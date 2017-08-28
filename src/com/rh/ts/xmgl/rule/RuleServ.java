@@ -65,6 +65,11 @@ public class RuleServ extends CommonServ {
 
 			Bean gzBean = getGz(xmId); // 规则bean key:规则id
 
+			if (gzmxBean.isEmpty() || gzBean.isEmpty()) {
+
+				throw new TipException("未绑定审核规则!");
+			}
+
 			JSONArray objList = new JSONArray(liststr);
 
 			for (int i = 0; i < objList.length(); i++) {
@@ -87,7 +92,7 @@ public class RuleServ extends CommonServ {
 				List<Bean> kslbList = ServDao.finds(TsConstant.SERV_BM_KSLB, sql); // 报名的考试类别
 
 				if (kslbList == null || kslbList.size() == 0) {
-					return outBean.setError("没有找到该考试类别");
+					return outBean.setError("未找到该考试类别!");
 				}
 
 				Bean kslb = kslbList.get(0);
@@ -96,8 +101,7 @@ public class RuleServ extends CommonServ {
 
 				List<Bean> mxList = gzmxBean.getList(ksqzId); // 规则明细list
 
-				Bean gzmxGroup = convertGzmxToGroup(mxList); // 规则明细分组Bean
-																// key:规则组
+				Bean gzmxGroup = convertGzmxToGroup(mxList); // 规则明细分组Bean,key:规则组
 
 				for (Object gzId : gzmxGroup.keySet()) {
 
@@ -146,9 +150,10 @@ public class RuleServ extends CommonServ {
 
 				outBean.set(bmBean.getStr("ID"), passList);
 			}
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
+			outBean.setError(e.getMessage());
 		}
 
 		return outBean;
@@ -173,17 +178,17 @@ public class RuleServ extends CommonServ {
 			String qzId = bean.getStr("KSQZ_ID");// 考试群组id
 
 			if (gzmxBean.containsKey(qzId)) {
-				
-				List<Bean> list =  gzmxBean.getList(qzId);
-				
+
+				List<Bean> list = gzmxBean.getList(qzId);
+
 				list.add(bean);
 
 				gzmxBean.set(qzId, list);
 
 			} else {
-				
+
 				List<Bean> list = new ArrayList<Bean>();
-				
+
 				list.add(bean);
 
 				gzmxBean.set(qzId, list);
@@ -246,11 +251,19 @@ public class RuleServ extends CommonServ {
 
 			if (groupBean.containsKey(gzId)) {
 
-				groupBean.set(gzId, groupBean.getList(gzId).add(bean));
+				List<Bean> list = groupBean.getList(gzId);
+
+				list.add(bean);
+
+				groupBean.set(gzId, list);
 
 			} else {
 
-				groupBean.set(gzId, new ArrayList<Bean>().add(bean));
+				List<Bean> list = new ArrayList<Bean>();
+
+				list.add(bean);
+
+				groupBean.set(gzId, list);
 			}
 		}
 		return groupBean;

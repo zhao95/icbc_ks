@@ -1,11 +1,12 @@
-package com.rh.ts.qjlb;
+package com.rh.ts.jklb;
+import java.util.List;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.ServDao;
 import com.rh.core.util.Constant;
 
-public class QjlbServ extends CommonServ {
+public class JklbServ extends CommonServ {
 	/**
 	 * 请假列表的新增以及待办事项的新增
 	 * @param paramBean
@@ -83,22 +84,23 @@ public class QjlbServ extends CommonServ {
 		String sh_status = paramBean.getStr("shstatus");
 		String sh_reason = paramBean.getStr("shreason");
 		String user_longin = paramBean.getStr("userloginname");
-		String user_name = paramBean.getStr("username");
 		String s_dname = paramBean.getStr("deptname");
-		String usercode = paramBean.getStr("usercode");
+		String s_uname = paramBean.getStr("usercode");
 		Bean qjbean=ServDao.find("TS_QJLB_QJ",qj_id);
 		//修改数据
 		qjbean.set("QJ_STATUS",qj_status);
 		ServDao.update(servId, qjbean);
 		//添加审核意见信息
 	 	Bean shyjBean =new Bean();
-	 	shyjBean.set("SH_MIND", sh_reason);
+	 	shyjBean.set("MIND_CONTENT", sh_reason);
+//	 	shyjBean.set("SH_NODE", sh_reason);
+//	 	shyjBean.set("SH_LEVEL", sh_reason);
 	 	shyjBean.set("SH_STATUS", sh_status);
 	 	shyjBean.set("DATA_ID", qj_id);
 	 	shyjBean.set("S_DNAME", s_dname);
-	 	shyjBean.set("SH_UCODE", usercode);
-	 	shyjBean.set("SH_ULOGIN", user_longin);
-	 	shyjBean.set("SH_UNAME", user_name);
+	 	shyjBean.set("S_UNAME", s_uname);
+	 	shyjBean.set("USER_LOGIN", user_longin);
+	 	shyjBean.set("MIND_CONTENT", sh_reason);
 	 	ServDao.save("TS_COMM_MIND", shyjBean);
 	}
 }

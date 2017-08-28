@@ -133,62 +133,62 @@ public class StayServ extends CommonServ {
 	 * @param paramBean
 	 */
 	public void update(Bean paramBean){
-		String user_code = paramBean.getStr("user_code");
 		String s = paramBean.getStr("checkedid");
-		String xmid = paramBean.getStr("xmid");
+		String xmid = "2Ajrh0gs97WXXYTHc39e";
+		String bm_code = "888802713";
+		String shenuser = "23UYZihM9erFGlX2ZNVB";
+		String slevel = "2";
 		//被选中的id
 		String[] ss = s.split(",");
 		String state = paramBean.getStr("radiovalue");
 		String liyou = paramBean.getStr("liyou");
 		//获取当前的审核层级  如果是最高层级审核结束只留下最高级的审核人 
 		for (String id : ss) {
-			
 			if(!"".equals(id)){
 				Bean bean = ServDao.find("TS_BMSH_STAY", id);
-				String cengji = bean.getStr("SH_LEVEL");
-				int cengjiint = Integer.parseInt(cengji)-1;//层级加1
-				String cengjiss = String.valueOf(cengjiint);
-				//判断是逐级还是越级越级的话返回下一级和所有的数据，  逐级的话将下一个审核节点的人编码  放进去，将当前审核人删除
-			//审核通过
-			if(state.equals("1")){
-				if(cengji.equals("2")){
-					ParamBean param = new ParamBean();
-					param.set("examercode", "888802713");
-					param.set("level",0);
-					param.set("xmId",xmid);
-					param.set("flowName","0");
-					param.set("shr","");
-					OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", param);
-					//流程最后一次审核
-					ServDao.delete("TS_BMSH_STAY", id);
-					String where = "AND BM_ID="+"'"+bean.getStr("BM_ID")+"'";
-					List<Bean> newlist = ServDao.finds("TS_BMSH_PASS", where);
-					Bean newbean = newlist.get(0);
-					newbean.set("SH_LEVEL",cengjiss);
-					//查出来的数据 是 最高层级人
-					
-					newbean.set("SH_USER",user_code);
-					newbean.set("SH_OTHER",user_code);
-					ServDao.save("TS_BMSH_PASS",newbean);
-				}else{
-					
-					//将数据进行修改update  获取到所有审核人的字段
-					String usercodes = bean.getStr("SH_OTHER");
-					String[] codesarr = usercodes.split(",");
-					//删除当前审核人后组建新的list  拼接成字符串update
-					List<String> remolist = new ArrayList<String>();
-					for (String code : codesarr) {
-						if(code==user_code){
-						}else{
-							remolist.add(code);
-						}
+				//获取审核人信息 
+				UserBean userbean = UserMgr.getUserByWorkNum(shenuser);
+				int cengjiint = Integer.parseInt(slevel);
+				//返回下一级和所有的数据，  逐级的话将下一个审核节点的人编码  放进去，将当前审核人删除
+				int level = Integer.parseInt(slevel);
+				int flowname = 0;
+				ParamBean parambean = new ParamBean();
+				parambean.set("examerWorekNum", bm_code);
+				parambean.set("level",level);
+				parambean.set("shrWorekNum", shenuser);
+				parambean.set("flowName", flowname);
+				parambean.set("xmId", xmid);
+				OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
+				List<Bean> list = outbean.getList("result");
+				
+				String allman ="";
+				String nextman = "";
+				for (int l=0;l<list.size();l++) {
+					if(l==list.size()-1){
+						
+						allman+= list.get(l).getStr("BMSHLC_SHR");
+						nextman = list.get(l).getStr("BMSHLC_SHR");
+					}else{
+						allman+= list.get(l).getStr("BMSHLC_SHR")+",";
 					}
-					//新字符串
-					String news  = remolist.toString();
-					bean.set("SH_OTHER", news);
-					bean.set("SH_LEVEL",cengjiss);
-					bean.set("SH_USER",user_code);
+					
+				}
+				int nowlevel = list.size();
+				//
+				//审核通过
+			if(state.equals("1")){
+				//查找下一层级的人当前人力资源编码
+				if(cengjiint==1){
+					//流程最后一次审核 
+					ServDao.delete("TS_BMSH_STAY", id);
+				}else{
+					//更新
+					bean.set("SH_LEVEL", nowlevel);
+					bean.set("SH_USER", nextman);
+					bean.set("SH_OTHER", allman);
 					ServDao.save("TS_BMSH_STAY", bean);
+				}
+					
 					//审核通过里面数据进行修改 同步
 					bean.remove("SH_ID");
 					bean.remove("S_CMPY");
@@ -206,17 +206,17 @@ public class StayServ extends CommonServ {
 				List<Bean> newlist = ServDao.finds("TS_BMSH_PASS", where);
 				if(newlist.size()!=0){
 					Bean newBean = newlist.get(0);
-					newBean.set("SH_OTHER", news);
-					newBean.set("SH_USER",user_code);
-					newBean.set("SH_LEVEL",cengjiss);
+					newBean.copyFrom(bean);
+					bean.set("SH_LEVEL", nowlevel+1);
+					bean.set("SH_USER", shenuser);
 					ServDao.save("TS_BMSH_PASS", newBean);
 				}else{
 					Bean newBean = new Bean();
 					newBean.copyFrom(bean);
-					newBean.set("SH_USER",user_code);
-					newBean.set("SH_LEVEL",cengjiss);
+					bean.set("SH_LEVEL", nowlevel+1);
+					bean.set("SH_USER", shenuser);
 					ServDao.save("TS_BMSH_PASS", newBean);
-				}
+				
 				}
 			}else{
 				//审核未通过的数据不再往上提交 将审核权限  只放在当前人手中、
@@ -234,11 +234,11 @@ public class StayServ extends CommonServ {
 				bean.remove("ROW_NUM_");
 				newBean.copyFrom(bean);
 				//只有 当前人能让审核再次进行下去
-				newBean.set("SH_LEVEL",cengjiss);
-				newBean.set("SH_USER",user_code);
-				newBean.set("SH_OTHER",user_code);
+				newBean.set("SH_LEVEL",nowlevel+1);
+				newBean.set("SH_USER",shenuser);
+				newBean.set("SH_OTHER",shenuser);
 				ServDao.save("TS_BMSH_NOPASS", newBean);
-				ServDao.delete("TS_BMSH_STAY", bean);
+				ServDao.delete("TS_BMSH_STAY", id);
 				String where = "AND BM_ID="+"'"+bean.getStr("BM_ID")+"'";
 				List<Bean> newlist = ServDao.finds("TS_BMSH_PASS", where);
 				if(newlist.size()==0){
@@ -247,8 +247,20 @@ public class StayServ extends CommonServ {
 				ServDao.delete("TS_BMSH_PASS",id1);
 				}
 			}
+			//审核明细表中插入此次审核数据
+			Bean mindbean = new Bean();
+			mindbean.set("SH_LEVEL",slevel);
+			mindbean.set("SH_MIND", liyou);
+			mindbean.set("DATA_ID",bean.getStr("BM_ID"));
+			mindbean.set("SH_STATUS", state);
+			mindbean.set("SH_ULOGIN",userbean.getLoginName());
+			mindbean.set("SH_UNAME",userbean.getName());
+			mindbean.set("SH_UCODE",shenuser);
+			mindbean.set("SH_TYPE", 1);
+			ServDao.save("TS_COMM_MIND",mindbean);
 			}
 		}
+		
 		
 	}
 
