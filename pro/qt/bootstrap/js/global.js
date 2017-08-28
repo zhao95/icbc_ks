@@ -857,7 +857,7 @@ global.Fn.InitFormData = function (model, elesConfig, hidesConfig) {
 }
 
 
-global.Fn.InitPlugin = function (plugins, container,userId) {
+global.Fn.InitPlugin = function (plugins, container,bmid) {
     if ($.type(plugins) === 'string') { plugins = plugins.split(','); }
     container = global.Fn.$(container || document);
     if (plugins.indexOf('file') !== -1) {
@@ -866,7 +866,7 @@ global.Fn.InitPlugin = function (plugins, container,userId) {
     if (plugins.indexOf('img') !== -1) {
         var $imgs = $('.upload-file', global.Fn.$(container || document));
         $.each($imgs, function (index, img) {
-            global.Fn.InitUploadImage($(img).parent(),userId);
+            global.Fn.InitUploadImage($(img).parent(),bmid);
         });
     }
     if (plugins.indexOf('datetime') !== -1) {
@@ -900,7 +900,7 @@ global.Fn.InitPlugin = function (plugins, container,userId) {
 }
 
 
-global.Fn.InitUploadImage = function (container,userId) {
+global.Fn.InitUploadImage = function (container,bmid) {
     container = container || document;
     var $upload = $('.upload-file', global.Fn.$(container));
 
@@ -938,10 +938,10 @@ global.Fn.InitUploadImage = function (container,userId) {
     }
     var $fileUpload = $(':file', $upload);
     //data赋值
-    $fileUpload.bind('fileuploadsubmit', function (e, data,userId) {
+    $fileUpload.bind('fileuploadsubmit', function (e, data) {
 //    	console.log(data);
     	var jsonData = {};
-    	jsonData["DATA_ID"] = userId;
+    	jsonData["DATA_ID"] = bmid;
     	jsonData["SERV_ID"] = "TS_BMLB_BM";
     	data.formData = jsonData;
     });
@@ -961,7 +961,9 @@ global.Fn.InitUploadImage = function (container,userId) {
             data = JSON.parse(data.result);
             var s = data["_DATA_"][0].FILE_ID;
             if (s!="") {
-            	$(".upload-list>ul", $upload).append('<li><a id="filedown" href="/file/'+s+'" onclick="xiazai()">'+s+'&nbsp;&nbsp;<image src="/ts/image/u344.png"></image></a></li><li>点击下载文件<li>');
+            	var i =0;
+            	i++;
+            	$(".upload-list>ul", $upload).append('<div id='+s+'><li name="filedown">'+s+'</li><li>&nbsp;&nbsp;<a href="/file/'+s+'" onclick="xiazai()"><image src="/ts/image/u344.png"></image></a></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick=deletefile('+s+')>删除</a></li></div>');
             } else {
                 global.Fn.ShowMsg({
                     type: 'alert:error',

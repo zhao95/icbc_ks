@@ -58,6 +58,7 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	   				param["XM_SZ_ID"] = XM_SZ_ID;
 	   				param["BM_ID"] = BM_ID;
 	   				param["XM_ID"] = XM_ID;
+	   				console.log(param);
 	   				FireFly.doAct(_viewer.servId,"save", param, true);	
 	   				_viewer.refresh();
 	    	    }

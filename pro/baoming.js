@@ -120,7 +120,6 @@ function getAllSelectData(user_code,dijiye){
 function selectdata(user_code){
 	var jb = document.getElementById("jb");
         var indexjb = jb.selectedIndex;
-        alert(indexjb);
         var jbvalue = jb.options[indexjb].value;
         //第一个下拉框值
         var type1 =  document.getElementById("gangwei");
@@ -205,7 +204,7 @@ function selectdata(user_code){
      		//为table重新appendtr
      	
      		if(pageEntity[i].BM_STATE==1){
-     			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">审核中</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a href="#" style="color:lightseagreen" id="shenkeliucheng">审核流程</a>$nbsp;$nbsp;<a href="#" data-toggle="modal" onclick="yiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+     			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">审核中</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a href="#" style="color:lightseagreen" id="shenkeliucheng">审核流程</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="yiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 	     		}else{
 	     		$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">审核中</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a style="color:red" id="chexiao">已撤销</a></td></tr>');	
 	     		}
@@ -496,34 +495,102 @@ function selectcreate(){
         $("#" + opt.targets[nextIndex+1]).find("option").first().attr('selected', true)
  	}
  //审核未通过提起上诉
-  var formnum =  0;
+  var formnum =0;
+  var idcode = -1;
   function yiyi(i){
-	  var userId = document.getElementById("baomingid"+i).innerHTML;
+	  var bmid = document.getElementById("baomingid"+i).innerHTML;
 	  $("#yiyi"+i).attr("data-target",'#appeal');
-	  
+	  var param={};
+	  param["bmid"]=bmid;
+	  var result = FireFly.doAct("TS_BMLB_BM","filehist",param);
+	  var data = result.list;
+	  var pageEntity = JSON.parse(data);
+	  $("#filehis").html("");
+	  $("#formContainer2").html("");
+	  if(pageEntity.length==0){
+		  
+	  }else{
+		  //已有上传文件记录
+		  //模态窗口 append上传的东西
+		  for(var i=0;i<pageEntity.length;i++){
+			  var fileid = pageEntity[i].FILE_ID;
+			  $("#filehis").append('<tr style="height:30px"><td style="width:30%"><td><a href="/file/'+fileid+'" onclick="xiazai()">'+fileid+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<image title="点击进行下载" src="/ts/image/u344.png"></image></a></td></tr><tr></tr>');
+		  }
+		  //将数据 保存
+		  //不能再提交 给按钮置灰
+		  document.getElementById("tjbutt").style.display="none";
+		  return;
+	  }
+	  if(formnum==0||icode!=i){
+		  $("#formContainer2").html("");
 	  var eles=[ 
                      [ 
                        {ele:{type:'img',id:'img1',name:'files',title:'',extendAttr:{filed:'deatil_img',handle:'single',url:''}}}   
                      ] 
                  ]; 
-	 if(formnum==0){
                  var bsForm = new BSForm({ eles: eles, autoLayout:true}).Render('formContainer2',function(bf){ 
                 	 
-                     global.Fn.InitPlugin('img','formContainer2',userId); 
+                     global.Fn.InitPlugin('img','formContainer2',bmid); 
                      
                  }); 
                  formnum+=1;
+                 idcode=i;
 	 }
-
+	  
   }
   //关闭上传模态页面
   function closemotai(){
-	/*  document.getElementById("formContainer2").innerHTML="";*/
+	//关闭时删除刚刚上传的文件
+	 var linum =  $("#formContainer2").find('li').length;
+	 //不为0 时可以删除
+	 if(linum!=0){
+		 var lis = document.getElementsByName("filedown");
+		 //循环不便利li里的内容拼接 删除
+		 var ids = "";
+		 for(i = 0; i < lis.length; i++){  
+		       var s = lis[i].innerHTML;
+		       if(i==lis.length-1){
+		    	   ids+=s;
+		       }else{
+		    	   ids+=s+",";
+		       }
+		    } 
+		 var bmid = document.getElementById("baomingid"+idcode).innerHTML;
+		 //可以删除
+		 var param={};
+		 param["SERV_ID"]="TS_BMLB_BM";
+		 param["DATA_ID"]=bmid;
+		 alert(bmid);
+		 param["_PK_"]=ids;
+		 //删除
+		 FireFly.doAct("SY_COMM_FILE","delete",param);
+		 
+	 }
   }
-  //下载
-  function xiazai(){
-	 var s =  document.getElementById("filedown").innerHTML;
-	 
-	 $("#formContainer2").submit();
-  }
-  
+  //删除文件
+ function deletefile(obj){
+	 //删除数据库
+	 var bmid = document.getElementById("baomingid"+idcode).innerHTML;
+	 var param={};
+	 param["SERV_ID"]="TS_BMLB_BM";
+	 param["DATA_ID"]=bmid;
+	 param["_PK_"]=obj;
+	 //删除
+	var result= FireFly.doAct("SY_COMM_FILE","delete",param);
+	
+	 //删除页面
+	 document.getElementById(obj).remove();
+ }
+ //提交意义
+ function tijiaoyiyi(){
+	 $('#appeal').modal('hide');
+	 //将数据从审核未通过中删除
+	 //加入到待审核中
+	 var bmid = document.getElementById("baomingid"+idcode).innerHTML;
+	 var liyou = document.getElementById("liyou").innerHTML;
+	 var param ={};
+	 param["bmid"]=bmid
+	 param["liyou"]=liyou;
+	 FireFly.doAct("TS_BMSH_NOPASS","yiyi",param);
+	 //将此数据 的状态改为审核中
+ }

@@ -87,7 +87,7 @@ public class RuleServ extends CommonServ {
 				List<Bean> kslbList = ServDao.finds(TsConstant.SERV_BM_KSLB, sql); // 报名的考试类别
 
 				if (kslbList == null || kslbList.size() == 0) {
-					return outBean.setError();
+					return outBean.setError("没有找到该考试类别");
 				}
 
 				Bean kslb = kslbList.get(0);
@@ -173,12 +173,20 @@ public class RuleServ extends CommonServ {
 			String qzId = bean.getStr("KSQZ_ID");// 考试群组id
 
 			if (gzmxBean.containsKey(qzId)) {
+				
+				List<Bean> list =  gzmxBean.getList(qzId);
+				
+				list.add(bean);
 
-				gzmxBean.set(qzId, gzmxBean.getList(qzId).add(bean));
+				gzmxBean.set(qzId, list);
 
 			} else {
+				
+				List<Bean> list = new ArrayList<Bean>();
+				
+				list.add(bean);
 
-				gzmxBean.set(qzId, new ArrayList<Bean>().add(bean));
+				gzmxBean.set(qzId, list);
 			}
 		}
 

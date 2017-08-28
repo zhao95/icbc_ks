@@ -586,4 +586,31 @@ public class BmlbServ extends CommonServ {
 		return out;
 	
 		}
+		/**
+		 * 查询异议的文件记录 回显
+		 * @param paramBean
+		 * @return
+		 */
+	public Bean filehist(Bean paramBean){
+		Bean outBean = new Bean();
+		String bmid = paramBean.getStr("bmid");
+		String where = "AND DATA_ID="+"'"+bmid+"'";
+		List<Bean> filelist = ServDao.finds("SY_COMM_FILE", where);
+		//转换成json格式字符串
+			 ObjectMapper mapper = new ObjectMapper();    
+		       StringWriter w = new StringWriter();  
+		       try {
+				mapper.writeValue(w, filelist);
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			 catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		       outBean.set("list",w.toString());
+			
+		       return outBean;
+	}
 }

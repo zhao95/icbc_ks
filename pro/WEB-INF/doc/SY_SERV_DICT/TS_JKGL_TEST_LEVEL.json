@@ -3,7 +3,7 @@
 "DICT_NAME_LAYER":"0",
 "S_PUBLIC":"1",
 "TABLE_SELECT":"",
-"S_MTIME":"2017-08-11 15:37:52:851",
+"S_MTIME":"2017-08-28 16:11:45:620",
 "TABLE_WHERE":"",
 "SY_SERV_DICT_ITEM":
 [
@@ -23,7 +23,7 @@
 "S_CMPY":"icbc",
 "ITEM_NAME":"初级",
 "ITEM_PCODE":"",
-"ITEM_CODE":"low",
+"ITEM_CODE":"1",
 "ITEM_LEAF":"1",
 "DICT_ID":"TS_JKGL_TEST_LEVEL"
 },
@@ -43,7 +43,7 @@
 "S_CMPY":"icbc",
 "ITEM_NAME":"中级",
 "ITEM_PCODE":"",
-"ITEM_CODE":"inter",
+"ITEM_CODE":"2",
 "ITEM_LEAF":"1",
 "DICT_ID":"TS_JKGL_TEST_LEVEL"
 },
@@ -63,7 +63,7 @@
 "S_CMPY":"icbc",
 "ITEM_NAME":"高级",
 "ITEM_PCODE":"",
-"ITEM_CODE":"high",
+"ITEM_CODE":"3",
 "ITEM_LEAF":"1",
 "DICT_ID":"TS_JKGL_TEST_LEVEL"
 },
@@ -83,7 +83,7 @@
 "S_CMPY":"icbc",
 "ITEM_NAME":"无",
 "ITEM_PCODE":"",
-"ITEM_CODE":"null",
+"ITEM_CODE":"4",
 "ITEM_LEAF":"1",
 "DICT_ID":"TS_JKGL_TEST_LEVEL"
 }

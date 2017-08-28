@@ -97,7 +97,7 @@
 							}
 							%> 
 	<div class="" style="padding: 10px">
-		<a href="index_qt.jsp"><image style="padding-bottom:10px"
+		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
 				src="<%=CONTEXT_PATH%>/ts/image/u1155.png" id="shouye"></image></a> <span
 			style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;我的报名</span>
 	</div>
@@ -298,9 +298,9 @@
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 						&times;
 					</button>
-					<h5 class="modal-title">
+					<h4 class="modal-title">
 						异议
-					</h5>
+					</h4>
 					
 				</div>
 				<div style="padding-top:20px;width:700px;font-size:20px;text-align:center;color:lightseagreen">
@@ -312,10 +312,13 @@
 				<td style="width:15%"></td><td style="height:150px;width:%;vertical-align:top"><textarea id="liyou" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
+				<table id="filehis">
+				
+				</table>
 				<div id="uploadfile" style="padding-left:50px;color:lightseagreen;font-size:20px"><form action="/file" name="formup" id="formContainer2" class="form form-horizontal"></form></div>
 				</div>
 				<div class="modal-footer" style="text-align:center;height:100px">
-					<button type="button" class="btn btn-primary" style="height:50px;background:lightseagreen;width:100px" onclick="">提交异议</button>
+					<button id="tjbutt" type="button" onclick="tijiaoyiyi()" class="btn btn-primary" style="height:50px;background:lightseagreen;width:100px">提交异议</button>
 					<button type="button" onclick = "closemotai()" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">取消</button>
 				</div>
 				
