@@ -24,17 +24,7 @@
 <!-- Ionicons -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/ionicons/css/ionicons.min.css">
-	
-	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
-	<!-- Bootstrap 3.3.6 -->
-	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
-<!--工具方法--> 
-<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/global.js"></script> 
-<!--插件--> 
-<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/jquery.smart-form.js"></script> 
-<script src="<%=CONTEXT_PATH%>/ts/jsp/jquery.iframe-transport.js"></script> 
-<script src="<%=CONTEXT_PATH%>/ts/jsp/jquery.ui.widget.js"></script> 
-<script src="<%=CONTEXT_PATH%>/ts/jsp/jquery.fileupload.js"></script> 
+
 <script src="<%=CONTEXT_PATH%>/qt/js/html5shiv.min.js"></script>
 <script src="<%=CONTEXT_PATH%>/qt/js/respond.min.js"></script>
 <!-- Theme style -->
@@ -162,8 +152,14 @@
 					<tr>
 						<td style="width: 10%;text-align: right;">证明材料&nbsp;&nbsp;</td>
 						<td colspan="3" style="padding-top: 15px;">
-							<img alt="选择"  onclick="upImg()" src="<%=CONTEXT_PATH %>/ts/image/uqjsc.png">
-							<form action="/file" name="formup" id="formContainer2" class="form form-horizontal"></form>
+							<form action="/com/rh/core/FileServlet" method="post" id="imgformid" enctype="multipart/form-data">
+							<div class="form-group" id="caseIma">
+							<label class="btn btn-primary">选择图片
+							<input type="file" style="display: none;" class="form-control" id="caseImage" name="caseImage" onchange="viewImage(this)"/>
+							</label>
+							</div>
+							<input type = "submit" value="传递" style="display: none;"/>
+							</form>
 						</td>
 					</tr>
 					<tr>
@@ -274,20 +270,6 @@
   		doubleBgColor(document.getElementById("ybmtable"),"#f0faff","#ffffff")
   		
  	 }); 
-  	//上传资料
-  	function upImg(){
-  		var eles=[ 
-            [ 
-              {ele:{type:'img',id:'img1',name:'files',title:'',extendAttr:{filed:'deatil_img',handle:'single',url:''}}}   
-            ] 
-        ]; 
-        var bsForm = new BSForm({ eles: eles, autoLayout:true}).Render('formContainer2',function(bf){ 
-       	 
-            global.Fn.InitPlugin('img','formContainer2'); 
-            
-        }); 
-
-  	}
   	//表格颜的设置
   	function doubleBgColor(Table,Bg1,Bg2) {  
   		for (var i=1;i<Table.rows.length;i++) Table.rows[i].bgColor=i%2?Bg2:Bg1;  
@@ -421,7 +403,9 @@
          }
 </script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
-
+	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
+	<!-- Bootstrap 3.3.6 -->
+	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
 	<!-- FastClick -->
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
 	<!-- AdminLTE App -->

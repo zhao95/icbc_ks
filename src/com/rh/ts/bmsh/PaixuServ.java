@@ -15,8 +15,7 @@ import com.rh.core.serv.ServDao;
  * @author shiyun
  *
  */
-public class PaixuServ extends CommonServ {
-
+public class PaixuServ extends CommonServ {  
 	/**
 	 *对th进行 排序保存
 	 * @param paramBean

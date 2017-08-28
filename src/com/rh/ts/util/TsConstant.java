@@ -65,6 +65,12 @@ public class TsConstant {
 	/** 辅助表*/
 	public static final String SERV_OBJECT = "TS_OBJECT";
 	
+	/** 项目管理*/
+	public static final String SERV_XMGL = "TS_XMGL";
+	
+	/** 项目管理 设置*/
+	public static final String SERV_XMGL_SZ = "TS_XMGL_SZ";
+	
 	
 	/** 字典 角色模块定义*/
 	public static final String DICT_ROLE_MOD = "TS_PVLG_MOD";
