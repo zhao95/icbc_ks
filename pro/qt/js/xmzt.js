@@ -19,7 +19,7 @@ $(function (){
 	//此时获取到的是项目挂接模块的名称以逗号分割的字符串
 	var xm_id = resultUserAssociateXM._DATA_[0].XM_ID;
 	var ks_name=resultUserAssociateXM._DATA_[0].BM_TITLE;
-	debugger;
+//	debugger;
 	//使用字符串的方法，将去除逗号的BM_GJ  模块合并成一条字符串， 并将字符串根据，进行分割， 得到分割后的数组。
 	var param2 = {};
 	param2["_extWhere"]="and XM_ID ='"+xm_id+"'";
@@ -59,7 +59,7 @@ $(function (){
 	param3["_extWhere"] = "and xm_id='"+xm_id+"'"
 	//获取到的是项目设置中的所有挂接模块的列表
 	var current_xm = FireFly.doAct("TS_XMGL_SZ","query",param3);
-	debugger;
+//	debugger;
 	
 	//定义状态map键值映射规则
 	//定义一个map集合，（对象的形式），存储状态对应的颜色

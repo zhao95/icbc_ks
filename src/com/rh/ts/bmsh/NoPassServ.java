@@ -118,7 +118,6 @@ public class NoPassServ extends CommonServ {
 		String s = paramBean.getStr("checkedid");
 		//被选中的id
 		String[] ss = s.split(",");
-		String state = paramBean.getStr("radiovalue");
 		String liyou = paramBean.getStr("liyou");
 		for (String id : ss) {
 			if(!"".equals(id)){
@@ -178,5 +177,33 @@ public class NoPassServ extends CommonServ {
 		   return outBean;
 		
 		
+	}
+	/**
+	 * 递交异一
+	 */
+	public void yiyi(Bean paramBean){
+		String bmid = paramBean.getStr("bmid");
+		String where = "AND BM_ID="+"'"+bmid+"'";
+		List<Bean> list = ServDao.finds("TS_BMSH_NOPASS", where);
+		//继续走审核流程
+		if(list.size()!=0){
+			Bean bean = list.get(0);
+			//添加一个字段用来标识异议   显示图标按钮
+			//bean.set("yiyi",bmid);  
+			bean.remove("SH_ID");
+			bean.remove("S_CMPY");
+			bean.remove("S_ODEPT");
+			bean.remove("S_TDEPT");
+			bean.remove("S_DEPT");
+			bean.remove("S_ATIME");
+			bean.remove("S_MTIME");
+			bean.remove("S_USER");
+			bean.remove("S_FLAG");
+			bean.remove("_PK_");
+			bean.remove("ROW_NUM_");
+			Bean newBean = new Bean();
+			newBean.copyFrom(bean);
+			ServDao.save("TS_BMSH_PASS", newBean);
+		}
 	}
 }
