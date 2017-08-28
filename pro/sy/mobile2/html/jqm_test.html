@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>jQueryMobile 样式测试页</title>
+<!-- *****************开发模式--start**************** -->
+<script>
+	var FireFlyContextPath, // ajax请求路径
+	ZhbxImgPath; // 图片加载路径
+	// OA系统地址
+	FireFlyContextPath = "";
+	// 门户系统地址
+	//ZhbxImgPath = "http://portal.cic.cn:8888";
+
+	var userCode = "admin", orgMapJson = "admin", // 是一个json，不能加双引号
+	homeUrl = window.location.href;
+</script>
+<!-- *****************开发模式--start**************** -->
+
+<!-- jqueryMobile样式 -->
+<!-- jqueryMobile样式 -->
+<link rel="stylesheet" type="text/css"
+	href="/sy/mobile2/plugins/themes/Bootstrap.css">
+<link rel="stylesheet" type="text/css"
+	href="/sy/mobile2/plugins/jquery.mobile-1.4.0/jquery.mobile.structure-1.4.0.css">
+<link rel="stylesheet" type="text/css"
+	href="/sy/mobile2/plugins/themes/jquery.mobile.icons.min.css">
+
+<!-- custom样式 -->
+<link rel="stylesheet" type="text/css"
+	href="/sy/mobile2/js/tree/style.css" />
+<link rel="stylesheet" type="text/css"
+	href="/sy/mobile2/css/mbCustom.css" />
+
+<!-- jquery相关脚本 -->
+<script type="text/javascript"
+	src="/sy/mobile2/plugins/jquery/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/q.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/tree/jquery.tree.js"></script>
+
+<!-- 平台相关脚本    @TODO 这三个文件也不一样？ 是否可以兼容？ -->
+<script type="text/javascript" src="/sy/mobile2/js/platform2.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/tools.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/constant.js"></script>
+
+<!-- 各组件相关脚本 -->
+<script type="text/javascript" src="/sy/mobile2/js/mbPageView.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/mbDeskView.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/mbListView.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/mb.ui.grid.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/mbNewsView.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/mbCardView.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/mb.ui.form.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/mbWfCardView.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/mbMind.js"></script>
+<script type="text/javascript" src="/sy/mobile2/js/mbCardToCardView.js"></script>
+
+<!-- costom脚本 -->
+<!-- <script type="text/javascript" src="/sy/mobile2/js/app_run.js"></script> -->
+<!-- 因为需要在jqm初始化之前执行，所以引用的顺序要往前放 -->
+<script type="text/javascript"
+	src="/sy/mobile2/plugins/jquery.mobile-1.4.0/jquery.mobile-1.4.0.js"></script>
+<!-- <script type='text/javascript' src='/sy/mobile2/html/jqm_test.js'></script> -->
+</head>
+<body>
+	<!-- listview列表页 -->
+	<style>
+.ui-listview .ui-li-aside {
+	top: 1.5em;
+	right: 0.5em;
+}
+
+.ui-listview>.ui-li-static {
+	padding: .7em 3em .7em 1em;
+}
+
+.ui-listview>li h1, .ui-listview>li h2, .ui-listview>li h3, .ui-listview>li h4,
+	.ui-listview>li h5, .ui-listview>li h6 {
+	white-space: initial;
+}
+</style>
+	<!-- <div id="listview_content" role="main" class="ui-content">
+		<ul data-role="listview">
+			<li> 
+				<h2>实现审批单的流转。填写意见、意见列表、流程跟踪、送交下一步实现审批单的流转。</h2>
+				<p>
+					<span>发文:</span>
+					<span>信息技术部</span>
+					<span>刘斌</span>
+				</p>
+				<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+			</li>
+			<li> 
+				<h2>Stephen Weber</h2>
+				<p>
+					<span>发文:</span>
+					<span>信息技术部</span>
+					<span>刘斌</span>
+				</p>
+				<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+			</li>
+			<li> 
+				<h2>Stephen Weber</h2>
+				<p>
+					<span>发文:</span>
+					<span>信息技术部</span>
+					<span>刘斌</span>
+				</p>
+				<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+			</li>
+			<li> 
+				<h2>实现审批单的流转。填写意见、意见列表、流程跟踪、送交下一步实现审批单的流转。</h2>
+				<p>
+					<span>发文:</span>
+					<span>信息技术部</span>
+					<span>刘斌</span>
+				</p>
+				<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+			</li>
+			<li> 
+				<h2>Stephen Weber</h2>
+				<p>
+					<span>发文:</span>
+					<span>信息技术部</span>
+					<span>刘斌</span>
+				</p>
+				<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+			</li>
+			<li> 
+				<h2>Stephen Weber</h2>
+				<p>
+					<span>发文:</span>
+					<span>信息技术部</span>
+					<span>刘斌</span>
+				</p>
+				<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+			</li>
+			<li> 
+				<h2>实现审批单的流转。填写意见、意见列表、流程跟踪、送交下一步实现审批单的流转。</h2>
+				<p>
+					<span>发文:</span>
+					<span>信息技术部</span>
+					<span>刘斌</span>
+				</p>
+				<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+			</li>
+			<li> 
+				<h2>Stephen Weber</h2>
+				<p>
+					<span>发文:</span>
+					<span>信息技术部</span>
+					<span>刘斌</span>
+				</p>
+				<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+			</li>
+			<li> 
+				<h2>Stephen Weber</h2>
+				<p>
+					<span>发文:</span>
+					<span>信息技术部</span>
+					<span>刘斌</span>
+				</p>
+				<p class="ui-li-aside"><strong>6:24</strong>PM</p>
+			</li>
+		</ul>
+	</div> -->
+	<!-- <script type="text/javascript">
+		$.mobile.loading('show', {
+			text: '页面正在加载,请稍等...',
+			textVisible: true,
+			textonly: false,
+			theme: 'c'
+		});
+	</script> -->
+	<!-- 
+	<form class="zhbx-form">
+		<div id="undefined_base" class="mb-card-group">
+			<div data-role="fieldcontain" code="SERV_DATA_CODE" model="3">
+				<label for="1_6o6qHnV879U5IX1gLkEv">文件编号</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="1_6o6qHnV879U5IX1gLkEv" name="1_6o6qHnV879U5IX1gLkEv">
+					<span>添加一些数据</span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_TITLE" model="1">
+				<label for="3IPedqU_teEUkyaGLwImzF">标题<span
+					class="mbCard-form-notNull mb-icon-notNull">*</span></label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="3IPedqU_teEUkyaGLwImzF" name="3IPedqU_teEUkyaGLwImzF">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_OPERATION" model="3">
+				<label for="2rZUNLfa97ErypNEEwNIs0">办理环节</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="2rZUNLfa97ErypNEEwNIs0" name="2rZUNLfa97ErypNEEwNIs0">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="SEND_USER_CODE" model="2">
+				<label for="31JsiNq-Z1qEMlxFu8RZjB">提交人<span
+					class="mbCard-form-notNull mb-icon-notNull">*</span></label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="31JsiNq-Z1qEMlxFu8RZjB" name="31JsiNq-Z1qEMlxFu8RZjB">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_SEND_TIME" model="4">
+				<label for="29fEIxPYZaN9AsF56hgVns">交办时间</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="29fEIxPYZaN9AsF56hgVns" name="29fEIxPYZaN9AsF56hgVns">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="S_EMERGENCY" model="2">
+				<label for="2GTsjPwbpd4H5ngG5dNUSA">紧急程度</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="2GTsjPwbpd4H5ngG5dNUSA" name="2GTsjPwbpd4H5ngG5dNUSA">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_CODE_NAME" model="9"
+				style="display: none;">
+				<label for="0BVIhCikVbmHC980hKZ1tY">文件种类<span
+					class="mbCard-form-notNull mb-icon-notNull">*</span></label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="0BVIhCikVbmHC980hKZ1tY" name="0BVIhCikVbmHC980hKZ1tY">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_OVERTIME_S" model="3">
+				<label for="0dy4EKt459fqohbqjjy7f5">超时时间</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="0dy4EKt459fqohbqjjy7f5" name="0dy4EKt459fqohbqjjy7f5">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_WASTETIME_S" model="3">
+				<label for="1sorWjQp1a6WgAPDKV7aF6">节点耗时</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="1sorWjQp1a6WgAPDKV7aF6" name="1sorWjQp1a6WgAPDKV7aF6">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="OWNER_CODE" model="3">
+				<label for="2iWdAlmhlfMaRRE1yRexqz">待办人<span
+					class="mbCard-form-notNull mb-icon-notNull">*</span></label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="2iWdAlmhlfMaRRE1yRexqz" name="2iWdAlmhlfMaRRE1yRexqz">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_DEADLINE1" model="9"
+				style="display: none;">
+				<label for="3QLDln1KB1ZbxQZy-RWJvE">办理期限1</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="3QLDln1KB1ZbxQZy-RWJvE" name="3QLDln1KB1ZbxQZy-RWJvE">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="DEPT_CODE" model="3">
+				<label for="2d7FIJTZd8QHO8LSySO5Yd">待办部门</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="2d7FIJTZd8QHO8LSySO5Yd" name="2d7FIJTZd8QHO8LSySO5Yd">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_CODE" model="3">
+				<label for="3VP8XMsVh2UWLYX5uDAblv">类型</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="3VP8XMsVh2UWLYX5uDAblv" name="3VP8XMsVh2UWLYX5uDAblv">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TDEPT_CODE" model="9"
+				style="display: none;">
+				<label for="2F7wFt4L16w8vT66YK4n5T">有效部门</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="2F7wFt4L16w8vT66YK4n5T" name="2F7wFt4L16w8vT66YK4n5T">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_FINISH_TIME" model="3">
+				<label for="0C-Y6SbPJflEW6unJiAitH">完成时间</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="0C-Y6SbPJflEW6unJiAitH" name="0C-Y6SbPJflEW6unJiAitH">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_OBJECT_ID1" model="3">
+				<label for="3pI1JJqfdc5E5hPp99gLnh">对象ID1<span
+					class="mbCard-form-notNull mb-icon-notNull">*</span></label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="3pI1JJqfdc5E5hPp99gLnh" name="3pI1JJqfdc5E5hPp99gLnh">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_OBJECT_ID2" model="3">
+				<label for="2lUvCgQLV1OoMT4xoTMCAe">对象ID2</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="2lUvCgQLV1OoMT4xoTMCAe" name="2lUvCgQLV1OoMT4xoTMCAe">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_DEADLINE2" model="9"
+				style="display: none;">
+				<label for="2l_bt1ocBcjWFCT2FdGClF">办理期限2</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="2l_bt1ocBcjWFCT2FdGClF" name="2l_bt1ocBcjWFCT2FdGClF">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_BENCH_FLAG" model="3">
+				<fieldset data-role="controlgroup" data-type="horizontal"
+					data-mini="true" class="ui-disabled" readonly="readonly">
+					<legend for="2UakUZUnt4Xbtidt-RIQsm">代理状态</legend>
+					<input id="2UakUZUnt4Xbtidt-RIQsm-1"
+						name="2UakUZUnt4Xbtidt-RIQsm-SY_TODO_BENCH" value="1" type="radio"><label
+						for="2UakUZUnt4Xbtidt-RIQsm-1">已代理</label><input
+						id="2UakUZUnt4Xbtidt-RIQsm-2"
+						name="2UakUZUnt4Xbtidt-RIQsm-SY_TODO_BENCH" value="2" type="radio"><label
+						for="2UakUZUnt4Xbtidt-RIQsm-2">未代理</label>
+				</fieldset>
+			</div>
+			<div data-role="fieldcontain" code="TODO_CATALOG" model="3">
+				<fieldset data-role="controlgroup" data-type="horizontal"
+					data-mini="true" class="ui-disabled" readonly="readonly">
+					<legend for="0NriBFobterEN0Hlfl9A0Z">办件[阅件]</legend>
+					<input id="0NriBFobterEN0Hlfl9A0Z-1"
+						name="0NriBFobterEN0Hlfl9A0Z-SY_TODO_CATALOG" value="1"
+						type="radio"><label for="0NriBFobterEN0Hlfl9A0Z-1">办件</label><input
+						id="0NriBFobterEN0Hlfl9A0Z-2"
+						name="0NriBFobterEN0Hlfl9A0Z-SY_TODO_CATALOG" value="2"
+						type="radio"><label for="0NriBFobterEN0Hlfl9A0Z-2">阅件</label>
+				</fieldset>
+			</div>
+			<div data-role="fieldcontain" code="TODO_ACCESS_FLAG" model="3">
+				<fieldset data-role="controlgroup" data-type="horizontal"
+					data-mini="true" class="ui-disabled" readonly="readonly">
+					<legend for="1QA3VfU9h0EVLE9aDW4xzq">访问标志</legend>
+					<input id="1QA3VfU9h0EVLE9aDW4xzq-1"
+						name="1QA3VfU9h0EVLE9aDW4xzq-SY_TODO_ACCESS" value="1"
+						type="radio"><label for="1QA3VfU9h0EVLE9aDW4xzq-1">已访问</label><input
+						id="1QA3VfU9h0EVLE9aDW4xzq-2"
+						name="1QA3VfU9h0EVLE9aDW4xzq-SY_TODO_ACCESS" value="2"
+						type="radio"><label for="1QA3VfU9h0EVLE9aDW4xzq-2">未访问</label>
+				</fieldset>
+			</div>
+			<div data-role="fieldcontain" code="TODO_CONTENT" model="3">
+				<label for="0cqQEAh2114rif0_FzgZy3">内容</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="0cqQEAh2114rif0_FzgZy3" name="0cqQEAh2114rif0_FzgZy3">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="SERV_ID" model="3">
+				<label for="2eoF7t8ph9t8CV4U2c1rKG">服务ID</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="2eoF7t8ph9t8CV4U2c1rKG" name="2eoF7t8ph9t8CV4U2c1rKG">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_FROM" model="3">
+				<label for="3g10Bl4kp0ma5dab0PQhSO">待办来自哪种业务</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="3g10Bl4kp0ma5dab0PQhSO" name="3g10Bl4kp0ma5dab0PQhSO">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="AGT_USER_CODE" model="3"
+				style="display: none;">
+				<label for="2PxDHcIYNcMGUQZMXgWjcD">代办人code</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="2PxDHcIYNcMGUQZMXgWjcD" name="2PxDHcIYNcMGUQZMXgWjcD">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_TYPE" model="3"
+				style="display: none;">
+				<label for="2zAe4f9af575bY3IaaQAzli">待办标识</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="2zAe4f9af575bY3IaaQAzli" name="2zAe4f9af575bY3IaaQAzli">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_LAST" model="3">
+				<fieldset data-role="controlgroup" data-type="horizontal"
+					data-mini="true" class="ui-disabled" readonly="readonly">
+					<legend for="3oc9a4luhV84V5y3MNcNM0u">最新标识</legend>
+					<input id="3oc9a4luhV84V5y3MNcNM0u-1"
+						name="3oc9a4luhV84V5y3MNcNM0u-SY_YESNO" value="1" type="radio"><label
+						for="3oc9a4luhV84V5y3MNcNM0u-1">是</label><input
+						id="3oc9a4luhV84V5y3MNcNM0u-2"
+						name="3oc9a4luhV84V5y3MNcNM0u-SY_YESNO" value="2" type="radio"><label
+						for="3oc9a4luhV84V5y3MNcNM0u-2">否</label>
+				</fieldset>
+			</div>
+			<div data-role="fieldcontain" code="S_CMPY" model="9"
+				style="display: none;">
+				<label for="0ZYFGZYDN1qUQsJPmqmAuU">公司编码</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="0ZYFGZYDN1qUQsJPmqmAuU" name="0ZYFGZYDN1qUQsJPmqmAuU">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="S_MTIME" model="9"
+				style="display: none;">
+				<label for="0c8-60QbdcCF2h0m55x_rz">更新时间</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="0c8-60QbdcCF2h0m55x_rz" name="0c8-60QbdcCF2h0m55x_rz">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_URL" model="9"
+				style="display: none;">
+				<label for="1th2mpaZxb2axryHOn_5HO">待办链接</label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="1th2mpaZxb2axryHOn_5HO" name="1th2mpaZxb2axryHOn_5HO">
+					<span></span>
+				</div>
+			</div>
+			<div data-role="fieldcontain" code="TODO_ID" model="9"
+				style="display: none;">
+				<label for="2jWe6O2Yt6brtpL5EeaBUu">待办表主键<span
+					class="mbCard-form-notNull mb-icon-notNull">*</span></label>
+				<div
+					class="ui-inpt-text ui-body-inhert ui-corner-all ui-shadow-inset"
+					id="2jWe6O2Yt6brtpL5EeaBUu" name="2jWe6O2Yt6brtpL5EeaBUu">
+					<span></span>
+				</div>
+			</div>
+		</div>
+	</form>
+	 -->
+	 <!-- 
+	  	<label for="select-choice-a" class="select">Custom select menu:</label>
+		<select name="select-choice-a" id="select-choice-a" data-native-menu="false">
+		    <option>Custom menu example</option>
+		    <option value="standard">Standard: 7 day</option>
+		    <option value="rush">Rush: 3 days</option>
+		    <option value="express">Express: next day</option>
+		    <option value="overnight">Overnight</option>
+		</select>
+	 -->
+	 <!-- 
+	 <div data-role="page">
+		<a href="#popupPhoto" data-rel="popup" data-role="button" data-inline="true">
+			弹出图片
+		</a>
+		 <div data-role="popup" id="popupPhoto" data-overlay-theme="a" data-theme="c" style="max-width:400px;" class="ui-corner-all">
+		 	<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">
+		 		关闭
+		 	</a>
+		 	<img class="popphoto" src="http://s.cn.bing.net/az/hprichbg/rb/SpiderRock_ZH-CN11137142079_1920x1080.jpg" alt="Colorful city" />
+		 </div>
+	 </div>
+	  -->
+	<!-- 
+	<div data-role="page">
+		<div data-role="footer">
+			<div data-role="navbar" data-iconpos="left">
+			    <ul>
+					<li><button data-icon="home">One</button></li>
+					<li><button data-icon="grid">Two</button></li>
+					<li><button data-icon="search">Three</button></li>
+					<li><button data-icon="search">Four</button></li>
+				</ul>
+			</div>
+		</div>
+		<div data-role="footer">
+		    <div data-role="navbar" data-iconpos="left">
+				<ul>
+					<li><a href="#" data-icon="grid">Summary</a></li>
+					<li><a href="#" data-icon="star" class="ui-btn-active">Favs</a></li>
+					<li><a href="#" data-icon="grid">Summary</a></li>
+					<li><a href="#" data-icon="star" class="ui-btn-active">Favs</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	 -->
+	 <!-- 
+	 -- 顶部Tab页面切换 --
+	 <div data-role="page">
+	 	<div data-role="header">
+	 		<a href="#" data-rel="back" data-icon="back" data-iconpos="notext">返回</a>
+	 		<h2>服务名称</h2>
+	 	</div>
+	 	<-- <div id="cardview_content" role="main" class="ui-content"> ->
+	 		<div data-role="tabs">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#jibenxinxi" data-ajax="false">基本信息</a></li>
+						<li><a href="#zhengwenfujian" data-ajax="false">正文附件</a></li>
+						<li><a href="#yijian" data-ajax="false">意见</a></li>
+					</ul>
+				</div>
+				<div id="jibenxinxi" role="main" class="ui-content">
+					<form class="zhbx-form">
+						<div class="mb-card-group">
+							<div data-role="fieldcontain">
+								<label for="1">菜单编码:</label>
+								<input id="1" />
+							</div>
+							<div data-role="fieldcontain">
+								<label for="2">菜单名称:</label>
+								<!-- <input id="2" value="流程中心" /> ->
+								<textarea></textarea>
+							</div>
+						</div>
+					</form>
+				</div>	 		
+				<div id="zhengwenfujian">
+					<h2>正文附件</h2>
+				</div>
+				<div id="yijian">
+					<h2>意见</h2>
+				</div>
+	 		</div>
+		<-- </div> ->
+	 	<div data-role="footer">
+	 		<div data-role="navbar">
+	 			<ul>
+	 				<li><a href="#" data-icon="search">卡片按钮</a></li>
+	 				<li><a href="#" data-icon="search">流程按钮</a></li>
+	 				<li><a href="#" data-icon="search">其他按钮</a></li>
+	 				<li><a href="#" data-icon="search">常用按钮</a></li>
+	 			</ul>
+	 		</div>
+	 	</div>
+	 </div>
+	  -->
+	 <!-- 
+	 -- 字段编辑时,侧滑出编辑页面效果 --
+	 <div id="cardview" data-role="page">
+	 	<div data-role="header">
+	 		<h2>测试编辑侧滑</h2>
+	 	</div>
+	 	<div role="main" class="ui-content">
+	 		<form class="zhbx-form">
+				<div class="mb-card-group">
+					<div data-role="fieldcontain">
+						<label for="1">菜单编码:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="1" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单编码项内容</span>
+						</a>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="2">菜单名称:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="2" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单名称项内容</span>
+						</a>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="1">菜单编码:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="1" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单编码项内容</span>
+						</a>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="2">菜单名称:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="2" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单名称项内容</span>
+						</a>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="1">菜单编码:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="1" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单编码项内容</span>
+						</a>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="2">菜单名称:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="2" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单名称项内容</span>
+						</a>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="1">菜单编码:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="1" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单编码项内容</span>
+						</a>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="2">菜单名称:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="2" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单名称项内容</span>
+						</a>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="1">菜单编码:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="1" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单编码项内容</span>
+						</a>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="2">菜单名称:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="2" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单名称项内容</span>
+						</a>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="1">菜单编码:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="1" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单编码项内容</span>
+						</a>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="2">菜单名称:</label>
+						<a href="#edit" data-transition="slide" style="display:block;font-weight:normal;text-decoration:none;" id="2" class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+							<span>菜单名称项内容</span>
+						</a>
+					</div>
+					
+				</div>
+			</form>
+	 	</div>
+	 	<div data-role="footer">
+	 		<h2>footer</h2>
+	 	</div>
+	 </div>
+	 
+	 <div id="edit" data-role="page">
+	 	<div data-role="header">
+	 		<h2>修改菜单编码</h2>
+	 	</div>
+	 	<div role="main" class="ui-content">
+	 		<textarea rows="40" cols="8"></textarea>
+	 		<a href="#" data-role="button">保存</a>
+	 		<a data-role="button" data-rel="back">取消</a>
+	 	</div>
+	 </div>
+	  -->
+	 <!--
+	 -- 侧滑显示列表 -- 
+	 <div data-role="page">
+	 	<div data-role="header">
+	 		<h2>header</h2>
+	 	</div>
+	 	<div role="main" class="ui-content">
+	 		<ul data-role="listview">
+	 			<li>2</li>
+	 			<li>3</li>
+	 			<li>1</li>
+	 			<li>5</li>
+	 			<li>3</li>
+	 			<li>7</li>
+	 		</ul>
+	 		<a href="#mypanel" data-role="button">按钮</a>
+	 	</div>
+	 	<div id="mypanel" data-role="panel">
+	 		<ul data-role="listview">
+	 			<li>2</li>
+	 			<li>3</li>
+	 			<li>4</li>
+	 		</ul>
+	 	</div>
+	 	<div data-role="footer">
+	 		<h2>footer</h2>
+	 	</div>
+	 </div>
+	  -->
+	  
+	 <!-- 
+	 <div data-role="page">
+	 	<div data-role="header">
+	 		<h2>header</h2>
+	 	</div>
+	 	<div role="main" class="ui-content">
+	 		<ui data-role="listview">
+	 			<li>
+	 				<a href="#"><h2>众信移动端设计20150602</h2></a>
+	 				<a href="#" data-rel="popup" data-position-to="window" data-transition="pop">操作</a>
+	 			</li>
+	 			<li>
+	 				<a href="#"><h2>空白测试文档</h2></a>
+	 				<a href="#" data-rel="popup" data-position-to="window" data-transition="pop">操作</a>
+	 			</li>
+	 			<li>
+	 				<a href="#"><h2>空白测试文档</h2></a>
+	 				<a href="#" data-rel="popup" data-position-to="window" data-transition="pop">操作</a>
+	 			</li>
+	 		</ui>
+	 	</div>
+	 	<div data-role="footer">
+	 		<h2>footer</h2>
+	 	</div>
+	 </div>
+	  -->
+	  
+	 <div id="cardview" data-role="page">
+	 	<div data-role="header">
+	 		<h2>Header</h2>
+	 	</div>
+	 	<div role="main" class="ui-content">
+	 		<div class="mind-divider">领导批示</div>
+	 		<div class="mind-item">
+	 			<p>请尽快落实</p>
+	 			<style>
+ 					.box{
+						margin-right:0.5em;
+						width:calc(100%/3 - 0.5em);
+						height: 100%;
+						float:left;
+						margin-bottom: 0.5em;
+					}
+					.box:nth-child(3n){
+						margin-left:0;
+					}
+	 			</style>
+	 			<div>
+ 					<div class="box" style="background:url('/sy/mobile2/images/user.jpg') center center;background-size:cover;"></div>
+ 					<div class="box" style="background:url('/sy/mobile2/images/kuan.jpg') center center;background-size:cover;"></div>
+ 					<div class="box" style="background:url('/sy/mobile2/images/gao.JPEG') center center;background-size:cover;"></div>
+ 					<div class="box" style="background:url('/sy/mobile2/images/user.jpg') center center;background-size:cover;"></div>
+ 					<div class="box" style="background:url('/sy/mobile2/images/kuan.jpg') center center;background-size:cover;"></div>
+ 					<div class="box" style="background:url('/sy/mobile2/images/gao.JPEG') center center;background-size:cover;"></div>
+ 					<div class="box" style="background:url('/sy/mobile2/images/user.jpg') center center;background-size:cover;"></div>
+ 					<div class="box" style="background:url('/sy/mobile2/images/kuan.jpg') center center;background-size:cover;"></div>
+					<script>
+						$(window).load(function() {
+							$('.box').css('height', $('.box').width());
+						});
+					</script>	 			
+	 			</div>
+	 			<div class="mind-infos">
+	 				<div class="mind-img-wrp">
+	 					<img class="mind-img" src="/sy/mobile2/images/user.jpg" />
+	 				</div>
+	 				<div class="mind-leader-wrp">
+	 					<span style="display:block;">
+	 						<span class="mind-leader-name">陈永纯</span>
+	 						<span class="mind-leader-post">总经理</span>
+	 						<span class="mind-time">11:12</span>
+	 					</span>
+	 					<span class="mind-leader-dept">公司领导</span>
+	 				</div>
+	 			</div>
+	 		</div>
+	 		
+	 		<div style="overflow: hidden;border-bottom: 1px solid #E3E3E3;">
+	 			<p>部门审核通过,并提出了进一步修改意见,请陈总批阅,如没有问题,可交由相关人员尽快办理.</p>
+	 			<div style="overflow:hidden;margin-bottom:0.5em;">
+	 				<div style="display:inline-block;float:left;width:15%;">
+	 					<img style="width:100%;height:auto;" src="/sy/mobile2/images/icon.jpg" />
+	 				</div>
+	 				<div style="display:inline-block;float:left;width:80%;">
+	 					<span style="display:block;">
+	 						<span style="margin:0 0 0 0.5em;font-size:1.4em;">陈永纯</span>
+	 						<span style="color:#A6A6A6;text-shadow:none;">总经理</span>
+	 						<span style="float:right;height:100%;line-height:250%;color:#A6A6A6;text-shadow:none;font-size:0.8em;">11:12</span>
+	 					</span>
+	 					<span style="display:block;margin:0 0.5em;color:#A6A6A6;">公司领导</span>
+	 				</div>
+	 			</div>
+	 		</div>
+	 		
+	 		<div class="mind-item">
+	 			<p>请尽快落实</p>
+	 			<div class="mind-infos">
+	 				<div class="mind-img-wrp">
+	 					<img class="mind-img" src="/sy/mobile2/images/icon.jpg" />
+	 				</div>
+	 				<div class="mind-leader-wrp">
+	 					<span style="display:block;">
+	 						<span class="mind-leader-name">陈永纯</span>
+	 						<span class="mind-leader-post">总经理</span>
+	 						<span class="mind-time">11:12</span>
+	 					</span>
+	 					<span class="mind-leader-dept">公司领导</span>
+	 				</div>
+	 			</div>
+	 		</div>
+	 	</div>
+	 	<div data-role="footer">
+	 		<h2>Footer</h2>
+	 	</div>
+	 </div>
+</body>
+</html>

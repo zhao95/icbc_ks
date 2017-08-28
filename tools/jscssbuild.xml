@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+
+<project default="deploy" basedir=".">
+	<echo message="初始化配置文件"/>
+	<taskdef resource="jst-task.properties" classpath="./lib/JSA.jar"/>
+
+	<property name="web.dir" value="../pro" />
+	<property name="src.dir" value="${web.dir}/sy/base" />
+	<property name="build.dir" value="./build" />
+	<property name="style.dir" value="${web.dir}/sy/theme/default" />
+	<property name="jquery-ui.dir" value="${src.dir}/frame/plugs/jquery-ui" />
+	<path id="yuiClasspath">
+        <fileset dir="./lib">
+            <include name="*.*" />
+        </fileset>
+	</path>
+
+	<target name="cleanBuild">
+		<delete dir="${build.dir}"></delete>
+	 </target>
+	<target name="init-css" >
+    	<mkdir dir="${build.dir}/css"/>
+    </target>
+
+    <target name="combine-css">
+        <concat destfile="${style.dir}/rh.core.min.css" encoding="UTF-8" append="false">
+        	<fileset dir="${style.dir}">
+        	    	 		<include name="base.css"/>
+        	        		<include name="common.css"/>
+			        		<include name="page.css"/>
+			        		<include name="form.css"/>
+			        		<include name="icon.css"/>
+        		            <include name="colortip.css"/>
+        	</fileset>
+        </concat>
+        <concat destfile="${jquery-ui.dir}/rh.jquery-ui.min.css" encoding="UTF-8" append="false">
+        	<fileset dir="${jquery-ui.dir}">
+        	    	 		<include name="jquery.ui.core.css"/>
+        	        		<include name="jquery.ui.resizable.css"/>
+			        		<include name="jquery.ui.theme.css"/>
+        	</fileset>
+        </concat>
+    </target>
+	
+	
+	<target name="init-js" >
+    	<mkdir dir="${build.dir}/js"/>
+    </target>
+	<target name="compress-js" depends="init-js">
+		 	<jscompress destDir="${build.dir}/js" charset="UTF-8"
+		 				  allInOneFileName="rh.core.min.js"
+		 				  syntaxcompression="true"
+		 				  textcompression="true"
+		 				  compatible="true">
+		 				 <fileset dir="${src.dir}/frame">
+		 				 	    <include name="platform.js"/>
+		 				 	    <include name="tools.js"/>
+		 				 		<include name="constant.js"/>
+		 				 </fileset>
+						 <fileset dir="${src.dir}/frame/coms">
+						 	    <include name="rh.ui.grid.js"/>
+						 	    <include name="rh.ui.menu.js"/>
+						 		<include name="rh.ui.loadbar.js"/>
+						 	    <include name="rh.ui.search.js"/>
+						 		<include name="rh.ui.tree.js"/>
+						 		<include name="rh.ui.Delegate.js"/>
+						 		<include name="rh.ui.openTab.js"/>
+						 		<include name="rh.ui.pop.js"/>
+					 		    <include name="rh.ui.popPrompt.js"/>
+						 		<include name="rh.ui.card.js"/>
+						 	    <include name="rh.ui.colorTip.js"/>
+						 	    <include name="rh.ui.base64.js"/>
+						 </fileset>
+						 <fileset dir="${src.dir}/frame/engines">
+						 	    <include name="rhListView.js"/>
+						 	    <include name="rhListBatchView.js"/>
+						 		<include name="rhCardView.js"/>
+						 		<include name="rhDictTreeView.js"/>
+						 		<include name="rhSelectListView.js"/>
+						 		<include name="rhWfCardView.js"/>
+						 		<include name="rhUserInfoView.js"/>
+						 		<include name="rhListExpanderView.js"/>
+					 		    <include name="rhCommentView.js"/>
+						 </fileset>
+						 <fileset dir="${src.dir}/frame/coms/ueditor">
+						 	    <include name="editor_config.js"/>
+						 	    <include name="editor_all.js"/>
+						 </fileset>
+			</jscompress>
+		 	<jscompress destDir="${build.dir}/js" charset="UTF-8"
+		 				  allInOneFileName="rh.jquery-ui.min.js"
+		 				  syntaxcompression="true"
+		 				  textcompression="true"
+		 				  compatible="true">
+						 <fileset dir="${jquery-ui.dir}">
+						 	    <include name="a.jquery.ui.core.js"/>
+						 	    <include name="b.jquery.ui.widget.js"/>
+						 		<include name="d.jquery.ui.mouse.js"/>
+						 		<include name="e.jquery.ui.draggable.js"/>
+						 		<include name="f.jquery.ui.droppable.js"/>
+						 		<include name="g.jquery.ui.sortable.js"/>
+						 		<include name="h.jquery.ui.position.js"/>
+						 		<include name="i.jquery.ui.resizable.js"/>
+						 		<include name="j.jquery.effect.js"/>
+						 		<include name="k.jquery.ui.accordion.js"/>
+						 		<include name="l.jquery.ui.dialog.js"/>
+						 		<include name="m.jquery.ui.tabs.js"/>
+					 			<include name="n.jquery.validate.js"/>
+						 </fileset>
+			</jscompress>
+ </target>
+
+
+	 <target name="compress-css" depends="combine-css" description="Compress">
+	    	<taskdef name="yuicompress" classname="com.yahoo.platform.yui.compressor.YUICompressTask">
+	             <classpath>
+	                 <path refid="yuiClasspath" />
+	             </classpath>
+	         </taskdef>
+
+	        <!-- first method compress the css files -->
+	        <yuicompress linebreak="10000000" warn="false" munge="yes" preserveallsemicolons="true" outputfolder="${build.dir}/css">
+	            <fileset dir="${build.dir}/css">
+	                <include name="*.css" />
+	            </fileset>
+	        </yuicompress>
+	 </target>
+
+	<target name="deploy" depends="compress-css,compress-js">
+		<copy todir="${src.dir}/frame">
+			<fileset dir="${build.dir}/js">
+				<include name="rh.core.min.js" />
+			</fileset>
+		</copy>
+		<copy todir="${jquery-ui.dir}">
+			<fileset dir="${build.dir}/js">
+				<include name="rh.jquery-ui.min.js" />
+			</fileset>
+		</copy>
+	</target>
+</project>

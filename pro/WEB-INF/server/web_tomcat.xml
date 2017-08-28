@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>ruaho</display-name>
+	<context-param>
+	    <param-name>jndi_prefix</param-name>
+	    <param-value>java:comp/env</param-value>
+	</context-param>
+  	<context-param>
+	    <param-name>datasource_prefix</param-name>
+	    <param-value>jdbc</param-value>
+  		<!-- 要求数据源JNDI名称为：jdbc/xxxx 第一个数据源为系统缺省数据源 -->
+	</context-param>
+  	<context-param>
+	    <param-name>listener</param-name>
+	    <param-value>com.rh.core.base.start.LogMgr,com.rh.core.base.start.DsMgr,com.rh.core.base.start.ScheduleLoader,com.rh.core.base.start.CacheLoader,com.rh.core.base.start.ServLisLoader,com.rh.core.base.start.MsgLisLoader</param-value>
+    	<!-- com.rh.core.base.start.LogMgr log日志-->
+		<!-- com.rh.core.base.start.DsMgr 数据源-->
+		<!-- com.rh.core.base.start.CacheLoader 启动装载服务和字典缓存-->
+		<!-- com.rh.core.base.start.ScheduleLoader 任务调度-->
+		<!-- com.rh.core.base.start.ImLoader IM即时消息-->
+		<!-- com.rh.core.base.start.ServLisLoader 服务监听加载器-->
+		<!-- com.rh.core.base.start.MsgLisLoader 服务监听加载器-->
+	</context-param>
+  	<context-param>
+	    <param-name>log</param-name>
+	    <param-value>log4j.properties</param-value>
+	</context-param>
+  	<context-param>
+	    <param-name>JSON_LOCATION</param-name>
+	    <param-value>@WEB-INF-DOC@</param-value>
+	    <!-- 非@WEB-INF-DOC@则为实际文件路径，用于支持文件共享存储（集群运行模式） -->
+	</context-param>
+  	<context-param>
+	    <param-name>LOG_SQL_TIME</param-name>
+	    <param-value>500</param-value>
+	</context-param>
+  	<context-param>
+	    <param-name>LOG_SQL_SIZE</param-name>
+	    <param-value>500</param-value>
+	</context-param>
+	<context-param>
+	    <param-name>SQL_MAX_SIZE</param-name>
+	    <param-value>10000</param-value>
+	    <!-- 单条sql执行最大记录数 -->
+	</context-param>
+  	<context-param>
+	    <param-name>DEBUG_MODE</param-name>
+	    <param-value>true</param-value>
+		<!-- false(缺省：生产模式) true(调试模式) 调试模式下模版不缓存，JS和CSS文件不压缩，权限不检查 -->
+	</context-param>
+	
+	
+	<listener>
+	    <listener-class>com.rh.core.base.ContextListener</listener-class>
+	</listener>
+	
+	<servlet>
+		<servlet-name>DoServlet</servlet-name>
+		<servlet-class>com.rh.core.DoServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DoServlet</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>FileServlet</servlet-name>
+		<servlet-class>com.rh.core.FileServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FileServlet</servlet-name>
+		<url-pattern>/file</url-pattern>
+		<url-pattern>/file/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- news servlet -->
+	<servlet>
+		<servlet-name>CmsServlet</servlet-name>
+		<servlet-class>com.rh.core.comm.cms.CmsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CmsServlet</servlet-name>
+		<url-pattern>/cms</url-pattern>
+		<url-pattern>/cms/*</url-pattern>
+		<url-pattern>/news</url-pattern>
+		<url-pattern>/news/*</url-pattern>
+		<url-pattern>/wenku</url-pattern>
+		<url-pattern>/wenku/*</url-pattern>
+		<url-pattern>/bbs</url-pattern>
+    <url-pattern>/bbs/*</url-pattern>
+	
+    <url-pattern>/zhidao</url-pattern>
+		<url-pattern>/zhidao/*</url-pattern>
+	</servlet-mapping>
+
+
+	<!-- web crawler conf -->
+	<servlet>
+
+		<servlet-name>WebCrawlerServlet</servlet-name>
+		<servlet-class>com.rh.core.plug.search.webcrawler.WebCrawlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+
+		<servlet-name>WebCrawlerServlet</servlet-name>
+		<url-pattern>/webcrawler</url-pattern>
+	</servlet-mapping>
+	<!--Web Service -->
+	<servlet>
+		<servlet-name>WsServlet</servlet-name>
+		<servlet-class>com.rh.core.WsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>WsServlet</servlet-name>
+		<url-pattern>*.ws</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	<!-- 嵌入XDOC服务 开始 -->
+	<servlet>
+		<servlet-name>XDocServlet</servlet-name>
+		<servlet-class>com.hg.xdoc.XDocServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>XDocServlet</servlet-name>
+		<url-pattern>/xdoc</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>XDocServlet</servlet-name>
+		<url-pattern>*.xdoc</url-pattern>
+	</servlet-mapping>
+	<!-- 嵌入XDOC服务 结束 -->
+
+	<!-- 模版缓存过滤 开始 -->
+	<filter>
+		<filter-name>pageCacheFilter</filter-name>
+		<filter-class>com.rh.core.util.http.PageCacheFilter</filter-class>
+		<init-param>
+			<param-name>cacheName</param-name>
+			<param-value>SimplePageCachingFilter</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>pageCacheFilter</filter-name>
+		<url-pattern>/SY_COMM_TEMPL.show.do</url-pattern>
+		<url-pattern>/SY_COMM_TEMPL.getPortal.do</url-pattern>
+		<url-pattern>/SY_COMM_INFO.chart.do</url-pattern>
+	</filter-mapping>
+	<!-- 模版缓存过滤 结束 -->
+</web-app>

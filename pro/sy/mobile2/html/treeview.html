@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>treeview</title>
+</head>
+<body>
+	<div id="treeview" data-role="page" data-theme="b">
+		<div id="treeview_header" data-role="header" data-positon="fixed" data-tap-toggle="false">
+			<a href="#" data-rel="back" data-icon="back" data-iconpos="notext">返回</a>
+			<h1></h1>
+		</div>
+		
+		<div id="treeview_content" role="main" class="ui-content">
+		</div>
+		
+		<div id="treeview_footer" data-role="footer" data-position="fixed" data-tap-toggle="false">
+			<div data-role="navbar">
+				<ul>
+					<li>
+						<a href="#" id="cancel" class="ui-link ui-btn ui-icon-cancel ui-btn-icon-top">取消</a>
+					</li>
+					<li>
+						<a href="#" id="save" class="ui-link ui-btn ui-icon-confirm ui-btn-icon-top">确认</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+		<script>
+			// 在cochat中去掉web头
+			$(document).ready(function() { 
+				console.log('ready remove header?');
+				if (rh.cochat_client) {
+					$('#treeview_header').remove();
+				}
+			});
+		</script>
+	</div>
+</body>
+</html>

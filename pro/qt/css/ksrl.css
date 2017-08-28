@@ -1,0 +1,125 @@
+//考试日历样式
+.TS_KS_CAL {
+clear:both;
+position:relative;
+top:10px;
+}
+.TS_KS_CAL .ui-datepicker-div{width: 95px;float: left;}
+.TS_KS_CAL .title_top {
+height:38px;
+width:100%;
+line-height:38px;
+/* background:#3b86d7; */
+background:#fff;
+}
+.TS_KS_CAL .title_001 {
+width:60px;
+float:left;
+}
+.TS_KS_CAL .img_001 {
+position:relative;
+bottom:4px;
+width:46px;
+}
+.TS_KS_CAL .title_002,.TS_KS_CAL .title_003,.TS_KS_CAL .title_004 {
+width:62px;
+height:40px;
+line-height:40px;
+background:url("/img/biaozhi_002.png");
+float:left;
+text-align:center;
+color:white;
+cursor: pointer;
+font-size:14px;
+font-weight:bold;
+}
+.TS_KS_CAL .title_select {
+background:url("/ks/img/biaozhi_002_.png");
+color:#ed6805;
+}
+.TS_KS_CAL .item {
+width:48px;
+height:33px;
+float:right;
+text-align:center;
+}
+.TS_KS_CAL .item_select {
+background:white;
+width:48px;
+height:33px;
+float:right;
+text-align:center;
+border-left: 1px #CCCCCC solid;
+border-right: 1px #CCCCCC solid;
+}
+
+/** 日历样式覆盖 */
+.TS_KS_CAL .scalender {
+margin-top: 0;
+}
+.TS_KS_CAL .scalender .ui-widget-header {
+background-image:none;
+background-color:#ece9e9;
+}
+.TS_KS_CAL .ui-widget-header {
+background-image:none;
+background-color:#EEEEEE;
+color:#7D775C;
+}
+.scalender .ui-widget-header .ui-icon{
+background-image:url("/sy/comm/scalender/css/scalender/images/ui-icons_ff0084_256x240.png");
+}
+.TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-prev, .TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-next{
+border-left: 1px solid #CCCCCC;
+width:10px;
+border-right: 1px solid #CCCCCC;
+}
+.TS_KS_CAL .scalender .ui-widget-header .ui-state-hover,
+.TS_KS_CAL .scalender .ui-widget-header .ui-datepicker-prev.ui-state-hover,
+.TS_KS_CAL .scalender .ui-widget-header .ui-datepicker-next.ui-state-hover,
+.TS_KS_CAL .ui-datepicker-prev-hover,
+.TS_KS_CAL .ui-datepicker-next-hover,
+.TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-next-hover {
+background-image:none;
+background-color:#CCCCCC;
+}
+.TS_KS_CAL .scalender .ui-datepicker {
+margin-right:0;
+}
+.TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-title {
+position:relative;
+right:35px;
+margin-left:85px;
+margin-right:0;
+text-align: left;
+height:33px;
+line-height: 33px;
+color:#333333;
+}
+.TS_KS_CAL .scalender .ui-state-hover,
+.TS_KS_CAL .scalender .ui-widget-content .ui-state-hover,
+.TS_KS_CAL .scalender .ui-state-focus,
+.TS_KS_CAL .scalender .ui-widget-content .ui-state-focus,
+.TS_KS_CAL .scalender .ui-widget-header .ui-state-focus {
+background-image: none;
+background-color: #fff;
+font-weight:normal;
+color: blue;
+}
+.TS_KS_CAL .scalender .ui-state-highlight, 
+.TS_KS_CAL .scalender .ui-widget-content .ui-state-highlight,
+.TS_KS_CAL .scalender .ui-widget-header .ui-state-highlight {
+background-image:none;
+font-weight:bold;
+color: red;
+}
+.scalender .ui-datepicker .ui-datepicker-title {
+font-size: 13px;
+}
+.TS_KS_CAL .title_ksrl{
+color: #ffffff;
+font-family: "Arial Negreta","Arial";
+font-size: 14px;
+font-style: normal;
+font-weight: 700;
+}

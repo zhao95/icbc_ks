@@ -1,0 +1,699 @@
+/**
+* 自定义样式(或覆盖jquery mobile 样式)，供手机OA使用
+* @author zjx
+* @date   2015-1-6
+*/
+/*=================global样式====================*/
+body,input,select,textarea,button,.ui-btn {
+	font-family: 'Microsoft YaHei';
+}
+.ui-btn-ruaho {
+	border: 1px #ccc solid;
+}
+.ui-field-contain {
+	border-bottom-width:0;
+	padding-bottom: 0;
+}
+.ui-listview > li h1, .ui-listview > li h2, .ui-listview > li h3, .ui-listview > li h4, .ui-listview > li h5, .ui-listview > li h6{
+	font-weight: normal;
+}
+.ui-controlgroup-controls .ui-btn-corner-all.ui-first-child, 
+.ui-controlgroup-controls .ui-btn.ui-corner-all.ui-first-child {
+	border-radius: .25em .25em 0 0;
+}
+.ui-controlgroup-controls .ui-btn-corner-all.ui-last-child, 
+.ui-controlgroup-controls .ui-btn.ui-corner-all.ui-last-child {
+	border-radius: 0 0 .25em .25em;
+}
+/* .ui-icon-gear:after, */
+/* .ui-icon-back:after, */
+.ui-icon-list:after,
+.ui-icon-save:after,
+.ui-icon-finish:after,
+.ui-icon-over:after,
+.ui-icon-stop:after,
+.ui-icon-shouhui:after,
+.ui-icon-deliver:after,
+.ui-icon-send:after,
+.ui-icon-zhuanfa:after,
+.ui-icon-fenfa:after,
+.ui-icon-imp:after,
+.ui-icon-fllow:after,
+.ui-icon-qian:after,
+.ui-icon-confirm:after,
+.ui-icon-cancel:after,
+.ui-icon-close:after
+/* .ui-icon-refresh:after */{
+	-webkit-border-radius: 0;
+		    border-radius: 0;
+	background-color: transparent;
+	background-size: cover;
+}
+
+/* 背景色 */
+.ui-page-theme-a .ui-btn, html .ui-bar-a .ui-btn, html .ui-body-a .ui-btn, html body .ui-group-theme-a .ui-btn, html head + body .ui-btn.ui-btn-a, .ui-page-theme-a .ui-btn:visited, html .ui-bar-a .ui-btn:visited, html .ui-body-a .ui-btn:visited, html body .ui-group-theme-a .ui-btn:visited, html head + body .ui-btn.ui-btn-a:visited {
+    /* background: #f6f6f6 none repeat scroll 0 0; */
+    background: #fff;
+    border-color: #dddddd;
+    color: #333333;
+}
+
+/** 确认*/
+.ui-icon-confirm:after {
+	background-image: url('/sy/mobile2/css/customImages/sc-icon-confirm.png');
+}
+/** 取消 */
+.ui-icon-cancel:after {
+	background-image: url('/sy/mobile2/css/customImages/sc-icon-cancel.png');
+}
+
+/*=================#desktop样式====================*/
+#deskview .zhbx-username {
+	margin: 0 20%;
+}
+
+#deskview .zhbx-logo {
+	position: absolute;
+	display: inline-block;
+	/* height: 70%;
+	top: 15%; */
+	height: 90%;
+	top: 10%;
+	left: 5%;
+}
+
+#deskview a:-webkit-any-link {
+	display: inline-block;
+	text-decoration: none !important;
+}
+
+#deskview .mb-desk-app {
+	position: relative;
+	float: left;
+	z-index: 1;
+	width: 85px;
+	height: 75px;
+	padding: 10px 5px;
+	cursor: pointer;
+	text-align: center;
+}
+
+#deskview .zhbx-desk-daibanxiang {
+	background: url("../css/customImages/dbsw.png");
+	background-size: cover;
+}
+
+#deskview .zhbx-desk-yuewenyueshi {
+	background: url("../css/customImages/tzgg.png");
+	background-size: cover;
+}
+
+#deskview .zhbx-desk-banwenbanshi {
+	background: url("../css/customImages/cx.png");
+	background-size: cover;
+}
+
+#deskview .zhbx-desk-xinwen {
+	background: url("../css/customImages/ybsw.png");
+	background-size: cover;
+}
+
+#deskview .zhbx-desk-sousuo {
+	background: url("../css/customImages/dysw.png");
+	background-size: cover;
+}
+
+#deskview .mb-desk-app span.sc-desk-app-icon {
+	display: inline-block;
+	width: 57px;
+	height: 57px;
+	-webkit-border-radius: .875em;
+	border-radius: .875em;
+	-webkit-box-shadow: 1px 1010px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
+	box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: 1s;
+}
+
+#deskview .mb-desk-app-text {
+	font-size: .8em;
+	height: 20px;
+	line-height: 20px;
+	color: #333;
+	/* text-shadow: 0 1px 0 rgba(155, 155, 155, 0.9); */
+	text-shadow: none;
+}
+
+#deskview .mb-desk-new-count {
+	display: none;
+	position: absolute;
+	right: 10px;
+	top: 0px;
+	min-width: 11px;
+	height: 18px;
+	padding: 0 2px;
+	border: 2px solid #FFF;
+	-webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+	-o-border-radius: 1em;
+	border-radius: 1em;
+	background-image: -webkit-linear-gradient(rgba(228, 62, 62, 0.9),
+		#E43E3E );
+	background-image: -moz-linear-gradient(rgba(228, 62, 62, 0.9),
+		rgba(228, 62, 62, 1) );
+	background-image: -o-linear-gradient(rgba(228, 62, 62, 0.9),
+		rgba(228, 62, 62, 1) );
+	background-image: linear-gradient(rgba(228, 62, 62, 0.9), #E43E3E );
+	color: #FFF;
+	font-size: 0.75em;
+	line-height: 18px;
+	text-align: center;
+	-webkit-box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 1px 1px 10px rgba(0, 0, 0, .5);
+	box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+}
+#deskview .ui-block-a,.ui-block-b,.ui-block-c {
+	text-align: center;
+}
+#deskview .zhbx-username:active {
+	background: -webkit-linear-gradient(top,#247AB2, #3599E6 ,#247AB2);
+}
+#deskview .zhbx-username:focus .jiangang-tips.info,
+#deskview .zhbx-username:active .jiangang-tips.info{
+	-webkit-animation:none 0 ease 0 1 normal;
+}
+#deskview .jiangang-tips{
+	display: block;
+	position: absolute;
+	top: 50%;
+	right: 20%;
+	width: 0.5em;
+	height: 0.5em;
+	margin-top:-0.2em;
+	-webkit-border-radius: 1em;
+			border-radius: 1em;
+	-webkit-box-shadow: 0 0 3px 3px #fff;
+			box-shadow: 0 0 3px 3px #fff;
+}
+#deskview .jiangang-tips.info{
+	display: block;
+	background-color: red;
+	-webkit-animation-name: scaleTips;
+	-webkit-animation-duration: 500ms;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-direction: alternate;
+}
+@-webkit-keyframes scaleTips {
+    from {-webkit-transform: scale(0.6);}
+    to { -webkit-transform: scale(1.2); }
+}
+@keyframes scaleTips {
+    from {transform: scale(0.6);}
+    to {transform: scale(1.2);}
+}
+#deskview .jiangang{
+	display:none;
+	position:absolute;
+	top:53px;
+	z-index:100;
+	width:100%;
+	height:100%;
+	background: rgba(0,0,0,.3);
+}
+/*=================#listview样式====================*/
+.mbGrid-overTip,.mbGrid-more {
+	text-align: center;
+	margin: 1em 0;
+}
+.ui-content {
+	padding:1em 0.5em 0.5em 1em;
+}
+.ui-content-cardview {
+	padding:0em 0.5em 0.5em 1em;
+}
+
+/*=================#cardview样式====================*/
+#cardview .ui-listview>li p {
+	white-space: normal;
+}
+#cardview .customNav.ui-hide{
+	display:none;
+}
+#cardview .ui-input-text span{
+	/*font-weight: bolder;*/
+	
+	opacity: .5;
+	
+	/*color: inherit;*/
+	color: #000;
+	text-shadow: inherit;
+	
+	padding: .4em;
+	line-height: 1.4em;
+	display: block;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	outline: 0;
+	
+	margin: 0;
+	min-height: 2.2em;
+	text-align: left; /* Opera aligns type="date" right by default */
+	border: 0;
+	background: transparent none;
+	-webkit-appearance: none;
+	-webkit-border-radius: inherit;
+	border-radius: inherit;
+}
+#cardview .ui-listview > .ui-li-static.ui-li-has-icon{
+	padding-left: 1.5em;
+}
+#cardview .ui-listview > .ui-li-has-icon > img:first-child{
+	left: 0.2em;
+	top: 0.6em;
+	max-height: 1.3em;
+	max-width: 1.3em;
+}
+.ui-page-theme-a a, html .ui-bar-a a, html .ui-body-a a, html body .ui-group-theme-a a{
+	font-weight:normal;
+	opacity: .8;
+}
+.ui-btn, label.ui-btn{
+	font-weight:normal;
+	opacity: .8;
+}
+.ui-select .ui-btn{
+	font-weight:normal;
+	opacity: .8;
+}
+/*=================#newsview样式====================*/
+#newsview .zhbx-news-title{
+	margin-bottom: .5em;
+	text-align: center;
+	font-size: 1.5em;
+}
+
+#newsview .zhbx-news-time{
+	text-align: center;
+	margin-bottom: 1em;
+	font-size: .9em;
+}
+
+#newsview .zhbx-news-viewcount{
+	text-align: center;
+	margin-bottom: 1em;
+	font-size: .9em;
+}
+
+#newsview .zhbx-news-content img{
+	max-width: 100%;
+}
+
+#newsview .zhbx-p-text-right{
+	text-align: right;
+}
+
+/*=================#cardToCardView样式====================*/
+#cardToCardView .ui-input-text span{
+	/*font-weight: bolder;*/
+	
+	opacity: .5;
+	
+	/*color: inherit;*/
+	color: #000;
+	text-shadow: inherit;
+	
+	padding: .4em;
+	line-height: 1.4em;
+	display: block;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	outline: 0;
+	
+	margin: 0;
+	min-height: 2.2em;
+	text-align: left; /* Opera aligns type="date" right by default */
+	border: 0;
+	background: transparent none;
+	-webkit-appearance: none;
+	-webkit-border-radius: inherit;
+	border-radius: inherit;
+}
+#cardToCardView .ui-listview > .ui-li-static.ui-li-has-icon{
+	padding-left: 1.5em;
+}
+#cardToCardView .ui-listview > .ui-li-has-icon > img:first-child{
+	left: 0.2em;
+	top: 0.6em;
+	max-height: 1.3em;
+	max-width: 1.3em;
+}
+#cardToCardView .ui-listview > li p {
+	white-space: normal;
+}
+
+/*=================media query样式====================*/
+/*
+IPHONE 4		320*480	
+IPHONE 5		320*568
+Galaxy Note2  	360*640
+Galaxy S3	  	360*640			 
+Galaxy S/S2/W   480*800
+*/
+/*IPHONE 4 In Portrait*/
+@media only screen and (min-device-width : 320px) and (max-device-width
+	: 480px) and (orientation : portrait) {
+	.mb-desk-app {
+		width: 70px;
+		/* height: 64px; */
+		padding: 5px 12px;
+	}
+	.mb-desk-app span.sc-desk-app-icon {
+		width: 60px;
+		height: 60px;
+	}
+	.mb-desk-app-text { /* font-size: 0.8em;
+		line-height: normal; */
+		
+	}
+	.mb-desk-new-count {
+		top: 1px;
+	}
+}
+/*IPHONE 5 In Portrait*/
+@media only screen and (min-device-width : 320px) and (max-device-width
+	: 568px) and (orientation : portrait) {
+	.mb-desk-app {
+		width: 80px;
+		padding: 16px 6px;
+	}
+	.mb-desk-app span.sc-desk-app-icon {
+		width: 65px;
+		height: 65px;
+	}
+	.mb-desk-new-count {
+		top: 5px;
+		right: 5px;
+	}
+}
+/*SCH-1869*/
+@media only screen and (min-device-width : 480px) and (max-device-width
+	: 800px) and (orientation : portrait) {
+	.mb-desk-app {
+		width: 80px;
+		padding: 16px 6px;
+	}
+	.mb-desk-app span.sc-desk-app-icon {
+		width: 65px;
+		height: 65px;
+	}
+	.mb-desk-new-count {
+		top: 5px;
+		right: 5px;
+	}
+}
+/*Galaxy Note2 In Portrait*/
+@media only screen and (min-device-width : 720px) and (max-device-width
+	: 1280px) and (orientation : portrait) {
+	.mb-desk-app {
+		width: 98px;
+		padding: 20px 5px;
+	}
+	.mb-desk-app span.sc-desk-app-icon {
+		width: 70px;
+		height: 70px;
+	}
+	.mb-desk-new-count {
+		top: 10px;
+		right: 10px;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*********************封闭开发添加样式,之前添加的都有可能被去掉************************/
+
+/*******************基础样式************************/
+.ui-form-head {
+	height:2em;
+	line-height:2em;
+	text-align:center;
+	color:red;
+	text-shadow:none;
+	font-weight:bold;
+	font-size:1.2em;
+	background-image: url('/sy/mobile2/images/logo.png');
+	background-repeat: no-repeat;
+  	background-size: contain;
+}
+#cardview .ui-select .ui-btn > span:not(.ui-li-count){
+	opacity: .6;
+	font-weight: normal;
+}
+#cardview .ui-input-text input{
+	opacity: .6;
+}
+/*所有表单不可用状态样式*/
+#cardview .ui-input-text input[disabled='disabled']{
+	background-color: #EBEBE4;
+	opacity: .6;
+}
+#cardview textarea.ui-input-text[disabled='disabled']{
+	background-color: #EBEBE4;
+	opacity: .6;
+	color: rgb(84, 84, 84);
+}
+#cardview .ui-input-text[disabled='disabled']{
+	background-color: #EBEBE4;
+	opacity: .6;
+}
+
+/*****************mind style start***********************/
+#cardview .mind-divider{
+	  width: 5000px;
+	  background-color: #EBEBEB;
+	  margin-left: -1em;
+	  padding-left: 1em;
+	  height: 1.5em;
+	  line-height: 1.8em;
+	  margin-top: -1px;
+}
+#cardview .mind-item {
+	overflow: hidden;
+	border-bottom: 1px solid #E3E3E3;
+}
+#cardview .mind-infos {
+	overflow:hidden;margin-bottom:0.5em;
+}
+#cardview .mind-img-wrp {
+	display:inline-block;float:left;width:15%;
+}
+#cardview .mind-img {
+	width:50px;height:50px;
+}
+#cardview .mind-leader-wrp {
+	display:inline-block;float:left;width:80%;
+}
+#cardview .mind-leader-name {
+	margin:0 0 0 0.5em;font-size:1em;float:left;
+}
+#cardview .mind-leader-dept {
+	display:block;margin:0 0.5em;color:#A6A6A6;font-size:.9em;clear:both;line-height:1.6em;
+}
+#cardview .mind-leader-post {
+	color:#A6A6A6;text-shadow:none;
+}
+#cardview .mind-time {
+	float:right;height:100%;color:#A6A6A6;text-shadow:none;font-size:0.9em;
+}
+#cardview .mind-image {
+	margin-right:0.5em;
+	width:calc(100%/3 - 0.5em);
+	height: 100%;
+	float:left;
+	margin-bottom: 0.5em;
+}
+#cardview .mind-image:nth-child(3n) {
+	margin-left:0;
+}
+#cardview .mind-sounds .ui-icon-audio:after {
+	background-color: #EDEDED;
+}
+#cardview .mind-sounds button{
+	height: 2.5em;
+  	margin: 0.2em 0;
+  	border: 1px solid #AFAFAF;
+    box-shadow: 0px 1px 0px #DBDBDB;
+    background-color: #EDEDED;
+    background: -webkit-gradient(linear, left top,left bottom, from(#F4F4F4),to(#E5E5E5), color-stop(0.1,#F3F3F3),color-stop(0.3,#F1F1F1),color-stop(0.5,#ECECEC),color-stop(0.7,#E9E9E9),color-stop(0.9,#E7E7E7),color-stop(1.0,#E5E5E5));
+}
+#sound-popup {
+	max-width: 100% !important;
+	width: 100% !important;
+  	height: 5em;
+  	text-align: center;
+  	line-height: 0em;
+  	left: 0 !important;
+}
+
+.ui-loader {
+  display: none !important;
+}
+/*****************mind style end***********************/
+.ui-page-theme-a .ui-btn[aria-disabled='true']{
+	background-color: #EBEBE4;
+	opacity: .6;
+}
+
+.ui-listview .ui-li-aside {
+	top: 1.5em;
+	right: 0.5em;
+}
+.ui-listview > .ui-li-static {
+	padding: .7em 3em .7em 1em;
+}
+.ui-listview > li h1, .ui-listview > li h2, .ui-listview > li h3, .ui-listview > li h4, .ui-listview > li h5, .ui-listview > li h6 {
+	white-space: initial;
+}
+.ui-listview > li p > span {
+	margin: 0 .5em;
+}
+.mbCard-form-notNull {
+	color: #F00;
+  	font-weight: bolder;
+}
+#listview .ui-content{
+	padding: 0;
+}
+#listview .ui-content .ui-listview{
+	margin: -0.1em 0;
+}
+.error .ui-select a, .error .ui-input-text {
+ 	border: #f00 dashed 1px !important;
+}
+.error-msg {
+	color: #F00;
+  	font-size: 0.5em;
+ 	text-align: right;
+  	display: inline-block;
+  	height: 1em;
+  	line-height: 1em;
+  	width: 100%;
+}
+
+/* 图标样式 */
+ /*!
+* jQuery Mobile Icon Pack - Font Awesome version 1.4.0
+*
+* Copyright 2013 Andy Matthews
+* http://andyMatthews.net
+* Released under the GPL/MIT license.
+*
+*/
+
+/** 保存 */
+.ui-icon-save:after,.ui-icon-saveIcon:after { 
+	background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M107.143%20428.571h214.286v-107.143h-214.286v107.143zM357.143%20428.571h35.714v-250q0-3.906-2.79-10.742t-5.581-9.626l-78.404-78.404q-2.79-2.79-9.487-5.581t-10.882-2.79v116.071q0%2011.161-7.813%2018.973t-18.973%207.813h-160.714q-11.161%200-18.973-7.813t-7.813-18.973v-116.071h-35.714v357.143h35.714v-116.071q0-11.161%207.813-18.973t18.973-7.813h232.143q11.161%200%2018.973%207.813t7.813%2018.973v116.071zM250%20169.643v-89.286q0-3.627-2.651-6.278t-6.278-2.651h-53.571q-3.627%200-6.278%202.651t-2.651%206.278v89.286q0%203.627%202.651%206.278t6.278%202.651h53.571q3.627%200%206.278-2.651t2.651-6.278zM428.571%20178.571v258.929q0%2011.161-7.813%2018.973t-18.973%207.813h-375q-11.161%200-18.973-7.813t-7.813-18.973v-375q0-11.161%207.813-18.973t18.973-7.813h258.929q11.161%200%2024.554%205.581t21.206%2013.393l78.125%2078.125q7.813%207.813%2013.393%2021.206t5.581%2024.554z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E');
+	background-repeat: no-repeat;
+    background-position: 4px 3px;
+}
+.ui-nosvg .ui-icon-save:after,.ui-nosvg .ui-icon-saveIcon:after { background-image: url('/sy/mobile2/css/png/save.png'); }
+
+/** 办结 */
+.ui-icon-flag-checkered:after,.ui-icon-finishIcon:after,.ui-icon-finish:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M232.143%20279.018v-53.571q-50.502%204.464-107.143%2032.645v51.618q57.199-26.786%20107.143-30.692zM232.143%20162.388v-54.966q-47.991%202.232-107.143%2035.156v52.734q59.989-30.971%20107.143-32.924zM464.286%20291.574v-51.339q-65.569%2032.366-107.143%2019.81v-62.5q-5.581-1.674-10.882-4.185-1.395-0.837-9.208-4.743t-9.626-4.743-8.789-4.185-9.626-4.325-9.068-3.627-10.044-3.488-9.766-2.372-11.021-2.093-11.021-1.116-12.277-0.558q-6.417%200-13.672%200.837v61.942h5.301q28.46%200%2053.711%208.091t55.106%2022.879q5.301%202.511%2010.882%204.185v52.456q11.719%204.743%2025.391%204.743%2033.482%200%2081.752-25.669zM464.286%20172.433v-52.734q-47.154%2025.391-85.379%2025.391-12.556%200-21.763-2.232v54.688q41.294%2011.719%20107.143-25.112zM89.286%2071.429q0%209.766-4.883%2017.857t-12.974%2012.835v353.237q0%203.906-2.511%206.417t-6.417%202.511h-17.857q-3.906%200-6.417-2.511t-2.511-6.417v-353.237q-8.091-4.743-12.974-12.835t-4.883-17.857q0-14.788%2010.463-25.251t25.251-10.463%2025.251%2010.463%2010.463%2025.251zM500%2089.286v212.891q0%2010.882-9.766%2015.904-2.79%201.395-4.743%202.511-60.826%2032.366-102.958%2032.366-24.554%200-44.085-9.766l-7.813-3.906q-17.857-9.208-27.623-13.393t-25.391-8.091-31.808-3.906q-28.46%200-65.708%2012.277t-63.755%2028.46q-4.185%202.511-9.208%202.511-4.464%200-8.929-2.232-8.929-5.301-8.929-15.625v-207.031q0-9.766%208.649-15.346%209.766-5.859%2021.903-11.858t31.808-14.509%2042.55-13.812%2043.248-5.301q31.25%200%2058.315%208.649t58.315%2023.996q10.603%205.301%2024.833%205.301%2034.040%200%2086.496-31.25%206.138-3.348%208.649-4.743%208.649-4.464%2017.299%200.558%208.649%205.581%208.649%2015.346z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-flag-checkered:after { background-image: url('/sy/mobile2/css/png/flag-checkered.png'); }
+
+/* 取消办结 */
+.ui-icon-flag-o:after,.ui-icon-undoFinish:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M464.286%20291.574v-171.875q-47.154%2025.391-85.379%2025.391-22.879%200-40.458-8.929-27.902-13.672-51.339-21.345t-49.665-7.673q-48.27%200-112.444%2035.435v167.132q68.359-31.529%20120.815-31.529%2015.346%200%2028.878%202.093t27.344%207.254%2021.484%208.649%2023.019%2011.021l7.813%203.906q12.277%206.138%2028.181%206.138%2033.482%200%2081.752-25.669zM89.286%2071.429q0%209.766-4.883%2017.857t-12.974%2012.835v353.237q0%203.906-2.511%206.417t-6.417%202.511h-17.857q-3.906%200-6.417-2.511t-2.511-6.417v-353.237q-8.091-4.743-12.974-12.835t-4.883-17.857q0-14.788%2010.463-25.251t25.251-10.463%2025.251%2010.463%2010.463%2025.251zM500%2089.286v212.891q0%2010.882-9.766%2015.904-2.79%201.395-4.743%202.511-60.826%2032.366-102.958%2032.366-24.554%200-44.085-9.766l-7.813-3.906q-17.857-9.208-27.623-13.393t-25.391-8.091-31.808-3.906q-28.46%200-65.708%2012.277t-63.755%2028.46q-4.185%202.511-9.208%202.511-4.464%200-8.929-2.232-8.929-5.301-8.929-15.625v-207.031q0-9.766%208.649-15.346%209.766-5.859%2021.903-11.858t31.808-14.509%2042.55-13.812%2043.248-5.301q31.25%200%2058.315%208.649t58.315%2023.996q10.603%205.301%2024.833%205.301%2034.040%200%2086.496-31.25%206.138-3.348%208.649-4.743%208.649-4.464%2017.299%200.558%208.649%205.581%208.649%2015.346z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-flag-o:after { background-image: url('/sy/mobile2/css/png/flag-o.png'); }
+
+/* 收回 */
+.ui-icon-mail-reply:after,.ui-icon-withdraw:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M500%20312.5q0%2046.317-35.435%20125.837-0.837%201.953-2.93%206.696t-3.767%208.371-3.627%206.138q-3.348%204.743-7.813%204.743-4.185%200-6.557-2.79t-2.372-6.976q0-2.511%200.698-7.394t0.698-6.557q1.395-18.973%201.395-34.319%200-28.181-4.883-50.502t-13.532-38.644-22.321-28.181-29.437-19.392-37.109-11.858-42.969-5.999-48.968-1.674h-62.5v71.429q0%207.254-5.301%2012.556t-12.556%205.301-12.556-5.301l-142.857-142.857q-5.301-5.301-5.301-12.556t5.301-12.556l142.857-142.857q5.301-5.301%2012.556-5.301t12.556%205.301%205.301%2012.556v71.429h62.5q198.94%200%20244.141%20112.444%2014.788%2037.388%2014.788%2092.913z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-mail-reply:after { background-image: url('/sy/mobile2/css/png/mail-reply.png'); }
+
+/** 流程跟踪 */
+.ui-icon-random:after,.ui-icon-cmWfTracking:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M185.826%20134.208q-16.741%2025.669-38.226%2076.172-6.138-12.556-10.324-20.229t-11.3-17.718-14.23-15.765-17.578-9.766-22.74-4.046h-62.5q-3.906%200-6.417-2.511t-2.511-6.417v-53.571q0-3.906%202.511-6.417t6.417-2.511h62.5q69.754%200%20114.397%2062.779zM500%20357.143q0%203.906-2.511%206.417l-89.286%2089.286q-2.511%202.511-6.417%202.511-3.627%200-6.278-2.651t-2.651-6.278v-53.571q-8.929%200-23.716%200.14t-22.601%200.279-20.368-0.279-19.81-1.395-17.857-2.93-17.578-5.162-16.183-7.952-16.462-11.161-15.346-14.927-15.625-19.392q16.462-25.949%2037.946-76.172%206.138%2012.556%2010.324%2020.229t11.3%2017.718%2014.23%2015.765%2017.578%209.766%2022.74%204.046h71.429v-53.571q0-3.906%202.511-6.417t6.417-2.511q3.348%200%206.696%202.79l89.007%2089.007q2.511%202.511%202.511%206.417zM500%20107.143q0%203.906-2.511%206.417l-89.286%2089.286q-2.511%202.511-6.417%202.511-3.627%200-6.278-2.651t-2.651-6.278v-53.571h-71.429q-13.393%200-24.274%204.185t-19.252%2012.556-14.23%2017.16-12.556%2021.624q-8.929%2017.299-21.763%2047.712-8.091%2018.415-13.812%2030.971t-15.067%2029.297-17.857%2027.902-20.647%2023.159-25.112%2019.113-29.715%2011.719-35.714%204.604h-62.5q-3.906%200-6.417-2.511t-2.511-6.417v-53.571q0-3.906%202.511-6.417t6.417-2.511h62.5q13.393%200%2024.274-4.185t19.252-12.556%2014.23-17.16%2012.556-21.624q8.929-17.299%2021.763-47.712%208.091-18.415%2013.812-30.971t15.067-29.297%2017.857-27.902%2020.647-23.159%2025.112-19.113%2029.715-11.719%2035.714-4.604h71.429v-53.571q0-3.906%202.511-6.417t6.417-2.511q3.348%200%206.696%202.79l89.007%2089.007q2.511%202.511%202.511%206.417z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-random:after { background-image: url('/sy/mobile2/css/png/random.png'); }
+
+
+.ui-icon-sitemap:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M500%20348.214v89.286q0%2011.161-7.813%2018.973t-18.973%207.813h-89.286q-11.161%200-18.973-7.813t-7.813-18.973v-89.286q0-11.161%207.813-18.973t18.973-7.813h26.786v-53.571h-142.857v53.571h26.786q11.161%200%2018.973%207.813t7.813%2018.973v89.286q0%2011.161-7.813%2018.973t-18.973%207.813h-89.286q-11.161%200-18.973-7.813t-7.813-18.973v-89.286q0-11.161%207.813-18.973t18.973-7.813h26.786v-53.571h-142.857v53.571h26.786q11.161%200%2018.973%207.813t7.813%2018.973v89.286q0%2011.161-7.813%2018.973t-18.973%207.813h-89.286q-11.161%200-18.973-7.813t-7.813-18.973v-89.286q0-11.161%207.813-18.973t18.973-7.813h26.786v-53.571q0-14.509%2010.603-25.112t25.112-10.603h142.857v-53.571h-26.786q-11.161%200-18.973-7.813t-7.813-18.973v-89.286q0-11.161%207.813-18.973t18.973-7.813h89.286q11.161%200%2018.973%207.813t7.813%2018.973v89.286q0%2011.161-7.813%2018.973t-18.973%207.813h-26.786v53.571h142.857q14.509%200%2025.112%2010.603t10.603%2025.112v53.571h26.786q11.161%200%2018.973%207.813t7.813%2018.973z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-sitemap:after { background-image: url('/sy/mobile2/css/png/sitemap.png'); }
+
+.ui-icon-save:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M107.143%20428.571h214.286v-107.143h-214.286v107.143zM357.143%20428.571h35.714v-250q0-3.906-2.79-10.742t-5.581-9.626l-78.404-78.404q-2.79-2.79-9.487-5.581t-10.882-2.79v116.071q0%2011.161-7.813%2018.973t-18.973%207.813h-160.714q-11.161%200-18.973-7.813t-7.813-18.973v-116.071h-35.714v357.143h35.714v-116.071q0-11.161%207.813-18.973t18.973-7.813h232.143q11.161%200%2018.973%207.813t7.813%2018.973v116.071zM250%20169.643v-89.286q0-3.627-2.651-6.278t-6.278-2.651h-53.571q-3.627%200-6.278%202.651t-2.651%206.278v89.286q0%203.627%202.651%206.278t6.278%202.651h53.571q3.627%200%206.278-2.651t2.651-6.278zM428.571%20178.571v258.929q0%2011.161-7.813%2018.973t-18.973%207.813h-375q-11.161%200-18.973-7.813t-7.813-18.973v-375q0-11.161%207.813-18.973t18.973-7.813h258.929q11.161%200%2024.554%205.581t21.206%2013.393l78.125%2078.125q7.813%207.813%2013.393%2021.206t5.581%2024.554z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-save:after { background-image: url('/sy/mobile2/css/png/save.png'); }
+
+.ui-icon-star-o:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M317.243%20280.134l85.379-82.868-117.746-17.299-52.734-106.585-52.734%20106.585-117.746%2017.299%2085.379%2082.868-20.368%20117.466%20105.469-55.524%20105.19%2055.524zM464.286%20180.524q0%206.138-7.254%2013.393l-101.284%2098.772%2023.996%20139.509q0.279%201.953%200.279%205.581%200%2013.951-11.44%2013.951-5.301%200-11.161-3.348l-125.279-65.848-125.279%2065.848q-6.138%203.348-11.161%203.348-5.859%200-8.789-4.046t-2.93-9.905q0-1.674%200.558-5.581l23.996-139.509-101.563-98.772q-6.976-7.534-6.976-13.393%200-10.324%2015.625-12.835l140.067-20.368%2062.779-126.953q5.301-11.44%2013.672-11.44t13.672%2011.44l62.779%20126.953%20140.067%2020.368q15.625%202.511%2015.625%2012.835z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-star-o:after { background-image: url('/sy/mobile2/css/png/star-o.png'); }
+
+.ui-icon-star:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M464.286%20180.524q0%206.138-7.254%2013.393l-101.284%2098.772%2023.996%20139.509q0.279%201.953%200.279%205.581%200%205.859-2.93%209.905t-8.51%204.046q-5.301%200-11.161-3.348l-125.279-65.848-125.279%2065.848q-6.138%203.348-11.161%203.348-5.859%200-8.789-4.046t-2.93-9.905q0-1.674%200.558-5.581l23.996-139.509-101.563-98.772q-6.976-7.534-6.976-13.393%200-10.324%2015.625-12.835l140.067-20.368%2062.779-126.953q5.301-11.44%2013.672-11.44t13.672%2011.44l62.779%20126.953%20140.067%2020.368q15.625%202.511%2015.625%2012.835z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-star:after { background-image: url('/sy/mobile2/css/png/star.png'); }
+
+.ui-icon-mail-forward:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M500%20178.571q0%207.254-5.301%2012.556l-142.857%20142.857q-5.301%205.301-12.556%205.301t-12.556-5.301-5.301-12.556v-71.429h-62.5q-27.344%200-48.968%201.674t-42.969%205.999-37.109%2011.858-29.437%2019.392-22.321%2028.181-13.532%2038.644-4.883%2050.502q0%2015.346%201.395%2034.319%200%201.674%200.698%206.557t0.698%207.394q0%204.185-2.372%206.976t-6.557%202.79q-4.464%200-7.813-4.743-1.953-2.511-3.627-6.138t-3.767-8.371-2.93-6.696q-35.435-79.52-35.435-125.837%200-55.524%2014.788-92.913%2045.201-112.444%20244.141-112.444h62.5v-71.429q0-7.254%205.301-12.556t12.556-5.301%2012.556%205.301l142.857%20142.857q5.301%205.301%205.301%2012.556z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-mail-forward:after { background-image: url('/sy/mobile2/css/png/mail-forward.png'); }
+
+.ui-icon-folder-o:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M428.571%20366.071v-196.429q0-11.161-7.813-18.973t-18.973-7.813h-196.429q-11.161%200-18.973-7.813t-7.813-18.973v-17.857q0-11.161-7.813-18.973t-18.973-7.813h-89.286q-11.161%200-18.973%207.813t-7.813%2018.973v267.857q0%2011.161%207.813%2018.973t18.973%207.813h339.286q11.161%200%2018.973-7.813t7.813-18.973zM464.286%20169.643v196.429q0%2025.669-18.415%2044.085t-44.085%2018.415h-339.286q-25.669%200-44.085-18.415t-18.415-44.085v-267.857q0-25.669%2018.415-44.085t44.085-18.415h89.286q25.669%200%2044.085%2018.415t18.415%2044.085v8.929h187.5q25.669%200%2044.085%2018.415t18.415%2044.085z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-folder-o:after { background-image: url('/sy/mobile2/css/png/folder-o.png'); }
+
+.ui-icon-folder-open-o:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M496.931%20259.766q0-9.766-14.788-9.766h-303.571q-11.161%200-23.856%205.999t-19.95%2014.648l-82.031%20101.284q-5.022%206.696-5.022%2011.161%200%209.766%2014.788%209.766h303.571q11.161%200%2023.996-6.138t19.81-14.788l82.031-101.284q5.022-6.138%205.022-10.882zM178.571%20214.286h214.286v-44.643q0-11.161-7.813-18.973t-18.973-7.813h-160.714q-11.161%200-18.973-7.813t-7.813-18.973v-17.857q0-11.161-7.813-18.973t-18.973-7.813h-89.286q-11.161%200-18.973%207.813t-7.813%2018.973v238.002l71.429-87.891q12.277-14.788%2032.366-24.414t39.063-9.626zM532.645%20259.766q0%2017.299-12.835%2033.482l-82.31%20101.284q-11.998%2014.788-32.366%2024.414t-39.063%209.626h-303.571q-25.669%200-44.085-18.415t-18.415-44.085v-267.857q0-25.669%2018.415-44.085t44.085-18.415h89.286q25.669%200%2044.085%2018.415t18.415%2044.085v8.929h151.786q25.669%200%2044.085%2018.415t18.415%2044.085v44.643h53.571q15.067%200%2027.623%206.836t18.694%2019.671q4.185%208.929%204.185%2018.973z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-folder-open-o:after { background-image: url('/sy/mobile2/css/png/folder-open-o.png'); }
+
+.ui-icon-folder-open:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M524.274%20265.625q0%208.649-8.649%2018.415l-93.75%20110.491q-11.998%2014.23-33.622%2024.135t-40.039%209.905h-303.571q-9.487%200-16.88-3.627t-7.394-11.998q0-8.649%208.649-18.415l93.75-110.491q11.998-14.23%2033.622-24.135t40.039-9.905h303.571q9.487%200%2016.88%203.627t7.394%2011.998zM428.571%20169.643v44.643h-232.143q-26.228%200-54.966%2013.253t-45.759%2033.343l-95.424%20112.165q0-1.116-0.14-3.488t-0.14-3.488v-267.857q0-25.669%2018.415-44.085t44.085-18.415h89.286q25.669%200%2044.085%2018.415t18.415%2044.085v8.929h151.786q25.669%200%2044.085%2018.415t18.415%2044.085z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-folder-open:after { background-image: url('/sy/mobile2/css/png/folder-open.png'); }
+
+.ui-icon-folder:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M464.286%20169.643v196.429q0%2025.669-18.415%2044.085t-44.085%2018.415h-339.286q-25.669%200-44.085-18.415t-18.415-44.085v-267.857q0-25.669%2018.415-44.085t44.085-18.415h89.286q25.669%200%2044.085%2018.415t18.415%2044.085v8.929h187.5q25.669%200%2044.085%2018.415t18.415%2044.085z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-folder:after { background-image: url('/sy/mobile2/css/png/folder.png'); }
+
+.ui-icon-file-text:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M285.714%20383.929v-17.857q0-3.906-2.511-6.417t-6.417-2.511h-196.429q-3.906%200-6.417%202.511t-2.511%206.417v17.857q0%203.906%202.511%206.417t6.417%202.511h196.429q3.906%200%206.417-2.511t2.511-6.417zM285.714%20312.5v-17.857q0-3.906-2.511-6.417t-6.417-2.511h-196.429q-3.906%200-6.417%202.511t-2.511%206.417v17.857q0%203.906%202.511%206.417t6.417%202.511h196.429q3.906%200%206.417-2.511t2.511-6.417zM357.143%20214.286v223.214q0%2011.161-7.813%2018.973t-18.973%207.813h-303.571q-11.161%200-18.973-7.813t-7.813-18.973v-375q0-11.161%207.813-18.973t18.973-7.813h151.786v151.786q0%2011.161%207.813%2018.973t18.973%207.813h151.786zM356.306%20178.571h-142.020v-142.020q22.879%204.185%2036.831%2018.136l87.054%2087.054q13.951%2013.951%2018.136%2036.831z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-file-text:after { background-image: url('/sy/mobile2/css/png/file-text.png'); }
+
+.ui-icon-file-text-o:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M285.714%20330.357v17.857q0%203.906-2.511%206.417t-6.417%202.511h-196.429q-3.906%200-6.417-2.511t-2.511-6.417v-17.857q0-3.906%202.511-6.417t6.417-2.511h196.429q3.906%200%206.417%202.511t2.511%206.417zM285.714%20258.929v17.857q0%203.906-2.511%206.417t-6.417%202.511h-196.429q-3.906%200-6.417-2.511t-2.511-6.417v-17.857q0-3.906%202.511-6.417t6.417-2.511h196.429q3.906%200%206.417%202.511t2.511%206.417zM35.714%20428.571h285.714v-214.286h-116.071q-11.161%200-18.973-7.813t-7.813-18.973v-116.071h-142.857v357.143zM214.286%20178.571h104.911q-2.79-8.091-6.138-11.44l-87.333-87.333q-3.348-3.348-11.44-6.138v104.911zM357.143%20187.5v250q0%2011.161-7.813%2018.973t-18.973%207.813h-303.571q-11.161%200-18.973-7.813t-7.813-18.973v-375q0-11.161%207.813-18.973t18.973-7.813h178.571q11.161%200%2024.554%205.581t21.206%2013.393l87.054%2087.054q7.813%207.813%2013.393%2021.206t5.581%2024.554z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-file-text-o:after { background-image: url('/sy/mobile2/css/png/file-text-o.png'); }
+
+.ui-icon-file-o:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M35.714%20428.571h285.714v-214.286h-116.071q-11.161%200-18.973-7.813t-7.813-18.973v-116.071h-142.857v357.143zM214.286%20178.571h104.911q-2.79-8.091-6.138-11.44l-87.333-87.333q-3.348-3.348-11.44-6.138v104.911zM357.143%20187.5v250q0%2011.161-7.813%2018.973t-18.973%207.813h-303.571q-11.161%200-18.973-7.813t-7.813-18.973v-375q0-11.161%207.813-18.973t18.973-7.813h178.571q11.161%200%2024.554%205.581t21.206%2013.393l87.054%2087.054q7.813%207.813%2013.393%2021.206t5.581%2024.554z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-file-o:after { background-image: url('/sy/mobile2/css/png/file-o.png'); }
+
+.ui-icon-edit:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M247.768%20330.357l32.366-32.366-42.411-42.411-32.366%2032.366v15.625h26.786v26.786h15.625zM370.536%20129.464q-4.464-4.464-9.208%200.279l-97.656%2097.656q-4.743%204.743-0.279%209.208t9.208-0.279l97.656-97.656q4.743-4.743%200.279-9.208zM392.857%20295.201v53.013q0%2033.203-23.577%2056.78t-56.78%2023.577h-232.143q-33.203%200-56.78-23.577t-23.577-56.78v-232.143q0-33.203%2023.577-56.78t56.78-23.577h232.143q17.578%200%2032.645%206.976%204.185%201.953%205.022%206.417%200.837%204.743-2.511%208.091l-13.672%2013.672q-3.906%203.906-8.929%202.232-6.417-1.674-12.556-1.674h-232.143q-18.415%200-31.529%2013.114t-13.114%2031.529v232.143q0%2018.415%2013.114%2031.529t31.529%2013.114h232.143q18.415%200%2031.529-13.114t13.114-31.529v-35.156q0-3.627%202.511-6.138l17.857-17.857q4.185-4.185%209.766-1.953t5.581%208.091zM366.071%2089.286l80.357%2080.357-187.5%20187.5h-80.357v-80.357zM489.956%20126.116l-25.669%2025.669-80.357-80.357%2025.669-25.669q7.813-7.813%2018.973-7.813t18.973%207.813l42.411%2042.411q7.813%207.813%207.813%2018.973t-7.813%2018.973z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-edit:after { background-image: url('/sy/mobile2/css/png/edit.png'); }
+
+.ui-icon-globe3:after { background-image: url('data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%20Tiny%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11-tiny.dtd%22%3E%3Csvg%20version%3D%221.1%22%20baseProfile%3D%22tiny%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20width%3D%2216px%22%20height%3D%2216px%22%20viewBox%3D%220%200%20500%20500%22%20xml%3Aspace%3D%22preserve%22%3E%20%3Cpath%20d%3D%22M285.714%20392.857h178.571v-35.714h-178.571v35.714zM178.571%20250h285.714v-35.714h-285.714v35.714zM357.143%20107.143h107.143v-35.714h-107.143v35.714zM500%20339.286v71.429q0%207.254-5.301%2012.556t-12.556%205.301h-464.286q-7.254%200-12.556-5.301t-5.301-12.556v-71.429q0-7.254%205.301-12.556t12.556-5.301h464.286q7.254%200%2012.556%205.301t5.301%2012.556zM500%20196.429v71.429q0%207.254-5.301%2012.556t-12.556%205.301h-464.286q-7.254%200-12.556-5.301t-5.301-12.556v-71.429q0-7.254%205.301-12.556t12.556-5.301h464.286q7.254%200%2012.556%205.301t5.301%2012.556zM500%2053.571v71.429q0%207.254-5.301%2012.556t-12.556%205.301h-464.286q-7.254%200-12.556-5.301t-5.301-12.556v-71.429q0-7.254%205.301-12.556t12.556-5.301h464.286q7.254%200%2012.556%205.301t5.301%2012.556z%22%20fill%3D%22%23ffffff%22%20%2F%3E%3C%2Fsvg%3E') }
+.ui-nosvg .ui-icon-globe3:after { background-image: url('/sy/mobile2/css/png/globe3.png'); }
+
+.ui-icon-audio:after {
+	background-image: url('/sy/mobile2/images/voice.png');
+	background-position: 0px 0px;
+}
+.ui-icon-audio.active:after {
+	background-image: url('/sy/mobile2/images/voice_playing.gif');
+}
+

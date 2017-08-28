@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>listview</title>
+</head>
+<body>
+	<div id="listview" data-role="page">
+		<!-- 
+		<div id="listview_header" data-role="header" data-position="fixed" data-theme="b">
+			<a href="#" data-rel="back" data-icon="back" data-iconpos="notext">返回</a>
+			<h2></h2>
+			<a href="#" id='listview_refresh' data-icon="refresh" data-iconpos="notext">刷新</a>
+		</div>
+		 -->
+	
+		<div id="listview_content" role="main" class="ui-content">
+			<!-- listview content -->
+			<div id="scroller"></div>
+		</div>
+		
+		<script>
+			// 在cochat中去掉web头
+			$(document).ready(function() { 
+				console.log('ready remove header?');
+				if (rh.cochat_client) {
+					$('#listview_header').remove();
+				}
+			});
+		</script>
+	</div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>search</title>
+</head>
+<body>
+	<div id="searchview" data-role="page">
+		<!-- 
+		<div id="searchview_header" data-role="header" data-position="fixed" data-tap-toggle="false" data-theme="b">
+			<a href="#" data-rel="back" data-icon="back" data-iconpos="notext">返回</a>
+			<h2></h2>
+			<a class="ui-btn ui-btn-right nextBtn" style="color:white;background:none;border:0;opacity:1;margin-top:.2em;">下一步</a>
+		</div>
+		 -->
+	
+		<div id="searchview_content" role="main" class="ui-content ui-content-cardview">
+			<!-- cardview content -->
+		</div>
+		
+		<script>
+			// 在cochat中去掉web头
+			$(document).ready(function() { 
+				console.log('ready remove header?');
+				if (rh.cochat_client) {
+					$('#searchview_header').remove();
+				}
+			});
+		</script>
+	</div>
+</body>
+</html>

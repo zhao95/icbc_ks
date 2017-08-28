@@ -1,0 +1,32 @@
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery(".txt_computer").on("click", function(event) {
+	    jQuery("#rhCard-back").mousedown();
+	});
+	jQuery(".user_name").text(System.getVar("@USER_NAME@"));
+	jQuery(".user_name").click(function(){
+		var options = {"url":"SY_ORG_USER_CENTER.show.do","menuFlag":1,"top":true,"menuId":"SY_USER_INFO__" + System.getVar("@CMPY_CODE@"),"tTitle":"基本信息"};
+		Tab.open(options);
+	});
+
+	jQuery(".time").text(System.getVar("@DATE_CN@"));
+});
+</script>
+<div class="icbc_top_info">
+	<img class="logo" src="../../../product/img/page_top_logo.png">
+	<div class="tran_bg">
+		<div class="tran_bg2">
+			<img src="../../../sy/tmpl/img/user.png" class="img_user">
+			<div style="float:left;" class="txt_user">
+				<span>您好，</span>
+				<span class="user_name" title="进入个人基本信息"></span>
+				<span>！</span>
+				<span class="time">！</span>
+			</div>
+			<img src="../../../sy/tmpl/img/setting.png" class="img_setting">
+			<div style="cursor:pointer;float:left;" class="txt_setting">设置</div>
+			<img src="../../../sy/tmpl/img/is_computer.png" class="img_computer">
+			<div style="cursor:pointer;float:left;" class="txt_computer">关闭</div>
+		</div>
+	</div>
+</div>

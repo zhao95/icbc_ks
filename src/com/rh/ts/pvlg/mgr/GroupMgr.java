@@ -1,0 +1,262 @@
+package com.rh.ts.pvlg.mgr;
+
+import java.util.List;
+
+import com.rh.core.base.Bean;
+import com.rh.core.base.TipException;
+import com.rh.core.comm.CacheMgr;
+import com.rh.core.serv.ServDao;
+import com.rh.core.util.Strings;
+import com.rh.ts.util.TsConstant;
+
+/**
+ * 工行考试系统 群组管理器
+ * 
+ * @author zjl
+ *
+ */
+public class GroupMgr {
+
+	/**
+	 * 获取用户所有群组编码 (逗号相隔)
+	 * 
+	 * @param userCode
+	 * @return
+	 */
+	public static String getGroupCodes(String userCode) {
+
+		String groupCodes = (String) getGroupCache(userCode, TsConstant.SERV_GROUP);
+
+		if (Strings.isBlank(groupCodes)) {
+
+			Bean queryUser = new Bean().set("USER_CODE", userCode).set("S_FLAG", 1);
+			// 查询用户所有群组
+			List<Bean> userList = ServDao.finds("TS_PVLG_GROUP_USER", queryUser);
+
+			for (Bean user : userList) {
+				// 用户群组id
+				String groupCode = user.getStr("G_ID");
+
+				if (Strings.isBlank(groupCodes)) {
+
+					groupCodes = groupCode;
+				} else {
+					groupCodes += "," + groupCode;
+				}
+			}
+
+			if (!Strings.isBlank(groupCodes)) {
+				// 去掉重复群组
+				groupCodes = Strings.removeSame(groupCodes);
+
+				updateGroupCache(userCode, TsConstant.SERV_GROUP, groupCodes);
+			}
+		}
+
+		if (groupCodes == null) {
+			groupCodes = "";
+		}
+
+		return groupCodes;
+	}
+
+	/**
+	 * 获取群组信息 包含 绑定角色编码(逗号相隔) 绑定人员编码(逗号相隔)
+	 * 
+	 * @param groupId
+	 * @return
+	 */
+	public static Bean getGroup(String groupId) {
+
+		Bean groupBean = (Bean) getGroupCache(groupId, TsConstant.SERV_GROUP);
+
+		if (groupBean == null || groupBean.isEmpty()) {
+			groupBean = ServDao.find(TsConstant.SERV_GROUP, groupId);
+
+			if (groupBean != null && !groupBean.isEmpty()) {
+				updateGroupCache(groupId, TsConstant.SERV_GROUP, groupBean);
+			}
+
+			// 缓存获取群组绑定角色
+			groupBean.set("ROLE_CODES", getGroupRoleCodes(groupId));
+			// 缓存获取群组绑定人员
+			groupBean.set("USER_CODES", getGroupUserCodes(groupId));
+		}
+		return groupBean;
+	}
+
+	/**
+	 * 更新群组缓存
+	 * 
+	 * @param groupId
+	 */
+	public static void setGroupCache(String groupId) {
+
+		if (Strings.isBlank(groupId)) {
+
+			throw new TipException("更新群组缓存失败, 角色编码为空!");
+		}
+
+		Bean param = ServDao.find(TsConstant.SERV_GROUP, groupId);
+
+		if (param != null && !param.isEmpty()) {
+
+			updateGroupCache(groupId, TsConstant.SERV_GROUP, param);
+		} else {
+
+			removeGroupCache(groupId, TsConstant.SERV_GROUP);
+		}
+
+	}
+
+	/**
+	 * 更新群组用户缓存
+	 * 
+	 * @param groupId
+	 */
+	public static void setGroupUserCache(String groupId) {
+
+		if (Strings.isBlank(groupId)) {
+			throw new TipException("更新群组人员缓存失败, 群组编码为空!");
+		}
+
+		// 清除缓存
+		removeGroupCache(groupId, TsConstant.SERV_GROUP_USER);
+		// 重新添加缓存
+		getGroupUserCodes(groupId);
+	}
+
+	public static void setGroupRoleCache(String groupId) {
+
+		if (Strings.isBlank(groupId)) {
+			throw new TipException("更新群组角色缓存失败, 群组编码为空!");
+		}
+
+		// 清除缓存
+		removeGroupCache(groupId, TsConstant.SERV_GROUP_ROLE);
+		// 重新添加缓存
+		getGroupRoleCodes(groupId);
+	}
+
+	/**
+	 * 获取群组绑定用户编码(逗号相隔)
+	 * 
+	 * @param groupId
+	 * @return
+	 */
+	public static String getGroupUserCodes(String groupId) {
+
+		String userCodes = (String) getGroupCache(groupId, TsConstant.SERV_GROUP_USER);
+
+		if (Strings.isBlank(userCodes)) {
+
+			Bean param = new Bean();
+			param.set("G_ID", groupId);
+			param.set("S_FLAG", 1);
+
+			// 查询群组关联的用户
+			List<Bean> userList = ServDao.finds(TsConstant.SERV_GROUP_USER, param);
+
+			for (Bean user : userList) {
+
+				if (Strings.isBlank(userCodes)) {
+
+					userCodes = user.getStr("USER_CODE");
+				} else {
+					userCodes += "," + user.getStr("USER_CODE");
+				}
+			}
+
+			if (!Strings.isBlank(userCodes)) {
+				// 去掉重复用户
+				userCodes = Strings.removeSame(userCodes);
+
+				updateGroupCache(groupId, TsConstant.SERV_GROUP_USER, userCodes);
+			} else {
+				userCodes = "";
+			}
+		}
+
+		return userCodes;
+
+	}
+
+	/**
+	 * 获取群组绑定角色编码 (逗号相隔)
+	 * 
+	 * @param groupId
+	 * @return
+	 */
+	public static String getGroupRoleCodes(String groupId) {
+
+		String roleCodes = (String) getGroupCache(groupId, TsConstant.SERV_GROUP_ROLE);
+
+		if (Strings.isBlank(roleCodes)) {
+
+			Bean param = new Bean();
+			param.set("G_ID", groupId);
+			param.set("S_FLAG", 1);
+
+			// 查询群组关联的角色
+			List<Bean> roleList = ServDao.finds(TsConstant.SERV_GROUP_ROLE, param);
+
+			for (Bean role : roleList) {
+
+				if (Strings.isBlank(roleCodes)) {
+
+					roleCodes = role.getStr("ROLE_CODE");
+				} else {
+					roleCodes += "," + role.getStr("ROLE_CODE");
+				}
+			}
+
+			if (!Strings.isBlank(roleCodes)) {
+				// 去掉重复角色
+				roleCodes = Strings.removeSame(roleCodes);
+
+				updateGroupCache(groupId, TsConstant.SERV_GROUP_ROLE, roleCodes);
+			} else {
+				roleCodes = "";
+			}
+		}
+
+		return roleCodes;
+
+	}
+
+	/**
+	 * 删除缓存
+	 * 
+	 * @param key
+	 * @param type
+	 * @return
+	 */
+	public static void removeGroupCache(String key, String type) {
+
+		CacheMgr.getInstance().remove(type + "-" + key, TsConstant.SERV_GROUP);
+	}
+
+	/**
+	 * 更新缓存
+	 * 
+	 * @param key
+	 * @param type
+	 * @param obj
+	 */
+	public static void updateGroupCache(String key, String type, Object obj) {
+
+		CacheMgr.getInstance().set(type + "-" + key, obj, TsConstant.SERV_GROUP);
+	}
+
+	/**
+	 * 获取缓存
+	 * 
+	 * @param key
+	 * @param type
+	 * @return
+	 */
+	public static Object getGroupCache(String key, String type) {
+		return CacheMgr.getInstance().get(type + "-" + key, TsConstant.SERV_GROUP);
+	}
+
+}
