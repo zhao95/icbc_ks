@@ -173,28 +173,40 @@
 	      						%>
 	      						<td width="27%">
 	      						<select id="mkid" onchange="typeId(this)">
+	      						<option value=""></option>
 	      						<% 
 	      						//根据岗位名称，序列和项目id找到对应的模块
 	      						String wheremk = "AND KSLB_NAME="+"'"+pt_type+"'"+" AND KSLB_XL="+"'"+pt_sequnce+"'"+" AND XM_ID="+"'"+xm_id+"'";
 	      						List<Bean> mkList = ServDao.finds("TS_XMGL_BM_KSLB", wheremk);
-	      							if(mkList.size()!=0){
-	      							for(int i=0;i<mkList.size();i++){
-	      								Bean mkbean = mkList.get(i);
-	      							String kslb_mk=mkbean.getStr("KSLB_MK");
-	      							String kslb_type=mkbean.getStr("KSLB_TYPE");
-	      							String kslb_id=mkbean.getStr("KSLB_ID");
-	      							String kslbk_id=mkbean.getStr("KSLBK_ID");
-	      						%>
-	      							<option value="<%=kslb_mk%>"><%=kslb_mk%></option>
-	      						<%
-	      							}
+	      						Bean mkBean = new Bean();
+	      						for (Bean bean : mkList) {
+      									String type = bean.getStr("KSLB_TYPE");
+      									String mk = bean.getStr("KSLB_MK");
+      									if (mkBean.containsKey(mk)) {
+      										List list = mkBean.getList(mk);
+      										list.add(type);
+      										mkBean.set(mk,list);
+      									} else {
+      										List list = new ArrayList();
+      										list.add(type);
+      										mkBean.set(mk,list);
+      									}
+      							%>
+      							<option value="<%=mk%>"><%=mk%></option>
+      							<%
 	      						}
 	      						%>
 	      						</select></td>
 	      						<td width="10%">
-	      						<select id="typeid" onchange="changeyk(this)">
-	      							<option value="1">初级</option>
-	      							<option value="2">中级</option>
+	      						<select id="lxid" onchange="changeyk(this)">
+	      						<% 
+	      						for(Object mk : mkBean.keySet()){
+	      							List typeList = mkBean.getList(mk);
+	      						%>
+	      							<option value="<%=typeList%>"><%=typeList%></option>
+	      						<% 
+	      						}
+	      						%>
 	      						</select></td>
 	      						<td width="20%">
 	      							<div>禁考规则</div>
@@ -231,7 +243,7 @@
 	       							<td width="15%">验证结果</td>
 	       						</tr>
       						 <tbody id="goods">
-         				
+         					
       						</tbody>	
       					</table>
       				</div>
@@ -363,12 +375,21 @@
 	yk["BM_LB"]="<%=lbname%>";
 	yk["BM_XL"]="<%=xlname%>";
 	var xkArg=[];
-
+	//等级改变事件
 	function changeyk(obj){
-		yk["BM_TYPE"]=obj.value;
+		yk["BM_TYPE"]=document.getElementById("lxid").value;
 	}
+	//模块改变事件
 	function typeId(obj){
-		yk["BM_MK"]=obj.value;
+		var mkvalue= document.getElementById("mkid").value;
+		alert(mkvalue)
+		var param = {};
+		param["MK"]=mkvalue;
+		var ww= FireFly.doAct("TS_BMLB_BM", "getMkvalue", param);
+		var hh= ww.list;
+		debugger;
+		alert(hh)
+		yk["BM_MK"]=mkvalue;
 	}
 	//模态页面 取消按钮 删除之前append的tr
 	function quxiao(){
@@ -380,17 +401,24 @@
 		}
 	}
 	function goBack(){
-		alert('<%=xm_id%>');
-		alert('<%=bm_id%>');
 		window.history.go(-1);
-	}
-	function typeId(){
-		var mkname = document.getElementById("mkid").value;
-		alert(mkname)
 	}
 	</script>
 	
 	<script type="text/javascript">
+	function deletec(){
+			var checkArray = document.getElementsByName("checkboxaa");
+			var kslxArray = document.getElementsByName("checkname1");
+			for(var j=0;j<checkArray.length;j++){
+				for(var i=0;i<kslxArray.length;i++){
+		     		if(kslxArray[i].value==checkArray[j]){
+		     			kslxArray[i].disabled=false;
+		     		}
+				}
+			}
+		    
+		}
+	//跨序列资格考试选择数量上限
 	var total = 0;
 	function change(obj){
 		var kslxArray = document.getElementsByName("checkname1");
@@ -529,7 +557,6 @@
 		param["BM_INFO"] = JSON.stringify(bminfo);
 		param["BM_LIST"] = JSON.stringify(xkArg);
 		console.log(JSON.stringify(param));
-		debugger;
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, true,false,function(data){
     		console.log(data);
     	});	
