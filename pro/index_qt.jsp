@@ -23,15 +23,17 @@
 <!-- Ionicons -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/ionicons/css/ionicons.min.css">
-	
+
 <!-- 进度条css -->
-<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/jdt.css">	
-	
+<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/jdt.css">
+
 <!-- 考试日历的样式 -->
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/ksrl.css">
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/jquery-ui-1.10.3.custom-0.css">
 <script src="<%=CONTEXT_PATH%>/qt/js/html5shiv.min.js"></script>
 <script src="<%=CONTEXT_PATH%>/qt/js/respond.min.js"></script>
+<!--代办/提醒列表样式-->
+<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/qt_todo.css">
 <!-- Theme style -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/dist/css/AdminLTE.min.css">
@@ -39,10 +41,11 @@
        folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
+</head>
 <body class="hold-transition skin-black sidebar-mini">
 	<div class="wrapper">
 		<div style="position: absolute; left: 15px; z-index: 10000;">
-			<img alt="中国工商银行" src="./qt/img/u3148.png"> 
+			<img alt="中国工商银行" src="./qt/img/u3148.png">
 			<img alt="考试系统" src="./qt/img/u3376.png">
 		</div>
 		<header class="main-header">
@@ -173,10 +176,10 @@
 						<!-- User Account: style can be found in dropdown.less -->
 						<li class="dropdown user user-menu">
 							<a id="userInfo2" href="#"
-							class="dropdown-toggle" data-toggle="dropdown"> 
+							class="dropdown-toggle" data-toggle="dropdown">
 							<img id= "userImg2"
 								src="qt/dist/img/user2-160x160.jpg" class="user-image"
-								alt="User Image"> 
+								alt="User Image">
 								<!-- <span class="hidden-xs">Alexander Pierce</span> -->
 						</a>
 							<ul class="dropdown-menu">
@@ -512,68 +515,78 @@
 							</div>
 							<!-- /.box-body -->
 						</div>
-						<!-- /.box -->
-						<div class="box">
-							<div class="box-header">
-								<h3 class="box-title">可申请的报名 (2)</h3>
+
+					<%--待办/提醒--%>
+					<div class="panel panel-default" id="todo-panel">
+						<div class="panel-heading" style="background-color: transparent">
+							<h3 class="panel-title">
+								待办 / 提醒 (<span id="todoListSum" style="color:red">0</span>)
+								<a href="<%=CONTEXT_PATH%>/qt/jsp/todo.jsp"
+								   class="index-list-more-a">
+									更多
+									<span style="color:red;">></span>
+								</a>
+							</h3>
+							<div style="width: 109px;height: 3px;position: relative;top: 11px;left: -5px;background-color: #ff0000;">
 							</div>
-							<!-- /.box-header -->
-							<div class="box-body no-padding">
-								<table class="table table-condensed">
-									<tr>
-										<th style="width: 10px">#</th>
-										<th>Task</th>
-										<th>Progress</th>
-										<th style="width: 40px">Label</th>
-									</tr>
-									<tr>
-										<td>1.</td>
-										<td>Update software</td>
-										<td>
-											<div class="progress progress-xs">
-												<div class="progress-bar progress-bar-danger"
-													style="width: 55%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-red">55%</span></td>
-									</tr>
-									<tr>
-										<td>2.</td>
-										<td>Clean database</td>
-										<td>
-											<div class="progress progress-xs">
-												<div class="progress-bar progress-bar-yellow"
-													style="width: 70%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-yellow">70%</span></td>
-									</tr>
-									<tr>
-										<td>3.</td>
-										<td>Cron job running</td>
-										<td>
-											<div class="progress progress-xs progress-striped active">
-												<div class="progress-bar progress-bar-primary"
-													style="width: 30%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-light-blue">30%</span></td>
-									</tr>
-									<tr>
-										<td>4.</td>
-										<td>Fix and squish bugs</td>
-										<td>
-											<div class="progress progress-xs progress-striped active">
-												<div class="progress-bar progress-bar-success"
-													style="width: 90%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-green">90%</span></td>
-									</tr>
-								</table>
-							</div>
-							<!-- /.box-body -->
 						</div>
+						<div class="panel-body">
+
+							<div class="index-qt-todo-list">
+								<div style="" class="todo-item">
+									<div style="" class="todo-circle yiyi">
+										<div style="padding:10px 4px;color: #fff">异议</div>
+									</div>
+									<div class="todo-content">
+										<div>2017年（第8周）资格考试报名异议申请</div>
+										<div style="font-size: 12px;color:#999999">
+											河南分行郑州市分行郑东区支行天津路营业部 孙少洋 2017.05.12 16:40
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="panel panel-default" id="apply-panel">
+
+						<div class="panel-heading" style="background-color: transparent">
+							<h3 class="panel-title">
+								可申请的报名 (<span id="keshenqingbaomingSum" style="color:red">0</span>)
+								<a href="<%=CONTEXT_PATH%>/ts/jsp/bm.jsp"
+								   class="index-list-more-a">
+									更多
+									<span style="color:red;">></span>
+								</a>
+							</h3>
+							<div style="width: 124px;height: 3px;position: relative;top: 11px;left: -5px;background-color: #ff0000;">
+							</div>
+						</div>
+						<div class="panel-body">
+                            <table class="rhGrid ss JColResizer" id="apply-table">
+								<thead class="">
+								<tr style="backGround-color:WhiteSmoke; height: 30px">
+									<th class="" style="width: 40%;">名称</th>
+									<th class="" style="width: 30%;">组织单位</th>
+									<th class="" style="width: 30%;">报名时间</th>
+								</tr>
+								</thead>
+								<tbody class="grid-tbody">
+								<tr>
+									<td >2017年（第8周）资格考试报名</td>
+									<td >中国工商银行总行</td>
+									<td>2017-05-07 00:00 － 05-16 00:00</td>
+								</tr>
+								<tr>
+									<td >2017年非资格考试报名</td>
+									<td >北京分行</td>
+									<td>2017-05-07 00:00 － 05-16 00:00</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
 						<!-- /.box -->
 						<div class="box">
 							<div class="box-header">
@@ -962,14 +975,17 @@
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
 	<!-- 问答模块的js文件 -->
 	<script src="<%=CONTEXT_PATH%>/qt/js/wdgl.js"></script>
-	
+
+	<!-- 首页待办/可申请报名js -->
+	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt_todo_apply.js"></script>
+
 	<!-- 考试日历模块JS文件 -->
-	<script src="<%=CONTEXT_PATH%>/qt/js/jquery-ui-1.10.3.custom.js"></script> 
-	<script src="<%=CONTEXT_PATH%>/qt/js/jquery.ui.datepicker-zh-CN.js"></script> 
-	<script src="<%=CONTEXT_PATH%>/qt/js/ksrl.js"></script> 
-	
+	<script src="<%=CONTEXT_PATH%>/qt/js/jquery-ui-1.10.3.custom.js"></script>
+	<script src="<%=CONTEXT_PATH%>/qt/js/jquery.ui.datepicker-zh-CN.js"></script>
+	<script src="<%=CONTEXT_PATH%>/qt/js/ksrl.js"></script>
+
 	<!-- 项目状态进度条展示的js文件 -->
 	<script src="<%=CONTEXT_PATH%>/qt/js/xmzt.js"></script>
-	
+
 </body>
 </html>

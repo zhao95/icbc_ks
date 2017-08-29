@@ -1,0 +1,78 @@
+/*首页 待办/提醒 样式*/
+#todo-panel > .panel-body {
+    min-height: 230px;
+}
+/*待办项样式*/
+.index-qt-todo-list .todo-item {
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid #F4F1F8;
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.index-qt-todo-list .todo-item:last-child {
+    border-bottom: none;
+}
+
+.index-qt-todo-list .todo-item > .todo-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+/*圆 颜色样式*/
+.index-qt-todo-list .todo-item > .jiekao {
+    background-color: #57a777;
+}
+
+.index-qt-todo-list .todo-item > .yiyi {
+    background-color: #ff9000;
+}
+
+.index-qt-todo-list .todo-item > .qijia {
+    background-color: #a583ab;
+}
+
+.index-qt-todo-list .todo-item > .yichang {
+    background-color: #fef8f1;
+}
+
+.index-qt-todo-list .todo-item > .todo-content {
+    margin-left: 52px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+/*待办更多a标签样式*/
+.index-list-more-a {
+    float: right;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+/*待办更多链接悬浮不变色*/
+.index-list-more-a:hover {
+    color: black;
+}
+
+/*首页 可申请报名列表*/
+#apply-panel > .panel-body {
+    min-height: 230px;
+}
+
+#apply-table > tbody > tr:nth-of-type(even) {
+    background-color: Azure;
+}
+
+#apply-table > thead > tr > th {
+    padding: 10px;
+}
+
+#apply-table > tbody > tr > td {
+    padding: 10px;
+}
+
+

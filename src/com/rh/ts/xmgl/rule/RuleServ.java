@@ -28,7 +28,16 @@ public class RuleServ extends CommonServ {
 	 */
 	private boolean vlidateOne(String className, Bean param) {
 
-		return RuleMgr.getInstance(className).validate(param);
+		try {
+
+			return RuleMgr.getInstance(className).validate(param);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			return false;
+		}
+
 	}
 
 	/**
@@ -44,8 +53,6 @@ public class RuleServ extends CommonServ {
 		OutBean outBean = new OutBean();
 
 		try {
-
-			List<Bean> passList = new ArrayList<Bean>();// 验证结果
 
 			String infostr = paramBean.getStr("BM_INFO");
 
@@ -73,14 +80,16 @@ public class RuleServ extends CommonServ {
 			JSONArray objList = new JSONArray(liststr);
 
 			for (int i = 0; i < objList.length(); i++) {
+				
+				List<Bean> passList = new ArrayList<Bean>();// 验证结果
 
 				JSONObject obj = (JSONObject) objList.get(i);
+				
+				if (obj.length() == 0) {
+					continue;
+				}
 
 				Bean bmBean = jsonToBean(obj);
-
-				String msg = ""; // 验证信息
-
-				boolean pass = false;
 
 				SqlBean sql = new SqlBean();
 				sql.and("KSLB_NAME", bmBean.getStr("BM_LB"));// 类别
@@ -91,61 +100,77 @@ public class RuleServ extends CommonServ {
 
 				List<Bean> kslbList = ServDao.finds(TsConstant.SERV_BM_KSLB, sql); // 报名的考试类别
 
-				if (kslbList == null || kslbList.size() == 0) {
-					return outBean.setError("未找到该考试类别!");
-				}
+				if (kslbList != null && kslbList.size() != 0) {
 
-				Bean kslb = kslbList.get(0);
+					String ksqzId = kslbList.get(0).getStr("KSQZ_ID"); // 考试群组id
 
-				String ksqzId = kslb.getStr("KSQZ_ID"); // 考试群组id
+					List<Bean> mxList = gzmxBean.getList(ksqzId); // 规则明细list
 
-				List<Bean> mxList = gzmxBean.getList(ksqzId); // 规则明细list
+					Bean gzmxGroup = convertGzmxToGroup(mxList); // 规则明细分组Bean,key:规则组
 
-				Bean gzmxGroup = convertGzmxToGroup(mxList); // 规则明细分组Bean,key:规则组
+					for (Object gzId : gzmxGroup.keySet()) { // 遍历规则组
 
-				for (Object gzId : gzmxGroup.keySet()) {
+						Bean shgz = gzBean.getBean(gzId); // 审核规则bean
 
-					Bean shgz = gzBean.getBean(gzId); // 审核规则bean
+						int gzType = shgz.getInt("GZ_TYPE");
 
-					List<Bean> gzmxGroupList = gzmxGroup.getList(gzId); // 审核规则关联的规则明细list
+						List<Bean> gzmxGroupList = gzmxGroup.getList(gzId); // 审核规则关联的规则明细list
 
-					for (Bean bean : gzmxGroupList) {
+						boolean pass = gzType == 1 ? true : false; // 审核不通过规则(与)默认ture，否则默认false
 
-						bean.putAll(bmBean); // 报名考试信息
-						bean.putAll(bmInfo); // 报名人信息
+						String msg = ""; // 验证信息
 
-						boolean result = this.vlidateOne(bean.getStr("XM_IMPL"), bean); // 执行验证
+						for (Bean bean : gzmxGroupList) {
 
-						if (shgz.getInt("GZ_TYPE") == 1) { // 审核不通过规则(与)
+							bean.putAll(bmBean); // 报名考试信息
+							bean.putAll(bmInfo); // 报名人信息
 
-							if (!result) {
-								pass = false;
-								msg += bean.getStr("MX_NAME") + ";";
-							}
-						} else if (shgz.getInt("GZ_TYPE") == 2) { // 审核通过规则(或)
+							String mxName = getMxName(bean);
 
-							if (result) {
-								pass = true;
+							String clazz = bean.getStr("MX_IMPL");
+
+							boolean result = this.vlidateOne(clazz, bean); // 执行验证
+
+							if (gzType == 1) { // 审核不通过规则(与)
+
+								if (!result) {
+									pass = false;
+									msg += mxName + ";";
+								}
+							} else if (gzType == 2) { // 审核通过规则(或)
+
+								if (result) {
+									pass = true;
+								} else {
+									msg += mxName + ";";
+								}
 							} else {
-								msg += bean.getStr("MX_NAME") + ";";
+								pass = false;
+								msg += mxName + "，审核类型不存在;";
 							}
-						} else {
-							pass = false;
-							msg += bean.getStr("MX_NAME") + "，审核类型不存在;";
+
 						}
+
+						Bean data = new Bean();
+
+						data.set("NAME", shgz.getStr("GZ_NAME")); // 规则名称
+
+						data.set("VLIDATE", pass);
+
+						data.set("MSG", msg);
+
+						passList.add(data);
 
 					}
 
+				} else {
 					Bean data = new Bean();
 
-					data.set("NAME", shgz.getStr("GZ_NAME")); // 规则名称
+					data.set("VLIDATE", false);
 
-					data.set("VLIDATE", pass);
-
-					data.set("MSG", msg);
+					data.set("MSG", "未找到该考试类别,审核不通过");
 
 					passList.add(data);
-
 				}
 
 				outBean.set(bmBean.getStr("ID"), passList);
@@ -267,6 +292,28 @@ public class RuleServ extends CommonServ {
 			}
 		}
 		return groupBean;
+	}
+
+	private String getMxName(Bean bean) {
+		
+		String name = bean.getStr("MX_NAME");
+		String jsonStr = bean.getStr("MX_VALUE2");
+		String type = bean.getStr("MX_VALUE1");
+
+		if (type.equals("1")) {
+			try {
+
+				JSONObject obj = new JSONObject(jsonStr);
+				String var = obj.getString("vari");
+				String val = obj.getString("val");
+				String repacle = "#" + var + "#";
+				name = name.replaceAll(repacle, val);
+
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return name;
 	}
 
 	private Bean jsonToBean(JSONObject obj) {
