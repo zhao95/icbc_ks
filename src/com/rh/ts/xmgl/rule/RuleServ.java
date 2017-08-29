@@ -121,6 +121,8 @@ public class RuleServ extends CommonServ {
 							bean.putAll(bmBean); // 报名考试信息
 							bean.putAll(bmInfo); // 报名人信息
 
+							String mxName = getMxName(bean);
+
 							String clazz = bean.getStr("MX_IMPL");
 
 							boolean result = this.vlidateOne(clazz, bean); // 执行验证
@@ -129,18 +131,18 @@ public class RuleServ extends CommonServ {
 
 								if (!result) {
 									pass = false;
-									msg += bean.getStr("MX_NAME") + ";";
+									msg += mxName + ";";
 								}
 							} else if (gzType == 2) { // 审核通过规则(或)
 
 								if (result) {
 									pass = true;
 								} else {
-									msg += bean.getStr("MX_NAME") + ";";
+									msg += mxName + ";";
 								}
 							} else {
 								pass = false;
-								msg += bean.getStr("MX_NAME") + "，审核类型不存在;";
+								msg += mxName + "，审核类型不存在;";
 							}
 
 						}
@@ -286,6 +288,27 @@ public class RuleServ extends CommonServ {
 			}
 		}
 		return groupBean;
+	}
+
+	private String getMxName(Bean bean) {
+		
+		String name = bean.getStr("MX_NAME");
+		String jsonStr = bean.getStr("MX_VALUE2");
+		String type = bean.getStr("MX_VALUE1");
+
+		if (type.equals("1")) {
+			try {
+
+				JSONObject obj = new JSONObject(jsonStr);
+				String var = obj.getString("vari");
+				String val = obj.getString("val");
+				name.replaceAll("#" + var + "#", val);
+
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return name;
 	}
 
 	private Bean jsonToBean(JSONObject obj) {
