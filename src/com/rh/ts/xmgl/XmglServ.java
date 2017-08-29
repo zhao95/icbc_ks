@@ -1,13 +1,7 @@
 package com.rh.ts.xmgl;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import com.icbc.ctp.utility.StringUtil;
 import com.rh.core.base.Bean;
@@ -189,8 +183,8 @@ public Bean getXmList(Bean paramBean){
 	out.set("xid", s);
 	return out;
 }
+/*
 public Bean getUserXm(Bean paramBean){
-	Bean outBean = new Bean();
 	String user_code = paramBean.getStr("user_code");
 	//从已报名的考试中找到已报名的考试信息   判断是否报名了  报的是什么
 	String where = "AND BM_CODE="+"'"+user_code+"'";
@@ -212,7 +206,9 @@ public Bean getUserXm(Bean paramBean){
 	List<Bean> list = ServDao.finds("TS_XMGL", "");
 	String s = "";
 	for (int i =0;i<list.size();i++) {
-		if(i==(list.size()-1)){
+		if(list.size()==0){
+			s+=list.get(i).getId();
+		}else if(i==(list.size()-1)){
 			s+=list.get(i).getId();
 		}else{
 			s+=list.get(i).getId()+",";
@@ -223,9 +219,8 @@ public Bean getUserXm(Bean paramBean){
 	List<String>  kjxm = new ArrayList<String>();
 	//遍历项目ID  匹配项目和本人的 群组权限
 	for(int a=0;a<xmarray.length;a++){
-		ParamBean param = new ParamBean();
-		param.set("xmid", xmarray[a]);
-		Bean outBeanCode = ServMgr.act("TS_XMGL_RYGL_V","getCodes",param);
+		paramBean.set("xmid", xmarray[a]);
+		Bean outBeanCode = ServMgr.act("TS_XMGL_RYGL_V","getCodes",paramBean);
 		String codes = outBeanCode.getStr("rycodes");
 	Boolean boo = false;
 	if(codes==""){
@@ -243,35 +238,7 @@ public Bean getUserXm(Bean paramBean){
 	if(boo==true){
 		kjxm.add(xmarray[a]);
 	}
-	}
-	//kjxm为可见项目idlist   stringlist 为已报名的项目idlist
-	List<Bean> lastlist = new ArrayList<Bean>();
-	for(int i=0;i<list.size();i++){
-		Bean bean = list.get(i);
-		//项目中已存在array的  title  数据  将展示在  已报名信息中
-		String id = bean.getStr("XM_ID");
-		if(stringlist.contains(id)|| !kjxm.contains(id)){
-			//已报名这个考试之后  或者他不能报名这个考试 中断循环 继续开始
-			continue;
-		}else{
-			lastlist.add(bean);
-		}
-	}
+	}	
 	
-	//将lastlist转换为 json字符串传给前台
-	 ObjectMapper mapper = new ObjectMapper();    
-     StringWriter w = new StringWriter();  
-     try {
-		mapper.writeValue(w, lastlist);
-	} catch (JsonProcessingException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} 
-	 catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-     outBean.set("list",w.toString());
-	return outBean;
-}
+}*/
 }

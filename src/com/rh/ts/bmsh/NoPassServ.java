@@ -9,8 +9,13 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rh.core.base.Bean;
+import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
+import com.rh.core.serv.OutBean;
+import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.core.serv.ServMgr;
 /**
  * 没有通过的审核
  * @author shiyun
@@ -116,11 +121,48 @@ public class NoPassServ extends CommonServ {
 	 */
 	public void update(Bean paramBean){
 		String s = paramBean.getStr("checkedid");
+		String xmid = paramBean.getStr("xm_id");
+		String slevel = paramBean.getStr("level");
+		int level = Integer.parseInt(slevel);
+		String bm_code = "888802713";
+		String shenuser = "888800172";
 		//被选中的id
 		String[] ss = s.split(",");
 		String liyou = paramBean.getStr("liyou");
+		//继续进行审核
+		
 		for (String id : ss) {
 			if(!"".equals(id)){
+				//获取下级参数
+				String allman ="";
+				String nextman = "";
+				int nowlevel=level;
+				if(level!=1){
+				ParamBean parambean = new ParamBean();
+				parambean.set("examerWorekNum", bm_code);
+				parambean.set("level",level);
+				parambean.set("shrWorekNum", shenuser);
+				parambean.set("flowName", 1);
+				parambean.set("xmId", xmid);
+				OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
+				List<Bean> list = outbean.getList("result");
+				if(list.size()==0){
+					return;
+				}	
+				for (int l=0;l<list.size();l++) {
+					if(l==0){
+						nextman = list.get(l).getStr("BMSHLC_SHR");
+					}
+					if(l==list.size()-1){
+						
+						allman+= list.get(l).getStr("BMSHLC_SHR");
+					}else{
+						allman+= list.get(l).getStr("BMSHLC_SHR")+",";
+					}
+					
+				}
+			 nowlevel = list.size();
+				}
 			Bean bean = ServDao.find("TS_BMSH_NOPASS", id);
 			bean.remove("SH_ID");
 			bean.remove("S_CMPY");
@@ -135,15 +177,34 @@ public class NoPassServ extends CommonServ {
 			bean.remove("ROW_NUM_");
 			Bean newBean = new Bean();
 			newBean.copyFrom(bean);
-				ServDao.save("TS_BMSH_PASS", newBean);
-			
+			ServDao.save("TS_BMSH_PASS", newBean);
+			if(level==1){
+				//不用再去待审核中直接去  审核通过中 且数据无改动
+			}else{
+				newBean.set("SH_USER", nextman);
+				newBean.set("SH_OTHER", allman);
+				newBean.set("SH_LEVEL", nowlevel);
+				ServDao.save("TS_BMSH_STAY", newBean);
+			}
 			ServDao.delete("TS_BMSH_NOPASS", id);
+			//审核明细表中插入此次审核数据
+			Bean mindbean = new Bean();
+			UserBean userbean = UserMgr.getUserByWorkNum(shenuser);
+			mindbean.set("SH_LEVEL",slevel);
+			mindbean.set("SH_MIND", liyou);
+			mindbean.set("DATA_ID",bean.getStr("BM_ID"));
+			mindbean.set("SH_STATUS", 1);
+			mindbean.set("SH_ULOGIN",userbean.getLoginName());
+			mindbean.set("SH_UNAME",userbean.getName());
+			mindbean.set("SH_UCODE",shenuser);
+			mindbean.set("SH_TYPE", 1);
+			ServDao.save("TS_COMM_MIND",mindbean);
 		}
 		}
 	}
 	
 	/**
-	 * 导出事获取 项目下的数据逗号分隔 返回 字符串
+	 * 导出事获取 项目下的数据逗号分隔 返回 字符串 导出所有
 	 */
 	public Bean reSids(Bean paramBean){
 		Bean outBean = new Bean();
@@ -179,7 +240,7 @@ public class NoPassServ extends CommonServ {
 		
 	}
 	/**
-	 * 递交异一
+	 * 提交异议
 	 */
 	public void yiyi(Bean paramBean){
 		String bmid = paramBean.getStr("bmid");

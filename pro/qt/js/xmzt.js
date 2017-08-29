@@ -25,14 +25,6 @@ $(function (){
 	param2["_extWhere"]="and XM_ID ='"+xm_id+"'";
 	var resultXM = FireFly.doAct("TS_XMGL","query",param2);
 	var xm_gj_str = resultXM._DATA_[0].XM_GJ;
-	//获取项目的进度百分数
-	var jdtNum = resultXM._DATA_[0].XM_JD;
-	if(jdtNum==undefined){
-		jdtNum="8.8";
-	}else{
-	var jdeNumArr = jdtNum.split(".");
-	jdtNum = jdeNumArr[0]+".0";
-	}
 	//此时数组存储的是内容为查询到的挂接模块的名称
 	var mkArray = xm_gj_str.split(",");
 	//创建存储当前项目所有进度的数组
@@ -141,7 +133,7 @@ $(function (){
 	});
 	
 	//设置进度值为百分之xx
-//	var jdtNum = CurrentXMGJ.length / xmzt_arr_all.length * 100;
+	var jdtNum = CurrentXMGJ.length / xmzt_arr_all.length * 100;
 //	debugger;
 	$("#jdtNum").html(""+jdtNum+"");
 	$("#jdtName").html(""+ks_name+"");

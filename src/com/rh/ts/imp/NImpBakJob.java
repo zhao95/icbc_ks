@@ -14,9 +14,9 @@ import com.rh.core.util.scheduler.RhJobContext;
  * @author wanglida
  *
  */
-public class UpdateKSRL extends RhJob {
+public class NImpBakJob extends RhJob {
 	/** log.日志 */
-	private static Log log = LogFactory.getLog(UpdateKSRL.class);
+	private static Log log = LogFactory.getLog(NImpBakJob.class);
 	
 	// 每次保存条数，批量操作数据数（暂未用到）
 //	private int SAVE_COUNT = 5000;

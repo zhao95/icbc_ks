@@ -370,9 +370,9 @@ $(function () {
 	$('#myTab li:eq(1) a').tab('show');
 	var table = document.getElementById("table");  
   //对每一行 进行  渲染 颜色
+	ksqxm();
    rowscolor(table);
    selectcreate();
-   
  }); 
 
 //---------------------下拉框生成
@@ -594,3 +594,37 @@ function selectcreate(){
 	 FireFly.doAct("TS_BMSH_NOPASS","yiyi",param);
 	 //将此数据 的状态改为审核中
  }
+ 
+ //报名项目列表调用(初始化后展示)
+ function ksqxm(){
+	 var param={};
+	 param["user_code"]=user_code;
+	 var result = FireFly.doAct("TS_XMGL","getUserXm",param);
+	 var data = result.list;
+	var pageEntity =  JSON.parse(data);
+	for(var i=0;i<pageEntity.length;i++){
+		var name = pageEntity[i].XM_NAME;
+		 //项目中已存在array的  title  数据  将展示在  已报名信息中
+		var id = pageEntity[i].XM_ID;
+		var dept = pageEntity[i].XM_FQDW_NAME;
+		var type = pageEntity[i].XM_TYPE;
+		var state = "未开始";
+		var display = "none";
+		
+		//获取报名时间判断  报名状态
+		var param1={};
+		param1["xmid"]=id;
+		var result1 = FireFly.doAct("TS_XMGL_BMGL","getBMState",param1);
+		var data1 = result1.list;
+		var pageEntity1 = JSON.parse(data1);
+		var startTime = pageEntity1[0].START_TIME;
+		var state = pageEntity1[0].STATE;
+		if(state=="待报名"){
+	    display = "block";
+		}
+		//append数据
+		var j=i+1;
+		$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+j+'</td><td class="rhGrid-td-hide" id="BM_TYPE'+i+'" >'+type+'</td><td class="rhGrid-td-hide" id="BM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-left " id="BM_NAME'+i+'" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " id="BM_ODEPT__NAME" style="text-align: left">'+dept+'</td><td class="rhGrid-td-left " id="S_ATIME" style="text-align: left" >'+startTime+'</td><td class="rhGrid-td-left " id="BM_STATE__NAME" style="text-align: left">'+state+'</td><td id="BM_OPTIONS" style="text-align: center"><input type="button" onclick="tiaozhuan('+i+')"style="display:'+display+';color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px"value="报名"></input></td></tr>');
+	}
+ }
+ 

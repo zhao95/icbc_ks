@@ -43,58 +43,15 @@
 <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/global.js"></script> 
 <!--插件--> 
 <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/jquery.smart-form.js"></script> 
-<script src="<%=CONTEXT_PATH%>/ts/jsp/jquery.iframe-transport.js"></script> 
-<script src="<%=CONTEXT_PATH%>/ts/jsp/jquery.ui.widget.js"></script> 
-<script src="<%=CONTEXT_PATH%>/ts/jsp/jquery.fileupload.js"></script> 
+<script src="<%=CONTEXT_PATH%>/ts/js/jquery.iframe-transport.js"></script> 
+<script src="<%=CONTEXT_PATH%>/ts/js/jquery.ui.widget.js"></script> 
+<script src="<%=CONTEXT_PATH%>/ts/js/jquery.fileupload.js"></script> 
 
 <body class="hold-transition skin-black sidebar-mini">
 <%
 			//获取所有项目ID
 			String user_code = userBean.getStr("USER_CODE");
-			Bean paramBean = new Bean();
-			String qz = GroupMgr.getGroupCodes(user_code);
-			Bean outBean = ServMgr.act("TS_XMGL","getXmList",paramBean );
-			String xmlist = outBean.getStr("xid");
-			String[] xmarray = xmlist.split(",");
-			//将可见的 项目 ID 放到新的数组中
-			List<String>  kjxm = new ArrayList<String>();
-			//遍历项目ID  匹配项目和本人的 群组权限
-			for(int a=0;a<xmarray.length;a++){
-				paramBean.set("xmid", xmarray[a]);
-				Bean outBeanCode = ServMgr.act("TS_XMGL_RYGL_V","getCodes",paramBean);
-				String codes = outBeanCode.getStr("rycodes");
-			Boolean boo = false;
-			if(codes==""){
-			}else{
-			//本人所在的群组编码
-			String[] codeArray = codes.split(",");
-			String[] qzArray = qz.split(",");
-			for(int b=0;b<qzArray.length;b++){
-				if(Arrays.asList(codeArray).contains(qzArray[b])){
-					boo=true;
-				}
-			}
-			}
-			//可见的项目id
-			if(boo==true){
-				kjxm.add(xmarray[a]);
-			}
-			}
-			//从已报名的考试中找到已报名的考试信息   判断是否报名了  报的是什么
-							String where = "AND BM_CODE="+"'"+user_code+"'";
-							List<Bean> baominglist = ServDao.finds("TS_BMLB_BM",where);
-							List<String> stringlist = new ArrayList<String>();
-							if(baominglist.size()!=0){
-								
-								for(int a=0;a<baominglist.size();a++){
-									//获取报名的 项目信息  的name  将报名项目名称放到array中
-							String XM_ID = baominglist.get(a).getStr("XM_ID");
-									if(XM_ID!=""){
-										
-								stringlist.add(XM_ID);
-									}
-								}
-							}
+			
 							%> 
 	<div class="" style="padding: 10px">
 		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
@@ -144,70 +101,7 @@
 							</tr>
 						</thead>
 						<tbody class="">
-							<%
-								String servId = "TS_XMGL";
-										List<Bean> list = ServDao.finds(servId,"");
-										
-										int j=0;
-									for(int i=0;i<list.size();i++){
-										j++;
-										Bean bean = list.get(i);
-										String name = bean.getStr("XM_NAME");
-							 //项目中已存在array的  title  数据  将展示在  已报名信息中
-										String id = bean.getStr("XM_ID");
-										if(stringlist.contains(id)|| !kjxm.contains(id)){
-											//已报名这个考试之后  或者他不能报名这个考试 中断循环 继续开始
-											j--;
-											continue;
-										} 
-										
-										String dept = bean.getStr("XM_FQDW_NAME");
-										String type = bean.getStr("XM_TYPE");
-										String where1 = "AND XM_ID="+"'"+id+"'";
-										List<Bean> listbean = ServDao.finds("TS_XMGL_BMGL",where1);
-										Bean bmbean = listbean.get(0);
-										SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
-										String startTime = bmbean.getStr("BM_START");
-										String endTime = bmbean.getStr("BM_END");
-										String state = "未开始";
-										String display = "none";
-										if(startTime!=""&&endTime!=""){
-										Date date1 = sdf.parse(startTime);
-										Date date2 = sdf.parse(endTime);
-										Date date = new Date();
-										if(date.getTime()<date2.getTime()&&date.getTime()>date1.getTime()){
-										 state = "待报名";
-										 display = "block";
-										}else if(date.getTime()>date2.getTime()){
-											state="已结束";
-										}
-										}
-							%>
-
-							<tr class="rhGrid-td-left" 
-								style="height: 50px">
-								<td class="indexTD" style="text-align: center"><%=j%></td>
-								<td class="rhGrid-td-hide" id="BM_TYPE<%=i%>" ><%=type %></td>
-								<td class="rhGrid-td-hide" id="BM_ID<%=i%>" ><%=id %></td>
-								<td class="rhGrid-td-left " id="BM_NAME<%=i%>"
-									style="text-align: left"><%=name%></td>
-								<td class="rhGrid-td-left " id="BM_ODEPT__NAME"
-									style="text-align: left"><%=dept%></td>
-								<td class="rhGrid-td-left " id="S_ATIME"
-									style="text-align: left" ><%=startTime%></td>
-								<td class="rhGrid-td-left " id="BM_STATE__NAME"
-									style="text-align: left"><%=state%></td>
-								<td id="BM_OPTIONS" style="text-align: center"><input
-									type="button" onclick="tiaozhuan(<%=i%>)"
-									style="display:<%=display%>;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px"
-									value="报名"></input></td>
-							</tr>
-
-
-							<%
 							
-										}
-							%>
 						</tbody>
 					</table>
 
@@ -333,7 +227,7 @@
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	
 	<!-- FastClick -->
-	<script src="<%=CONTEXT_PATH%>/baoming.js"></script>
+	<script src="<%=CONTEXT_PATH%>/ts/js/baoming.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
 	<!-- AdminLTE App -->
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>

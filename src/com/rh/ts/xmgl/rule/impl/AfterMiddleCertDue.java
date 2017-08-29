@@ -43,7 +43,7 @@ public class AfterMiddleCertDue implements IRule {
 
 			sql.and("CERT_MODULE_CODE", mkCde);// 证书模块编号
 
-			sql.andIn("CERT_GRADE_CODE", "2","3");// 证书等级编号
+			sql.andIn("CERT_GRADE_CODE", "inter","high");// 证书等级编号
 			
 			sql.and("QUALFY_STAT", 3);// 获证状态(1-正常;2-获取中;3-过期)
 

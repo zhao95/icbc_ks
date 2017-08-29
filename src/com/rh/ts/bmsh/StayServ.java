@@ -134,9 +134,9 @@ public class StayServ extends CommonServ {
 	 */
 	public void update(Bean paramBean){
 		String s = paramBean.getStr("checkedid");
-		String xmid = "2Ajrh0gs97WXXYTHc39e";
+		String xmid = "0c4Q0kfeB1JUQ2Cg189e";
 		String bm_code = "888802713";
-		String shenuser = "23UYZihM9erFGlX2ZNVB";
+		String shenuser = "888800172";
 		String slevel = "2";
 		//被选中的id
 		String[] ss = s.split(",");
@@ -151,7 +151,7 @@ public class StayServ extends CommonServ {
 				int cengjiint = Integer.parseInt(slevel);
 				//返回下一级和所有的数据，  逐级的话将下一个审核节点的人编码  放进去，将当前审核人删除
 				int level = Integer.parseInt(slevel);
-				int flowname = 0;
+				int flowname = 1;
 				ParamBean parambean = new ParamBean();
 				parambean.set("examerWorekNum", bm_code);
 				parambean.set("level",level);
@@ -160,14 +160,18 @@ public class StayServ extends CommonServ {
 				parambean.set("xmId", xmid);
 				OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
 				List<Bean> list = outbean.getList("result");
-				
+				if(list.size()==0){
+					return;
+				}
 				String allman ="";
 				String nextman = "";
 				for (int l=0;l<list.size();l++) {
+					if(l==0){
+						nextman = list.get(l).getStr("BMSHLC_SHR");
+					}
 					if(l==list.size()-1){
 						
 						allman+= list.get(l).getStr("BMSHLC_SHR");
-						nextman = list.get(l).getStr("BMSHLC_SHR");
 					}else{
 						allman+= list.get(l).getStr("BMSHLC_SHR")+",";
 					}

@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+resin.conf
+.project
+rh.log.2017-08-28
+.settings/org.eclipse.core.resources.prefs
+=======
 build/*
 pro/WEB-INF/work/*
 .project
@@ -7,4 +13,5 @@ resin.conf
 rh.log*
 pro/WEB-INF/classes/*
 .externalToolBuilders/
+>>>>>>> a6f2a797c88e2d16c77950249daeff6783b46dca
 pro/WEB-INF/.gitignore

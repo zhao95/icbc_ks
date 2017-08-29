@@ -9,6 +9,8 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rh.core.base.Bean;
+import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.ServDao;
 
@@ -129,6 +131,9 @@ public class PassServ extends CommonServ {
 	public void update(Bean paramBean){
 		String user_code = paramBean.getStr("user_code");
 		String s = paramBean.getStr("checkedid");
+		String slevel = paramBean.getStr("level");
+		int level = Integer.parseInt(slevel);
+		String shenuser = paramBean.getStr("shenheuser");
 		//被选中的id
 		String[] ss = s.split(",");
 		String state = paramBean.getStr("radiovalue");
@@ -167,6 +172,18 @@ public class PassServ extends CommonServ {
 			newBean.set("SH_OTHER",user_code);
 			ServDao.save("TS_BMSH_NOPASS", newBean);
 			ServDao.delete("TS_BMSH_PASS", id);
+			//审核明细表中插入此次审核数据
+			UserBean userbean = UserMgr.getUserByWorkNum(shenuser);
+			Bean mindbean = new Bean();
+			mindbean.set("SH_LEVEL",slevel);
+			mindbean.set("SH_MIND", liyou);
+			mindbean.set("DATA_ID",bean.getStr("BM_ID"));
+			mindbean.set("SH_STATUS", state);
+			mindbean.set("SH_ULOGIN",userbean.getLoginName());
+			mindbean.set("SH_UNAME",userbean.getName());
+			mindbean.set("SH_UCODE",shenuser);
+			mindbean.set("SH_TYPE", 1);
+			ServDao.save("TS_COMM_MIND",mindbean);
 		}
 		}
 	}
