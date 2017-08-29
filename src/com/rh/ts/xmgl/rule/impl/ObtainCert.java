@@ -129,11 +129,7 @@ public class ObtainCert implements IRule {
 
 		sql.and("KSLBK_TYPE", lv); // 级别
 
-		if (xl.length == 1) {
-			sql.and("KSLBK_XL", xl[0]);
-		} else {
-			sql.andIn("KSLBK_XL", xl);
-		}
+		sql.andIn("KSLBK_XL", xl);
 
 		// 考试类别库找到编号
 		List<Bean> list = ServDao.finds(TsConstant.SERV_BM_KSLBK, sql);

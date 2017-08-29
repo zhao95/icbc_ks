@@ -54,8 +54,6 @@ public class RuleServ extends CommonServ {
 
 		try {
 
-			List<Bean> passList = new ArrayList<Bean>();// 验证结果
-
 			String infostr = paramBean.getStr("BM_INFO");
 
 			String liststr = paramBean.getStr("BM_LIST");
@@ -82,8 +80,14 @@ public class RuleServ extends CommonServ {
 			JSONArray objList = new JSONArray(liststr);
 
 			for (int i = 0; i < objList.length(); i++) {
+				
+				List<Bean> passList = new ArrayList<Bean>();// 验证结果
 
 				JSONObject obj = (JSONObject) objList.get(i);
+				
+				if (obj.length() == 0) {
+					continue;
+				}
 
 				Bean bmBean = jsonToBean(obj);
 
@@ -302,7 +306,8 @@ public class RuleServ extends CommonServ {
 				JSONObject obj = new JSONObject(jsonStr);
 				String var = obj.getString("vari");
 				String val = obj.getString("val");
-				name.replaceAll("#" + var + "#", val);
+				String repacle = "#" + var + "#";
+				name = name.replaceAll(repacle, val);
 
 			} catch (JSONException e) {
 				e.printStackTrace();
