@@ -5,6 +5,8 @@
 <!DOCTYPE html>
 <%
     final String CONTEXT_PATH = request.getContextPath();
+    String refDyxl = request.getParameter("REF_DYXL");//用request得到 序列参数
+    refDyxl = refDyxl == null ? "" : refDyxl;
 %>
 <html>
 <head>
@@ -54,6 +56,24 @@
         #examref-table > thead > tr > th {
             font-weight: bold
         }
+
+        /*滚动条样式*/
+        ._scrollbar::-webkit-scrollbar {
+            -webkit-appearance: none;
+        }
+
+        ._scrollbar::-webkit-scrollbar-thumb {
+            min-height: 2rem;
+            background: #ccc;
+            background-clip: padding-box;
+            border: 5px solid transparent;
+            border-radius: 10px;
+        }
+
+        ._scrollbar::-webkit-scrollbar-corner {
+            display: none
+        }
+
     </style>
 
 </head>
@@ -117,6 +137,7 @@
         <table class="rhGrid JColResizer" id="examref-table" border="1"><%-- dshtablea JPadding--%>
             <thead id="tem" class="">
             <tr style="backGround-color:WhiteSmoke; height: 30px;font-weight: bold">
+                <th style="width: 6.6%; text-align: center">类别</th>
                 <th style="width: 6.6%; text-align: center">序号</th>
                 <th style="width: 10%;">序列</th>
                 <th style="width: 20%;">模块</th>
@@ -273,7 +294,7 @@
             for (var i = 0; i < listData._DATA_.length; i++) {
                 var item = listData._DATA_[i];
                 var cardFiles = FireFly.getCardFile("TS_EXAMINATION_REFERENCE", item._PK_, /*servDataId,*/ "REF_FILE", {"S_FLAG": 1});
-                var fileDiv = jQuery('<div style="max-height:85px;overflow-y:auto;">');
+                var fileDiv = jQuery('<div style="max-height:85px;overflow-y:auto;" class="_scrollbar">');
                 for (var j = 0; j < cardFiles.length; j++) {
                     var cardFile = cardFiles[j];
                     var p = jQuery('<p></p>');
@@ -290,6 +311,7 @@
                  '  <input type="checkbox" name="checkbox1" value="checkboxaa" onchange="change(this)" title="">',
                  ' </td>'].join('')); */
                 tr.append('<td style="text-align: center;">' + (i + 1) + '</td>');
+                tr.append('<td>' + item.REF_DYLB__NAME + '</td>');
                 tr.append('<td>' + item.REF_DYXL__NAME + '</td>');
                 tr.append('<td>' + item.REF_DYMK__NAME + '</td>');
                 tr.append('<td><a target="_blank" href="' + item.REF_ONLINE_STUDY_URL + '">' + item.REF_ONLINE_STUDY + '</a></td>');
@@ -502,8 +524,25 @@
             listPage.search();
         });
         //岗位类下拉框数据填充
-        dictData = getDictData("", 'KSLBK_NAME');
+        var dictData = getDictData("", 'KSLBK_NAME');
         changeOption(icodes[0], dictData);
+
+        //如果参数中有序列的值，加入到搜索条件
+        var dyxl = "<%=refDyxl%>";
+        if (dyxl !== '') {
+            for (var i = 0; i < dictData.length; i++) {
+                var dylb = dictData[i];
+                var dyxlList = getDictData(" and KSLBK_NAME='" + dylb.NAME + "'", 'KSLBK_XL');
+
+                for (var j = 0; j < dyxlList.length; j++) {
+                    var dyxlItem = dyxlList[j];
+                    if (dyxlItem.NAME === dyxl) {
+                        changeOption(icodes[0], dictData, dylb.NAME);
+                        changeOption(icodes[1], dyxlList, dyxl);
+                    }
+                }
+            }
+        }
 
         //
         var listPage = new ListPage();

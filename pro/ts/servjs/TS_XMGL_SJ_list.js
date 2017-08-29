@@ -56,9 +56,9 @@ if (jQuery('#' + IMPORT_FILE_ID).length === 0) {
         "id": IMPORT_FILE_ID,
         "config": config
     });
-    file._obj.insertBefore(jQuery('#'+_viewer.servId+'-delete'));
-    $("#"+file.time  + "-upload span:first").css('padding','0 7px 2px 20px');
-    jQuery('<span class="rh-icon-img btn-imp"></span>').appendTo($("#"+file.time  + "-upload"));
+    file._obj.insertBefore(jQuery('#' + _viewer.servId + '-delete'));
+    $("#" + file.time + "-upload span:first").css('padding', '0 7px 2px 20px');
+    jQuery('<span class="rh-icon-img btn-imp"></span>').appendTo($("#" + file.time + "-upload"));
     file.initUpload();
     file.afterQueueComplete = function (fileData) {// 这个上传队列完成之后
         console.log("这个上传队列完成之后" + fileData);
@@ -272,12 +272,18 @@ function getTrIcodeValues(pk) {
 const dybm = $('th[icode="' + icodes[0] + '__NAME"]');
 dybm.html('对应报名');
 dybm.unbind('click');//去除对应报名(th)点击排序
+var deleteThNum = 0;//删除的th数量
 for (var i = 0; i < icodes.length; i++) {
     if (i !== 0) {
         var obj = icodes[i];
         _viewer.grid._tHead.find('th[icode="' + obj + '__NAME"]').remove();
+        deleteThNum++;
     }
 }
+//修改无记录tr的colspan值
+var rhGridTBody = _viewer.grid._table.find('.rhGrid-tbody');
+var rhGridShowNO = rhGridTBody.find('.rhGrid-showNO');
+rhGridShowNO.attr('colspan', rhGridShowNO.attr('colspan') - deleteThNum);
 
 //遍历每行设置下拉框及操作栏
 jQuery.each(_viewer.grid.getBodyTr(), function (i, tr) {
