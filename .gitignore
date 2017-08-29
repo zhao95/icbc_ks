@@ -1,0 +1,8 @@
+pro/WEB-INF/work/_jsp/_sy/_comm/_page/_page__jsp.java.smap
+pro/WEB-INF/work/*
+.project
+.settings/*
+pro/WEB-INF/doc/SY_COMM_MENU/*
+resin.conf
+rh.log*
+pro/WEB-INF/classes/*

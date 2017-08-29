@@ -346,39 +346,39 @@
 								<!-- 进度条 -->
 								<div id="jdtMain">
 									<div id="upDiv">
-										<div style="left: -15px">
+										<div style="left: -2%">
 											报名
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 47px">
+										<div style="left: 7%">
 											人工审核
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 128px">
+										<div style="left: 19%">
 											结果公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 210px">
+										<div style="left: 31%">
 											考场安排
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 292px">
+										<div style="left: 43%">
 											辖内公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 372px">
+										<div style="left: 55%">
 											总行公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 470px">
+										<div style="left: 70%">
 											考试
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 535px">
+										<div style="left: 79%">
 											成绩公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 615px">
+										<div style="left: 90%">
 											认证公示
 											<div class="upSX"></div>
 										</div>
@@ -404,28 +404,28 @@
 									</div>
 
 									<div id="downDiv">
-										<div style="left: 15px;">
+										<div style="left: 2%;">
 											<div class="downSX">|</div>
 											<span>提交报名</span><br /> <span>自动审核</span><br /> <span>异议</span>
 
 										</div>
-										<div style="left: 110px">
+										<div style="left: 16%">
 											<div class="downSX">|</div>
 											异议
 										</div>
-										<div style="left: 190px">
+										<div style="left: 28%">
 											<div class="downSX">|</div>
 											异议
 										</div>
-										<div style="left: 270px"  id ="jk_sp" >
+										<div style="left: 40%"  id ="jk_sp" >
 											<div class="downSX" >|</div>
 											借考
 										</div>
-										<div style="left: 340px">
+										<div style="left: 50%">
 											<div class="downSX">|</div>
 											<span>考场调整</span><br><span id ="qj_sp">请假</span>
 										</div>
-										<div style="left: 415px">
+										<div style="left: 61%">
 											<div class="downSX">|</div>
 											打印准考证
 										</div>
