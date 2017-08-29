@@ -162,10 +162,12 @@
 	      						 String xlname ="";
 	      						if(xlBean.size()!=0){
 	      						  lbname = xlBean.get(0).getStr("KSLB_NAME");
-	      						 xlname= xlBean.get(0).getStr("KSLB_XL");
+	      						String kslb_id = xlBean.get(0).getStr("KSLB_ID");
+	      						 xlname= xlBean.get(0).getStr("BM_XL");
 	      						%>
        						<tr>
 	      						<td ><input checked="checked" type="checkbox"  name="checkboxaa"></td>
+	      						<td class="rhGrid-td-hide" ><input type="text" id="zglbid" value="<%=kslb_id%>"></td>
 	      						<td width="10%"><%=lbname%></td>
 	      						<td width="15%"><%=xlname%></td>
 	      						<% 
@@ -173,7 +175,6 @@
 	      						%>
 	      						<td width="27%">
 	      						<select id="mkid" onchange="typeId(this)">
-	      						<option value=""></option>
 	      						<% 
 	      						//根据岗位名称，序列和项目id找到对应的模块
 	      						String wheremk = "AND KSLB_NAME="+"'"+pt_type+"'"+" AND KSLB_XL="+"'"+pt_sequnce+"'"+" AND XM_ID="+"'"+xm_id+"'";
@@ -372,24 +373,47 @@
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
 	<script type="text/javascript">
 	var yk={};
-	yk["BM_LB"]="<%=lbname%>";
-	yk["BM_XL"]="<%=xlname%>";
+	var tab = document.getElementById("tableid");
+    //表格行数
+    var rows = tab.rows.length;
+    if(rows>1){
+		yk["BM_LB"]="<%=lbname%>";
+		yk["BM_XL"]="<%=xlname%>";
+		
+		yk["BM_TYPE"]=document.getElementById("lxid").value;
+		yk["ID"]=document.getElementById("zglbid").value;
+    }
 	var xkArg=[];
 	//等级改变事件
 	function changeyk(obj){
 		yk["BM_TYPE"]=document.getElementById("lxid").value;
 	}
+	
+	$(function () { 
+		typeId(obj);
+	});
 	//模块改变事件
 	function typeId(obj){
+		var tab = document.getElementById("tableid");
+	    //表格行数
+	    var rows = tab.rows.length;
+	    if(rows>1){
 		var mkvalue= document.getElementById("mkid").value;
-		alert(mkvalue)
 		var param = {};
 		param["MK"]=mkvalue;
+		param["pt_type"]="<%=pt_type%>";
+		param["pt_sequnce"]="<%=pt_sequnce%>";
 		var ww= FireFly.doAct("TS_BMLB_BM", "getMkvalue", param);
-		var hh= ww.list;
+		hh= ww.list;
 		debugger;
-		alert(hh)
+		var tyArray = hh.split(",");
+		var select = document.getElementById("lxid");
+		jQuery("#lxid").empty();          //把select对象的所有option清除掉
+		for(var i=0;i<tyArray.length;i++){
+			select.options[i]=new Option(tyArray[i],tyArray[i]);
+		}
 		yk["BM_MK"]=mkvalue;
+	}
 	}
 	//模态页面 取消按钮 删除之前append的tr
 	function quxiao(){
@@ -506,11 +530,11 @@
 			   '<td class="rhGrid-td-hide" ><input type="text" name="zgksname" value="'+kslb_id+'"></td>';
 		      kslxArray[i].disabled=true;
 		       var xk = {};
-		       xk["KSLB_ID"] = kslb_id;
-		       xk["BM_LB"] = kslb_name;
-		       xk["BM_XL"] = kslb_xl;
-		       xk["BM_MK"] = kslb_mk;
-		       xk["BM_TYPE"] = kslb_type;
+		       xk['ID'] = kslb_id;
+		       xk['BM_LB'] = kslb_name;
+		       xk['BM_XL'] = kslb_xl;
+		       xk['BM_MK'] = kslb_mk;
+		       xk['BM_TYPE'] = kslb_type;
 		       xkArg.push(xk);
 			}
      	}
@@ -548,14 +572,13 @@
 		
 		var param = {};
 		var bminfo={};
-		bminfo["XM_ID"] = "<%=xm_id%>";
-		bminfo["BM_CODE"] = "<%=user_code%>";
-		bminfo["BM_STARTDATE"] = "<%=bm_start%>";
-		bminfo["BM_ENDDATE"] = "<%=bm_end%>";
-		
+		bminfo['XM_ID'] = '<%=xm_id%>';
+		bminfo['BM_CODE'] = '<%=user_code%>';
+		bminfo['BM_STARTDATE'] = '<%=bm_start%>';
+		bminfo['BM_ENDDATE'] = '<%=bm_end%>';
 		xkArg.push(yk);
-		param["BM_INFO"] = JSON.stringify(bminfo);
-		param["BM_LIST"] = JSON.stringify(xkArg);
+		param['BM_INFO'] = JSON.stringify(bminfo);
+		param['BM_LIST'] = JSON.stringify(xkArg);
 		console.log(JSON.stringify(param));
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, true,false,function(data){
     		console.log(data);
