@@ -1,1 +1,5 @@
 resin.conf
+.project
+rh.log.2017-08-28
+.settings/org.eclipse.core.resources.prefs
+pro/WEB-INF/.gitignore
