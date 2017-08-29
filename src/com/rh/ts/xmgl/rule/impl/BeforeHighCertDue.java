@@ -43,7 +43,7 @@ public class BeforeHighCertDue implements IRule {
 
 			sql.and("CERT_MODULE_CODE", mkCode);// 证书模块编号
 
-			sql.and("CERT_GRADE_CODE", "high");// 证书等级编号
+			sql.and("CERT_GRADE_CODE", "2");// 证书等级编号
 			
 			sql.and("QUALFY_STAT", 3);// 获证状态(1-正常;2-获取中;3-过期)
 

@@ -42,7 +42,7 @@ public class ObtainCert implements IRule {
 		certSql.and("STU_PERSON_ID", user).andNot("QUALFY_STAT", 3);
 
 		// 报考初级无持证要求
-		if (lvCode.equals("low")) {
+		if (lvCode.equals("1")) {
 			return true;
 		}
 
@@ -50,7 +50,7 @@ public class ObtainCert implements IRule {
 			xl = "业务处理";
 		}
 
-		if (lvCode.equals("inter")) { // 报考中级，需要初级资质
+		if (lvCode.equals("2")) { // 报考中级，需要初级资质
 
 			// 投行顾问序列初级资格不设置考试，取得营销、对公客户经理序列初级专业资格，信贷A类初级和信贷B类初级专业资质，可视为取得投行顾问序列初级资格
 			if ("投行顾问".equals(xl)) {
@@ -64,19 +64,19 @@ public class ObtainCert implements IRule {
 				postSql.and("POSTION_QUALIFICATION", "1").and("POSTION_SEQUENCE", xl);
 			}
 
-			certSql.and("CERT_GRADE_CODE", "low");
+			certSql.and("CERT_GRADE_CODE", "1");
 
 		} else if (lvCode.equals("high")) { // 报考高级，需要中级资质
 
 			postSql.and("POSTION_QUALIFICATION", "2").and("POSTION_SEQUENCE", xl);
 
-			certSql.and("CERT_GRADE_CODE", "inter");
+			certSql.and("CERT_GRADE_CODE", "2");
 
 		} else { // 报考专家级，需要高级资质
 
 			postSql.and("POSTION_QUALIFICATION", "3").and("POSTION_SEQUENCE", xl);
 
-			certSql.and("CERT_GRADE_CODE", "high");
+			certSql.and("CERT_GRADE_CODE", "3");
 		}
 
 		// 获证sql 设置证书模块条件

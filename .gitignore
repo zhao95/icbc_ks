@@ -6,3 +6,5 @@ pro/WEB-INF/doc/SY_COMM_MENU/*
 resin.conf
 rh.log*
 pro/WEB-INF/classes/*
+.externalToolBuilders/
+pro/WEB-INF/.gitignore
