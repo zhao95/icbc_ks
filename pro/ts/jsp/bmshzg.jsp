@@ -16,7 +16,7 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 <!-- 获取后台数据 -->
-<%@ include file="aaa.jsp"%>
+<%@ include file="/sy/base/view/inHeader.jsp"%>
 <%@ page import="com.rh.core.serv.ServDao"%>
 <%@ page import="com.rh.core.serv.ServMgr"%>
 <%@ page import="com.rh.ts.pvlg.mgr.GroupMgr"%>
@@ -31,6 +31,9 @@
 <!-- Ionicons -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/ionicons/css/ionicons.min.css">
+<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
 
 <script src="<%=CONTEXT_PATH%>/qt/js/html5shiv.min.js"></script>
 <script src="<%=CONTEXT_PATH%>/qt/js/respond.min.js"></script>
@@ -394,13 +397,10 @@ String user_code = userBean.getStr("USER_CODE");%>
 	}
 	</script>
 		
-	<script src="<%=CONTEXT_PATH%>/ts/jsp/shenhe.js"></script>
+	<script src="<%=CONTEXT_PATH%>/ts/js/shenhe.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
-	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
-	<!-- Bootstrap 3.3.6 -->
-	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
+	
 	<!-- FastClick -->
-	<script src="<%=CONTEXT_PATH%>/baoming.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
 	<!-- AdminLTE App -->
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>

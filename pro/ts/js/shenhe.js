@@ -21,7 +21,6 @@ function selectdata1(user_code,xmid,shenhe,yema){
 	var servId="TS_BMSH_STAY";
 	var checkbox="a";
 	var diftid="A";
-	alert(shenhe);
 	if(shenhe==1){
 	var name = document.getElementById("xm1").value;
     var renlicode =  document.getElementById("rlzybm1").value;
@@ -679,7 +678,6 @@ function appendTh(user_code){
 		}
 	//第一个td显示所有的数据
 function firall(){
-	alert("a");
 	var param1={};
     var result1 = FireFly.doAct("TS_BMSH_PX","getShenhelist",param1);
 	var data1= result1.list;
@@ -728,8 +726,6 @@ function firall(){
 					  var i=0;
 					  i++;
 					  var aa = $(this).val();
-					  alert(aa);
-					  
 					  if(i==0){
 						  s+=aa;
 					  }else{
@@ -929,7 +925,7 @@ function firall(){
 		
 //---------------------------------------------------------------------------------------------------------
 			//加载完后自动调用
-				jQuery(function(){
+			jQuery(function(){
 				appendTh(user_code);
 				selectdata1(user_code,xmid,1,1);
 				firall();
@@ -970,7 +966,7 @@ function firall(){
 				data = jQuery.extend(data,whereData);
 				
 				window.open(FireFly.getContextPath() + '/' + obj + '.exp.do?data=' + 
-				encodeURIComponent(jQuery_1_8_2.toJSON(data)));
+				encodeURIComponent(jQuery.toJSON(data)));
 				
 				}
 			
