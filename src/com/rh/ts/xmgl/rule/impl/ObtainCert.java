@@ -123,7 +123,7 @@ public class ObtainCert implements IRule {
 	 * @return
 	 */
 	private String[] getMkCodes(String lv, String... xl) {
-		String[] mkCodes = {};
+		String[] mkCodes = new String[100];
 
 		SqlBean sql = new SqlBean();
 
