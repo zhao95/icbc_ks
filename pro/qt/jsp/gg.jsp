@@ -2,12 +2,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.rh.core.serv.ServDao" %>
 <%@ page import="com.rh.core.base.Bean" %>
+<%@ page import="com.rh.core.serv.dict.DictMgr" %>
 <%@ include file= "../../sy/base/view/inHeader.jsp" %>
 <%
 	String id = request.getParameter("id");
-	Bean ks = ServDao.find("KS_GG",id);
+	Bean ks = ServDao.find("TS_GG",id);
 	String title = ks.getStr("GG_TITLE");
 	String content = ks.getStr("GG_CONTENTS");
+	String dept = DictMgr.getName("SY_ORG_DEPT",ks.getStr("S_DEPT"));
+    String sAtime = ks.getStr("S_ATIME");
 %>
 
 <html>
@@ -68,10 +71,13 @@
       <!-- Unnamed (矩形) -->
       <div class="ax_default label" id="u3559">
         <div id="u3559_div"></div>
-       <div class="text" id="GG_TITLE">
+       <div class="text" id="GG_TITLE" style="top: -6px;position: relative;">
           <p><span><%=title%></span></p>
-        </div> 
-         </div>
+        </div>
+        <div class="" id="" style="color: #999999;line-height: 19px;font-size: 14px;">
+          <p><span><%=sAtime%> <%=dept%></span></p>
+        </div>
+      </div>
        <!-- Unnamed (图像) -->
       <div class="ax_default image" id="u3561">
         <img class="img " id="u3561_img" src="<%=urlPath %>/qt/img/u1182.png">

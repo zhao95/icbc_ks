@@ -49,6 +49,7 @@ public class BmServ extends CommonServ {
 		Bean newBean = new Bean();
 		newBean.set("STATE", state);
 		newBean.set("START_TIME",startTime);
+		newBean.set("END_TIME",endTime);
 		List<Bean> list = new ArrayList<Bean>();
 		list.add(newBean);
 		

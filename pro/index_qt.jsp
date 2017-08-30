@@ -389,15 +389,15 @@
 									<br />
 									<div id="jdtDivOut" class="progress">
 										<div id="jdtDivInner1" class="progress-bar"
-											style="background-color: #blue"></div>
+											style="background-color: blue"></div>
 										<div id="jdtDivInner2" class="progress-bar"
 											style="background-color: #70c0b3"></div>
 										<div id="jdtDivInner3" class="progress-bar divColor"
-											style="background-color: #red"></div>
+											style="background-color: red"></div>
 										<div id="jdtDivInner4" class="progress-bar divColor"
 											style="background-color: #70c0b3"></div>
 										<div id="jdtDivInner5" class="progress-bar divColor"
-											style="background-color: #blue"></div>
+											style="background-color: blue"></div>
 										<div id="jdtDivInner6" class="progress-bar"
 											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner7" class="progress-bar"
@@ -453,68 +453,6 @@
 						</div>
 						<!-- /.box-div -->
 						<!-- /.box -->
-
-						<div class="box">
-							<div class="box-header">
-								<h3 class="box-title">可申请的报名 (2)</h3>
-							</div>
-							<!-- /.box-header -->
-							<div class="box-body no-padding">
-								<table class="table table-condensed">
-									<tr>
-										<th style="width: 10px">#</th>
-										<th>Task</th>
-										<th>Progress</th>
-										<th style="width: 40px">Label</th>
-									</tr>
-									<tr>
-										<td>1.</td>
-										<td>Update software</td>
-										<td>
-											<div class="progress progress-xs">
-												<div class="progress-bar progress-bar-danger"
-													style="width: 55%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-red">55%</span></td>
-									</tr>
-									<tr>
-										<td>2.</td>
-										<td>Clean database</td>
-										<td>
-											<div class="progress progress-xs">
-												<div class="progress-bar progress-bar-yellow"
-													style="width: 70%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-yellow">70%</span></td>
-									</tr>
-									<tr>
-										<td>3.</td>
-										<td>Cron job running</td>
-										<td>
-											<div class="progress progress-xs progress-striped active">
-												<div class="progress-bar progress-bar-primary"
-													style="width: 30%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-light-blue">30%</span></td>
-									</tr>
-									<tr>
-										<td>4.</td>
-										<td>Fix and squish bugs</td>
-										<td>
-											<div class="progress progress-xs progress-striped active">
-												<div class="progress-bar progress-bar-success"
-													style="width: 90%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-green">90%</span></td>
-									</tr>
-								</table>
-							</div>
-							<!-- /.box-body -->
-						</div>
 
 					<%--待办/提醒--%>
 					<div class="panel panel-default" id="todo-panel">
@@ -588,91 +526,44 @@
 					</div>
 
 						<!-- /.box -->
-						<div class="box">
-							<div class="box-header">
-								<h3 class="box-title">可申请的报名 (2)</h3>
-							</div>
-							<!-- /.box-header -->
-							<div class="box-body no-padding">
-								<table class="table table-condensed">
-									<tr>
-										<th style="width: 10px">#</th>
-										<th>Task</th>
-										<th>Progress</th>
-										<th style="width: 40px">Label</th>
-									</tr>
-									<tr>
-										<td>1.</td>
-										<td>Update software</td>
-										<td>
-											<div class="progress progress-xs">
-												<div class="progress-bar progress-bar-danger"
-													style="width: 55%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-red">55%</span></td>
-									</tr>
-									<tr>
-										<td>2.</td>
-										<td>Clean database</td>
-										<td>
-											<div class="progress progress-xs">
-												<div class="progress-bar progress-bar-yellow"
-													style="width: 70%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-yellow">70%</span></td>
-									</tr>
-									<tr>
-										<td>3.</td>
-										<td>Cron job running</td>
-										<td>
-											<div class="progress progress-xs progress-striped active">
-												<div class="progress-bar progress-bar-primary"
-													style="width: 30%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-light-blue">30%</span></td>
-									</tr>
-									<tr>
-										<td>4.</td>
-										<td>Fix and squish bugs</td>
-										<td>
-											<div class="progress progress-xs progress-striped active">
-												<div class="progress-bar progress-bar-success"
-													style="width: 90%"></div>
-											</div>
-										</td>
-										<td><span class="badge bg-green">90%</span></td>
-									</tr>
-								</table>
-							</div>
-							<!-- /.box-body -->
-						</div>
-						<!-- /.box -->
 					</div>
 					<!-- /.col -->
 					<div class="col-md-4">
-						<div class="box">
-							<div class="box-header">
-								<h3 class="box-title">通知公告</h3>
+						<div id="announcement-box" class="box">
+							<div class="box-header" style="background-color: #f9f9f9;">
+								<h3 class="box-title" style="display: block;">
+									通知公告
+									<a href="/qt/jsp/todo.jsp" class="index-list-more-a">
+										更多
+										<span style="color:red;">&gt;</span>
+									</a>
+								</h3>
 							</div>
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
-								<table class="table">
+								<table class="table no-border">
 									<tr>
-										<td style="width: 10px">1</td>
-										<td>关于使用正规浏览器...</td>
+										<td>
+											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #398daf;">
+												●
+											</span>
+											关于使用正规浏览器...</td>
 										<td>2017-05-31</td>
 									</tr>
 									<tr>
-										<td style="width: 10px">1</td>
-										<td>个人对公初级专业资...</td>
+										<td>
+											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #b4dbc0;">
+												●
+											</span>
+											个人对公初级专业资...</td>
 										<td>2017-05-21</td>
 									</tr>
 									<tr>
-										<td style="width: 10px">1</td>
-										<td>综合中级专业资格认</td>
+										<td>
+											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #ff0000;">
+												●
+											</span>
+											综合中级专业资格认</td>
 										<td>2017-05-11</td>
 									</tr>
 								</table>
@@ -700,8 +591,8 @@
 						<div class="box-header" icode="ksrl-header">
 							<h3 class="box-title">考试日历</h3>
 							<p style="float:right;cursor:pointer;">
-								<span style="font-family:'微软雅黑';color:'#ff0000';">更多</span>
-								<span style="font-family:'黑体';color:'#ff0000';">></span>
+								<span style="font-family:'微软雅黑';color:#ff0000;">更多</span>
+								<span style="font-family:'黑体';color:#ff0000;">></span>
 							</p>
 						</div>
 						<div class="TS_KS_CAL" style="height:250px;">

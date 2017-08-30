@@ -1,10 +1,11 @@
 /**
- * 首页待办/可申请报名列表初始化
+ * 首页待办/可申请报名列表/通知公告初始化
  */
 
 $(function () {
     showTodoContent();
     setApplyContent();
+    setAnnouncementContent();
 });
 
 /**
@@ -93,22 +94,18 @@ function setApplyContent() {
         var deptCode = userXm.XM_FQDW_NAME;
         var kstype = userXm.XM_TYPE;
 
-        var where1 = "AND XM_ID=" + "'" + xmId + "'";
-        var data = {
-            "_SELECT_": "BM_START,BM_END,XM_ID,XM_SZ_ID ",
-            "_extWhere": where1,
-            "_NOPAGE_": "true"
-        };
-        var listBean = FireFly.doAct("TS_XMGL_BMGL", "query", data);
-        var bmBean = listBean._DATA_[0];
-        var startTime = bmBean.BM_START;
-        var endTime = bmBean.BM_END;
+        //获取报名时间判断  报名状态
+        var param1 = {};
+        param1["xmid"] = xmId;
+        var result1 = FireFly.doAct("TS_XMGL_BMGL", "getBMState", param1);
+        var data1 = result1.list;
+        var pageEntity1 = JSON.parse(data1);
+        var startTime = pageEntity1[0].START_TIME;
+        var endTime = pageEntity1[0].END_TIME;
+        var state = pageEntity1[0].STATE;
 
         var canApply = false;
-
-        if (startTime !== '' && startTime !== null && startTime !== undefined
-            && endTime !== '' && endTime !== null && endTime !== undefined
-            && new Date().getTime() >= Date.parse(startTime) && new Date().getTime() < Date.parse(endTime)) {
+        if (state === "待报名") {
             //当前可报名
             canApply = true;
         }
@@ -154,6 +151,38 @@ function setApplyContent() {
     }
 }
 
+/**
+ * 通知公告
+ */
+function setAnnouncementContent() {
+    var data = {};
+    var ggList = FireFly.doAct("TS_GG", 'query', data, false);
+    var tbodyEl = jQuery('#announcement-box .table tbody');
+    tbodyEl.html('');
+
+    var circleColors = ['#398daf', '#b4dbc0', '#ff0000'];
+
+    for (var i = 0; i < ggList._DATA_.length; i++) {
+        if (i === 3) {
+            return false;
+        }
+        var gg = ggList._DATA_[i];
+        var trEl = jQuery([
+            '<tr id="' + gg.GG_ID + '">',
+            '   <td class="col-md-8">',
+            '       <span style="color: ' + circleColors[i] + ';width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;">●</span>',
+            '       <a href="' + FireFly.getContextPath() + '/qt/jsp/gg.jsp?id=' + gg.GG_ID + '" style="display: inline;" class="gg-title" style="cursor:pointer;">' + gg.GG_TITLE + '</a>',
+            '   </td>',
+            '<td class="col-md-4">' + new Date(gg.S_ATIME).format("yyyy-mm-dd") + '</td>',//yyyy-mm-dd HH:MM
+            '</tr>'
+        ].join(''));
+        // trEl.find('.gg-title').bind('click', function () {
+        //     alert('test');
+        // });
+        trEl.appendTo(tbodyEl);
+    }
+
+}
 
 /**
  * form表单post请求
