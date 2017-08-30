@@ -12,19 +12,33 @@ $(function (){
 	var param1 = {};
 	//调用平台级的方法，使用系统变量获取到当前登录用户的人力资源编码
 	//通过人力资源编码查询报名项目的服务对应的表
-	var CurrentUser_work_num=System.getUser("USER_WORK_NUM");
-	param1["_extWhere"]= "and BM_CODE='"+CurrentUser_work_num+"'";
-	var resultUserAssociateXM = FireFly.doAct("TS_BMLB_BM","query",param1);
+//	var CurrentUser_work_num=System.getUser("USER_WORK_NUM");
+	
+	//因审核暂时使用的是用户编码，所以此时暂时使用USER_CODE(后续要改)
+	var CurrentUser_work_num=System.getUser("USER_CODE");
+	param1["_extWhere"]= "and STR1='"+CurrentUser_work_num+"' AND INT1 ='1'";
+	var resultUserAssociateXM = FireFly.doAct("TS_XMZT","query",param1);
 	//上面结果的项目id获取到，再查询到对应的项目的挂接模块
 	//此时获取到的是项目挂接模块的名称以逗号分割的字符串
-	var xm_id = resultUserAssociateXM._DATA_[0].XM_ID;
-	var ks_name=resultUserAssociateXM._DATA_[0].BM_TITLE;
+	var xm_id = resultUserAssociateXM._DATA_[0].DATA_ID;
+//	var ks_name=resultUserAssociateXM._DATA_[0].BM_TITLE;
+//	var xm_jd = resultUserAssociateXM._DATA_[0].XM_JD;
+	
 //	debugger;
 	//使用字符串的方法，将去除逗号的BM_GJ  模块合并成一条字符串， 并将字符串根据，进行分割， 得到分割后的数组。
 	var param2 = {};
 	param2["_extWhere"]="and XM_ID ='"+xm_id+"'";
 	var resultXM = FireFly.doAct("TS_XMGL","query",param2);
 	var xm_gj_str = resultXM._DATA_[0].XM_GJ;
+	var ks_name=resultXM._DATA_[0].XM_NAME;
+	//获取项目的进度百分数
+	var jdtNum = resultXM._DATA_[0].XM_JD;
+	if(jdtNum==undefined){
+		jdtNum="8.8";
+	}else{
+	var jdeNumArr = jdtNum.split(".");
+	jdtNum = jdeNumArr[0]+"0.0";
+	}
 	//此时数组存储的是内容为查询到的挂接模块的名称
 	var mkArray = xm_gj_str.split(",");
 	//创建存储当前项目所有进度的数组
@@ -133,7 +147,7 @@ $(function (){
 	});
 	
 	//设置进度值为百分之xx
-	var jdtNum = CurrentXMGJ.length / xmzt_arr_all.length * 100;
+//	var jdtNum = CurrentXMGJ.length / xmzt_arr_all.length * 100;
 //	debugger;
 	$("#jdtNum").html(""+jdtNum+"");
 	$("#jdtName").html(""+ks_name+"");
