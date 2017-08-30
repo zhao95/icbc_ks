@@ -273,4 +273,164 @@ public Bean getUserXm(Bean paramBean){
      outBean.set("list",w.toString());
 	return outBean;
 }
+
+/**
+ * 获取此人所在节点下 可审核 的 机构 根据机构   筛选可审核的项目
+ */
+public Bean getDshList(Bean paramBean){
+	String user_code = paramBean.getStr("user_code");
+	/*ServDao.finds("TS_XMGL", where);*/
+	List<Bean> list = ServDao.finds("TS_XMGL", "");
+	//可审核的项目list
+	List<Bean>  SHlist = new ArrayList<Bean>();
+	Boolean  show = false;
+	for (Bean bean : list) {
+		String id = bean.getId();
+		//查询待审核 表  里的other字段判断 是否包含user_code
+		String where = "AND XM_ID="+"'"+id+"'";
+		List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", where);
+		
+		for (Bean bean2 : staylist) {
+			
+			String other = bean2.getStr("SH_OTHER");
+			if(other.contains(user_code)){
+				show = true;
+			}
+		}
+		if(show){
+			SHlist.add(bean);
+		}
+	}
+	
+	Bean out = new Bean();
+	out.set("list", SHlist);
+	return out;
+}
+/**
+ * 获取此人所在节点下 可审核 的 机构 根据机构   筛选可审核的项目
+ */
+public Bean getShJsonList(Bean paramBean){
+	String where1 = paramBean.getStr("where");
+	String user_code = paramBean.getStr("user_code");
+	List<Bean> list = ServDao.finds("TS_XMGL", where1);
+	//可审核的项目list
+		List<Bean>  SHlist = new ArrayList<Bean>();
+		Boolean  show = false;
+		for (Bean bean : list) {
+			String id = bean.getId();
+			//查询待审核 表  里的other字段判断 是否包含user_code
+			String where = "AND XM_ID="+"'"+id+"'";
+			List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", where);
+			
+			for (Bean bean2 : staylist) {
+				
+				String other = bean2.getStr("SH_OTHER");
+				if(other.contains(user_code)){
+					show = true;
+				}
+			}
+			if(show){
+				SHlist.add(bean);
+			}
+		}
+	Bean outBean = new Bean();
+	ObjectMapper mapper = new ObjectMapper();    
+    StringWriter w = new StringWriter();  
+    try {
+		mapper.writeValue(w, SHlist);
+	} catch (JsonProcessingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} 
+	 catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+    outBean.set("list",w.toString());
+    return outBean;
+}
+
+/**
+ * 获取项目下所有 未审核的 报名   (某一页 每页多少条)
+ */
+public Bean getUncheckList(Bean paramBean){
+		Bean outBean = new Bean();
+		String servId = "TS_XMGL";
+		String user_code = paramBean.getStr("user_code");
+		String NOWPAGE = paramBean.getStr("nowpage");
+		String SHOWNUM = paramBean.getStr("shownum");
+		String where1 = paramBean.getStr("where");
+		List<Bean> list = ServDao.finds(servId, where1);
+		List<Bean>  SHlist = new ArrayList<Bean>();
+		Boolean  show = false;
+		for (Bean bean : list) {
+			String id = bean.getId();
+			//查询待审核 表  里的other字段判断 是否包含user_code
+			String where = "AND XM_ID="+"'"+id+"'";
+			List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", where);
+			
+			for (Bean bean2 : staylist) {
+				
+				String other = bean2.getStr("SH_OTHER");
+				if(other.contains(user_code)){
+					show = true;
+				}
+			}
+			if(show){
+				SHlist.add(bean);
+			}
+		}
+		int ALLNUM = SHlist.size();
+		//计算页数
+		int meiye =  Integer.parseInt(SHOWNUM);
+		int yeshu = ALLNUM/meiye;
+		int yushu = ALLNUM%meiye;
+		//获取总页数
+		if(yushu==0&&yeshu!=0){
+			yeshu+=1;
+		}
+		
+		int nowpage = Integer.parseInt(NOWPAGE);
+		int showpage = Integer.parseInt(SHOWNUM);
+		//计算第一项 开始
+		int chushi = (nowpage-1)*showpage+1;
+		//计算结束项
+		int jieshu = (nowpage-1)*showpage+showpage;
+		//放到Array中
+		List<Bean> list2 = new ArrayList<Bean>();
+		if(ALLNUM==0){
+			//没有数据
+		}else{
+			
+			if(jieshu<=ALLNUM){
+				//循环将数据放入list2中返回给前台
+				for(int i =chushi;i<=jieshu;i++){
+					list2.add(list.get(i-1));
+				}
+				
+			}else{
+				for(int j=chushi;j<ALLNUM+1;j++){
+					list2.add(list.get(j-1));
+				}
+			}
+		}
+		//ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化  
+	   ObjectMapper mapper = new ObjectMapper();    
+       StringWriter w = new StringWriter();  
+       try {
+		mapper.writeValue(w, list2);
+	} catch (JsonProcessingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} 
+	 catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+       outBean.set("list",w.toString());
+       return outBean;
+}
+}
+
+
 }

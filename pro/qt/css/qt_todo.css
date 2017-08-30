@@ -2,6 +2,7 @@
 #todo-panel > .panel-body {
     min-height: 230px;
 }
+
 /*待办项样式*/
 .index-qt-todo-list .todo-item {
     padding: 0 0 10px 0;
@@ -47,6 +48,7 @@
 
 /*待办更多a标签样式*/
 .index-list-more-a {
+    color: black;
     float: right;
     cursor: pointer;
     font-size: 12px;
@@ -75,4 +77,27 @@
     padding: 10px;
 }
 
+/*首页通知公告样式*/
+/*超出省略号*/
+#announcement-box .table {
+    table-layout: fixed;
+}
 
+#announcement-box .table tr td {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -moz-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+}
+
+/*通知公告标题*/
+.gg-title {
+    display: inline;
+    color: black;
+}
+
+.gg-title:hover, .gg-title:active {
+    color: black;
+}
