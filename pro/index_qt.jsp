@@ -278,7 +278,7 @@
 						</a>
 					</div>
 					<div id="renzheng" style="float: left;">
-						<a href="#">
+						<a href="eti/jsp/rzgj.jsp">
 							<div class="box_2"
 								style="background-color: rgba(0, 198, 198, 1); width: 44px; height: 44px; border-radius: 24px; margin-left: 20px;">
 								<div id="u3294_div" class="" tabindex="0">
