@@ -15,7 +15,7 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 <!-- 获取后台数据 -->
-<%@ include file="/sy/base/view/inHeader.jsp"%>
+<%@ include file="../../sy/base/view/inHeader.jsp"%>
 <%@ page import="com.rh.core.serv.ServDao"%>
 <%@ page import="com.rh.core.serv.ServMgr"%>
 <%@ page import="com.rh.ts.pvlg.mgr.GroupMgr"%>

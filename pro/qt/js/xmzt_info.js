@@ -11,11 +11,10 @@ $(function (){
 			"未设置":"c1",
 			"已设置":"c3"
 	}
-	//获取用户功人力资源编码(目前使用的是用户编码)
+	//获取用户人力资源编码(目前使用的是用户编码)
 //	var user_work_num = System.getUser("USER_WORK_NUM");
 	var user_work_num = System.getUser("USER_CODE");
 	var paramBM = {};
-//	paramBM["_extWhere"] = "AND BM_CODE = '"+user_work_num+"'";
 	paramBM["_extWhere"] = "AND BM_CODE = '"+user_work_num+"'";
 	//查询出该人员报名的所有项目
 	var resultBM = FireFly.doAct("TS_BMSH_PASS","query",paramBM);
@@ -36,14 +35,7 @@ $(function (){
 			//判断项目进度是否小于100%
 			if(resultXM._DATA_[0].XM_JD<10){
 //				debugger;
-				//通过项目ID和用户人力资源编码查询到show_type
-				var paramObj = {};
-				paramObj["_extWhere"] = "and STR1='"+user_work_num+"' AND DATA_ID = '"+xm_id+"'";
-				var resultObj = FireFly.doAct("TS_OBJECT","query",paramObj);
-				var show_type = resultObj._DATA_[0].INT1;
-				var show_id = resultObj._DATA_[0].ID;
 				
-//				debugger;
 				var xm_rowNum =resultBM._DATA_[i].ROWNUM_;
 				var xm_name = resultXM._DATA_[0].XM_NAME;
 				var xm_type = resultXM._DATA_[0].XM_TYPE;
@@ -53,11 +45,17 @@ $(function (){
 				var xm_end = resultXM._DATA_[0].XM_END;
 				var xm_jd = resultXM._DATA_[0].XM_JD;
 				var xm_currentState = "";
-				var xm_opera ="";
-				if(show_type ==="0"){
-					var xm_opera = "首页未显示";
-				}else if(show_type =="1"){
-					var xm_opera = "首页显示";
+				
+				//通过项目ID和用户人力资源编码查询到标志，设置按钮的内容
+				var paramObj1 = {};
+				paramObj1["_extWhere"] = "and STR1='"+user_work_num+"' AND DATA_ID ='"+xm_id+"'";
+				var resultObj = FireFly.doAct("TS_XMZT","query",paramObj1);
+				if(resultObj._DATA_.length != 0 ){
+					if(resultObj._DATA_[0].INT1 === "1"){
+						var xm_opera ="首页显示中";
+					}
+				}else{
+					var xm_opera ="首页未显示";
 				}
 //				debugger;
 				//获取到项目挂接所有模块姓名
@@ -73,7 +71,7 @@ $(function (){
 					}
 				}
 				//数据输入到页面
-				jQuery("#table1_tbody").append('<tr class="rhGrid-td-left" id="'+show_id+'" XM_ID="'+xm_id+'" style="height: 50px">'+
+				jQuery("#table1_tbody").append('<tr class="rhGrid-td-left" XM_ID="'+xm_id+'" style="height: 50px">'+
 						'<td class="indexTD" style="text-align: center">'+xm_rowNum1+'</td>'+
 						'<td class="rhGrid-td-left " id="xm_currentState"style="text-align: center">'+xm_name+'</td>'+
 						'<td class="rhGrid-td-left " id="xm_type" style="text-align: center">'+xm_type+'</td>'+
@@ -107,7 +105,7 @@ $(function (){
 				var xm_jd = resultXM._DATA_[0].XM_JD;
 				var xm_currentState = "";
 				//数据输入到页面
-				jQuery("#table2_tbody").append('<tr class="rhGrid-td-left" id="'+show_id+'" XM_ID="'+xm_id+'" style="height: 50px">'+
+				jQuery("#table2_tbody").append('<tr class="rhGrid-td-left"  XM_ID="'+xm_id+'" style="height: 50px">'+
 						'<td class="indexTD" style="text-align: center">'+xm_rowNum2+'</td>'+
 						'<td class="rhGrid-td-left " id="BM_NAME"style="text-align: center">'+xm_name+'</td>'+
 						'<td class="rhGrid-td-left " id="BM_ODEPT__NAME" style="text-align: center">'+xm_type+'</td>'+
@@ -132,16 +130,43 @@ $(function (){
 		//判断点击按钮以后，将要显示的项目显示到首页
 		
 		jQuery("#table1_tbody").find(".opera_btn").unbind("click").click(function (){
-			var tr_id = $(this).parent().parent().attr("id");
+			//获取到对应的XM_ID
 			var tr_xm_id = $(this).parent().parent().attr("XM_ID");
-			var strsLength = jQuery("#table1_tbody").find("tr").length;
-//			debugger;
+			
+			//通过项目ID和用户人力资源编码查询到show_type
+			var paramObj = {};
+			paramObj["_extWhere"] = "and STR1='"+user_work_num+"'";
+			var resultObj = FireFly.doAct("TS_OBJECT","query",paramObj);
+			
+			//如果ts_object表中无此数据，则添加一条对应用户的数据，再次查询结果
+			if(resultObj._DATA_.length == 0 ){
+				var saveParam={};
+				saveParam["DATA_ID"] =xm_id;
+				saveParam["STR1"] =user_work_num;
+				saveParam["INT1"] =1;
+				saveParam["SERV_ID"] ="TS_XMZT";
+				FireFly.doAct("TS_XMZT","save",saveParam);
+				resultObj = FireFly.doAct("TS_OBJECT","query",paramObj);
+			}
+			
+			$(this).val("首页显示中");
+			
 			var paramStrs = {};
-			paramStrs["TR_ID"]=tr_id;
+//			paramStrs["TR_ID"]=tr_id;
 			paramStrs["USER_WORK_NUM"]=user_work_num;
 			paramStrs["XM_ID"]=tr_xm_id;
-			FireFly.doAct("TS_XMZT","modifyShowType",paramStrs,function(){
-				window.location.reload();
+			FireFly.doAct("TS_XMZT","modifyShowType",paramStrs,false,false,function(data){
+				if(data.INT1==="1"){
+//					Tip.addTip("设置成功！");
+					location.reload();
+//					Tip.showLoad("设置成功！", null, jQuery(".ui-dialog-title", location).last());
+				}else{
+//					Tip.addTip("设置失败！");
+					location.reload();
+//					Tip.showLoad("设置失败！", null, jQuery(".ui-dialog-title", winDialog).last());
+				}
+//				debugger;
+//				window.location.reload();
 			});
 		});
 })
