@@ -16,12 +16,8 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 <!-- 获取后台数据 -->
+
 <%@ include file="/sy/base/view/inHeader.jsp"%>
-<%@ page import="com.rh.core.serv.ServDao"%>
-<%@ page import="com.rh.core.serv.ServMgr"%>
-<%@ page import="com.rh.ts.pvlg.mgr.GroupMgr"%>
-<%@ page import="com.rh.core.base.Bean"%>
-<%@ page import="java.text.SimpleDateFormat"%>
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
@@ -31,9 +27,6 @@
 <!-- Ionicons -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/ionicons/css/ionicons.min.css">
-<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
-<!-- Bootstrap 3.3.6 -->
-<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
 
 <script src="<%=CONTEXT_PATH%>/qt/js/html5shiv.min.js"></script>
 <script src="<%=CONTEXT_PATH%>/qt/js/respond.min.js"></script>
@@ -47,7 +40,7 @@
 <body class="hold-transition skin-black sidebar-mini">
 
 <style>
-      
+	 
       #dshtable{
             margin: 100px auto;
             position: relative;
@@ -107,38 +100,39 @@ String user_code = userBean.getStr("USER_CODE");%>
 			<table id="cxkuang" style="margin-top:20px">
 				<tbody>
 					<tr style="height:20px">
-						<td style="width:15%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:50%" id="xm1" type="text"></input></td>
-						<td style="width:15%;text-align:center">审核级数&nbsp;&nbsp;<input style="height:30px;width:50%" id="shjs" type="text"></input></td>
-						<td style="width:30%;text-align:right">人力资源编码&nbsp;&nbsp;<input  style="height:30px;width:50%" id="rlzybm1" type="text"></input></td>
-						<td style="width:13%;text-align:center"><select id = "zhuangtai1" onchange="ztcx(待审核)">
+						<td style="width:18%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:50%" id="xm1" type="text"></input></td>
+						<td style="width:18%;text-align:right">审核级数&nbsp;&nbsp;<input style="height:30px;width:50%" id="shjs" type="text"></input></td>
+						<td style="width:30%;text-align:center">人力资源编码&nbsp;&nbsp;<input  style="height:30px;width:50%" id="rlzybm1" type="text"></input></td>
+						<td style="width:1%;text-align:left"><select id = "zhuangtai1" onchange="ztcx(待审核)">
 				            <option selected="selected">全部</option>
 				            <option value="进行中">进行中</option>
 				            <option value="已结束">已结束</option>
 				            </select>
 				        </td>
-				        <td style="width:12%;"><button style="border:none;color:white;height:30px;width:35%;background:DarkTurquoise" onclick="xzcu(1)"id = "chaxun">查询</button></td>
+				        
+				        <td style="width:12%;text-align:left;"><button class ="btn" style="color:white;height:30px;width:35%;background:DarkTurquoise" onclick="xzcu(1)"id = "chaxun">查询</button></td>
 					</tr>
 				</tbody>
 			</table>
 			<div id="xixian"
-				style="margin-left: 10px; margin-top: 20px; background-color: lightgray; height:1px; width: 98%">
+				style="margin-left: 10px; margin-top: 10px; background-color: lightgray; height:1px; width: 98%">
 			</div>
-			<table style="margin-top:20px;width:50%">
+			<table style="margin-top:10px;width:50%">
 			<tr style="width:98%">
 				<td style="width:15%;text-align:right"><button  class="btn btn-success"  data-toggle="modal" style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheA()" id = "shenheA">审核</button></td>
 				<td style="width:20%;text-align:right"><button  class="btn btn-success"  data-toggle="modal" data-target="#paixu" style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="zdyl()" id = "zdyl" >自定义显示列</button></td>
-				<td style="width:20%;text-align:right"><button style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="impdata('TS_BMSH_STAY')" id = "import">文件批量导入</button></td>
-				<td style="width:20%;text-align:right"><button style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="exportdata('TS_BMSH_STAY','checkboxa')" id = "export">文件批量导出</button></td>
-				<td style="width:20%;text-align:center"><button style="border:none;color:white;height:30px;width:40%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
+				<td style="width:20%;text-align:right"><button class="btn btn-success" style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="impdata('TS_BMSH_STAY')" id = "import">文件批量导入</button></td>
+				<td style="width:20%;text-align:right"><button class="btn btn-success" style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="exportdata('TS_BMSH_STAY','checkboxa')" id = "export">文件批量导出</button></td>
+				<td style="width:20%;text-align:center"><button class="btn btn-success" style="border:none;color:white;height:30px;width:40%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
 					<table class="rhGrid JPadding JColResizer" id="staytable">
 					<thead>
 							<tr style="backGround-color:WhiteSmoke; height: 30px">
-							<th style="width: 5%; text-align: center"><input type="checkbox" name="checkbox1" value="checkboxaa" onchange="change(this)"></th>
-								<th style="width: 5%; text-align: center">序号</th>
-								<th style="width: 5%; text-align: center">操作</th>
+							<th style="width: 2%; text-align: center"><input type="checkbox" name="checkbox1" value="checkboxaa" onchange="change(this)"></th>
+								<th style="width: 3%; text-align: center">序号</th>
+								<th style="width: 8%; text-align: center">操作</th>
 								<!--从 TS_BMSH_PX中查找 当前审核人的 排序字段记录 没有的话 默认为空 循环遍历 list输出th  -->
 							</tr>
 					</thead>
@@ -175,25 +169,19 @@ String user_code = userBean.getStr("USER_CODE");%>
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">审核通过人员</span>
 			</div>
-			<table id="cxkuang" style="margin-top:20px">
-				<tbody>
-					<tr style="height:20px">
-						<td style="width:15%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:50%" id="xm2" type="text"></input></td>
-						<td style="width:5%"></td>
-						<td style="width:15;text-align:left">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:50%" id="rlzybm2" type="text"></input></td>
-				        <td style="width:60%;text-align:left"><button style="border:none;color:white;height:30px;width:10%;background:DarkTurquoise" onclick="xzcu(2)"id = "chaxun">查询</button></td>
-					</tr>
-				</tbody>
-			</table>
 			<div id="xixian"
-				style="margin-left: 10px; margin-top: 20px; background-color: lightgray; height:1px; width: 98%">
+				style="margin-left: 10px; margin-top: 10px; background-color: lightgray; height:1px; width: 98%">
 			</div>
-			<table style="margin-top:20px">
+			<table style="margin-top:10px">
 			<tr>
-				<td style="width:15%;text-align:right"><button  class="btn btn-success"  data-toggle="modal"  style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheB()" id = "shenheB">审核</button></td>
-				<td style="width:20%;text-align:right"><button style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="impdata('TS_BMSH_PASS')" id = "import">文件批量导入</button></td>
-				<td style="width:20%;text-align:right"><button style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="exportdata('TS_BMSH_PASS','checkboxb')" id = "export2">文件批量导出</button></td>
-				<td style="width:20%;text-align:center"><button style="border:none;color:white;height:30px;width:40%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
+				<td style="width:10%;text-align:center"><button  class="btn btn-success"  data-toggle="modal"  style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheB()" id = "shenheB">审核</button></td>
+				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="impdata('TS_BMSH_PASS')" id = "import">文件批量导入</button></td>
+				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="exportdata('TS_BMSH_PASS','checkboxb')" id = "export2">文件批量导出</button></td>
+				<td style="width:10%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
+				<td style="width:15%"></td>
+				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm2" type="text"></input></td>
+						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm2" type="text"></input></td>
+				        <td style="width:8%;text-align:left"><button class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(2)"id = "chaxun">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
@@ -240,25 +228,19 @@ String user_code = userBean.getStr("USER_CODE");%>
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">审核不通过人员</span>
 			</div>
-			<table id="cxkuang" style="margin-top:20px">
-				<tbody>
-					<tr style="height:20px">
-						<td style="width:15%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:50%" id="xm3" type="text"></input></td>
-						<td style="width:5%"></td>
-						<td style="width:15;text-align:left">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:50%" id="rlzybm3" type="text"></input></td>
-				        <td style="width:60%;text-align:left"><button style="border:none;color:white;height:30px;width:10%;background:DarkTurquoise" onclick="xzcu(3)"id = "chaxun">查询</button></td>
-					</tr>
-				</tbody>
-			</table>
 			<div id="xixian"
-				style="margin-left: 10px; margin-top: 20px; background-color: lightgray; height:1px; width: 98%">
+				style="margin-left: 10px; margin-top: 10px; background-color: lightgray; height:1px; width: 98%">
 			</div>
-			<table style="margin-top:20px">
+			<table style="margin-top:10px">
 			<tr>
-				<td style="width:15%;text-align:right"><button  class="btn btn-success"  data-toggle="modal"  style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheC()" id = "shenheC">审核</button></td>
-				<td style="width:20%;text-align:right"><button style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="impdata('TS_BMSH_NOPASS')" id = "import">文件批量导入</button></td>
-				<td style="width:20%;text-align:right"><button style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="exportdata('TS_BMSH_NOPASS','checkboxc')" id = "export3">文件批量导出</button></td>
-				<td style="width:20%;text-align:"><button style="border:none;color:white;height:30px;width:40%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
+				<td style="width:10%;text-align:center"><button  class="btn btn-success"  data-toggle="modal"  style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheC()" id = "shenheC">审核</button></td>
+				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="impdata('TS_BMSH_NOPASS')" id = "import">文件批量导入</button></td>
+				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="exportdata('TS_BMSH_NOPASS','checkboxc')" id = "export3">文件批量导出</button></td>
+				<td style="width:10%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
+						<td style="width:15%"></td>
+				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm3" type="text"></input></td>
+						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm3" type="text"></input></td>
+				        <td style="width:8%;text-align:left"><button class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(3)"id = "chaxun">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
@@ -355,7 +337,8 @@ String user_code = userBean.getStr("USER_CODE");%>
 				    <thead>
 				      <tr>
 				        <th style="padding-left:10px;width:40%;text-align:left">所有列</th>
-				          <th style="text-align:center">当前显示的列</th>
+				        <th width="20%"></th>
+				          <th style="text-align:left">当前显示的列</th>
 				      </tr>
 				      </thead>
 				      <tbody>
@@ -378,7 +361,42 @@ String user_code = userBean.getStr("USER_CODE");%>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-	
+	<div class="modal fade" id="yiyi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width:50%">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: #00c2c2;color: white">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title">
+						异议
+					</h4>
+					
+				</div>
+				<div style="padding-top:20px;width:300px;font-size:20px;text-align:center;color:lightseagreen">
+				申诉理由：
+				</div>
+				<div style="padding-top:20px">
+				<table style="width:700px">
+				<tr>
+				<td style="width:15%"></td><td style="height:150px;vertical-align:top"><textarea id="liyou" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
+				</tr>
+				</table>
+				<div style="padding-top:20px;width:300px;font-size:20px;text-align:center;color:lightseagreen">
+				申诉详细材料：
+				</div>
+				<table id="filehistory">
+				
+				</table>
+				
+				</div>
+				<div class="modal-footer" style="text-align:center;height:100px">
+					<button type="button" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">取消</button>
+				</div>
+				
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
 			<form id="form1" style="display:none" method="post" action="bmshmx.jsp">
 				<input id = "bmid" name="shmx"></input>
 			</form>
@@ -391,20 +409,23 @@ String user_code = userBean.getStr("USER_CODE");%>
 		<input type="hidden" id = "user_code" value="<%=user_code %>"/>
 	
 	<script>
+	var jq = $.noConflict(true);
 	//导入
 	function impdata(obj){
 		importdataa(event,obj);
 	}
 	</script>
-		
-	<script src="<%=CONTEXT_PATH%>/ts/js/shenhe.js"></script>
+		<script src="<%=CONTEXT_PATH%>/ts/js/shenhe.js"></script>
+	 <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
+	<!-- Bootstrap 3.3.6 -->
+	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>	 
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
-	
 	<!-- FastClick -->
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
 	<!-- AdminLTE App -->
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>
 	<!-- AdminLTE for demo purposes -->
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
+
 </body>
 </html>

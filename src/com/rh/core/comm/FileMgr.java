@@ -1555,12 +1555,12 @@ public class FileMgr {
 	 * @return deletes result
 	 */
 	public static boolean deleteFile(Bean file) {
-//		ServDao.delete(CURRENT_SERVICE, file);
-//		return deleteFileFromStorage(file);
+		ServDao.delete(CURRENT_SERVICE, file);
+		return deleteFileFromStorage(file);
 		//TODO 定期清理删除文件
-		file.set("S_FLAG", 2);
+		/*file.set("S_FLAG", 2);
 		ServDao.update(CURRENT_SERVICE, file);
-		return true;
+		return true;*/
 	}
 
 	/**

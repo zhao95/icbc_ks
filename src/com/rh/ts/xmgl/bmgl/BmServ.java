@@ -68,4 +68,31 @@ public class BmServ extends CommonServ {
 	       return outBean;
 		
 	}
+	/**
+	 * 获取项目信息
+	 * @param paramBean
+	 * @return
+	 * @throws ParseException 
+	 */
+	public Bean getXmInfo(Bean paramBean){
+		Bean outBean = new Bean();
+	String xmid = paramBean.getStr("xmid");
+	String where1 = "AND XM_ID="+"'"+xmid+"'";
+	List<Bean> listbean = ServDao.finds("TS_XMGL_BMGL",where1);
+	ObjectMapper mapper = new ObjectMapper();    
+    StringWriter w = new StringWriter();  
+    try {
+		mapper.writeValue(w, listbean);
+	} catch (JsonProcessingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} 
+	 catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+    outBean.set("list",w.toString());
+	
+    return outBean;
+	}
 }

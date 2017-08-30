@@ -44,7 +44,7 @@
 
 <%String user_code=userBean.getStr("user_code"); %>
 	<div class="" style="padding: 10px">
-		<a href="bmsh.jsp"><image style="padding-bottom:10px"
+		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
 				src="<%=CONTEXT_PATH%>/ts/image/u1155.png" id="shouye"></image></a> <span
 			style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;报名审核</span>
 	</div>
@@ -137,9 +137,7 @@
 					<td style="text-align: left"><%=state%></td>
 					<td><input type="button" onclick="tiaozhuan(<%=i%>)"
 						style="margin-top: 7px; border: none; color: white; font-size: 15px; background-color: LightSeaGreen; height: 35px; width: 80px"
-						value="审核"></input> &nbsp;&nbsp;<input type="button"
-						style="border: none; color: white; font-size: 15px; background-color: LightSeaGreen; height: 35px; width: 80px"
-						value="配置"></input> &nbsp;&nbsp;<input type="button"
+						value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" type="button" onclick="chakan(<%=i %>)"
 						style="border: none; color: white; font-size: 15px; background-color: LightSeaGreen; height: 35px; width: 80px"
 						value="查看"></input></td>
 					<td class="rhGrid-td-hide" id="XM_ID<%=i%>"><%=id%></td>
@@ -182,6 +180,51 @@
 			</table>
 		</div>
 	</div>
+	<div class="modal fade" id="bminfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width:50%">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: #00c2c2;color: white">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title">
+						报名详细信息
+					</h4>
+					
+				</div>
+				<div style="padding-left:30px;padding-top:20px;">
+				<table style="width:650px;font-size:20px;color:lightseagreen">
+				<tr height="50px">
+				<td style="width:30%;text-align:right;">报名编号:&nbsp;</td><td style="color:red;width:20%" id="bmcode"></td><td style="width:30%;text-align:right;">报名名称：&nbsp;</td><td style="color:red;text-align:center;width:40%" id="bmname" ></td>
+				</tr>
+				<tr height="50px">
+				<td style="width:30%;text-align:right;">创建人：&nbsp;</td><td style="color:red;width:20%" id="creator"></td><td style="width:30%;text-align:right;">组织单位：&nbsp;</td><td style="color:red;text-align:center;width:40%" id="oragnize"></td>
+				</tr>
+				<tr height="50px">
+				<td style="width:30%;text-align:right;">报名开始时间：&nbsp;</td><td style="color:red;width:20%" id="starttime"></td><td style="width:30%;text-align:right;">报名结束时间：&nbsp;</td><td style="color:red;text-align:center;width:40%" id="endtime"></td>
+				</tr>
+				<tr height="50px">
+				<td style="width:30%;text-align:right;">考试须知：&nbsp;</td><td style="color:red;width:20%" id="mustknow"></td><td style="width:30%;text-align:right;">状态：&nbsp;</td><td style="color:red;text-align:center;width:40%" id="status"></td>
+				</tr>
+				</table>
+				</div>
+				<div style="padding-top:20px;width:200px;font-size:20px;text-align:center;color:lightseagreen">
+				描述：
+				</div>
+				<div style="padding-top:20px">
+				<table style="width:700px">
+				<tr>
+				<td style="width:15%"></td><td style="disabled:disabled;height:150px;vertical-align:top"><textarea id="describe" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
+				</tr>
+				</table>
+				</div>
+				<div class="modal-footer" style="text-align:center;height:100px">
+					<button type="button" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">关闭</button>
+				</div>
+				
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
 	<form id="form1" style="display: none" method="post"
 		action="bmshzg.jsp">
 		<input id="zgtz" name="zgtz"></input>
@@ -195,7 +238,8 @@
 	<input type="hidden" id="xmid" />
 	<input type="hidden" id="dijige">
 	<script type="text/javascript">
-	$(function (){
+	var jq = $.noConflict(true);
+	jq(function (){
 		var user_code = "<%=user_code%>";
 		selectxmdata(user_code,1);
 		 var s ="yema"+1;
@@ -275,12 +319,162 @@
 		var table = document.getElementById("table");   
 		rowscolor(table);
 	} 
+	function chakan(obj){
+		
+		//通过项目查找报名信息
+		 var hid = "XM_ID"+obj;
+		var id = document.getElementById(hid).innerHTML;
+		alert(id);
+		var param={};
+		param["xmid"]=id;
+		var result = FireFly.doAct("TS_XMGL_BMGL","getXmInfo",param);
+		var data = result.list;
+		var pageEntity = JSON.parse(data);
+		$("#bmcode").text(pageEntity[0].BM_ID);
+		$("#bmname").text(pageEntity[0].BM_NAME);
+		$("#creator").text(pageEntity[0].BM_USER);
+		$("#oragnize").text(pageEntity[0].ODEPT);
+		$("#starttime").text(pageEntity[0].BM_START);
+		$("#endtime").text(pageEntity[0].BM_END);
+		$("#mustknow").text(pageEntity[0].BM_KSXZ);
+		$("#status").text(pageEntity[0].BM_STATE);
+		$("#describe").text(pageEntity[0].BM_DESC);
+	}
+
+	//项目筛选  能审核的项目   
+	function selectxmdata(user_code,yema){
+		var name = document.getElementById("mc").value;
+	    var zuzhidanwei =  document.getElementById("zzdw").value;
+	    var where1 = "";
+	    var where2 = "";
+	    var where3="";
+	    if(name!=""){
+	    	where1 = "AND XM_NAME like"+"'%"+name+"%'";
+	    }
+	    if(zuzhidanwei!=""){
+	    	where2 = " AND XM_FQDW_NAME like"+"'%"+zuzhidanwei+"%'"
+	    }
+	     	//下拉框值
+	     	var type =  document.getElementById("zhuangtai");
+	     	var index = type.selectedIndex;
+	     	var  zhuangtai = type.options[index].value;
+	     	
+	     	if(zhuangtai!="全部"){
+	     		//进行状态匹配 进行中和一结束
+	     		where3 = " AND BM_ZHUANGTAI="+"'"+zhuangtai+"'";
+	     	}
+	     	//每页条数
+			var select = document.getElementById("yema");
+			 var index = document.getElementById("yema").selectedIndex;
+			var myts = select.options[index].value;
+			//重新计算 页码
+			var param={};
+			param["user_code"]=user_code;
+			param["nowpage"]=yema;
+			param["shownum"]=myts;
+	     	param["where"]=where1 + where2 + where3;
+	     	//在某一结点下 可以查看哪些机构的 审核  过滤出来
+	     	var result = FireFly.doAct("TS_XMGL","getUncheckList",param);
+	     	
+	     	var result2 = FireFly.doAct("TS_XMGL","getShJsonList",param);
+			//data为json格式字符串
+			var data2 = result2.list;
+	     	var data = result.list;
+	     	//将json字符串 转换为 json对象
+	     	var first = (yema-1)*myts+1;
+	     	if(data==null){
+	     		$("#table tbody").html("");
+	     		$("#fenyeul").html("");
+	     		$("#fenyeul").append('<li><a href="#">&laquo;</a></li><li><a  href="#">&raquo;</a></li>');
+	     	}else{
+	     		
+	     		
+	     	var pageEntity=JSON.parse(data);
+	     	var pageEntity2 = JSON.parse(data2);
+	     	 //总条数/每页
+			//页数
+			 var yeshu = Math.floor(pageEntity2.length/myts);
+			 var yushu = pageEntity2.length%myts;
+			 $("#fenyeul").html("");
+			
+				 if(yushu!=0){
+					 //余数为0
+					 yeshu+=1;
+				 }
+				  for(var z=0;z<yeshu;z++){
+				  var j=z+1;
+					 if(z==0){
+				$("#fenyeul").append('<li onclick="forward()"><a href="#">&laquo;</a></li><li id="yema1" class="active" onclick="chaxun('+j+')"><a href="#">1</a></li>');
+					 }else {
+				 $("#fenyeul").append('<li id="yema'+j+'" onclick=chaxun('+j+')><a  href="#">'+j+'</a></li>');
+						 
+					 }
+					 
+				 
+			 }
+	     		  //最后一页
+				 var last =yeshu+1;
+				 $("#fenyeul").append(' <li id="yema'+last+'" onclick="backward('+last+')"><a  href="#">&raquo;</a></li>');
+				 $("li.active").removeClass();
+				 var s ="yema"+yema;
+				 $("#"+s).addClass("active");
+	     	$("#table tbody").html("");
+	     	  for(var i=0;i<pageEntity.length;i++){
+	     		  
+	     		 var name = pageEntity[i].XM_NAME;
+					var zzdw = pageEntity[i].XM_FQDW_NAME;
+					var startdate = pageEntity[i].XM_START;
+					var cjsj = pageEntity[i].S_ATIME;
+					var enddate = pageEntity[i].XM_END;
+					var xmtype = pageEntity[i].XM_TYPE;
+					//创建新时间 判断 状态
+					var str1 =startdate;
+					var str2 = enddate;
+					str1 = str1.replace(/-/g,"/");
+					str2 = str2.replace(/-/g,"/");
+					var state = "已结束";
+					if(startdate!=""&&enddate!=""){
+					var end = new Date(str2);
+					var start = new Date(str1);
+					var date = new Date();
+				
+					if(date.getTime()>start.getTime()&&date.getTime()<end.getTime()){
+						
+					 state = "报名审核";
+					}else if(date.getTime()<start.getTime()){
+						state = "未开始";
+					}
+					}
+					//添加一行隐藏的项目id
+					var id = pageEntity[i].XM_ID;
+					var xuhao = first+i;
+	     		//为table重新appendtr
+					if(state=="报名审核"){
+	     			$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td><input type="button" onclick="tiaozhuan('+i+')" style="margin-top:7px;border:none;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" style="border:none;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="查看"></input></td></tr>');
+		     		
+					}else{
+						$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="BM_ID'+i+'" >'+id+'</td><td></td></tr>');	
+					}
+	     	  }
+	     	
+	     	}	 
+	     	
+	   	 
+	}
+	function rowscolor(table){
+		 var rows = table.getElementsByTagName("tr");  
+		    for(i = 1; i < rows.length; i++){  
+		        if(i % 2 == 0){  
+		   
+		            rows[i].style.backgroundColor = "Azure";  
+		       }  
+		    } 
+	}
 	</script>
-	<script src="<%=CONTEXT_PATH%>/ts/jsp/shenhe.js"></script>
-	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
+	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<!-- FastClick -->
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
 	<!-- AdminLTE  -->

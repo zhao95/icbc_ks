@@ -183,6 +183,10 @@
 				<input id = "fzgtz" name="fzgtz"></input>
 			<input type="submit" name="Submit" value="提交">
 			</form>
+				<form id="form3" style="display:none" method="post" action="bmshmx.jsp">
+				<input id = "bmid" name="bmid"></input>
+			<input type="submit" name="Submit" value="提交">
+			</form>
 		</div>
 		<!--异议模态窗口  -->
 		<div class="modal fade" id="appeal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

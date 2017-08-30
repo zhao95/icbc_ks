@@ -134,7 +134,7 @@ public class StayServ extends CommonServ {
 	 */
 	public void update(Bean paramBean){
 		String s = paramBean.getStr("checkedid");
-		String xmid = "0c4Q0kfeB1JUQ2Cg189e";
+		String xmid = "35QzQkC4xdvXoTjvYEYu";
 		String bm_code = "888802713";
 		String shenuser = "888800172";
 		String slevel = "2";
@@ -145,6 +145,7 @@ public class StayServ extends CommonServ {
 		//获取当前的审核层级  如果是最高层级审核结束只留下最高级的审核人 
 		for (String id : ss) {
 			if(!"".equals(id)){
+				
 				Bean bean = ServDao.find("TS_BMSH_STAY", id);
 				//获取审核人信息 
 				UserBean userbean = UserMgr.getUserByWorkNum(shenuser);
@@ -160,9 +161,7 @@ public class StayServ extends CommonServ {
 				parambean.set("xmId", xmid);
 				OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
 				List<Bean> list = outbean.getList("result");
-				if(list.size()==0){
-					return;
-				}
+				
 				String allman ="";
 				String nextman = "";
 				for (int l=0;l<list.size();l++) {
@@ -211,16 +210,29 @@ public class StayServ extends CommonServ {
 				if(newlist.size()!=0){
 					Bean newBean = newlist.get(0);
 					newBean.copyFrom(bean);
-					bean.set("SH_LEVEL", nowlevel+1);
-					bean.set("SH_USER", shenuser);
+					newBean.set("SH_LEVEL", nowlevel+1);
+					newBean.set("SH_USER", shenuser);
+					if(level==1){
+						//最后一级审核
+						newBean.set("SH_OTHER",shenuser);
+					}else{
+						
+						newBean.set("SH_OTHER",allman);
+					}
 					ServDao.save("TS_BMSH_PASS", newBean);
 				}else{
 					Bean newBean = new Bean();
 					newBean.copyFrom(bean);
-					bean.set("SH_LEVEL", nowlevel+1);
-					bean.set("SH_USER", shenuser);
+					newBean.set("SH_LEVEL", nowlevel+1);
+					newBean.set("SH_USER", shenuser);
+					if(level==1){
+						//最后一级审核
+						newBean.set("SH_OTHER",shenuser);
+					}else{
+						
+						newBean.set("SH_OTHER",allman);
+					}
 					ServDao.save("TS_BMSH_PASS", newBean);
-				
 				}
 			}else{
 				//审核未通过的数据不再往上提交 将审核权限  只放在当前人手中、
