@@ -389,15 +389,15 @@
 									<br />
 									<div id="jdtDivOut" class="progress">
 										<div id="jdtDivInner1" class="progress-bar"
-											style="background-color: #blue"></div>
+											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner2" class="progress-bar"
-											style="background-color: #70c0b3"></div>
+											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner3" class="progress-bar divColor"
-											style="background-color: #red"></div>
+											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner4" class="progress-bar divColor"
-											style="background-color: #70c0b3"></div>
+											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner5" class="progress-bar divColor"
-											style="background-color: #blue"></div>
+											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner6" class="progress-bar"
 											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner7" class="progress-bar"

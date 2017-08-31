@@ -11,7 +11,7 @@ $(function (){
 			"未设置":"c1",
 			"已设置":"c3"
 	}
-	//获取用户人力资源编码(目前使用的是用户编码)
+	//获取当前登录用户的人力资源编码(目前使用的是用户编码)
 //	var user_work_num = System.getUser("USER_WORK_NUM");
 	var user_work_num = System.getUser("USER_CODE");
 	var paramBM = {};
@@ -35,11 +35,11 @@ $(function (){
 			//判断项目进度是否小于100%
 			if(resultXM._DATA_[0].XM_JD<10){
 //				debugger;
-				
 				var xm_rowNum =resultBM._DATA_[i].ROWNUM_;
+				//获取项目相关的数据， 用于拼接到状态更多页面 xmzt_info.jsp
 				var xm_name = resultXM._DATA_[0].XM_NAME;
 				var xm_type = resultXM._DATA_[0].XM_TYPE;
-				//根据返回值可以找到查询数据字典后的结果，直接拿来用即可。
+				//根据返回值可以找到查询数据字典后的结果，直接拿来用即可。数据为发起单位。
 				var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME__NAME;
 				var xm_start = resultXM._DATA_[0].XM_START;
 				var xm_end = resultXM._DATA_[0].XM_END;
@@ -127,6 +127,21 @@ $(function (){
 			//不做任何操作
 		}
 	}
+//		渲染隔行背景色
+		var table1 = jQuery("#table1_tbody");  
+		var table2 = jQuery("#table2_tbody");  
+	  rowscolor(table1);
+	  rowscolor(table2);
+//	  背景色渲染方法
+	   function rowscolor(table){
+	   	 var rows1 =jQuery(table).find("tr");  
+	   	    for(i = 0; i < rows1.length; i++){  
+	   	        if(i % 2 == 1){  
+	   	            rows1[i].style.backgroundColor = "Azure";  
+	   	       }  
+	   	    } 
+	   }
+	
 		//判断点击按钮以后，将要显示的项目显示到首页
 		
 		jQuery("#table1_tbody").find(".opera_btn").unbind("click").click(function (){
