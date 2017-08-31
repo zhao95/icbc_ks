@@ -207,7 +207,9 @@ public class RoleMgr {
 					roleOptBean.put(mdCode, mdVal);
 
 					Bean pvlg = getOptsPvlg(role, opts, mdVal);
+					
 					if (!pvlg.isEmpty()) {
+						
 						roleOptBean.put("PVLG-" + mdCode, pvlg);
 					}
 				}
