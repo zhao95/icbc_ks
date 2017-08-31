@@ -146,9 +146,7 @@ public class NoPassServ extends CommonServ {
 				parambean.set("xmId", xmid);
 				OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
 				List<Bean> list = outbean.getList("result");
-				if(list.size()==0){
-					return;
-				}	
+				
 				for (int l=0;l<list.size();l++) {
 					if(l==0){
 						nextman = list.get(l).getStr("BMSHLC_SHR");
@@ -244,13 +242,45 @@ public class NoPassServ extends CommonServ {
 	 */
 	public void yiyi(Bean paramBean){
 		String bmid = paramBean.getStr("bmid");
+		String shenuser = paramBean.getStr("user_code");
 		String where = "AND BM_ID="+"'"+bmid+"'";
 		List<Bean> list = ServDao.finds("TS_BMSH_NOPASS", where);
+		
 		//继续走审核流程
 		if(list.size()!=0){
 			Bean bean = list.get(0);
-			//添加一个字段用来标识异议   显示图标按钮
-			//bean.set("yiyi",bmid);  
+			String slevel  = bean.getStr("SH_LEVEL");
+			String xmid = bean.getStr("XM_ID");
+			String bm_code = bean.getStr("BM_CODE");
+			int level = Integer.parseInt(slevel);
+			ParamBean parambean = new ParamBean();
+			parambean.set("examerWorekNum", bm_code);
+			parambean.set("level",level);
+			parambean.set("shrWorekNum", shenuser);
+			parambean.set("flowName", 1);
+			parambean.set("xmId", xmid);
+			
+			OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
+			List<Bean> list1 = outbean.getList("result");
+			
+			String allman ="";
+			String nextman = "";
+			int nowlevel=level;
+			for (int l=0;l<list1.size();l++) {
+				if(l==0){
+					nextman = list1.get(l).getStr("BMSHLC_SHR");
+				}
+				if(l==list1.size()-1){
+					
+					allman+= list1.get(l).getStr("BMSHLC_SHR");
+				}else{
+					allman+= list1.get(l).getStr("BMSHLC_SHR")+",";
+				}
+				
+			}
+			nowlevel = list1.size();
+			
+			
 			bean.remove("SH_ID");
 			bean.remove("S_CMPY");
 			bean.remove("S_ODEPT");
@@ -264,7 +294,23 @@ public class NoPassServ extends CommonServ {
 			bean.remove("ROW_NUM_");
 			Bean newBean = new Bean();
 			newBean.copyFrom(bean);
-			ServDao.save("TS_BMSH_PASS", newBean);
+			if(level==1){
+				//不再stay中加数据
+				ServDao.save("TS_BMSH_PASS", newBean);
+			}else{
+				if(level==0){
+					
+				}else{
+					
+					ServDao.save("TS_BMSH_PASS", newBean);
+				}
+				newBean.set("SH_USER", nextman);
+				newBean.set("SH_OTHER", allman);
+				newBean.set("SH_LEVEL",nowlevel);
+				newBean.set("BM_YIYI", bmid);
+				ServDao.save("TS_BMSH_STAY", newBean);
+			}
+			//添加一个字段用来标识异议   显示图标按钮
 		}
 	}
 }

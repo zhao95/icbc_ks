@@ -15,7 +15,7 @@ function btnClick(){
 	jQuery("td [operCode='optSelect']").unbind("click").bind("click",function(){
 		var CERT_ID=$(this).parent().parent().attr("id");
 		//打开查看页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"ETI_CERTQUAL","parHandler":_viewer,"widHeiArray":[900,700],"xyArray":[200,50]};
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"ETI_CERTQUAL_TS","parHandler":_viewer,"widHeiArray":[900,700],"xyArray":[200,50]};
 		temp[UIConst.PK_KEY]=CERT_ID;//修改时，必填
 	    temp[UIConst.readOnly]=true;
 	    var cardView = new rh.vi.cardView(temp);
@@ -25,7 +25,7 @@ function btnClick(){
 	jQuery("td [operCode='optEdit']").unbind("click").bind("click",function(){	
 		var CERT_ID=$(this).parent().parent().attr("id");
 		//打开查看页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"ETI_CERTQUAL","parHandler":_viewer,"widHeiArray":[900,700],"xyArray":[200,50]};
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"ETI_CERTQUAL_TS","parHandler":_viewer,"widHeiArray":[900,700],"xyArray":[200,50]};
 		temp[UIConst.PK_KEY]=CERT_ID;//修改时，必填
 	    var cardView = new rh.vi.cardView(temp);
 	  	cardView.show()

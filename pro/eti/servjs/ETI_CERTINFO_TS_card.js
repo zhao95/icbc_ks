@@ -30,7 +30,7 @@ _viewer.getItem("STATION_TYPE").change(function(){
 //若是修改则直接调用平台方法获取数据返回
 if(_viewer._actVar==UIConst.ACT_CARD_ADD){
 	//卡片交互后台的方法，第一个参数为服务ID， 第二个参数为自己编写扩展类的方法名。
-	var serialNum=FireFly.doAct('ETI_CERTINFO','uuid');
+	var serialNum=FireFly.doAct('ETI_CERTINFO_TS','uuid');
 	//将后台返回的数据传入到对应的位置。
 	_viewer.getItem("CERT_ID").setValue(serialNum.serialNum);
 }

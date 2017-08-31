@@ -1,5 +1,5 @@
-var xmid = jQuery("#xmid").val();
-var user_code = jQuery("#user_code").val();
+var xmid = jq("#xmid").val();
+var user_code = jq("#user_code").val();
 //隔一行 进行 背景颜色 渲染
 function rowscolor(table){
 	 var rows = table.getElementsByTagName("tr");  
@@ -9,6 +9,17 @@ function rowscolor(table){
 	            rows[i].style.backgroundColor = "Azure";  
 	       }  
 	    } 
+}
+//所有的button   onmouserover事件
+var btns = document.getElementsByTagName('button');
+for(var z=0;z<btns.length;z++){
+	 btns[z].onmouseover = function() {
+		 this.style.backgroundColor = 'red';
+	 }
+	 btns[z].onmouseout = function() {
+	        this.style.background = 'lightseagreen';
+	    }
+
 }
 //审核 筛选
 function selectdata1(user_code,xmid,shenhe,yema){
@@ -106,7 +117,6 @@ function selectdata1(user_code,xmid,shenhe,yema){
 	    	where2 = " AND BM_CODE like "+"'%"+renlicode+"%'";
 	    }
 	  
-	     	
 	     	 where4 = " AND XM_ID="+"'"+xmid+"'";
 	     	 where5 = "AND SH_OTHER like '%"+user_code+"%'";
 	     	//每页条数
@@ -134,7 +144,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
 		var data2 = result2.list;
      	var data = result.list;
      	//将json字符串 转换为 json对象
-     	if(data.length==2){
+     	if(data==null){
      		
      		$("#"+table+" tbody").html("");
      		$("#"+fenye).html("");
@@ -155,7 +165,13 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    	var userinfo = FireFly.doAct("TS_BMSH_STAY","getUserInfo",paramuser);
      	    	var userdata = userinfo.list;
      	     	var userEntity = JSON.parse(userdata);
-     	    	$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td style="text-align: center"><a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick="form2submit('+i+')" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+     	     	var yiyi = pageEntity[i].BM_YIYI;
+     	     	if(yiyi==""){
+     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td style="text-align: center"><a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick="form2submit('+i+')" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+     	     	}else{
+     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick="form2submit('+i+')" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+     	     		
+     	     	}
      	    	for(var j=0;j<pageEntity3.length;j++){
      	    		var column = pageEntity3[j].PX_COLUMN;
      	    		var fir = pageEntity[i][column];
@@ -219,125 +235,6 @@ function selectdata1(user_code,xmid,shenhe,yema){
 }
 //--------------------------------bmshs.jsp调用
 
-//项目筛选  能审核的项目   
-function selectxmdata(user_code,yema){
-	var name = document.getElementById("mc").value;
-    var zuzhidanwei =  document.getElementById("zzdw").value;
-    var where1 = "";
-    var where2 = "";
-    var where3="";
-    if(name!=""){
-    	where1 = "AND XM_NAME like"+"'%"+name+"%'";
-    }
-    if(zuzhidanwei!=""){
-    	where2 = " AND XM_FQDW_NAME like"+"'%"+zuzhidanwei+"%'"
-    }
-     	//下拉框值
-     	var type =  document.getElementById("zhuangtai");
-     	var index = type.selectedIndex;
-     	var  zhuangtai = type.options[index].value;
-     	
-     	if(zhuangtai!="全部"){
-     		//进行状态匹配 进行中和一结束
-     		where3 = " AND BM_ZHUANGTAI="+"'"+zhuangtai+"'";
-     	}
-     	//每页条数
-		var select = document.getElementById("yema");
-		 var index = document.getElementById("yema").selectedIndex;
-		var myts = select.options[index].value;
-		//重新计算 页码
-		var param={};
-		param["user_code"]=user_code;
-		param["nowpage"]=yema;
-		param["shownum"]=myts;
-     	param["where"]=where1 + where2 + where3;
-     	//在某一结点下 可以查看哪些机构的 审核  过滤出来
-     	var result = FireFly.doAct("TS_XMGL","getUncheckList",param);
-     	var result2 = FireFly.doAct("TS_XMGL","getShJsonList",param);
-		//data为json格式字符串
-		var data2 = result2.list;
-     	var data = result.list;
-     	//将json字符串 转换为 json对象
-     	var first = (yema-1)*myts+1;
-     	if(data.length==2){
-     		$("#table tbody").html("");
-     		$("#fenyeul").html("");
-     		$("#fenyeul").append('<li><a href="#">&laquo;</a></li><li><a  href="#">&raquo;</a></li>');
-     	}else{
-     		
-     		
-     	var pageEntity=JSON.parse(data);
-     	var pageEntity2 = JSON.parse(data2);
-     	 //总条数/每页
-		//页数
-		 var yeshu = Math.floor(pageEntity2.length/myts);
-		 var yushu = pageEntity2.length%myts;
-		 $("#fenyeul").html("");
-		
-			 if(yushu!=0){
-				 //余数为0
-				 yeshu+=1;
-			 }
-			  for(var z=0;z<yeshu;z++){
-			  var j=z+1;
-				 if(z==0){
-			$("#fenyeul").append('<li onclick="forward()"><a href="#">&laquo;</a></li><li id="yema1" class="active" onclick="chaxun('+j+')"><a href="#">1</a></li>');
-				 }else {
-			 $("#fenyeul").append('<li id="yema'+j+'" onclick=chaxun('+j+')><a  href="#">'+j+'</a></li>');
-					 
-				 }
-				 
-			 
-		 }
-     		  //最后一页
-			 var last =yeshu+1;
-			 $("#fenyeul").append(' <li id="yema'+last+'" onclick="backward('+last+')"><a  href="#">&raquo;</a></li>');
-			 $("li.active").removeClass();
-			 var s ="yema"+yema;
-			 $("#"+s).addClass("active");
-     	$("#table tbody").html("");
-     	  for(var i=0;i<pageEntity.length;i++){
-     		  
-     		 var name = pageEntity[i].XM_NAME;
-				var zzdw = pageEntity[i].XM_FQDW_NAME;
-				var startdate = pageEntity[i].XM_START;
-				var cjsj = pageEntity[i].S_ATIME;
-				var enddate = pageEntity[i].XM_END;
-				var xmtype = pageEntity[i].XM_TYPE;
-				//创建新时间 判断 状态
-				var str1 =startdate;
-				var str2 = enddate;
-				str1 = str1.replace(/-/g,"/");
-				str2 = str2.replace(/-/g,"/");
-				var state = "已结束";
-				if(startdate!=""&&enddate!=""){
-				var end = new Date(str2);
-				var start = new Date(str1);
-				var date = new Date();
-			
-				if(date.getTime()>start.getTime()&&date.getTime()<end.getTime()){
-					
-				 state = "报名审核";
-				}else if(date.getTime()<start.getTime()){
-					state = "未开始";
-				}
-				}
-				//添加一行隐藏的项目id
-				var id = pageEntity[i].XM_ID;
-				var xuhao = first+i;
-     		//为table重新appendtr
-				if(state=="报名审核"){
-     			$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td><input type="button" onclick="tiaozhuan('+i+')" style="margin-top:7px;border:none;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="审核"></input>&nbsp;&nbsp;<input type="button" style="border:none;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="配置"></input>&nbsp;&nbsp;<input type="button" style="border:none;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="查看"></input></td></tr>');
-	     		
-				}else{
-					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="BM_ID'+i+'" >'+id+'</td><td></td></tr>');	
-				}
-     	  }
-     	
-     	}	 
-     	
-   	 
-}
 //------------------------------------------------拖动效果
 function Drag(div,table){
 	  
@@ -433,9 +330,9 @@ function appendTh(user_code){
 	$("#staytable thead").html("");
 	$("#nopasstable thead").html("");
 	$("#passtable thead").html("");
-	$("#staytable thead").append('<tr style="backGround-color:WhiteSmoke; height: 30px"><th style="width: 5%; text-align: center"><input type="checkbox" name="checkbox1" value="checkboxaa" onchange="change(this)"></th><th style="width: 5%; text-align: center">序号</th><th style="width: 5%; text-align: center">操作</th>');
-	$("#passtable thead").append('<tr style="backGround-color:WhiteSmoke; height: 30px"><th style="width: 5%; text-align: center"><input type="checkbox" name="checkbox2" value="checkboxbb" onchange="change(this)"></th><th style="width: 5%; text-align: center">序号</th><th style="width: 5%; text-align: center">操作</th>');
-	$("#nopasstable thead").append('<tr style="backGround-color:WhiteSmoke; height: 30px"><th style="width: 5%; text-align: center"><input type="checkbox" name="checkbox3" value="checkboxcc" onchange="change(this)"></th><th style="width: 5%; text-align: center">序号</th><th style="width: 5%; text-align: center">操作</th>');
+	$("#staytable thead").append('<tr style="backGround-color:WhiteSmoke; height: 30px"><th style="width: 2%; text-align: center"><input type="checkbox" name="checkbox1" value="checkboxaa" onchange="change(this)"></th><th style="width: 3%; text-align: center">序号</th><th style="width: 10%; text-align: center">操作</th>');
+	$("#passtable thead").append('<tr style="backGround-color:WhiteSmoke; height: 30px"><th style="width: 2%; text-align: center"><input type="checkbox" name="checkbox2" value="checkboxbb" onchange="changeb(this)"></th><th style="width: 3%; text-align: center">序号</th><th style="width: 10%; text-align: center">操作</th>');
+	$("#nopasstable thead").append('<tr style="backGround-color:WhiteSmoke; height: 30px"><th style="width: 2%; text-align: center"><input type="checkbox" name="checkbox3" value="checkboxcc" onchange="changec(this)"></th><th style="width: 3%; text-align: center">序号</th><th style="width: 10%; text-align: center">操作</th>');
 	var param ={};
 	param["user_code"]=user_code;
 	var result = FireFly.doAct("TS_BMSH_PX","getShenheJson",param);
@@ -499,7 +396,7 @@ function appendTh(user_code){
 				//第二个td
 				var sentds = document.getElementsByName("sentd");
 				
-				sentds[i].innerHTML='<input type="checkbox" id='+px_column+' onclick="changetd(this)" value='+name+' name="pxcheckbox">'+name+'';
+				sentds[i].innerHTML='<input style="width:50px;height=50px" type="checkbox" id='+px_column+' onclick="changetd(this)" value='+name+' name="pxcheckbox">'+name+'';
 				//都处于选中状态
 				sentds[i].children[0].checked=true;
 				//第一个td
@@ -685,7 +582,7 @@ function firall(){
     for(var i=0;i<pageEntity1.length;i++){
     	var name = pageEntity1[i].PX_NAME;
     	var px_column= pageEntity1[i].PX_COLUMN;
-    	$("#pxtable tbody").append('<tr><td id="fir'+i+'" name="firtd" style="padding-left:5px;text-align:left;height:30px;font-size:20px"><input type="checkbox" id='+px_column+' onclick="changetd(this)" value='+name+'  name="pxcheckbox">'+name+'</td><td id="sen'+i+'" onclick="xuanzhong('+i+')" style="text-align:center;font-size:20px" name="sentd"></td></tr>');
+    	$("#pxtable tbody").append('<tr><td id="fir'+i+'" name="firtd" style="padding-left:5px;text-align:left;height:20px;font-size:20px"><input style="width:50px;height=50px" type="checkbox" id='+px_column+' onclick="changetd(this)" value='+name+'  name="pxcheckbox">'+name+'</td><td style="width:20%"></td><td id="sen'+i+'" onclick="xuanzhong('+i+')" style="text-align:left;font-size:20px" name="sentd"></td></tr>');
     }
 
 }
@@ -906,7 +803,7 @@ function firall(){
 			//点击第几页
 			var ym = document.getElementById(id).innerText;
 			//传入 要显示的页码数即可
-			selectdata1(user_code,xmid,tab,ym);
+			selectdata1(user_code,xmid,obj,ym);
 			}else if(obj==2){
 				var id = "yemaB"+i;
 				//点击第几页
@@ -925,7 +822,7 @@ function firall(){
 		
 //---------------------------------------------------------------------------------------------------------
 			//加载完后自动调用
-			jQuery(function(){
+			jq(function(){
 				appendTh(user_code);
 				selectdata1(user_code,xmid,1,1);
 				firall();
@@ -966,7 +863,96 @@ function firall(){
 				data = jQuery.extend(data,whereData);
 				
 				window.open(FireFly.getContextPath() + '/' + obj + '.exp.do?data=' + 
-				encodeURIComponent(jQuery.toJSON(data)));
+				encodeURIComponent(jq.toJSON(data)));
 				
 				}
-			
+//导入
+				function importdataa(event,obj){
+					var _self = this;
+					var config = {"SERV_ID":obj, "FILE_CAT":"EXCEL_UPLOAD", "FILENUMBER":1, 
+				    		"VALUE":5, "TYPES":"*.xls;*.xlsx", "DESC":Language.transStatic("rhListView_string10")};
+					var file = new rh.ui.File({
+						"config" : config,"width":"99%"
+					});
+					
+					var importWin = new rh.ui.popPrompt({
+//						title:"请选择文件",
+						title:Language.transStatic("rhListView_string11"),
+//						tip:"请选择要导入的Excel文件：",
+						tip:Language.transStatic("rhListView_string12"),
+						okFunc:function() {
+							var fileData = file.getFileData();
+							if (jQuery.isEmptyObject(fileData)) {
+//								alert("请选择文件上传");
+								alert(Language.transStatic("rhListView_string13"));
+								return;
+							}
+							var fileId = null;
+							for (var key in fileData) {
+								fileId = key;
+							}
+							if (fileId == null){
+//								alert("请选择文件上传");
+								alert(Language.transStatic("rhListView_string13"));
+								return;
+							}
+							rh.vi.listView.prototype._imp1(fileId,true,obj);
+							importWin.closePrompt();
+					        // _self.refreshGrid();
+							file.destroy();
+						},
+						closeFunc:function() {
+							file.destroy();
+						}
+					});
+
+				    var container = rh.vi.listView.prototype._getImpContainer(event, importWin);
+					container.append(file.obj);
+					file.obj.css({'margin-left':'5px'});
+					file.initUpload();
+
+				}
+
+				
+				/** 导入数据 **/
+				rh.vi.listView.prototype._imp1 = function(fileId, param,obj) {
+					var data = {"fileId":fileId};
+					if(param) {
+						data = jQuery.extend(data, param);
+					}
+					var _self = this;
+					var _loadbar = new rh.ui.loadbar();
+					_loadbar.show(true);
+					//form提交，需要服务器再返回Excel
+					FireFly.doAct(obj, "imp", data, false, true, function(result) {
+						if(result._MSG_.indexOf("ERROR,") == 0) {
+//							var msg = "导入文件失败，点击“确定按钮”下载文件。请打开文件查看导入结果。";
+							var msg = Language.transStatic("rhListView_string16");
+							SysMsg.alert(msg, function(){
+								if(result.FILE_ID) {
+									var url = FireFlyContextPath + "/file/" + result.FILE_ID;
+									window.open(url);
+								}
+							});
+						} 
+						_self._deletePageAllNum();
+						/*_self.refreshGrid();*/
+						_loadbar.hideDelayed();	
+					});
+				}
+//--------------------------------------------------------------------------异议图标
+function yiyi(obj){
+		var a = obj.parentNode.id;
+  			$("#filehistory").html("");
+			var param = {};
+			param["bmid"]=a;
+			var fileresult = FireFly.doAct("TS_BMLB_BM","filehist",param);
+			var filedata = fileresult.list;
+			var fileEntity = JSON.parse(filedata);
+				  //已有上传文件记录
+				  //模态窗口 append上传的东西
+				  for(var i=0;i<fileEntity.length;i++){
+					  var fileid = fileEntity[i].FILE_ID;
+					  $("#filehistory").append('<tr style="height:30px"><td style="width:30%"></td><td><a href="/file/'+fileid+'" onclick="xiazai()">'+fileid+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<image title="点击进行下载" src="/ts/image/u344.png"></image></a></td></tr>');
+				  }
+	}
