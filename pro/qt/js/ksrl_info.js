@@ -12,7 +12,6 @@ var listPage = function () {
 	////初始化页面
 	 var currentDate = new Date;
 	 var currentYear = currentDate.getFullYear();
-//	 debugger;
      var data = {};
 //     data["_extWhere"] = "and START_DATE like '%"+currentYear+"%'"+sqlWhere;
      data["_extWhere"] = sqlWhere;
@@ -30,7 +29,6 @@ var listPage = function () {
      this._lPage = listData._PAGE_;
      this._lData = listData._DATA_;
      this.bldTable(listData);
-//     debugger;
      this.bldPage();
      var listPage=this;
    //查询条件按钮（设置查询考试名称和年份的条件）
@@ -55,7 +53,6 @@ var listPage = function () {
      	var param = {};
      	//页面的输入查询条件放入传递的参数中
      	param["_extWhere"] = sqlWhere;
-//     	debugger;
      	//获取到查询后的数据
      	var searchResult = FireFly.doAct("TS_KS_CAL","query",param);
      	//将数据填入页面
@@ -63,27 +60,27 @@ var listPage = function () {
      	listPage._lData = searchResult._DATA_;
      	listPage.bldTable(searchResult);
      	listPage.bldPage();
-//     	debugger;
         //table tr  隔行改变背景色
-//        var table = jQuery("#kstable");  
-//        rowscolor(table);
-     	 //去掉字符串中所有的空格方法
+     	//var table = jQuery("#kstable");  
+     	//rowscolor(table);
+     	//去掉字符串中所有的空格方法
      	 function trimAll(str) {return str.replace(/\s+/g, "");}
      });
 
-     //渲染隔行背景色
-//     var table = jQuery("#kstable");  
-//     rowscolor(table);
-     //背景色渲染方法
-//      function rowscolor(table){
-//      	 var rows =jQuery("#tbody_data").find("tr");  
-//      	    for(i = 0; i < rows.length; i++){  
-//      	        if(i % 2 == 0){  
-//      	            rows[i].style.backgroundColor = "Azure";  
-//      	       }  
-//      	    } 
-//      }
+		//渲染隔行背景色
+  		//var table = jQuery("#kstable");  
+  		//     rowscolor(table);
+     	//背景色渲染方法
+  		//function rowscolor(table){
+		//	 var rows =jQuery("#tbody_data").find("tr");  
+		//   	 for(i = 0; i < rows.length; i++){  
+		//      	 if(i % 2 == 0){  
+		//      	    rows[i].style.backgroundColor = "Azure";  
+		//      	  }  
+		//      	} 
+		//}
  };
+ 
  /*跳转到指定页*/
  listPage.prototype.gotoPage = function (num) {
 	 
@@ -125,11 +122,9 @@ var listPage = function () {
              '<td>' + item.CAL_COMMENT + '</td>',
              '<td>' + item.CAL_MONTH + '</td>',
              '</tr>'].join("");
-//         debugger;
          rhGridTBody.append(trs);
      }
  }; 
- 
  
  /*添加分页展示*/
  listPage.prototype.bldPage = function () {
