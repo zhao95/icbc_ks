@@ -210,21 +210,26 @@ function post(URL, PARAMS) {        
 			<%
 				//获证信息
 				String serID = "TS_ETI_CERT_QUAL";
-				//用户ID
-				String STU_PERSON_ID=userBean.getCode();
+				//用户的工号USER_WORK_NUM				
+				String STU_PERSON_ID=userBean.getWorkNum();
 				String where = "and STU_PERSON_ID='" + STU_PERSON_ID +"'";
 				List<Bean> dataList = ServDao.finds(serID, where);				
 				//用户信息查询
 				String serviceID="SY_ORG_USER_INFO_SELF";
-				List <Bean> stu=ServDao.finds(serviceID,"and USER_CODE='"+STU_PERSON_ID+"'");
+				List <Bean> stu=ServDao.finds(serviceID,"and USER_WORK_NUM='"+STU_PERSON_ID+"'");
 				//入职日期
-				String USER_CMPY_DATE=stu.get(0).getStr("USER_CMPY_DATE");
+				String USER_CMPY_DATE="";
 				String CMPY_DATE="";
-				if(!USER_CMPY_DATE.equals("")){
-				 CMPY_DATE=USER_CMPY_DATE.substring(0,4)+"年"+USER_CMPY_DATE.substring(4,6)+"月";
-				}
 				//序列
-				String USER_POST=stu.get(0).getStr("USER_POST");
+				String USER_POST="";
+				if(stu.size()>0){				
+					USER_CMPY_DATE=stu.get(0).getStr("USER_CMPY_DATE");
+					if(!USER_CMPY_DATE.equals("")){
+					 CMPY_DATE=USER_CMPY_DATE.substring(0,4)+"年"+USER_CMPY_DATE.substring(4,6)+"月";
+					}				
+				    USER_POST=stu.get(0).getStr("USER_POST");
+				}
+				
 				if (dataList.size()> 0) {
 			%>
 			<div id="u5013_state0" class="panel_state" data-label="图" style="">
@@ -884,7 +889,7 @@ function post(URL, PARAMS) {        
 							%>
 							<tr class="" style="height: 50px">
 								<td style="text-align: center"><%=j+1%></td>
-								<td style="text-align: center" id=""><%=USER_CMPY_DATE.substring(0,4)+"."+USER_CMPY_DATE.substring(4,6)+"."+USER_CMPY_DATE.substring(6)%></td>
+								<td style="text-align: center" id=""><%=USER_CMPY_DATE.equals("")?"":USER_CMPY_DATE.substring(0,4)+"."+USER_CMPY_DATE.substring(4,6)+"."+USER_CMPY_DATE.substring(6)%></td>
 								<td style="text-align: center" id="">加入工行</td>
 								<td style="text-align: center" id=""></td>
 								<td style="text-align: center" id=""></td>
@@ -919,14 +924,18 @@ function post(URL, PARAMS) {        
 				}
 			%>
 			<%
-				if (dataList.size()==0 && USER_POST!=null) {
+				if (dataList.size()==0) {
 					//根据职位名称查找岗位信息					
 					String where3="and POSTION_NAME='"+USER_POST+"'";
 					List<Bean> bean=ServDao.finds("TS_ORG_POSTION",where3);
 					//岗位序列
-					String POSTION_SEQUENCE=bean.get(0).getStr("POSTION_SEQUENCE"); 
+					String POSTION_SEQUENCE="";
 					//岗位资格
-					String POSTION_QUALIFICATION=bean.get(0).getStr("POSTION_QUALIFICATION");
+					String POSTION_QUALIFICATION="0";
+					if(bean.size()>0){															
+					 POSTION_SEQUENCE=bean.get(0).getStr("POSTION_SEQUENCE"); 				
+					 POSTION_QUALIFICATION=bean.get(0).getStr("POSTION_QUALIFICATION");
+					}
 					String[] classs={" ","初级","中级","高级","专家级"};
 					Integer i=Integer.valueOf(POSTION_QUALIFICATION);
 					POSTION_QUALIFICATION=classs[i];
@@ -995,7 +1004,7 @@ function post(URL, PARAMS) {        
 						<!-- Unnamed () -->
 						<div id="u5192" class="text">
 							<p>
-								<span><%=POSTION_SEQUENCE%>序列</span>
+								<span><%=POSTION_SEQUENCE.equals("")?"无":POSTION_SEQUENCE%>序列</span>
 							</p>
 						</div>
 					</div>
@@ -1017,7 +1026,7 @@ function post(URL, PARAMS) {        
 						<!-- Unnamed () -->
 						<div id="u5196" class="text">
 							<p>							 
-								<span id="tijiao" style="color: #666666;"><%=POSTION_SEQUENCE%><%=POSTION_QUALIFICATION%>（</span><span
+								<span id="tijiao" style="color: #666666;"><%=POSTION_SEQUENCE.equals("")?"无":POSTION_SEQUENCE%>序列 <%=POSTION_QUALIFICATION.equals("")?"":POSTION_QUALIFICATION%>（</span><span
 									style="text-decoration: underline; color: #388CAE;"><a href="javascript:post('../../qt/jsp/examref.jsp',{REF_DYXL:'<%=POSTION_SEQUENCE%>'})">相关学习资料下载</a></span><span
 									style="color: #388CAE;">&nbsp;&nbsp; </span><span
 									style="text-decoration: underline; color: #388CAE;">工银大学</span><span>）</span>							
@@ -1044,7 +1053,7 @@ function post(URL, PARAMS) {        
 						<tbody class="">
 							<tr class="" style="height: 50px">
 								<td style="text-align: center"><%=1%></td>
-								<td style="text-align: center" id=""><%=USER_CMPY_DATE.substring(0,4)+"."+USER_CMPY_DATE.substring(4,6)+"."+USER_CMPY_DATE.substring(6)%></td>
+								<td style="text-align: center" id=""><%=USER_CMPY_DATE.equals("")?"":USER_CMPY_DATE.substring(0,4)+"."+USER_CMPY_DATE.substring(4,6)+"."+USER_CMPY_DATE.substring(6)%></td>
 								<td style="text-align: center" id="">加入工行</td>
 								<td style="text-align: center" id=""></td>
 								<td style="text-align: center" id=""></td>
@@ -1088,8 +1097,8 @@ function post(URL, PARAMS) {        
 			//追赶，同步，落后
 			int pre=0, after =0, other =-1;
 			for (int i = 0;i<num; i++) {				
-				 String USER_CODE= lists.get(i).getStr("USER_CODE");
-				String where3="and STU_PERSON_ID ='"+USER_CODE+"'";
+				String USER_WORK_NUM= lists.get(i).getStr("USER_WORK_NUM");
+				String where3="and STU_PERSON_ID ='"+USER_WORK_NUM+"'";
 				List<Bean> list3 = ServDao.finds("TS_ETI_CERT_QUAL",where3);
 				 if (dataList.size()>list3.size()) {
 					 after++;					
