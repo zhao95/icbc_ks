@@ -8,20 +8,20 @@ $(function(){
 });
 // 自动计算合计费用
 function total(){
-			var EXAM_FEE = $("#ETI_CERTQUAL-EXAM_FEE").val();
-			var TRANS_FEE =$("#ETI_CERTQUAL-TRANS_FEE").val();
-			var HOTEL_FEE =$("#ETI_CERTQUAL-HOTEL_FEE").val();
+			var EXAM_FEE = $("#ETI_CERTQUAL_TS-EXAM_FEE").val();
+			var TRANS_FEE =$("#ETI_CERTQUAL_TS-TRANS_FEE").val();
+			var HOTEL_FEE =$("#ETI_CERTQUAL_TS-HOTEL_FEE").val();
 			var num = parseFloat(EXAM_FEE) + parseFloat(TRANS_FEE)
 					+ parseFloat(HOTEL_FEE);
 			_viewer.getItem("TOTLE_FEE").setValue(num);
 }
-$("#ETI_CERTQUAL-EXAM_FEE").change(function(){
+$("#ETI_CERTQUAL_TS-EXAM_FEE").change(function(){
 	total();
 });
-$("#ETI_CERTQUAL-TRANS_FEE").change(function(){
+$("#ETI_CERTQUAL_TS-TRANS_FEE").change(function(){
 	total();
 });
-$("#ETI_CERTQUAL-HOTEL_FEE").change(function(){
+$("#ETI_CERTQUAL_TS-HOTEL_FEE").change(function(){
 	total();
 });
 // 修改证书模块名称的时候自动修改编码
@@ -36,7 +36,7 @@ _viewer.getItem("CERT_GRADE").change(function() {
 	_viewer.getItem("CERT_GRADE_CODE").setValue(CERT_GRADE);// 添加证书等级编号
 });
 // 获取证书验证码
-$("#ETI_CERTQUAL-CERT_CHECK_CD").click(function() {
+$("#ETI_CERTQUAL_TS-CERT_CHECK_CD").click(function() {
 	var codes = "abcdefghijklmnopqrstuvwxyz";
 	var checkCode = "";
 	for (var j = 0; j < 4; j++) {
