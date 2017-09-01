@@ -42,7 +42,8 @@
             font-family: 'Arial Normal', 'Arial'; 
  		    font-weight: 400; 
  		    font-style: normal; 
- 		    font-size: 13px; 
+ 		    height:50px;
+ 		    font-size: 14px; 
  		    color: #333333; 
 		    text-align: center; 
  		    line-height: normal; 
@@ -76,15 +77,14 @@
 	<div>
 		<table id="myTab" class="nav nav-tabs"
 		style="margin-left: 10px; width: 98%; background-color: white">
-		<tr style="height: 70px">
-			<td id="ksrltd"  class="active"
-				style="border-bottom:white solid 1px;width: 33.3%; text-align: center; font-size: 25px">
-<%-- 				<image style="margin-bottom:10px" src="<%=CONTEXT_PATH%>/ts/image/u1677.png" id="dshimage"> --%>
-				<a id="ksrla" href="#home" data-toggle="tab"><span id="ksrlsp"
-					style="color: lightseagreen">考试日历详情</span>
-				</a>
-			</td>
-		</tr>
+<!-- 		<tr style="height: 70px"> -->
+<!-- 			<td id="ksrltd"  class="active" -->
+<!-- 				style="border-bottom:white solid 1px;width: 33.3%; text-align: center; font-size: 25px"> -->
+<!-- 				<a id="ksrla" href="#home" data-toggle="tab"><span id="ksrlsp" -->
+<!-- 					style="color: lightseagreen">考试日历详情</span> -->
+<!-- 				</a> -->
+<!-- 			</td> -->
+<!-- 		</tr> -->
 	</table>
 	</div>
 
@@ -92,7 +92,7 @@
 	<div id="myTabContent" class="tab-content">
 		<div class="tab-pane fade active in" style="position:relative;" id="home">
 			<div style="margin-top: -5px; margin-left: 100%; height: 5px; width: 20%; background-color: LightSeaGreen"></div>
-				<div id="cuxian1" style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
+				<div id="cuxian1" style="margin-left: 10px; margin-top: 0px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">考试相关安排</span>
 			</div>
 			<!-- 查询框 -->
@@ -124,10 +124,10 @@
 <!-- 			</tr> -->
 <!-- 			</tbody></table> -->
 			<!-- 考试信息主要数据展示区域 -->
-			<div id="kstable_div" class="" style="margin-top:20px;margin-left: 10px; width: 80%; margin:0 auto;text-align: center;">
+			<div id="kstable_div" class="" style="margin-top:20px;margin-left: 10px; width: 98%; margin:0 auto;text-align: center;">
 					<table class="rhGrid JPadding JColResizer" id="kstable" border="1">
 						<thead id="tem" class="">
-							<tr style="backGround-color:WhiteSmoke; height: 30px">
+							<tr style="backGround-color:WhiteSmoke; height: 30px; font-size:14px;">
 								<th style="width: 6%; text-align: center">序号</th>
 								<th style="width: 30%;	text-align: center">考试名称</th>
 								<th style="width: 10%;	text-align: center">考试级别</th>
