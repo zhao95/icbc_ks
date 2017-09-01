@@ -1,6 +1,7 @@
 package com.rh.ts.bmlb;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,13 @@ import java.util.List;
 
 
 
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -18,6 +26,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.TipException;
+import com.rh.core.comm.FileMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -618,4 +628,49 @@ public class BmlbServ extends CommonServ {
 		outBean.set("bean", list);
 		return outBean;
 	}
+	
+	 /**
+     * 通过excl文件获取试卷相关信息
+     *
+     * @param fileId 文件id
+     */
+    private List<Bean> getDataFromXls(Bean paramBean) throws IOException, BiffException {
+        List<Bean> result = new ArrayList<>();
+        List<String> codeList = new ArrayList<>();
+        List<String> nameList = new ArrayList<>();
+        String fileId=paramBean.getStr("fileId");
+        Bean fileBean = FileMgr.getFile(fileId);
+        InputStream in = FileMgr.download(fileBean);
+        Workbook workbook = Workbook.getWorkbook(in);
+        try {
+            Sheet sheet1 = workbook.getSheet("试卷信息");
+            int rows = sheet1.getRows();
+            for (int i = 0; i < rows; i++) {
+                if (i != 0) {
+                    Cell[] cells = sheet1.getRow(i);
+                    //获取字段对应的名字  和字段  循环判断 是否对应 然后赋值  将 其组成key value
+                    
+                    List<String> newlist = new ArrayList<String>();
+                    if(cells[0].getContents()=="主键"){
+                    	//newlist.add()  字段
+                    }
+                    //获的排序好的字段  的list
+                    Bean bean = new Bean();
+                    for(int j=1;j<cells.length;j++){
+                    	
+                    	if (!StringUtils.isEmpty(cells[j].getContents())) {
+                    		bean.set("code",cells[j].getContents());
+                    	}
+                    	result.add(bean);
+                    }
+                 
+                }
+            }
+        } catch (Exception e) {
+            throw new TipException("Excel文件解析错误，请校验！");
+        } finally {
+            workbook.close();
+        }
+        return result;
+    }
 }

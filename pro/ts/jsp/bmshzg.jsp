@@ -18,6 +18,7 @@
 <!-- 获取后台数据 -->
 
 <%@ include file="/sy/base/view/inHeader.jsp"%>
+	
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
@@ -131,7 +132,7 @@ String user_code = userBean.getStr("USER_CODE");%>
 			<tr style="width:98%">
 				<td style="width:15%;text-align:right"><button  class="btn btn-success"  data-toggle="modal" style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheA()" id = "shenheA">审核</button></td>
 				<td style="width:20%;text-align:right"><button  class="btn btn-success"  data-toggle="modal" data-target="#paixu" style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="zdyl()" id = "zdyl" >自定义显示列</button></td>
-				<td style="width:20%;text-align:right"><button class="btn btn-success" style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="impdata('TS_BMSH_STAY')" id = "import">文件批量导入</button></td>
+				<td style="width:20%;text-align:right"><button class="btn btn-success" data-toggle="modal" data-target="#excleupload" onclick="importdata(1)"  style="border:none;color:white;height:30px;width:80%;background:lightseagreen"  id = "import">文件批量导入</button></td>
 				<td style="width:20%;text-align:right"><button class="btn btn-success" style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="exportdata('TS_BMSH_STAY','checkboxa')" id = "export">文件批量导出</button></td>
 				<td style="width:20%;text-align:center"><button class="btn btn-success" style="border:none;color:white;height:30px;width:40%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
 			</tr>
@@ -332,42 +333,6 @@ String user_code = userBean.getStr("USER_CODE");%>
 		</div><!-- /.modal -->
 	</div>
 	
-	<!-- <div class="modal fade" id="paixu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog" style="width:50%">
-			<div class="modal-content">
-				<div class="modal-header" style="background-color: #00c2c2;color: white">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
-					<h5 class="modal-title">
-					自定义显示列
-					</h5>
-					
-				</div>
-				<table id="pxtable" width="700px">
-				    <thead>
-				      <tr>
-				        <th style="padding-left:10px;width:40%;text-align:left">待选</th>
-				        <th width="20%"></th>
-				          <th style="text-align:left">已选</th>
-				      </tr>
-				      </thead>
-				      <tbody>
-				    
-				      </tbody>
-				    </table>
-				   
-				<div class="modal-footer" style="text-align:center;height:100px">
-					<button type="button" class="btn btn-primary" style="height:50px;background:lightseagreen;width:100px" onclick="savePX()">保存</button>
-					<button type="button" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">关闭
-					</button>
-					
-					
-				</div>
-			</div>/.modal-content
-		</div>/.modal
-	</div> -->
-	 
 	<div class="modal fade" id="paixu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" style="width:50%;">
 			<div class="modal-content" style="height:630px">
@@ -460,6 +425,29 @@ String user_code = userBean.getStr("USER_CODE");%>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
+	<div class="modal fade" id="excleupload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width:50%">
+			<div class="modal-content" style="width:400px;height:300px">
+				<div class="modal-header" style="background-color: #00c2c2;color: white">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title">
+						请选择文件
+					</h4>
+					
+				</div>
+				<div style="padding-left:50px;padding-top:30px;color:red">请导入要上传的excel</div>
+				<div id="uploadfile" style="padding-left:50px;color:lightseagreen;font-size:20px"><form action="/file" name="formup" id="excleupload11" class="form form-horizontal"></form></div>
+				
+				<div class="modal-footer" style="padding-top:30px;text-align:center;">
+					<button id="excelimp" type="button" class="btn btn-primary" style="padding-left:30px;height:40px;background:lightseagreen;width:80px">导入</button>
+					<button type="button" onclick = "closemot()" class="btn btn-default" style="height:40px;width:80px" data-dismiss="modal">取消</button>
+				</div>
+				
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
 	<!--报名详细信息  -->
 	<div class="modal fade" id="userbminfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
@@ -507,17 +495,22 @@ String user_code = userBean.getStr("USER_CODE");%>
 		<input type="hidden" id="dijige">
 		<input type="hidden" id = "user_code" value="<%=user_code %>"/>
 	
+	
+	
 	<script>
 	var jq = $.noConflict(true);
 	//导入
-	function impdata(obj){
-		importdataa(event,obj);
-	}
 	</script>
-		<script src="<%=CONTEXT_PATH%>/ts/js/shenhe.js"></script>
+	<script src="<%=CONTEXT_PATH%>/ts/js/shenhe.js"></script>
 	 <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>	 
+	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/global.js"></script> 
+<!--插件--> 
+<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/jquery.smart-form.js"></script> 
+<script src="<%=CONTEXT_PATH%>/ts/js/jquery.iframe-transport.js"></script> 
+<script src="<%=CONTEXT_PATH%>/ts/js/jquery.ui.widget.js"></script> 
+<script src="<%=CONTEXT_PATH%>/ts/js/jquery.fileupload.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<!-- FastClick -->
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>

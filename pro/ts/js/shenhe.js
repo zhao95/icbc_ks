@@ -184,9 +184,6 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    	var paramuser={}
      	    	paramuser["bm_code"]=BM_CODE;
      	    	//获取对象信息
-     	    	var userinfo = FireFly.doAct("TS_BMSH_STAY","getUserInfo",paramuser);
-     	    	var userdata = userinfo.list;
-     	     	var userEntity = JSON.parse(userdata);
      	     	var yiyi = pageEntity[i].BM_YIYI;
      	     	if(yiyi==""){
      	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#userbminfo" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
@@ -197,7 +194,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    	for(var j=0;j<pageEntity3.length;j++){
      	    		var column = pageEntity3[j].PX_COLUMN;
      	    		var fir = pageEntity[i][column];
-     	    		if(fir==null){
+     	    		/*if(fir==null){
      	    			
      	    			fir = userEntity[0][column];
      	    			if(column=="JOB_LB"){
@@ -209,7 +206,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    			if(column=="TONGYI"){
      	    				fir=pageEntity[i].BM_CODE;
      	    			}
-     	    		}
+     	    		}*/
      	    		if(fir==null){
      	    			fir="";
      	    		}
@@ -230,7 +227,6 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	 //总条数/每页
 		//页数
 		 var yeshu = Math.floor(pageEntity2.length/myts);
-     	
 		 var yushu = pageEntity2.length%myts;
 		 $("#"+fenye).html("");
 			 if(yushu!=0){
@@ -756,7 +752,7 @@ function firall(){
 				encodeURIComponent(jq.toJSON(data)));
 				
 				}
-//导入
+/*//导入
 				function importdataa(event,obj){
 					var _self = this;
 					var config = {"SERV_ID":obj, "FILE_CAT":"EXCEL_UPLOAD", "FILENUMBER":1, 
@@ -804,7 +800,7 @@ function firall(){
 				}
 
 				
-				/** 导入数据 **/
+				*//** 导入数据 **//*
 				rh.vi.listView.prototype._imp1 = function(fileId, param,obj) {
 					var data = {"fileId":fileId};
 					if(param) {
@@ -826,10 +822,10 @@ function firall(){
 							});
 						} 
 						_self._deletePageAllNum();
-						/*_self.refreshGrid();*/
+						_self.refreshGrid();
 						_loadbar.hideDelayed();	
 					});
-				}
+				}*/
 //--------------------------------------------------------------------------异议图标
 function yiyi(obj){
 		var a = obj.parentNode.id;
@@ -988,7 +984,7 @@ jq(document).ready(function(){
         stop: updateIndex
     }).disableSelection();
 });
-//找到所有的td  需要拖动的 td
+//找到所有的td  需要拖动的 td onmousevoer时间改变背景颜色
 function tuodongtr(){
 	var btns = document.getElementsByName('rtcheckbox');
 	for(var z=0;z<btns.length;z++){
@@ -1010,4 +1006,76 @@ function ztcx(obj){
 	}else{
 		selectdata1(user_code,xmid,3,1)
 	}
+}
+var data_id = xmid;
+var z=0;
+function importdata(obj){
+	
+	if(z==0){
+var eles=[ 
+          [ 
+            {ele:{type:'img',id:'img1',name:'files',title:'',extendAttr:{filed:'deatil_img',handle:'single',url:''}}}   
+          ] 
+      ]; 
+      var bsForm = new BSForm({ eles: eles, autoLayout:true}).Render('excleupload11',function(bf){ 
+     	 
+          global.Fn.InitPlugin1('img','excleupload11',data_id); 
+          
+      }); 
+      z++;
+	}
+}
+function deletefile(obj){
+	var id =  obj.parentNode.parentNode.id;
+	 //删除数据库
+	 var param={};
+	 param["SERV_ID"]="TS_BMLB_BM";
+	 param["DATA_ID"]=data_id;
+	 param["_PK_"]=id;
+	 //删除
+	FireFly.doAct("SY_COMM_FILE","delete",param);
+	
+	 //删除页面
+	 document.getElementById(id).remove();
+	 $("#uploadefile").attr("disabled","false");
+ }
+//导入数据库
+jq("#excelimp").click(function(){
+	 var linum =  $("#excleupload").find('li').length;
+	 //不为0 时可以删除
+	 if(linum==0){
+		 alert("文件不能为空");
+	 }else{
+		 var param = {};
+		 var s = document.getElementById("shanchu").innerHTML;
+		 param["fileId"]=s;
+		 FireFly.doAct("TS_BMLB_BM","getDataFromXls",param);
+	 }
+});
+//验证不是xls 或  xl 删除
+function deletefiles(s){
+	 var param={};
+	 param["SERV_ID"]="TS_BMSH_STAY";
+	 param["DATA_ID"]=data_id;
+	 param["_PK_"]=s;
+	 //删除
+	FireFly.doAct("SY_COMM_FILE","delete",param);
+}
+function deletefiles(){
+	var linum =  $("#excleupload").find('li').length;
+	if(linum!=0){
+	var s =document.getElementById("shanchu").innerHTML;
+	 var param={};
+	 param["SERV_ID"]="TS_BMSH_STAY";
+	 param["DATA_ID"]=data_id;
+	 param["_PK_"]=s;
+	 //删除
+	FireFly.doAct("SY_COMM_FILE","delete",param);
+	}
+}
+function returnz(){
+	return z;
+}
+function closemot(){
+	deletefiles();	
 }

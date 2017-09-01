@@ -187,6 +187,9 @@
 				<input id = "bmid" name="bmid"></input>
 			<input type="submit" name="Submit" value="提交">
 			</form>
+			<form id="form4" style="display:none" method="post" action="zgchakan.jsp">
+				<input id = "bmid" name="bmid"></input>
+			</form>
 		</div>
 		<!--异议模态窗口  -->
 		<div class="modal fade" id="appeal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
