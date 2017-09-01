@@ -40,7 +40,17 @@
 <body class="hold-transition skin-black sidebar-mini">
 
 <style>
-	 
+	tr{cursor: pointer;}
+
+	#paixu .modal-dialog { 
+    position: absolute; 
+    top: 0px; 
+    bottom: 200px; 
+    left: 0; 
+    right: 0; 
+    } 
+	
+
       #dshtable{
             margin: 100px auto;
             position: relative;
@@ -321,7 +331,8 @@ String user_code = userBean.getStr("USER_CODE");%>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-	<div class="modal fade" id="paixu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	
+	<!-- <div class="modal fade" id="paixu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
@@ -336,21 +347,16 @@ String user_code = userBean.getStr("USER_CODE");%>
 				<table id="pxtable" width="700px">
 				    <thead>
 				      <tr>
-				        <th style="padding-left:10px;width:40%;text-align:left">所有列</th>
+				        <th style="padding-left:10px;width:40%;text-align:left">待选</th>
 				        <th width="20%"></th>
-				          <th style="text-align:left">当前显示的列</th>
+				          <th style="text-align:left">已选</th>
 				      </tr>
 				      </thead>
 				      <tbody>
 				    
 				      </tbody>
 				    </table>
-				    <div style="text-align:right;margin-right:20px">
-				<button type="button"  style="height:30px;width:50px" value="Up" onclick="test(-1)">上移
-					</button>
-					<button type="button"  style="height:30px;width:50px" value="Down" onclick="test(1)">下移
-					</button>
-					</div>
+				   
 				<div class="modal-footer" style="text-align:center;height:100px">
 					<button type="button" class="btn btn-primary" style="height:50px;background:lightseagreen;width:100px" onclick="savePX()">保存</button>
 					<button type="button" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">关闭
@@ -358,9 +364,66 @@ String user_code = userBean.getStr("USER_CODE");%>
 					
 					
 				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal -->
+			</div>/.modal-content
+		</div>/.modal
+	</div> -->
+	 
+	<div class="modal fade" id="paixu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width:50%;">
+			<div class="modal-content" style="height:630px">
+				<div class="modal-header" style="background-color: #00c2c2;color: white">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h5 style="font-size:16px">
+					自定义显示列
+					</h5>
+					
+				</div>
+				<div id ="pxtablediv" style="height:500px;overflow-y:scroll;width:360px">
+				<table id="pxtable" style="width:340px;">
+				    <thead style="background-color:lightgray;border-bottom:solid 1px lightgray">
+				      <tr>
+				        <th style="padding-left:20px;width:40%;text-align:left"><input type="checkbox" style="font-size:13px;width:20px;height:20px" id="daixuan" onclick="checkall(this)">待选</th>
+				      </tr>
+				      </thead>
+				      <tbody>
+				      </tbody>
+				    </table>
+				    </div>
+				    <div style="position:relative;left:370px;top:-400px">
+				   <a onclick="removeleft()" href="#"><image id="imageleft" src="/ts/image/1124.png"></image></a>
+				    </div>
+				    <div style="position:relative;left:370px;top:-370px">
+				    <a onclick="removeright()" href="#"><image id="imageright" src="/ts/image/1348.png"></image> </a>
+				    </div>
+				     <div style="position:relative;left:370px;top:-350px">
+				   <a id="leftalla" onclick="leftall()" href="#"><image id="leftall" src="/ts/image/1440.png"></image></a>
+				    </div>
+				     <div style="position:relative;left:370px;top:-330px">
+				   <a id="rightalla" onclick="rightall()" href="#"><image id="rightall" src="/ts/image/1552.png"></image></a>
+				    </div>
+				      <div id="pxtable2div" style="height:500px;overflow-y:scroll;width:330px;position:relative;left:420px;top:-630px">
+				   <table id="pxtable2" style="width:310px;">
+				     <thead style="background-color:lightgray;width:200px;border-bottom:solid 1px lightgray">
+				      <tr>
+				        <th style="padding-left:20px;text-align:left"><input type="checkbox" style="width:20px;height:20px" id="daixuanrt" onclick="checkallright(this)">已选&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+				      </tr>
+				      </thead>
+				      <tbody>
+				    
+				      </tbody>
+				    </table>
+				    </div>
+				<div  class="modal-footer" style="position:relative;top:-635px;text-align:center;height:32px">
+					<button type="button" class="btn btn-primary" style="font-size:13px;height:40px;background:lightseagreen;width:70px" onclick="savePX()">保存</button>
+					<button type="button" class="btn btn-default" style="font-size:13px;margin-left:100px;height:40px;width:70px" data-dismiss="modal">关闭
+					</button>
+				</div>
+			</div>
+		</div>
 	</div>
+	
 	<div class="modal fade" id="yiyi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
 			<div class="modal-content">
@@ -379,7 +442,7 @@ String user_code = userBean.getStr("USER_CODE");%>
 				<div style="padding-top:20px">
 				<table style="width:700px">
 				<tr>
-				<td style="width:15%"></td><td style="height:150px;vertical-align:top"><textarea id="liyou" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="height:150px;vertical-align:top"><textarea id="backliyou" style="border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
 				<div style="padding-top:20px;width:300px;font-size:20px;text-align:center;color:lightseagreen">
@@ -392,6 +455,42 @@ String user_code = userBean.getStr("USER_CODE");%>
 				</div>
 				<div class="modal-footer" style="text-align:center;height:100px">
 					<button type="button" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">取消</button>
+				</div>
+				
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
+	<!--报名详细信息  -->
+	<div class="modal fade" id="userbminfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width:50%">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: #00c2c2;color: white">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title">
+						报名详细信息
+					</h4>
+					
+				</div>
+				<div style="padding-left:30px;padding-top:20px;">
+				<table style="width:750px;font-size:20px;color:lightseagreen">
+				<tr height="50px">
+				<td style="width:30%;text-align:right;">考试标题：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="ks_title"></td><td style="width:30%;text-align:right;"></td><td style="font-size:14px;color:red;text-align:left;width:40%" ></td>
+				</tr>
+				<tr height="50px">
+				<td style="width:30%;text-align:right;">报名人：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="bm_name"></td><td style="width:30%;text-align:right;">人力编码：&nbsp;</td><td style="font-size:14px;color:red;text-align:left;width:40%" id="work_num"></td>
+				</tr>
+				<tr height="50px">
+				<td style="width:30%;text-align:right;">性别：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="gender"></td><td style="width:30%;text-align:right;">电话：&nbsp;</td><td style="font-size:14px;color:red;text-align:left;width:40%" id="phone_num"></td>
+				</tr>
+				<tr height="50px">
+				<td style="width:30%;text-align:right;">报名时间：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="starttime"></td><td style="width:30%;text-align:right;">所属机构：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="belongto"></td>
+				</tr>
+				</table>
+				</div>
+				<div class="modal-footer" style="text-align:center;height:100px">
+					<button type="button" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">关闭</button>
 				</div>
 				
 			</div><!-- /.modal-content -->

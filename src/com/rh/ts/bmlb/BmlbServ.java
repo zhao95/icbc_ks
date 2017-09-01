@@ -422,24 +422,9 @@ public class BmlbServ extends CommonServ {
        return outBean;
 	}
 
+	
 	/**
-	 * 撤销时将已报名的数据状态 改为已撤销（多条）
-	 * @param paramBean
-	 */
-	public void deletebm(Bean paramBean){
-		String servId="TS_BMLB_BM";
-		String id = paramBean.getStr("id");
-		String user_code = paramBean.getStr("user_code");
-		String where = "AND XM_ID="+"'"+id+"' "+"AND BM_CODE="+"'"+user_code+"' order by BM_STATE";
-		List<Bean> list = ServDao.finds(servId, where);
-		for(int i=0;i<list.size();i++){
-			Bean dataBean = list.get(i);
-			dataBean.set("BM_STATE", 2);
-			ServDao.update(servId, dataBean);
-		}
-	}
-	/**
-	 * 撤销时将已报名的数据状态 改为已撤销(单条)
+	 * 撤销时将已报名的数据状态 改为已撤销
 	 * @param paramBean
 	 */
 	public void deletesingle(Bean paramBean){
@@ -452,9 +437,6 @@ public class BmlbServ extends CommonServ {
 			dataBean.set("BM_STATE", 2);
 			ServDao.update(servId, dataBean);
 		}
-		
-		
-		
 	}
 	public Bean lookstate(Bean paramBean){
 		String xmid = paramBean.getStr("xmid");
@@ -612,5 +594,28 @@ public class BmlbServ extends CommonServ {
 		       outBean.set("list",w.toString());
 			
 		       return outBean;
+	}
+	/**
+	 * 获取上诉理由  异议原因
+	 * @param paramBean
+	 * @return
+	 */
+	public Bean getLiyou(Bean paramBean){
+		Bean outBean = new Bean();
+		String bmid = paramBean.getStr("bmid");
+		Bean databean = ServDao.find("TS_BMLB_BM", bmid);
+		outBean.set("liyou", databean.getStr("BM_SS_REASON"));
+		return outBean;
+	}
+	/**
+	 * 获取单条  根据id
+	 */
+	public Bean getSingle(Bean paramBean){
+		String id = paramBean.getStr("bmid");
+		String where = "AND BM_ID="+"'"+id+"'";
+		List<Bean> list  = ServDao.finds("TS_BMLB_BM",where);
+		Bean outBean = new Bean();
+		outBean.set("bean", list);
+		return outBean;
 	}
 }
