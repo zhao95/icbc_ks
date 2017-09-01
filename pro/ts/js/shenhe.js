@@ -1042,12 +1042,14 @@ function deletefile(obj){
 //导入数据库
 jq("#excelimp").click(function(){
 	 var linum =  $("#excleupload").find('li').length;
+	 alert(linum);
 	 //不为0 时可以删除
 	 if(linum==0){
 		 alert("文件不能为空");
 	 }else{
 		 var param = {};
 		 var s = document.getElementById("shanchu").innerHTML;
+		 alert(s);
 		 param["fileId"]=s;
 		 FireFly.doAct("TS_BMLB_BM","getDataFromXls",param);
 	 }
@@ -1078,4 +1080,5 @@ function returnz(){
 }
 function closemot(){
 	deletefiles();	
+	 document.getElementById("shanchu").parentNode.parentNode.remove();
 }

@@ -634,7 +634,7 @@ public class BmlbServ extends CommonServ {
      *
      * @param fileId 文件id
      */
-    private List<Bean> getDataFromXls(Bean paramBean) throws IOException, BiffException {
+    public List<Bean> getDataFromXls(Bean paramBean) throws IOException, BiffException {
         List<Bean> result = new ArrayList<>();
         List<String> codeList = new ArrayList<>();
         List<String> nameList = new ArrayList<>();
