@@ -28,7 +28,7 @@ _viewer.grid.getBtn("set").unbind("click").bind("click",function() {
 	    	   cs(xmglId);
 	    	   break;
 	    case  '考场安排':
-	    	   ap(pk);
+	    	   ap(xmglId);
 	    	   break;
 	    default:;
 	}
@@ -161,6 +161,15 @@ function cs(pk){
 	var height = jQuery(window).height()-200;
 	var width = jQuery(window).width()-200;
 	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_CCCS","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+	temp[UIConst.PK_KEY] = pk;//修改时，必填
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+}
+//考场安排
+function ap(pk){
+	var height = jQuery(window).height()-200;
+	var width = jQuery(window).width()-200;
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_KCAP","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
 	temp[UIConst.PK_KEY] = pk;//修改时，必填
     var cardView = new rh.vi.cardView(temp);
     cardView.show();

@@ -6649,7 +6649,7 @@ rh.ui.Image.prototype.fillData = function(val) {
  * 渲染之后
  */
 rh.ui.Image.prototype.afterRender = function() {
-	alert("imagerender");
+//	alert("imagerender");
 	this._file.initUpload();
 };
 /**
