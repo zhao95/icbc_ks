@@ -963,7 +963,7 @@ global.Fn.InitUploadImage = function (container,bmid) {
             if (s!="") {
             	var i =0;
             	i++;
-            	$(".upload-list>ul", $upload).append('<div id='+s+'><li name="filedown">'+s+'</li><li>&nbsp;&nbsp;<a href="/file/'+s+'" onclick="xiazai()"><image src="/ts/image/u344.png"></image></a></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick=deletefile('+s+')>删除</a></li></div>');
+            	$(".upload-list>ul", $upload).append('<div id='+s+'><li name="filedown">'+s+'</li><li>&nbsp;&nbsp;<a href="/file/'+s+'" onclick="xiazai()"><image src="/ts/image/u344.png"></image></a></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick=deletefile(this)>删除</a></li></div>');
             } else {
                 global.Fn.ShowMsg({
                     type: 'alert:error',

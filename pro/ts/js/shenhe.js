@@ -49,13 +49,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
     if(shjshu!=""){
     	where3 = " AND SH_NODE like "+"'%"+shjshu+"%'";
     }
-     	//下拉框值
-     	var type =  document.getElementById("zhuangtai1");
-     	var index = type.selectedIndex;
-     	var  zhuangtai = type.options[index].value;
-     	if(zhuangtai!="全部"){
-     		where4 = " AND BM_TYPE="+"'"+zhuangtai+"'";
-     	}
+     	
      	
      	var where5 = " AND XM_ID="+"'"+xmid+"'";
      	var where6 = "AND SH_OTHER like '%"+user_code+"%'";
@@ -66,8 +60,10 @@ function selectdata1(user_code,xmid,shenhe,yema){
 		//param
 		param["nowpage"]=yema;
 		param["shownum"]=myts;
-     	param["where"]=where1 + where2 + where3 + where4+ where5 + where6;
+     	param["where"]=where1 + where2 + where3 + where5 + where6;
 	}else if(shenhe==2){
+		//下拉框值
+     	
 		diftid="B";
 		checkbox="b";
 		servId = "TS_BMSH_PASS";
@@ -80,6 +76,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
 	    var where3 = "";
 	    var where4 = "";
 	    var where5 = "";
+	    var where6 = "";
 	    //判断 审核编码 是否在other字段中
 	    if(name!=""){
 	    	where1 = "AND BM_NAME like "+"'%"+name+"%'";
@@ -89,6 +86,18 @@ function selectdata1(user_code,xmid,shenhe,yema){
 	    }
 	     	 where4 = " AND XM_ID="+"'"+xmid+"'";
 	     	 where5 = "AND SH_OTHER like '%"+user_code+"%'";
+	     	 
+	     	var type =  document.getElementById("zhuangtai1");
+	     	var index = type.selectedIndex;
+	     	var  zhuangtai = type.options[index].value;
+	     	if(zhuangtai!="全部"){
+	     		if(zhuangtai=="进行中"){
+	     			where6 = " AND SH_LEVEL!='1'";
+	     		}else{
+	     			where6 = " AND SH_LEVEL='1'";
+	     		}
+	     	}
+	     	 
 	     	//每页条数
 			var select = document.getElementById("select2");
 			var index = document.getElementById("select2").selectedIndex;
@@ -96,7 +105,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
 			//拼接param
 			param["nowpage"]=yema;
 			param["shownum"]=myts;
-	     	param["where"]=where1 + where2 + where3 + where4 + where5;
+	     	param["where"]=where1 + where2 + where3 + where4 + where5+where6;
 	}else if(shenhe==3){
 		diftid="C";
 		checkbox="c";
@@ -110,6 +119,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
 	    var where3 = "";
 	    var where4 = "";
 	    var where5 = "";
+	    var where6="";
 	    if(name!=""){
 	    	where1 = "AND BM_NAME like "+"'%"+name+"%'";
 	    }
@@ -119,6 +129,18 @@ function selectdata1(user_code,xmid,shenhe,yema){
 	  
 	     	 where4 = " AND XM_ID="+"'"+xmid+"'";
 	     	 where5 = "AND SH_OTHER like '%"+user_code+"%'";
+	     	 
+	     	var type =  document.getElementById("zhuangtai2");
+	     	var index = type.selectedIndex;
+	     	var  zhuangtai = type.options[index].value;
+	     	if(zhuangtai!="全部"){
+	     		if(zhuangtai=="进行中"){
+	     			where6 = " AND SH_LEVEL!='1'";
+	     		}else{
+	     			where6 = " AND SH_LEVEL='1'";
+	     		}
+	     	}
+	     	 
 	     	//每页条数
 			var select = document.getElementById("select3");
 			var index = document.getElementById("select3").selectedIndex;
@@ -126,7 +148,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
 			//拼接param
 			param["nowpage"]=yema;
 			param["shownum"]=myts;
-	     	param["where"]=where1 + where2 + where3 + where4 + where5;
+	     	param["where"]=where1 + where2 + where3 + where4 + where5+where6;
 	}
 	
 	
@@ -979,5 +1001,13 @@ function tuodongtr(){
 		        this.style.background = 'white';
 		    }
 
+	}
+}
+//进行中 已结束 下拉框 onchange
+function ztcx(obj){
+	if(obj=="通过"){
+		selectdata1(user_code,xmid,2,1)
+	}else{
+		selectdata1(user_code,xmid,3,1)
 	}
 }

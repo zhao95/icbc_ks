@@ -601,17 +601,18 @@ function selectcreate(){
   }
   //删除文件
  function deletefile(obj){
+	var id =  obj.parentNode.parentNode.id;
 	 //删除数据库
 	 var bmid = document.getElementById("baomingid"+idcode).innerHTML;
 	 var param={};
 	 param["SERV_ID"]="TS_BMLB_BM";
 	 param["DATA_ID"]=bmid;
-	 param["_PK_"]=obj;
+	 param["_PK_"]=id;
 	 //删除
 	FireFly.doAct("SY_COMM_FILE","delete",param);
 	
 	 //删除页面
-	 document.getElementById(obj).remove();
+	 document.getElementById(id).remove();
  }
  //提交意义
  function tijiaoyiyi(){
