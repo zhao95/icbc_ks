@@ -241,7 +241,17 @@ public class NoPassServ extends CommonServ {
 	 * 提交异议
 	 */
 	public void yiyi(Bean paramBean){
+		String liyou = paramBean.getStr("liyou");
 		String bmid = paramBean.getStr("bmid");
+		//将异议状态改为1  已提交
+		//将提交理由保存到  此表  ts_bmlb_bm
+		String where1 =  "AND BM_ID="+"'"+bmid+"'";
+		List<Bean> bmlist = ServDao.finds("TS_BMLB_BM", where1);
+		Bean bmbean = bmlist.get(0);
+		bmbean.set("BM_YIYI_STATE", 1);
+		bmbean.set("BM_SS_REASON", liyou);
+		bmbean.set("BM_SH_STATE", 0);
+		ServDao.save("TS_BMLB_BM",bmbean);
 		String shenuser = paramBean.getStr("user_code");
 		String where = "AND BM_ID="+"'"+bmid+"'";
 		List<Bean> list = ServDao.finds("TS_BMSH_NOPASS", where);

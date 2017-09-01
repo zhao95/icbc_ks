@@ -14,7 +14,6 @@ var hasCreate = {
 };
 //页面加载时运行该函数
 jQuery(document).ready(function(){
-//	debugger;
 	//存放
 	var eventArr = [];
 	doPick($("[iiCode='kaoshi'] .TS_KS_CAL_picker"),type);
@@ -35,7 +34,6 @@ jQuery(document).ready(function(){
 	//考试日历的按钮（‘更多>’）.点击之后跳转到考试日历的详细介绍页面
 	jQuery("div[icode='ksrl-header']").unbind("click").click(function(){
 		var url = FireFly.getContextPath() + "/qt/jsp/ksrl.jsp";
-//		alert(url);
 		window.location.href = url;
 		});
 	
@@ -121,9 +119,10 @@ jQuery(document).ready(function(){
 			}
 			if (n.CAL_TYPE && n.CAL_TYPE==2) {
 				time = n.CAL_MONTH.substring(5)+"月" || "";
-//				debugger;
 			}
-			liebiaoArr.push("<tr><td style='width:80px;border:0;text-align:right;padding-right:10px;'>"+time+"</td><td style='border:0;text-align:left;padding-right:4px;'>"+name+"</td></tr>");
+			//css样式,控制div内的字超出范围的省略号代替  overflow: hidden; text-overflow: ellipsis;
+			liebiaoArr.push("<tr><td style='width:120px;border:0;text-align:center;padding-right:10px;'>"+time+"</td><td style='border:0;text-align:left;padding-right:4px;overflow: hidden; text-overflow: ellipsis;'>"+name+"</td></tr>");
+//			liebiaoArr.push("<tr><td style='width:120px;border:0;text-align:center;padding-right:10px;'>"+time+"</td><td style='border:0;text-align:left;padding-right:4px;'>"+name+"</td></tr>");
 		});
 		if (eventArr.length == 0) {
 			liebiaoArr.push("<tr><td colspan='2' style='border:0;'>暂无记录</td></tr>");

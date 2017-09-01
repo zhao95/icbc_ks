@@ -89,75 +89,11 @@
 						style="width: 20%; text-align: left">组织单位</th>
 					<th id="S_ATIME" class="" style="width: 20%; text-align: left">创建时间</th>
 					<th id="BM_STATE__NAME" class="" style="width: 5%;">状态</th>
-					<th id="BM_OPTIONS" class="" style="width: 30%; text-align: center">操作</th>
+					<th id="BM_OPTIONS" class="" style="width: 10%; text-align: center">操作</th>
 				</tr>
 			</thead>
 			<tbody class="">
-				<%
-					//查询出所有的项目   对登陆人的节点进行判断包含那几个机构的报名他可以看
-								String servId = "TS_XMGL";
-								String act = "getDshList";
-								Bean param = new Bean();
-								param.set("user_code", user_code);
-								//返回需要的数据放入list中进行展示
-								Bean bean = ServMgr.act(servId, act, param);
-								List<Bean> list = bean.getList("list");
-								for(int i =0;i<list.size();i++){
-									String name = list.get(i).getStr("XM_NAME");
-									String zzdw = list.get(i).getStr("XM_FQDW_NAME");
-									String xmtype = list.get(i).getStr("XM_TYPE");
-									String cjsj = list.get(i).getStr("S_ATIME");
-									String startdate = list.get(i).getStr("XM_START");
-									String enddate = list.get(i).getStr("XM_END");
-									//创建新时间 判断 状态
-									SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
-									String state = "未开始";
-									String display = "none";
-									if(startdate!=""&&enddate!=""){
-									Date start = sdf.parse(startdate);
-									Date end = sdf.parse(enddate);
-									Date date = new Date();
-									if(date.getTime()>start.getTime()&&date.getTime()<end.getTime()){
-										
-									 state = "报名审核";
-									 display = "block";
-									}else if(date.getTime()>end.getTime()){
-										state="已结束";
-									}
-									}
-									//添加一行隐藏的项目id
-									String id = list.get(i).getStr("XM_ID");
-									if(state=="报名审核"){
-				%>
-				<tr style="height: 50px; width: 100%">
-					<td><%=i+1%></td>
-					<td style="text-align: left"><%=name%></td>
-					<td style="text-align: left"><%=zzdw%></td>
-					<td style="text-align: left"><%=cjsj%></td>
-					<td style="text-align: left"><%=state%></td>
-					<td><input type="button" onclick="tiaozhuan(<%=i%>)"
-						style="margin-top: 7px; border: none; color: white; font-size: 15px; background-color: LightSeaGreen; height: 35px; width: 80px"
-						value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" type="button" onclick="chakan(<%=i %>)"
-						style="border: none; color: white; font-size: 15px; background-color: LightSeaGreen; height: 35px; width: 80px"
-						value="查看"></input></td>
-					<td class="rhGrid-td-hide" id="XM_ID<%=i%>"><%=id%></td>
-					<td class="rhGrid-td-hide" id="XM_TYPE<%=i%>"><%=xmtype%></td>
-				</tr>
-				<%
-					}else{
-				%>
-				<tr style="height: 50px; width: 100%">
-					<td><%=i+1%></td>
-					<td style="text-align: left"><%=name%></td>
-					<td style="text-align: left"><%=zzdw%></td>
-					<td style="text-align: left"><%=cjsj%></td>
-					<td style="text-align: left"><%=state%></td>
-					<td></td>
-					<td class="rhGrid-td-hide" id="XM_ID<%=i%>"><%=id%></td>
-				</tr>
-				<%
-					}}
-				%>
+				
 			</tbody>
 		</table>
 		<div id="fenyediiv"
@@ -195,29 +131,35 @@
 				<div style="padding-left:30px;padding-top:20px;">
 				<table style="width:650px;font-size:20px;color:lightseagreen">
 				<tr height="50px">
-				<td style="width:30%;text-align:right;">报名编号:&nbsp;</td><td style="color:red;width:20%" id="bmcode"></td><td style="width:30%;text-align:right;">报名名称：&nbsp;</td><td style="color:red;text-align:center;width:40%" id="bmname" ></td>
+				<td style="width:30%;text-align:right;">报名编号：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="bmcode"></td><td style="width:30%;text-align:right;">报名名称：&nbsp;</td><td style="font-size:14px;color:red;text-align:left;width:40%" id="bmname" ></td>
 				</tr>
 				<tr height="50px">
-				<td style="width:30%;text-align:right;">创建人：&nbsp;</td><td style="color:red;width:20%" id="creator"></td><td style="width:30%;text-align:right;">组织单位：&nbsp;</td><td style="color:red;text-align:center;width:40%" id="oragnize"></td>
+				<td style="width:30%;text-align:right;">创建人：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="creator"></td><td style="width:30%;text-align:right;">组织单位：&nbsp;</td><td style="font-size:14px;color:red;text-align:left;width:40%" id="oragnize"></td>
 				</tr>
 				<tr height="50px">
-				<td style="width:30%;text-align:right;">报名开始时间：&nbsp;</td><td style="color:red;width:20%" id="starttime"></td><td style="width:30%;text-align:right;">报名结束时间：&nbsp;</td><td style="color:red;text-align:center;width:40%" id="endtime"></td>
+				<td style="width:30%;text-align:right;">报名开始时间：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="starttime"></td><td style="width:30%;text-align:right;">报名结束时间：&nbsp;</td><td style="font-size:14px;color:red;text-align:left;width:40%" id="endtime"></td>
 				</tr>
 				<tr height="50px">
-				<td style="width:30%;text-align:right;">考试须知：&nbsp;</td><td style="color:red;width:20%" id="mustknow"></td><td style="width:30%;text-align:right;">状态：&nbsp;</td><td style="color:red;text-align:center;width:40%" id="status"></td>
+				<td style="width:30%;text-align:right;">状态：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="status"></td><td style="width:30%;text-align:right;"></td><td style="font-size:14px;color:red;text-align:left;width:40%" ></td>
 				</tr>
 				</table>
 				</div>
-				<div style="padding-top:20px;width:200px;font-size:20px;text-align:center;color:lightseagreen">
+				<div style="padding-top:10px;width:200px;font-size:20px;text-align:center;color:lightseagreen">
 				描述：
 				</div>
-				<div style="padding-top:20px">
 				<table style="width:700px">
 				<tr>
-				<td style="width:15%"></td><td style="disabled:disabled;height:150px;vertical-align:top"><textarea id="describe" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="disabled:disabled;height:100px;vertical-align:top"><textarea id="describe" style="border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
+				</tr>
+				</table >
+				<div style="padding-top:10px;width:200px;font-size:20px;text-align:center;color:lightseagreen">
+				考试须知：
+				</div>
+				<table style="width:700px">
+				<tr>
+				<td style="width:15%"></td><td style="height:100px;vertical-align:top"><textarea id="mustknow" style="border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
-				</div>
 				<div class="modal-footer" style="text-align:center;height:100px">
 					<button type="button" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">关闭</button>
 				</div>
@@ -324,7 +266,6 @@
 		//通过项目查找报名信息
 		 var hid = "XM_ID"+obj;
 		var id = document.getElementById(hid).innerHTML;
-		alert(id);
 		var param={};
 		param["xmid"]=id;
 		var result = FireFly.doAct("TS_XMGL_BMGL","getXmInfo",param);
@@ -337,8 +278,10 @@
 		$("#starttime").text(pageEntity[0].BM_START);
 		$("#endtime").text(pageEntity[0].BM_END);
 		$("#mustknow").text(pageEntity[0].BM_KSXZ);
+		$("#mustknow").attr("disabled","disabled");
 		$("#status").text(pageEntity[0].BM_STATE);
 		$("#describe").text(pageEntity[0].BM_DESC);
+		$("#describe").attr("disabled","disabled");
 	}
 
 	//项目筛选  能审核的项目   
@@ -347,7 +290,6 @@
 	    var zuzhidanwei =  document.getElementById("zzdw").value;
 	    var where1 = "";
 	    var where2 = "";
-	    var where3="";
 	    if(name!=""){
 	    	where1 = "AND XM_NAME like"+"'%"+name+"%'";
 	    }
@@ -359,20 +301,18 @@
 	     	var index = type.selectedIndex;
 	     	var  zhuangtai = type.options[index].value;
 	     	
-	     	if(zhuangtai!="全部"){
-	     		//进行状态匹配 进行中和一结束
-	     		where3 = " AND BM_ZHUANGTAI="+"'"+zhuangtai+"'";
-	     	}
+	     	
 	     	//每页条数
 			var select = document.getElementById("yema");
 			 var index = document.getElementById("yema").selectedIndex;
 			var myts = select.options[index].value;
 			//重新计算 页码
 			var param={};
+			param["bm_zhuantai"]=zhuangtai;
 			param["user_code"]=user_code;
 			param["nowpage"]=yema;
 			param["shownum"]=myts;
-	     	param["where"]=where1 + where2 + where3;
+	     	param["where"]=where1 + where2;
 	     	//在某一结点下 可以查看哪些机构的 审核  过滤出来
 	     	var result = FireFly.doAct("TS_XMGL","getUncheckList",param);
 	     	
@@ -453,7 +393,7 @@
 	     			$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td><input type="button" onclick="tiaozhuan('+i+')" style="margin-top:7px;border:none;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" style="border:none;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="查看"></input></td></tr>');
 		     		
 					}else{
-						$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="BM_ID'+i+'" >'+id+'</td><td></td></tr>');	
+						$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="BM_ID'+i+'" >'+id+'</td><td><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" style="border:none;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="查看"></input></td></tr>');	
 					}
 	     	  }
 	     	
@@ -469,6 +409,10 @@
 		            rows[i].style.backgroundColor = "Azure";  
 		       }  
 		    } 
+	}
+	function ztcx(){
+		var user_code = "<%=user_code%>";
+		selectxmdata(user_code,1);
 	}
 	</script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>

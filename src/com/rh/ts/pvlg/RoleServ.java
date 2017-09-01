@@ -1,6 +1,5 @@
 package com.rh.ts.pvlg;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.rh.core.base.Bean;
@@ -9,7 +8,6 @@ import com.rh.core.base.TipException;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
-import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -86,6 +84,12 @@ public class RoleServ extends CommonServ {
 					if (Strings.containsValue(userOptStr, optCode)) {
 						// 该功能可见范围
 						Bean optPvlg = userOpt.getBean("PVLG-" + mdCode).getBean(optCode);
+						// 关联机构层级的机构编码
+						String orgsLv = getOrgsByLv(optPvlg.getStr("ROLE_ORG_LV"));
+						// 关联部门和机构层级合并
+						String orgs = Strings.mergeStr(orgsLv,  optPvlg.getStr("ROLE_DCODE"));
+						
+						optPvlg.set("ROLE_DCODE", orgs);
 
 						optBean.put(optCode, optPvlg);
 
@@ -161,34 +165,39 @@ public class RoleServ extends CommonServ {
 			String deptCodes = listPvlg.getStr("ROLE_DCODE");
 
 			SqlBean sql = new SqlBean();
-
-			Bean org = getOrgsByLv(deptLvs,userCode);
 			
-			Bean org1 = getOrgBydept(deptCodes);
+//			Strings.
 
 			paramBean.set(Constant.PARAM_WHERE, sql.toString());
+		} else { //无权限访问
+			paramBean.set(Constant.PARAM_WHERE, " and 1=2");
 		}
 	}
 
 	/**
-	 * 根据关联机构层级 获取所有机构 (包含下属机构)
+	 * 根据关联机构层级 获取机构
+	 * 
 	 * @param deptLvs
 	 * @param userCode
 	 * @return
 	 */
-	private Bean getOrgsByLv(String deptLvs, String userCode) {
+	private String getOrgsByLv(String deptLvs) {
+		
+		if (Strings.isBlank(deptLvs)) {
+			return "";
+		}
 
-		UserBean userBean = UserMgr.getUser(userCode);
+		UserBean userBean = Context.getUserBean();
 
 		int curLv = userBean.getODeptLevel() - 1; // 用户机构层级
 
 		String[] deptLvArg = deptLvs.split(",");
 
-		String[] odept = new String[deptLvArg.length];
+		String orgs = "";
 
 		for (int i = 0; i < deptLvArg.length; i++) {
 
-			DeptBean odeptBean = userBean.getODeptBean();
+			DeptBean odeptBean = null;
 
 			if (!Strings.isBlank(deptLvArg[i])) { // 机构层级
 
@@ -198,64 +207,19 @@ public class RoleServ extends CommonServ {
 
 				for (int j = 1; j <= differ; j++) {
 
-					odeptBean = odeptBean.getParentDeptBean().getODeptBean();
+					odeptBean = userBean.getODeptBean().getParentDeptBean().getODeptBean();
 
 					System.out.println("上级 lv=" + odeptBean.getLevel() + "   curLv=" + curLv);
 				}
 
-				odept[i] = odeptBean.getODeptCode();
-			}
-		}
-
-		Bean org = new Bean();
-
-		for (String dept : odept) {
-
-			List<DeptBean> list = OrgMgr.getSubOrgs(userBean.getCmpyCode(), dept);
-
-			for (DeptBean bean : list) {
-
-				org.set(bean.getCode(), bean.getODeptCode());
-			}
-
-		}
-
-		return org;
-	}
-
-	/**
-	 * 根据关联指定部门 获取部门所有机构(包含下属机构)
-	 * @param deptCodes
-	 * @return
-	 */
-	private Bean getOrgBydept(String deptCodes) {
-		
-		Bean org = new Bean();
-
-		String[] deptArg = deptCodes.split(",");
-
-		for (int i = 0; i < deptArg.length; i++) {
-
-			String deptCode = deptArg[i];
-
-			if (!Strings.isBlank(deptCode)) { // 自定义部门
-
-				DeptBean deptBean = OrgMgr.getOdept(deptCode);
-
-				if (deptBean.getType() == 2) { // 机构
-
-				} else { // 部门
-
-					StringBuffer sub = new StringBuffer();
-					sub.append(" and ( S_DEPT = ?");
-					sub.append(" or S_TDEPT = ?) ");
-
+				if (odeptBean != null && !odeptBean.isEmpty()) {
+					
+					Strings.addValue(orgs, odeptBean.getODeptCode());
 				}
-
 			}
 		}
 
-		return org;
+		return orgs;
 	}
 
 }

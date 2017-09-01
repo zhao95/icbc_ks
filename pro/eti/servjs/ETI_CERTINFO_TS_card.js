@@ -2,7 +2,7 @@ var _viewer = this;
 /**
  * 证书信息模块
  * 实现岗位类别和岗位序列的二级联动效果
- * @author leader
+ * @author wanglida
  */
 _viewer.getItem("STATION_TYPE").change(function(){
 	//获取到对应类别
@@ -23,7 +23,6 @@ _viewer.getItem("STATION_TYPE").change(function(){
 	_viewer.getItem("STATION_NO").addOptions(stationList);
 });
 
-//debugger;
 //var as = _viewer._actVar;
 //alert(as);
 //判断请求是添加还是修改，若是添加则调用扩展类的方法生成流水号，

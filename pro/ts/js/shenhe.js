@@ -167,9 +167,9 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	     	var userEntity = JSON.parse(userdata);
      	     	var yiyi = pageEntity[i].BM_YIYI;
      	     	if(yiyi==""){
-     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td style="text-align: center"><a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick="form2submit('+i+')" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#userbminfo" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
      	     	}else{
-     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick="form2submit('+i+')" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#userbminfo" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
      	     		
      	     	}
      	    	for(var j=0;j<pageEntity3.length;j++){
@@ -190,6 +190,17 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    		}
      	    		if(fir==null){
      	    			fir="";
+     	    		}
+     	    		var BM_TYPE = "";
+     	    		if(column=="BM_TYPE"){
+     	     		 if(fir=="1"){
+     	     			BM_TYPE="初级";
+     	     		 }else if(fir=="2"){
+     	     			 BM_TYPE="中级";
+     	     		 }else{
+     	     			 BM_TYPE="高级";
+     	     		 }
+     	     		 fir = BM_TYPE;
      	    		}
      	    		$("#"+table+" tbody").find('tr:eq('+i+')').append('<td>'+fir+'</td>');
      	    	}
@@ -277,7 +288,6 @@ function Drag(div,table){
                   for (var i = 0; i < oth.length; i++) {
                          arrn.push(oth[i].offsetLeft);      
                   }; 
-                  console.log(arrn);
                   box.style.display="block";
                   box.style.width=thW+"px";
                   box.style.left=disX+"px";
@@ -310,7 +320,6 @@ function Drag(div,table){
                           rows[i].cells[_this.cellIndex].innerHTML=rows[i].cells[index].innerHTML;
                           rows[i].cells[index].innerHTML="";
                           rows[i].cells[index].innerHTML=opr[i].innerHTML;
-                          console.log(rows[i].cells[index].innerHTML);
                        };
                        box.innerHTML="";
                        arrn.splice(0,arrn.length);
@@ -325,6 +334,7 @@ function Drag(div,table){
         };
         
   }
+
   //动态获取 th重新 排序 拼接
 function appendTh(user_code){
 	$("#staytable thead").html("");
@@ -383,7 +393,6 @@ function appendTh(user_code){
 //---------------------------------------------------------------------------------自定义显示列
 	//自定义显示列数据进行回显
 	function zdyl(){
-		
 		var param={};
 		param["user_code"]=user_code;
 		var result = FireFly.doAct("TS_BMSH_PX","getUserList",param);
@@ -393,45 +402,37 @@ function appendTh(user_code){
 			for(var i=0;i<pageEntity.length;i++){
 				var px_column = pageEntity[i].PX_COLUMN;
 				var name = pageEntity[i].PX_NAME;
-				//第二个td
-				var sentds = document.getElementsByName("sentd");
-				
-				sentds[i].innerHTML='<input style="width:50px;height=50px" type="checkbox" id='+px_column+' onclick="changetd(this)" value='+name+' name="pxcheckbox">'+name+'';
 				//都处于选中状态
-				sentds[i].children[0].checked=true;
 				//第一个td
-				var value = sentds[i].children[0].value;
 				var firtds = document.getElementsByName("firtd");
 				for(var j=0;j<firtds.length;j++){
-					
-					if(value==firtds[j].children[0].value){
-						firtds[j].children[0].checked=true;
+					if(firtds[j].children[0].id==px_column){
+						firtds[j].children[0].name="rtcheckbox";
+						var s =  firtds[j].parentNode.innerHTML;
+						firtds[j].parentNode.remove();
+						 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px lightgray">'+s+'</tr>')
 					}
 				}
 		}
-			var table = document.getElementById("pxtable");  
-			rowscolor(table);
-		
+			
+			 tuodongtr();
 }
-
 	
 	//保存自定义显示 的 数据 
 	function  savePX(){
 		//获取所有的td
-		var sentds = document.getElementsByName("sentd");
+		var sentds = document.getElementsByName("rtcheckbox");
 		//循环遍历所有的td
 		var param={};
 		var aa = false;
 		for(var i=0;i<sentds.length;i++){
-			if(sentds[i].innerHTML!=""){
-			var id = sentds[i].children[0].id;
-			var name = sentds[i].children[0].value;
+			var id = sentds[i].id;
+			var name = sentds[i].value;
 			param["id"]=id;
 			param["user_code"]=user_code;
 			param["xuhao"]=i+1;
 			param["name"]=name;
 			FireFly.doAct("TS_BMSH_PX","paixu",param);
-			}
 		}
 		$('#paixu').modal('hide');
 		//重新append th
@@ -439,140 +440,7 @@ function appendTh(user_code){
 		selectdata1(user_code,xmid,1,1);
 	}
 	
-	//自定义显示列
-	var tr;
-	function xuanzhong(obj){
-		//判断tr是否 已经被选中了
-		if(!tr){
-			//没有选中的
-			//选中td 改变 背景颜色
-			var s =  document.getElementById("sen"+obj)
-			s.style.color="red";
-			//获取tr
-			tr=s.parentNode;
-			return
-		}
-		//当前选中的 行数
-		var j= tr.sectionRowIndex;
-		//取消当前绑定
-		$("#sen"+j).unbind("click"); 
-		//将颜色改回
-		document.getElementById("sen"+j).style.color="black";
-		//选中td 改变 背景颜色
-		var s =  document.getElementById("sen"+obj)
-		s.style.color="red";
-		//获取tr
-		tr=s.parentNode;
-}
 	
-	
-	var t1=document.getElementById("pxtable");
-	//上下移动
-	function test(n){
-		//选中空行不能 进行 移动
-		
-		//判断上一行或者下一行是否还有数据 没有的话return
-			var z = tr.sectionRowIndex;
-			var m= tr.sectionRowIndex+n;
-			var tdnext = document.getElementById("sen"+m);
-			var td = document.getElementById("sen"+z)
-			if(td.innerHTML==""||tdnext.innerHTML==""){
-				return;
-			}
-	//tr还没赋值  没有选中
-	if(!tr){
-	   alert('请选择一行');
-	   return;
-	}
-	//当前行 和要移动到的行
-	var j= tr.sectionRowIndex;
-	var i=tr.sectionRowIndex+n;
-	//顺序调整
-	if(i>=0 && i<t1.rows.length){
-	   var origin = document.getElementById('sen'+tr.sectionRowIndex);
-	   var target = document.getElementById('sen'+i);
-	   var tmp = origin.innerHTML;
-	   origin.innerHTML=target.innerHTML;
-	   target.innerHTML=tmp;
-	}
-	//解绑当前行
-	$("#sen"+j).unbind("click"); 
-	document.getElementById("sen"+j).style.color="black";
-	//要移动的行默认选中
-	 $("#sen"+i).trigger("click"); 
-	 //全选中  checkbox
-	 var sentds = document.getElementsByName("sentd");
-		for(var i=0;i<sentds.length;i++){
-			if(sentds[i].innerHTML!=""){
-			sentds[i].children[0].checked=true;
-			}
-		}
-	}
-	
-
-	//checkbox  选中和取消选中的时候    进行  联动选中或取消选中
-		function changetd(obj){
-			//选中时  将 此td的值放入  第二个td中 且  排序 从上往下
-			if($(obj).prop("checked")){
-				var row = obj.parentNode.parentNode;
-				var tds=row.getElementsByTagName("td");
-				var inner = tds[0].innerHTML;
-				var sentds = document.getElementsByName("sentd");
-				//排序
-				for(var i=0;i<sentds.length;i++){
-					if(sentds[i].innerHTML==""){
-					sentds[i].innerHTML = inner;
-					sentds[i].children[0].checked=true;
-					return;
-					}
-				}
-			}else{
-				//左边td不选中
-				var sentds = document.getElementsByName("sentd");
-				var firtds = document.getElementsByName("firtd");
-				//checckbox  取消选中   第二个td删除 数据  且重新排序
-				for(var i=0;i<sentds.length;i++){
-				if(obj.parentNode.innerHTML==sentds[i].innerHTML){
-					for(var a=0;a<firtds.length;a++){
-						if(firtds[a].innerHTML==sentds[i].innerHTML){
-							firtds[a].children[0].checked=false;
-						}
-					}
-					sentds[i].innerHTML="";
-					//排序
-					for(var j=i+1;j<sentds.length;j++){
-						if(sentds[j].innerHTML==""){
-						}else{
-							sentds[i].innerHTML=sentds[j].innerHTML;
-							sentds[j].innerHTML="";
-							sentds[i].children[0].checked=true;
-							i++;
-						}
-					}
-					return;
-				}
-					
-				}
-				// 右边td不选中 
-				var row = obj.parentNode.parentNode;
-				var tds=row.getElementsByTagName("td");
-				var inner = tds[0].innerHTML;
-				for(var i=0;i<sentds.length;i++){
-					if(sentds[i].innerHTML==inner){
-					sentds[i].innerHTML = "";
-					for(var j=i+1;j<sentds.length;j++){
-						if(sentds[j].innerHTML==""){
-						}else{
-							sentds[i].innerHTML=sentds[j].innerHTML;
-							sentds[j].innerHTML="";
-							i++;
-						}
-					}
-					return;
-					}
-				}
-			}
-		}
 	//第一个td显示所有的数据
 function firall(){
 	var param1={};
@@ -582,7 +450,7 @@ function firall(){
     for(var i=0;i<pageEntity1.length;i++){
     	var name = pageEntity1[i].PX_NAME;
     	var px_column= pageEntity1[i].PX_COLUMN;
-    	$("#pxtable tbody").append('<tr><td id="fir'+i+'" name="firtd" style="padding-left:5px;text-align:left;height:20px;font-size:20px"><input style="width:50px;height=50px" type="checkbox" id='+px_column+' onclick="changetd(this)" value='+name+'  name="pxcheckbox">'+name+'</td><td style="width:20%"></td><td id="sen'+i+'" onclick="xuanzhong('+i+')" style="text-align:left;font-size:20px" name="sentd"></td></tr>');
+    	$("#pxtable tbody").append('<tr style="border-bottom:solid 1px lightgray"><td id="fir'+i+'" name="firtd" style="padding-left:5px;text-align:left;height:20px;font-size:13px"><input style="width:50px;height=50px" type="checkbox" id='+px_column+' onclick="changetd(this)" value='+name+'  name="pxcheckbox">'+name+'</td></tr>');
     }
 
 }
@@ -949,6 +817,13 @@ function yiyi(obj){
 			var fileresult = FireFly.doAct("TS_BMLB_BM","filehist",param);
 			var filedata = fileresult.list;
 			var fileEntity = JSON.parse(filedata);
+			//审核理由
+			var param1 = {};
+			param1["bmid"]=a;
+			var result = FireFly.doAct("TS_BMLB_BM","getLiyou",param1);
+			var reason = result.liyou;
+			$("#backliyou").text(reason);
+			  $("#backliyou").attr("disabled","disabled");
 				  //已有上传文件记录
 				  //模态窗口 append上传的东西
 				  for(var i=0;i<fileEntity.length;i++){
@@ -956,3 +831,153 @@ function yiyi(obj){
 					  $("#filehistory").append('<tr style="height:30px"><td style="width:30%"></td><td><a href="/file/'+fileid+'" onclick="xiazai()">'+fileid+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<image title="点击进行下载" src="/ts/image/u344.png"></image></a></td></tr>');
 				  }
 	}
+//-------------------------------------------------------------------------------报名详细信息图标
+function form2submit(obj){
+	var a = obj.parentNode.id;
+		var param = {};
+		param["bmid"]=a;
+	var result = FireFly.doAct("TS_BMLB_BM","getSingle",param);
+	var data = result.list;
+	var pageEntity = JSON.parse(data);
+	 $("#ks_title").text(pageEntity[0].BM_TITLE);
+	 $("#bm_name").text(pageEntity[0].BM_NAME);
+	 $("#work_num").text(pageEntity[0].BM_CODE);
+	 $("#phone_num").text(pageEntity[0].BM_PHONE);
+	 $("#starttime").text(pageEntity[0].S_MTIME);
+	 if(pageEntity[0].BM_SEX==0){
+		 $("#gender").text("女");
+	 }else if(pageEntity[0].BM_SEX==1){
+		 $("#gender").text("男");
+	 }
+	 $("#belongto").text(pageEntity[0].ODEPT_NAME);
+}
+//左侧全选
+function checkall(obj){
+	if($(obj).prop("checked")){
+		  var kslxArray = document.getElementsByName("pxcheckbox");
+		  for(var i=0;i<kslxArray.length;i++){
+	     	kslxArray[i].checked=true;
+	     	}
+		}else{
+			 var kslxArray = document.getElementsByName("pxcheckbox");
+			  for(var i=0;i<kslxArray.length;i++){
+		     	kslxArray[i].checked=false;
+		     	}
+}
+	
+}
+//右侧全选
+function checkallright(obj){
+	if($(obj).prop("checked")){
+		  var kslxArray = document.getElementsByName("rtcheckbox");
+		  for(var i=0;i<kslxArray.length;i++){
+	     	kslxArray[i].checked=true;
+	     	}
+		}else{
+			 var kslxArray = document.getElementsByName("rtcheckbox");
+			  for(var i=0;i<kslxArray.length;i++){
+		     	kslxArray[i].checked=false;
+		     	}
+}
+	
+}
+function removeleft(){
+	  $('input:checkbox[name=pxcheckbox]:checked').each(function(){
+		  $(this).attr("name","rtcheckbox");
+		 var s =  this.parentNode.parentNode.innerHTML;
+		 this.parentNode.parentNode.remove();
+		 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px lightgray">'+s+'</tr>')
+	  });
+	document.getElementById("daixuan").checked=false;
+	 tuodongtr();
+}
+function removeright(){
+	  $('input:checkbox[name=rtcheckbox]:checked').each(function(){
+		  $(this).attr("name","pxcheckbox");
+		 var s =  this.parentNode.parentNode.innerHTML;
+		 this.parentNode.parentNode.remove();
+		 $("#pxtable tbody").append('<tr style="border-bottom:solid 1px lightgray">'+s+'</tr>')
+	  });
+	  document.getElementById("daixuanrt").checked=false;
+	  tuodongtr();
+}
+//全部移动左边
+jq("#leftalla").click(function(){
+	$('input:checkbox[name=pxcheckbox]').each(function(){
+		  $(this).attr("name","rtcheckbox");
+		 var s =  this.parentNode.parentNode.innerHTML;
+		 this.parentNode.parentNode.remove();
+		 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px lightgray">'+s+'</tr>')
+	  });
+	 tuodongtr();
+});
+jq("#rightalla").click(function(){
+	 $('input:checkbox[name=rtcheckbox]').each(function(){
+		  $(this).attr("name","pxcheckbox");
+		 var s =  this.parentNode.parentNode.innerHTML;
+		 this.parentNode.parentNode.remove();
+		 $("#pxtable tbody").append('<tr style="border-bottom:solid 1px lightgray">'+s+'</tr>')
+	  });
+	 tuodongtr();
+});
+
+document.getElementById("imageleft").onmouseover = function(){
+	 this.src = "/ts/image/2020.png";
+	 
+}
+document.getElementById("imageleft").onmouseout = function() {
+       this.src = '/ts/image/1124.png';
+   }
+document.getElementById("imageright").onmouseover = function(){
+	 this.src = "/ts/image/2024.png";
+}
+document.getElementById("imageright").onmouseout = function() {
+      this.src = '/ts/image/1348.png';
+  }
+document.getElementById("leftall").onmouseover = function(){
+	 this.src = "/ts/image/2028.png";
+}
+document.getElementById("leftall").onmouseout = function() {
+      this.src = '/ts/image/1440.png';
+  }
+document.getElementById("rightall").onmouseover = function(){
+	 this.src = "/ts/image/2032.png";
+}
+document.getElementById("rightall").onmouseout = function() {
+      this.src = '/ts/image/1552.png';
+  }
+//表格行拖动
+jq(document).ready(function(){
+    var fixHelperModified = function(e, tr) {
+                var $originals = tr.children();
+                var $helper = tr.clone();
+                $helper.children().each(function(index) {
+                    $(this).width($originals.eq(index).width())
+                });
+                return $helper;
+            },
+            updateIndex = function(e, ui) {
+                /*$('td.index', ui.item.parent()).each(function (i) {
+                    $(this).html(i + 1);
+                });*/
+            };
+    jq("#pxtable2 tbody").sortable({
+        helper: fixHelperModified,
+        stop: updateIndex
+    }).disableSelection();
+});
+//找到所有的td  需要拖动的 td
+function tuodongtr(){
+	var btns = document.getElementsByName('rtcheckbox');
+	for(var z=0;z<btns.length;z++){
+		alert(btns[z]);
+		var td = btns[z].parentNode;
+		td.onmouseover = function() {
+			 this.style.backgroundColor = 'red';
+		 }
+		 td.onmouseout = function() {
+		        this.style.background = 'white';
+		    }
+
+	}
+}

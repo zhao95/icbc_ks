@@ -120,9 +120,9 @@
                  <div  id="jibie" style="padding-top:20px;padding-left:75%">
                  <select id = "jb" onchange="jibieonchange()">
                  <option selected="selected">全部</option>
-                 <option value="初级">初级</option>
-                 <option value="中级">中级</option>
-                 <option value="高级">高级</option>
+                 <option value="1">初级</option>
+                 <option value="2">中级</option>
+                 <option value="3">高级</option>
                  </select>
                  </div>
                  
@@ -207,7 +207,7 @@
 				<div style="padding-top:20px">
 				<table style="width:700px">
 				<tr>
-				<td style="width:15%"></td><td style="height:150px;width:%;vertical-align:top"><textarea id="liyou" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="height:150px;vertical-align:top"><textarea id="liyou11" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
 				<table id="filehis">
