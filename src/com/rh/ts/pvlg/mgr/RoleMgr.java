@@ -99,15 +99,19 @@ public class RoleMgr {
 
 		if (roleBean == null || roleBean.isEmpty()) {
 
-			roleBean = new RoleBean(ServDao.find(TsConstant.SERV_ROLE, roleId));
+			Bean bean = ServDao.find(TsConstant.SERV_ROLE, roleId);
+			
+			if (bean != null) {
+				roleBean = new RoleBean(bean);
+			}
 
-			if (!roleBean.isEmpty()) {
+			if (roleBean != null && !roleBean.isEmpty()) {
 
 				updateRoleCache(roleId, TsConstant.SERV_ROLE, roleBean);
 			}
 		}
 
-		if (!roleBean.isEmpty()) {
+		if (roleBean != null && !roleBean.isEmpty()) {
 			// 缓存获取角色功能
 			List<Bean> list = getRoleOpts(roleId);
 
@@ -208,7 +212,7 @@ public class RoleMgr {
 
 					Bean pvlg = getOptsPvlg(role, opts, mdVal);
 					
-					if (!pvlg.isEmpty()) {
+					if (pvlg != null && !pvlg.isEmpty()) {
 						
 						roleOptBean.put("PVLG-" + mdCode, pvlg);
 					}
@@ -275,7 +279,7 @@ public class RoleMgr {
 					pvlg.set("ROLE_ORG_LV", orgLv);
 				}
 
-				if (!pvlg.isEmpty()) {
+				if (pvlg != null && !pvlg.isEmpty()) {
 					if (opts.containsKey(opt)) {
 						opts.put(opt, pvlg);
 					} else {
@@ -305,7 +309,7 @@ public class RoleMgr {
 
 			list = ServDao.finds(TsConstant.SERV_ROLE_MOD, param);
 
-			if (!list.isEmpty()) {
+			if (list!= null &&!list.isEmpty()) {
 
 				updateRoleCache(roleCode, TsConstant.SERV_ROLE_MOD, list);
 			}
@@ -326,7 +330,7 @@ public class RoleMgr {
 
 		RoleBean roleBean = new RoleBean(ServDao.find(TsConstant.SERV_ROLE, roleCode));
 
-		if (!roleBean.isEmpty()) {
+		if (roleBean != null && !roleBean.isEmpty()) {
 
 			updateRoleCache(roleCode, TsConstant.SERV_ROLE, roleBean);
 		} else {
@@ -344,7 +348,7 @@ public class RoleMgr {
 
 		List<Bean> list = ServDao.finds(TsConstant.SERV_ROLE_MOD, param);
 
-		if (!list.isEmpty()) {
+		if (list != null && !list.isEmpty()) {
 
 			updateRoleCache(roleCode, TsConstant.SERV_ROLE_MOD, list);
 		} else {
