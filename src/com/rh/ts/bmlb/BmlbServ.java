@@ -1,12 +1,14 @@
 package com.rh.ts.bmlb;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+<<<<<<< HEAD
 
 
 
@@ -19,6 +21,8 @@ import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
 import org.apache.commons.lang.StringUtils;
+=======
+>>>>>>> 4c617c2fd8356b95cbce770c7594e734f9bb1663
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -28,14 +32,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
-import com.rh.core.base.TipException;
-import com.rh.core.comm.FileMgr;
+import com.rh.core.base.BeanUtils;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.util.Constant;
+import com.rh.ts.xmgl.XmglMgr;
 
 public class BmlbServ extends CommonServ {
 	/**
@@ -47,15 +51,15 @@ public class BmlbServ extends CommonServ {
 		//获取服务ID
 		String servId=paramBean.getStr(Constant.PARAM_SERV_ID);
 		//获取前台传过来的值
-		String user_code = paramBean.getStr("user_code");
-		String user_name = paramBean.getStr("user_name");
-		String user_sex = paramBean.getStr("user_sex");
-		String odept_name = paramBean.getStr("odept_name");
-		String user_office_phone = paramBean.getStr("user_office_phone");
-		String user_mobile = paramBean.getStr("user_mobile");
-		String user_cmpy_date = paramBean.getStr("user_cmpy_date");
+		String user_code = paramBean.getStr("USER_CODE");
+		String user_name = paramBean.getStr("USER_NAME");
+		String user_sex = paramBean.getStr("USER_SEX");
+		String odept_name = paramBean.getStr("ODEPT_NAME");
+		String user_office_phone = paramBean.getStr("USER_OFFICE_PHONE");
+		String user_mobile = paramBean.getStr("USER_MOBILE");
+		String user_cmpy_date = paramBean.getStr("USER_CMPY_DATE");
+		String xm_id = paramBean.getStr("XM_ID");
 		String bmcode = paramBean.getStr("bmCodes");
-		String xm_id = paramBean.getStr("xm_id");
 		String[] bmcodes = bmcode.split(",");
 		for (String string : bmcodes) {
 			//根据服务id 主键id获取 当前非资格考试的服务
@@ -75,34 +79,39 @@ public class BmlbServ extends CommonServ {
 			beans.set("BM_ENDDATE",fzgks_date2);
 			beans.set("BM_TITLE",fzgks_name);
 			beans.set("XM_ID",xm_id);
+			beans.set("BM_SH_STATE",0);
+			//新增到数据库
 			Bean bmbean = ServDao.create(servId, beans);
 			//获取到报名id
 			String bm_id= bmbean.getStr("BM_ID");
 			//根据报名id获取到非资格考试表单
-			Bean bmfzgBean=ServDao.find("TS_BMLB_BM", bm_id);
-			String bm_name = bmfzgBean.getStr("BM_NAME");//报名人姓名
-			String bm_code = bmfzgBean.getStr("BM_CODE");//报名人人力资源编码
-			String xm_ids = bmfzgBean.getStr("XM_ID");//获得项目id
+			//添加公共表
+			Bean objBean=new Bean();
+			objBean.set("DATA_ID",xm_id);
+			objBean.set("STR1",user_code);
+			objBean.set("INT1",0);
+			ServDao.save("TS_OBJECT", objBean);
 			
 			ParamBean param=new ParamBean();
-			param.set("examercode",bm_code);
+			param.set("examerWorekNum",user_code);
 			param.set("level",0);
-			param.set("xmId",xm_ids);
-			param.set("flowName",0);
-			param.set("shr","");
-			Bean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
-			//审核bean
+			param.set("xmId",xm_id);
+			param.set("flowName",1);
+			param.set("shrWorekNum",user_code);
+			OutBean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
+			
+			//添加到审核表中
 			Bean shBean =new Bean();
-			shBean.set("XM_ID",xm_ids);
+			shBean.set("XM_ID",xm_id);
 			shBean.set("BM_ID",bm_id);
-			shBean.set("BM_NAME",bm_name);
-			shBean.set("BM_CODE",bm_code);
+			shBean.set("BM_NAME",user_name);
+			shBean.set("BM_CODE",user_code);
 			ServDao.save("TS_BMSH_STAY", shBean);
 			
 		}
 	}
 	/**
-	 * 资格考试跨序列的新增
+	 * 资格考试的新增
 	 * @param paramBean
 	 * @return
 	 */
@@ -110,154 +119,183 @@ public class BmlbServ extends CommonServ {
 		//获取服务ID
 		String servId=paramBean.getStr(Constant.PARAM_SERV_ID);
 		//获取前台传过来的值
-		String user_code = paramBean.getStr("user_code");
-		String user_name = paramBean.getStr("user_name");
-		String user_sex = paramBean.getStr("user_sex");
-		String odept_name = paramBean.getStr("odept_name");
-		String user_office_phone = paramBean.getStr("user_office_phone");
-		String user_mobile = paramBean.getStr("user_mobile");
-		String user_cmpy_date = paramBean.getStr("user_cmpy_date");
-		String xm_name = paramBean.getStr("xm_name");
-		String bmcode = paramBean.getStr("BM_IDS");
+		String user_code = paramBean.getStr("USER_CODE");
+		String user_name = paramBean.getStr("USER_NAME");
+		String user_sex = paramBean.getStr("USER_SEX");
+		String odept_name = paramBean.getStr("ODEPT_NAME");
+		String user_office_phone = paramBean.getStr("USER_OFFICE_PHONE");
+		String ryl_mobile = paramBean.getStr("USER_MOBILE");
+		String user_cmpy_date = paramBean.getStr("USER_CMPY_DATE");
 		String xm_id = paramBean.getStr("XM_ID");
-		String bm_start = paramBean.getStr("bm_start");
-		String bm_end = paramBean.getStr("bm_end");
-		//根据项目id获取项目报名开始时间和结束时间
-		String[] bmcodes = bmcode.split(",");
-		for (String string : bmcodes) {
-			//根据主键id获取 当前考试类别的服务
-			Bean bean = ServDao.find("TS_XMGL_BM_KSLB", string);
-			String kslb_name = bean.getStr("KSLB_NAME");
-			String kslb_xl = bean.getStr("KSLB_XL");
-			String kslb_mk = bean.getStr("KSLB_MK");
-			String kslb_type = bean.getStr("KSLB_TYPE");
-			String kslbk_id = bean.getStr("KSLBK_ID");
-			//根据主键id获取 当前考试类别库的服务
-			Bean kslbkbean = ServDao.find("TS_XMGL_BM_KSLBK",kslbk_id);
-			String kslbk_mkcode = kslbkbean.getStr("KSLB_TYPE");
-			Bean beans=new Bean();
-			beans.set("BM_CODE", user_code);
-			beans.set("BM_NAME", user_name);
-			beans.set("BM_SEX", user_sex);
-			beans.set("ODEPT_NAME", odept_name);
-			beans.set("BM_OFFICE_PHONE", user_office_phone);
-			beans.set("BM_PHONE", user_mobile);
-			beans.set("BM_ATIME", user_cmpy_date);
-			beans.set("BM_LB",kslb_name);
-			beans.set("BM_XL",kslb_xl);
-			beans.set("BM_MK",kslb_mk);
-			beans.set("BM_TYPE",kslb_type);
-			beans.set("XM_ID",xm_id);
-			beans.set("BM_TITLE",xm_name);
-			beans.set("BM_STARTDATE",bm_start);
-			beans.set("BM_ENDDATE",bm_end);
-			beans.set("KSLBK_ID",kslbk_id);
-			beans.set("KSLBK_MKCODE",kslbk_mkcode);
-			Bean bmbean = ServDao.create(servId, beans);
-			//获取到报名id
-			String bm_id= bmbean.getStr("BM_ID");
-			//根据报名id获取到跨序列资格考试表单
-			Bean bmzgBean=ServDao.find("TS_BMLB_BM", bm_id);
-			String bm_name = bmzgBean.getStr("BM_NAME");//报名人姓名
-			String bm_code = bmzgBean.getStr("BM_CODE");//报名人人力资源编码
-			//审核bean
-			Bean shBean =new Bean();
-			shBean.set("XM_ID",xm_id);
-			shBean.set("BM_ID",bm_id);
-			shBean.set("BM_NAME",bm_name);
-			shBean.set("BM_CODE",bm_code);
-			shBean.set("KSLBK_ID",kslbk_id);
-			shBean.set("BM_LB",kslb_name);
-			shBean.set("BM_XL",kslb_xl);
-			shBean.set("BM_MK",kslb_mk);
-			shBean.set("BM_TYPE",kslb_type);
-			ServDao.save("TS_BMSH_STAY", shBean);
-		}
-		String where ="AND BM_CODE="+"'"+user_code+"'";
-		List<Bean> list = ServDao.finds("TS_BMLB_BM", where);
-		String BM_ID="";
+		String bm_start = paramBean.getStr("BM_START");
+		String bm_end = paramBean.getStr("BM_END");
+		String xm_name = paramBean.getStr("XM_NAME");
+		String liststr = paramBean.getStr("BM_LIST");
+		String yzgzstr = paramBean.getStr("YZGZ_LIST");
+		
+		OutBean outBean=new OutBean();
+		JSONArray json;
+		JSONObject yzgzstrjson;
+		try {
+			json = new JSONArray(liststr);
+			yzgzstrjson = new JSONObject(yzgzstr);
+			if(json.length()>0){
+				  for(int i=0;i<json.length();i++){
+				    JSONObject job = json.getJSONObject(i);  // 遍历 jsonarray 数组，把每一个对象转成 json 对象
+				    String  kslb_name= (String) job.get("BM_LB");
+					String  kslb_xl= (String) job.get("BM_XL");
+					String  kslb_mk= (String) job.get("BM_MK");
+					String  kslb_type= (String) job.get("BM_TYPE");
+					String  kslb_id= (String) job.get("ID");
+					String wherelbk = "AND KSLBK_NAME="+"'"+kslb_name+"'"+" AND KSLBK_XL="+"'"+kslb_xl+"'"+" AND KSLBK_MK="+"'"+kslb_mk+"'"+" AND KSLBK_TYPE="+"'"+kslb_type+"'";
+					List<Bean> lbkList = ServDao.finds("TS_XMGL_BM_KSLBK", wherelbk);
+					String kslbk_id= lbkList.get(0).getStr("KSLBK_ID");
+					//获取到考试名称
+					String back_All=kslb_name+"-"+kslb_xl+"-"+kslb_mk+"-"+kslb_type;
+					JSONArray yzgzArg=(JSONArray) yzgzstrjson.get(kslb_id);
+					int flag=0;
+					String ad_rule="";
+					//获取资格验证信息以及验证结果
+					for(int j=0;j<yzgzArg.length();j++){
+						JSONObject object = (JSONObject) yzgzArg.get(j);
+						String sname = (String) object.get("NAME");
+						String svlidate=(String) object.get("VLIDATE");
+						ad_rule+=sname+":"+svlidate+",";
+						if(svlidate.equals("false")){
+							flag+=1;
+						}
+					}
+					String ad_result="";
+					if(flag!=0){
+						//验证不通过
+						ad_result="2";
+					}if(flag==0){
+						//验证通过
+						ad_result="1";
+					}
+					//1自动审核, 2人工审核, 3自动+人工审核
+					int count = XmglMgr.existSh(xm_id);
+				    Bean beans=new Bean();
+					beans.set("BM_CODE", user_code);
+					beans.set("BM_NAME", user_name);
+					beans.set("BM_SEX", user_sex);
+					beans.set("ODEPT_NAME", odept_name);
+					beans.set("BM_OFFICE_PHONE", user_office_phone);
+					beans.set("BM_PHONE", ryl_mobile);
+					beans.set("BM_ATIME", user_cmpy_date);
+					beans.set("BM_LB",kslb_name);
+					beans.set("BM_XL",kslb_xl);
+					beans.set("BM_MK",kslb_mk);
+					beans.set("BM_TYPE",kslb_type);
+					beans.set("XM_ID",xm_id);
+					beans.set("BM_TITLE",xm_name);
+					beans.set("BM_STARTDATE",bm_start);
+					beans.set("BM_ENDDATE",bm_end);
+					beans.set("KSLBK_ID",kslbk_id);
+					if(count==0){
+						beans.set("BM_SH_STATE",1);
+					}if(count==1){
+						if(ad_result.equals("1")){
+						beans.set("BM_SH_STATE",1);
+						}if(ad_result.equals("2")){
+						beans.set("BM_SH_STATE",2);
+						}
+					}if(count==2){
+						beans.set("BM_SH_STATE",0);
+					}if(count==3){
+						if(ad_result.equals("1")){
+						beans.set("BM_SH_STATE",1);
+						}if(ad_result.equals("2")){
+						beans.set("BM_SH_STATE",3);
+						}
+					}
+					Bean bmbean = ServDao.create(servId, beans);
+					//获取到报名主键id
+					String bm_id= bmbean.getStr("BM_ID");
+					
+       				Bean yzBean = new Bean();
+       				yzBean.set("BM_ID",bm_id);
+       				yzBean.set("AD_NAME",back_All);
+       				yzBean.set("AD_UCODE",user_code);
+       				yzBean.set("AD_RULE",ad_rule);
+       				yzBean.set("AD_RESULT",ad_result);
+       				yzBean.set("AD_UNAME",user_name);
+					ServDao.save("TS_BMSH_AUDIT",yzBean);
+					//添加公共表
+					Bean objBean=new Bean();
+					objBean.set("DATA_ID",xm_id);
+					objBean.set("STR1",user_code);
+					objBean.set("INT1",0);
+					ServDao.save("TS_OBJECT", objBean);
+					
+					ParamBean param=new ParamBean();
+					param.set("examerWorekNum","000786238");
+					param.set("level",0);
+					param.set("xmId",xm_id);
+					param.set("flowName",1);
+					param.set("shrWorekNum","000786238");
+					OutBean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
+					System.out.println(out);
+					//添加到审核表中
+					Bean shBean =new Bean();
+					shBean.set("XM_ID",xm_id);
+					shBean.set("BM_ID",bm_id);
+					shBean.set("BM_NAME",user_name);
+					shBean.set("BM_CODE",user_code);
+					shBean.set("KSLBK_ID",kslbk_id);
+					shBean.set("BM_LB",kslb_name);
+					shBean.set("BM_XL",kslb_xl);
+					shBean.set("BM_MK",kslb_mk);
+					shBean.set("BM_TYPE",kslb_type);
+					if(count==0){
+						ServDao.save("TS_BMSH_PASS", shBean);
+					}if(count==1){
+						if(ad_result.equals("1")){
+							ServDao.save("TS_BMSH_PASS", shBean);
+						}if(ad_result.equals("2")){
+							ServDao.save("TS_BMSH_NOPASS", shBean);
+						}
+					}if(count==2){
+							ServDao.save("TS_BMSH_PASS", shBean);
+					}if(count==3){
+						if(ad_result.equals("1")){
+								ServDao.save("TS_BMSH_PASS", shBean);
+						}if(ad_result.equals("2")){
+							ServDao.save("TS_BMSH_STAY", shBean);
+						}
+					}
+				  }
+				}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} 
+		
+
+		return outBean;
+	}
+
+	
+	public Bean getMkvalue(Bean paramBean){
+		String MK=paramBean.getStr("MK");
+		String XL=paramBean.getStr("pt_sequnce");
+		String LB=paramBean.getStr("pt_type");
+		String XM_ID=paramBean.getStr("xm_id");
+		String wheremk = "AND KSLB_NAME="+"'"+LB+"'"+" AND KSLB_XL="+"'"+XL+"'"+" AND KSLB_MK="+"'"+MK+"'"+" AND XM_ID="+"'"+XM_ID+"'";
+		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", wheremk);
+		String KSLB_TYPE="";
 		if(list.size()>0){
 			for(int i=0;i<list.size();i++){
 				if(i==0){
-					BM_ID=list.get(i).getId();
+					KSLB_TYPE=list.get(i).getStr("KSLB_TYPE");
 				}else{
-					BM_ID+=","+list.get(i).getId();
+					KSLB_TYPE+=","+list.get(i).getStr("KSLB_TYPE");
 				}
 			}
 		}
 		Bean outBean=new Bean();
-		outBean.set("list", BM_ID);
+		outBean.set("list", KSLB_TYPE);
 		return outBean;
 	}
-
-	/**
-	 * 资格考试必须考试的新增
-	 * @param paramBean
-	 * @return
-	 */
-	/*
-	public void addZgDataOne(Bean paramBean){
-		//获取服务ID
-			String servId=paramBean.getStr(Constant.PARAM_SERV_ID);
-			//获取前台传过来的值
-			String user_code = paramBean.getStr("user_code");
-			String user_name = paramBean.getStr("user_name");
-			String user_sex = paramBean.getStr("user_sex");
-			String odept_name = paramBean.getStr("odept_name");
-			String user_office_phone = paramBean.getStr("user_office_phone");
-			String user_mobile = paramBean.getStr("user_mobile");
-			String user_cmpy_date = paramBean.getStr("user_cmpy_date");
-			String bk_id = "1HjT0eSXZ5MauSymtKSE";
-			String xm_name = paramBean.getStr("xm_name");
-			String bm_start = paramBean.getStr("bm_start");
-			String bm_end = paramBean.getStr("bm_end");
-			String xm_id = paramBean.getStr("xm_id");
-			//根据服务id 主键id获取 当前资格考试的服务
-			Bean bean = ServDao.find("TS_XMGL_BM_KSLBK", bk_id);
-			String kslbk_name = bean.getStr("KSLBK_NAME");
-			String kslbk_xl = bean.getStr("KSLBK_XL");
-			String kslbk_mk = bean.getStr("KSLBK_MK");
-			String kslbk_type = bean.getStr("KSLBK_TYPE");
-			String kslbk_mkcode = bean.getStr("KSLBK_MKCODE");
-			Bean beans=new Bean();
-			beans.set("BM_CODE", user_code);
-			beans.set("BM_NAME", user_name);
-			beans.set("BM_SEX", user_sex);
-			beans.set("ODEPT_NAME", odept_name);
-			beans.set("BM_OFFICE_PHONE", user_office_phone);
-			beans.set("BM_PHONE", user_mobile);
-			beans.set("BM_RUHANG", user_cmpy_date);
-			beans.set("BM_LB",kslbk_name);
-			beans.set("BM_XL",kslbk_xl);
-			beans.set("BM_MK",kslbk_mk);
-			beans.set("BM_TYPE",kslbk_type);
-			beans.set("KSLBK_ID",bk_id);
-			beans.set("KSLBK_MKCODE",kslbk_mkcode);
-			beans.set("XM_ID",xm_id);
-			beans.set("BM_TITLE",xm_name);
-			beans.set("BM_STARTDATE",bm_start);
-			beans.set("BM_ENDDATE",bm_end);
-			Bean bmbean = ServDao.create(servId, beans);
-			//获取到报名id
-			String bm_id= bmbean.getStr("BM_ID");
-			//根据报名id获取到跨序列资格考试表单
-			Bean bmfzgBean=ServDao.find("TS_BMLB_BM", bm_id);
-			String bm_name = bmfzgBean.getStr("BM_NAME");//报名人姓名
-			String bm_code = bmfzgBean.getStr("BM_CODE");//报名人人力资源编码
-			//待办bean
-			Bean shBean =new Bean();
-			shBean.set("XM_ID",xm_id);
-			shBean.set("BM_ID",bm_id);
-			shBean.set("BM_NAME",bm_name);
-			shBean.set("BM_CODE",bm_code);
-			shBean.set("KSLBK_ID",bk_id);
-			shBean.set("BM_LB",kslbk_name);
-			shBean.set("BM_XL",kslbk_xl);
-			shBean.set("BM_MK",kslbk_mk);
-			shBean.set("BM_TYPE",kslbk_type);
-			ServDao.save("TS_BMSH_STAY", shBean);
-	}
-	*/
 	/**
 	 * 根据name条件查询非资格
 	 * @param paramBean
@@ -434,9 +472,24 @@ public class BmlbServ extends CommonServ {
        return outBean;
 	}
 
-	
 	/**
-	 * 撤销时将已报名的数据状态 改为已撤销
+	 * 撤销时将已报名的数据状态 改为已撤销（多条）
+	 * @param paramBean
+	 */
+	public void deletebm(Bean paramBean){
+		String servId="TS_BMLB_BM";
+		String id = paramBean.getStr("id");
+		String user_code = paramBean.getStr("user_code");
+		String where = "AND XM_ID="+"'"+id+"' "+"AND BM_CODE="+"'"+user_code+"' order by BM_STATE";
+		List<Bean> list = ServDao.finds(servId, where);
+		for(int i=0;i<list.size();i++){
+			Bean dataBean = list.get(i);
+			dataBean.set("BM_STATE", 2);
+			ServDao.update(servId, dataBean);
+		}
+	}
+	/**
+	 * 撤销时将已报名的数据状态 改为已撤销(单条)
 	 * @param paramBean
 	 */
 	public void deletesingle(Bean paramBean){
@@ -449,6 +502,9 @@ public class BmlbServ extends CommonServ {
 			dataBean.set("BM_STATE", 2);
 			ServDao.update(servId, dataBean);
 		}
+		
+		
+		
 	}
 	public Bean lookstate(Bean paramBean){
 		String xmid = paramBean.getStr("xmid");
@@ -607,6 +663,7 @@ public class BmlbServ extends CommonServ {
 			
 		       return outBean;
 	}
+<<<<<<< HEAD
 	/**
 	 * 获取上诉理由  异议原因
 	 * @param paramBean
@@ -717,4 +774,6 @@ public class BmlbServ extends CommonServ {
     	 }
          return outBean.setCount(count).setMsg("添加成功").setOk();
 }
+=======
+>>>>>>> 4c617c2fd8356b95cbce770c7594e734f9bb1663
 }
