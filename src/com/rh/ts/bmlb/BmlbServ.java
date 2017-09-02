@@ -1,6 +1,7 @@
 package com.rh.ts.bmlb;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-<<<<<<< HEAD
 
 
 
@@ -21,8 +21,6 @@ import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
 import org.apache.commons.lang.StringUtils;
-=======
->>>>>>> 4c617c2fd8356b95cbce770c7594e734f9bb1663
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -33,6 +31,8 @@ import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.BeanUtils;
+import com.rh.core.base.TipException;
+import com.rh.core.comm.FileMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -663,7 +663,6 @@ public class BmlbServ extends CommonServ {
 			
 		       return outBean;
 	}
-<<<<<<< HEAD
 	/**
 	 * 获取上诉理由  异议原因
 	 * @param paramBean
@@ -774,6 +773,4 @@ public class BmlbServ extends CommonServ {
     	 }
          return outBean.setCount(count).setMsg("添加成功").setOk();
 }
-=======
->>>>>>> 4c617c2fd8356b95cbce770c7594e734f9bb1663
 }
