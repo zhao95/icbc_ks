@@ -9,6 +9,7 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
@@ -240,7 +241,7 @@ public class NoPassServ extends CommonServ {
 	/**
 	 * 提交异议
 	 */
-	public void yiyi(Bean paramBean){
+	public Bean yiyi(Bean paramBean){
 		String liyou = paramBean.getStr("liyou");
 		String bmid = paramBean.getStr("bmid");
 		//将异议状态改为1  已提交
@@ -252,7 +253,13 @@ public class NoPassServ extends CommonServ {
 		bmbean.set("BM_SS_REASON", liyou);
 		bmbean.set("BM_SH_STATE", 0);
 		ServDao.save("TS_BMLB_BM",bmbean);
-		String shenuser = paramBean.getStr("user_code");
+		String shenuser = "";
+		UserBean userBean = Context.getUserBean();
+		if(userBean.isEmpty()){
+			 return new OutBean().setError("ERROR:user_code 为空");
+		}else{
+			shenuser=userBean.getStr("USER_CODE");
+		}
 		String where = "AND BM_ID="+"'"+bmid+"'";
 		List<Bean> list = ServDao.finds("TS_BMSH_NOPASS", where);
 		
@@ -288,8 +295,8 @@ public class NoPassServ extends CommonServ {
 				}
 				
 			}
-			nowlevel = list1.size();
-			
+			String nowslevel = list.get(0).getStr("NODE_ID");
+			 nowlevel = Integer.parseInt(nowslevel);
 			
 			bean.remove("SH_ID");
 			bean.remove("S_CMPY");
@@ -322,5 +329,6 @@ public class NoPassServ extends CommonServ {
 			}
 			//添加一个字段用来标识异议   显示图标按钮
 		}
+		return new OutBean().setOk();
 	}
 }

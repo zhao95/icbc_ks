@@ -373,7 +373,6 @@ function tiaozhuan(i){
 		document.getElementById("form1").submit();
 	  
 	}else {
-		
 	document.getElementById("fzgtz").value=id;
 	document.getElementById("form2").submit(); 
 	} 
