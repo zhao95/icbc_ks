@@ -214,7 +214,7 @@ function selectdata(user_code){
 		    if(sh_state==0){
 		    	//审核中
 		    	  sh_state_str = "审核中"
-		    	}else if(sh_state==2){
+		    	}else if(sh_state==2||sh_state==3){
 		    		sh_state_str="审核未通过"
 		    	}
      		//为table重新appendtr
@@ -231,6 +231,12 @@ function selectdata(user_code){
 		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}else if(sh_state==1){
 		    			//审核通过 没有异议  没有撤销
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    		}else if(sh_state==0){
+		    			//待审核
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    		}else{
+		    			//审核未通过  没有手动审核
 		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}
 		    	}else{
@@ -400,7 +406,6 @@ $(function () {
 	var table = document.getElementById("table");  
   //对每一行 进行  渲染 颜色
 	ksqxm();
-   rowscolor(table);
    selectcreate();
  }); 
 

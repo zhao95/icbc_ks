@@ -5,7 +5,6 @@ function rowscolor(table){
 	 var rows = table.getElementsByTagName("tr");  
 	    for(i = 1; i < rows.length; i++){  
 	        if(i % 2 == 0){  
-	   
 	            rows[i].style.backgroundColor = "Azure";  
 	       }  
 	    } 
@@ -184,6 +183,9 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    	var paramuser={}
      	    	paramuser["bm_code"]=BM_CODE;
      	    	//获取对象信息
+     	    	var userinfo = FireFly.doAct("TS_BMSH_STAY","getUserInfo",paramuser);
+     	    	var userdata = userinfo.list;
+     	     	var userEntity = JSON.parse(userdata);
      	     	var yiyi = pageEntity[i].BM_YIYI;
      	     	if(yiyi==""){
      	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#userbminfo" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
@@ -192,11 +194,14 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	     		
      	     	}
      	    	for(var j=0;j<pageEntity3.length;j++){
+     	    		
      	    		var column = pageEntity3[j].PX_COLUMN;
+     	    		
      	    		var fir = pageEntity[i][column];
-     	    		/*if(fir==null){
-     	    			
+     	    		if(fir==null){
+     	    			console.log(userEntity);
      	    			fir = userEntity[0][column];
+     	    			alert(fir);
      	    			if(column=="JOB_LB"){
      	    				fir = pageEntity[i].BM_LB;
      	    			}
@@ -206,20 +211,22 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    			if(column=="TONGYI"){
      	    				fir=pageEntity[i].BM_CODE;
      	    			}
-     	    		}*/
+     	    			var BM_TYPE = "";
+     	    			if(column=="BM_TYPE"){
+     	    				if(fir=="1"){
+     	    					BM_TYPE="初级";
+     	    				}else if(fir=="2"){
+     	    					BM_TYPE="中级";
+     	    				}else{
+     	    					BM_TYPE="高级";
+     	    				}
+     	    				fir = BM_TYPE;
+     	    			}
+     	    			
+     	    		}
+     	    		
      	    		if(fir==null){
      	    			fir="";
-     	    		}
-     	    		var BM_TYPE = "";
-     	    		if(column=="BM_TYPE"){
-     	     		 if(fir=="1"){
-     	     			BM_TYPE="初级";
-     	     		 }else if(fir=="2"){
-     	     			 BM_TYPE="中级";
-     	     		 }else{
-     	     			 BM_TYPE="高级";
-     	     		 }
-     	     		 fir = BM_TYPE;
      	    		}
      	    		$("#"+table+" tbody").find('tr:eq('+i+')').append('<td>'+fir+'</td>');
      	    	}
@@ -378,6 +385,7 @@ function appendTh(user_code){
 }
 	
 	//可选报名  已选报名字体图片改变
+var tabnum=1;
 	function dsha(){
 		
 		document.getElementById("dshimage").src="/ts/image/u1677.png";
@@ -387,6 +395,7 @@ function appendTh(user_code){
 		document.getElementById("shwtgsp").style.color="black";
 		document.getElementById("shwtgimage").src="/ts/image/u1695.png";
 		selectdata1(user_code,xmid,1,1); 
+		tabnum=1;
 	}
 	function shtga(){
 		document.getElementById("shtgsp").style.color="LightSeaGreen";
@@ -396,9 +405,9 @@ function appendTh(user_code){
 		document.getElementById("shwtgsp").style.color="black";
 		document.getElementById("shwtgimage").src="/ts/image/u1695.png";
 		selectdata1(user_code,xmid,2,1); 
+		tabnum=2;
 	}
 	function shwtda(){
-		   
 		document.getElementById("shwtgsp").style.color="LightSeaGreen";
 		document.getElementById("shwtgimage").src="/ts/image/u2813.png";
 		document.getElementById("shtgsp").style.color="black";
@@ -406,7 +415,7 @@ function appendTh(user_code){
 		document.getElementById("dshimage").src="/ts/image/u2212.png";
 		document.getElementById("dshsp").style.color="black";
 		selectdata1(user_code,xmid,3,1); 
-	    
+		tabnum=3;
 	}
 //---------------------------------------------------------------------------------自定义显示列
 	//自定义显示列数据进行回显
@@ -440,6 +449,10 @@ function appendTh(user_code){
 	function  savePX(){
 		//获取所有的td
 		var sentds = document.getElementsByName("rtcheckbox");
+		if(sentds.length==0){
+			alert("至少选择一条");
+			return;
+		}
 		//循环遍历所有的td
 		var param={};
 		var aa = false;
@@ -752,80 +765,7 @@ function firall(){
 				encodeURIComponent(jq.toJSON(data)));
 				
 				}
-/*//导入
-				function importdataa(event,obj){
-					var _self = this;
-					var config = {"SERV_ID":obj, "FILE_CAT":"EXCEL_UPLOAD", "FILENUMBER":1, 
-				    		"VALUE":5, "TYPES":"*.xls;*.xlsx", "DESC":Language.transStatic("rhListView_string10")};
-					var file = new rh.ui.File({
-						"config" : config,"width":"99%"
-					});
-					
-					var importWin = new rh.ui.popPrompt({
-//						title:"请选择文件",
-						title:Language.transStatic("rhListView_string11"),
-//						tip:"请选择要导入的Excel文件：",
-						tip:Language.transStatic("rhListView_string12"),
-						okFunc:function() {
-							var fileData = file.getFileData();
-							if (jQuery.isEmptyObject(fileData)) {
-//								alert("请选择文件上传");
-								alert(Language.transStatic("rhListView_string13"));
-								return;
-							}
-							var fileId = null;
-							for (var key in fileData) {
-								fileId = key;
-							}
-							if (fileId == null){
-//								alert("请选择文件上传");
-								alert(Language.transStatic("rhListView_string13"));
-								return;
-							}
-							rh.vi.listView.prototype._imp1(fileId,true,obj);
-							importWin.closePrompt();
-					        // _self.refreshGrid();
-							file.destroy();
-						},
-						closeFunc:function() {
-							file.destroy();
-						}
-					});
 
-				    var container = rh.vi.listView.prototype._getImpContainer(event, importWin);
-					container.append(file.obj);
-					file.obj.css({'margin-left':'5px'});
-					file.initUpload();
-
-				}
-
-				
-				*//** 导入数据 **//*
-				rh.vi.listView.prototype._imp1 = function(fileId, param,obj) {
-					var data = {"fileId":fileId};
-					if(param) {
-						data = jQuery.extend(data, param);
-					}
-					var _self = this;
-					var _loadbar = new rh.ui.loadbar();
-					_loadbar.show(true);
-					//form提交，需要服务器再返回Excel
-					FireFly.doAct(obj, "imp", data, false, true, function(result) {
-						if(result._MSG_.indexOf("ERROR,") == 0) {
-//							var msg = "导入文件失败，点击“确定按钮”下载文件。请打开文件查看导入结果。";
-							var msg = Language.transStatic("rhListView_string16");
-							SysMsg.alert(msg, function(){
-								if(result.FILE_ID) {
-									var url = FireFlyContextPath + "/file/" + result.FILE_ID;
-									window.open(url);
-								}
-							});
-						} 
-						_self._deletePageAllNum();
-						_self.refreshGrid();
-						_loadbar.hideDelayed();	
-					});
-				}*/
 //--------------------------------------------------------------------------异议图标
 function yiyi(obj){
 		var a = obj.parentNode.id;
@@ -988,7 +928,6 @@ jq(document).ready(function(){
 function tuodongtr(){
 	var btns = document.getElementsByName('rtcheckbox');
 	for(var z=0;z<btns.length;z++){
-		alert(btns[z]);
 		var td = btns[z].parentNode;
 		td.onmouseover = function() {
 			 this.style.backgroundColor = 'red';
@@ -1042,16 +981,26 @@ function deletefile(obj){
 //导入数据库
 jq("#excelimp").click(function(){
 	 var linum =  $("#excleupload").find('li').length;
-	 alert(linum);
 	 //不为0 时可以删除
 	 if(linum==0){
 		 alert("文件不能为空");
 	 }else{
+		 var servid="";
 		 var param = {};
 		 var s = document.getElementById("shanchu").innerHTML;
-		 alert(s);
 		 param["fileId"]=s;
+		 if(tabnum==1){
+			  servid = "TS_BMSH_STAY";
+		 }else if(tabnum==2){
+			 servid="TS_BMSH_PASS"
+		 }else{
+			 servid="TS_BMSH_NOPASS"
+		 }
+		 param["serv_id"]=servid;
 		 FireFly.doAct("TS_BMLB_BM","getDataFromXls",param);
+		 $("#excleupload").modal('hide');
+		 selectdata1(user_code,xmid,tabnum,1); 
+		 
 	 }
 });
 //验证不是xls 或  xl 删除

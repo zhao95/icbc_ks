@@ -114,12 +114,7 @@ String user_code = userBean.getStr("USER_CODE");%>
 						<td style="width:18%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:50%" id="xm1" type="text"></input></td>
 						<td style="width:18%;text-align:right">审核级数&nbsp;&nbsp;<input style="height:30px;width:50%" id="shjs" type="text"></input></td>
 						<td style="width:30%;text-align:center">人力资源编码&nbsp;&nbsp;<input  style="height:30px;width:50%" id="rlzybm1" type="text"></input></td>
-						<td style="width:1%;text-align:left"><select id = "zhuangtai1" onchange="ztcx(待审核)">
-				            <option selected="selected">全部</option>
-				            <option value="进行中">进行中</option>
-				            <option value="已结束">已结束</option>
-				            </select>
-				        </td>
+						
 				        
 				        <td style="width:12%;text-align:left;"><button class ="btn" style="color:white;height:30px;width:35%;background:DarkTurquoise" onclick="xzcu(1)"id = "chaxun">查询</button></td>
 					</tr>
@@ -192,6 +187,12 @@ String user_code = userBean.getStr("USER_CODE");%>
 				<td style="width:15%"></td>
 				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm2" type="text"></input></td>
 						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm2" type="text"></input></td>
+						<td style="width:1%;text-align:left"><select id = "zhuangtai1" onchange="ztcx(审核通过)">
+				            <option selected="selected">全部</option>
+				            <option value="进行中">进行中</option>
+				            <option value="已结束">已结束</option>
+				            </select>
+				        </td>
 				        <td style="width:8%;text-align:left"><button class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(2)"id = "chaxun">查询</button></td>
 			</tr>
 			</table>
@@ -251,6 +252,12 @@ String user_code = userBean.getStr("USER_CODE");%>
 						<td style="width:15%"></td>
 				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm3" type="text"></input></td>
 						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm3" type="text"></input></td>
+						<td style="width:1%;text-align:left"><select id = "zhuangtai2" onchange="ztcx(未通过)">
+				            <option selected="selected">全部</option>
+				            <option value="进行中">进行中</option>
+				            <option value="已结束">已结束</option>
+				            </select>
+				        </td>
 				        <td style="width:8%;text-align:left"><button class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(3)"id = "chaxun">查询</button></td>
 			</tr>
 			</table>

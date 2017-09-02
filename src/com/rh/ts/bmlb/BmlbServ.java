@@ -11,6 +11,8 @@ import java.util.List;
 
 
 
+
+
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -634,35 +636,50 @@ public class BmlbServ extends CommonServ {
      *
      * @param fileId 文件id
      */
-    public List<Bean> getDataFromXls(Bean paramBean) throws IOException, BiffException {
+    public OutBean getDataFromXls(Bean paramBean) throws IOException, BiffException {
         List<Bean> result = new ArrayList<>();
-        List<String> codeList = new ArrayList<>();
-        List<String> nameList = new ArrayList<>();
         String fileId=paramBean.getStr("fileId");
+        String servid = paramBean.getStr("serv_id");
+        String where = "AND SERV_ID="+"'"+servid+"'";
+        List<Bean> listcolumn = ServDao.finds("SY_SERV_ITEM",where);
+        //查询表字段和注释
+        /*String where = "AND "*/
         Bean fileBean = FileMgr.getFile(fileId);
         InputStream in = FileMgr.download(fileBean);
         Workbook workbook = Workbook.getWorkbook(in);
         try {
-            Sheet sheet1 = workbook.getSheet("试卷信息");
+        	//查找服务名称
+        	String whereser = "AND SERV_ID="+"'"+servid+"'";
+        	List<Bean> serlist = ServDao.finds("SY_SERV",whereser);
+            Sheet sheet1 = workbook.getSheet(serlist.get(0).getStr("SERV_NAME"));
             int rows = sheet1.getRows();
+            List<String> newlist = new ArrayList<String>();
             for (int i = 0; i < rows; i++) {
+            	if(i==0){
+            		//获取第一行单元格
+            		Cell[] cells = sheet1.getRow(0);
+            		for (Cell cell : cells) {
+            			for (Bean columnbean : listcolumn) {
+            				String s = cell.getContents();
+            				if(cell.getContents().equals(columnbean.getStr("ITEM_NAME"))){
+            					newlist.add(columnbean.getStr("ITEM_CODE"));
+            				}
+            				}
+					}
+            		
+            	}
                 if (i != 0) {
-                    Cell[] cells = sheet1.getRow(i);
                     //获取字段对应的名字  和字段  循环判断 是否对应 然后赋值  将 其组成key value
-                    
-                    List<String> newlist = new ArrayList<String>();
-                    if(cells[0].getContents()=="主键"){
-                    	//newlist.add()  字段
-                    }
                     //获的排序好的字段  的list
+                	Cell[] cells = sheet1.getRow(i);
                     Bean bean = new Bean();
-                    for(int j=1;j<cells.length;j++){
+                    for(int j=0;j<cells.length;j++){
                     	
                     	if (!StringUtils.isEmpty(cells[j].getContents())) {
-                    		bean.set("code",cells[j].getContents());
+                    		bean.set(newlist.get(j),cells[j].getContents());
                     	}
-                    	result.add(bean);
                     }
+                    result.add(bean);
                  
                 }
             }
@@ -671,6 +688,33 @@ public class BmlbServ extends CommonServ {
         } finally {
             workbook.close();
         }
-        return result;
+       
+        OutBean outBean = saveFromExcel(result,servid);
+        return outBean;
     }
+    
+    /**
+     * 从excel文件中读取试卷信息，并保存
+     *
+     * @param paramBean paramBean
+     * @return outBean
+     */
+    public OutBean saveFromExcel(List<Bean> list,String servid){
+        OutBean outBean = new OutBean();
+    	 Bean queryBean = new Bean();
+    	 int count = 0;
+    	 if(list.size()!=0){
+         for (Bean bean : list) {
+             String code =  bean.getStr("KSLBK_ID");
+             String name =  bean.getStr("BM_CODE");
+             queryBean.set("KSLBK_ID", code);
+             queryBean.set("BM_CODE", name);
+             if (ServDao.count(servid, queryBean) <= 0) {
+                 ServDao.save(servid, bean);
+             }
+             count++;
+         }
+    	 }
+         return outBean.setCount(count).setMsg("添加成功").setOk();
+}
 }
