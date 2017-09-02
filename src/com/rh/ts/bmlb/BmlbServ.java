@@ -36,15 +36,15 @@ public class BmlbServ extends CommonServ {
 		//获取服务ID
 		String servId=paramBean.getStr(Constant.PARAM_SERV_ID);
 		//获取前台传过来的值
-		String user_code = paramBean.getStr("user_code");
-		String user_name = paramBean.getStr("user_name");
-		String user_sex = paramBean.getStr("user_sex");
-		String odept_name = paramBean.getStr("odept_name");
-		String user_office_phone = paramBean.getStr("user_office_phone");
-		String user_mobile = paramBean.getStr("user_mobile");
-		String user_cmpy_date = paramBean.getStr("user_cmpy_date");
+		String user_code = paramBean.getStr("USER_CODE");
+		String user_name = paramBean.getStr("USER_NAME");
+		String user_sex = paramBean.getStr("USER_SEX");
+		String odept_name = paramBean.getStr("ODEPT_NAME");
+		String user_office_phone = paramBean.getStr("USER_OFFICE_PHONE");
+		String user_mobile = paramBean.getStr("USER_MOBILE");
+		String user_cmpy_date = paramBean.getStr("USER_CMPY_DATE");
+		String xm_id = paramBean.getStr("XM_ID");
 		String bmcode = paramBean.getStr("bmCodes");
-		String xm_id = paramBean.getStr("xm_id");
 		String[] bmcodes = bmcode.split(",");
 		for (String string : bmcodes) {
 			//根据服务id 主键id获取 当前非资格考试的服务
@@ -64,34 +64,33 @@ public class BmlbServ extends CommonServ {
 			beans.set("BM_ENDDATE",fzgks_date2);
 			beans.set("BM_TITLE",fzgks_name);
 			beans.set("XM_ID",xm_id);
+			beans.set("BM_SH_STATE",0);
 			//新增到数据库
 			Bean bmbean = ServDao.create(servId, beans);
 			//获取到报名id
 			String bm_id= bmbean.getStr("BM_ID");
 			//根据报名id获取到非资格考试表单
-			Bean bmfzgBean=ServDao.find("TS_BMLB_BM", bm_id);
-			String bm_name = bmfzgBean.getStr("BM_NAME");//报名人姓名
-			String bm_code = bmfzgBean.getStr("BM_CODE");//报名人人力资源编码
-			String xm_ids = bmfzgBean.getStr("XM_ID");//获得项目id
-			//公共表
+			//添加公共表
 			Bean objBean=new Bean();
 			objBean.set("DATA_ID",xm_id);
 			objBean.set("STR1",user_code);
 			objBean.set("INT1",0);
 			ServDao.save("TS_OBJECT", objBean);
+			
 			ParamBean param=new ParamBean();
-			param.set("examercode",bm_code);
+			param.set("examerWorekNum",user_code);
 			param.set("level",0);
-			param.set("xmId",xm_ids);
-			param.set("flowName",0);
-			param.set("shr","");
-			Bean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
-			//审核bean
+			param.set("xmId",xm_id);
+			param.set("flowName",1);
+			param.set("shrWorekNum",user_code);
+			OutBean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
+			
+			//添加到审核表中
 			Bean shBean =new Bean();
-			shBean.set("XM_ID",xm_ids);
+			shBean.set("XM_ID",xm_id);
 			shBean.set("BM_ID",bm_id);
-			shBean.set("BM_NAME",bm_name);
-			shBean.set("BM_CODE",bm_code);
+			shBean.set("BM_NAME",user_name);
+			shBean.set("BM_CODE",user_code);
 			ServDao.save("TS_BMSH_STAY", shBean);
 			
 		}
@@ -126,7 +125,6 @@ public class BmlbServ extends CommonServ {
 			json = new JSONArray(liststr);
 			yzgzstrjson = new JSONObject(yzgzstr);
 			if(json.length()>0){
-					
 				  for(int i=0;i<json.length();i++){
 				    JSONObject job = json.getJSONObject(i);  // 遍历 jsonarray 数组，把每一个对象转成 json 对象
 				    String  kslb_name= (String) job.get("BM_LB");
@@ -137,6 +135,31 @@ public class BmlbServ extends CommonServ {
 					String wherelbk = "AND KSLBK_NAME="+"'"+kslb_name+"'"+" AND KSLBK_XL="+"'"+kslb_xl+"'"+" AND KSLBK_MK="+"'"+kslb_mk+"'"+" AND KSLBK_TYPE="+"'"+kslb_type+"'";
 					List<Bean> lbkList = ServDao.finds("TS_XMGL_BM_KSLBK", wherelbk);
 					String kslbk_id= lbkList.get(0).getStr("KSLBK_ID");
+					//获取到考试名称
+					String back_All=kslb_name+"-"+kslb_xl+"-"+kslb_mk+"-"+kslb_type;
+					JSONArray yzgzArg=(JSONArray) yzgzstrjson.get(kslb_id);
+					int flag=0;
+					String ad_rule="";
+					//获取资格验证信息以及验证结果
+					for(int j=0;j<yzgzArg.length();j++){
+						JSONObject object = (JSONObject) yzgzArg.get(j);
+						String sname = (String) object.get("NAME");
+						String svlidate=(String) object.get("VLIDATE");
+						ad_rule+=sname+":"+svlidate+",";
+						if(svlidate.equals("false")){
+							flag+=1;
+						}
+					}
+					String ad_result="";
+					if(flag!=0){
+						//验证不通过
+						ad_result="2";
+					}if(flag==0){
+						//验证通过
+						ad_result="1";
+					}
+					//1自动审核, 2人工审核, 3自动+人工审核
+					int count = XmglMgr.existSh(xm_id);
 				    Bean beans=new Bean();
 					beans.set("BM_CODE", user_code);
 					beans.set("BM_NAME", user_name);
@@ -154,48 +177,36 @@ public class BmlbServ extends CommonServ {
 					beans.set("BM_STARTDATE",bm_start);
 					beans.set("BM_ENDDATE",bm_end);
 					beans.set("KSLBK_ID",kslbk_id);
-					Bean bmbean = ServDao.create(servId, beans);
-					//获取到报名id
-					String bm_id= bmbean.getStr("BM_ID");
-					//根据报名id获取到跨序列资格考试表单
-					Bean bmzgBean=ServDao.find("TS_BMLB_BM", bm_id);
-					String back_name = bmzgBean.getStr("BM_NAME");//报名人姓名
-					String back_code = bmzgBean.getStr("BM_CODE");//报名人人力资源编码
-					String back_lb = bmzgBean.getStr("BM_LB");
-					String back_xl = bmzgBean.getStr("BM_XL");
-					String back_mk = bmzgBean.getStr("BM_MK");
-					String back_type = bmzgBean.getStr("BM_TYPE");
-					String back_All=back_lb+"-"+back_xl+"-"+back_mk+"-"+back_type;
-					JSONArray yzgzArg=(JSONArray) yzgzstrjson.get(kslb_id);
-					int flag=0;
-					String ad_rule="";
-					for(int j=0;j<yzgzArg.length();j++){
-						
-						JSONObject object = (JSONObject) yzgzArg.get(j);
-						String sname = (String) object.get("NAME");
-						String svlidate=(String) object.get("VLIDATE");
-						ad_rule+=sname+":"+svlidate+",";
-						if(svlidate.equals("false")){
-							flag+=1;
+					if(count==0){
+						beans.set("BM_SH_STATE",1);
+					}if(count==1){
+						if(ad_result.equals("1")){
+						beans.set("BM_SH_STATE",1);
+						}if(ad_result.equals("2")){
+						beans.set("BM_SH_STATE",2);
+						}
+					}if(count==2){
+						beans.set("BM_SH_STATE",0);
+					}if(count==3){
+						if(ad_result.equals("1")){
+						beans.set("BM_SH_STATE",1);
+						}if(ad_result.equals("2")){
+						beans.set("BM_SH_STATE",3);
 						}
 					}
-					String ad_result="";
-					if(flag!=0){
-						//验证不通过
-						ad_result="2";
-					}if(flag==0){
-						//验证通过
-						ad_result="1";
-					}
+					Bean bmbean = ServDao.create(servId, beans);
+					//获取到报名主键id
+					String bm_id= bmbean.getStr("BM_ID");
+					
        				Bean yzBean = new Bean();
        				yzBean.set("BM_ID",bm_id);
        				yzBean.set("AD_NAME",back_All);
-       				yzBean.set("AD_UCODE",back_code);
+       				yzBean.set("AD_UCODE",user_code);
        				yzBean.set("AD_RULE",ad_rule);
        				yzBean.set("AD_RESULT",ad_result);
-       				yzBean.set("AD_UNAME",back_name);
+       				yzBean.set("AD_UNAME",user_name);
 					ServDao.save("TS_BMSH_AUDIT",yzBean);
-					//公共表
+					//添加公共表
 					Bean objBean=new Bean();
 					objBean.set("DATA_ID",xm_id);
 					objBean.set("STR1",user_code);
@@ -203,20 +214,19 @@ public class BmlbServ extends CommonServ {
 					ServDao.save("TS_OBJECT", objBean);
 					
 					ParamBean param=new ParamBean();
-					param.set("examerWorekNum",back_code);
+					param.set("examerWorekNum","000786238");
 					param.set("level",0);
 					param.set("xmId",xm_id);
 					param.set("flowName",1);
-					param.set("shrWorekNum",back_code);
+					param.set("shrWorekNum","000786238");
 					OutBean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
-//					1自动审核, 2人工审核, 3自动+人工审核
-					int count = XmglMgr.existSh(xm_id);
-					//审核bean
+					System.out.println(out);
+					//添加到审核表中
 					Bean shBean =new Bean();
 					shBean.set("XM_ID",xm_id);
 					shBean.set("BM_ID",bm_id);
-					shBean.set("BM_NAME",back_name);
-					shBean.set("BM_CODE",back_code);
+					shBean.set("BM_NAME",user_name);
+					shBean.set("BM_CODE",user_code);
 					shBean.set("KSLBK_ID",kslbk_id);
 					shBean.set("BM_LB",kslb_name);
 					shBean.set("BM_XL",kslb_xl);
@@ -226,22 +236,19 @@ public class BmlbServ extends CommonServ {
 						ServDao.save("TS_BMSH_PASS", shBean);
 					}if(count==1){
 						if(ad_result.equals("1")){
-						ServDao.save("TS_BMSH_PASS", shBean);
+							ServDao.save("TS_BMSH_PASS", shBean);
 						}if(ad_result.equals("2")){
-						ServDao.save("TS_BMSH_NOPASS", shBean);
+							ServDao.save("TS_BMSH_NOPASS", shBean);
 						}
 					}if(count==2){
-						ServDao.save("TS_BMSH_PASS", shBean);
+							ServDao.save("TS_BMSH_PASS", shBean);
 					}if(count==3){
 						if(ad_result.equals("1")){
-						ServDao.save("TS_BMSH_PASS", shBean);
+								ServDao.save("TS_BMSH_PASS", shBean);
 						}if(ad_result.equals("2")){
-						ServDao.save("TS_BMSH_STAY", shBean);
+							ServDao.save("TS_BMSH_STAY", shBean);
 						}
 					}
-
-
-					
 				  }
 				}
 		} catch (JSONException e) {

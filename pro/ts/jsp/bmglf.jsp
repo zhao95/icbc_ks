@@ -57,21 +57,21 @@
 		String where2 = "AND BM_ID="+"'"+bm_id+"'";
 		List<Bean> fzgbean = ServDao.finds("TS_XMGL_BM_FZGKS", where2);
 		//获取用户编码
-		String user_code = userBean.getStr("USER_CODE");
+		String user_code = userBean.getStr("USER_WORK_NUM");
 		//获取用户名称
 		String user_name = userBean.getStr("USER_NAME");
 		//获取用户性别
 		String user_sex = userBean.getStr("USER_SEX");
-		//获取用户部門
-		String dept_name = userBean.getStr("DEPT_NAME");
 		//获取用户机构
-		String odept_name= userBean.getODeptName();
+		String odept_name = userBean.getODeptName();
 		//获取用户办公电话
 		String user_office_phone = userBean.getStr("USER_OFFICE_PHONE");
 		//获取用户手机号码
 		String user_mobile = userBean.getStr("USER_MOBILE");
 		//获取用户入行时间
 		String user_cmpy_date =userBean.getStr("USER_CMPY_DATE");
+		//职务
+		String user_post =userBean.getStr("USER_POST");
 	
 		%>
 		<div style="padding-left: 90px;width: 90%;text-align: left;">
@@ -215,15 +215,17 @@
 		    var user_mobile = document.getElementById("u_mobile").value;
 			var param={};
 			param["bmCodes"] = bmlb;
-			param["user_code"]="<%=user_code%>";
-			param["user_name"] = "<%=user_name%>";
-			param["user_sex"] = "<%=user_sex%>";
-			param["odept_name"] = "<%=odept_name%>";
-			param["user_office_phone"] = "<%=user_office_phone%>";
-			param["user_mobile"] = user_mobile;
-			param["user_cmpy_date"] = "<%=user_cmpy_date%>";
-			param["user_cmpy_date"] = "<%=user_cmpy_date%>";
-			param["xm_id"] = "<%=xm_id%>";
+			param["USER_CODE"] = "<%=user_code%>";
+			param["USER_NAME"] = "<%=user_name%>";
+			param["USER_SEX"] = "<%=user_sex%>";
+			param["ODEPT_NAME"] = "<%=odept_name%>";
+			param["USER_OFFICE_PHONE"] = "<%=user_office_phone%>";
+			param["USER_MOBILE"] = "<%=user_mobile%>";
+			param["USER_CMPY_DATE"] = "<%=user_cmpy_date%>";
+			param["XM_ID"] = "<%=xm_id%>";
+			param["BM_START"] = "<%=bm_start%>";
+			param["BM_END"] = "<%=bm_end%>";
+			param["XM_NAME"] = "<%=xm_name%>";
 			FireFly.doAct("TS_BMLB_BM", "addData", param);
 			window.location.href="bm.jsp";
 		    }

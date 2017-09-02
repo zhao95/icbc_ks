@@ -424,15 +424,19 @@
 	
 	<script type="text/javascript">
 	function deletec(){
-			var checkArray = document.getElementsByName("checkboxaa");
-			var kslxArray = document.getElementsByName("checkname1");
-			for(var j=0;j<checkArray.length;j++){
-				for(var i=0;i<kslxArray.length;i++){
-		     		if(kslxArray[i].value==checkArray[j]){
-		     			kslxArray[i].disabled=false;
-		     		}
-				}
-			}
+// 		var tab = document.getElementById("tablehang");
+// 		var kslbArray=document.getElementById("checkboxaa");
+// 		var kslxArray = document.getElementsByName("checkname1");
+// 			for(var i=0;i<kslxArray.length;i++){
+// 				for(var j=0;j<kslbArray.length;j++){
+// 		     		if(kslxArray[i].value==kkslbArray[j].value){
+// 		     			kslxArray[i].disabled=false;
+// 							var j = delObj.parentNode.parentNode.rowIndex;
+// 							tab.deleteRow(j);
+// 		     		}
+		     		
+// 				}
+// 			}
 		    
 		}
 	//跨序列资格考试选择数量上限
@@ -513,7 +517,7 @@
 		       tbody=document.getElementById("goods");
 		       var ntr = tbody.insertRow();
 		       ntr.innerHTML=
-		       '<td ><input checked="checked" type="checkbox" onchange="change2(this)" name="checkboxaa"></td>'+
+		       '<td ><input checked="checked" type="checkbox" onchange="change2(this)" name="checkboxaa"  value="'+kslb_id+'"></td>'+
 		       '<td >'+kslb_name+'</td>'+
 		       '<td >'+kslb_xl+'</td>'+
 		       '<td >'+kslb_mk+'</td>'+
@@ -648,7 +652,6 @@
    			}
    		}
      	var param = {};
-// 		xkArg.push(yk);
 		var neAry=xkArg.concat(yk);
 		for(var i=0; i < neAry.length; i++) {
 		    for(var j=i+1;j< neAry.length; j++) {
@@ -675,23 +678,8 @@
 		}else{
 		 	var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param);
 		 	console.log(JSON.stringify(BM_ID.list));
+	 		window.location.href="bm.jsp";
 		}
-	 	window.location.href="bm.jsp";
-	
-		
-// 		var paramArray = [];
-// 		var param = {};
-// 		param.BM_ID = "报名id";
-// 		param.AD_NAME = "报考名称";
-// 		param.AD_UCODE = "人力资源编码";
-// 		param.AD_UNAME = "报考人姓名";
-// 		param.AD_RULE = "验证规则";
-// 		param.AD_RESULT = "验证结果";
-// 		paramArray.push(param);
-
-// 		var batchData = {};
-// 		batchData["BATCHDATAS"] = paramArray;
-// 		var rtn = FireFly.batchSave("TS_BMSH_AUDIT",batchData,null,2,false);
 		
 }
 	</script>
