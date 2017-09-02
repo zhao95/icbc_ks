@@ -65,7 +65,7 @@
      #box{position:absolute;display:none;opacity:0.9;background:#fff;text-align: center;top:0;}
     </style>
 
-<% String xmid = "0nTjlmash9mbO5sAiPbS";
+<% String xmid = request.getParameter("zgtz");
 String user_code = userBean.getStr("USER_CODE");%>
 	<div style="padding: 10px">
 		<a href="index_qt.jsp"><image style="padding-bottom:10px"

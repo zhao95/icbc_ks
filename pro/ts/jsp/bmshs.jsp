@@ -195,13 +195,8 @@
 		 var xmtypeid = "XM_TYPE"+i;
 			var id = document.getElementById(hid).innerHTML;
 			var xmtype = document.getElementById(xmtypeid).innerHTML;
-			if(xmtype=="资格类考试"){
 			document.getElementById("zgtz").value=id;
-				
-			document.getElementById("form1").submit();
-			}else{
-			document.getElementById("fzgtz").value=id;
-			document.getElementById("form2").submit();
+			document.getElementById("zgtz").value=id;
 			}
 	}
 	//分页
