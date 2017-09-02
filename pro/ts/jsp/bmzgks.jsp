@@ -42,11 +42,13 @@
 	<% 
 		//获取项目id
 		String xm_id = request.getParameter("zgtz");
+		
 		Bean xmbean=ServDao.find("TS_XMGL", xm_id);
 		String xm_name = xmbean.getStr("XM_NAME");
 		//获取报名管理id
 		String where1 = "AND XM_ID="+"'"+xm_id+"'";
 		List<Bean> bmglList = ServDao.finds("TS_XMGL_BMGL", where1);
+		System.out.print("wwwwwwwwwwwwwwww"+bmglList);
 		String bm_id = bmglList.get(0).getStr("BM_ID");
 		String bm_ksxz = bmglList.get(0).getStr("BM_KSXZ");
 		String bm_start = bmglList.get(0).getStr("BM_START");
@@ -69,13 +71,18 @@
 		//职务
 		String user_post =userBean.getStr("USER_POST");
 		String wheregw = "AND POSTION_NAME="+"'"+user_post+"'";
+		String pt_type="";
+		String pt_sequnce="";
 		List<Bean> gwList = ServDao.finds("TS_ORG_POSTION", wheregw);
-		String pt_type=gwList.get(0).getStr("POSTION_TYPE");
-		String pt_sequnce= gwList.get(0).getStr("POSTION_SEQUENCE");
-		
+		List<Bean> zgList =new ArrayList<Bean>();
+		if(gwList!=null && gwList.size()!=0){
+		System.out.print("wwwwwwwwwwwwwwww"+gwList);
+		 pt_type=gwList.get(0).getStr("POSTION_TYPE");
+		 pt_sequnce= gwList.get(0).getStr("POSTION_SEQUENCE");
 		//获取跨序列的类型列表    
 		String where2 = "AND KSLB_NAME<>"+"'"+pt_type+"'"+" AND KSLB_XL<>"+"'"+pt_sequnce+"'"+" AND XM_ID="+"'"+xm_id+"'";
-		List<Bean> zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
+				zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
+		}
 		%>
 	<div style="padding-left: 90px;width: 90%;text-align: left;">
 			<img alt="中国工商银行" src="<%=CONTEXT_PATH%>/qt/img/u3148.png"> <img alt="考试系统"src="<%=CONTEXT_PATH%>/qt/img/u3376.png">
@@ -219,7 +226,7 @@
 	       					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	       					<button class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#myModal">选择考试</button>
 	       					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	       					<button class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#deletec">删除</button>
+	       					<button class="btn btn-success" style="width:100px;background-color: #00c2c2;" onclick="deletec()">删除</button>
 	       				</div>
       				<div style="padding-top: 5px;">
       					<table border="1" style="width: 90%" id="tablehang">
@@ -270,6 +277,7 @@
 	   					<td width="15%">级别</td>
        				</tr>
 	       			<%
+	       			System.out.print("1111111111");
 					for(int i=0;i<zgList.size();i++){
 						Bean bean1 = zgList.get(i);
 						String kslb_id = bean1.getStr("KSLB_ID");
@@ -423,22 +431,7 @@
 	</script>
 	
 	<script type="text/javascript">
-	function deletec(){
-// 		var tab = document.getElementById("tablehang");
-// 		var kslbArray=document.getElementById("checkboxaa");
-// 		var kslxArray = document.getElementsByName("checkname1");
-// 			for(var i=0;i<kslxArray.length;i++){
-// 				for(var j=0;j<kslbArray.length;j++){
-// 		     		if(kslxArray[i].value==kkslbArray[j].value){
-// 		     			kslxArray[i].disabled=false;
-// 							var j = delObj.parentNode.parentNode.rowIndex;
-// 							tab.deleteRow(j);
-// 		     		}
-		     		
-// 				}
-// 			}
 		    
-		}
 	//跨序列资格考试选择数量上限
 	var total = 0;
 	function change(obj){
@@ -517,7 +510,7 @@
 		       tbody=document.getElementById("goods");
 		       var ntr = tbody.insertRow();
 		       ntr.innerHTML=
-		       '<td ><input checked="checked" type="checkbox" onchange="change2(this)" name="checkboxaa"  value="'+kslb_id+'"></td>'+
+		       '<td ><input type="checkbox" checked onchange="change2(this)" name="checkboxaa"  value="'+kslb_id+'"></td>'+
 		       '<td >'+kslb_name+'</td>'+
 		       '<td >'+kslb_xl+'</td>'+
 		       '<td >'+kslb_mk+'</td>'+
@@ -538,6 +531,17 @@
 			}
      	}
      	
+	}
+	//批量删除
+	function deletec(){
+		var tab = document.getElementById("tablehang");    
+ 		var kslbArray = document.getElementsByName("checkboxaa");
+ 		var kslxArray = document.getElementsByName("checkname1");  
+	    for(j=kslbArray.length-1;j>=0;j--){
+    		if(kslbArray[j].checked){
+    			tab.deleteRow(j);
+        	}
+   		}
 	}
 	//删除
 	//跨序列复选框变动

@@ -105,6 +105,7 @@ public class BmlbServ extends CommonServ {
 		String servId=paramBean.getStr(Constant.PARAM_SERV_ID);
 		//获取前台传过来的值
 		String user_code = paramBean.getStr("USER_CODE");
+//		String user_code = "000786530";
 		String user_name = paramBean.getStr("USER_NAME");
 		String user_sex = paramBean.getStr("USER_SEX");
 		String odept_name = paramBean.getStr("ODEPT_NAME");
@@ -214,13 +215,28 @@ public class BmlbServ extends CommonServ {
 					ServDao.save("TS_OBJECT", objBean);
 					
 					ParamBean param=new ParamBean();
-					param.set("examerWorekNum","000786238");
+					param.set("examerWorekNum",user_code);
 					param.set("level",0);
 					param.set("xmId",xm_id);
 					param.set("flowName",1);
-					param.set("shrWorekNum","000786238");
+					param.set("shrWorekNum",user_code);
 					OutBean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
-					System.out.println(out);
+					List<Bean> blist = (List<Bean>) out.get("result");
+					String node_id= blist.get(0).getStr("NODE_ID");
+					String sh_user= blist.get(blist.size()-1).getStr("SHR_WORKNUM");
+					String sh_level= blist.get(0).getStr("NODE_STEPS");
+					String allman="";
+					for (int l=0;l<blist.size();l++) {
+						if(l==0){
+							allman = blist.get(l).getStr("SHR_WORKNUM");
+						}
+						else{
+							allman+= blist.get(l).getStr("SHR_WORKNUM")+",";
+						}
+						
+					}
+
+					
 					//添加到审核表中
 					Bean shBean =new Bean();
 					shBean.set("XM_ID",xm_id);
@@ -232,6 +248,10 @@ public class BmlbServ extends CommonServ {
 					shBean.set("BM_XL",kslb_xl);
 					shBean.set("BM_MK",kslb_mk);
 					shBean.set("BM_TYPE",kslb_type);
+					shBean.set("SH_NODE",node_id);//目前审核节点
+					shBean.set("SH_LEVEL",sh_level);//目前审核层级
+					shBean.set("SH_USER",sh_user);//当前办理人
+					shBean.set("SH_OTHER",allman);//其他办理人
 					if(count==0){
 						ServDao.save("TS_BMSH_PASS", shBean);
 					}if(count==1){
