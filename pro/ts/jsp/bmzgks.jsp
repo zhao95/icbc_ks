@@ -52,9 +52,6 @@
 		String bm_start = bmglList.get(0).getStr("BM_START");
 		String bm_end = bmglList.get(0).getStr("BM_END");
 		String bm_name = bmglList.get(0).getStr("BM_NAME");
-		//获取类型列表    
-		String where2 = "AND BM_ID="+"'"+bm_id+"'";
-		List<Bean> zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
 		//获取用户编码
 		String user_code = userBean.getStr("USER_WORK_NUM");
 		//获取用户名称
@@ -76,6 +73,9 @@
 		String pt_type=gwList.get(0).getStr("POSTION_TYPE");
 		String pt_sequnce= gwList.get(0).getStr("POSTION_SEQUENCE");
 		
+		//获取跨序列的类型列表    
+		String where2 = "AND KSLB_NAME<>"+"'"+pt_type+"'"+" AND KSLB_XL<>"+"'"+pt_sequnce+"'"+" AND XM_ID="+"'"+xm_id+"'";
+		List<Bean> zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
 		%>
 	<div style="padding-left: 90px;width: 90%;text-align: left;">
 			<img alt="中国工商银行" src="<%=CONTEXT_PATH%>/qt/img/u3148.png"> <img alt="考试系统"src="<%=CONTEXT_PATH%>/qt/img/u3376.png">
@@ -147,7 +147,7 @@
        					<span style="color: #fdb64f;">(提示：如果应考序列包含模块，请在下方选择具体的模块)</span></div>
        					<table border="1" align="center" style="width: 90%;" id="tableid">
        						<tr style="background-color: #ffbdbd;">
-	       						<td width="3%"><input type="checkbox" ></td>
+	       						<td width="3%"></td>
 	       						<td width="10%">岗位类别</td>
        							<td width="15%">序列</td>
        							<td width="27%">模块</td>
@@ -158,16 +158,16 @@
 	      						<% 
 	      						String wherexl = "AND KSLB_NAME="+"'"+pt_type+"'"+" AND KSLB_XL="+"'"+pt_sequnce+"'"+" AND XM_ID="+"'"+xm_id+"'";
 	      						List<Bean> xlBean = ServDao.finds("TS_XMGL_BM_KSLB", wherexl);
+	      						Bean mkBean = new Bean();
 	      						String lbname ="";
-	      						 String xlname ="";
-	      						if(xlBean.size()!=0){
-	      						  lbname = xlBean.get(0).getStr("KSLB_NAME");
-	      						String kslb_id = xlBean.get(0).getStr("KSLB_ID");
-	      						 xlname= xlBean.get(0).getStr("BM_XL");
+	      						String xlname ="";
+	      						if(xlBean!=null && xlBean.size()!=0){
+	      						 String kslb_id = xlBean.get(0).getStr("KSLB_ID");
+	      						 lbname = xlBean.get(0).getStr("KSLB_NAME");
+	      						 xlname= xlBean.get(0).getStr("KSLB_XL");
 	      						%>
        						<tr>
-	      						<td ><input checked="checked" type="checkbox"  name="checkboxaa"></td>
-	      						<td class="rhGrid-td-hide" ><input type="text" id="zglbid" value="<%=kslb_id%>"></td>
+	      						<td ><input class="rhGrid-td-hide" type="text"  name="checkboxaa"></td>
 	      						<td width="10%"><%=lbname%></td>
 	      						<td width="15%"><%=xlname%></td>
 	      						<% 
@@ -177,10 +177,8 @@
 	      						<select id="mkid" onchange="typeId(this)">
 	      						<% 
 	      						//根据岗位名称，序列和项目id找到对应的模块
-	      						String wheremk = "AND KSLB_NAME="+"'"+pt_type+"'"+" AND KSLB_XL="+"'"+pt_sequnce+"'"+" AND XM_ID="+"'"+xm_id+"'";
-	      						List<Bean> mkList = ServDao.finds("TS_XMGL_BM_KSLB", wheremk);
-	      						Bean mkBean = new Bean();
-	      						for (Bean bean : mkList) {
+	      						
+	      						for (Bean bean : xlBean) {
       									String type = bean.getStr("KSLB_TYPE");
       									String mk = bean.getStr("KSLB_MK");
       									if (mkBean.containsKey(mk)) {
@@ -192,6 +190,8 @@
       										list.add(type);
       										mkBean.set(mk,list);
       									}
+	      						}
+	      						for(Object mk : mkBean.keySet()){
       							%>
       							<option value="<%=mk%>"><%=mk%></option>
       							<%
@@ -200,24 +200,13 @@
 	      						</select></td>
 	      						<td width="10%">
 	      						<select id="lxid" onchange="changeyk(this)">
-	      						<% 
-	      						for(Object mk : mkBean.keySet()){
-	      							List typeList = mkBean.getList(mk);
-	      						%>
-	      							<option value="<%=typeList%>"><%=typeList%></option>
-	      						<% 
-	      						}
-	      						%>
+	      						<option></option>
 	      						</select></td>
+	      						<td class="rhGrid-td-hide" ><input type="text" id="zglbid" name="zgksname" value="<%=kslb_id%>"></td>
 	      						<td width="20%">
-	      							<div>禁考规则</div>
-									<div>准入测试规则</div>
-									<div>本序列持证规则</div>
-									<div>多次考试规则</div>
-									<div>证书规则</div>
-									<div>岗位规则</div>
+	      						<div id="<%=kslb_id%>"></div>
 	      						</td>
-	      						<td width="15%">验证结果</td>
+	      						<td width="15%"><div id="<%=kslb_id%>yzjg"></div></td>
        						</tr>
        						<% 
 	      					}
@@ -373,25 +362,18 @@
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
 	<script type="text/javascript">
 	var yk={};
-	var tab = document.getElementById("tableid");
-    //表格行数
-    var rows = tab.rows.length;
-    if(rows>1){
-		yk["BM_LB"]="<%=lbname%>";
-		yk["BM_XL"]="<%=xlname%>";
-		
-		yk["BM_TYPE"]=document.getElementById("lxid").value;
-		yk["ID"]=document.getElementById("zglbid").value;
-    }
-	var xkArg=[];
+	var xkArg=[];//考试结果
+	var yzgz;//资格验证后端返回到前端的数据
 	//等级改变事件
 	function changeyk(obj){
-		yk["BM_TYPE"]=document.getElementById("lxid").value;
+		var sel = document.getElementById("lxid");
+		var selected_val = sel.options[sel.selectedIndex].value;
+		yk["BM_TYPE"]=selected_val;
 	}
 	
-	$(function () { 
-		typeId(obj);
-	});
+	 $(function(){ 
+		 typeId(obj);
+	 });
 	//模块改变事件
 	function typeId(obj){
 		var tab = document.getElementById("tableid");
@@ -403,17 +385,28 @@
 		param["MK"]=mkvalue;
 		param["pt_type"]="<%=pt_type%>";
 		param["pt_sequnce"]="<%=pt_sequnce%>";
+		param["xm_id"]="<%=xm_id%>";
 		var ww= FireFly.doAct("TS_BMLB_BM", "getMkvalue", param);
 		hh= ww.list;
-		debugger;
 		var tyArray = hh.split(",");
 		var select = document.getElementById("lxid");
 		jQuery("#lxid").empty();          //把select对象的所有option清除掉
 		for(var i=0;i<tyArray.length;i++){
-			select.options[i]=new Option(tyArray[i],tyArray[i]);
+			select.options[i]=new Option((tyArray[i]=="1")?"初级":(tyArray[i]=="2")?"中级":(tyArray[i]=="3")?"高级":"无模块",tyArray[i]);
 		}
-		yk["BM_MK"]=mkvalue;
-	}
+		var tab = document.getElementById("tableid");
+	    //表格行数
+	    var rows = tab.rows.length;
+	    if(rows>1){
+			yk["BM_LB"]="<%=lbname%>";
+			yk["BM_XL"]="<%=xlname%>";
+			yk["ID"]=document.getElementById("zglbid").value;
+			yk["BM_MK"]=mkvalue;
+			var sel = document.getElementById("lxid");
+			var selected_val = sel.options[sel.selectedIndex].value;
+			yk["BM_TYPE"]=selected_val;
+	       }
+		}
 	}
 	//模态页面 取消按钮 删除之前append的tr
 	function quxiao(){
@@ -472,11 +465,12 @@
 	}
 	
 	//获取应考试的值
-	function tijiao(){  		
+	function tijiao(){ 
+		
 		//获取手机号码
 	 	var ryl_mobile = document.getElementById("user_mobile2").value=document.getElementById("user_mobile1").value; 
 		//获取 当前页面中checkbox选中的数据
-		var arrChk=$("input[name='checkboxaa']:checked"); 
+		var arrChk=$("input[name='checkboxaa']"); 
 		tbody=document.getElementById("xinxi");
 		for(var i=0;i<arrChk.length;i++){
 			 //得到tr
@@ -523,11 +517,12 @@
 		       '<td >'+kslb_name+'</td>'+
 		       '<td >'+kslb_xl+'</td>'+
 		       '<td >'+kslb_mk+'</td>'+
-		       '<td >'+kslb_type+'</td>'+
+		       '<td >'+((kslb_type=="1")?"初级":(kslb_type=="2")?"中级":"高级")+'</td>'+
 		       '<td class="rhGrid-td-hide" >'+hanghao+'</td>'+
-		       '<td ><div>禁考规则</div><div>准入测试规则</div><div>本序列持证规则</div><div>多次考试规则</div><div>证书规则</div><div>岗位规则</div></td>'+
-		       '<td ></td>'+
-			   '<td class="rhGrid-td-hide" ><input type="text" name="zgksname" value="'+kslb_id+'"></td>';
+		       '<td ><div id="'+kslb_id+'"></div></td>'+
+		       '<td ><div id="'+kslb_id+'yzjg"></div></td>'+
+			   '<td class="rhGrid-td-hide" ><input type="text" name="zgksname" value="'+kslb_id+'"></td>'+
+			   '<td class="rhGrid-td-hide" >'+kslb_id+'</td>';
 		      kslxArray[i].disabled=true;
 		       var xk = {};
 		       xk['ID'] = kslb_id;
@@ -543,6 +538,7 @@
 	//删除
 	//跨序列复选框变动
 	function change2(obj){
+		var arrChk=$("input[name='checkboxaa']"); 
 		if($(obj).prop("checked")){ 
 			}else{
 				var tab = document.getElementById("tablehang");
@@ -556,6 +552,18 @@
 				var tds=row.getElementsByTagName("td");
 				var j=obj.parentNode.parentNode.rowIndex;
 				var hanghao = tds[5].innerText;
+				//删除时清空数组中的元素
+				var ys = tds[9].innerText;
+				for(var i=0;i<xkArg.length;i++){
+					xkArg[i]
+					if(xkArg[i].ID===ys){
+						var index = xkArg.indexOf(xkArg[i]);
+						if (index > -1) {
+							xkArg.splice(index, 1);
+						}
+					}
+				}
+				//删除行
 				tab.deleteRow(j);
 				 var kslxArray2 = document.getElementsByName("checkname1");
 				 kslxArray2[hanghao].disabled=false;
@@ -569,19 +577,60 @@
 	<script type="text/javascript">
 	//进行资格验证
 	function checky(){
-		
 		var param = {};
 		var bminfo={};
 		bminfo['XM_ID'] = '<%=xm_id%>';
 		bminfo['BM_CODE'] = '<%=user_code%>';
 		bminfo['BM_STARTDATE'] = '<%=bm_start%>';
 		bminfo['BM_ENDDATE'] = '<%=bm_end%>';
-		xkArg.push(yk);
+// 		xkArg.push(yk);
+		var neAry=xkArg.concat(yk);
+		for(var i=0; i < neAry.length; i++) {
+		    for(var j=i+1;j< neAry.length; j++) {
+		        if(neAry[i].ID == neAry[j].ID) {
+		        	neAry.splice(neAry[j],1);
+		        }
+		    }
+		}
 		param['BM_INFO'] = JSON.stringify(bminfo);
-		param['BM_LIST'] = JSON.stringify(xkArg);
+		param['BM_LIST'] = JSON.stringify(neAry);
 		console.log(JSON.stringify(param));
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, true,false,function(data){
     		console.log(data);
+    		yzgz=data;
+    		//获取后台传过来的key
+    		var zgArray = document.getElementsByName("zgksname");
+         	for(var i=0;i<zgArray.length;i++){
+             	//获取验证规则div的id
+       			var a=zgArray[i].value;
+       			//获取验证结果div的id
+             	var yzjg=a+"yzjg";
+       			var dataArray =data[a];
+            	//获取div对应的数组
+       			//append内容之前判断是否有内容
+       			var divtext1 = $("#"+a).html();
+       			if(divtext1==null||divtext1.length==0){
+       				var shArray=true;
+       				for(var j=0;j<dataArray.length;j++){
+       					if(dataArray[j].VLIDATE=="true"){
+	       					$("#"+a).append('<div><img src="<%=CONTEXT_PATH%>/ts/image/u4719.png">'+dataArray[j].NAME+'</div>');
+	       					
+						}if(dataArray[j].VLIDATE=="false"){
+							$("#"+a).append('<div style="color:red;"><img src="<%=CONTEXT_PATH%>/ts/image/u4721.png">'+dataArray[j].NAME+'</div>');
+						}
+						if(dataArray[j].VLIDATE=="false"){
+							shArray=false;
+						}
+					 }
+       				if(shArray==false){
+       					$("#"+yzjg).append('审核不通过');
+       				
+       				}if(shArray==true){
+       					$("#"+yzjg).append('审核通过');
+       				}
+	       		}
+       			
+       		}
     	});	
 	}
 	//提交所有数据
@@ -597,23 +646,53 @@
    			}else{
    				zglb +="," + zgArray[i].value;
    			}
-   			}
-		
-	var param={}
-		param["user_code"] = "<%=user_code%>";
-		param["user_name"] = "<%=user_name%>";
-		param["user_sex"] = "<%=user_sex%>";
-		param["odept_name"] = "<%=odept_name%>";
-		param["user_office_phone"] = "<%=user_office_phone%>";
-		param["user_mobile"] = ryl_mobile;
-		param["user_cmpy_date"] = "<%=user_cmpy_date%>";
-		param["BM_IDS"] = zglb;
+   		}
+     	var param = {};
+// 		xkArg.push(yk);
+		var neAry=xkArg.concat(yk);
+		for(var i=0; i < neAry.length; i++) {
+		    for(var j=i+1;j< neAry.length; j++) {
+		        if(neAry[i].ID == neAry[j].ID) {
+		        	neAry.splice(neAry[j],1);
+		        }
+		    }
+		}
+		param["USER_CODE"] = "<%=user_code%>";
+		param["USER_NAME"] = "<%=user_name%>";
+		param["USER_SEX"] = "<%=user_sex%>";
+		param["ODEPT_NAME"] = "<%=odept_name%>";
+		param["USER_OFFICE_PHONE"] = "<%=user_office_phone%>";
+		param["USER_MOBILE"] = ryl_mobile;
+		param["USER_CMPY_DATE"] = "<%=user_cmpy_date%>";
 		param["XM_ID"] = "<%=xm_id%>";
-		param["bm_start"] = "<%=bm_start%>";
-		param["bm_end"] = "<%=bm_end%>";
-		param["xm_name"] = "<%=xm_name%>";
-	 	var BM_IDS = FireFly.doAct("TS_BMLB_BM", "addZgData", param);
+		param["BM_START"] = "<%=bm_start%>";
+		param["BM_END"] = "<%=bm_end%>";
+		param["XM_NAME"] = "<%=xm_name%>";
+		param['BM_LIST'] = JSON.stringify(neAry);
+		param["YZGZ_LIST"] = JSON.stringify(yzgz);
+		if(ryl_mobile==""){
+			alert("手机号码不能为空");
+		}else{
+		 	var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param);
+		 	console.log(JSON.stringify(BM_ID.list));
+		}
 	 	window.location.href="bm.jsp";
+	
+		
+// 		var paramArray = [];
+// 		var param = {};
+// 		param.BM_ID = "报名id";
+// 		param.AD_NAME = "报考名称";
+// 		param.AD_UCODE = "人力资源编码";
+// 		param.AD_UNAME = "报考人姓名";
+// 		param.AD_RULE = "验证规则";
+// 		param.AD_RESULT = "验证结果";
+// 		paramArray.push(param);
+
+// 		var batchData = {};
+// 		batchData["BATCHDATAS"] = paramArray;
+// 		var rtn = FireFly.batchSave("TS_BMSH_AUDIT",batchData,null,2,false);
+		
 }
 	</script>
 </body>
