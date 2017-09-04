@@ -78,27 +78,27 @@ public class FlowServ extends CommonServ {
 
     /**
      * 提供报名审核流程的方法.
-     * examercode是考生的人力资源编码，level为层级，xmId为ID,flowName为流程名字，shr为审核人WORKNUM
-     * 注：起草节点 shrWorekNum 传 examerWorekNum
+     * examerUserCode是起草人的用户编码，level为层级，xmId为ID,flowName为流程名字，shrUserCode为审核人用户编码
+     * 注：起草节点 shrUserCode 传 examerUserCode
      * @param paramBean
      * @return
      */
     public OutBean backFlow(ParamBean paramBean){
 	OutBean outBean = new OutBean();
-	String examerWorekNum = paramBean.getStr("examerWorekNum");
+	String examerUserCode = paramBean.getStr("examerUserCode");
 	int level = paramBean.getInt("level");
 	String xmId = paramBean.getStr("xmId");
 	//表单Bean
 	Bean formBean = paramBean.getBean("form");
 	//1:报名审核流程 2:异地借考流程 3:请假审核流程	
 	int flowName = paramBean.getInt("flowName");  
-	String shrWorekNum = paramBean.getStr("shrWorekNum");
+	String shrUserCode = paramBean.getStr("shrUserCode");
 	//起草人
-	UserBean userBean = UserMgr.getUserByWorkNum(examerWorekNum);
+	UserBean userBean = UserMgr.getUser(examerUserCode);
 	String deptCode = userBean.getDeptCode();
 	String odeptCode = userBean.getODeptCode(); 
 	//推送人
-	UserBean shrUserBean = UserMgr.getUserByWorkNum(shrWorekNum);
+	UserBean shrUserBean = UserMgr.getUser(shrUserCode);
 	String shrDeptCode = shrUserBean.getDeptCode();
 	String shrOdeptCode = shrUserBean.getODeptCode(); 
 	
@@ -152,17 +152,17 @@ public class FlowServ extends CommonServ {
 	    for (int k = 0; k < shList.size(); k++) {
 		Bean shBean = shList.get(k);
 		String shrName = shBean.getStr("QJKLC_SHR");
-		String shrWorkNum = shBean.getStr("SHR_WORKNUM");
+		String shUserCode = shBean.getStr("SHR_USERCODE");
 		String ydyBm = shBean.getStr("QJKLC_YDDEPT");
 		String zdyDeptCode = shBean.getStr("DEPT_CODE");
 		String shzw = shBean.getStr("QJKLC_SHZW");
 		String colCodel = shBean.getStr("QJKLC_ZDDEPT_COLCODE");
 		
 		//1.审核人已填写
-		if(!shrWorkNum.equals("")){
+		if(!shUserCode.equals("")){
 		    Bean shUser = new Bean();
 		    shUser.set("SHR_NAME", shrName);
-		    shUser.set("SHR_WORKNUM", shrWorkNum);
+		    shUser.set("SHR_USERCODE", shUserCode);
 		    resList.add(shUser);
 		}
 		//2.预定义部门，审核人职位已填写
@@ -193,7 +193,7 @@ public class FlowServ extends CommonServ {
 			    for (int i = 0; i < userlist.size(); i++) {
 				Bean tmpUser = new Bean();
 				tmpUser.set("SHR_NAME", userlist.get(i).getStr("USER_NAME"));
-				tmpUser.set("SHR_WORKNUM", userlist.get(i).getStr("USER_WORK_NUM"));
+				tmpUser.set("SHR_USERCODE", userlist.get(i).getStr("USER_CODE"));
 				resList.add(tmpUser);
 			    }
 		    }
@@ -204,7 +204,7 @@ public class FlowServ extends CommonServ {
 		    for (int i = 0; i < userlist.size(); i++) {
 			Bean tmpUser = new Bean();
 			tmpUser.set("SHR_NAME", userlist.get(i).getStr("USER_NAME"));
-			tmpUser.set("SHR_WORKNUM", userlist.get(i).getStr("USER_WORK_NUM"));
+			tmpUser.set("SHR_USERCODE", userlist.get(i).getStr("USER_CODE"));
 			resList.add(tmpUser);
 		    }
 		}
@@ -216,7 +216,7 @@ public class FlowServ extends CommonServ {
 		    for (int i = 0; i < userlist.size(); i++) {
 			Bean tmpUser = new Bean();
 			tmpUser.set("SHR_NAME", userlist.get(i).getStr("USER_NAME"));
-			tmpUser.set("SHR_WORKNUM", userlist.get(i).getStr("USER_WORK_NUM"));
+			tmpUser.set("SHR_USERCODE", userlist.get(i).getStr("USER_CODE"));
 			resList.add(tmpUser);
 		    }
 		}
