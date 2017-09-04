@@ -130,21 +130,20 @@ public class PassServ extends CommonServ {
 		}else{
 			shenuser=userBean.getStr("USER_CODE");
 		}
-		shenuser="admin";
 		String nodeid = "";
 		String levels =""; 
 		ParamBean parambean = new ParamBean();
-		parambean.set("examerWorekNum",list1.get(0).getStr("BM_CODE"));
+		parambean.set("examerUserCode",list1.get(0).getStr("BM_CODE"));
 		parambean.set("level",0);
-		parambean.set("shrWorekNum", shenuser);
+		parambean.set("shrUserCode", shenuser);
 		parambean.set("flowName", 1);
 		parambean.set("xmId", xmid);
 		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
 		List<Bean> flowlist = outbean.getList("result");
 		for (Bean bean : flowlist) {
-			if(shenuser.equals(bean.getStr("SHR_WORKNUM"))){
+			if(shenuser.equals(bean.getStr("S_USER"))){
 				levels=bean.getStr("NODE_STEPS");
-				nodeid = bean.getStr("NODE_ID");
+				nodeid = bean.getStr("NODE_NAME");
 			}
 		}
 		//ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化  
@@ -173,7 +172,7 @@ public class PassServ extends CommonServ {
 	 */
 	public Bean update(Bean paramBean){
 		String nodeid = paramBean.getStr("nodeid");
-		String levels = paramBean.getStr("SH_LEVEL");
+		String levels = paramBean.getStr("level");
 		int level = 0;
 		if(!"".equals(nodeid)){
 			 level=Integer.parseInt(levels);

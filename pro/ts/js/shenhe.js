@@ -155,7 +155,6 @@ function selectdata1(user_code,xmid,shenhe,yema){
 		param["xmid"]=xmid;
      	var result = FireFly.doAct(servId,"getUncheckList",param);
      	var result2 = FireFly.doAct(servId,"getAllData",param);
-     	console.log(result2);
      	nowlevel=result2.level;
      	nodeid=result2.node_id;
      	//查找排序顺序   根据排序号进行排序
@@ -206,6 +205,16 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    			var resultname = FireFly.doAct("TS_BMSH_STAY","getusername",paramcode);
      	    			fir = resultname.usernames;
      	    		}     	    		
+     	    		if(column=="BM_TYPE"){
+     	    			if(fir=="1"){
+     	    				BM_TYPE="初级";
+     	    			}else if(fir=="2"){
+     	    				BM_TYPE="中级";
+     	    			}else{
+     	    				BM_TYPE="高级";
+     	    			}
+     	    			fir = BM_TYPE;
+     	    		}
      	    		if(column=="SH_USER"){
      	    			fir = userEntity[0][column];
      	    		}
@@ -220,16 +229,6 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    				fir=pageEntity[i].BM_CODE;
      	    			}
      	    			var BM_TYPE = "";
-     	    			if(column=="BM_TYPE"){
-     	    				if(fir=="1"){
-     	    					BM_TYPE="初级";
-     	    				}else if(fir=="2"){
-     	    					BM_TYPE="中级";
-     	    				}else{
-     	    					BM_TYPE="高级";
-     	    				}
-     	    				fir = BM_TYPE;
-     	    			}
      	    		}
      	    	
      	    		if(column=="SH_LEVEL"){
@@ -748,7 +747,7 @@ function firall(){
 				//审核明细
 				function formsubmit(obj){
 					var bmid = obj.parentNode.id;
-					document.getElementById("bmid1").value=bmid;
+					document.getElementById("bmid4").value=bmid;
 					document.getElementById("form5").submit();
 				}
 				//导出

@@ -38,9 +38,6 @@
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 
 <body class="hold-transition skin-black sidebar-mini">
-<%String bmid = request.getParameter("bmid");
-String bmid1 = request.getParameter("bmid1");
-%>
 	<div class="" style="padding: 10px">
 		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
 				src="/ts/image/u1155.png" id="shouye"></image></a> <span
@@ -64,13 +61,14 @@ String bmid1 = request.getParameter("bmid1");
 			<th style="width: 13%; text-align: center">审核状态</th>
 			<th style="width: 13%; text-align: center">审核理由</th>
 			<th style="width: 13%; text-align: center">审核地址</th>
-			
 		</tr>
 	</thead>
 	<tbody>
 	 <%
-	String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
-	List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
+	 String bmid = request.getParameter("bmid4");
+	 out.print(bmid);
+	 String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
+	 List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
 	 for(int i=0;i<list.size();i++){
 		Bean bean = list.get(i);
 		int j = i+1;
@@ -85,15 +83,13 @@ String bmid1 = request.getParameter("bmid1");
 		 <tr>
 		<td><%=j %></td><td><%=shdate %></td><td><%=shr %></td><td><%=shlog %></td><td><%=jibie %></td><td><%=state %></td><td><%=liyou %></td><td><%=address %></td>
 		</tr> 
-		<% }%>
+		<%}%>
 	</tbody>
 	</table>
 	<script type="text/javascript">
-	alert("<%=bmid1%>");
-	/* $(function(){
+	 $(function(){
 	var table = document.getElementById("table");		
-	rowscolor(table);
-	}); */
+	}); 
 	</script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>

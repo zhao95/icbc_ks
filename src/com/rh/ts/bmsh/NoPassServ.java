@@ -133,17 +133,17 @@ public class NoPassServ extends CommonServ {
 		String nodeid = "";
 		String levels =""; 
 		ParamBean parambean = new ParamBean();
-		parambean.set("examerWorekNum",list.get(0).getStr("BM_CODE"));
+		parambean.set("examerUserCode",list.get(0).getStr("BM_CODE"));
 		parambean.set("level",0);
-		parambean.set("shrWorekNum", shenuser);
+		parambean.set("shrUserCode", shenuser);
 		parambean.set("flowName", 1);
 		parambean.set("xmId", xmid);
 		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
 		List<Bean> flowlist = outbean.getList("result");
 		for (Bean bean : flowlist) {
-			if(shenuser.equals(bean.getStr("SHR_WORKNUM"))){
+			if(shenuser.equals(bean.getStr("S_USER"))){
 				levels=bean.getStr("NODE_STEPS");
-				nodeid = bean.getStr("NODE_ID");
+				nodeid = bean.getStr("NODE_NAME");
 			}
 		}
 		
@@ -173,7 +173,7 @@ public class NoPassServ extends CommonServ {
 	 */
 	public OutBean update(Bean paramBean){
 		String nodeid = paramBean.getStr("nodeid");
-		String levels = paramBean.getStr("SH_LEVEL");
+		String levels = paramBean.getStr("level");
 		int level = 0;
 		if(!"".equals(levels)){
 			
@@ -198,15 +198,14 @@ public class NoPassServ extends CommonServ {
 				//获取下级参数
 				Bean bean = ServDao.find("TS_BMSH_NOPASS", id);
 				String allman ="";
-				String nextman = "";
 				
 				int nowlevel=0;
 				if(level!=1){
 					
 				ParamBean parambean = new ParamBean();
-				parambean.set("examerWorekNum", bean.getStr("BM_CODE"));
+				parambean.set("examerUserCode", bean.getStr("BM_CODE"));
 				parambean.set("level",level);
-				parambean.set("shrWorekNum", shenuser);
+				parambean.set("shrUserCode", shenuser);
 				parambean.set("flowName", 1);
 				parambean.set("xmId", xmid);
 				OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
@@ -216,9 +215,9 @@ public class NoPassServ extends CommonServ {
 					
 					if(l==list.size()-1){
 						
-						allman+= list.get(l).getStr("SHR_WORKNUM");
+						allman+= list.get(l).getStr("S_USER");
 					}else{
-						allman+= list.get(l).getStr("SHR_WORKNUM")+",";
+						allman+= list.get(l).getStr("S_USER")+",";
 					}
 					
 				}
@@ -252,13 +251,12 @@ public class NoPassServ extends CommonServ {
 			ServDao.delete("TS_BMSH_NOPASS", id);
 			//审核明细表中插入此次审核数据
 			Bean mindbean = new Bean();
-			UserBean userbean = UserMgr.getUserByWorkNum(shenuser);
 			mindbean.set("SH_LEVEL",level);
 			mindbean.set("SH_MIND", liyou);
 			mindbean.set("DATA_ID",bean.getStr("BM_ID"));
 			mindbean.set("SH_STATUS", 1);
-			mindbean.set("SH_ULOGIN",userbean.getLoginName());
-			mindbean.set("SH_UNAME",userbean.getName());
+			mindbean.set("SH_ULOGIN",userBean.getLoginName());
+			mindbean.set("SH_UNAME",userBean.getName());
 			mindbean.set("SH_UCODE",shenuser);
 			mindbean.set("SH_TYPE", 1);
 			mindbean.set("SH_NODE", nodeid);
@@ -337,9 +335,9 @@ public class NoPassServ extends CommonServ {
 			String bm_code = bean.getStr("BM_CODE");
 			int level = Integer.parseInt(slevel);
 			ParamBean parambean = new ParamBean();
-			parambean.set("examerWorekNum", bm_code);
+			parambean.set("examerUserCode", bm_code);
 			parambean.set("level",level);
-			parambean.set("shrWorekNum", shenuser);
+			parambean.set("shrUserCode", shenuser);
 			parambean.set("flowName", 1);
 			parambean.set("xmId", xmid);
 			
@@ -347,23 +345,17 @@ public class NoPassServ extends CommonServ {
 			List<Bean> list1 = outbean.getList("result");
 			
 			String allman ="";
-			String nextman = "";
 			int nowlevel=level;
 			for (int l=0;l<list1.size();l++) {
-				if(l==0){
-					nextman = list1.get(l).getStr("BMSHLC_SHR");
-				}
+				
 				if(l==list1.size()-1){
 					
-					allman+= list1.get(l).getStr("BMSHLC_SHR");
+					allman+= list1.get(l).getStr("S_USER");
 				}else{
-					allman+= list1.get(l).getStr("BMSHLC_SHR")+",";
+					allman+= list1.get(l).getStr("S_USER")+",";
 				}
 				
 			}
-			String nowslevel = list.get(0).getStr("NODE_ID");
-			 nowlevel = Integer.parseInt(nowslevel);
-			
 			bean.remove("SH_ID");
 			bean.remove("S_CMPY");
 			bean.remove("S_ODEPT");
@@ -387,11 +379,13 @@ public class NoPassServ extends CommonServ {
 					
 					ServDao.save("TS_BMSH_PASS", newBean);
 				}
-				newBean.set("SH_USER", nextman);
-				newBean.set("SH_OTHER", allman);
-				newBean.set("SH_LEVEL",nowlevel);
-				newBean.set("BM_YIYI", bmid);
-				ServDao.save("TS_BMSH_STAY", newBean);
+				Bean newBean1 = new Bean();
+				newBean1.copyFrom(bean);
+				newBean1.set("SH_USER", allman);
+				newBean1.set("SH_OTHER", allman);
+				newBean1.set("SH_LEVEL",nowlevel);
+				newBean1.set("BM_YIYI", bmid);
+				ServDao.save("TS_BMSH_STAY", newBean1);
 			}
 			//添加一个字段用来标识异议   显示图标按钮
 		}
@@ -439,7 +433,6 @@ public class NoPassServ extends CommonServ {
 	        //排序用的 parr存读取th
 	        parr.setQuerySearchWhere(searchWhere);
             LinkedHashMap<String, Bean> cols = new LinkedHashMap<String, Bean>();
-            String s = "";
         	List<Bean> pxdatalist1 = ServDao.finds("TS_BMSH_PX", searchWhere);
         	if(pxdatalist1.size()==0){
         		String where1 = "AND USER_CODE is null ";
@@ -447,7 +440,6 @@ public class NoPassServ extends CommonServ {
         	}
 	        //查询出所有的 待审核记录
 	        OutBean outBean = query(paramBean);
-	        LinkedHashMap<String, Bean> cols1 = outBean.getCols();
 	        for (Bean bean : dataList) {
 			String work_num = bean.getStr("BM_CODE");
 			Bean userBean =getUserInfo1(work_num);

@@ -188,7 +188,8 @@
 			<input type="submit" name="Submit" value="提交">
 			</form>
 			<form id="form4" style="display:none" method="post" action="zgchakan.jsp">
-				<input id = "bmid4" name="bmid4"></input>
+				<input type="text" id = "bmid4" name="bmid4"></input>
+				<input type="submit" name="Submit" value="提交">
 			</form>
 		</div>
 		<!--异议模态窗口  -->

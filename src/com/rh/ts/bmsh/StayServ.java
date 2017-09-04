@@ -110,6 +110,9 @@ public class StayServ extends CommonServ {
 		List<Bean> list1 = ServDao.finds(servId, where1);
 		String user_code = paramBean.getStr("user_code");
 		List<Bean> list = new ArrayList<Bean>();
+		if(list1.size()==0){
+			return new OutBean().setOk("数据为空");
+		}
 		for (Bean bean : list1) {
 			String other = bean.getStr("SH_OTHER");
 			if (other.contains(user_code)) {
@@ -126,17 +129,18 @@ public class StayServ extends CommonServ {
 		String nodeid = "";
 		String levels =""; 
 		ParamBean parambean = new ParamBean();
-		parambean.set("examerWorekNum",list1.get(0).getStr("BM_CODE"));
+		String bmcode = list1.get(0).getStr("BM_CODE");
+		parambean.set("examerUserCode",bmcode);
 		parambean.set("level",0);
-		parambean.set("shrWorekNum", shenuser);
+		parambean.set("shrUserCode", shenuser);
 		parambean.set("flowName", 1);
 		parambean.set("xmId", xmid);
-		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
+		OutBean outbean = ServMgr.act("TS_WFS_APPLY","backFlow",parambean);
 		List<Bean> flowlist = outbean.getList("result");
 		for (Bean bean : flowlist) {
-			if(shenuser.equals(bean.getStr("SHR_WORKNUM"))){
+			if(shenuser.equals(bean.getStr("S_USER"))){
 				levels=bean.getStr("NODE_STEPS");
-				nodeid = bean.getStr("NODE_ID");
+				nodeid = bean.getStr("NODE_NAME");
 			}
 		}
 		// ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化
@@ -165,9 +169,9 @@ public class StayServ extends CommonServ {
 	public Bean update(Bean paramBean){
 		String nodeid = paramBean.getStr("nodeid");
 		
-		String levels = paramBean.getStr("SH_LEVEL");
+		String levels = paramBean.getStr("level");
 		int level = 0;
-		if("".equals(levels)){
+		if(!"".equals(levels)){
 			
 			 level=Integer.parseInt(levels);
 		}
@@ -191,9 +195,9 @@ public class StayServ extends CommonServ {
 				//获取审核人信息 
 				int flowname = 1;
 				ParamBean parambean = new ParamBean();
-				parambean.set("examerWorekNum", bean.getStr("BM_CODE"));
+				parambean.set("examerUserCode", bean.getStr("BM_CODE"));
 				parambean.set("level",level);
-				parambean.set("shrWorekNum", shenuser);
+				parambean.set("shrUserCode", shenuser);
 				parambean.set("flowName", flowname);
 				parambean.set("xmId", xmid);
 				OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
@@ -203,9 +207,9 @@ public class StayServ extends CommonServ {
 				for (int l=0;l<list.size();l++) {
 					
 					if(l==list.size()-1){
-						allman+= list.get(l).getStr("SHR_WORKNUM");
+						allman+= list.get(l).getStr("S_USER");
 					}else{
-						allman+= list.get(l).getStr("SHR_WORKNUM")+",";
+						allman+= list.get(l).getStr("S_USER")+",";
 					}
 					
 				}

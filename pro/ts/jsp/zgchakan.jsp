@@ -42,13 +42,20 @@
 	<% 
 		//获取项目id
 		String bmid = request.getParameter("bmid4");
-	Bean bmbean = ServDao.find("TS_BMLB_BM",bmid);
-	String xm_id = bmbean.getStr("XM_ID");
+		Bean bmbean = ServDao.find("TS_BMLB_BM",bmid);
+		if(bmbean.isEmpty()){
+			return;
+		}
+		String xm_id = bmbean.getStr("XM_ID");
 		Bean xmbean=ServDao.find("TS_XMGL", xm_id);
+		if(xmbean.isEmpty()){return;}
 		String xm_name = xmbean.getStr("XM_NAME");
-		//获取报名管理id
+		//获取项目id
 		String where1 = "AND XM_ID="+"'"+xm_id+"'";
 		List<Bean> bmglList = ServDao.finds("TS_XMGL_BMGL", where1);
+		if(bmglList.size()==0){
+			return;
+		}
 		String bm_id = bmglList.get(0).getStr("BM_ID");
 		String bm_ksxz = bmglList.get(0).getStr("BM_KSXZ");
 		String bm_start = bmglList.get(0).getStr("BM_START");
@@ -75,8 +82,13 @@
 		String user_post =userBean.getStr("USER_POST");
 		String wheregw = "AND POSTION_NAME="+"'"+user_post+"'";
 		List<Bean> gwList = ServDao.finds("TS_ORG_POSTION", wheregw);
-		String pt_type=gwList.get(0).getStr("POSTION_TYPE");
-		String pt_sequnce= gwList.get(0).getStr("POSTION_SEQUENCE");
+		String pt_type="";
+		String pt_sequnce="";
+		if(gwList.size()!=0){
+		 pt_type=gwList.get(0).getStr("POSTION_TYPE");
+		 pt_sequnce= gwList.get(0).getStr("POSTION_SEQUENCE");
+			
+		}
 		
 		%>
 	<div style="padding-left: 90px;width: 90%;text-align: left;">
