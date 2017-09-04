@@ -45,17 +45,29 @@
 		//获取项目设置id
 		String where = "AND XM_SZ_NAME='报名' "+"AND XM_ID="+"'"+xm_id+"'";
 		List<Bean> ksList = ServDao.finds("TS_XMGL_SZ", where);
-		String xm_sz_id = ksList.get(0).getStr("XM_SZ_ID");
+		String xm_sz_id="";
+		if(ksList!=null && ksList.size()>0){
+		 xm_sz_id = ksList.get(0).getStr("XM_SZ_ID");
+		}
 		//获取报名管理id
 		String where1 = "AND XM_SZ_ID="+"'"+xm_sz_id+"'";
 		List<Bean> bmglList = ServDao.finds("TS_XMGL_BMGL", where1);
-		String bm_id = bmglList.get(0).getStr("BM_ID");
-		String bm_ksxz = bmglList.get(0).getStr("BM_KSXZ");
-		String bm_start = bmglList.get(0).getStr("BM_START");
-		String bm_end = bmglList.get(0).getStr("BM_END");
+		String bm_id ="";
+		String bm_ksxz ="";
+		String bm_start ="";
+		String bm_end ="";
+		if(bmglList!=null && bmglList.size()>0){
+		 bm_id = bmglList.get(0).getStr("BM_ID");
+		 bm_ksxz = bmglList.get(0).getStr("BM_KSXZ");
+		 bm_start = bmglList.get(0).getStr("BM_START");
+		 bm_end = bmglList.get(0).getStr("BM_END");
+		}
 		//获取非资格列表
 		String where2 = "AND BM_ID="+"'"+bm_id+"'";
-		List<Bean> fzgbean = ServDao.finds("TS_XMGL_BM_FZGKS", where2);
+		List<Bean> fzgbean =ServDao.finds("TS_XMGL_BM_FZGKS", where2);
+		if(fzgbean!=null && fzgbean.size()>0){
+		 fzgbean = ServDao.finds("TS_XMGL_BM_FZGKS", where2);
+		}
 		//获取用户编码
 		String user_code = userBean.getStr("USER_CODE");
 		//获取用户名称
@@ -224,7 +236,7 @@
 			param["user_cmpy_date"] = "<%=user_cmpy_date%>";
 			param["user_cmpy_date"] = "<%=user_cmpy_date%>";
 			param["xm_id"] = "<%=xm_id%>";
-			FireFly.doAct("TS_BMLB_BM", "addData", param);
+			FireFly.doAct("TS_BMLB_BM", "addData", param,true,false);
 			window.location.href="bm.jsp";
 		    }
 		}
