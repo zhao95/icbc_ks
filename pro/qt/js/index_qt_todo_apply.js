@@ -171,14 +171,11 @@ function setAnnouncementContent() {
             '<tr id="' + gg.GG_ID + '">',
             '   <td class="col-md-8">',
             '       <span style="color: ' + circleColors[i] + ';width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;">●</span>',
-            '       <a href="' + FireFly.getContextPath() + '/qt/jsp/gg.jsp?id=' + gg.GG_ID + '" style="display: inline;" class="gg-title" style="cursor:pointer;">' + gg.GG_TITLE + '</a>',
+            '       <a href="' + FireFly.getContextPath() + '/qt/jsp/gg.jsp?id=' + gg.GG_ID + '"target="_blank" style="display:inline;cursor:pointer;" class="gg-title">' + gg.GG_TITLE + '</a>',
             '   </td>',
             '<td class="col-md-4">' + new Date(gg.S_ATIME).format("yyyy-mm-dd") + '</td>',//yyyy-mm-dd HH:MM
             '</tr>'
         ].join(''));
-        // trEl.find('.gg-title').bind('click', function () {
-        //     alert('test');
-        // });
         trEl.appendTo(tbodyEl);
     }
 
