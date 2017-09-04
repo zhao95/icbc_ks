@@ -227,15 +227,14 @@
 		    var user_mobile = document.getElementById("u_mobile").value;
 			var param={};
 			param["bmCodes"] = bmlb;
-			param["user_code"]="<%=user_code%>";
-			param["user_name"] = "<%=user_name%>";
-			param["user_sex"] = "<%=user_sex%>";
-			param["odept_name"] = "<%=odept_name%>";
-			param["user_office_phone"] = "<%=user_office_phone%>";
-			param["user_mobile"] = user_mobile;
-			param["user_cmpy_date"] = "<%=user_cmpy_date%>";
-			param["user_cmpy_date"] = "<%=user_cmpy_date%>";
-			param["xm_id"] = "<%=xm_id%>";
+			param["USER_CODE"]="<%=user_code%>";
+			param["USER_NAME"] = "<%=user_name%>";
+			param["USER_SEX"] = "<%=user_sex%>";
+			param["ODEPT_NAME"] = "<%=odept_name%>";
+			param["USER_OFFICE_PHONE"] = "<%=user_office_phone%>";
+			param["USER_MOBILE"] = user_mobile;
+			param["USER_CMPY_DATE"] = "<%=user_cmpy_date%>";
+			param["XM_ID"] = "<%=xm_id%>";
 			FireFly.doAct("TS_BMLB_BM", "addData", param,true,false);
 			window.location.href="bm.jsp";
 		    }

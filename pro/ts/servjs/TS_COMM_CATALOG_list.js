@@ -76,6 +76,10 @@ $("a[actcode='refresh']").unbind("mousedown").unbind("click").bind("click",funct
  * 初始化按钮
  */
 _viewer.getBtn("initCatalog").unbind("click").bind("click",function(event) {
+	
+	var _loadbar = new rh.ui.loadbar();
+	_loadbar.show(true);
+	
 	var param = {};
 	
 	var odept = System.getVar("@ODEPT_CODE@");
@@ -86,13 +90,18 @@ _viewer.getBtn("initCatalog").unbind("click").bind("click",function(event) {
 	param["CTLG_MODULE"] = module;
 	
 	if(module == "ROOT"){
-		param["INIT_MODULE"] = "all";
+//		param["INIT_MODULE"] = "all";
+		alert("无目录模块，同步失败！");
+		_loadbar.hideDelayed();
+		return;
 	}
 	
-	var result = FireFly.doAct(_viewer.servId, "initCatalog", param, true);
+	var result = FireFly.doAct(_viewer.servId, "initCatalog", param, false);
     if (result[UIConst.RTN_MSG].indexOf(UIConst.RTN_OK) == 0) {//成功后刷新列表
     	_viewer.refresh();
+    	_loadbar.hideDelayed();
     }
+    
 });
 
 /**
