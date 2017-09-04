@@ -364,23 +364,17 @@ public class XmglServ extends CommonServ {
 		String where1 = paramBean.getStr("where");
 		List<Bean> list = ServDao.finds(servId, where1);
 		List<Bean> SHlist = new ArrayList<Bean>();
-		Boolean show = false;
 		for (Bean bean : list) {
 			String id = bean.getId();
 			// 查询待审核 表 里的other字段判断 是否包含user_code
-			String where = "AND XM_ID=" + "'" + id + "'";
+			String where = "AND XM_ID="+"'"+id+"'"+" AND SH_OTHER like"+"'%"+user_code+"%'";
 			List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", where);
-
-			for (Bean bean2 : staylist) {
-
-				String other = bean2.getStr("SH_OTHER");
-				if (other.contains(user_code)) {
-					show = true;
-				}
-			}
-			if (show) {
+			List<Bean> NOPASSlist = ServDao.finds("TS_BMSH_NOPASS", where);
+			List<Bean> PASSlist = ServDao.finds("TS_BMSH_PASS", where);
+			if(staylist.size()!=0||NOPASSlist.size()!=0||PASSlist.size()!=0){
 				SHlist.add(bean);
 			}
+			
 		}
 		int ALLNUM = SHlist.size();
 		// 计算页数
@@ -407,12 +401,12 @@ public class XmglServ extends CommonServ {
 			if (jieshu <= ALLNUM) {
 				// 循环将数据放入list2中返回给前台
 				for (int i = chushi; i <= jieshu; i++) {
-					list2.add(list.get(i - 1));
+					list2.add(SHlist.get(i - 1));
 				}
 
 			} else {
 				for (int j = chushi; j < ALLNUM + 1; j++) {
-					list2.add(list.get(j - 1));
+					list2.add(SHlist.get(j - 1));
 				}
 			}
 		}

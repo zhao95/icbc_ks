@@ -682,8 +682,23 @@ public class BmlbServ extends CommonServ {
 		String id = paramBean.getStr("bmid");
 		String where = "AND BM_ID="+"'"+id+"'";
 		List<Bean> list  = ServDao.finds("TS_BMLB_BM",where);
+		if(list.size()==0){
+			return new OutBean().setOk("信息为空");
+		}
 		Bean outBean = new Bean();
-		outBean.set("bean", list);
+		 ObjectMapper mapper = new ObjectMapper();    
+	       StringWriter w = new StringWriter();  
+	       try {
+			mapper.writeValue(w, list);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	       outBean.set("list",w.toString());
 		return outBean;
 	}
 	

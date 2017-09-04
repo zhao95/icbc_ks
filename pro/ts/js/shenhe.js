@@ -1,5 +1,5 @@
 var xmid = jq("#xmid").val();
-var user_code = jq("#user_code").val();
+var user_code = System.getVar("@USER_WORK_NUM@");
 //隔一行 进行 背景颜色 渲染
 function rowscolor(table){
 	 var rows = table.getElementsByTagName("tr");  
@@ -187,10 +187,11 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    	var userdata = userinfo.list;
      	     	var userEntity = JSON.parse(userdata);
      	     	var yiyi = pageEntity[i].BM_YIYI;
+     	     	var bmid = pageEntity[i].BM_ID;
      	     	if(yiyi==""){
-     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#userbminfo" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: center"><a onclick = "formsubmit(this)" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
      	     	}else{
-     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#userbminfo" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
      	     		
      	     	}
      	    	for(var j=0;j<pageEntity3.length;j++){
@@ -201,7 +202,6 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    		if(fir==null){
      	    			console.log(userEntity);
      	    			fir = userEntity[0][column];
-     	    			alert(fir);
      	    			if(column=="JOB_LB"){
      	    				fir = pageEntity[i].BM_LB;
      	    			}
@@ -585,6 +585,8 @@ function firall(){
 					  param["checkedid"]=s;
 					  param["radiovalue"]=radiovalue;
 					  param["liyou"]=liyou;
+					  param["xmid"]=xmid;
+					  alert(xmid);
 					  FireFly.doAct("TS_BMSH_NOPASS","update",param);
 					  $('#tiJiao').modal('hide');
 
@@ -730,10 +732,9 @@ function firall(){
 			});
 				//审核明细
 				function formsubmit(obj){
-					var id = "BM_ID"+obj;
-					var bmid = document.getElementById(id).innerHTML;
-					document.getElementById("bmid").value=bmid;
-					$("#form1").submit();
+					var bmid = obj.parentNode.id;
+					document.getElementById("bmid1").value=bmid;
+					document.getElementById("form5").submit();
 				}
 				//导出
 				//定义一个公共变量  当进行条件查询时  将 数据ID放入数组中
@@ -791,11 +792,13 @@ function yiyi(obj){
 	}
 //-------------------------------------------------------------------------------报名详细信息图标
 function form2submit(obj){
-	var a = obj.parentNode.id;
+	var bmid = obj.parentNode.id;
 		var param = {};
-		param["bmid"]=a;
+		param["bmid"]=bmid;
 	var result = FireFly.doAct("TS_BMLB_BM","getSingle",param);
 	var data = result.list;
+	if(data.length!=2){
+	$(obj).attr("data-target","#userbminfo");
 	var pageEntity = JSON.parse(data);
 	 $("#ks_title").text(pageEntity[0].BM_TITLE);
 	 $("#bm_name").text(pageEntity[0].BM_NAME);
@@ -808,6 +811,9 @@ function form2submit(obj){
 		 $("#gender").text("男");
 	 }
 	 $("#belongto").text(pageEntity[0].ODEPT_NAME);
+	}else{
+		 $(obj).attr("data-target","");
+	}
 }
 //左侧全选
 function checkall(obj){

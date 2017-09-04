@@ -1,4 +1,4 @@
-var user_code = $("#user_code").val();
+var user_code = System.getVar("@USER_WORK_NUM@");
 //隔一行 进行 背景颜色 渲染
 function rowscolor(table){
 	 var rows = table.getElementsByTagName("tr");  
@@ -10,115 +10,10 @@ function rowscolor(table){
 	    } 
 }
 
-//下一页 或上一页 按钮 重新  加载数据   传过来 yema1 是 要显示的页码数
-function  backwarddata(user_code,yema1){
-	 //每页条数
-	var select = document.getElementById("yema")
-	 var index = document.getElementById("yema").selectedIndex;
-	var myts = select.options[index].value;
-	//当前选中的页码  移除active
-	$("li.active").removeClass();
-	var s ="yema"+yema1;
-	 $("#"+s).addClass("active");	 
-		//要显示的页码
-		var result =  getAllSelectData(user_code,yema1);
-		//data为json格式字符串
-		var first = (yema1-1)*myts+1;
- 	var data = result.list;
- 	//将json字符串 转换为 json对象
- 	var pageEntity=JSON.parse(data);
- 	//删除thead之外的 tr
- 	$("#ybmtable tbody").html("");
- 	var last = pageEntity.length+first-1;
- 	 for(var i=0;i<pageEntity.length;i++){
-  		var BM_TYPE = pageEntity[i].BM_TYPE;
-			var BM_TITLE = pageEntity[i].BM_TITLE;
-			var BM_XL = pageEntity[i].BM_XL;
-			var BM_MK = pageEntity[i].BM_MK;
-			var BM_LB = pageEntity[i].BM_LB;
-		    var BM_STATE = pageEntity[i].BM_STATE;
-			var BM_STARTDATE = pageEntity[i].BM_STARTDATE;
-			var BM_ENDDATE = pageEntity[i].BM_ENDDATE;
-		    var BM_ID =  pageEntity[i].BM_ID;
-		    var xuhao = first+i;
-		  //资格非资格
-		    var type = "";
-		    var leixng="";
-		    if(BM_LB==""){
-		    	type="非资格";
-		    	leixng=BM_TITLE;
-		    }else{
-		    	type="资格";
-		    	var leixng = BM_TITLE+": "+BM_LB+"-"+BM_XL+"-"+BM_MK+"-"+BM_TYPE; 
-		    }
-  		//为table重新appendtr
-  		if(pageEntity[i].BM_STATE==1){
-  			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">审核中</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
-	     		}else{
-	     		$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">审核中</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a style="color:red" id="chexiao">已撤销</a></td></tr>');	
-	     		}
-  	}  
- 	
-}
-
-
-//将四个下拉框的 条件都算上 进行 分页查询 得出 第几页的数据 进行返回
-function getAllSelectData(user_code,dijiye){
-	 var jb = document.getElementById("jb");
-    var indexjb = jb.selectedIndex;
-    var jbvalue = jb.options[indexjb].value;
-    //第一个下拉框值
-    var type1 =  document.getElementById("gangwei");
- 	var index1 = type1.selectedIndex;
- 	var  value1 = type1.options[index1].value;
- 	//第二个下拉框值
- 	var type2 =  document.getElementById("xulie");
- 	var index2 = type2.selectedIndex;
- 	var  value2 = type2.options[index2].value;
- 	//第三个下拉框值
- 	var type3 =  document.getElementById("mokuai");
- 	var index3 = type3.selectedIndex;
- 	var  value3 = type3.options[index3].value;
- 	
- 	var param={};
- 	var id = document.getElementById("xmid").value;
- 	param["id"] = id;
- 	param["user_code"]=user_code;
- 		//每页条数
-		var select = document.getElementById("yema");
-		 var index = document.getElementById("yema").selectedIndex;
-		var myts = select.options[index].value;
-		//重新计算 页码
-		param["nowpage"]=dijiye;
-		param["shownum"]=myts;
- 	if(value1=="" && jbvalue=="全部"){
- 		param["where"]="";
- 	}else if(value1=="" && jbvalue!=""){
- 		param["where"] = "AND BM_TYPE="+"'"+jbvalue+"'";
- 	}
- 	else if(value1!="" && value2=="" && jbvalue!="全部"){
- 		
- 	param["where"]="AND BM_LB="+"'"+value1+"' "+"AND BM_TYPE="+"'"+jbvalue+"'";
- 	
- 	}else if(value1!="" && value2=="" && jbvalue=="全部"){
- 		param["where"] = "AND BM_LB="+"'"+value1+"'";
- 	}else if(value1!="" && value2!="" && value3!="" && jbvalue=="全部"){
- 		param["where"]="AND BM_LB="+"'"+value1+"' "+"AND BM_XL="+"'"+value2+"' "+"AND BM_MK="+"'"+value3+"'";
- 	}else if(value1!="" && value2!="" && value3!="" && jbvalue!="全部"){
- 		param["where"]="AND BM_LB="+"'"+value1+"' "+"AND BM_XL="+"'"+value2+"' "+"AND BM_MK="+"'"+value3+"' "+"AND BM_TYPE="+"'"+jbvalue+"'";
- 	}else if(value1!="" && value2!="" && value3=="" && jbvalue!="全部"){
- 		param["where"]="AND BM_LB="+"'"+value1+"' "+"AND BM_XL="+"'"+value2+"' "+"AND BM_TYPE="+"'"+jbvalue+"'";
- 	}else if(value1!="" && value2!="" && value3=="" && jbvalue=="全部"){
- 		param["where"]="AND BM_LB="+"'"+value1+"' "+"AND BM_XL="+"'"+value2+"'";
- 	}
- 	var result = FireFly.doAct("TS_BMLB_BM","getSelectedData",param);
- 	return result
-}
-
 
 //所有下拉框onchang进行  查询数据  资格非资格 进行筛选
-function selectdata(user_code){
-	var jb = document.getElementById("jb");
+function selectdata(user_code,yema){
+		var jb = document.getElementById("jb");
         var indexjb = jb.selectedIndex;
         var jbvalue = jb.options[indexjb].value;
         //第一个下拉框值
@@ -140,7 +35,7 @@ function selectdata(user_code){
 		 var index = document.getElementById("yema").selectedIndex;
 		var myts = select.options[index].value;
 		//重新计算 页码
-		param["nowpage"]=1;
+		param["nowpage"]=yema;
 		param["shownum"]=myts;
      	if(value1=="" && jbvalue=="全部"){
      		param["where"]="";
@@ -164,7 +59,7 @@ function selectdata(user_code){
      	}
      	var result = FireFly.doAct("TS_BMLB_BM","getSelectedData",param);
      	var result2 = FireFly.doAct("TS_BMLB_BM","getSelectData",param);
-		var first =1;
+		
 		//data为json格式字符串
 		var data2 = result2.list;
      	var data = result.list;
@@ -180,13 +75,14 @@ function selectdata(user_code){
      	var pageEntity2 = JSON.parse(data2);
      	$("#ybmtable tbody").html("");
      	  for(var i=0;i<pageEntity.length;i++){
+     		 var first =(yema-1)*myts+1;
      		 var BM_TYPES = pageEntity[i].BM_TYPE;
      		 var BM_TYPE="";
      		 if(BM_TYPES=="1"){
      			BM_TYPE="初级";
-     		 }else if(BM_TYPE=="2"){
+     		 }else if(BM_TYPES=="2"){
      			 BM_TYPE="中级";
-     		 }else{
+     		 }else if(BM_TYPES=="3"){
      			 BM_TYPE="高级";
      		 }
 			var BM_TITLE = pageEntity[i].BM_TITLE;
@@ -197,7 +93,7 @@ function selectdata(user_code){
 			var BM_STARTDATE = pageEntity[i].BM_STARTDATE;
 			var BM_ENDDATE = pageEntity[i].BM_ENDDATE;
 		    var BM_ID =  pageEntity[i].BM_ID;
-     		first=i+1;
+     		first = first+i;
      		 //资格非资格
 		    var type = "";
 		    var leixng = "";
@@ -220,7 +116,7 @@ function selectdata(user_code){
      		//为table重新appendtr
 		    //已提交异议  
 		    if(yiyistate==1){
-		    	$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a href="#" onclick="chakan('+i+')" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议详情</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    	$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a href="#" onclick="chakan('+i+')" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议详情</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    	
 		    }else{
 		    	//没有提交异议  且没有撤销
@@ -228,19 +124,19 @@ function selectdata(user_code){
 		    		//判断审核状态
 		    		//审核未通过
 		    		if(sh_state==2){
-		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}else if(sh_state==1){
 		    			//审核通过 没有异议  没有撤销
-		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}else if(sh_state==0){
 		    			//待审核
-		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}else{
 		    			//审核未通过  没有手动审核
-		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}
 		    	}else{
-		    		$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">审核中</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" id="chakan">查看</a>&nbsp&nbsp<a style="color:red" id="chexiao">已撤销</a></td></tr>');	
+		    		$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">审核中</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a style="color:red" id="chexiao">已撤销</a></td></tr>');	
 		    	}
 		    }
      	  
@@ -271,7 +167,9 @@ function selectdata(user_code){
      	
 			 $("#fenyeul").append(' <li id="yema'+last+'" onclick="backward('+last+')"><a  href="#">&raquo;</a></li>');
      	}	 
-     	
+     	$("li.active").removeClass();
+    	var s ="yema"+yema;
+    	 $("#"+s).addClass("active");	
      	var table = document.getElementById("ybmtable");  
      	 rowscolor(table);
      	
@@ -297,18 +195,18 @@ function chexiao(i){
 	}else{
 		return false;
 	}
-	selectdata(user_code);
+	selectdata(user_code,1);
 }
 
 //级别下拉框onchange事件
 function jibieonchange(){
-	selectdata(user_code);
+	selectdata(user_code,1);
 }
 
 //每页多少条 添加onchange事件
 function fenyeselect(){	
 	//跟 级别 按钮 的onchange时间一样都要 筛选所有条件下的数据
-	selectdata(user_code);
+	selectdata(user_code,1);
 }
 
 //上一页 按钮
@@ -320,10 +218,7 @@ function forward(){
 	}else{
 		//要显示的页码
 		var yema1 = yema-1;
-		backwarddata(user_code,yema1);
-		//table tr  背景色
-		var table = document.getElementById("ybmtable");   
-		rowscolor(table);
+		selectdata(user_code,yema1);
 	}
 }
 
@@ -338,10 +233,7 @@ function backward(last){
 	}else{
 		//要显示的页码数
 		 var yema1 = yema-1+2;
-		backwarddata(user_code,yema1);
-		//table tr  背景色
-		var table = document.getElementById("ybmtable");   
-		rowscolor(table);
+		 selectdata(user_code,yema1);
      	  
 	}
 }
@@ -350,11 +242,7 @@ function chaxun(i){
 	var id = "yema"+i;
 	//点击第几页
 	var ym = document.getElementById(id).innerText;
-	//传入 要显示的页码数即可
-	backwarddata(user_code,ym);
-	//table tr  背景色
-	var table = document.getElementById("ybmtable");   
-	rowscolor(table);
+	 selectdata(user_code,ym);
 } 
 
 //报名时根据类型跳转不同页面
@@ -394,7 +282,7 @@ $('#ayishen').click(function(){
 	document.getElementById("yishenimage").src="/ts/image/u7733.png";
 	document.getElementById("keshenimage").src="/ts/image/u1131.png";
 	document.getElementById("yishen").style.color="LightSeaGreen";
-	selectdata(user_code);
+	selectdata(user_code,1);
 	var table = document.getElementById("ybmtable");  
    rowscolor(table);
    
@@ -505,7 +393,7 @@ function selectcreate(){
  	            $next.find("option").first().attr('selected', true)
  	            $("#" + opt.targets[nextIndex+1]).find("option").attr('selected', false)
  	            $("#" + opt.targets[nextIndex+1]).find("option").first().attr('selected', true)
- 	           selectdata(user_code);
+ 	           selectdata(user_code,1);
  	        });
  	    }
  	    var $this = $("#gangwei");
@@ -629,7 +517,7 @@ function selectcreate(){
 	 param["bmid"]=bmid
 	 param["liyou"]=liyou;
 	 FireFly.doAct("TS_BMSH_NOPASS","yiyi",param);
-	 selectdata(user_code);
+	 selectdata(user_code,1);
 }
  
  //报名项目列表调用(初始化后展示)
@@ -675,7 +563,7 @@ function selectcreate(){
  }
  function chakan(obj){
 	 var bmid = document.getElementById("baomingid"+obj).innerHTML;
-		document.getElementById("bmid").value=bmid;
+		document.getElementById("bmid4").value=bmid;
 		$("#form4").submit();
  }
  

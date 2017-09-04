@@ -9,6 +9,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.CommonServ;
+import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ServDao;
 /**
  * 保存当前用户 的 审核排序
@@ -20,7 +21,7 @@ public class PaixuServ extends CommonServ {
 	 *对th进行 排序保存
 	 * @param paramBean
 	 */
-	public void paixu(Bean paramBean){
+	public Bean paixu(Bean paramBean){
 		String user_code = paramBean.getStr("user_code");
 		String xuhao = paramBean.getStr("xuhao");
 		String name = paramBean.getStr("name");
@@ -42,6 +43,7 @@ public class PaixuServ extends CommonServ {
 		dataBean.set("PX_NAME",name);
 		dataBean.set("USER_CODE",user_code);
 		ServDao.save("TS_BMSH_PX", dataBean);
+		 return new OutBean().setOk("保存成功");
 	}
 	/**
 	 * 所有的排序

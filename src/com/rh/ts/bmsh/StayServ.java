@@ -140,7 +140,6 @@ public class StayServ extends CommonServ {
 	public Bean update(Bean paramBean){
 		String s = paramBean.getStr("checkedid");
 		String xmid = paramBean.getStr("xmid");
-		String bm_code = paramBean.getStr("bm_code");
 		String shenuser = "";
 		UserBean userBean = Context.getUserBean();
 			if(userBean.isEmpty()){
@@ -148,6 +147,7 @@ public class StayServ extends CommonServ {
 			}else{
 				shenuser=userBean.getStr("USER_CODE");
 			}
+			shenuser="admin";
 		String slevel = "";
 		//被选中的id
 		String[] ss = s.split(",");
@@ -164,7 +164,7 @@ public class StayServ extends CommonServ {
 				int level = Integer.parseInt(slevel);
 				int flowname = 1;
 				ParamBean parambean = new ParamBean();
-				parambean.set("examerWorekNum", bm_code);
+				parambean.set("examerWorekNum", bean.getStr("BM_CODE"));
 				parambean.set("level",level);
 				parambean.set("shrWorekNum", shenuser);
 				parambean.set("flowName", flowname);
@@ -175,19 +175,18 @@ public class StayServ extends CommonServ {
 				String allman ="";
 				String nextman = "";
 				for (int l=0;l<list.size();l++) {
-					if(l==0){
-						nextman = list.get(l).getStr("BMSHLC_SHR");
-					}
+					
 					if(l==list.size()-1){
-						
-						allman+= list.get(l).getStr("BMSHLC_SHR");
+						allman+= list.get(l).getStr("SHR_WORKNUM");
 					}else{
-						allman+= list.get(l).getStr("BMSHLC_SHR")+",";
+						allman+= list.get(l).getStr("SHR_WORKNUM")+",";
 					}
 					
 				}
-				String nowslevel = list.get(0).getStr("NODE_ID");
-				int nowlevel = Integer.parseInt(nowslevel);
+				String  nowlevelS = list.get(0).getStr("NODE_STEPS");
+				
+				int nowlevel = Integer.parseInt(nowlevelS);
+				String SH_NODE = list.get(0).getStr("NODE_ID");
 				//
 				//审核通过
 			if(state.equals("1")){
@@ -221,27 +220,25 @@ public class StayServ extends CommonServ {
 				if(newlist.size()!=0){
 					Bean newBean = newlist.get(0);
 					newBean.copyFrom(bean);
-					newBean.set("SH_LEVEL", nowlevel+1);
 					newBean.set("SH_USER", shenuser);
 					if(level==1){
 						//最后一级审核
 						newBean.set("SH_OTHER",shenuser);
 					}else{
 						
-						newBean.set("SH_OTHER",allman);
+						newBean.set("SH_OTHER",allman+","+shenuser);
 					}
 					ServDao.save("TS_BMSH_PASS", newBean);
 				}else{
 					Bean newBean = new Bean();
 					newBean.copyFrom(bean);
-					newBean.set("SH_LEVEL", nowlevel+1);
 					newBean.set("SH_USER", shenuser);
 					if(level==1){
 						//最后一级审核
 						newBean.set("SH_OTHER",shenuser);
 					}else{
 						
-						newBean.set("SH_OTHER",allman);
+						newBean.set("SH_OTHER",allman+","+shenuser);
 					}
 					ServDao.save("TS_BMSH_PASS", newBean);
 				}
@@ -261,7 +258,6 @@ public class StayServ extends CommonServ {
 				bean.remove("ROW_NUM_");
 				newBean.copyFrom(bean);
 				//只有 当前人能让审核再次进行下去
-				newBean.set("SH_LEVEL",nowlevel+1);
 				newBean.set("SH_USER",shenuser);
 				newBean.set("SH_OTHER",shenuser);
 				ServDao.save("TS_BMSH_NOPASS", newBean);
@@ -284,6 +280,7 @@ public class StayServ extends CommonServ {
 			mindbean.set("SH_UNAME",userBean.getName());
 			mindbean.set("SH_UCODE",shenuser);
 			mindbean.set("SH_TYPE", 1);
+			mindbean.set("SH_NODE",SH_NODE);
 			ServDao.save("TS_COMM_MIND",mindbean);
 			}
 		}
@@ -486,7 +483,7 @@ public class StayServ extends CommonServ {
 	  				}else{
 	  					user_code1=userBean1.getStr("USER_CODE");
 	  				}
-	  				
+	  				user_code1="admin";
 	  		 parr.copyFrom(paramBean);
 	  		 parr.setServId("TS_BMSH_PX");
 	        String servId = paramBean.getServId();
@@ -512,7 +509,6 @@ public class StayServ extends CommonServ {
 	       	 
 		        //排序用的 parr存读取th
 		        parr.setQuerySearchWhere(searchWhere);
-	            OutBean outBean1 = query(parr);
 	            LinkedHashMap<String, Bean> cols = new LinkedHashMap<String, Bean>();
 	            String s = "";
 	        	List<Bean> pxdatalist1 = ServDao.finds("TS_BMSH_PX", searchWhere);

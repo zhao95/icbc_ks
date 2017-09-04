@@ -3,6 +3,7 @@ package com.rh.ts.bmsh;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.codehaus.jackson.JsonProcessingException;
@@ -10,20 +11,27 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
+import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
+import com.rh.core.serv.util.ExportExcel;
+import com.rh.core.serv.util.ServUtils;
 /**
  * 没有通过的审核
  * @author shiyun
  *
  */
 public class NoPassServ extends CommonServ {
-	
+	 /**每次获取数据条数*/
+    private static final int ONETIME_EXP_NUM = 5000;
+    /**excel最大行数*/
+    private static final int EXCEL_MAX_NUM = 65536;
 	/**
 	 * 获取那一页的记录  返回 
 	 * @param paramBean
@@ -120,13 +128,17 @@ public class NoPassServ extends CommonServ {
 	 * 修改 审核状态 
 	 * @param paramBean
 	 */
-	public void update(Bean paramBean){
+	public OutBean update(Bean paramBean){
 		String s = paramBean.getStr("checkedid");
-		String xmid = paramBean.getStr("xm_id");
-		String slevel = paramBean.getStr("level");
-		int level = Integer.parseInt(slevel);
-		String bm_code = "888802713";
-		String shenuser = "888800172";
+		String xmid = paramBean.getStr("xmid");
+		String shenuser ="";
+		UserBean userBean = Context.getUserBean();
+		if(userBean.isEmpty()){
+			 return new OutBean().setError("ERROR:user_code 为空");
+		}else{
+			shenuser=userBean.getStr("USER_CODE");
+		}
+		shenuser="admin";
 		//被选中的id
 		String[] ss = s.split(",");
 		String liyou = paramBean.getStr("liyou");
@@ -135,12 +147,16 @@ public class NoPassServ extends CommonServ {
 		for (String id : ss) {
 			if(!"".equals(id)){
 				//获取下级参数
+				Bean bean = ServDao.find("TS_BMSH_NOPASS", id);
 				String allman ="";
 				String nextman = "";
-				int nowlevel=level;
+				String levels = bean.getStr("SH_LEVEL");
+				int level=Integer.parseInt(levels);
+				int nowlevel=0;
 				if(level!=1){
+					
 				ParamBean parambean = new ParamBean();
-				parambean.set("examerWorekNum", bm_code);
+				parambean.set("examerWorekNum", bean.getStr("BM_CODE"));
 				parambean.set("level",level);
 				parambean.set("shrWorekNum", shenuser);
 				parambean.set("flowName", 1);
@@ -149,20 +165,18 @@ public class NoPassServ extends CommonServ {
 				List<Bean> list = outbean.getList("result");
 				
 				for (int l=0;l<list.size();l++) {
-					if(l==0){
-						nextman = list.get(l).getStr("BMSHLC_SHR");
-					}
+					
 					if(l==list.size()-1){
 						
-						allman+= list.get(l).getStr("BMSHLC_SHR");
+						allman+= list.get(l).getStr("SHR_WORKNUM");
 					}else{
-						allman+= list.get(l).getStr("BMSHLC_SHR")+",";
+						allman+= list.get(l).getStr("SHR_WORKNUM")+",";
 					}
 					
 				}
-			 nowlevel = list.size();
+				String  nowlevelS = list.get(0).getStr("NODE_STEPS");
+				 nowlevel = Integer.parseInt(nowlevelS);
 				}
-			Bean bean = ServDao.find("TS_BMSH_NOPASS", id);
 			bean.remove("SH_ID");
 			bean.remove("S_CMPY");
 			bean.remove("S_ODEPT");
@@ -180,8 +194,7 @@ public class NoPassServ extends CommonServ {
 			if(level==1){
 				//不用再去待审核中直接去  审核通过中 且数据无改动
 			}else{
-				newBean.set("SH_USER", nextman);
-				newBean.set("SH_OTHER", allman);
+				newBean.set("SH_OTHER", allman+","+shenuser);
 				newBean.set("SH_LEVEL", nowlevel);
 				ServDao.save("TS_BMSH_STAY", newBean);
 			}
@@ -189,7 +202,7 @@ public class NoPassServ extends CommonServ {
 			//审核明细表中插入此次审核数据
 			Bean mindbean = new Bean();
 			UserBean userbean = UserMgr.getUserByWorkNum(shenuser);
-			mindbean.set("SH_LEVEL",slevel);
+			mindbean.set("SH_LEVEL",level);
 			mindbean.set("SH_MIND", liyou);
 			mindbean.set("DATA_ID",bean.getStr("BM_ID"));
 			mindbean.set("SH_STATUS", 1);
@@ -200,6 +213,7 @@ public class NoPassServ extends CommonServ {
 			ServDao.save("TS_COMM_MIND",mindbean);
 		}
 		}
+		return new OutBean().setOk();
 	}
 	
 	/**
@@ -331,4 +345,220 @@ public class NoPassServ extends CommonServ {
 		}
 		return new OutBean().setOk();
 	}
+	  /**
+     * 提供导出Excel
+     * @param paramBean 参数信息
+     * @return 执行结果
+     */
+  	@Override
+    public OutBean exp(ParamBean paramBean) {
+  		String servid= paramBean.getServId();
+  		 ParamBean parr = new ParamBean();
+  		UserBean userBean1 = Context.getUserBean();
+  				String user_code1 = "";
+  				if(userBean1.isEmpty()){
+  					 return new OutBean().setError("ERROR:user_code 为空");
+  				}else{
+  					user_code1=userBean1.getStr("USER_CODE");
+  				}
+  				user_code1="admin";
+  		 parr.copyFrom(paramBean);
+  		 parr.setServId("TS_BMSH_PX");
+        String servId = paramBean.getServId();
+        ServDefBean serv = ServUtils.getServDef(servId);
+        long count = 0;
+        long times = 0;
+        paramBean.setQueryPageShowNum(ONETIME_EXP_NUM); // 设置每页最大导出数据量
+        String searchWhere="";
+        beforeExp(paramBean); //执行监听方法
+        if (paramBean.getId().length() > 0) { //支持指定记录的导出（支持多选）
+             searchWhere = " and " + serv.getPKey() + " in ('" 
+                    + paramBean.getId().replaceAll(",", "','") + "')";
+            paramBean.setQuerySearchWhere(searchWhere);
+        }
+        //所有
+        List<Bean> dataList = ServDao.finds(servid, searchWhere);
+        
+        	List<Bean> finalList = new ArrayList<Bean>();
+        
+	      	//判断user_code 是否为空  若为空则 导出所有
+        	
+       	 	 searchWhere = " AND USER_CODE="+"'"+user_code1+"'";
+       	 
+	        //排序用的 parr存读取th
+	        parr.setQuerySearchWhere(searchWhere);
+            LinkedHashMap<String, Bean> cols = new LinkedHashMap<String, Bean>();
+            String s = "";
+        	List<Bean> pxdatalist1 = ServDao.finds("TS_BMSH_PX", searchWhere);
+        	if(pxdatalist1.size()==0){
+        		String where1 = "AND USER_CODE is null ";
+        		 pxdatalist1 = ServDao.finds("TS_BMSH_PX", where1);
+        	}
+	        //查询出所有的 待审核记录
+	        OutBean outBean = query(paramBean);
+	        LinkedHashMap<String, Bean> cols1 = outBean.getCols();
+	        for (Bean bean : dataList) {
+			String work_num = bean.getStr("BM_CODE");
+			Bean userBean =getUserInfo1(work_num);
+			Bean newBean = new Bean();
+			//for循环排序bean
+			for(Bean pxbean : pxdatalist1){
+				String aa = pxbean.getStr("PX_NAME");
+				String namecol = pxbean.getStr("PX_COLUMN");
+				String pxcol = namecol;
+				 Bean colBean = new Bean();
+				 
+				 colBean.set("SAFE_HTML", "");
+				 colBean.set("ITEM_LIST_FLAG", "1");
+				 colBean.set("ITEM_CODE",namecol);
+				 colBean.set("EN_JSON","");
+				 colBean.set("ITEM_NAME",aa);
+				 cols.put(pxcol, colBean);
+				 
+				//字段
+				//如果 有值 赋值
+				 String name = bean.getStr(namecol);
+				if(!"".equals(bean.getStr(namecol))){
+					newBean.set(namecol, bean.getStr(namecol));
+				}
+				if(!"".equals(userBean.getStr(namecol))){
+					newBean.set(namecol, userBean.getStr(namecol));
+					name = userBean.getStr(namecol);
+				}
+				if("".equals(bean.getStr(namecol))&&"".equals(userBean.getStr(namecol))){
+					newBean.set(namecol,"");
+				}
+				if("".equals(name)){
+					
+				if("JOB_LB".equals(namecol)){
+					name = bean.getStr("BM_LB");
+	    			}
+	    			if("JOB_XL".equals(namecol)){
+	    				name = bean.getStr("BM_XL");
+	    			}
+	    			if("TONGYI".equals(namecol)){
+	    				name=bean.getStr("BM_CODE");
+	    			}
+	    			String BM_TYPE = "";
+	    			if("BM_TYPE".equals(namecol)){
+	    				if("1".equals(aa)){
+	    					BM_TYPE="初级";
+	    				}else if("2".equals(aa)){
+	    					BM_TYPE="中级";
+	    				}else{
+	    					BM_TYPE="高级";
+	    				}
+	    				name = BM_TYPE;
+	    			}
+	    			newBean.set(namecol, name);
+				}
+				newBean.set("_ROWNUM_","");
+				newBean.set("ROWNUM_","");
+			}
+			finalList.add(newBean);
+			
+		}
+        ExportExcel expExcel = new ExportExcel(serv);
+        try {
+        	 //查询出 要导出的数据
+	            count = outBean.getCount();
+            //总数大于excel可写最大值
+            if (count > EXCEL_MAX_NUM) {
+                return new OutBean().setError("导出数据总条数大于Excel最大行数：" + EXCEL_MAX_NUM);
+            }
+            //导出第一次查询数据
+            paramBean.setQueryPageNowPage(1); //导出当前第几页
+            afterExp(paramBean, outBean);   //执行导出查询后扩展方法
+        //查询出表头  查询出 对应数据    hashmaplist
+            expExcel.createHeader(cols);
+            expExcel.appendData1(finalList, paramBean);
+            // 存在多页数据
+            if (ONETIME_EXP_NUM < count) {
+                times = count / ONETIME_EXP_NUM;
+                // 如果获取的是整页数据
+                if (ONETIME_EXP_NUM * times == count && count != 0) {
+                    times = times - 1;
+                        }
+                for (int i = 1; i <= times; i++) {
+                    paramBean.setQueryPageNowPage(i + 1); // 导出当前第几页
+                    OutBean out = query(paramBean);
+                    afterExp(paramBean, out); // 执行导出查询后扩展方法
+                    expExcel.appendData(out.getDataList(), paramBean);
+                    }
+                }
+            expExcel.addSumRow();
+        } catch (Exception e) {
+            log.error("导出Excel文件异常" + e.getMessage(), e);
+        } finally {
+            expExcel.close();
+            }
+        return new OutBean().setOk();
+        }
+  	/**
+	 * 获取用户信息
+	 */
+	public Bean getUserInfo1(String s){
+		Bean returnBean = new Bean();
+		Bean outBean = new Bean();
+		try{
+		//根据人力编码获取人力信息
+		UserBean userBean = UserMgr.getUser(s);
+	    
+    	//获取当前机构;
+    	DeptBean oneodeptcode1= userBean.getODeptBean();
+    	String codes = "";
+    	if(oneodeptcode1!=null){
+    		//获取所有逗号分隔的字符串
+    		codes = getusercodes(oneodeptcode1,s);
+    	}
+    		String[] codesarr = codes.split(",");
+    	
+    		int j=6;
+    	for(int i=codesarr.length-1;i>=0;i--){
+    		//最后一个 deptcodename
+    		String evname = codesarr[i];
+    		j--;
+    		outBean.set("LEVEL"+j,evname);
+    	}
+    
+    	//性别
+    	int user_sex = userBean.getSex();
+    	if(user_sex==0){
+    		outBean.set("USER_SEX","男");
+    	}else{
+    		outBean.set("USER_SEX","女");
+    	}
+    	//入行时间
+    	String date = userBean.getStr("USER_CMPY_DATE");
+    	outBean.set("USER_CMPY_DATE",date);
+    	//办公电话
+    	String office_phone = userBean.getOfficePhone();
+    	outBean.set("USER_OFFICE_PHONE", office_phone);
+    	//手机号码
+    	String user_phone = userBean.getMobile();
+    	outBean.set("USER_MOBILE",user_phone);
+    	//职务层级
+    	String cengji = userBean.getPost();
+    	outBean.set("USER_POST_LEVEL",cengji);
+		}catch(Exception exception){
+			
+		}
+		
+		return returnBean;
+	}
+	/**
+	 * 获取所有部门信息
+	 * @param oneodeptcode1
+	 * @return
+	 */
+	  public String getusercodes(DeptBean oneodeptcode1,String codes){
+  		DeptBean newBean= oneodeptcode1.getParentDeptBean();
+  		if(newBean!=null){
+  			String s = newBean.getName()+",";
+  			return  codes +=getusercodes(newBean,s);
+  		}else{
+  			
+  			return "";
+  		}
+  }
 }
