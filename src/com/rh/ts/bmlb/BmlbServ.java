@@ -1,6 +1,7 @@
 package com.rh.ts.bmlb;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+
+
+
+
+
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -18,6 +31,8 @@ import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.BeanUtils;
+import com.rh.core.base.TipException;
+import com.rh.core.comm.FileMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -78,19 +93,41 @@ public class BmlbServ extends CommonServ {
 			ServDao.save("TS_OBJECT", objBean);
 			
 			ParamBean param=new ParamBean();
-			param.set("examerWorekNum",user_code);
+			param.set("examerUserCode",user_code);
 			param.set("level",0);
 			param.set("xmId",xm_id);
 			param.set("flowName",1);
-			param.set("shrWorekNum",user_code);
+			param.set("shrUserCode",user_code);
 			OutBean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
-			
+			List<Bean> blist = (List<Bean>) out.get("result");
+			String allman="";
+			String node_id=""; 
+			String sh_user="";
+			String sh_level=""; 
+			if(blist!=null && blist.size()>0){
+			 node_id= blist.get(0).getStr("NODE_ID");
+			 sh_user= blist.get(blist.size()-1).getStr("SHR_WORKNUM");
+			 sh_level= blist.get(0).getStr("NODE_STEPS");
+				for (int l=0;l<blist.size();l++) {
+					if(l==0){
+						allman = blist.get(l).getStr("SHR_WORKNUM");
+					}
+					else{
+						allman+= blist.get(l).getStr("SHR_WORKNUM")+",";
+					}
+					
+				}
+			}
 			//添加到审核表中
 			Bean shBean =new Bean();
 			shBean.set("XM_ID",xm_id);
 			shBean.set("BM_ID",bm_id);
 			shBean.set("BM_NAME",user_name);
 			shBean.set("BM_CODE",user_code);
+			shBean.set("SH_NODE",node_id);//目前审核节点
+			shBean.set("SH_LEVEL",sh_level);//目前审核层级
+			shBean.set("SH_USER",sh_user);//当前办理人
+			shBean.set("SH_OTHER",allman);//其他办理人
 			ServDao.save("TS_BMSH_STAY", shBean);
 			
 		}
@@ -134,7 +171,10 @@ public class BmlbServ extends CommonServ {
 					String  kslb_id= (String) job.get("ID");
 					String wherelbk = "AND KSLBK_NAME="+"'"+kslb_name+"'"+" AND KSLBK_XL="+"'"+kslb_xl+"'"+" AND KSLBK_MK="+"'"+kslb_mk+"'"+" AND KSLBK_TYPE="+"'"+kslb_type+"'";
 					List<Bean> lbkList = ServDao.finds("TS_XMGL_BM_KSLBK", wherelbk);
-					String kslbk_id= lbkList.get(0).getStr("KSLBK_ID");
+					String kslbk_id="";
+					if(lbkList!=null && lbkList.size()>0){
+						 kslbk_id= lbkList.get(0).getStr("KSLBK_ID");
+					}
 					//获取到考试名称
 					String back_All=kslb_name+"-"+kslb_xl+"-"+kslb_mk+"-"+kslb_type;
 					JSONArray yzgzArg=(JSONArray) yzgzstrjson.get(kslb_id);
@@ -197,7 +237,7 @@ public class BmlbServ extends CommonServ {
 					Bean bmbean = ServDao.create(servId, beans);
 					//获取到报名主键id
 					String bm_id= bmbean.getStr("BM_ID");
-					
+					//验证信息
        				Bean yzBean = new Bean();
        				yzBean.set("BM_ID",bm_id);
        				yzBean.set("AD_NAME",back_All);
@@ -214,13 +254,28 @@ public class BmlbServ extends CommonServ {
 					ServDao.save("TS_OBJECT", objBean);
 					
 					ParamBean param=new ParamBean();
-					param.set("examerWorekNum","000786238");
+					param.set("examerUserCode",user_code);
 					param.set("level",0);
 					param.set("xmId",xm_id);
 					param.set("flowName",1);
-					param.set("shrWorekNum","000786238");
+					param.set("shrUserCode",user_code);
 					OutBean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
-					System.out.println(out);
+					List<Bean> blist = (List<Bean>) out.get("result");
+					String allman="";
+					String node_name=""; 
+					if(blist!=null && blist.size()>0){
+					 node_name= blist.get(0).getStr("NODE_NAME");
+					for (int l=0;l<blist.size();l++) {
+						if(l==0){
+							allman = blist.get(l).getStr("S_USER");
+						}
+						else{
+							allman+= blist.get(l).getStr("S_USER")+",";
+						}
+						
+					}
+					}
+					
 					//添加到审核表中
 					Bean shBean =new Bean();
 					shBean.set("XM_ID",xm_id);
@@ -232,6 +287,10 @@ public class BmlbServ extends CommonServ {
 					shBean.set("BM_XL",kslb_xl);
 					shBean.set("BM_MK",kslb_mk);
 					shBean.set("BM_TYPE",kslb_type);
+					shBean.set("SH_NODE",node_name);//目前审核节点
+//					shBean.set("SH_LEVEL",sh_level);//目前审核层级
+					shBean.set("SH_USER",allman);//当前办理人
+					shBean.set("SH_OTHER",allman);//其他办理人
 					if(count==0){
 						ServDao.save("TS_BMSH_PASS", shBean);
 					}if(count==1){
@@ -241,12 +300,12 @@ public class BmlbServ extends CommonServ {
 							ServDao.save("TS_BMSH_NOPASS", shBean);
 						}
 					}if(count==2){
-							ServDao.save("TS_BMSH_PASS", shBean);
+							ServDao.save("TS_BMSH_STAY", shBean);
 					}if(count==3){
 						if(ad_result.equals("1")){
 								ServDao.save("TS_BMSH_PASS", shBean);
 						}if(ad_result.equals("2")){
-							ServDao.save("TS_BMSH_STAY", shBean);
+							ServDao.save("TS_BMSH_NOPASS", shBean);
 						}
 					}
 				  }
@@ -268,7 +327,7 @@ public class BmlbServ extends CommonServ {
 		String wheremk = "AND KSLB_NAME="+"'"+LB+"'"+" AND KSLB_XL="+"'"+XL+"'"+" AND KSLB_MK="+"'"+MK+"'"+" AND XM_ID="+"'"+XM_ID+"'";
 		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", wheremk);
 		String KSLB_TYPE="";
-		if(list.size()>0){
+		if(list!=null && list.size()>0){
 			for(int i=0;i<list.size();i++){
 				if(i==0){
 					KSLB_TYPE=list.get(i).getStr("KSLB_TYPE");
@@ -648,4 +707,126 @@ public class BmlbServ extends CommonServ {
 			
 		       return outBean;
 	}
+	/**
+	 * 获取上诉理由  异议原因
+	 * @param paramBean
+	 * @return
+	 */
+	public Bean getLiyou(Bean paramBean){
+		Bean outBean = new Bean();
+		String bmid = paramBean.getStr("bmid");
+		Bean databean = ServDao.find("TS_BMLB_BM", bmid);
+		outBean.set("liyou", databean.getStr("BM_SS_REASON"));
+		return outBean;
+	}
+	/**
+	 * 获取单条  根据id
+	 */
+	public Bean getSingle(Bean paramBean){
+		String id = paramBean.getStr("bmid");
+		String where = "AND BM_ID="+"'"+id+"'";
+		List<Bean> list  = ServDao.finds("TS_BMLB_BM",where);
+		if(list.size()==0){
+			return new OutBean().setOk("信息为空");
+		}
+		Bean outBean = new Bean();
+		 ObjectMapper mapper = new ObjectMapper();    
+	       StringWriter w = new StringWriter();  
+	       try {
+			mapper.writeValue(w, list);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	       outBean.set("list",w.toString());
+		return outBean;
+	}
+	
+	 /**
+     * 通过excl文件获取试卷相关信息
+     *
+     * @param fileId 文件id
+     */
+    public OutBean getDataFromXls(Bean paramBean) throws IOException, BiffException {
+        List<Bean> result = new ArrayList<>();
+        String fileId=paramBean.getStr("fileId");
+        String servid = paramBean.getStr("serv_id");
+        String where = "AND SERV_ID="+"'"+servid+"'";
+        List<Bean> listcolumn = ServDao.finds("SY_SERV_ITEM",where);
+        //查询表字段和注释
+        /*String where = "AND "*/
+        Bean fileBean = FileMgr.getFile(fileId);
+        InputStream in = FileMgr.download(fileBean);
+        Workbook workbook = Workbook.getWorkbook(in);
+        try {
+        	//查找服务名称
+        	String whereser = "AND SERV_ID="+"'"+servid+"'";
+        	List<Bean> serlist = ServDao.finds("SY_SERV",whereser);
+            Sheet sheet1 = workbook.getSheet(serlist.get(0).getStr("SERV_NAME"));
+            int rows = sheet1.getRows();
+            List<String> newlist = new ArrayList<String>();
+            for (int i = 0; i < rows; i++) {
+            	if(i==0){
+            		//获取第一行单元格
+            		Cell[] cells = sheet1.getRow(0);
+            		for (Cell cell : cells) {
+            			for (Bean columnbean : listcolumn) {
+            				String s = cell.getContents();
+            				if(cell.getContents().equals(columnbean.getStr("ITEM_NAME"))){
+            					newlist.add(columnbean.getStr("ITEM_CODE"));
+            				}
+            				}
+					}
+            		
+            	}
+                if (i != 0) {
+                    //获取字段对应的名字  和字段  循环判断 是否对应 然后赋值  将 其组成key value
+                    //获的排序好的字段  的list
+                	Cell[] cells = sheet1.getRow(i);
+                    Bean bean = new Bean();
+                    for(int j=0;j<cells.length;j++){
+                    	
+                    	if (!StringUtils.isEmpty(cells[j].getContents())) {
+                    		bean.set(newlist.get(j),cells[j].getContents());
+                    	}
+                    }
+                    result.add(bean);
+                 
+                }
+            }
+        } catch (Exception e) {
+            throw new TipException("Excel文件解析错误，请校验！");
+        } finally {
+            workbook.close();
+        }
+       
+        OutBean outBean = saveFromExcel(result,servid);
+        return outBean;
+    }
+    
+    /**
+     * 从excel文件中读取试卷信息，并保存
+     *
+     * @param paramBean paramBean
+     * @return outBean
+     */
+    public OutBean saveFromExcel(List<Bean> list,String servid){
+        OutBean outBean = new OutBean();
+    	 Bean queryBean = new Bean();
+    	 int count = 0;
+    	 if(list.size()!=0){
+         for (Bean bean : list) {
+        	 queryBean.copyFrom(bean);
+             if (ServDao.count(servid, queryBean) <= 0) {
+                 ServDao.save(servid, bean);
+             }
+             count++;
+         }
+    	 }
+         return outBean.setCount(count).setMsg("添加成功").setOk();
+}
 }

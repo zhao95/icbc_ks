@@ -17,11 +17,6 @@
 <!-- 获取后台数据 -->
 <%@ include file="/sy/base/view/inHeader.jsp"%>
 <%@ page import="com.rh.core.serv.ServDao"%>
-<%@ page import="com.rh.core.serv.ServMgr"%>
-<%@ page import="com.rh.core.serv.ParamBean"%>
-<%@ page import="com.rh.ts.pvlg.mgr.GroupMgr"%>
-<%@ page import="com.rh.core.base.Bean"%>
-<%@ page import="java.text.SimpleDateFormat"%>
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
@@ -43,19 +38,18 @@
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 
 <body class="hold-transition skin-black sidebar-mini">
-<%String bmid = request.getParameter("bmid"); %>
 	<div class="" style="padding: 10px">
-		<a href="index_qt.jsp"><image style="padding-bottom:10px"
+		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
 				src="/ts/image/u1155.png" id="shouye"></image></a> <span
 			style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;我的报名</span>
 	</div>
-	<table id="table" style="margin-left: 10px; margin-top: 20px; background-color: white; width: 98%">
-	
 	<div  style="padding-left: 50px;padding-top:10px">
 		<a href="index_qt.jsp"><image style="padding-bottom:10px"
 				src="/ts/image/u1011.png" id="shouye"></image></a> <span
 			style="color: black; font-size: 25px">&nbsp;&nbsp;&nbsp;&nbsp;审核明细</span>
 	</div>
+	<table id="table" style="margin-left: 10px; margin-top: 20px; background-color: white; width: 98%">
+	
 	<thead id="tem" class="">
 						
 		<tr style="backGround-color:WhiteSmoke; height: 30px">
@@ -67,37 +61,41 @@
 			<th style="width: 13%; text-align: center">审核状态</th>
 			<th style="width: 13%; text-align: center">审核理由</th>
 			<th style="width: 13%; text-align: center">审核地址</th>
-			
 		</tr>
 	</thead>
 	<tbody>
-	<%-- <%
-	ParamBean param = new ParamBean();
-	param.set("bmid", bmid);
-	OutBean bean = ServMgr.act("", "getxxlist", param);
-	List<Bean> list = bean.getDataList();
-	for(int i=0;i<list.size();i++){
-	int j = i+1;
+	 <%
+	 String bmid = request.getParameter("bmid4");
+	 out.print(bmid);
+	 String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
+	 List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
+	 for(int i=0;i<list.size();i++){
+		Bean bean = list.get(i);
+		int j = i+1;
+		String shdate = bean.getStr("S_ATIME");
+		String shr = bean.getStr("SH_UNAME");
+		String shlog = bean.getStr("SH_ULOGIN");
+		String jibie = bean.getStr("SH_LEVEL");
+		String state = bean.getStr("SH_STATE");
+		String liyou = bean.getStr("SH_MIND");
+		String address = bean.getStr("SH_UCODE");
 	%>
-		<tr>
-		<td><%=j %></td><td><%= %></td><td><%= %></td><td><%= %></td><td><%= %></td><td><%= %></td><td><%= %></td><td><%= %></td>
-		</tr>
-		<% }%> --%>
+		 <tr>
+		<td><%=j %></td><td><%=shdate %></td><td><%=shr %></td><td><%=shlog %></td><td><%=jibie %></td><td><%=state %></td><td><%=liyou %></td><td><%=address %></td>
+		</tr> 
+		<%}%>
 	</tbody>
 	</table>
 	<script type="text/javascript">
-	$(function(){
+	 $(function(){
 	var table = document.getElementById("table");		
-	rowscolor(table);
-	});
+	}); 
 	</script>
-<script src="<%=CONTEXT_PATH%>/shenhe.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
 	<!-- FastClick -->
-	<script src="<%=CONTEXT_PATH%>/baoming.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
 	<!-- AdminLTE App -->
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>

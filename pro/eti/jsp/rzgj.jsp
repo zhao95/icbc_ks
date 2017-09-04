@@ -40,7 +40,8 @@ function post(URL, PARAMS) {        
 	    var temp = document.createElement("form");        
 	    temp.action = URL;        
 	    temp.method = "post";        
-	    temp.style.display = "none";        
+	    temp.style.display = "none"; 
+	    temp.target="_blank";       
 	    for (var x in PARAMS) {        
 	        var opt = document.createElement("textarea");        
 	        opt.name = x;        
@@ -210,13 +211,13 @@ function post(URL, PARAMS) {        
 			<%
 				//获证信息
 				String serID = "TS_ETI_CERT_QUAL";
-				//用户的工号USER_WORK_NUM				
-				String STU_PERSON_ID=userBean.getWorkNum();
-				String where = "and STU_PERSON_ID='" + STU_PERSON_ID +"'";
+				//用户的USER_CODE				
+				String USER_CODE=userBean.getCode();
+				String where = "and STU_PERSON_ID='" + USER_CODE +"'";
 				List<Bean> dataList = ServDao.finds(serID, where);				
 				//用户信息查询
 				String serviceID="SY_ORG_USER_INFO_SELF";
-				List <Bean> stu=ServDao.finds(serviceID,"and USER_WORK_NUM='"+STU_PERSON_ID+"'");
+				List <Bean> stu=ServDao.finds(serviceID,"and USER_CODE='"+USER_CODE+"'");
 				//入职日期
 				String USER_CMPY_DATE="";
 				String CMPY_DATE="";
@@ -1097,8 +1098,8 @@ function post(URL, PARAMS) {        
 			//追赶，同步，落后
 			int pre=0, after =0, other =-1;
 			for (int i = 0;i<num; i++) {				
-				String USER_WORK_NUM= lists.get(i).getStr("USER_WORK_NUM");
-				String where3="and STU_PERSON_ID ='"+USER_WORK_NUM+"'";
+				String STU_PERSON_ID= lists.get(i).getStr("USER_CODE");
+				String where3="and STU_PERSON_ID ='"+STU_PERSON_ID+"'";
 				List<Bean> list3 = ServDao.finds("TS_ETI_CERT_QUAL",where3);
 				 if (dataList.size()>list3.size()) {
 					 after++;					

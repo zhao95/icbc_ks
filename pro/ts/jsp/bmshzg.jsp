@@ -65,8 +65,7 @@
      #box{position:absolute;display:none;opacity:0.9;background:#fff;text-align: center;top:0;}
     </style>
 
-<% String xmid = "0nTjlmash9mbO5sAiPbS";
-String user_code = userBean.getStr("USER_CODE");%>
+<% String xmid = request.getParameter("zgtz");%>
 	<div style="padding: 10px">
 		<a href="index_qt.jsp"><image style="padding-bottom:10px"
 				src="/ts/image/u1155.png" id="shouye"></image></a> <span
@@ -114,12 +113,7 @@ String user_code = userBean.getStr("USER_CODE");%>
 						<td style="width:18%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:50%" id="xm1" type="text"></input></td>
 						<td style="width:18%;text-align:right">审核级数&nbsp;&nbsp;<input style="height:30px;width:50%" id="shjs" type="text"></input></td>
 						<td style="width:30%;text-align:center">人力资源编码&nbsp;&nbsp;<input  style="height:30px;width:50%" id="rlzybm1" type="text"></input></td>
-						<td style="width:1%;text-align:left"><select id = "zhuangtai1" onchange="ztcx(待审核)">
-				            <option selected="selected">全部</option>
-				            <option value="进行中">进行中</option>
-				            <option value="已结束">已结束</option>
-				            </select>
-				        </td>
+						
 				        
 				        <td style="width:12%;text-align:left;"><button class ="btn" style="color:white;height:30px;width:35%;background:DarkTurquoise" onclick="xzcu(1)"id = "chaxun">查询</button></td>
 					</tr>
@@ -186,12 +180,18 @@ String user_code = userBean.getStr("USER_CODE");%>
 			<table style="margin-top:10px">
 			<tr>
 				<td style="width:10%;text-align:center"><button  class="btn btn-success"  data-toggle="modal"  style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheB()" id = "shenheB">审核</button></td>
-				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="impdata('TS_BMSH_PASS')" id = "import">文件批量导入</button></td>
+				<td style="width:10%;text-align:left"><button id="TS_BMSH_PASS" class="btn btn-success" data-toggle="modal" data-target="#excleupload" onclick="importdata(2)"  style="border:none;color:white;height:30px;width:80%;background:lightseagreen"  id = "import2">文件批量导入</button></td>
 				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="exportdata('TS_BMSH_PASS','checkboxb')" id = "export2">文件批量导出</button></td>
 				<td style="width:10%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
 				<td style="width:15%"></td>
 				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm2" type="text"></input></td>
 						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm2" type="text"></input></td>
+						<td style="width:1%;text-align:left"><select id = "zhuangtai1" onchange="ztcx(审核通过)">
+				            <option selected="selected">全部</option>
+				            <option value="进行中">进行中</option>
+				            <option value="已结束">已结束</option>
+				            </select>
+				        </td>
 				        <td style="width:8%;text-align:left"><button class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(2)"id = "chaxun">查询</button></td>
 			</tr>
 			</table>
@@ -245,12 +245,18 @@ String user_code = userBean.getStr("USER_CODE");%>
 			<table style="margin-top:10px">
 			<tr>
 				<td style="width:10%;text-align:center"><button  class="btn btn-success"  data-toggle="modal"  style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheC()" id = "shenheC">审核</button></td>
-				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="impdata('TS_BMSH_NOPASS')" id = "import">文件批量导入</button></td>
+				<td style="width:10%;text-align:left"><button id="TS_BMSH_NOPASS" class="btn btn-success" data-toggle="modal" data-target="#excleupload" onclick="importdata(3)"  style="border:none;color:white;height:30px;width:80%;background:lightseagreen" id = "import3">文件批量导入</button></td>
 				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="exportdata('TS_BMSH_NOPASS','checkboxc')" id = "export3">文件批量导出</button></td>
 				<td style="width:10%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
 						<td style="width:15%"></td>
 				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm3" type="text"></input></td>
 						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm3" type="text"></input></td>
+						<td style="width:1%;text-align:left"><select id = "zhuangtai2" onchange="ztcx(未通过)">
+				            <option selected="selected">全部</option>
+				            <option value="进行中">进行中</option>
+				            <option value="已结束">已结束</option>
+				            </select>
+				        </td>
 				        <td style="width:8%;text-align:left"><button class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(3)"id = "chaxun">查询</button></td>
 			</tr>
 			</table>
@@ -484,8 +490,8 @@ String user_code = userBean.getStr("USER_CODE");%>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-			<form id="form1" style="display:none" method="post" action="bmshmx.jsp">
-				<input id = "bmid" name="shmx"></input>
+			<form id="form5" style="display:none" method="post" action="bmshmx.jsp">
+				<input id = "bmid4" name="bmid4"></input>
 			</form>
 			<form id="form2" style="display:none" method="post" action="baomingglf.jsp">
 				<input id = "fzgtz" name="fzgtz"></input>
@@ -493,7 +499,6 @@ String user_code = userBean.getStr("USER_CODE");%>
 		
 		<input type="hidden" id="xmid" value="<%=xmid %>"/>
 		<input type="hidden" id="dijige">
-		<input type="hidden" id = "user_code" value="<%=user_code %>"/>
 	
 	
 	

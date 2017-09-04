@@ -34,11 +34,19 @@
        folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
+	<style type="text/css">.a table tr{height:40px;padding-left: 10px;}</style>
+	<style type="text/css">.a table td{padding-left: 20px;}</style>
+	<style type="text/css">.b table tr{height:30px;}</style>
+	<style type="text/css">.zgks table td{padding-left: 5px;}</style>
+<!-- 遮罩层 -->
+	<style type="text/css">     
+    .mask {       
+            position: absolute; top: 0px; filter: alpha(opacity=60); background-color: #777;     
+            z-index: 1002; left: 0px;     
+            opacity:0.5; -moz-opacity:0.5;     
+        }     
+	</style>  
 <body class="hold-transition skin-black sidebar-mini">
-	<style>.a table tr{height:40px;padding-left: 10px;}</style>
-	<style>.a table td{padding-left: 20px;}</style>
-	<style>.b table tr{height:30px;}</style>
-	<style>.zgks table td{padding-left: 5px;}</style>
 	<% 
 		//获取项目id
 		String xm_id = request.getParameter("zgtz");
@@ -47,13 +55,20 @@
 		//获取报名管理id
 		String where1 = "AND XM_ID="+"'"+xm_id+"'";
 		List<Bean> bmglList = ServDao.finds("TS_XMGL_BMGL", where1);
-		String bm_id = bmglList.get(0).getStr("BM_ID");
-		String bm_ksxz = bmglList.get(0).getStr("BM_KSXZ");
-		String bm_start = bmglList.get(0).getStr("BM_START");
-		String bm_end = bmglList.get(0).getStr("BM_END");
-		String bm_name = bmglList.get(0).getStr("BM_NAME");
+		String bm_id = "";
+		String bm_ksxz = "";
+		String bm_start = "";
+		String bm_end = "";
+		String bm_name = "";
+		if(bmglList!=null && bmglList.size()>0){
+		 bm_id = bmglList.get(0).getStr("BM_ID");
+		 bm_ksxz = bmglList.get(0).getStr("BM_KSXZ");
+		 bm_start = bmglList.get(0).getStr("BM_START");
+		 bm_end = bmglList.get(0).getStr("BM_END");
+		 bm_name = bmglList.get(0).getStr("BM_NAME");
+		}
 		//获取用户编码
-		String user_code = userBean.getStr("USER_WORK_NUM");
+		String user_code = userBean.getStr("USER_CODE");
 		//获取用户名称
 		String user_name = userBean.getStr("USER_NAME");
 		//获取用户性别
@@ -70,12 +85,18 @@
 		String user_post =userBean.getStr("USER_POST");
 		String wheregw = "AND POSTION_NAME="+"'"+user_post+"'";
 		List<Bean> gwList = ServDao.finds("TS_ORG_POSTION", wheregw);
-		String pt_type=gwList.get(0).getStr("POSTION_TYPE");
-		String pt_sequnce= gwList.get(0).getStr("POSTION_SEQUENCE");
-		
+		String pt_type="";
+		String pt_sequnce= "";
+		if(gwList!=null && gwList.size()>0){
+		 pt_type=gwList.get(0).getStr("POSTION_TYPE");
+		 pt_sequnce= gwList.get(0).getStr("POSTION_SEQUENCE");
+		}
 		//获取跨序列的类型列表    
-		String where2 = "AND KSLB_NAME<>"+"'"+pt_type+"'"+" AND KSLB_XL<>"+"'"+pt_sequnce+"'"+" AND XM_ID="+"'"+xm_id+"'";
-		List<Bean> zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
+		String where2 = " AND XM_ID="+"'"+xm_id+"'";
+		List<Bean> zgList= ServDao.finds("TS_XMGL_BM_KSLB", where2);
+		if(zgList!=null && zgList.size()>0){
+		 zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
+		}
 		%>
 	<div style="padding-left: 90px;width: 90%;text-align: left;">
 			<img alt="中国工商银行" src="<%=CONTEXT_PATH%>/qt/img/u3148.png"> <img alt="考试系统"src="<%=CONTEXT_PATH%>/qt/img/u3376.png">
@@ -239,9 +260,9 @@
       				</div>
        		<div style="height: 100px;padding: 20px;">
        			
-       			<button  onclick="checky()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">1.资格验证</button>
+       			<button id="zgyzbt" onclick="checky()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">1.资格验证</button>
        			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-       			<button class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#tiJiao" onclick="tijiao()">2.提交报名</button>
+       			<button id="tjbt" class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#tiJiao" onclick="tijiao()">2.提交报名</button>
        			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	
        			<button  onclick="goBack()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">返回</button>	
        		</div>
@@ -261,7 +282,7 @@
 					</h5>
 				</div>
 				<div class="modal-body zgks">
-					<table border="1" style="width: 100%;" id="tabletjId">
+					<table border="1" style="width: 100%;"  id="tabletjId">
 	       			<tr style="background-color: #d9eeeb;padding-left: 5px;">
 	   					<td width="10%"></td>
 	   					<td width="15%">岗位类别</td>
@@ -374,6 +395,22 @@
 	 $(function(){ 
 		 typeId(obj);
 	 });
+	 function idHidden(){
+	    //获得本序列表格行数
+		var zgtabObj = document.getElementById("tableid");
+	    var zgrows = zgtabObj.rows.length;
+	  	//获得跨序列表格行数
+		var tjtabObj = document.getElementById("tablehang");
+		var tjrows = tjtabObj.rows.length;
+		//获取资格验证按钮对象
+		var zgyzbt = document.getElementById("zgyzbt");
+		//获取提交按钮对象
+		var tjbt = document.getElementById("tjbt");
+		if(zgrows<2 && tjrows<2){
+			zgyzbt.style.display = "none";
+			tjbt.style.display = "none";
+		}
+	 }
 	//模块改变事件
 	function typeId(obj){
 		var tab = document.getElementById("tableid");
@@ -386,7 +423,7 @@
 		param["pt_type"]="<%=pt_type%>";
 		param["pt_sequnce"]="<%=pt_sequnce%>";
 		param["xm_id"]="<%=xm_id%>";
-		var ww= FireFly.doAct("TS_BMLB_BM", "getMkvalue", param);
+		var ww= FireFly.doAct("TS_BMLB_BM", "getMkvalue", param,true,false);
 		hh= ww.list;
 		var tyArray = hh.split(",");
 		var select = document.getElementById("lxid");
@@ -424,19 +461,15 @@
 	
 	<script type="text/javascript">
 	function deletec(){
-// 		var tab = document.getElementById("tablehang");
-// 		var kslbArray=document.getElementById("checkboxaa");
-// 		var kslxArray = document.getElementsByName("checkname1");
-// 			for(var i=0;i<kslxArray.length;i++){
-// 				for(var j=0;j<kslbArray.length;j++){
-// 		     		if(kslxArray[i].value==kkslbArray[j].value){
-// 		     			kslxArray[i].disabled=false;
-// 							var j = delObj.parentNode.parentNode.rowIndex;
-// 							tab.deleteRow(j);
-// 		     		}
-		     		
-// 				}
-// 			}
+			var checkArray = document.getElementsByName("checkboxaa");
+			var kslxArray = document.getElementsByName("checkname1");
+			for(var j=0;j<checkArray.length;j++){
+				for(var i=0;i<kslxArray.length;i++){
+		     		if(kslxArray[i].value==checkArray[j]){
+		     			kslxArray[i].disabled=false;
+		     		}
+				}
+			}
 		    
 		}
 	//跨序列资格考试选择数量上限
@@ -517,7 +550,7 @@
 		       tbody=document.getElementById("goods");
 		       var ntr = tbody.insertRow();
 		       ntr.innerHTML=
-		       '<td ><input checked="checked" type="checkbox" onchange="change2(this)" name="checkboxaa"  value="'+kslb_id+'"></td>'+
+		       '<td ><input checked="checked" type="checkbox" onchange="change2(this)" name="checkboxaa"></td>'+
 		       '<td >'+kslb_name+'</td>'+
 		       '<td >'+kslb_xl+'</td>'+
 		       '<td >'+kslb_mk+'</td>'+
@@ -588,7 +621,11 @@
 		bminfo['BM_STARTDATE'] = '<%=bm_start%>';
 		bminfo['BM_ENDDATE'] = '<%=bm_end%>';
 // 		xkArg.push(yk);
-		var neAry=xkArg.concat(yk);
+		var neAry=xkArg;
+		if(yk.ID){
+			neAry=xkArg.concat(yk);	
+		}
+		//数组去重
 		for(var i=0; i < neAry.length; i++) {
 		    for(var j=i+1;j< neAry.length; j++) {
 		        if(neAry[i].ID == neAry[j].ID) {
@@ -652,7 +689,13 @@
    			}
    		}
      	var param = {};
-		var neAry=xkArg.concat(yk);
+// 		xkArg.push(yk);
+		var neAry;
+		var neAry=xkArg;
+		if(yk.ID){
+			neAry=xkArg.concat(yk);	
+		}
+		
 		for(var i=0; i < neAry.length; i++) {
 		    for(var j=i+1;j< neAry.length; j++) {
 		        if(neAry[i].ID == neAry[j].ID) {
@@ -676,10 +719,11 @@
 		if(ryl_mobile==""){
 			alert("手机号码不能为空");
 		}else{
-		 	var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param);
+		 	var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param,true,false);
 		 	console.log(JSON.stringify(BM_ID.list));
-	 		window.location.href="bm.jsp";
 		}
+	 	window.location.href="bm.jsp";
+	
 		
 }
 	</script>

@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ -->
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.rh.core.serv.ServDao" %>
 <%@ page import="com.rh.core.base.Bean" %>
@@ -10,17 +11,17 @@
 	String title = ks.getStr("GG_TITLE");
 	String content = ks.getStr("GG_CONTENTS");
 	String dept = DictMgr.getName("SY_ORG_DEPT",ks.getStr("S_DEPT"));
-    String sAtime = ks.getStr("S_ATIME");
+    String sAtime = ks.getStr("S_ATIME").substring(0,19);
 %>
 
 <html>
   <head>
     <title>公告详情</title>
-  	<link href="<%=urlPath %>/qt/css/jquery-ui-themes.css" rel="stylesheet" type="text/css">
-   	<link href="<%=urlPath %>/qt/css/axure_rp_page.css" rel="stylesheet" type="text/css">
-   	<link href="<%=urlPath %>/qt/css/styles.css" rel="stylesheet" type="text/css">
-    <link href="<%=urlPath %>/qt/css/styles1.css" rel="stylesheet" type="text/css">
-    </head>
+  	<link href="<%=urlPath %>/qt/css/jquery-ui-themes.css" rel="stylesheet" type="text/css"/>
+   	<link href="<%=urlPath %>/qt/css/axure_rp_page.css" rel="stylesheet" type="text/css"/>
+   	<link href="<%=urlPath %>/qt/css/styles.css" rel="stylesheet" type="text/css"/>
+    <link href="<%=urlPath %>/qt/css/styles1.css" rel="stylesheet" type="text/css"/>
+  </head>
     <body>
       <div class="" id="base">
       <!-- Unnamed (矩形) -->
@@ -80,10 +81,10 @@
       </div>
        <!-- Unnamed (图像) -->
       <div class="ax_default image" id="u3561">
-        <img class="img " id="u3561_img" src="<%=urlPath %>/qt/img/u1182.png">
-        <div class="text" id="u3562" style="display: none; visibility: hidden;">
-          <p><span></span></p>
-        </div>
+	       	 <img class="img " id="u3561_img" src="<%=urlPath %>/qt/img/u1182.png">
+	        <div class="text" id="u3562" style="display: none; visibility: hidden;">
+	          <p><span></span></p>
+	        </div>
       </div>
 
       <!-- Unnamed (矩形) -->

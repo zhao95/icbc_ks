@@ -266,6 +266,66 @@ public class ExportExcel {
         }
 
     }
+    /**
+     * 填充列表数据   排序专用  。。。。。。
+     * @param paramBean 参数Bean
+     * @param dataList 数据列表
+     */
+    public void appendData1(List<Bean> dataList, ParamBean paramBean) {
+        initSpecItem(dataList, colList);
+
+        try {
+            strFormat = new WritableCellFormat(
+                    new WritableFont(WritableFont.createFont("微软简仿宋"), 12)); // 设置字体
+            strFormat.setWrap(true); // 自动换行
+            strFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+
+            // 添加数据体
+            for (Bean data : dataList) {
+                rowNum++;
+                addRow1(rowNum, data);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+
+    }
+    /**
+     * 
+     * @param rowNum 行号
+     * @param rowData 行数据
+     * @throws WriteException Excel操作错误
+     */
+    private void addRow1(int rowNum,
+            Bean rowData) throws WriteException {
+        int y = 0;
+        for (String key : colList.keySet()) {
+        	
+            Bean col = colList.get(key);
+            if (col.getInt("ITEM_LIST_FLAG") != Constant.YES_INT) {
+                continue;
+            }
+
+            if (key.endsWith("__NAME")) { // 默认为字符串
+                String cellData = rowData.getStr(key);
+                addCell(rowNum, y, cellData);
+                y++;
+                continue;
+            }
+
+           /* Bean itemBean = this.servDefBean.getItem(key);
+            if (itemBean.getStr("ITEM_FIELD_TYPE").equals(Constant.ITEM_FIELD_TYPE_NUM)) {
+
+                Double cellData = rowData.getDouble(col.getStr("ITEM_CODE"));
+                addCell(rowNum, y, cellData, itemBean.getStr("ITEM_FIELD_LENGTH"));
+            } else {
+            }*/
+            String cellData = rowData.getStr(col.getStr("ITEM_CODE"));
+            addCell(rowNum, y, cellData);
+            y++;
+        }
+    }
+    
 
     /**
      * 
@@ -277,6 +337,7 @@ public class ExportExcel {
             Bean rowData) throws WriteException {
         int y = 0;
         for (String key : colList.keySet()) {
+        	
             Bean col = colList.get(key);
             if (col.getInt("ITEM_LIST_FLAG") != Constant.YES_INT) {
                 continue;
@@ -295,8 +356,8 @@ public class ExportExcel {
                 Double cellData = rowData.getDouble(col.getStr("ITEM_CODE"));
                 addCell(rowNum, y, cellData, itemBean.getStr("ITEM_FIELD_LENGTH"));
             } else {
-                String cellData = rowData.getStr(col.getStr("ITEM_CODE"));
-                addCell(rowNum, y, cellData);
+            	String cellData = rowData.getStr(col.getStr("ITEM_CODE"));
+            	addCell(rowNum, y, cellData);
             }
             y++;
         }

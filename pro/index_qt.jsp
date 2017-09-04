@@ -349,39 +349,39 @@
 								<!-- 进度条 -->
 								<div id="jdtMain">
 									<div id="upDiv">
-										<div style="left: -2%">
+										<div style="left: -15px">
 											报名
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 7%">
+										<div style="left: 47px">
 											人工审核
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 19%">
+										<div style="left: 128px">
 											结果公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 31%">
+										<div style="left: 210px">
 											考场安排
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 43%">
+										<div style="left: 292px">
 											辖内公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 55%">
+										<div style="left: 372px">
 											总行公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 70%">
+										<div style="left: 470px">
 											考试
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 79%">
+										<div style="left: 535px">
 											成绩公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 90%">
+										<div style="left: 615px">
 											认证公示
 											<div class="upSX"></div>
 										</div>
@@ -389,15 +389,15 @@
 									<br />
 									<div id="jdtDivOut" class="progress">
 										<div id="jdtDivInner1" class="progress-bar"
-											style="background-color: #f0f0f0"></div>
+											style="background-color: blue"></div>
 										<div id="jdtDivInner2" class="progress-bar"
-											style="background-color: #f0f0f0"></div>
+											style="background-color: #70c0b3"></div>
 										<div id="jdtDivInner3" class="progress-bar divColor"
-											style="background-color: #f0f0f0"></div>
+											style="background-color: red"></div>
 										<div id="jdtDivInner4" class="progress-bar divColor"
-											style="background-color: #f0f0f0"></div>
+											style="background-color: #70c0b3"></div>
 										<div id="jdtDivInner5" class="progress-bar divColor"
-											style="background-color: #f0f0f0"></div>
+											style="background-color: blue"></div>
 										<div id="jdtDivInner6" class="progress-bar"
 											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner7" class="progress-bar"
@@ -407,28 +407,28 @@
 									</div>
 
 									<div id="downDiv">
-										<div style="left: 2%;">
+										<div style="left: 15px;">
 											<div class="downSX">|</div>
 											<span>提交报名</span><br /> <span>自动审核</span><br /> <span>异议</span>
 
 										</div>
-										<div style="left: 16%">
+										<div style="left: 110px">
 											<div class="downSX">|</div>
 											异议
 										</div>
-										<div style="left: 28%">
+										<div style="left: 190px">
 											<div class="downSX">|</div>
 											异议
 										</div>
-										<div style="left: 40%"  id ="jk_sp" >
+										<div style="left: 270px"  id ="jk_sp" >
 											<div class="downSX" >|</div>
 											借考
 										</div>
-										<div style="left: 50%">
+										<div style="left: 340px">
 											<div class="downSX">|</div>
 											<span>考场调整</span><br><span id ="qj_sp">请假</span>
 										</div>
-										<div style="left: 61%">
+										<div style="left: 415px">
 											<div class="downSX">|</div>
 											打印准考证
 										</div>
@@ -533,7 +533,7 @@
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title" style="display: block;">
 									通知公告
-									<a href="/qt/jsp/todo.jsp" class="index-list-more-a">
+									<a href="/qt/jsp/ggInfo.jsp" class="index-list-more-a" target="_blank">
 										更多
 										<span style="color:red;">&gt;</span>
 									</a>
@@ -542,30 +542,7 @@
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
 								<table class="table no-border">
-									<tr>
-										<td>
-											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #398daf;">
-												●
-											</span>
-											关于使用正规浏览器...</td>
-										<td>2017-05-31</td>
-									</tr>
-									<tr>
-										<td>
-											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #b4dbc0;">
-												●
-											</span>
-											个人对公初级专业资...</td>
-										<td>2017-05-21</td>
-									</tr>
-									<tr>
-										<td>
-											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #ff0000;">
-												●
-											</span>
-											综合中级专业资格认</td>
-										<td>2017-05-11</td>
-									</tr>
+									<tbody></tbody>
 								</table>
 							</div>
 							<!-- /.box-body -->

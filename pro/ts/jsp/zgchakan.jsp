@@ -41,14 +41,21 @@
 	<style>.zgks table td{padding-left: 5px;}</style>
 	<% 
 		//获取项目id
-		String bmid = request.getParameter("bmid");
-	Bean bmbean = ServDao.find("TS_BMLB_BM",bmid);
-	String xm_id = bmbean.getStr("XM_ID");
+		String bmid = request.getParameter("bmid4");
+		Bean bmbean = ServDao.find("TS_BMLB_BM",bmid);
+		if(bmbean.isEmpty()){
+			return;
+		}
+		String xm_id = bmbean.getStr("XM_ID");
 		Bean xmbean=ServDao.find("TS_XMGL", xm_id);
+		if(xmbean.isEmpty()){return;}
 		String xm_name = xmbean.getStr("XM_NAME");
-		//获取报名管理id
+		//获取项目id
 		String where1 = "AND XM_ID="+"'"+xm_id+"'";
 		List<Bean> bmglList = ServDao.finds("TS_XMGL_BMGL", where1);
+		if(bmglList.size()==0){
+			return;
+		}
 		String bm_id = bmglList.get(0).getStr("BM_ID");
 		String bm_ksxz = bmglList.get(0).getStr("BM_KSXZ");
 		String bm_start = bmglList.get(0).getStr("BM_START");
@@ -75,8 +82,13 @@
 		String user_post =userBean.getStr("USER_POST");
 		String wheregw = "AND POSTION_NAME="+"'"+user_post+"'";
 		List<Bean> gwList = ServDao.finds("TS_ORG_POSTION", wheregw);
-		String pt_type=gwList.get(0).getStr("POSTION_TYPE");
-		String pt_sequnce= gwList.get(0).getStr("POSTION_SEQUENCE");
+		String pt_type="";
+		String pt_sequnce="";
+		if(gwList.size()!=0){
+		 pt_type=gwList.get(0).getStr("POSTION_TYPE");
+		 pt_sequnce= gwList.get(0).getStr("POSTION_SEQUENCE");
+			
+		}
 		
 		%>
 	<div style="padding-left: 90px;width: 90%;text-align: left;">
@@ -166,12 +178,12 @@
 	      						  lbname = bmbean.getStr("BM_LB");
 	      						 xlname= bmbean.getStr("BM_XL");
 	      						 mkname = bmbean.getStr("BM_MK");
-	      						 String type = bmbean.getStr("BM_TYPE");
-	      						 if("1".equals(type)){
+	      						 String jibietype = bmbean.getStr("BM_TYPE");
+	      						 if("1".equals(jibietype)){
 	      							 jb="初级";
-	      						 }else if("2".equals("type")){
+	      						 }else if("2".equals(jibietype)){
 	      							 jb="中级";
-	      						 }else{
+	      						 }else if("3".equals(jibietype)){
 	      							 jb="高级";
 	      						 }
 	      						 
@@ -180,8 +192,10 @@
 	      							 shstate = "恭喜您！审核已通过，请及时请假参加考试";
 	      						 }else if(bmshstate==2){
 	      							 shstate="不好意思！审核未通过，如有需要请及时上诉";
-	      						 }else{
+	      						 }else if(bmshstate==0){
 	      							 shstate="已提交上诉申请，请耐心等待......";
+	      						 }else if(bmshstate==3){
+	      							 shstate="不好意思！审核未通过，您未获得考试资格";
 	      						 }
 	      						 String chexiao = bmbean.getStr("BM_STATE");
 	      						 if("2".equals(chexiao)){
@@ -230,6 +244,7 @@
 	function goBack(){
 		window.history.go(-1);
 	}
+	alert("<%=bmid%>");
 	$(function(){
 		var bm = "<%=lbname%>";
 		var ksmc = "<%=bm_ksxz%>";
