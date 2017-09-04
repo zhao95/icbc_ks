@@ -101,22 +101,18 @@ public class BmlbServ extends CommonServ {
 			OutBean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
 			List<Bean> blist = (List<Bean>) out.get("result");
 			String allman="";
-			String node_id=""; 
-			String sh_user="";
-			String sh_level=""; 
+			String node_name=""; 
 			if(blist!=null && blist.size()>0){
-			 node_id= blist.get(0).getStr("NODE_ID");
-			 sh_user= blist.get(blist.size()-1).getStr("SHR_WORKNUM");
-			 sh_level= blist.get(0).getStr("NODE_STEPS");
-				for (int l=0;l<blist.size();l++) {
-					if(l==0){
-						allman = blist.get(l).getStr("SHR_WORKNUM");
-					}
-					else{
-						allman+= blist.get(l).getStr("SHR_WORKNUM")+",";
-					}
-					
+			 node_name= blist.get(0).getStr("NODE_NAME");
+			for (int l=0;l<blist.size();l++) {
+				if(l==0){
+					allman = blist.get(l).getStr("S_USER");
 				}
+				else{
+					allman+= blist.get(l).getStr("S_USER")+",";
+				}
+				
+			}
 			}
 			//添加到审核表中
 			Bean shBean =new Bean();
@@ -124,9 +120,8 @@ public class BmlbServ extends CommonServ {
 			shBean.set("BM_ID",bm_id);
 			shBean.set("BM_NAME",user_name);
 			shBean.set("BM_CODE",user_code);
-			shBean.set("SH_NODE",node_id);//目前审核节点
-			shBean.set("SH_LEVEL",sh_level);//目前审核层级
-			shBean.set("SH_USER",sh_user);//当前办理人
+			shBean.set("SH_NODE",node_name);//目前审核节点
+			shBean.set("SH_USER",allman);//当前办理人
 			shBean.set("SH_OTHER",allman);//其他办理人
 			ServDao.save("TS_BMSH_STAY", shBean);
 			
@@ -288,7 +283,6 @@ public class BmlbServ extends CommonServ {
 					shBean.set("BM_MK",kslb_mk);
 					shBean.set("BM_TYPE",kslb_type);
 					shBean.set("SH_NODE",node_name);//目前审核节点
-//					shBean.set("SH_LEVEL",sh_level);//目前审核层级
 					shBean.set("SH_USER",allman);//当前办理人
 					shBean.set("SH_OTHER",allman);//其他办理人
 					if(count==0){
