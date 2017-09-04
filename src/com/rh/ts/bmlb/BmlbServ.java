@@ -93,11 +93,11 @@ public class BmlbServ extends CommonServ {
 			ServDao.save("TS_OBJECT", objBean);
 			
 			ParamBean param=new ParamBean();
-			param.set("examerWorekNum",user_code);
+			param.set("examerUserCode",user_code);
 			param.set("level",0);
 			param.set("xmId",xm_id);
 			param.set("flowName",1);
-			param.set("shrWorekNum",user_code);
+			param.set("shrUserCode",user_code);
 			OutBean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
 			List<Bean> blist = (List<Bean>) out.get("result");
 			String allman="";
@@ -142,7 +142,6 @@ public class BmlbServ extends CommonServ {
 		String servId=paramBean.getStr(Constant.PARAM_SERV_ID);
 		//获取前台传过来的值
 		String user_code = paramBean.getStr("USER_CODE");
-//		String user_code = "000786530";
 		String user_name = paramBean.getStr("USER_NAME");
 		String user_sex = paramBean.getStr("USER_SEX");
 		String odept_name = paramBean.getStr("ODEPT_NAME");
@@ -238,7 +237,7 @@ public class BmlbServ extends CommonServ {
 					Bean bmbean = ServDao.create(servId, beans);
 					//获取到报名主键id
 					String bm_id= bmbean.getStr("BM_ID");
-					
+					//验证信息
        				Bean yzBean = new Bean();
        				yzBean.set("BM_ID",bm_id);
        				yzBean.set("AD_NAME",back_All);
@@ -255,27 +254,23 @@ public class BmlbServ extends CommonServ {
 					ServDao.save("TS_OBJECT", objBean);
 					
 					ParamBean param=new ParamBean();
-					param.set("examerWorekNum",user_code);
+					param.set("examerUserCode",user_code);
 					param.set("level",0);
 					param.set("xmId",xm_id);
 					param.set("flowName",1);
-					param.set("shrWorekNum",user_code);
+					param.set("shrUserCode",user_code);
 					OutBean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
 					List<Bean> blist = (List<Bean>) out.get("result");
 					String allman="";
-					String node_id=""; 
-					String sh_user="";
-					String sh_level=""; 
+					String node_name=""; 
 					if(blist!=null && blist.size()>0){
-					 node_id= blist.get(0).getStr("NODE_ID");
-					 sh_user= blist.get(blist.size()-1).getStr("SHR_WORKNUM");
-					 sh_level= blist.get(0).getStr("NODE_STEPS");
+					 node_name= blist.get(0).getStr("NODE_NAME");
 					for (int l=0;l<blist.size();l++) {
 						if(l==0){
-							allman = blist.get(l).getStr("SHR_WORKNUM");
+							allman = blist.get(l).getStr("S_USER");
 						}
 						else{
-							allman+= blist.get(l).getStr("SHR_WORKNUM")+",";
+							allman+= blist.get(l).getStr("S_USER")+",";
 						}
 						
 					}
@@ -292,9 +287,9 @@ public class BmlbServ extends CommonServ {
 					shBean.set("BM_XL",kslb_xl);
 					shBean.set("BM_MK",kslb_mk);
 					shBean.set("BM_TYPE",kslb_type);
-					shBean.set("SH_NODE",node_id);//目前审核节点
-					shBean.set("SH_LEVEL",sh_level);//目前审核层级
-					shBean.set("SH_USER",sh_user);//当前办理人
+					shBean.set("SH_NODE",node_name);//目前审核节点
+//					shBean.set("SH_LEVEL",sh_level);//目前审核层级
+					shBean.set("SH_USER",allman);//当前办理人
 					shBean.set("SH_OTHER",allman);//其他办理人
 					if(count==0){
 						ServDao.save("TS_BMSH_PASS", shBean);
@@ -305,12 +300,12 @@ public class BmlbServ extends CommonServ {
 							ServDao.save("TS_BMSH_NOPASS", shBean);
 						}
 					}if(count==2){
-							ServDao.save("TS_BMSH_PASS", shBean);
+							ServDao.save("TS_BMSH_STAY", shBean);
 					}if(count==3){
 						if(ad_result.equals("1")){
 								ServDao.save("TS_BMSH_PASS", shBean);
 						}if(ad_result.equals("2")){
-							ServDao.save("TS_BMSH_STAY", shBean);
+							ServDao.save("TS_BMSH_NOPASS", shBean);
 						}
 					}
 				  }

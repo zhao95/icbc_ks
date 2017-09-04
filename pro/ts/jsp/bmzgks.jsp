@@ -621,7 +621,11 @@
 		bminfo['BM_STARTDATE'] = '<%=bm_start%>';
 		bminfo['BM_ENDDATE'] = '<%=bm_end%>';
 // 		xkArg.push(yk);
-		var neAry=xkArg.concat(yk);
+		var neAry=xkArg;
+		if(yk.ID){
+			neAry=xkArg.concat(yk);	
+		}
+		//数组去重
 		for(var i=0; i < neAry.length; i++) {
 		    for(var j=i+1;j< neAry.length; j++) {
 		        if(neAry[i].ID == neAry[j].ID) {
@@ -686,7 +690,12 @@
    		}
      	var param = {};
 // 		xkArg.push(yk);
-		var neAry=xkArg.concat(yk);
+		var neAry;
+		var neAry=xkArg;
+		if(yk.ID){
+			neAry=xkArg.concat(yk);	
+		}
+		
 		for(var i=0; i < neAry.length; i++) {
 		    for(var j=i+1;j< neAry.length; j++) {
 		        if(neAry[i].ID == neAry[j].ID) {
