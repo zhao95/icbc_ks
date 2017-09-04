@@ -1,5 +1,5 @@
 var xmid = jq("#xmid").val();
-var user_code = System.getVar("@USER_WORK_NUM@");
+var user_code = System.getVar("@USER_CODE@");
 //隔一行 进行 背景颜色 渲染
 function rowscolor(table){
 	 var rows = table.getElementsByTagName("tr");  
@@ -21,6 +21,8 @@ for(var z=0;z<btns.length;z++){
 
 }
 //审核 筛选
+var nowlevel = 0;
+var nodeid = "";
 function selectdata1(user_code,xmid,shenhe,yema){
 	//判断审核是待审核  还是 审核通过 还是 审核未通过  然后拼接不同的where 条件 查询
 	var param={};
@@ -149,24 +151,24 @@ function selectdata1(user_code,xmid,shenhe,yema){
 			param["shownum"]=myts;
 	     	param["where"]=where1 + where2 + where3 + where4 + where5+where6;
 	}
-	
-	
 		var first = (yema-1)*myts+1;
+		param["xmid"]=xmid;
      	var result = FireFly.doAct(servId,"getUncheckList",param);
      	var result2 = FireFly.doAct(servId,"getAllData",param);
+     	console.log(result2);
+     	nowlevel=result2.level;
+     	nodeid=result2.node_id;
      	//查找排序顺序   根据排序号进行排序
      	var param1 = {};
      	param1["user_code"]=user_code;
      	var result3 = FireFly.doAct("TS_BMSH_PX","getShenheJson",param1);
      	var data3 = result3.list;
      	var pageEntity3 = JSON.parse(data3);
-     	
 		//data为json格式字符串
 		var data2 = result2.list;
      	var data = result.list;
      	//将json字符串 转换为 json对象
-     	if(data==null){
-     		
+     	if(data.length==2){
      		$("#"+table+" tbody").html("");
      		$("#"+fenye).html("");
      		$("#"+fenye).append('<li><a href="#">&laquo;</a></li><li><a  href="#">&raquo;</a></li>');
@@ -174,6 +176,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
      		var pageEntity=JSON.parse(data);
      		var pageEntity2 = JSON.parse(data2);
      		$("#"+table+" tbody").html("");
+     		
      	    for(var i=0;i<pageEntity.length;i++){
      	    	var xuhao = first+i;
      	    	var id = pageEntity[i].SH_ID;
@@ -195,13 +198,18 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	     		
      	     	}
      	    	for(var j=0;j<pageEntity3.length;j++){
-     	    		
      	    		var column = pageEntity3[j].PX_COLUMN;
-     	    		
      	    		var fir = pageEntity[i][column];
-     	    		if(fir==null){
-     	    			console.log(userEntity);
+     	    		if(column=="SH_OTHER"){
+     	    			var paramcode = {};
+     	    			paramcode["codes"]=pageEntity[i][column];
+     	    			var resultname = FireFly.doAct("TS_BMSH_STAY","getusername",paramcode);
+     	    			fir = resultname.usernames;
+     	    		}     	    		
+     	    		if(column=="SH_USER"){
      	    			fir = userEntity[0][column];
+     	    		}
+     	    		if(fir==null){
      	    			if(column=="JOB_LB"){
      	    				fir = pageEntity[i].BM_LB;
      	    			}
@@ -222,9 +230,11 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    				}
      	    				fir = BM_TYPE;
      	    			}
-     	    			
      	    		}
-     	    		
+     	    	
+     	    		if(column=="SH_LEVEL"){
+     	    			fir=nowlevel;
+     	    		}
      	    		if(fir==null){
      	    			fir="";
      	    		}
@@ -535,6 +545,8 @@ function firall(){
 					  param["radiovalue"]=radiovalue;
 					  param["liyou"]=liyou;
 					  param["xmid"]=xmid;
+					  param["level"]=nowlevel;
+					  param["nodeid"]=nodeid;
 					  FireFly.doAct("TS_BMSH_STAY","update",param);
 					  $('#tiJiao').modal('hide');
 					  dsha();
@@ -560,6 +572,8 @@ function firall(){
 					  param["checkedid"]=s;
 					  param["radiovalue"]=radiovalue;
 					  param["liyou"]=liyou;
+					  param["level"]=nowlevel;
+					  param["nodeid"]=nodeid;
 					  FireFly.doAct("TS_BMSH_PASS","update",param);
 					  //局部刷新
 					   $('#tiJiao').modal('hide');
@@ -586,7 +600,8 @@ function firall(){
 					  param["radiovalue"]=radiovalue;
 					  param["liyou"]=liyou;
 					  param["xmid"]=xmid;
-					  alert(xmid);
+					  param["level"]=nowlevel;
+					  param["nodeid"]=nodeid;
 					  FireFly.doAct("TS_BMSH_NOPASS","update",param);
 					  $('#tiJiao').modal('hide');
 

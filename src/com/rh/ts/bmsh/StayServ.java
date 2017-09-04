@@ -103,6 +103,7 @@ public class StayServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getAllData(Bean paramBean) {
+		String xmid = paramBean.getStr("xmid");
 		Bean outBean = new Bean();
 		String servId = "TS_BMSH_STAY";
 		String where1 = paramBean.getStr("where");
@@ -115,7 +116,29 @@ public class StayServ extends CommonServ {
 				list.add(bean);
 			}
 		}
-
+		String shenuser="";
+		UserBean userBean = Context.getUserBean();
+		if(userBean.isEmpty()){
+			 return new OutBean().setError("ERROR:user_code 为空");
+		}else{
+			shenuser=userBean.getStr("USER_CODE");
+		}
+		String nodeid = "";
+		String levels =""; 
+		ParamBean parambean = new ParamBean();
+		parambean.set("examerWorekNum",list1.get(0).getStr("BM_CODE"));
+		parambean.set("level",0);
+		parambean.set("shrWorekNum", shenuser);
+		parambean.set("flowName", 1);
+		parambean.set("xmId", xmid);
+		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
+		List<Bean> flowlist = outbean.getList("result");
+		for (Bean bean : flowlist) {
+			if(shenuser.equals(bean.getStr("SHR_WORKNUM"))){
+				levels=bean.getStr("NODE_STEPS");
+				nodeid = bean.getStr("NODE_ID");
+			}
+		}
 		// ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter w = new StringWriter();
@@ -129,6 +152,8 @@ public class StayServ extends CommonServ {
 			e.printStackTrace();
 		}
 		outBean.set("list", w.toString());
+		   outBean.set("level", levels);
+		   outBean.set("node_id",nodeid);
 		return outBean;
 	}
 
@@ -138,6 +163,14 @@ public class StayServ extends CommonServ {
 	 * @param paramBean
 	 */
 	public Bean update(Bean paramBean){
+		String nodeid = paramBean.getStr("nodeid");
+		
+		String levels = paramBean.getStr("SH_LEVEL");
+		int level = 0;
+		if("".equals(levels)){
+			
+			 level=Integer.parseInt(levels);
+		}
 		String s = paramBean.getStr("checkedid");
 		String xmid = paramBean.getStr("xmid");
 		String shenuser = "";
@@ -147,8 +180,6 @@ public class StayServ extends CommonServ {
 			}else{
 				shenuser=userBean.getStr("USER_CODE");
 			}
-			shenuser="admin";
-		String slevel = "";
 		//被选中的id
 		String[] ss = s.split(",");
 		String state = paramBean.getStr("radiovalue");
@@ -157,11 +188,7 @@ public class StayServ extends CommonServ {
 		for (String id : ss) {
 			if(!"".equals(id)){
 				Bean bean = ServDao.find("TS_BMSH_STAY", id);
-				slevel=bean.getStr("SH_LEVEL");
 				//获取审核人信息 
-				int cengjiint = Integer.parseInt(slevel);
-				//返回下一级和所有的数据，  逐级的话将下一个审核节点的人编码  放进去，将当前审核人删除
-				int level = Integer.parseInt(slevel);
 				int flowname = 1;
 				ParamBean parambean = new ParamBean();
 				parambean.set("examerWorekNum", bean.getStr("BM_CODE"));
@@ -173,7 +200,6 @@ public class StayServ extends CommonServ {
 				List<Bean> list = outbean.getList("result");
 				
 				String allman ="";
-				String nextman = "";
 				for (int l=0;l<list.size();l++) {
 					
 					if(l==list.size()-1){
@@ -183,21 +209,17 @@ public class StayServ extends CommonServ {
 					}
 					
 				}
-				String  nowlevelS = list.get(0).getStr("NODE_STEPS");
-				
-				int nowlevel = Integer.parseInt(nowlevelS);
-				String SH_NODE = list.get(0).getStr("NODE_ID");
 				//
 				//审核通过
 			if(state.equals("1")){
 				//查找下一层级的人当前人力资源编码
-				if(cengjiint==1){
+				if(level==1){
 					//流程最后一次审核 
 					ServDao.delete("TS_BMSH_STAY", id);
 				}else{
 					//更新
-					bean.set("SH_LEVEL", nowlevel);
-					bean.set("SH_USER", nextman);
+					bean.set("SH_LEVEL", level);
+					bean.set("SH_USER", allman);
 					bean.set("SH_OTHER", allman);
 					ServDao.save("TS_BMSH_STAY", bean);
 				}
@@ -272,7 +294,7 @@ public class StayServ extends CommonServ {
 			}
 			//审核明细表中插入此次审核数据
 			Bean mindbean = new Bean();
-			mindbean.set("SH_LEVEL",slevel);
+			mindbean.set("SH_LEVEL",level);
 			mindbean.set("SH_MIND", liyou);
 			mindbean.set("DATA_ID",bean.getStr("BM_ID"));
 			mindbean.set("SH_STATUS", state);
@@ -280,7 +302,7 @@ public class StayServ extends CommonServ {
 			mindbean.set("SH_UNAME",userBean.getName());
 			mindbean.set("SH_UCODE",shenuser);
 			mindbean.set("SH_TYPE", 1);
-			mindbean.set("SH_NODE",SH_NODE);
+			mindbean.set("SH_NODE", nodeid);
 			ServDao.save("TS_COMM_MIND",mindbean);
 			}
 		}
@@ -357,7 +379,15 @@ public class StayServ extends CommonServ {
     		j--;
     		outBean.set("LEVEL"+j,evname);
     	}
-    
+    	String shuser="";
+    	UserBean userBean1 = Context.getUserBean();
+		if(userBean1.isEmpty()){
+			 return new OutBean().setError("ERROR:user_code 为空");
+		}else{
+			 shuser = userBean.getStr("USER_NAME");
+		}
+    	//当前办理人
+    	outBean.set("SH_USER", shuser);
     	//性别
     	int user_sex = userBean.getSex();
     	if(user_sex==0){
@@ -483,7 +513,6 @@ public class StayServ extends CommonServ {
 	  				}else{
 	  					user_code1=userBean1.getStr("USER_CODE");
 	  				}
-	  				user_code1="admin";
 	  		 parr.copyFrom(paramBean);
 	  		 parr.setServId("TS_BMSH_PX");
 	        String servId = paramBean.getServId();
@@ -505,7 +534,7 @@ public class StayServ extends CommonServ {
 	        
 		      	//判断user_code 是否为空  若为空则 导出所有
 	        	
-	       	 	 searchWhere = " AND USER_CODE="+"'"+user_code1+"'";
+	       	 	 searchWhere = " AND USER_CODE ="+"'"+user_code1+"'";
 	       	 
 		        //排序用的 parr存读取th
 		        parr.setQuerySearchWhere(searchWhere);
@@ -617,4 +646,33 @@ public class StayServ extends CommonServ {
 	        return new OutBean().setOk();
 	        }
 
+	  	/**
+	  	 * 根据usercode  获取username
+	  	 */
+	  	public Bean getusername(Bean paramBean){
+	  		Bean outBean = new Bean();
+	  		String s = "";
+	  		String codes = paramBean.getStr("codes");
+	  		if(!"".equals(codes)){
+	  		 String[] split = codes.split(",");
+	  		 for (int i=0;i<split.length;i++) {
+				
+	  			 if(!"".equals(split[i])){
+	  				 UserBean userBean = UserMgr.getUser(split[i]);
+	  				if(userBean.isEmpty()){
+	  					 return new OutBean().setError("ERROR:user_code 为空");
+	  				}else{
+	  					if(i==split.length-1){
+	  						s+=userBean.getStr("USER_NAME");
+	  					}else{
+	  						s+=userBean.getStr("USER_NAME")+",";
+	  					}
+	  				}
+	  			 }
+			}
+	  		}
+	  		
+	  		outBean.set("usernames", s);
+	  		return outBean;
+	  	}
 }

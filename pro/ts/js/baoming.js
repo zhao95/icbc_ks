@@ -1,4 +1,4 @@
-var user_code = System.getVar("@USER_WORK_NUM@");
+var user_code = System.getVar("@USER_CODE@");
 //隔一行 进行 背景颜色 渲染
 function rowscolor(table){
 	 var rows = table.getElementsByTagName("tr");  

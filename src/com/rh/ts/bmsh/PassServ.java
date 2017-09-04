@@ -106,12 +106,16 @@ public class PassServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getAllData(Bean paramBean){
+		String xmid = paramBean.getStr("xmid");
 		Bean outBean = new Bean();
 		String servId = "TS_BMSH_PASS";
 		String where1 = paramBean.getStr("where");
 		List<Bean> list1 = ServDao.finds(servId, where1);
 		String user_code = paramBean.getStr("user_code");
 		List<Bean> list = new ArrayList<Bean>();
+		if(list1.size()==0){
+			return new OutBean().setOk("nothing");
+		}
 		for (Bean bean : list1) {
 			String other = bean.getStr("SH_OTHER");
 			if(other.contains(user_code)){
@@ -119,6 +123,30 @@ public class PassServ extends CommonServ {
 			}
 		}
 		
+		String shenuser="";
+		UserBean userBean = Context.getUserBean();
+		if(userBean.isEmpty()){
+			 return new OutBean().setError("ERROR:user_code 为空");
+		}else{
+			shenuser=userBean.getStr("USER_CODE");
+		}
+		shenuser="admin";
+		String nodeid = "";
+		String levels =""; 
+		ParamBean parambean = new ParamBean();
+		parambean.set("examerWorekNum",list1.get(0).getStr("BM_CODE"));
+		parambean.set("level",0);
+		parambean.set("shrWorekNum", shenuser);
+		parambean.set("flowName", 1);
+		parambean.set("xmId", xmid);
+		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
+		List<Bean> flowlist = outbean.getList("result");
+		for (Bean bean : flowlist) {
+			if(shenuser.equals(bean.getStr("SHR_WORKNUM"))){
+				levels=bean.getStr("NODE_STEPS");
+				nodeid = bean.getStr("NODE_ID");
+			}
+		}
 		//ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化  
 	   ObjectMapper mapper = new ObjectMapper();    
 	   StringWriter w = new StringWriter();  
@@ -133,6 +161,8 @@ public class PassServ extends CommonServ {
 		e.printStackTrace();
 	}
 	   outBean.set("list",w.toString());
+	   outBean.set("level", levels);
+	   outBean.set("node_id",nodeid);
 	   return outBean;
 	}
 	
@@ -142,7 +172,12 @@ public class PassServ extends CommonServ {
 	 * @param paramBean
 	 */
 	public Bean update(Bean paramBean){
-		
+		String nodeid = paramBean.getStr("nodeid");
+		String levels = paramBean.getStr("SH_LEVEL");
+		int level = 0;
+		if(!"".equals(nodeid)){
+			 level=Integer.parseInt(levels);
+		}
 		String s = paramBean.getStr("checkedid");
 		String shenuser = "";
 		UserBean userBean = Context.getUserBean();
@@ -160,8 +195,7 @@ public class PassServ extends CommonServ {
 			if(!"".equals(id)){
 			//获取当前对象
 			Bean bean = ServDao.find("TS_BMSH_PASS", id);
-			String slevel = bean.getStr("SH_LEVEL");
-			int level = Integer.parseInt(slevel);
+			
 			//将数据删除 若存在的话在stay中     因为不会再往下推送 所以审核 级数不会变
 			String bmid = bean.getStr("BM_ID");
 			//获取 stay里对象
@@ -194,7 +228,7 @@ public class PassServ extends CommonServ {
 			ServDao.delete("TS_BMSH_PASS", id);
 			//审核明细表中插入此次审核数据
 			Bean mindbean = new Bean();
-			mindbean.set("SH_LEVEL",bean.getStr("SH_LEVEL"));
+			mindbean.set("SH_LEVEL",level);
 			mindbean.set("SH_MIND", liyou);
 			mindbean.set("DATA_ID",bean.getStr("BM_ID"));
 			mindbean.set("SH_STATUS", state);
@@ -202,6 +236,7 @@ public class PassServ extends CommonServ {
 			mindbean.set("SH_UNAME",userBean.getName());
 			mindbean.set("SH_UCODE",shenuser);
 			mindbean.set("SH_TYPE", 1);
+			mindbean.set("SH_NODE", nodeid);
 			ServDao.save("TS_COMM_MIND",mindbean);
 		}
 		}
@@ -269,7 +304,6 @@ public class PassServ extends CommonServ {
   				}else{
   					user_code1=userBean1.getStr("USER_CODE");
   				}
-  				user_code1="admin";
   		 parr.copyFrom(paramBean);
   		 parr.setServId("TS_BMSH_PX");
         String servId = paramBean.getServId();

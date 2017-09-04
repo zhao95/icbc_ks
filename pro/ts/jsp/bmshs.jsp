@@ -180,7 +180,7 @@
 	<input type="hidden" id="xmid" />
 	<input type="hidden" id="dijige">
 	<script type="text/javascript">
-	var user_code = System.getVar("@USER_WORK_NUM@");
+	var user_code = System.getVar("@USER_CODE@");
 	var jq = $.noConflict(true);
 	jq(function (){
 		selectxmdata(user_code,1);
@@ -315,8 +315,6 @@
 	     		$("#fenyeul").html("");
 	     		$("#fenyeul").append('<li><a href="#">&laquo;</a></li><li><a  href="#">&raquo;</a></li>');
 	     	}else{
-	     		
-	     		
 	     	var pageEntity=JSON.parse(data);
 	     	var pageEntity2 = JSON.parse(data2);
 	     	 //总条数/每页
@@ -337,8 +335,6 @@
 				 $("#fenyeul").append('<li id="yema'+j+'" onclick=chaxun('+j+')><a  href="#">'+j+'</a></li>');
 						 
 					 }
-					 
-				 
 			 }
 	     		  //最后一页
 				 var last =yeshu+1;

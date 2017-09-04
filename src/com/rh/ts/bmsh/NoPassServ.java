@@ -38,12 +38,16 @@ public class NoPassServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getUncheckList(Bean paramBean){
+		
+		
 		Bean outBean = new Bean();
 		String servId = "TS_BMSH_NOPASS";
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where");
 		List<Bean> list = ServDao.finds(servId, where1);
+		
+		
 		int ALLNUM = list.size();
 		//计算页数
 		int meiye =  Integer.parseInt(SHOWNUM);
@@ -101,10 +105,47 @@ public class NoPassServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getAllData(Bean paramBean){
+		String xmid = paramBean.getStr("xmid");
 		Bean outBean = new Bean();
 		String servId = "TS_BMSH_NOPASS";
 		String where1 = paramBean.getStr("where");
-		List<Bean> list = ServDao.finds(servId, where1);
+		List<Bean> list1 = ServDao.finds(servId, where1);
+		String user_code = paramBean.getStr("user_code");
+		List<Bean> list = new ArrayList<Bean>();
+		for (Bean bean : list1) {
+			String other = bean.getStr("SH_OTHER");
+			if (other.contains(user_code)) {
+				list.add(bean);
+			}
+		}
+		
+		if(list.size()==0){
+			return new OutBean().setOk("nothing");
+		}
+		
+		String shenuser="";
+		UserBean userBean = Context.getUserBean();
+		if(userBean.isEmpty()){
+			 return new OutBean().setError("ERROR:user_code 为空");
+		}else{
+			shenuser=userBean.getStr("USER_CODE");
+		}
+		String nodeid = "";
+		String levels =""; 
+		ParamBean parambean = new ParamBean();
+		parambean.set("examerWorekNum",list.get(0).getStr("BM_CODE"));
+		parambean.set("level",0);
+		parambean.set("shrWorekNum", shenuser);
+		parambean.set("flowName", 1);
+		parambean.set("xmId", xmid);
+		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
+		List<Bean> flowlist = outbean.getList("result");
+		for (Bean bean : flowlist) {
+			if(shenuser.equals(bean.getStr("SHR_WORKNUM"))){
+				levels=bean.getStr("NODE_STEPS");
+				nodeid = bean.getStr("NODE_ID");
+			}
+		}
 		
 		//ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化  
 	   ObjectMapper mapper = new ObjectMapper();    
@@ -120,6 +161,8 @@ public class NoPassServ extends CommonServ {
 		e.printStackTrace();
 	}
 	   outBean.set("list",w.toString());
+	   outBean.set("level", levels);
+	   outBean.set("node_id",nodeid);
 	   return outBean;
 	}
 	
@@ -129,6 +172,13 @@ public class NoPassServ extends CommonServ {
 	 * @param paramBean
 	 */
 	public OutBean update(Bean paramBean){
+		String nodeid = paramBean.getStr("nodeid");
+		String levels = paramBean.getStr("SH_LEVEL");
+		int level = 0;
+		if(!"".equals(levels)){
+			
+			 level=Integer.parseInt(levels);
+		}
 		String s = paramBean.getStr("checkedid");
 		String xmid = paramBean.getStr("xmid");
 		String shenuser ="";
@@ -138,7 +188,6 @@ public class NoPassServ extends CommonServ {
 		}else{
 			shenuser=userBean.getStr("USER_CODE");
 		}
-		shenuser="admin";
 		//被选中的id
 		String[] ss = s.split(",");
 		String liyou = paramBean.getStr("liyou");
@@ -150,8 +199,7 @@ public class NoPassServ extends CommonServ {
 				Bean bean = ServDao.find("TS_BMSH_NOPASS", id);
 				String allman ="";
 				String nextman = "";
-				String levels = bean.getStr("SH_LEVEL");
-				int level=Integer.parseInt(levels);
+				
 				int nowlevel=0;
 				if(level!=1){
 					
@@ -174,8 +222,7 @@ public class NoPassServ extends CommonServ {
 					}
 					
 				}
-				String  nowlevelS = list.get(0).getStr("NODE_STEPS");
-				 nowlevel = Integer.parseInt(nowlevelS);
+				
 				}
 			bean.remove("SH_ID");
 			bean.remove("S_CMPY");
@@ -190,13 +237,17 @@ public class NoPassServ extends CommonServ {
 			bean.remove("ROW_NUM_");
 			Bean newBean = new Bean();
 			newBean.copyFrom(bean);
+			newBean.set("SH_LEVEL", level);
+			newBean.set("SH_OTHER", allman+","+shenuser);
 			ServDao.save("TS_BMSH_PASS", newBean);
 			if(level==1){
 				//不用再去待审核中直接去  审核通过中 且数据无改动
 			}else{
-				newBean.set("SH_OTHER", allman+","+shenuser);
-				newBean.set("SH_LEVEL", nowlevel);
-				ServDao.save("TS_BMSH_STAY", newBean);
+				Bean newBean1 = new Bean();
+				newBean1.copyFrom(bean);
+				newBean1.set("SH_OTHER", allman);
+				newBean1.set("SH_LEVEL", nowlevel);
+				ServDao.save("TS_BMSH_STAY", newBean1);
 			}
 			ServDao.delete("TS_BMSH_NOPASS", id);
 			//审核明细表中插入此次审核数据
@@ -210,6 +261,7 @@ public class NoPassServ extends CommonServ {
 			mindbean.set("SH_UNAME",userbean.getName());
 			mindbean.set("SH_UCODE",shenuser);
 			mindbean.set("SH_TYPE", 1);
+			mindbean.set("SH_NODE", nodeid);
 			ServDao.save("TS_COMM_MIND",mindbean);
 		}
 		}
@@ -361,7 +413,6 @@ public class NoPassServ extends CommonServ {
   				}else{
   					user_code1=userBean1.getStr("USER_CODE");
   				}
-  				user_code1="admin";
   		 parr.copyFrom(paramBean);
   		 parr.setServId("TS_BMSH_PX");
         String servId = paramBean.getServId();
@@ -528,7 +579,9 @@ public class NoPassServ extends CommonServ {
     	}else{
     		outBean.set("USER_SEX","女");
     	}
+    	
     	//入行时间
+    	
     	String date = userBean.getStr("USER_CMPY_DATE");
     	outBean.set("USER_CMPY_DATE",date);
     	//办公电话
