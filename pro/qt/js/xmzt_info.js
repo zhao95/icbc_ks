@@ -13,9 +13,9 @@ $(function() {
 	}
 	// 获取当前登录用户的人力资源编码(目前使用的是用户编码)
 	// var user_work_num = System.getUser("USER_WORK_NUM");
-	var user_work_num = System.getUser("USER_CODE");
+	var user_code = System.getUser("USER_CODE");
 	var paramBM = {};
-	paramBM["_extWhere"] = "AND BM_CODE = '" + user_work_num + "'";
+	paramBM["_extWhere"] = "AND BM_CODE = '" + user_code + "'";
 	// 查询出该人员报名的所有项目
 	var resultBM = FireFly.doAct("TS_BMSH_PASS", "query", paramBM);
 	// 报名前端去重的数组
@@ -47,7 +47,7 @@ $(function() {
 
 				// 通过项目ID和用户人力资源编码查询到标志，设置按钮的内容
 				var paramObj1 = {};
-				paramObj1["_extWhere"] = "and STR1='" + user_work_num
+				paramObj1["_extWhere"] = "and STR1='" + user_code
 						+ "' AND DATA_ID ='" + xm_id + "'";
 				var resultObj = FireFly.doAct("TS_XMZT", "query", paramObj1);
 				if (resultObj._DATA_.length != 0) {
@@ -144,14 +144,14 @@ $(function() {
 
 				// 通过项目ID和用户人力资源编码查询到show_type
 				var paramObj = {};
-				paramObj["_extWhere"] = "and STR1='" + user_work_num + "'";
+				paramObj["_extWhere"] = "and STR1='" + user_code + "'";
 				var resultObj = FireFly.doAct("TS_OBJECT", "query", paramObj);
 
 				// 如果ts_object表中无此数据，则添加一条对应用户的数据，再次查询结果
 				if (resultObj._DATA_.length == 0) {
 					var saveParam = {};
 					saveParam["DATA_ID"] = xm_id;
-					saveParam["STR1"] = user_work_num;
+					saveParam["STR1"] = user_code;
 					saveParam["INT1"] = 1;
 					saveParam["SERV_ID"] = "TS_XMZT";
 					FireFly.doAct("TS_XMZT", "save", saveParam);
@@ -161,7 +161,7 @@ $(function() {
 				$(this).val("首页显示中");
 
 				var paramStrs = {};
-				paramStrs["USER_WORK_NUM"] = user_work_num;
+				paramStrs["USER_CODE"] = user_code;
 				paramStrs["XM_ID"] = tr_xm_id;
 				FireFly.doAct("TS_XMZT", "modifyShowType", paramStrs, false,
 						false, function(data) {

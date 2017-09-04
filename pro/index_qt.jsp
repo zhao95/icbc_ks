@@ -24,6 +24,9 @@
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/ionicons/css/ionicons.min.css">
 
+<!-- 首页模块css -->
+<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/index_qt.css">
+
 <!-- 进度条css -->
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/jdt.css">
 
@@ -62,107 +65,36 @@
 
 				<div class="navbar-custom-menu">
 					<ul class="nav navbar-nav">
-						<!-- Messages: style can be found in dropdown.less-->
-						<li class="dropdown messages-menu"><a href="#"
-							class="dropdown-toggle" data-toggle="dropdown"> <i
-								class="fa fa-envelope-o"></i> <span class="label label-success">4</span>
-						</a>
-							<ul class="dropdown-menu">
-								<li class="header">You have 4 messages</li>
-								<li>
-									<!-- inner menu: contains the actual data -->
-									<ul class="menu">
-										<li>
-											<!-- start message --> <a href="#">
-												<div class="pull-left">
-													<img src="dist/img/user2-160x160.jpg" class="img-circle"
-														alt="User Image">
-												</div>
-												<h4>
-													Support Team <small><i class="fa fa-clock-o"></i> 5
-														mins</small>
-												</h4>
-												<p>Why not buy a new awesome theme?</p>
-										</a>
-										</li>
-										<!-- end message -->
-										<li><a href="#">
-												<div class="pull-left">
-													<img src="dist/img/user3-128x128.jpg" class="img-circle"
-														alt="User Image">
-												</div>
-												<h4>
-													AdminLTE Design Team <small><i
-														class="fa fa-clock-o"></i> 2 hours</small>
-												</h4>
-												<p>Why not buy a new awesome theme?</p>
-										</a></li>
-										<li><a href="#">
-												<div class="pull-left">
-													<img src="qt/dist/img/user4-128x128.jpg" class="img-circle"
-														alt="User Image">
-												</div>
-												<h4>
-													Developers <small><i class="fa fa-clock-o"></i>
-														Today</small>
-												</h4>
-												<p>Why not buy a new awesome theme?</p>
-										</a></li>
-										<li><a href="#">
-												<div class="pull-left">
-													<img src="qt/dist/img/user3-128x128.jpg" class="img-circle"
-														alt="User Image">
-												</div>
-												<h4>
-													Sales Department <small><i class="fa fa-clock-o"></i>
-														Yesterday</small>
-												</h4>
-												<p>Why not buy a new awesome theme?</p>
-										</a></li>
-										<li><a href="#">
-												<div class="pull-left">
-													<img src="qt/dist/img/user4-128x128.jpg" class="img-circle"
-														alt="User Image">
-												</div>
-												<h4>
-													Reviewers <small><i class="fa fa-clock-o"></i> 2
-														days</small>
-												</h4>
-												<p>Why not buy a new awesome theme?</p>
-										</a></li>
-									</ul>
-								</li>
-								<li class="footer"><a href="#">See All Messages</a></li>
-							</ul></li>
+						
 						<!-- Notifications: style can be found in dropdown.less -->
 						<li class="dropdown notifications-menu"><a href="#"
 							class="dropdown-toggle" data-toggle="dropdown"> <i
-								class="fa fa-bell-o"></i> <span class="label label-warning">10</span>
+								class="fa fa-bell-o"></i> <span class="label label-warning" id="tipSum">0</span>
 						</a>
-							<ul class="dropdown-menu">
-								<li class="header">You have 10 notifications</li>
-								<li>
-									<!-- inner menu: contains the actual data -->
-									<ul class="menu">
-										<li><a href="#"> <i class="fa fa-users text-aqua"></i>
-												5 new members joined today
-										</a></li>
-										<li><a href="#"> <i class="fa fa-warning text-yellow"></i>
-												Very long description here that may not fit into the page
-												and may cause design problems
-										</a></li>
-										<li><a href="#"> <i class="fa fa-users text-red"></i>
-												5 new members joined
-										</a></li>
-										<li><a href="#"> <i
-												class="fa fa-shopping-cart text-green"></i> 25 sales made
-										</a></li>
-										<li><a href="#"> <i class="fa fa-user text-red"></i>
-												You changed your username
-										</a></li>
-									</ul>
-								</li>
-								<li class="footer"><a href="#">View all</a></li>
+							<ul class="dropdown-menu index-qt-tip-list" style="left: -120px;">
+<!-- 								<li class="header">待办 / 消息</li> -->
+<!-- 								<li> -->
+<!-- 									inner menu: contains the actual data -->
+<!-- 									<ul class="menu"> -->
+<!-- 										<li><a href="#"> <i class="fa fa-users text-aqua"></i> -->
+<!-- 												5 new members joined today -->
+<!-- 										</a></li> -->
+<!-- 										<li><a href="#"> <i class="fa fa-warning text-yellow"></i> -->
+<!-- 												Very long description here that may not fit into the page -->
+<!-- 												and may cause design problems -->
+<!-- 										</a></li> -->
+<!-- 										<li><a href="#"> <i class="fa fa-users text-red"></i> -->
+<!-- 												5 new members joined -->
+<!-- 										</a></li> -->
+<!-- 										<li><a href="#"> <i -->
+<!-- 												class="fa fa-shopping-cart text-green"></i> 25 sales made -->
+<!-- 										</a></li> -->
+<!-- 										<li><a href="#"> <i class="fa fa-user text-red"></i> -->
+<!-- 												You changed your username -->
+<!-- 										</a></li> -->
+<!-- 									</ul> -->
+<!-- 								</li> -->
+<%-- 								<li class="footer"><a href="<%=CONTEXT_PATH%>/qt/jsp/todo.jsp">查看所有待办 / 消息</a></li> --%>
 							</ul></li>
 						<!-- Tasks: style can be found in dropdown.less -->
 						<!-- <li class="dropdown tasks-menu"><a href="#"
@@ -182,39 +114,27 @@
 								alt="User Image">
 								<!-- <span class="hidden-xs">Alexander Pierce</span> -->
 						</a>
-							<ul class="dropdown-menu">
-								<!-- User image -->
-								<li class="user-header"><img id = "userImg3"
-									src="qt/dist/img/user2-160x160.jpg" class="img-circle"
-									alt="User Image">
-
-									<p>
-										Alexander Pierce - Web Developer <small>Member since
-											Nov. 2012</small>
-									</p></li>
-								<!-- Menu Body -->
-								<li class="user-body">
-									<div class="row">
-										<div class="col-xs-4 text-center">
-											<a href="#">Followers</a>
-										</div>
-										<div class="col-xs-4 text-center">
-											<a href="#">Sales</a>
-										</div>
-										<div class="col-xs-4 text-center">
-											<a href="#">Friends</a>
-										</div>
-									</div> <!-- /.row -->
-								</li>
-								<!-- Menu Footer-->
-								<li class="user-footer">
-									<div class="pull-left">
-										<a href="#" class="btn btn-default btn-flat">Profile</a>
-									</div>
-									<div class="pull-right">
-										<a href="#" class="btn btn-default btn-flat">Sign out</a>
-									</div>
-								</li>
+							<ul class="dropdown-menu" style="width:160px;">
+<!-- 							<li class="user-header"></li> -->
+<!-- 							<li class="user-body"></li> -->
+							<li><a href="#" class="" id="TipUserInfo"><i class="fa fa-user-o fa-fw"></i>个人信息</a></li>
+								<li><a href="#" class="" data-layout="layout-boxed"><i class="fa fa-cog fa-fw"></i>简约/平铺</a></li>
+								<li><a href="#" class="" id="loginOutBtn"><i class="fa fa-power-off fa-fw"></i>注销用户</a></li>
+							
+<!-- 							<li class="user-footer"></li> -->
+								
+							
+<!-- 									<a href="#" class="btn btn-default btn-flat">Profile</a> -->
+<!-- 									<a href="#" class="btn btn-default btn-flat" data-layout="layout-boxed">简约/平铺</a> -->
+<!-- 									<a href="#" class="btn btn-default btn-flat">Sign out</a> -->
+<!-- 								<li class="user-header"><img id = "userImg3" -->
+<!-- 									src="qt/dist/img/user2-160x160.jpg" class="img-circle" -->
+<!-- 									alt="User Image"> -->
+<!-- 									<p> -->
+<!-- 										Alexander Pierce - Web Developer <small>Member since -->
+<!-- 											Nov. 2012</small> -->
+<!-- 									</p></li> -->
+<!-- 								</li> -->
 							</ul></li>
 						<!-- Control Sidebar Toggle Button -->
 						<!-- <li>
@@ -225,7 +145,7 @@
 			</nav>
 		</header>
 
-		<aside class="main-sidebar">
+		<aside class="main-sidebar" style="z-index:0;">
 			<!-- sidebar: style can be found in sidebar.less -->
 			<section class="sidebar">
 				<!-- Sidebar user panel -->
@@ -243,8 +163,7 @@
 				<div style="margin-top: 20px;">
 					<div id="baoming" style="float: left;">
 						<a href="#">
-							<div class="box_2"
-								style="background-color: rgba(41, 151, 192, 1); width: 44px; height: 44px; border-radius: 24px; margin-left: 20px;">
+							<div class="box_2" style="background-color: rgba(41, 151, 192, 1); width: 44px; height: 44px; border-radius: 24px; margin-left: 20px;">
 								<div id="u3273_div" class="" tabindex="0">
 									<img id="u3273_img"
 										style="width: 24px; height: 24px; margin-left: 10px; margin-top: 10px;"
@@ -252,7 +171,7 @@
 								</div>
 								<!-- Unnamed () -->
 							</div>
-							<div style="width: 100%; margin-top: 5px;">
+							<div style="width:100%; margin-top:5px;">
 								<p align="center" style="margin-left: 20px;">
 									<span><font color="white">报名</font></span>
 								</p>
@@ -261,8 +180,7 @@
 					</div>
 					<div id="kaoshi" style="float: left;">
 						<a href="#">
-							<div class="box_2"
-								style="background-color: rgba(112, 192, 179, 1); width: 44px; height: 44px; border-radius: 24px; margin-left: 20px;">
+							<div class="box_2" style="background-color: rgba(112, 192, 179, 1); width: 44px; height: 44px; border-radius: 24px; margin-left: 20px;">
 								<div id="u3292_div" class="" tabindex="0">
 									<img id="u3292_img"
 										style="width: 24px; height: 24px; margin-left: 10px; margin-top: 10px;"
@@ -320,7 +238,7 @@
 			<!-- /.sidebar -->
 		</aside>
 
-		<div class="content-wrapper" style="min-height: 916px;">
+		<div class="content-wrapper" style="min-height: 1100px;">
 
 			<section class="content">
 				<div class="row">
@@ -349,39 +267,39 @@
 								<!-- 进度条 -->
 								<div id="jdtMain">
 									<div id="upDiv">
-										<div style="left: -15px">
+										<div style="left: -3%">
 											报名
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 47px">
+										<div style="left: 7%">
 											人工审核
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 128px">
+										<div style="left: 19%">
 											结果公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 210px">
+										<div style="left: 31%">
 											考场安排
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 292px">
+										<div style="left: 43%">
 											辖内公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 372px">
+										<div style="left: 54%">
 											总行公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 470px">
+										<div style="left: 70%">
 											考试
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 535px">
+										<div style="left: 79%">
 											成绩公示
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 615px">
+										<div style="left: 90%">
 											认证公示
 											<div class="upSX"></div>
 										</div>
@@ -389,15 +307,15 @@
 									<br />
 									<div id="jdtDivOut" class="progress">
 										<div id="jdtDivInner1" class="progress-bar"
-											style="background-color: blue"></div>
+											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner2" class="progress-bar"
-											style="background-color: #70c0b3"></div>
+											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner3" class="progress-bar divColor"
-											style="background-color: red"></div>
+											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner4" class="progress-bar divColor"
-											style="background-color: #70c0b3"></div>
+											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner5" class="progress-bar divColor"
-											style="background-color: blue"></div>
+											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner6" class="progress-bar"
 											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner7" class="progress-bar"
@@ -407,28 +325,28 @@
 									</div>
 
 									<div id="downDiv">
-										<div style="left: 15px;">
+										<div style="left: 2%;">
 											<div class="downSX">|</div>
 											<span>提交报名</span><br /> <span>自动审核</span><br /> <span>异议</span>
 
 										</div>
-										<div style="left: 110px">
+										<div style="left: 16%">
 											<div class="downSX">|</div>
 											异议
 										</div>
-										<div style="left: 190px">
+										<div style="left: 28%">
 											<div class="downSX">|</div>
 											异议
 										</div>
-										<div style="left: 270px"  id ="jk_sp" >
+										<div style="left: 40%"  id ="jk_sp" >
 											<div class="downSX" >|</div>
 											借考
 										</div>
-										<div style="left: 340px">
+										<div style="left: 50%">
 											<div class="downSX">|</div>
 											<span>考场调整</span><br><span id ="qj_sp">请假</span>
 										</div>
-										<div style="left: 415px">
+										<div style="left: 61%">
 											<div class="downSX">|</div>
 											打印准考证
 										</div>
@@ -533,7 +451,7 @@
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title" style="display: block;">
 									通知公告
-									<a href="/qt/jsp/ggInfo.jsp" class="index-list-more-a" target="_blank">
+									<a href="/qt/jsp/todo.jsp" class="index-list-more-a">
 										更多
 										<span style="color:red;">&gt;</span>
 									</a>
@@ -542,7 +460,30 @@
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
 								<table class="table no-border">
-									<tbody></tbody>
+									<tr>
+										<td>
+											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #398daf;">
+												●
+											</span>
+											关于使用正规浏览器...</td>
+										<td>2017-05-31</td>
+									</tr>
+									<tr>
+										<td>
+											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #b4dbc0;">
+												●
+											</span>
+											个人对公初级专业资...</td>
+										<td>2017-05-21</td>
+									</tr>
+									<tr>
+										<td>
+											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #ff0000;">
+												●
+											</span>
+											综合中级专业资格认</td>
+										<td>2017-05-11</td>
+									</tr>
 								</table>
 							</div>
 							<!-- /.box-body -->
@@ -550,7 +491,7 @@
 						<!-- /.box -->
 
 						<div class="box">
-							<div class="box-header">
+							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title">Q&A 问答</h3>
 							</div>
 							<!-- /.box-header -->
@@ -565,10 +506,10 @@
 						</div>
 						<!-- /.box -->
 						<div class="box">
-						<div class="box-header" icode="ksrl-header">
+						<div class="box-header" icode="ksrl-header" style="background-color: #f9f9f9;">
 							<h3 class="box-title">考试日历</h3>
 							<p style="float:right;cursor:pointer;">
-								<span style="font-family:'微软雅黑';color:#ff0000;">更多</span>
+								<span style="font-family:'微软雅黑';">更多</span>
 								<span style="font-family:'黑体';color:#ff0000;">></span>
 							</p>
 						</div>
@@ -637,20 +578,21 @@
 
 		</div>
 
-		<footer class="main-footer">
+		<footer class="main-footer" id="main-fotter-div">
 			<div align="center">
+				<img id="qt_footer_logo" class="img" src="/qt/img/u996.png">
 				<strong>中国工商银行考试系统</strong>
 			</div>
 			<div>
 				<table>
-					<tr>
+					<tr id="qt_footer_tr">
 						<td width="22%"><span>版权所有：中国工商银行 </span></td>
+						<td><span>|</span></td>
+						<td width="30%"><span>地址：北京市复兴门内大街55号</span></td>
 						<td><span></span></td>
-						<td width="25%"><span>地址：北京市复兴门内大街55号</span></td>
-						<td><span></span></td>
-						<td width="22%"><span>邮编：100140 </span></td>
-						<td><span> </span></td>
-						<td width="22%" align="right"><span>2017 年 6 月 </span></td>
+						<td width="16%"><span>邮编：100140 </span></td>
+						<td><span>|</span></td>
+						<td width="14%" align="right"><span style="font-family:'微软雅黑';font-weight: 400;color: #CCCCCC;">2017 年 6 月 </span></td>
 					</tr>
 				</table>
 			</div>
@@ -842,7 +784,7 @@
 	<!-- AdminLTE for demo purposes -->
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
 	<!-- 问答模块的js文件 -->
-	<script src="<%=CONTEXT_PATH%>/qt/js/wdgl.js"></script>
+<%-- 	<script src="<%=CONTEXT_PATH%>/qt/js/wdgl.js"></script> --%>
 
 	<!-- 首页待办/可申请报名js -->
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt_todo_apply.js"></script>

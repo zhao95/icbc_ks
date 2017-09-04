@@ -17,6 +17,7 @@ function userInfo() {
 			"<p>" + odeptName + "</p>");
 	var perImg = FireFly.getContextPath() + System.getUser("USER_IMG");
 	$("#userInfo2").append("<span class='hidden-xs'>" + userName + "</span>");
+	$("#userInfo2").append("<span class='hidden-xs' style='margin-left:8px;'><i class='fa fa-chevron-circle-down'></i></span>");
 	$("#userImg1").attr('src',perImg); 
 	$("#userImg2").attr('src',perImg); 
 	$("#userImg3").attr('src',perImg);  

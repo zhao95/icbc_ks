@@ -48,9 +48,9 @@ $(function() {
 	// 通过人力资源编码查询报名项目的服务对应的表
 	// var CurrentUser_work_num=System.getUser("USER_WORK_NUM");
 
-	// 因审核暂时使用的是用户编码，所以此时暂时使用USER_CODE(后续要改)
-	var CurrentUser_work_num = System.getUser("USER_CODE");
-	param1["_extWhere"] = "and STR1='" + CurrentUser_work_num
+	// 因审核暂时使用的是用户编码，所以此时暂时使用USER_CODE
+	var CurrentUser_code = System.getUser("USER_CODE");
+	param1["_extWhere"] = "and STR1='" + CurrentUser_code
 			+ "' AND INT1 ='1'";
 	var resultUserAssociateXM = FireFly.doAct("TS_XMZT", "query", param1);
 	// 上面结果的项目id获取到，再查询到对应的项目的挂接模块
@@ -142,7 +142,7 @@ $(function() {
 	} else {
 		// 如果未设置首页展示的项目，则查询审核通过的表添加到首页展示
 		var paramSH = {};
-		paramSH["_extWhere"] = "and BM_CODE='" + CurrentUser_work_num + "'";
+		paramSH["_extWhere"] = "and BM_CODE='" + CurrentUser_code + "'";
 		var resultSH = FireFly.doAct("TS_BMSH_PASS", "query", paramSH);
 		// 如果没有报名考试， 则显示提示信息到页面
 		if (resultSH._DATA_.length == 0) {

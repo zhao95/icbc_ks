@@ -6,6 +6,14 @@ $(function () {
     showTodoContent();
     setApplyContent();
     setAnnouncementContent();
+    /**
+     * 首页上标题的信息展示方法
+     * 点击跳转到用户个人信息的方法
+     * 注销用户的方法
+     */
+    showTodoTip();
+    jQuery("#loginOutBtn").unbind("click").click(clickAndLoginOut);
+    jQuery("#userInfo").unbind("click").click(userInfoPage);
 });
 
 /**
@@ -199,4 +207,97 @@ function doPost(to, data) {  //to:提交动作（action）,data:参数
     document.body.appendChild(myForm);
     myForm.submit();
     document.body.removeChild(myForm);  // 提交后移除创建的form
+}
+
+/**
+ * 首页上标题栏 提醒信息按钮的下拉框内容
+ */
+function showTodoTip() {
+
+    //获取待办/提醒列表数据
+    var tipListEl = jQuery('.index-qt-tip-list');
+    tipListEl.html('');
+    var data = {};
+    data = {_NOPAGE_: true};
+    var todoListPageList = FireFly.doAct("TS_COMM_TODO", 'query', data, false);
+    var todoList = todoListPageList._DATA_;
+
+    var typeNameMap = {
+        '0': '请假',
+        '1': '借考',
+        '2': '异议'
+    };
+
+    var colorClassNameMap = {
+        '0': 'qijia',
+        '1': 'jiekao',
+        '2': 'yiyi'
+    };
+
+    tipListEl.append(
+    		'<li class="header"><a href="#">待办 / 消息</a></li>'+
+    		'<li class="body">'
+    		
+    );
+    for (var i = 0; i < todoList.length; i++) {
+        var item = todoList[i];
+        //最多显示3个待办
+        if (i === 3) {
+            return false;
+        }
+        var typeName = typeNameMap[item.TYPE];
+        typeName = typeName ? typeName : '';
+        var colorClassName = colorClassNameMap[item.TYPE];
+        colorClassName = colorClassName ? colorClassName : 'yichang';
+        $('#tipSum').html(todoList.length);//设置待办总数
+        var itemContent = jQuery(
+            [
+                '<div id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '" style="text-lign:center;margin-left: 10px;" class="todo-content">',
+                '   <div style="min-height: 17px;">' + item.TITLE + '</div>',
+                '   <div style="font-size: 12px;color:#999999;min-height: 15px; cursor: pointer;">','<i class="fa fa-envelope-o fa-fw"></i>',
+                '   ' + item.SEND_DEPT_NAME + ' ' + item.SEND_NAME + ' ' + new Date(item.SEND_TIME).format("yyyy-mm-dd HH:MM"),
+                '   </div>',
+                '</div>'].join('')
+        ).bind('click', function () {//跳转到页面详情（请假/借考/异议）
+            var dataId = $(this).attr('data-id');
+            var todoId = $(this).attr('id');
+            doPost("/ts/jsp/qjlb_qj2.jsp", {todoid: todoId, qjid: dataId});
+        });
+
+        tipListEl.append(
+            jQuery([
+                '<div style="" class="todo-item">',
+                '   <div style="" class="todo-circle ' + colorClassName + '">',
+                '       <div style="padding:4px 4px;color: #fff"></div>',
+                '   </div>',
+                '</div>'
+            ].join('')).append(itemContent)
+        );
+    }
+    tipListEl.append(
+    		'</li>'
+    );
+    var tipViewAll = tipListEl.append(
+    		'<li class="footer" style="padding-top:30px;"><a href="#">查看所有待办 / 消息</a></li>'
+    ).bind('click', function () {//跳转到页面详情（请假/借考/异议）
+        var user_work_num = System.getUser("USER_CODE");
+//        debugger;
+        doPost("/qt/jsp/todo.jsp", {user_work_num: user_work_num });
+    });
+}
+/**
+ * 点击注销用户按钮触发注销用户的操作
+ */
+function clickAndLoginOut(){
+	var param = {};
+	FireFly.doAct("SY_ORG_LOGIN","logout",param);
+	window.location.href="/logout.jsp";
+}
+/**
+ * 点击个人信息跳转到用户个人信息界面
+ */
+function userInfoPage(){
+	var user_work_number = System.getUser("USER_CODE");
+	window.location.href ="/qt/jsp/user_info.jsp?USER_CODE="+user_work_number;
+	
 }
