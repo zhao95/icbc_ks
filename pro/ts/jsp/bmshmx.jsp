@@ -68,7 +68,7 @@ String bmid1 = request.getParameter("bmid1");
 		</tr>
 	</thead>
 	<tbody>
-	 <%-- <%
+	 <%
 	String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
 	List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
 	 for(int i=0;i<list.size();i++){
@@ -85,7 +85,7 @@ String bmid1 = request.getParameter("bmid1");
 		 <tr>
 		<td><%=j %></td><td><%=shdate %></td><td><%=shr %></td><td><%=shlog %></td><td><%=jibie %></td><td><%=state %></td><td><%=liyou %></td><td><%=address %></td>
 		</tr> 
-		<% }%>  --%>
+		<% }%>
 	</tbody>
 	</table>
 	<script type="text/javascript">

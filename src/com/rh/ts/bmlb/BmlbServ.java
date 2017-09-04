@@ -776,10 +776,7 @@ public class BmlbServ extends CommonServ {
     	 int count = 0;
     	 if(list.size()!=0){
          for (Bean bean : list) {
-             String code =  bean.getStr("KSLBK_ID");
-             String name =  bean.getStr("BM_CODE");
-             queryBean.set("KSLBK_ID", code);
-             queryBean.set("BM_CODE", name);
+        	 queryBean.copyFrom(bean);
              if (ServDao.count(servid, queryBean) <= 0) {
                  ServDao.save(servid, bean);
              }
