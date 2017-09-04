@@ -1,5 +1,6 @@
 package com.rh.ts.qjlb;
 
+import com.icbc.ctp.utility.CollectionUtil;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
@@ -30,6 +31,7 @@ public class QjlbServ extends CommonServ {
      * @return
      */
     public OutBean addData(ParamBean paramBean) {
+        Transaction.begin();
         OutBean outBean = new OutBean();
         String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
 
@@ -70,6 +72,15 @@ public class QjlbServ extends CommonServ {
         //起草人
         UserBean userBean = UserMgr.getUser(userCode);
         doFlowTask(outBean, userBean, qjbd, 0);
+
+        if (outBean.get(Constant.RTN_MSG) != null
+                && ((String) outBean.get(Constant.RTN_MSG)).contains(Constant.RTN_MSG_ERROR)) {
+            //有错误回滚
+            Transaction.rollback();
+        } else {
+            Transaction.commit();
+        }
+        Transaction.end();
         return outBean;
     }
 
@@ -195,43 +206,47 @@ public class QjlbServ extends CommonServ {
         OutBean shBean = ServMgr.act("TS_WFS_APPLY", "backFlow", flowParamBean);
 //        new FlowServ().backFlow(flowParamBean);
         List<Bean> shList = (List<Bean>) shBean.get("result");
-        int nodeSteps = (int) shBean.get("NODE_STEPS");
-        if (shList.size() == 0) {
-            outBean.setError("没有审核人，请联系管理员！");
-        }
+        outBean.putAll(shBean);
+        if (CollectionUtil.isEmpty(shList)) {
+            if (shList != null && shList.size() == 0) {
+                outBean.setError("没有审核人，请联系管理员！");
+            }
+        } else {
+            int nodeSteps = (int) shBean.get("NODE_STEPS");
 
-        StringBuilder shrNames = new StringBuilder();
-        for (Bean bean : shList) {
-            String shrName = (String) bean.get("SHR_NAME");
-            String shrUserCode2 = (String) bean.get("SHR_USERCODE");
-            shrNames.append(" ").append(shrName);
-            //推送人
-            UserBean shrUserBean = UserMgr.getUser(shrUserCode2);
-            String shrDeptCode = shrUserBean.getDeptCode();
-            String shrUserDeptName = shrUserBean.getDeptName();
+            StringBuilder shrNames = new StringBuilder();
+            for (Bean bean : shList) {
+                String shrName = (String) bean.get("SHR_NAME");
+                String shrUserCode2 = (String) bean.get("SHR_USERCODE");
+                shrNames.append(" ").append(shrName);
+                //推送人
+                UserBean shrUserBean = UserMgr.getUser(shrUserCode2);
+                String shrDeptCode = shrUserBean.getDeptCode();
+                String shrUserDeptName = shrUserBean.getDeptName();
 //            String shrOdeptCode = shrUserBean.getODeptCode();
 
-            Bean todoBean = new Bean();
-            todoBean.set("TITLE", qjTitle);
-            todoBean.set("TYPE", "0");//待办类型 1 请假 2借考  (? 0 请假)
-            todoBean.set("DATA_ID", qjId);
-            todoBean.set("NODE_STEPS", nodeSteps + "");//当前所在的流程级别
+                Bean todoBean = new Bean();
+                todoBean.set("TITLE", qjTitle);
+                todoBean.set("TYPE", "0");//待办类型 1 请假 2借考  (? 0 请假)
+                todoBean.set("DATA_ID", qjId);
+                todoBean.set("NODE_STEPS", nodeSteps + "");//当前所在的流程级别
 //            todoBean.set("SERV_ID", "0");//???
-            //发送人
-            todoBean.set("SEND_NAME", userBean.getName());
-            todoBean.set("SEND_USER", userBean.getCode());//发送人编码
-            todoBean.set("SEND_DEPT", userBean.getDeptCode());
-            todoBean.set("SEND_DEPT_NAME", userBean.getDeptName());
-            //办理人
-            todoBean.set("OWNER_NAME", shrName);
-            todoBean.set("OWNER_CODE", shrUserCode2);
-            todoBean.set("OWNER_DEPT", shrDeptCode);
-            todoBean.set("OWNER_DEPT_NAME", shrUserDeptName);
-            todoBean.set("SEND_TIME", sdf.format(new Date()));
-            //todoBean.set("DONE_TIME", "0");//???
-            ServDao.save(TODO_SERVID, todoBean);
+                //发送人
+                todoBean.set("SEND_NAME", userBean.getName());
+                todoBean.set("SEND_USER", userBean.getCode());//发送人编码
+                todoBean.set("SEND_DEPT", userBean.getDeptCode());
+                todoBean.set("SEND_DEPT_NAME", userBean.getDeptName());
+                //办理人
+                todoBean.set("OWNER_NAME", shrName);
+                todoBean.set("OWNER_CODE", shrUserCode2);
+                todoBean.set("OWNER_DEPT", shrDeptCode);
+                todoBean.set("OWNER_DEPT_NAME", shrUserDeptName);
+                todoBean.set("SEND_TIME", sdf.format(new Date()));
+                //todoBean.set("DONE_TIME", "0");//???
+                ServDao.save(TODO_SERVID, todoBean);
+            }
+            outBean.set("shrNames", shrNames.toString());
         }
-        outBean.set("shrNames", shrNames.toString());
     }
 
 

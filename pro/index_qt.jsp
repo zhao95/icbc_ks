@@ -586,7 +586,7 @@
 			<div>
 				<table>
 					<tr id="qt_footer_tr">
-						<td width="22%"><span>版权所有：中国工商银行 </span></td>
+						<td width="20%"><span>版权所有：中国工商银行 </span></td>
 						<td><span>|</span></td>
 						<td width="30%"><span>地址：北京市复兴门内大街55号</span></td>
 						<td><span></span></td>

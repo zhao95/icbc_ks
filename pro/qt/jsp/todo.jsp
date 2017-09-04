@@ -289,7 +289,7 @@
         };
         /*获取搜索条件 where语句*/
         ListPage.prototype.getExtWhere = function () {
-            var extWhere = '';
+            var extWhere = "and OWNER_CODE='" + System.getUser("USER_CODE") + "'";
 //            for (var i = 0; i < icodes.length; i++) {
 //                var icode = icodes[i];
 //                var select = jQuery('select[icode="' + icode + '"]');
@@ -326,11 +326,23 @@
                 tr.append('<td style="text-align: center;">' + (i + 1) + '</td>');
 
                 var td = jQuery('<td></td>');
-                var a = jQuery('<a id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>').unbind('click').bind('click', function () {
-                    var todoId = $(this).attr('id');
-                    var dataId = $(this).attr('data-id');
-                    doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
-                });
+                var a = jQuery('<a id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>');
+
+
+
+                if (item.TYPE === '0') {
+                    a.unbind('click').bind('click', function () {
+                        var todoId = $(this).attr('id');
+                        var dataId = $(this).attr('data-id');
+                        doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
+                    });
+                } else if (item.TYPE === '2') {
+                    a.unbind('click').bind('click', function () {
+                        var todoId = $(this).attr('id');
+                        var dataId = $(this).attr('data-id');
+                        doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
+                    });
+                }
                 td.append(a);
                 tr.append(td);
 
@@ -581,6 +593,9 @@
                     var dataId = $(this).attr('data-id');
                     doPost("/ts/jsp/qjlb_qj2.jsp", {/*todoid: item.TODO_ID,*/ qjid: dataId});
                 });
+
+
+
                 td.append(a);
 
                 tr.append(td);

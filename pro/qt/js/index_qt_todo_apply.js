@@ -25,20 +25,20 @@ function showTodoContent() {
     var todoListEl = jQuery('.index-qt-todo-list');
     todoListEl.html('');
     var data = {};
-    data = {_NOPAGE_: true};
+    data = {_extWhere: "and OWNER_CODE='" + System.getUser("USER_CODE") + "'", _NOPAGE_: true};
     var todoListPageList = FireFly.doAct("TS_COMM_TODO", 'query', data, false);
     var todoList = todoListPageList._DATA_;
 
     var typeNameMap = {
         '0': '请假',
-        '1': '借考',
-        '2': '异议'
+        '2': '借考',
+        '1': '异议'
     };
 
     var colorClassNameMap = {
         '0': 'qijia',
-        '1': 'jiekao',
-        '2': 'yiyi'
+        '2': 'jiekao',
+        '1': 'yiyi'
     };
 
     for (var i = 0; i < todoList.length; i++) {
@@ -60,11 +60,20 @@ function showTodoContent() {
                 '   ' + item.SEND_DEPT_NAME + ' ' + item.SEND_NAME + ' ' + new Date(item.SEND_TIME).format("yyyy-mm-dd HH:MM"),
                 '   </div>',
                 '</div>'].join('')
-        ).bind('click', function () {//跳转到页面详情（请假/借考/异议）
-            var dataId = $(this).attr('data-id');
-            var todoId = $(this).attr('id');
-            doPost("/ts/jsp/qjlb_qj2.jsp", {todoid: todoId, qjid: dataId});
-        });
+        );
+        if (item.TYPE === '0') {
+            itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
+                var dataId = $(this).attr('data-id');
+                var todoId = $(this).attr('id');
+                doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
+            });
+        } else if (item.TYPE === '2') {
+            itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
+                var dataId = $(this).attr('data-id');
+                var todoId = $(this).attr('id');
+                doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
+            });
+        }
 
         todoListEl.append(
             jQuery([
@@ -235,9 +244,8 @@ function showTodoTip() {
     };
 
     tipListEl.append(
-    		'<li class="header"><a href="#">待办 / 消息</a></li>'+
-    		'<li class="body">'
-    		
+        '<li class="header"><a href="#">待办 / 消息</a></li>' +
+        '<li class="body">'
     );
     for (var i = 0; i < todoList.length; i++) {
         var item = todoList[i];
@@ -254,15 +262,24 @@ function showTodoTip() {
             [
                 '<div id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '" style="text-lign:center;margin-left: 10px;" class="todo-content">',
                 '   <div style="min-height: 17px;">' + item.TITLE + '</div>',
-                '   <div style="font-size: 12px;color:#999999;min-height: 15px; cursor: pointer;">','<i class="fa fa-envelope-o fa-fw"></i>',
+                '   <div style="font-size: 12px;color:#999999;min-height: 15px; cursor: pointer;">', '<i class="fa fa-envelope-o fa-fw"></i>',
                 '   ' + item.SEND_DEPT_NAME + ' ' + item.SEND_NAME + ' ' + new Date(item.SEND_TIME).format("yyyy-mm-dd HH:MM"),
                 '   </div>',
                 '</div>'].join('')
-        ).bind('click', function () {//跳转到页面详情（请假/借考/异议）
-            var dataId = $(this).attr('data-id');
-            var todoId = $(this).attr('id');
-            doPost("/ts/jsp/qjlb_qj2.jsp", {todoid: todoId, qjid: dataId});
-        });
+        );
+        if (item.TYPE === '0') {
+            itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
+                var dataId = $(this).attr('data-id');
+                var todoId = $(this).attr('id');
+                doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId});
+            });
+        } else if (item.TYPE === '2') {
+            itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
+                var dataId = $(this).attr('data-id');
+                var todoId = $(this).attr('id');
+                doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, qjid: dataId});
+            });
+        }
 
         tipListEl.append(
             jQuery([
@@ -275,29 +292,29 @@ function showTodoTip() {
         );
     }
     tipListEl.append(
-    		'</li>'
+        '</li>'
     );
     var tipViewAll = tipListEl.append(
-    		'<li class="footer" style="padding-top:30px;"><a href="#">查看所有待办 / 消息</a></li>'
+        '<li class="footer" style="padding-top:30px;"><a href="#">查看所有待办 / 消息</a></li>'
     ).bind('click', function () {//跳转到页面详情（请假/借考/异议）
         var user_work_num = System.getUser("USER_CODE");
 //        debugger;
-        doPost("/qt/jsp/todo.jsp", {user_work_num: user_work_num });
+        doPost("/qt/jsp/todo.jsp", {user_work_num: user_work_num});
     });
 }
 /**
  * 点击注销用户按钮触发注销用户的操作
  */
-function clickAndLoginOut(){
-	var param = {};
-	FireFly.doAct("SY_ORG_LOGIN","logout",param);
-	window.location.href="/logout.jsp";
+function clickAndLoginOut() {
+    var param = {};
+    FireFly.doAct("SY_ORG_LOGIN", "logout", param);
+    window.location.href = "/logout.jsp";
 }
 /**
  * 点击个人信息跳转到用户个人信息界面
  */
-function userInfoPage(){
-	var user_work_number = System.getUser("USER_CODE");
-	window.location.href ="/qt/jsp/user_info.jsp?USER_CODE="+user_work_number;
-	
+function userInfoPage() {
+    var user_work_number = System.getUser("USER_CODE");
+    window.location.href = "/qt/jsp/user_info.jsp?USER_CODE=" + user_work_number;
+
 }
