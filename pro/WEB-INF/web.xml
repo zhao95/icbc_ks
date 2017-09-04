@@ -68,7 +68,7 @@
 	</context-param>
 	<context-param>
 	    <param-name>CACHE_DICT_SCHED_LOAD</param-name>
-	    <param-value>SY_ORG_CMPY,SY_ORG_DEPT_ALL</param-value>
+	    <param-value>SY_ORG_CMPY,SY_ORG_DEPT_ALL,TS_CTLG_TREE_ROLE,TS_CTLG_TREE_GROUP,TS_CTLG_TREE_PROJECT,TS_CTLG_TREE_PLAN</param-value>
 	    <!-- ,SY_ORG_ODEPT_ALL -->
 		<!-- 启动自动加载的外部字典编码，多个逗号分隔，例如：SY_ORG_CMPY,SY_ORG_DEPT,SY_ORG_DEPT_USER ,SY_ORG_DEPT_USER_ALL, SY_ORG_USER-->
 	</context-param>
