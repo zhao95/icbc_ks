@@ -88,6 +88,8 @@ public class FlowServ extends CommonServ {
 	String examerWorekNum = paramBean.getStr("examerWorekNum");
 	int level = paramBean.getInt("level");
 	String xmId = paramBean.getStr("xmId");
+	//表单Bean
+	Bean formBean = paramBean.getBean("form");
 	//1:报名审核流程 2:异地借考流程 3:请假审核流程	
 	int flowName = paramBean.getInt("flowName");  
 	String shrWorekNum = paramBean.getStr("shrWorekNum");
@@ -99,6 +101,7 @@ public class FlowServ extends CommonServ {
 	UserBean shrUserBean = UserMgr.getUserByWorkNum(shrWorekNum);
 	String shrDeptCode = shrUserBean.getDeptCode();
 	String shrOdeptCode = shrUserBean.getODeptCode(); 
+	
 	
 	String wfsId = "";
 	List<Bean> list = ServDao.finds("TS_XMGL_FLOW_UTIL_V", "and xm_id ='"+xmId+"' and FLOW_TYPE = " + flowName);
@@ -153,6 +156,7 @@ public class FlowServ extends CommonServ {
 		String ydyBm = shBean.getStr("QJKLC_YDDEPT");
 		String zdyDeptCode = shBean.getStr("DEPT_CODE");
 		String shzw = shBean.getStr("QJKLC_SHZW");
+		String colCodel = shBean.getStr("QJKLC_ZDDEPT_COLCODE");
 		
 		//1.审核人已填写
 		if(!shrWorkNum.equals("")){
@@ -204,6 +208,19 @@ public class FlowServ extends CommonServ {
 			resList.add(tmpUser);
 		    }
 		}
+		//4.制定部门编码，审核人职位已填写
+		if((!colCodel.equals("")) &&(!shzw.equals(""))){
+		    //指定部门
+		    String zdDept = formBean.getStr(colCodel);
+		    List<Bean> userlist = ServDao.finds("SY_ORG_USER_ALL", "and odept_code = '"+zdDept+"' and USER_POST = '"+shzw+"'");
+		    for (int i = 0; i < userlist.size(); i++) {
+			Bean tmpUser = new Bean();
+			tmpUser.set("SHR_NAME", userlist.get(i).getStr("USER_NAME"));
+			tmpUser.set("SHR_WORKNUM", userlist.get(i).getStr("USER_WORK_NUM"));
+			resList.add(tmpUser);
+		    }
+		}
+		
 	    }
 	    outBean.set("result", resList);
 	    outBean.set("NODE_STEPS", getStep);
