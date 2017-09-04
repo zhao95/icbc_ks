@@ -146,6 +146,15 @@ public class XmglServ extends CommonServ {
 			String ryqz = "delete from ts_xmgl_bmgl where XM_SZ_ID in ('" + delIds.substring(1).replace(",", "','")
 					+ "')";
 			Transaction.getExecutor().execute(ryqz);
+			 //删除审核
+		    String bmsh ="delete from ts_xmgl_bmsh where XM_SZ_ID in ('"+delIds.substring(1).replace(",", "','")+"')";
+		    Transaction.getExecutor().execute(bmsh);
+		    //删除请假
+		    String qj ="delete from ts_xmgl_qjgl where XM_SZ_ID in ('"+delIds.substring(1).replace(",", "','")+"')";
+		    Transaction.getExecutor().execute(qj);
+		  //删除异地借考
+		    String ydjk ="delete from ts_xmgl_ydjk where XM_SZ_ID in ('"+delIds.substring(1).replace(",", "','")+"')";
+		    Transaction.getExecutor().execute(ydjk);
 		}
 
 		if (!StringUtil.isBlank(bmid)) {
@@ -230,7 +239,7 @@ public class XmglServ extends CommonServ {
 			Bean outBeanCode = ServMgr.act("TS_XMGL_RYGL_V", "getCodes", param);
 			String codes = outBeanCode.getStr("rycodes");
 			Boolean boo = false;
-			if (codes == "") {
+			if ("".equals(codes)) {
 			} else {
 				// 本人所在的群组编码
 				String[] codeArray = codes.split(",");
