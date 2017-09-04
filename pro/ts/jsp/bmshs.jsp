@@ -42,7 +42,7 @@
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 <body class="hold-transition skin-black sidebar-mini">
 
-<%String user_code=userBean.getStr("user_code"); %>
+
 	<div class="" style="padding: 10px">
 		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
 				src="<%=CONTEXT_PATH%>/ts/image/u1155.png" id="shouye"></image></a> <span
@@ -180,9 +180,9 @@
 	<input type="hidden" id="xmid" />
 	<input type="hidden" id="dijige">
 	<script type="text/javascript">
+	var user_code = System.getVar("@USER_CODE@");
 	var jq = $.noConflict(true);
 	jq(function (){
-		var user_code = "<%=user_code%>";
 		selectxmdata(user_code,1);
 		 var s ="yema"+1;
 		 $("#"+s).addClass("active");	 
@@ -194,24 +194,15 @@
 		 var hid = "XM_ID"+i;
 		 var xmtypeid = "XM_TYPE"+i;
 			var id = document.getElementById(hid).innerHTML;
-			var xmtype = document.getElementById(xmtypeid).innerHTML;
-			if(xmtype=="资格类考试"){
 			document.getElementById("zgtz").value=id;
-				
 			document.getElementById("form1").submit();
-			}else{
-			document.getElementById("fzgtz").value=id;
-			document.getElementById("form2").submit();
-			}
 	}
 	//分页
 	function fenyeselect(){
-		var user_code = "<%=user_code%>";
 		selectxmdata(user_code,1);
 	}
 	//查询
 	function xzcu(){
-		var user_code = "<%=user_code%>";
 		selectxmdata(user_code,1);
 	}
 	//上一页 按钮
@@ -223,7 +214,6 @@
 		}else{
 			//要显示的页码
 			var yema1 = yema-1;
-			var user_code = "<%=user_code%>";
 			selectxmdata(user_code,yema1);
 			//table tr  背景色
 			var table = document.getElementById("table");   
@@ -240,7 +230,6 @@
 		}else{
 			//要显示的页码数
 			 var yema1 = yema-1+2;
-			 var user_code = "<%=user_code%>";
 			 selectxmdata(user_code,yema1);
 			//table tr  背景色
 			var table = document.getElementById("table");   
@@ -254,7 +243,6 @@
 		//点击第几页
 		var ym = document.getElementById(id).innerText;
 		//传入 要显示的页码数即可
-		var user_code = "<%=user_code%>";
 		selectxmdata(user_code,ym);
 		 
 		//table tr  背景色
@@ -327,8 +315,6 @@
 	     		$("#fenyeul").html("");
 	     		$("#fenyeul").append('<li><a href="#">&laquo;</a></li><li><a  href="#">&raquo;</a></li>');
 	     	}else{
-	     		
-	     		
 	     	var pageEntity=JSON.parse(data);
 	     	var pageEntity2 = JSON.parse(data2);
 	     	 //总条数/每页
@@ -349,8 +335,6 @@
 				 $("#fenyeul").append('<li id="yema'+j+'" onclick=chaxun('+j+')><a  href="#">'+j+'</a></li>');
 						 
 					 }
-					 
-				 
 			 }
 	     		  //最后一页
 				 var last =yeshu+1;
@@ -367,33 +351,32 @@
 					var cjsj = pageEntity[i].S_ATIME;
 					var enddate = pageEntity[i].XM_END;
 					var xmtype = pageEntity[i].XM_TYPE;
-					//创建新时间 判断 状态
-					var str1 =startdate;
-					var str2 = enddate;
-					str1 = str1.replace(/-/g,"/");
-					str2 = str2.replace(/-/g,"/");
+					var id = pageEntity[i].XM_ID;
 					var state = "已结束";
-					if(startdate!=""&&enddate!=""){
-					var end = new Date(str2);
-					var start = new Date(str1);
-					var date = new Date();
-				
-					if(date.getTime()>start.getTime()&&date.getTime()<end.getTime()){
+					//创建新时间 判断 状态
+					var param1={};
+					param1["xmid"]=id;
+					var result1 = FireFly.doAct("TS_XMGL_BMGL","getBMState",param1);
+					var data1 = result1.list;
+					var pageEntity1 = JSON.parse(data1);
+					//报名开始时间
+					var startTime = pageEntity1[0].START_TIME;
+					var state1 = pageEntity1[0].STATE;
+					if(state1=="待报名"){
+						state="报名审核"
+					}else if(state1=="已结束"){
 						
-					 state = "报名审核";
-					}else if(date.getTime()<start.getTime()){
+					}else{
 						state = "未开始";
 					}
-					}
 					//添加一行隐藏的项目id
-					var id = pageEntity[i].XM_ID;
 					var xuhao = first+i;
 	     		//为table重新appendtr
 					if(state=="报名审核"){
-	     			$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td><input type="button" onclick="tiaozhuan('+i+')" style="margin-top:7px;border:none;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" style="border:none;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="查看"></input></td></tr>');
+	     			$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td><input class = "btn" type="button" onclick="tiaozhuan('+i+')" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');
 		     		
 					}else{
-						$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="BM_ID'+i+'" >'+id+'</td><td><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" style="border:none;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="查看"></input></td></tr>');	
+						$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" class="btn" type="button" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');	
 					}
 	     	  }
 	     	
@@ -411,7 +394,6 @@
 		    } 
 	}
 	function ztcx(){
-		var user_code = "<%=user_code%>";
 		selectxmdata(user_code,1);
 	}
 	</script>

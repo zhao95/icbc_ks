@@ -1,6 +1,7 @@
 package com.rh.ts.bmlb;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+
+
+
+
+
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -18,6 +31,8 @@ import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.BeanUtils;
+import com.rh.core.base.TipException;
+import com.rh.core.comm.FileMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -105,7 +120,6 @@ public class BmlbServ extends CommonServ {
 		String servId=paramBean.getStr(Constant.PARAM_SERV_ID);
 		//获取前台传过来的值
 		String user_code = paramBean.getStr("USER_CODE");
-//		String user_code = "000786530";
 		String user_name = paramBean.getStr("USER_NAME");
 		String user_sex = paramBean.getStr("USER_SEX");
 		String odept_name = paramBean.getStr("ODEPT_NAME");
@@ -215,28 +229,13 @@ public class BmlbServ extends CommonServ {
 					ServDao.save("TS_OBJECT", objBean);
 					
 					ParamBean param=new ParamBean();
-					param.set("examerWorekNum",user_code);
+					param.set("examerWorekNum","000786238");
 					param.set("level",0);
 					param.set("xmId",xm_id);
 					param.set("flowName",1);
-					param.set("shrWorekNum",user_code);
+					param.set("shrWorekNum","000786238");
 					OutBean out= ServMgr.act("TS_WFS_APPLY","backFlow", param);
-					List<Bean> blist = (List<Bean>) out.get("result");
-					String node_id= blist.get(0).getStr("NODE_ID");
-					String sh_user= blist.get(blist.size()-1).getStr("SHR_WORKNUM");
-					String sh_level= blist.get(0).getStr("NODE_STEPS");
-					String allman="";
-					for (int l=0;l<blist.size();l++) {
-						if(l==0){
-							allman = blist.get(l).getStr("SHR_WORKNUM");
-						}
-						else{
-							allman+= blist.get(l).getStr("SHR_WORKNUM")+",";
-						}
-						
-					}
-
-					
+					System.out.println(out);
 					//添加到审核表中
 					Bean shBean =new Bean();
 					shBean.set("XM_ID",xm_id);
@@ -248,10 +247,6 @@ public class BmlbServ extends CommonServ {
 					shBean.set("BM_XL",kslb_xl);
 					shBean.set("BM_MK",kslb_mk);
 					shBean.set("BM_TYPE",kslb_type);
-					shBean.set("SH_NODE",node_id);//目前审核节点
-					shBean.set("SH_LEVEL",sh_level);//目前审核层级
-					shBean.set("SH_USER",sh_user);//当前办理人
-					shBean.set("SH_OTHER",allman);//其他办理人
 					if(count==0){
 						ServDao.save("TS_BMSH_PASS", shBean);
 					}if(count==1){
@@ -668,4 +663,126 @@ public class BmlbServ extends CommonServ {
 			
 		       return outBean;
 	}
+	/**
+	 * 获取上诉理由  异议原因
+	 * @param paramBean
+	 * @return
+	 */
+	public Bean getLiyou(Bean paramBean){
+		Bean outBean = new Bean();
+		String bmid = paramBean.getStr("bmid");
+		Bean databean = ServDao.find("TS_BMLB_BM", bmid);
+		outBean.set("liyou", databean.getStr("BM_SS_REASON"));
+		return outBean;
+	}
+	/**
+	 * 获取单条  根据id
+	 */
+	public Bean getSingle(Bean paramBean){
+		String id = paramBean.getStr("bmid");
+		String where = "AND BM_ID="+"'"+id+"'";
+		List<Bean> list  = ServDao.finds("TS_BMLB_BM",where);
+		if(list.size()==0){
+			return new OutBean().setOk("信息为空");
+		}
+		Bean outBean = new Bean();
+		 ObjectMapper mapper = new ObjectMapper();    
+	       StringWriter w = new StringWriter();  
+	       try {
+			mapper.writeValue(w, list);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	       outBean.set("list",w.toString());
+		return outBean;
+	}
+	
+	 /**
+     * 通过excl文件获取试卷相关信息
+     *
+     * @param fileId 文件id
+     */
+    public OutBean getDataFromXls(Bean paramBean) throws IOException, BiffException {
+        List<Bean> result = new ArrayList<>();
+        String fileId=paramBean.getStr("fileId");
+        String servid = paramBean.getStr("serv_id");
+        String where = "AND SERV_ID="+"'"+servid+"'";
+        List<Bean> listcolumn = ServDao.finds("SY_SERV_ITEM",where);
+        //查询表字段和注释
+        /*String where = "AND "*/
+        Bean fileBean = FileMgr.getFile(fileId);
+        InputStream in = FileMgr.download(fileBean);
+        Workbook workbook = Workbook.getWorkbook(in);
+        try {
+        	//查找服务名称
+        	String whereser = "AND SERV_ID="+"'"+servid+"'";
+        	List<Bean> serlist = ServDao.finds("SY_SERV",whereser);
+            Sheet sheet1 = workbook.getSheet(serlist.get(0).getStr("SERV_NAME"));
+            int rows = sheet1.getRows();
+            List<String> newlist = new ArrayList<String>();
+            for (int i = 0; i < rows; i++) {
+            	if(i==0){
+            		//获取第一行单元格
+            		Cell[] cells = sheet1.getRow(0);
+            		for (Cell cell : cells) {
+            			for (Bean columnbean : listcolumn) {
+            				String s = cell.getContents();
+            				if(cell.getContents().equals(columnbean.getStr("ITEM_NAME"))){
+            					newlist.add(columnbean.getStr("ITEM_CODE"));
+            				}
+            				}
+					}
+            		
+            	}
+                if (i != 0) {
+                    //获取字段对应的名字  和字段  循环判断 是否对应 然后赋值  将 其组成key value
+                    //获的排序好的字段  的list
+                	Cell[] cells = sheet1.getRow(i);
+                    Bean bean = new Bean();
+                    for(int j=0;j<cells.length;j++){
+                    	
+                    	if (!StringUtils.isEmpty(cells[j].getContents())) {
+                    		bean.set(newlist.get(j),cells[j].getContents());
+                    	}
+                    }
+                    result.add(bean);
+                 
+                }
+            }
+        } catch (Exception e) {
+            throw new TipException("Excel文件解析错误，请校验！");
+        } finally {
+            workbook.close();
+        }
+       
+        OutBean outBean = saveFromExcel(result,servid);
+        return outBean;
+    }
+    
+    /**
+     * 从excel文件中读取试卷信息，并保存
+     *
+     * @param paramBean paramBean
+     * @return outBean
+     */
+    public OutBean saveFromExcel(List<Bean> list,String servid){
+        OutBean outBean = new OutBean();
+    	 Bean queryBean = new Bean();
+    	 int count = 0;
+    	 if(list.size()!=0){
+         for (Bean bean : list) {
+        	 queryBean.copyFrom(bean);
+             if (ServDao.count(servid, queryBean) <= 0) {
+                 ServDao.save(servid, bean);
+             }
+             count++;
+         }
+    	 }
+         return outBean.setCount(count).setMsg("添加成功").setOk();
+}
 }

@@ -1,11 +1,10 @@
 var xmid = jq("#xmid").val();
-var user_code = jq("#user_code").val();
+var user_code = System.getVar("@USER_CODE@");
 //隔一行 进行 背景颜色 渲染
 function rowscolor(table){
 	 var rows = table.getElementsByTagName("tr");  
 	    for(i = 1; i < rows.length; i++){  
 	        if(i % 2 == 0){  
-	   
 	            rows[i].style.backgroundColor = "Azure";  
 	       }  
 	    } 
@@ -22,6 +21,8 @@ for(var z=0;z<btns.length;z++){
 
 }
 //审核 筛选
+var nowlevel = 0;
+var nodeid = "";
 function selectdata1(user_code,xmid,shenhe,yema){
 	//判断审核是待审核  还是 审核通过 还是 审核未通过  然后拼接不同的where 条件 查询
 	var param={};
@@ -150,24 +151,24 @@ function selectdata1(user_code,xmid,shenhe,yema){
 			param["shownum"]=myts;
 	     	param["where"]=where1 + where2 + where3 + where4 + where5+where6;
 	}
-	
-	
 		var first = (yema-1)*myts+1;
+		param["xmid"]=xmid;
      	var result = FireFly.doAct(servId,"getUncheckList",param);
      	var result2 = FireFly.doAct(servId,"getAllData",param);
+     	console.log(result2);
+     	nowlevel=result2.level;
+     	nodeid=result2.node_id;
      	//查找排序顺序   根据排序号进行排序
      	var param1 = {};
      	param1["user_code"]=user_code;
      	var result3 = FireFly.doAct("TS_BMSH_PX","getShenheJson",param1);
      	var data3 = result3.list;
      	var pageEntity3 = JSON.parse(data3);
-     	
 		//data为json格式字符串
 		var data2 = result2.list;
      	var data = result.list;
      	//将json字符串 转换为 json对象
-     	if(data==null){
-     		
+     	if(data.length==2){
      		$("#"+table+" tbody").html("");
      		$("#"+fenye).html("");
      		$("#"+fenye).append('<li><a href="#">&laquo;</a></li><li><a  href="#">&raquo;</a></li>');
@@ -175,6 +176,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
      		var pageEntity=JSON.parse(data);
      		var pageEntity2 = JSON.parse(data2);
      		$("#"+table+" tbody").html("");
+     		
      	    for(var i=0;i<pageEntity.length;i++){
      	    	var xuhao = first+i;
      	    	var id = pageEntity[i].SH_ID;
@@ -184,19 +186,30 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    	var paramuser={}
      	    	paramuser["bm_code"]=BM_CODE;
      	    	//获取对象信息
+     	    	var userinfo = FireFly.doAct("TS_BMSH_STAY","getUserInfo",paramuser);
+     	    	var userdata = userinfo.list;
+     	     	var userEntity = JSON.parse(userdata);
      	     	var yiyi = pageEntity[i].BM_YIYI;
+     	     	var bmid = pageEntity[i].BM_ID;
      	     	if(yiyi==""){
-     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#userbminfo" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: center"><a onclick = "formsubmit(this)" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
      	     	}else{
-     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit('+i+')" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" data-target="#userbminfo" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+     	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
      	     		
      	     	}
      	    	for(var j=0;j<pageEntity3.length;j++){
      	    		var column = pageEntity3[j].PX_COLUMN;
      	    		var fir = pageEntity[i][column];
-     	    		/*if(fir==null){
-     	    			
+     	    		if(column=="SH_OTHER"){
+     	    			var paramcode = {};
+     	    			paramcode["codes"]=pageEntity[i][column];
+     	    			var resultname = FireFly.doAct("TS_BMSH_STAY","getusername",paramcode);
+     	    			fir = resultname.usernames;
+     	    		}     	    		
+     	    		if(column=="SH_USER"){
      	    			fir = userEntity[0][column];
+     	    		}
+     	    		if(fir==null){
      	    			if(column=="JOB_LB"){
      	    				fir = pageEntity[i].BM_LB;
      	    			}
@@ -206,20 +219,24 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    			if(column=="TONGYI"){
      	    				fir=pageEntity[i].BM_CODE;
      	    			}
-     	    		}*/
+     	    			var BM_TYPE = "";
+     	    			if(column=="BM_TYPE"){
+     	    				if(fir=="1"){
+     	    					BM_TYPE="初级";
+     	    				}else if(fir=="2"){
+     	    					BM_TYPE="中级";
+     	    				}else{
+     	    					BM_TYPE="高级";
+     	    				}
+     	    				fir = BM_TYPE;
+     	    			}
+     	    		}
+     	    	
+     	    		if(column=="SH_LEVEL"){
+     	    			fir=nowlevel;
+     	    		}
      	    		if(fir==null){
      	    			fir="";
-     	    		}
-     	    		var BM_TYPE = "";
-     	    		if(column=="BM_TYPE"){
-     	     		 if(fir=="1"){
-     	     			BM_TYPE="初级";
-     	     		 }else if(fir=="2"){
-     	     			 BM_TYPE="中级";
-     	     		 }else{
-     	     			 BM_TYPE="高级";
-     	     		 }
-     	     		 fir = BM_TYPE;
      	    		}
      	    		$("#"+table+" tbody").find('tr:eq('+i+')').append('<td>'+fir+'</td>');
      	    	}
@@ -378,6 +395,7 @@ function appendTh(user_code){
 }
 	
 	//可选报名  已选报名字体图片改变
+var tabnum=1;
 	function dsha(){
 		
 		document.getElementById("dshimage").src="/ts/image/u1677.png";
@@ -387,6 +405,7 @@ function appendTh(user_code){
 		document.getElementById("shwtgsp").style.color="black";
 		document.getElementById("shwtgimage").src="/ts/image/u1695.png";
 		selectdata1(user_code,xmid,1,1); 
+		tabnum=1;
 	}
 	function shtga(){
 		document.getElementById("shtgsp").style.color="LightSeaGreen";
@@ -396,9 +415,9 @@ function appendTh(user_code){
 		document.getElementById("shwtgsp").style.color="black";
 		document.getElementById("shwtgimage").src="/ts/image/u1695.png";
 		selectdata1(user_code,xmid,2,1); 
+		tabnum=2;
 	}
 	function shwtda(){
-		   
 		document.getElementById("shwtgsp").style.color="LightSeaGreen";
 		document.getElementById("shwtgimage").src="/ts/image/u2813.png";
 		document.getElementById("shtgsp").style.color="black";
@@ -406,7 +425,7 @@ function appendTh(user_code){
 		document.getElementById("dshimage").src="/ts/image/u2212.png";
 		document.getElementById("dshsp").style.color="black";
 		selectdata1(user_code,xmid,3,1); 
-	    
+		tabnum=3;
 	}
 //---------------------------------------------------------------------------------自定义显示列
 	//自定义显示列数据进行回显
@@ -440,6 +459,10 @@ function appendTh(user_code){
 	function  savePX(){
 		//获取所有的td
 		var sentds = document.getElementsByName("rtcheckbox");
+		if(sentds.length==0){
+			alert("至少选择一条");
+			return;
+		}
 		//循环遍历所有的td
 		var param={};
 		var aa = false;
@@ -522,6 +545,8 @@ function firall(){
 					  param["radiovalue"]=radiovalue;
 					  param["liyou"]=liyou;
 					  param["xmid"]=xmid;
+					  param["level"]=nowlevel;
+					  param["nodeid"]=nodeid;
 					  FireFly.doAct("TS_BMSH_STAY","update",param);
 					  $('#tiJiao').modal('hide');
 					  dsha();
@@ -547,6 +572,8 @@ function firall(){
 					  param["checkedid"]=s;
 					  param["radiovalue"]=radiovalue;
 					  param["liyou"]=liyou;
+					  param["level"]=nowlevel;
+					  param["nodeid"]=nodeid;
 					  FireFly.doAct("TS_BMSH_PASS","update",param);
 					  //局部刷新
 					   $('#tiJiao').modal('hide');
@@ -572,6 +599,9 @@ function firall(){
 					  param["checkedid"]=s;
 					  param["radiovalue"]=radiovalue;
 					  param["liyou"]=liyou;
+					  param["xmid"]=xmid;
+					  param["level"]=nowlevel;
+					  param["nodeid"]=nodeid;
 					  FireFly.doAct("TS_BMSH_NOPASS","update",param);
 					  $('#tiJiao').modal('hide');
 
@@ -717,10 +747,9 @@ function firall(){
 			});
 				//审核明细
 				function formsubmit(obj){
-					var id = "BM_ID"+obj;
-					var bmid = document.getElementById(id).innerHTML;
-					document.getElementById("bmid").value=bmid;
-					$("#form1").submit();
+					var bmid = obj.parentNode.id;
+					document.getElementById("bmid1").value=bmid;
+					document.getElementById("form5").submit();
 				}
 				//导出
 				//定义一个公共变量  当进行条件查询时  将 数据ID放入数组中
@@ -752,80 +781,7 @@ function firall(){
 				encodeURIComponent(jq.toJSON(data)));
 				
 				}
-/*//导入
-				function importdataa(event,obj){
-					var _self = this;
-					var config = {"SERV_ID":obj, "FILE_CAT":"EXCEL_UPLOAD", "FILENUMBER":1, 
-				    		"VALUE":5, "TYPES":"*.xls;*.xlsx", "DESC":Language.transStatic("rhListView_string10")};
-					var file = new rh.ui.File({
-						"config" : config,"width":"99%"
-					});
-					
-					var importWin = new rh.ui.popPrompt({
-//						title:"请选择文件",
-						title:Language.transStatic("rhListView_string11"),
-//						tip:"请选择要导入的Excel文件：",
-						tip:Language.transStatic("rhListView_string12"),
-						okFunc:function() {
-							var fileData = file.getFileData();
-							if (jQuery.isEmptyObject(fileData)) {
-//								alert("请选择文件上传");
-								alert(Language.transStatic("rhListView_string13"));
-								return;
-							}
-							var fileId = null;
-							for (var key in fileData) {
-								fileId = key;
-							}
-							if (fileId == null){
-//								alert("请选择文件上传");
-								alert(Language.transStatic("rhListView_string13"));
-								return;
-							}
-							rh.vi.listView.prototype._imp1(fileId,true,obj);
-							importWin.closePrompt();
-					        // _self.refreshGrid();
-							file.destroy();
-						},
-						closeFunc:function() {
-							file.destroy();
-						}
-					});
 
-				    var container = rh.vi.listView.prototype._getImpContainer(event, importWin);
-					container.append(file.obj);
-					file.obj.css({'margin-left':'5px'});
-					file.initUpload();
-
-				}
-
-				
-				*//** 导入数据 **//*
-				rh.vi.listView.prototype._imp1 = function(fileId, param,obj) {
-					var data = {"fileId":fileId};
-					if(param) {
-						data = jQuery.extend(data, param);
-					}
-					var _self = this;
-					var _loadbar = new rh.ui.loadbar();
-					_loadbar.show(true);
-					//form提交，需要服务器再返回Excel
-					FireFly.doAct(obj, "imp", data, false, true, function(result) {
-						if(result._MSG_.indexOf("ERROR,") == 0) {
-//							var msg = "导入文件失败，点击“确定按钮”下载文件。请打开文件查看导入结果。";
-							var msg = Language.transStatic("rhListView_string16");
-							SysMsg.alert(msg, function(){
-								if(result.FILE_ID) {
-									var url = FireFlyContextPath + "/file/" + result.FILE_ID;
-									window.open(url);
-								}
-							});
-						} 
-						_self._deletePageAllNum();
-						_self.refreshGrid();
-						_loadbar.hideDelayed();	
-					});
-				}*/
 //--------------------------------------------------------------------------异议图标
 function yiyi(obj){
 		var a = obj.parentNode.id;
@@ -851,11 +807,13 @@ function yiyi(obj){
 	}
 //-------------------------------------------------------------------------------报名详细信息图标
 function form2submit(obj){
-	var a = obj.parentNode.id;
+	var bmid = obj.parentNode.id;
 		var param = {};
-		param["bmid"]=a;
+		param["bmid"]=bmid;
 	var result = FireFly.doAct("TS_BMLB_BM","getSingle",param);
 	var data = result.list;
+	if(data.length!=2){
+	$(obj).attr("data-target","#userbminfo");
 	var pageEntity = JSON.parse(data);
 	 $("#ks_title").text(pageEntity[0].BM_TITLE);
 	 $("#bm_name").text(pageEntity[0].BM_NAME);
@@ -868,6 +826,9 @@ function form2submit(obj){
 		 $("#gender").text("男");
 	 }
 	 $("#belongto").text(pageEntity[0].ODEPT_NAME);
+	}else{
+		 $(obj).attr("data-target","");
+	}
 }
 //左侧全选
 function checkall(obj){
@@ -988,7 +949,6 @@ jq(document).ready(function(){
 function tuodongtr(){
 	var btns = document.getElementsByName('rtcheckbox');
 	for(var z=0;z<btns.length;z++){
-		alert(btns[z]);
 		var td = btns[z].parentNode;
 		td.onmouseover = function() {
 			 this.style.backgroundColor = 'red';
@@ -1042,16 +1002,26 @@ function deletefile(obj){
 //导入数据库
 jq("#excelimp").click(function(){
 	 var linum =  $("#excleupload").find('li').length;
-	 alert(linum);
 	 //不为0 时可以删除
 	 if(linum==0){
 		 alert("文件不能为空");
 	 }else{
+		 var servid="";
 		 var param = {};
 		 var s = document.getElementById("shanchu").innerHTML;
-		 alert(s);
 		 param["fileId"]=s;
+		 if(tabnum==1){
+			  servid = "TS_BMSH_STAY";
+		 }else if(tabnum==2){
+			 servid="TS_BMSH_PASS"
+		 }else{
+			 servid="TS_BMSH_NOPASS"
+		 }
+		 param["serv_id"]=servid;
 		 FireFly.doAct("TS_BMLB_BM","getDataFromXls",param);
+		 $("#excleupload").modal('hide');
+		 selectdata1(user_code,xmid,tabnum,1); 
+		 
 	 }
 });
 //验证不是xls 或  xl 删除
