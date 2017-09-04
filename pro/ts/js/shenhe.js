@@ -219,6 +219,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	    			fir = userEntity[0][column];
      	    		}
      	    		if(fir==null){
+     	    			fir = userEntity[0][column];
      	    			if(column=="JOB_LB"){
      	    				fir = pageEntity[i].BM_LB;
      	    			}
