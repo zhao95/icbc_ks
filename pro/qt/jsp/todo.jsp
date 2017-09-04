@@ -329,7 +329,7 @@
                 var a = jQuery('<a id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>').unbind('click').bind('click', function () {
                     var todoId = $(this).attr('id');
                     var dataId = $(this).attr('data-id');
-                    doPost("/ts/jsp/qjlb_qj2.jsp", {todoid: todoId, qjid: dataId});
+                    doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
                 });
                 td.append(a);
                 tr.append(td);
