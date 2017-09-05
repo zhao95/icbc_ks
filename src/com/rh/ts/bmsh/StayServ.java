@@ -434,7 +434,6 @@ public class StayServ extends CommonServ {
 	 * 获取用户信息
 	 */
 	public Bean getUserInfo1(String s){
-		Bean returnBean = new Bean();
 		Bean outBean = new Bean();
 		try{
 		//根据人力编码获取人力信息
@@ -456,6 +455,15 @@ public class StayServ extends CommonServ {
     		j--;
     		outBean.set("LEVEL"+j,evname);
     	}
+    	String shuser="";
+    	UserBean userBean1 = Context.getUserBean();
+		if(userBean1.isEmpty()){
+			 return new OutBean().setError("ERROR:user_code 为空");
+		}else{
+			 shuser = userBean.getStr("USER_NAME");
+		}
+    	//当前办理人
+    	outBean.set("SH_USER", shuser);
     
     	//性别
     	int user_sex = userBean.getSex();
@@ -480,7 +488,7 @@ public class StayServ extends CommonServ {
 			
 		}
 		
-		return returnBean;
+		return outBean;
 	}
 	/**
 	 * 获取所有部门信息
@@ -583,8 +591,13 @@ public class StayServ extends CommonServ {
 					if("".equals(bean.getStr(namecol))&&"".equals(userBean.getStr(namecol))){
 						newBean.set(namecol,"");
 					}
-					if("".equals(name)){
-						
+						if("SH_OTHER".equals(namecol)){
+							//其它办理人
+							Bean parambeansss = new Bean();
+							parambeansss.set("codes", bean.getStr("SH_OTHER"));
+							Bean outBeans = getusername(bean);
+							 name = outBeans.getStr("usernames");
+						}
 					if("JOB_LB".equals(namecol)){
 						name = bean.getStr("BM_LB");
  	    			}
@@ -606,7 +619,6 @@ public class StayServ extends CommonServ {
  	    				name = BM_TYPE;
  	    			}
  	    			newBean.set(namecol, name);
-					}
 					newBean.set("_ROWNUM_","");
 					newBean.set("ROWNUM_","");
 				}

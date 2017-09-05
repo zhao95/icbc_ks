@@ -337,7 +337,6 @@ public class PassServ extends CommonServ {
         	}
 	        //查询出所有的 待审核记录
 	        OutBean outBean = query(paramBean);
-	        LinkedHashMap<String, Bean> cols1 = outBean.getCols();
 	        for (Bean bean : dataList) {
 			String work_num = bean.getStr("BM_CODE");
 			Bean userBean =getUserInfo1(work_num);
@@ -366,11 +365,13 @@ public class PassServ extends CommonServ {
 					newBean.set(namecol, userBean.getStr(namecol));
 					name = userBean.getStr(namecol);
 				}
-				if("".equals(bean.getStr(namecol))&&"".equals(userBean.getStr(namecol))){
-					newBean.set(namecol,"");
+				if("SH_OTHER".equals(namecol)){
+					//其它办理人
+					ParamBean parambeansss = new ParamBean();
+					parambeansss.set("codes", bean.getStr("SH_OTHER"));
+					Bean outBeans = ServMgr.act("TS_BMSH_STAY", "getusername", parambeansss);
+					 name = outBeans.getStr("usernames");
 				}
-				if("".equals(name)){
-					
 				if("JOB_LB".equals(namecol)){
 					name = bean.getStr("BM_LB");
 	    			}
@@ -390,9 +391,9 @@ public class PassServ extends CommonServ {
 	    					BM_TYPE="高级";
 	    				}
 	    				name = BM_TYPE;
-	    			}
-	    			newBean.set(namecol, name);
+	    			
 				}
+	    			newBean.set(namecol, name);
 				newBean.set("_ROWNUM_","");
 				newBean.set("ROWNUM_","");
 			}
@@ -439,7 +440,6 @@ public class PassServ extends CommonServ {
 	 * 获取用户信息
 	 */
 	public Bean getUserInfo1(String s){
-		Bean returnBean = new Bean();
 		Bean outBean = new Bean();
 		try{
 		//根据人力编码获取人力信息
@@ -462,6 +462,18 @@ public class PassServ extends CommonServ {
     		outBean.set("LEVEL"+j,evname);
     	}
     
+    	String shuser="";
+    	UserBean userBean1 = Context.getUserBean();
+		if(userBean1.isEmpty()){
+			 return new OutBean().setError("ERROR:user_code 为空");
+		}else{
+			 shuser = userBean.getStr("USER_NAME");
+		}
+		
+		//其它办理人
+		
+    	//当前办理人
+    	outBean.set("SH_USER", shuser);
     	//性别
     	int user_sex = userBean.getSex();
     	if(user_sex==0){
@@ -485,7 +497,7 @@ public class PassServ extends CommonServ {
 			
 		}
 		
-		return returnBean;
+		return outBean;
 	}
 	/**
 	 * 获取所有部门信息

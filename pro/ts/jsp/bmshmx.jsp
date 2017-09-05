@@ -65,6 +65,8 @@
 	</thead>
 	<tbody>
 	 <%
+	 String s =request.getQueryString();
+	 out.print(s);
 	 String bmid = request.getParameter("bmid4");
 	 out.print(bmid);
 	 String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";

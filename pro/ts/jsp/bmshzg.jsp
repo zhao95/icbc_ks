@@ -491,7 +491,7 @@
 		</div><!-- /.modal -->
 	</div>
 			<form id="form5" style="display:none" method="post" action="bmshmx.jsp">
-				<input id = "bmid4" name="bmid4"></input>
+				<input id = "bmid4" name="bmid4">
 			</form>
 			<form id="form2" style="display:none" method="post" action="baomingglf.jsp">
 				<input id = "fzgtz" name="fzgtz"></input>

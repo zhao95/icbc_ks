@@ -749,7 +749,7 @@ function firall(){
 				function formsubmit(obj){
 					var bmid = obj.parentNode.id;
 					document.getElementById("bmid4").value=bmid;
-					document.getElementById("form5").submit();
+					$("form5").submit();
 				}
 				//导出
 				//定义一个公共变量  当进行条件查询时  将 数据ID放入数组中
@@ -968,10 +968,11 @@ function ztcx(obj){
 	}
 }
 var data_id = xmid;
-var z=0;
+//区分点击
+var zzzz=0;
 function importdata(obj){
 	
-	if(z==0){
+	if(zzzz==0){
 var eles=[ 
           [ 
             {ele:{type:'img',id:'img1',name:'files',title:'',extendAttr:{filed:'deatil_img',handle:'single',url:''}}}   
@@ -982,7 +983,7 @@ var eles=[
           global.Fn.InitPlugin1('img','excleupload11',data_id); 
           
       }); 
-      z++;
+      zzzz++;
 	}
 }
 function deletefile(obj){
@@ -1024,7 +1025,7 @@ jq("#excelimp").click(function(){
 		 
 	 }
 });
-//验证不是xls 或  xl 删除
+//验证不是xls 或  xl 删除 
 function deletefiles(s){
 	 var param={};
 	 param["SERV_ID"]="TS_BMSH_STAY";
@@ -1046,7 +1047,7 @@ function deletefiles(){
 	}
 }
 function returnz(){
-	return z;
+	return zzzz;
 }
 function closemot(){
 	deletefiles();	

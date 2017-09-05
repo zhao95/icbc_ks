@@ -310,7 +310,7 @@
 	     	var data = result.list;
 	     	//将json字符串 转换为 json对象
 	     	var first = (yema-1)*myts+1;
-	     	if(data==null){
+	     	if(data.length==2){
 	     		$("#table tbody").html("");
 	     		$("#fenyeul").html("");
 	     		$("#fenyeul").append('<li><a href="#">&laquo;</a></li><li><a  href="#">&raquo;</a></li>');
