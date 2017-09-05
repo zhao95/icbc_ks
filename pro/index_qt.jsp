@@ -13,7 +13,7 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 
-<%@ include file="sy/base/view/inHeader.jsp"%>
+<%@ include file="sy/base/view/inHeader-icbc.jsp"%>
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
@@ -28,15 +28,16 @@
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/index_qt.css">
 
 <!-- 进度条css -->
-<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/jdt.css">
+<%-- <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/jdt.css"> --%>
 
 <!-- 考试日历的样式 -->
-<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/ksrl.css">
+<%-- <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/ksrl.css"> --%>
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/jquery-ui-1.10.3.custom-0.css">
 <script src="<%=CONTEXT_PATH%>/qt/js/html5shiv.min.js"></script>
 <script src="<%=CONTEXT_PATH%>/qt/js/respond.min.js"></script>
 <!--代办/提醒列表样式-->
-<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/qt_todo.css">
+<%-- <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/qt_todo.css"> --%>
+
 <!-- Theme style -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/dist/css/AdminLTE.min.css">

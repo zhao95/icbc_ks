@@ -31,3 +31,400 @@
     width: 100%;
     height: 116px;
 }
+
+/* //项目状态进度条样式 */
+#jdtMain {
+	position: relative;
+	margin-left: 30px;
+    top: 10px;
+	height: 150px;
+/* 	border-bottom: 2px dashed #efefef; */
+}
+
+#upDiv>div {
+	/* 	float:left; */
+	position: absolute;
+	top: 0px;
+	left: 80px;
+	color: #666666;
+}
+
+#upDiv .upSX {
+	/* 	float:left; */
+	position: relative;
+	top: 14px;
+	left: 50%;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background-color: white;
+	border: 2px solid #999999;
+	z-index: 3;
+}
+
+#downDiv>div {
+	/* 	position:relative; */
+	/* 	float:left; */
+	position: absolute;
+	top: 40px;
+	left: 80px;
+	/*     height:80px; */
+	color: #999999;
+}
+
+#downDiv {
+	text-align: center;
+}
+
+#downDiv .downSX {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+}
+
+#downDiv .downSX >span {
+	display: block;
+	margin: 0 auto;
+}
+
+#jdtDivInner {
+/* 	width: 0%; */
+/* 	position: left; */
+/* 	border-radius: 0px; */
+/* 	z-index: 2; */
+}
+
+#jdtDivOut {
+	position: relative;
+	margin-left: 0px;
+	margin-top: 15px;
+	left: 0px;
+	width: 95%;
+	height: 10px;
+	border: 0px solid;
+	background-color: #f0f0f0;
+	display: block;
+	border-radius: 35px;
+	min-height: 0px;
+	/* 层级高度 */
+	z-index: 2;
+}
+
+#jdtNum {
+	color: red;
+	/* 		float: right; */
+	/* 	position: relative; */
+	/*     margin: -36px 100px 0px 0px; */
+}
+
+#jdtTitle .jdtNumClass {
+	right: 30px;
+	top: 50px;
+	font-size: 30px;
+	position: absolute;
+	/* 		float: right; */
+	/*     margin-right: 30px; */
+	/*     margin: -36px 100px 0px 0px; */
+}
+
+#jdtNameT {
+	font-size: 16px;
+	color: #990000;
+	position: relative;
+	float: left;
+	left: 20px;
+	top: 10px;
+}
+
+#jdtName {
+	position: relative;
+	float: left;
+	left: 40px;
+	top: 10px;
+    font-size: 16px;
+	/* 	padding-top: 25%; */
+	/*     padding-bottom: 25%; */
+	/*     border-width: 0px; */
+	/* 	display: table-cell; */
+	/* /*     vertical-align: middle;	 */
+	/*     text-align:center; */
+	/* /*     line-height:100px; */
+}
+
+#jdtMore {
+	display: block;
+	border-width: 0px;
+	position: relative;
+	float: right;
+	left: 0px;
+	top: 0px;
+	width: 50px;
+	word-wrap: break-word;
+	cursor:pointer;
+}
+
+#jdtMain .progress-bar {
+	position: clear;
+	/*     float:clear; */
+	width: 12.5%;
+	z-index: 2;
+}
+
+#jdtComment {
+	display: block;
+	position: relative;
+	top: 15px;
+	left: 100px;
+	text-align: center;
+	height: 50px
+}
+
+#jdtComment .jdtColor {
+	display: block;
+	float: left;
+	width: 30px;
+	height: 15px;
+	top: 20px;
+	left: 90px;
+	height: 15px;
+	margin-left: 30px;
+}
+
+#jdtComment .jdtTEXT {
+	display: block;
+	float: left;
+	width: 50px;
+	height: 15px;
+	top: 20px;
+}
+/* //考试日历样式 */
+.TS_KS_CAL {
+clear:both;
+position:relative;
+top:10px;
+}
+.TS_KS_CAL .ui-datepicker-div{width: 95px;float: left;}
+.TS_KS_CAL .title_top {
+height:38px;
+width:100%;
+line-height:38px;
+/* background:#3b86d7; */
+background:#fff;
+}
+.TS_KS_CAL .title_001 {
+width:60px;
+float:left;
+}
+.TS_KS_CAL .img_001 {
+position:relative;
+bottom:4px;
+width:46px;
+}
+.TS_KS_CAL .title_002,.TS_KS_CAL .title_003,.TS_KS_CAL .title_004 {
+width:62px;
+height:40px;
+line-height:40px;
+background:url("/img/biaozhi_002.png");
+float:left;
+text-align:center;
+color:white;
+cursor: pointer;
+font-size:14px;
+font-weight:bold;
+}
+.TS_KS_CAL .title_select {
+background:url("/ks/img/biaozhi_002_.png");
+color:#ed6805;
+}
+.TS_KS_CAL .item {
+width:48px;
+height:33px;
+float:right;
+text-align:center;
+}
+.TS_KS_CAL .item_select {
+background:white;
+width:48px;
+height:33px;
+float:right;
+text-align:center;
+border-left: 1px #CCCCCC solid;
+border-right: 1px #CCCCCC solid;
+}
+
+/** 日历样式覆盖 */
+.TS_KS_CAL .scalender {
+margin-top: 0;
+}
+.TS_KS_CAL .scalender .ui-widget-header {
+background-image:none;
+background-color:#ece9e9;
+}
+.TS_KS_CAL .ui-widget-header {
+background-image:none;
+background-color:#EEEEEE;
+color:#7D775C;
+}
+.scalender .ui-widget-header .ui-icon{
+background-image:url("/sy/comm/scalender/css/scalender/images/ui-icons_ff0084_256x240.png");
+}
+.TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-prev, .TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-next{
+border-left: 1px solid #CCCCCC;
+width:10px;
+border-right: 1px solid #CCCCCC;
+}
+.TS_KS_CAL .scalender .ui-widget-header .ui-state-hover,
+.TS_KS_CAL .scalender .ui-widget-header .ui-datepicker-prev.ui-state-hover,
+.TS_KS_CAL .scalender .ui-widget-header .ui-datepicker-next.ui-state-hover,
+.TS_KS_CAL .ui-datepicker-prev-hover,
+.TS_KS_CAL .ui-datepicker-next-hover,
+.TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-next-hover {
+background-image:none;
+background-color:#CCCCCC;
+}
+.TS_KS_CAL .scalender .ui-datepicker {
+margin-right:0;
+}
+.TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-title {
+position:relative;
+right:35px;
+margin-left:85px;
+margin-right:0;
+text-align: left;
+height:33px;
+line-height: 33px;
+color:#333333;
+}
+.TS_KS_CAL .scalender .ui-state-hover,
+.TS_KS_CAL .scalender .ui-widget-content .ui-state-hover,
+.TS_KS_CAL .scalender .ui-state-focus,
+.TS_KS_CAL .scalender .ui-widget-content .ui-state-focus,
+.TS_KS_CAL .scalender .ui-widget-header .ui-state-focus {
+background-image: none;
+background-color: #fff;
+font-weight:normal;
+color: blue;
+}
+.TS_KS_CAL .scalender .ui-state-highlight, 
+.TS_KS_CAL .scalender .ui-widget-content .ui-state-highlight,
+.TS_KS_CAL .scalender .ui-widget-header .ui-state-highlight {
+background-image:none;
+font-weight:bold;
+color: red;
+}
+.scalender .ui-datepicker .ui-datepicker-title {
+font-size: 13px;
+}
+.TS_KS_CAL .title_ksrl{
+color: #ffffff;
+font-family: "Arial Negreta","Arial";
+font-size: 14px;
+font-style: normal;
+font-weight: 700;
+}
+
+/*首页 待办/提醒 样式*/
+#todo-panel > .panel-body {
+    min-height: 230px;
+}
+
+/*待办项样式*/
+.index-qt-todo-list .todo-item {
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid #F4F1F8;
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.index-qt-todo-list .todo-item:last-child {
+    border-bottom: none;
+}
+
+.index-qt-todo-list .todo-item > .todo-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+/*圆 颜色样式*/
+.index-qt-todo-list .todo-item > .jiekao {
+    background-color: #57a777;
+}
+
+.index-qt-todo-list .todo-item > .yiyi {
+    background-color: #ff9000;
+}
+
+.index-qt-todo-list .todo-item > .qijia {
+    background-color: #a583ab;
+}
+
+.index-qt-todo-list .todo-item > .yichang {
+    background-color: #fef8f1;
+}
+
+.index-qt-todo-list .todo-item > .todo-content {
+    margin-left: 52px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+/*待办更多a标签样式*/
+.index-list-more-a {
+    color: black;
+    float: right;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+/*待办更多链接悬浮不变色*/
+.index-list-more-a:hover {
+    color: black;
+}
+
+/*首页 可申请报名列表*/
+#apply-panel > .panel-body {
+    min-height: 230px;
+}
+
+#apply-table > tbody > tr:nth-of-type(even) {
+    background-color: Azure;
+}
+
+#apply-table > thead > tr > th {
+    padding: 10px;
+}
+
+#apply-table > tbody > tr > td {
+    padding: 10px;
+}
+
+/*首页通知公告样式*/
+/*超出省略号*/
+#announcement-box .table {
+    table-layout: fixed;
+}
+
+#announcement-box .table tr td {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -moz-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+}
+
+/*通知公告标题*/
+.gg-title {
+    display: inline;
+    color: black;
+}
+
+.gg-title:hover, .gg-title:active {
+    color: black;
+}
+
