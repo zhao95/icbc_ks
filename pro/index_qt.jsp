@@ -246,7 +246,7 @@
 					<div class="col-md-8">
 																	<!-- /.box -->
 						<div class="box">
-							<div class="box-header with-border"  style="background-color:#f9f9f9">
+							<div class="box-header with-border"  style="background-color:#f9f9f9;height: 40px;">
 								<h3 class="box-title">资格考试项目进展状态</h3>
 								<div id="jdtMore" class="text">
 									<p>
@@ -375,7 +375,7 @@
 
 					<%--待办/提醒--%>
 					<div class="panel panel-default" id="todo-panel">
-						<div class="panel-heading" style="background-color: transparent">
+						<div class="panel-heading" style="background-color: #f9f9f9">
 							<h3 class="panel-title">
 								待办 / 提醒 (<span id="todoListSum" style="color:red">0</span>)
 								<a href="<%=CONTEXT_PATH%>/qt/jsp/todo.jsp"
@@ -407,7 +407,7 @@
 
 					<div class="panel panel-default" id="apply-panel">
 
-						<div class="panel-heading" style="background-color: transparent">
+						<div class="panel-heading" style="background-color: #f9f9f9">
 							<h3 class="panel-title">
 								可申请的报名 (<span id="keshenqingbaomingSum" style="color:red">0</span>)
 								<a href="<%=CONTEXT_PATH%>/ts/jsp/bm.jsp"
@@ -507,7 +507,7 @@
 						</div>
 						<!-- /.box -->
 						<div class="box">
-						<div class="box-header" icode="ksrl-header" style="background-color: #f9f9f9;">
+						<div class="box-header" icode="ksrl-header" style="background-color: #f9f9f9;height: 40px;">
 							<h3 class="box-title">考试日历</h3>
 							<p style="float:right;cursor:pointer;">
 								<span style="font-family:'微软雅黑';">更多</span>
@@ -527,7 +527,7 @@
 						</div>
 						<!-- /.box -->
 						<div class="box">
-							<div class="box-header">
+							<div class="box-header" style="background-color: #f9f9f9">
 								<h3 class="box-title">问卷调查</h3>
 							</div>
 							<!-- /.box-header -->
@@ -558,7 +558,7 @@
 						</div>
 						<!-- /.box -->
 						<div class="box">
-							<div class="box-header">
+							<div class="box-header" style="background-color: #f9f9f9">
 								<h3 class="box-title">我的认证轨迹</h3>
 							</div>
 							<!-- /.box-header -->
