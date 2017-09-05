@@ -327,21 +327,14 @@ public class XmglServ extends CommonServ {
 		List<Bean> list = ServDao.finds("TS_XMGL", where1);
 		// 可审核的项目list
 		List<Bean> SHlist = new ArrayList<Bean>();
-		Boolean show = false;
 		for (Bean bean : list) {
 			String id = bean.getId();
 			// 查询待审核 表 里的other字段判断 是否包含user_code
-			String where = "AND XM_ID=" + "'" + id + "'";
+			String where = "AND XM_ID="+"'"+id+"'"+" AND SH_OTHER like"+"'%"+user_code+"%'";
 			List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", where);
-
-			for (Bean bean2 : staylist) {
-
-				String other = bean2.getStr("SH_OTHER");
-				if (other.contains(user_code)) {
-					show = true;
-				}
-			}
-			if (show) {
+			List<Bean> NOPASSlist = ServDao.finds("TS_BMSH_NOPASS", where);
+			List<Bean> PASSlist = ServDao.finds("TS_BMSH_PASS", where);
+			if(staylist.size()!=0||NOPASSlist.size()!=0||PASSlist.size()!=0){
 				SHlist.add(bean);
 			}
 		}
@@ -360,6 +353,7 @@ public class XmglServ extends CommonServ {
 		outBean.set("list", w.toString());
 		return outBean;
 	}
+
 
 	/**
 	 * 获取项目下所有 未审核的 报名 (某一页 每页多少条)
