@@ -45,7 +45,7 @@
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 </head>
-<body class="hold-transition skin-black sidebar-mini">
+<body class="hold-transition skin-black sidebar-mini layout-boxed">
 	<div class="wrapper">
 		<div style="position: absolute; left: 15px; z-index: 10000;">
 			<img alt="中国工商银行" src="./qt/img/u3148.png">
@@ -119,6 +119,7 @@
 <!-- 							<li class="user-body"></li> -->
 							<li><a href="#" class="" id="TipUserInfo"><i class="fa fa-user-o fa-fw"></i>个人信息</a></li>
 								<li><a href="#" class="" data-layout="layout-boxed"><i class="fa fa-cog fa-fw"></i>简约/平铺</a></li>
+<!-- 								<li><input type="checkbox" data-layout="layout-boxed" class="pull-right" checked="checked">简约/平铺</li> -->
 								<li><a href="#" class="" id="loginOutBtn"><i class="fa fa-power-off fa-fw"></i>注销用户</a></li>
 							
 <!-- 							<li class="user-footer"></li> -->
@@ -238,7 +239,7 @@
 			<!-- /.sidebar -->
 		</aside>
 
-		<div class="content-wrapper" style="min-height: 1100px;">
+		<div class="content-wrapper" style="min-height: 1000px;">
 
 			<section class="content">
 				<div class="row">
