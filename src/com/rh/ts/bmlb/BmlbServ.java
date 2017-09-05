@@ -307,8 +307,7 @@ public class BmlbServ extends CommonServ {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} 
-		
-
+		outBean.set("strresult", "提交成功");
 		return outBean;
 	}
 
