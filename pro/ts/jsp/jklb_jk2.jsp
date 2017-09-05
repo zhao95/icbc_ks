@@ -3,6 +3,8 @@
 <%@ page import="com.icbc.ctp.utility.StringUtil" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
+    
+
 <%
     final String CONTEXT_PATH = request.getContextPath();
 %>
@@ -190,7 +192,7 @@
         <table style="padding: 10px;width:100%;background-color: #ffffff;">
             <tr>
                 <td style="width: 10%;text-align: right;">借考标题&nbsp;&nbsp;</td>
-                <td colspan="3"><input style="width: 90%;height: 25px;" id="qjtitle" value="<%=jk_title%>" disabled>
+                <td colspan="3"><input style="width: 90%;height: 25px;" id="jktitle" value="<%=jk_title%>" disabled>
                 </td>
             </tr>
             <tr>
@@ -226,7 +228,7 @@
 
                             for (int i = 0; i < bmidArray.length; i++) {
                                 String cwhere = "AND BM_ID=" + "'" + bmidArray[i] + "'";
-                                List<Bean> cbeanList = ServDao.finds("TS_QJLB_BM", cwhere);
+                                List<Bean> cbeanList = ServDao.finds("TS_JKLB_BM", cwhere);
                                 for (int j = 0; j < cbeanList.size(); j++) {
                                     Bean bmbean = cbeanList.get(j);
                                     String lb_id = bmbean.getStr("LB_ID");
