@@ -213,22 +213,22 @@ function post(URL, PARAMS) {        
 				String serID = "TS_ETI_CERT_QUAL";
 				//用户的USER_CODE				
 				String USER_CODE=userBean.getCode();
-				String where = "and STU_PERSON_ID='" + USER_CODE +"'";
+				String where = "and STU_PERSON_ID='" +USER_CODE+"'";
 				List<Bean> dataList = ServDao.finds(serID,where);				
 				//用户信息查询
 				String serviceID="SY_ORG_USER_INFO_SELF";
-				List <Bean> stu=ServDao.finds(serviceID,"and USER_CODE='"+USER_CODE+"'");
+				Bean stu=ServDao.find(serviceID,USER_CODE);
 				//入职日期
 				String USER_CMPY_DATE="";
 				String CMPY_DATE="";
 				//职位名称
 				String USER_POST="";
-				if(stu.size()>0){				
-					USER_CMPY_DATE=stu.get(0).getStr("USER_CMPY_DATE");
+				if(stu!=null){				
+					USER_CMPY_DATE=stu.getStr("USER_CMPY_DATE");
 					if(!USER_CMPY_DATE.equals("")){
 					 CMPY_DATE=USER_CMPY_DATE.substring(0,4)+"年"+USER_CMPY_DATE.substring(4,6)+"月";
 					}				
-				    USER_POST=stu.get(0).getStr("USER_POST");
+				    USER_POST=stu.getStr("USER_POST");
 				}
 				
 				if (dataList.size()> 0) {
@@ -853,7 +853,7 @@ function post(URL, PARAMS) {        
 										//获证状态
 										String CERT_ID = dataList.get(i).getStr("CERT_ID");//证书内码
 										Integer QUALFY_STAT=dataList.get(i).getInt("QUALFY_STAT");//证书状态
-										String servID = "TS_ETI_CERT_INFO";
+										String servID = "ETI_CERTINFO_TS";
 										String wher = "and CERT_ID='" + CERT_ID + "'";
 										List<Bean> bean = ServDao.finds(servID, wher); 
 										Integer VALID_TERM=bean.get(0).getInt("VALID_TERM");
@@ -1092,28 +1092,21 @@ function post(URL, PARAMS) {        
 				}
 			%>
 		</div>
-		<%
-			//查找同等序列下的人的集合
-			String where2 = "and USER_POST='" + USER_POST + "'";
-			List<Bean> lists = ServDao.finds("SY_ORG_USER_INFO_SELF", where2);
-			//同等序列下的人数
-			int num = lists.size();
+	<%
 			//追赶，同步，落后
-			int pre=0, after =0, other =-1;
-			for (int i = 0;i<num; i++) {				
-				String STU_PERSON_ID= lists.get(i).getStr("USER_CODE");
-				String where3="and STU_PERSON_ID ='"+STU_PERSON_ID+"'";
-				List<Bean> list3 = ServDao.finds("TS_ETI_CERT_QUAL",where3);
-				 if (dataList.size()>list3.size()) {
-					 after++;					
-				}
-				 if (list3.size()>dataList.size()) {
-					pre++;
-				} 
-				 if (list3.size()==dataList.size()) {
-					  other++;
-				} 					
-			} 
+			int pre=0, after =0, other =0,nums=0,num=0;
+			if(!USER_POST.equals("")){
+			//查找同等序列下的人数
+			List<Bean> lists=ServDao.finds("SY_ORG_USER_INFO_SELF","and USER_POST='" +USER_POST+ "'");
+			num=lists.size();
+			//获取证书内码
+			List<Bean> infos=ServDao.finds("TS_ETI_CERT_INFO","and STATION_NO='"+USER_POST+"'");			
+			 pre=ServDao.finds("TS_ETI_CERT_QUAL","and CERT_ID='"+infos.get(dataList.size()).getStr("CERT_ID")+"'").size(); 
+			 if (dataList.size()>0) {
+				  other=ServDao.finds("TS_ETI_CERT_QUAL","and CERT_ID='"+infos.get(dataList.size()-1).getStr("CERT_ID")+"'").size()-1-pre;
+			}
+					after=num-other-pre;
+			}
 			if(USER_POST.equals("")){
 				num=ServDao.finds("SY_ORG_USER_INFO_SELF", "and USER_POST is null").size();
 				other =num-1;
