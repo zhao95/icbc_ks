@@ -87,7 +87,7 @@ public class RoleServ extends CommonServ {
 		
 		if(!Strings.isBlank(sqlStr)) {
 			
-			paramBean.set(Constant.PARAM_WHERE, sqlStr);
+			paramBean.setQueryExtWhere(sqlStr);
 		}
 
 		
