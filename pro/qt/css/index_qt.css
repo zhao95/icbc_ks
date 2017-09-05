@@ -10,6 +10,10 @@
 #qt_footer_tr{
 	margin: 15px 0 0 25%;
     position: absolute;
+    text-align: center;
+}
+#qt_footer_tr >td{
+    text-align: center;
 }
 #qt_footer_tr span {
 	top:20px;
