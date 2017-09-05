@@ -71,7 +71,7 @@ function showTodoContent() {
             itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
                 var dataId = $(this).attr('data-id');
                 var todoId = $(this).attr('id');
-                doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
+                doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId, hidden: '2'});
             });
         }
 
@@ -277,7 +277,7 @@ function showTodoTip() {
             itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
                 var dataId = $(this).attr('data-id');
                 var todoId = $(this).attr('id');
-                doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, qjid: dataId});
+                doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId});
             });
         }
 

@@ -433,13 +433,11 @@
 		
 			var $jkyiji=$('#jkyiji');
 			$jkyiji.append('<option value=""></option>');
-			var itemName="";
+
 			for(var i=0;i<arr.length;i++){
 				var item=arr[i];
-				 itemName=item.NAME;
-			     
-				
-				$jkyiji.append('<option value="'+i+'">'+itemName+'</option>');
+                var itemId=item.ID, itemName=item.NAME;
+				$jkyiji.append('<option value="'+itemId+'">'+itemName+'</option>');
 			}
 			//绑定change事件
 			//var d= document.getElementById("jkyiji");
@@ -520,7 +518,7 @@
             var  jkyiji=document.getElementById("jkyiji").value;
             var  jkcity=document.getElementById("jkcity").value;
             var bumen = document.getElementById("bumen").value;
-            var qjreason = document.getElementById("jkreason").value;
+            var jkreason = document.getElementById("jkreason").value;
             var bmidsArray = document.getElementsByName("bmids");
             var bmids = "";
             for (var i = 0; i < bmidsArray.length; i++) {

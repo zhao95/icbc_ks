@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@page import="com.rh.core.serv.ServDao" %>
+<%@ page import="com.icbc.ctp.utility.StringUtil" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
@@ -99,7 +100,7 @@
 </style>
 <%
     //获取请假id和一个状态
-    String jk_id = request.getParameter("qjid");
+    String jk_id = request.getParameter("jkid");
     String todoId = request.getParameter("todoId");
 
     String hidden = request.getParameter("hidden") != null ? request.getParameter("hidden") : "";
@@ -117,7 +118,8 @@
     String jk_name = jkbean.getStr("JK_NAME");
     String jkImg = jkbean.getStr("JK_IMG");
     String jk_jkcity = jkbean.getStr("JK_JKCITY");
-	String jk_yjfh=jkbean.getStr("JK_YIFH");
+	String jk_yjfh=jkbean.getStr("JK_YJFH");
+	jk_yjfh = StringUtil.isEmpty(jk_yjfh) ?  "":jk_yjfh;
     //获取人力资源编码
     String user_code = userBean.getStr("USER_CODE");
     //获取用户登录名
@@ -193,21 +195,19 @@
             </tr>
             <tr>
 					<td style="width: 10%;text-align: right;">借考一级分行</td>
-					<td><select id="jkyiji"   style="min-width: 208px;height: 25px; border: 1px solid rgb(0, 0, 0); " disabled></select></td>
-					
+					<td>
+                        <input style="width:95%;height: 25px;" id="jkyiji" value="" disabled>
+                        <%--<select id="jkyiji"   style="min-width: 208px;height: 25px; border: 1px solid rgb(0, 0, 0); " disabled></select>--%>
+                    </td>
 					<!--  <td ><input style="width:95%;height: 25px;" id="jktitle" value=""></td>-->
 					<td style="width: 10%;text-align:left ;" >希望借考的城市&nbsp;&nbsp;
-					<input style="width: 60%;height: 25px;" id="jkcity" value=""  disabled></td>
+					<input style="width: 60%;height: 25px;" id="jkcity" value="<%=jk_jkcity%>"  disabled></td>
 				</tr>
 				<tr>
 					<td style="width: 10%;text-align: right;">借考的考试&nbsp;&nbsp;
 					</td>
 					<td colspan="3">
-                    <div  data-toggle="modal" data-target="#myModal" style="display: inline-block;cursor: pointer;color: #4cd4d4;">
-                         
-                        <i class="fa fa-search" aria-hidden="true" style="font-size: 24px;color: #91dce4;"></i>
-                        <span>选择</span>
-                    </div>
+
 					</td>
 				</tr>
             <tr>
@@ -420,10 +420,14 @@
             document.getElementById("shaddid").style.display = "block";
         }
 
+        //借考一级分行
+        var jkYjfh = '<%=jk_yjfh%>';
+        $('#jkyiji').val(FireFly.getDictNames(FireFly.getDict('TS_JKLB_JKCITY'),jkYjfh));
+
         //考试信息
         var bmIdStr = '<%=jk_ksname%>';
         var params = {bmids: bmIdStr};
-        var bmInfoListBean = FireFly.doAct('TS_JKLB_JK', 'toApplyExam', params);
+        var bmInfoListBean = FireFly.doAct('TS_JKLB_JK', 'getBmInfoByIds', params);
         var bmInfoList = bmInfoListBean._DATA_;
         var $jkksTable = $('#jkks-table tbody');
         for (var i = 0; i < bmInfoList.length; i++) {
@@ -517,7 +521,7 @@
 
     //提交审批
     function updateData(param) {
-        FireFly.doAct("TS_JKLB_QJ", "updateData", param, false, false, function (response) {
+        FireFly.doAct("TS_JKLB_JK", "updateData", param, false, false, function (response) {
             if (response._MSG_.indexOf('ERROR,') >= 0) {
                 //发起申请出错
                 alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,'), response._MSG_.length));

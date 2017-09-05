@@ -340,7 +340,7 @@
                     a.unbind('click').bind('click', function () {
                         var todoId = $(this).attr('id');
                         var dataId = $(this).attr('data-id');
-                        doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
+                        doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId, hidden: '2'});
                     });
                 }
                 td.append(a);
@@ -588,11 +588,20 @@
                 tr.append('<td style="text-align: center;">' + (i + 1) + '</td>');
 
                 var td = jQuery('<td></td>');
-                var a = jQuery('<a  id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>').unbind('click').bind('click', function () {
-//                    var todoId = $(this).attr('id');
-                    var dataId = $(this).attr('data-id');
-                    doPost("/ts/jsp/qjlb_qj2.jsp", {/*todoid: item.TODO_ID,*/ qjid: dataId});
-                });
+                var a = jQuery('<a  id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>')
+                if (item.TYPE === '0') {
+                    a.unbind('click').bind('click', function () {
+                        var todoId = $(this).attr('id');
+                        var dataId = $(this).attr('data-id');
+                        doPost("/ts/jsp/qjlb_qj2.jsp", {/*todoid: item.TODO_ID,*/ qjid: dataId});
+                    });
+                } else if (item.TYPE === '2') {
+                    a.unbind('click').bind('click', function () {
+                        var todoId = $(this).attr('id');
+                        var dataId = $(this).attr('data-id');
+                        doPost("/ts/jsp/jklb_jk2.jsp", {/*todoid: item.TODO_ID,*/ jkid: dataId});
+                    });
+                }
 
 
 

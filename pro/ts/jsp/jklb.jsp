@@ -294,7 +294,7 @@
         var pkCode = obj.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML.trim();
 //        document.getElementById("qjid").value = pkCode;
 //        document.getElementById("hidden").value = 2;
-        doPost('jklb_jk2.jsp', {jkid: pkCode, hidden: 2});//hidden为空 查看
+        doPost('jklb_jk2.jsp', {jkid: pkCode});//hidden为空 查看
 //        document.getElementById("formchakan").submit();
     }
 

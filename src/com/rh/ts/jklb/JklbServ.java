@@ -59,7 +59,7 @@ public class JklbServ extends CommonServ {
       //借考
         Bean jkbean = new Bean();
         jkbean.set("JK_TITLE", jkTitle);
-        jkbean.set("JK_YIFH", jkYiJi);
+        jkbean.set("JK_YJFH", jkYiJi);
         jkbean.set("JK_JKCITY", jkCity);
         jkbean.set("USER_CODE", jkUserCode);
         jkbean.set("JK_REASON", jkReason);
@@ -163,11 +163,11 @@ public class JklbServ extends CommonServ {
 	        }
 
 	        if (outBean.get(Constant.RTN_MSG) != null
-	                && (outBean.getStr(Constant.RTN_MSG)).indexOf(Constant.RTN_MSG_ERROR) > 0) {
+	                && (outBean.getStr(Constant.RTN_MSG)).contains(Constant.RTN_MSG_ERROR)) {
 	            //有错误回滚
 	            Transaction.rollback();
 	        } else {
-	            Transaction.commit();
+                Transaction.commit();
 	        }
 	        Transaction.end();
 	        return outBean;
@@ -194,7 +194,7 @@ public class JklbServ extends CommonServ {
         //form表单传给后台一个bean，只包括借考一级分行
         flowParamBean.set("form", jkbean);
         flowParamBean.set("examerUserCode", examerUserCode);
-        flowParamBean.set("shrWorekNum", shUserCode);//起草节点examerWorkNum传shrWorkNum
+        flowParamBean.set("shrUserCode", shUserCode);//起草节点examerWorkNum传shrWorkNum
         flowParamBean.set("level", level);
         flowParamBean.set("xmId", xmId);
         flowParamBean.set("flowName", 2); //1:报名审核流程 2:异地借考流程 3:请假审核流程
@@ -207,14 +207,14 @@ public class JklbServ extends CommonServ {
            }
        }  else{
     	   int  nodeSteps=shBean.getInt("NODE_STEPS");
-       
+
        StringBuilder  shrNames=new  StringBuilder();
        for (Bean  bean :shList){
     	   String  shrName= bean.getStr("SHR_NAME");
     	   String shrUserCode2 = bean.getStr("SHR_USERCODE");
     	   shrNames.append(" ").append(shrName);
     	   //推送人
-    	   UserBean shrUserBean = UserMgr.getUserByWorkNum(shrUserCode2);
+    	   UserBean shrUserBean = UserMgr.getUser(shrUserCode2);
            String shrDeptCode = shrUserBean.getDeptCode();
            String shrUserDeptName = shrUserBean.getDeptName();
            
