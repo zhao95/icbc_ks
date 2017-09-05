@@ -214,14 +214,14 @@ function post(URL, PARAMS) {        
 				//用户的USER_CODE				
 				String USER_CODE=userBean.getCode();
 				String where = "and STU_PERSON_ID='" + USER_CODE +"'";
-				List<Bean> dataList = ServDao.finds(serID, where);				
+				List<Bean> dataList = ServDao.finds(serID,where);				
 				//用户信息查询
 				String serviceID="SY_ORG_USER_INFO_SELF";
 				List <Bean> stu=ServDao.finds(serviceID,"and USER_CODE='"+USER_CODE+"'");
 				//入职日期
 				String USER_CMPY_DATE="";
 				String CMPY_DATE="";
-				//序列
+				//职位名称
 				String USER_POST="";
 				if(stu.size()>0){				
 					USER_CMPY_DATE=stu.get(0).getStr("USER_CMPY_DATE");
@@ -926,15 +926,18 @@ function post(URL, PARAMS) {        
 			%>
 			<%
 				if (dataList.size()==0) {
-					//根据职位名称查找岗位信息					
-					String where3="and POSTION_NAME='"+USER_POST+"'";
-					List<Bean> bean=ServDao.finds("TS_ORG_POSTION",where3);
-					//岗位序列
-					String POSTION_SEQUENCE="";
+					//查找用户序列名称
+					Bean ser=ServDao.find("SY_HRM_ZDSTAFFPOSITION",USER_CODE);
+					String STATION_NO="";
+					if(ser!=null){
+						STATION_NO=ser.getStr("STATION_NO");
+					}
+					
+					//根据职位名称查找岗位信息
+					List<Bean> bean=ServDao.finds("TS_ORG_POSTION","and POSTION_NAME='"+USER_POST+"'");
 					//岗位资格
 					String POSTION_QUALIFICATION="0";
-					if(bean.size()>0){															
-					 POSTION_SEQUENCE=bean.get(0).getStr("POSTION_SEQUENCE"); 				
+					if(bean.size()>0){															 				
 					 POSTION_QUALIFICATION=bean.get(0).getStr("POSTION_QUALIFICATION");
 					}
 					String[] classs={" ","初级","中级","高级","专家级"};
@@ -1005,7 +1008,7 @@ function post(URL, PARAMS) {        
 						<!-- Unnamed () -->
 						<div id="u5192" class="text">
 							<p>
-								<span><%=POSTION_SEQUENCE.equals("")?"无":POSTION_SEQUENCE%>序列</span>
+								<span><%=STATION_NO.equals("")?"无":STATION_NO%>序列</span>
 							</p>
 						</div>
 					</div>
@@ -1027,8 +1030,8 @@ function post(URL, PARAMS) {        
 						<!-- Unnamed () -->
 						<div id="u5196" class="text">
 							<p>							 
-								<span id="tijiao" style="color: #666666;"><%=POSTION_SEQUENCE.equals("")?"无":POSTION_SEQUENCE%>序列 <%=POSTION_QUALIFICATION.equals("")?"":POSTION_QUALIFICATION%>（</span><span
-									style="text-decoration: underline; color: #388CAE;"><a href="javascript:post('../../qt/jsp/examref.jsp',{REF_DYXL:'<%=POSTION_SEQUENCE%>'})">相关学习资料下载</a></span><span
+								<span id="tijiao" style="color: #666666;"><%=STATION_NO.equals("")?"无":STATION_NO%>序列 <%=POSTION_QUALIFICATION.equals("")?"":POSTION_QUALIFICATION%>（</span><span
+									style="text-decoration: underline; color: #388CAE;"><a href="javascript:post('../../qt/jsp/examref.jsp',{REF_DYXL:'<%=STATION_NO%>'})">相关学习资料下载</a></span><span
 									style="color: #388CAE;">&nbsp;&nbsp; </span><span
 									style="text-decoration: underline; color: #388CAE;">工银大学</span><span>）</span>							
 							</p>
