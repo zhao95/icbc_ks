@@ -4,11 +4,11 @@ $(".rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var XM_ID = item.id;
 	 $(item).find("td[icode='buttons']").append(
-     '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_look" actcode="look" title="查看" rowpk="'+XM_ID+'"><span class="rh-icon-inner"><span class="rh-icon-img btn-edit"></span></span></a>'+	
-	 '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_copy" actcode="copy" title="复制" rowpk="'+XM_ID+'"><span class="rh-icon-inner"><span class="rh-icon-img btn-copy"></span></span></a>'+
-	 '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_edit" actcode="edit" title="编辑" rowpk="'+XM_ID+'"><span class="rh-icon-inner"><span class="rh-icon-img btn-edit"></span></span></a>'+
-	 '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_set" actcode="set" title="设置"  rowpk="'+XM_ID+'"><span class="rh-icon-inner"><span class="rh-icon-img btn-option"></span></span></a>'+
-	 '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_delete" actcode="delete" title="删除" rowpk="'+XM_ID+'"><span class="rh-icon-inner"><span class="rh-icon-img btn-delete"></span></span></a>'
+     '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_look" title="查看" rowpk="'+XM_ID+'"><span class="rh-icon-inner"><span class="rh-icon-img btn-edit"></span></span></a>'+	
+	 '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_copy" title="复制" rowpk="'+XM_ID+'"><span class="rh-icon-inner"><span class="rh-icon-img btn-copy"></span></span></a>'+
+	 '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_edit" title="编辑" rowpk="'+XM_ID+'"><span class="rh-icon-inner"><span class="rh-icon-img btn-edit"></span></span></a>'+
+	 '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_set" title="设置"  rowpk="'+XM_ID+'"><span class="rh-icon-inner"><span class="rh-icon-img btn-option"></span></span></a>'+
+	 '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_delete" title="删除" rowpk="'+XM_ID+'"><span class="rh-icon-inner"><span class="rh-icon-img btn-delete"></span></span></a>'
 	 );
 	bindCard();
 	}

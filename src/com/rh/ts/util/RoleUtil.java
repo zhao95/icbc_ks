@@ -31,15 +31,15 @@ public class RoleUtil {
 		// 用户所有功能权限
 		Bean allOpt = getPvlgRole(userCode);
 
-		String pvlgkey = servId +"_PVLG";
+		String pvlgkey = "PVLG_" + servId;
 
 		Bean servPvlg = allOpt.getBean(pvlgkey);
 
+		Bean listPvlg = servPvlg.getBean("list");
+
 		SqlBean sql = new SqlBean();
 
-		if (servPvlg != null && !servPvlg.isEmpty()) {
-			
-			Bean listPvlg = servPvlg.getBean("list"); //查询的权限
+		if (listPvlg != null && !listPvlg.isEmpty()) {
 
 			String deptCodes = listPvlg.getStr("ROLE_DCODE");
 

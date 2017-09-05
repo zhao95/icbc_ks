@@ -41,8 +41,8 @@
 <!-- 遮罩层 -->
 	<style type="text/css">     
     .mask {       
-            position: absolute; top: 0px; filter: alpha(opacity=60); background-color: #777;
-            z-index: 1000; left: 0px;     
+            position: absolute; top: 0px; filter: alpha(opacity=60); background-color: #777;     
+            z-index: 1002; left: 0px;     
             opacity:0.5; -moz-opacity:0.5;     
         }     
 	</style>  
@@ -304,21 +304,13 @@
 						String kslb_xl = bean1.getStr("KSLB_XL");
 						String kslb_mk = bean1.getStr("KSLB_MK");
 						String kslb_type = bean1.getStr("KSLB_TYPE");
-						String type_name="";
-						if(kslb_type.equals("1")){
-							type_name="初级";
-						}if(kslb_type.equals("2")){
-							type_name="中级";
-						}if(kslb_type.equals("3")){
-							type_name="高级";
-						}
 					%>
 						<tr>
 							<td style="text-align: center" width="10%"><input type="checkbox" onchange="change(this)" name="checkname1" value="<%=bm_id%>" ></td>
 							<td width="15%"><%=kslb_name%></td>
 		       				<td width="15%"><%=kslb_xl%></td>
 		       				<td width="45%"><%=kslb_mk%></td>
-		       				<td width="15%"><%=type_name%></td>
+		       				<td width="15%"><%=kslb_type%></td>
 		       				<td class="rhGrid-td-hide" id="HANGHAO<%=i%>"><%=i %></td>
 							<td class="rhGrid-td-hide" ><%=kslb_id%></td>
 						</tr>
@@ -341,7 +333,6 @@
 	<div class="modal fade" id="tiJiao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-			<div id="mask" class="mask"></div> 
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 						&times;
@@ -400,18 +391,6 @@
 	var yk={};
 	var xkArg=[];//考试结果
 	var yzgz;//资格验证后端返回到前端的数据
-	//兼容火狐、IE8   
-    //显示遮罩层    
-    function showMask(){     
-        $("#mask").css("height",$(document).height());     
-        $("#mask").css("width",$(document).width());     
-        $("#mask").show();     
-    }  
-    //隐藏遮罩层  
-    function hideMask(){     
-          
-        $("#mask").hide();     
-    }  
 	//等级改变事件
 	function changeyk(obj){
 		var sel = document.getElementById("lxid");
@@ -580,7 +559,7 @@
 		       '<td >'+kslb_name+'</td>'+
 		       '<td >'+kslb_xl+'</td>'+
 		       '<td >'+kslb_mk+'</td>'+
-		       '<td >'+kslb_type+'</td>'+
+		       '<td >'+((kslb_type=="1")?"初级":(kslb_type=="2")?"中级":"高级")+'</td>'+
 		       '<td class="rhGrid-td-hide" >'+hanghao+'</td>'+
 		       '<td ><div id="'+kslb_id+'"></div></td>'+
 		       '<td ><div id="'+kslb_id+'yzjg"></div></td>'+
@@ -592,7 +571,7 @@
 		       xk['BM_LB'] = kslb_name;
 		       xk['BM_XL'] = kslb_xl;
 		       xk['BM_MK'] = kslb_mk;
-		       xk['BM_TYPE'] = (kslb_type=="初级")?"1":(kslb_type=="中级")?"2":"3";
+		       xk['BM_TYPE'] = kslb_type;
 		       xkArg.push(xk);
 			}
      	}
@@ -755,12 +734,8 @@
 			if(ryl_mobile==""){
 				alert("手机号码不能为空");
 			}if(ryl_mobile!="" && ryl_mobile!=null){
-			 	var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param,true,false);		 	
-				showMask();
-			 	console.log(JSON.stringify(BM_ID.strresult));
-			 	if(BM_ID.strresult!=null ||BM_ID.strresult!="" ){
-			 	hideMask();
-			 	}
+			 	var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param,true,false);
+			 	console.log(JSON.stringify(BM_ID.list));
 	    		window.location.href="bm.jsp";
 			}
 	    }

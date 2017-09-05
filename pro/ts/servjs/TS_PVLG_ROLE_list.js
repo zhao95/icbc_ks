@@ -1,6 +1,5 @@
 var _viewer = this;
 
-
 //每一行添加编辑和删除
 $("#TS_PVLG_ROLE .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
@@ -104,7 +103,7 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 	
 	var params = {"isHide":"true", "CTLG_MODULE":module};
 	
-	var options = {"tTitle":"目录管理","url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
+	var options = {"url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
 	Tab.open(options);
 
 });

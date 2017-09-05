@@ -8,9 +8,9 @@ _viewer.grid._table.find("tr").each(function(index, item) {
 	}
 	if(index!=0 && isHavId != undefined){
 		$(item).append('<td class="rhGrid-td-center">'+
-				 '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optEditBtn" operCode="optEditBtn"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
-				 '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_delete" operCode="delete"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'+
-				 '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optViewBtn" operCode="optViewBtn"><span class="rh-icon-inner">详细</span><span class="rh-icon-img btn-view"></span></a>'+
+				 '<a class="rh-icon rhGrid-btnBar-a" operCode="optEditBtn"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
+				 '<a class="rh-icon rhGrid-btnBar-a" operCode="optDeleteBtn"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'+
+				 '<a class="rh-icon rhGrid-btnBar-a" operCode="optViewBtn"><span class="rh-icon-inner">详细</span><span class="rh-icon-img btn-view"></span></a>'+
 				 '</td>');
 		// 为每个按钮绑定卡片
 		 bindCard();
@@ -29,7 +29,7 @@ rh.vi.listView.prototype.beforeDelete = function(pkArray) {
 //绑定的事件     
 function bindCard(){
 	//当行删除事件
-	jQuery("td [operCode='delete']").unbind("click").bind("click", function(){
+	jQuery("td [operCode='optDeleteBtn']").unbind("click").bind("click", function(){
 		var pkCode = $(this).parent().parent().attr("id");
 		rowDelete(pkCode,_viewer);
 	});

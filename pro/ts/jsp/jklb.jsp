@@ -93,7 +93,7 @@
         <div style="margin-top: -5px; margin-left: 19%; height: 5px; width: 190px; background-color: LightSeaGreen"></div>
         <div id="cuxian1"
              style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
-            <span style="margin-left: 50px; padding-top: 10px">可申请的借考</span>
+            <span style="margin-left: 50px; padding-top: 10px">可申请的请假</span>
             <div style="float:right;">
                 <a onclick="jiekao()"
                    style="color:white;font-size:20px;background-color:LightSeaGreen;height:45px;width:140px;margin:15px;cursor: pointer;">
