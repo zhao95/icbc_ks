@@ -619,7 +619,7 @@ public class UserMgr {
         SqlBean sql = new SqlBean();
         sql.and("S_FLAG", Constant.YES_INT).and("USER_CODE", userCode)
                 .andIn("ROLE_CODE", roleCodes.split(Constant.SEPARATOR));
-        authStateSql(sql);
+//        authStateSql(sql);
         return (ServDao.count(ServMgr.SY_ORG_ROLE_USER, sql) > 0);
     }
     
