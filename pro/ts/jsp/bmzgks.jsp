@@ -91,12 +91,18 @@
 		 pt_type=gwList.get(0).getStr("POSTION_TYPE");
 		 pt_sequnce= gwList.get(0).getStr("POSTION_SEQUENCE");
 		}
-		//获取跨序列的类型列表    
-		String where2 = " AND XM_ID="+"'"+xm_id+"'";
+		//获取跨序列的类型列表  
+		String where2 ="";
+		if(!pt_type.equals("") || !pt_sequnce.equals("")) {
+			 where2= "AND KSLB_NAME<>"+"'"+pt_type+"'"+" AND KSLB_XL<>"+"'"+pt_sequnce+"'"+" AND XM_ID="+"'"+xm_id+"'";
+		}if(pt_type.equals("") || pt_sequnce.equals("")){
+			 where2= " AND XM_ID="+"'"+xm_id+"'";
+		}
 		List<Bean> zgList= ServDao.finds("TS_XMGL_BM_KSLB", where2);
 		if(zgList!=null && zgList.size()>0){
-		 zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
+		  zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
 		}
+		
 		%>
 	<div style="padding-left: 90px;width: 90%;text-align: left;">
 			<img alt="中国工商银行" src="<%=CONTEXT_PATH%>/qt/img/u3148.png"> <img alt="考试系统"src="<%=CONTEXT_PATH%>/qt/img/u3376.png">
@@ -502,14 +508,13 @@
 	}
 	
 	//获取应考试的值
-	function tijiao(){ 
-		
+	function tijiao(){
 		//获取手机号码
-	 	var ryl_mobile = document.getElementById("user_mobile2").value=document.getElementById("user_mobile1").value; 
-		//获取 当前页面中checkbox选中的数据
-		var arrChk=$("input[name='checkboxaa']"); 
-		tbody=document.getElementById("xinxi");
-		for(var i=0;i<arrChk.length;i++){
+		 	var ryl_mobile = document.getElementById("user_mobile2").value=document.getElementById("user_mobile1").value; 
+			//获取 当前页面中checkbox选中的数据
+			var arrChk=$("input[name='checkboxaa']"); 
+			tbody=document.getElementById("xinxi");
+			for(var i=0;i<arrChk.length;i++){
 			 //得到tr
 			  var tr=arrChk[i].parentNode.parentNode;
 		      var tds=tr.getElementsByTagName("td");
@@ -529,7 +534,7 @@
 				       '<td style="text-align:left">'+tds[3].innerHTML+'</td>'+
 				       '<td style="text-align:left">'+tds[4].innerHTML+'</td>';
 		       }
-		}
+			}
 	}
 	 
 	//跨序列的考试
@@ -676,6 +681,7 @@
 	}
 	//提交所有数据
 	function mttijiao(){
+		checky();
 		//获取手机号码
 		var ryl_mobile = document.getElementById("user_mobile2").value
 		//获取到资格考试类型主键id
@@ -716,15 +722,23 @@
 		param["XM_NAME"] = "<%=xm_name%>";
 		param['BM_LIST'] = JSON.stringify(neAry);
 		param["YZGZ_LIST"] = JSON.stringify(yzgz);
-		if(ryl_mobile==""){
-			alert("手机号码不能为空");
-		}else{
-		 	var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param,true,false);
-		 	console.log(JSON.stringify(BM_ID.list));
-		}
-	 	window.location.href="bm.jsp";
-	
-		
+		 //本序列表格行数
+		var bxltabObj = document.getElementById("tableid");
+	    var bxlrows = bxltabObj.rows.length;
+	    //跨序列表格行数
+	    var kxlObj = document.getElementById("tablehang");
+	    var kxlrows = kxlObj.rows.length;
+	    if(bxlrows<2 && kxlrows<2){
+			alert("您没有选择考试")
+	    }if(bxlrows!=1 || kxlrows!=1){
+			if(ryl_mobile==""){
+				alert("手机号码不能为空");
+			}if(ryl_mobile!="" && ryl_mobile!=null){
+			 	var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param,true,false);
+			 	console.log(JSON.stringify(BM_ID.list));
+	    		window.location.href="bm.jsp";
+			}
+	    }
 }
 	</script>
 </body>
