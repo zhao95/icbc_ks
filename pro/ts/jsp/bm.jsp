@@ -7,17 +7,14 @@
 %>
 <html>
 <head>
+
+
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>报名管理</title>
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <!-- 获取后台数据 -->
 <%@ include file="/sy/base/view/inHeader.jsp"%>
-<%@ page import="com.rh.core.serv.ServDao"%>
-<%@ page import="com.rh.core.serv.ServMgr"%>
-<%@ page import="com.rh.ts.pvlg.mgr.GroupMgr"%>
-<%@ page import="com.rh.core.base.Bean"%>
-<%@ page import="java.text.SimpleDateFormat"%>
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
 <!-- Font Awesome -->
@@ -47,6 +44,7 @@
 <script src="<%=CONTEXT_PATH%>/ts/js/jquery.ui.widget.js"></script> 
 <script src="<%=CONTEXT_PATH%>/ts/js/jquery.fileupload.js"></script> 
 
+
 <body class="hold-transition skin-black sidebar-mini">
 <%
 			//获取所有项目ID
@@ -73,7 +71,8 @@
 				<a id="ayishen" href="#tab2" data-toggle="tab"><span id="yishen"
 					style="color: black">已申请的报名</span></a></td>
 		</tr>
-
+		
+		
 	</table>
 	<div id="myTabContent" class="tab-content">
 		<div class="tab-pane fade in active" id="home">
@@ -182,14 +181,6 @@
 			<form id="form2" style="display:none" method="post" action="bmglf.jsp">
 				<input id = "fzgtz" name="fzgtz"></input>
 			<input type="submit" name="Submit" value="提交">
-			</form>
-				<form id="form3" style="display:none" method="post" action="bmshmx.jsp">
-				<input id = "bmid" name="bmid"></input>
-			<input type="submit" name="Submit" value="提交">
-			</form>
-			<form id="form4" style="display:none" method="post" action="zgchakan.jsp">
-				<input type="text" id = "bmid4" name="bmid4"></input>
-				<input type="submit" name="Submit" value="提交">
 			</form>
 		</div>
 		<!--异议模态窗口  -->

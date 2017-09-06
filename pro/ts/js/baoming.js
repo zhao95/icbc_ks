@@ -10,7 +10,6 @@ function rowscolor(table){
 	    } 
 }
 
-
 //所有下拉框onchang进行  查询数据  资格非资格 进行筛选
 function selectdata(user_code,yema){
 		var jb = document.getElementById("jb");
@@ -124,19 +123,19 @@ function selectdata(user_code,yema){
 		    		//判断审核状态
 		    		//审核未通过
 		    		if(sh_state==2){
-		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td  style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}else if(sh_state==1){
 		    			//审核通过 没有异议  没有撤销
-		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}else if(sh_state==0){
 		    			//待审核
-		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}else{
 		    			//审核未通过  没有手动审核
-		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}
 		    	}else{
-		    		$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">审核中</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a style="color:red" id="chexiao">已撤销</a></td></tr>');	
+		    		$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+first+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">审核中</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a style="color:red" id="chexiao">已撤销</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');	
 		    	}
 		    }
      	  
@@ -420,16 +419,12 @@ function selectcreate(){
 	  param["bmid"]=bmid;
 	  var result = FireFly.doAct("TS_BMLB_BM","filehist",param);
 	  var data = result.list;
+	  var reason = result.liyou;
 	  var pageEntity = JSON.parse(data);
 	  $("#filehis").html("");
 	  $("#formContainer2").html("");
-	  if(pageEntity.length==0){
-		  
+	  if(pageEntity.length==0&&reason==""){
 	  }else{
-		  var param1 = {};
-		  param1["bmid"]=bmid;
-		  var result = FireFly.doAct("TS_BMLB_BM","getLiyou",param1);
-		  var reason = result.liyou;
 		  $("#liyou11").val(reason);
 		  $("#liyou11").attr("disabled","disabled");
 		  
@@ -506,8 +501,8 @@ function selectcreate(){
 	 $('#appeal').modal('hide');
 	 //将数据从审核未通过中删除
 	 //加入到待审核中
-	 var bmid = document.getElementById("baomingid"+idcode).innerHTML;
-	 var liyou = document.getElementById("liyou11").innerHTML;
+	 var bmid = $("#baomingid"+idcode).html();
+	 var liyou = $("#liyou11").val();
 	 var param ={};
 	 param["bmid"]=bmid
 	 param["liyou"]=liyou;
@@ -549,17 +544,30 @@ function selectcreate(){
 		var j=i+1;
 		$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+j+'</td><td class="rhGrid-td-hide" id="BM_TYPE'+i+'" >'+type+'</td><td class="rhGrid-td-hide" id="BM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-left " id="BM_NAME'+i+'" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " id="BM_ODEPT__NAME" style="text-align: left">'+dept+'</td><td class="rhGrid-td-left " id="S_ATIME" style="text-align: left" >'+startTime+'</td><td class="rhGrid-td-left " id="BM_STATE__NAME" style="text-align: left">'+state+'</td><td id="BM_OPTIONS"><input type="button" onclick="tiaozhuan('+i+')" style="margin-left:30px;display:'+display+';color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px"value="报名"></input></td></tr>');
 	}
+	var table = document.getElementById("table");  
+	   rowscolor(table);
  }
  //审核明细
  function formsubmit(obj){
 	 var bmid = document.getElementById("baomingid"+obj).innerHTML;
-			document.getElementById("bmid").value=bmid;
-			$("#form3").submit();
+	  doPost('bmshmx.jsp', {bmid: bmid});
  }
  function chakan(obj){
 	 var bmid = document.getElementById("baomingid"+obj).innerHTML;
-		document.getElementById("bmid4").value=bmid;
-		$("#form4").submit();
+	 doPost('zgchakan.jsp', {bmid4: bmid});
  }
  
- 
+ function doPost(to, data) {  // to:提交动作（action）,data:参数
+     var myForm = document.createElement("form");
+     myForm.method = "post";
+     myForm.action = to;
+     for (var i in data) {
+         var myInput = document.createElement("input");
+         myInput.setAttribute("name", i);  // 为input对象设置name
+         myInput.setAttribute("value", data[i]);  // 为input对象设置value
+         myForm.appendChild(myInput);
+     }
+     document.body.appendChild(myForm);
+     myForm.submit();
+     document.body.removeChild(myForm);  // 提交后移除创建的form
+ }

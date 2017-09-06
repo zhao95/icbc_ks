@@ -43,6 +43,7 @@
 <body class="hold-transition skin-black sidebar-mini">
 
 
+
 	<div class="" style="padding: 10px">
 		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
 				src="<%=CONTEXT_PATH%>/ts/image/u1155.png" id="shouye"></image></a> <span
@@ -65,8 +66,8 @@
 				<td style="width: 5%"></td>
 				<td style="width: 15%"><select id="zhuangtai" onchange="ztcx()">
 						<option selected="selected">全部</option>
-						<option value="进行中">进行中</option>
-						<option value="已结束">已结束</option>
+						<option value="1">进行中</option>
+						<option value="2">已结束</option>
 				</select></td>
 				<td style="width: 5%"></td>
 				<td><button

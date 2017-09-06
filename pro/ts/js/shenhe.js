@@ -34,9 +34,9 @@ function selectdata1(user_code,xmid,shenhe,yema){
 	var checkbox="a";
 	var diftid="A";
 	if(shenhe==1){
-	var name = document.getElementById("xm1").value;
-    var renlicode =  document.getElementById("rlzybm1").value;
-    var shjshu =  document.getElementById("shjs").value;
+	var name = $("xm1").val();
+    var renlicode =  $("rlzybm1").val();
+    var shjshu =  $("shjs").val();
     var where1 = "";
     var where2 = "";
     var where3 = "";
@@ -55,23 +55,20 @@ function selectdata1(user_code,xmid,shenhe,yema){
      	var where5 = " AND XM_ID="+"'"+xmid+"'";
      	var where6 = "AND SH_OTHER like '%"+user_code+"%'";
      	//每页条数
-		var select = document.getElementById("select1");
-		var index = select.selectedIndex;
-		var myts = select.options[index].value;
+		var myts = $("#select1").children('option:selected').val();
 		//param
 		param["nowpage"]=yema;
 		param["shownum"]=myts;
      	param["where"]=where1 + where2 + where3 + where5 + where6;
 	}else if(shenhe==2){
 		//下拉框值
-     	
 		diftid="B";
 		checkbox="b";
 		servId = "TS_BMSH_PASS";
 		fenye="fenyeu2";
 		table = "passtable";
-		var name = document.getElementById("xm2").value;
-	    var renlicode =  document.getElementById("rlzybm2").value;
+		var name = $("#xm2").val();
+	    var renlicode =  $("#rlzybm2").val();
 	    var where1 = "";
 	    var where2 = "";
 	    var where3 = "";
@@ -88,21 +85,17 @@ function selectdata1(user_code,xmid,shenhe,yema){
 	     	 where4 = " AND XM_ID="+"'"+xmid+"'";
 	     	 where5 = "AND SH_OTHER like '%"+user_code+"%'";
 	     	 
-	     	var type =  document.getElementById("zhuangtai1");
-	     	var index = type.selectedIndex;
-	     	var  zhuangtai = type.options[index].value;
+	     	var  zhuangtai = $("#zhuangtai1").children('option:selected').val();
 	     	if(zhuangtai!="全部"){
 	     		if(zhuangtai=="进行中"){
-	     			where6 = " AND SH_LEVEL!='1'";
+	     			where6 = " AND SH_LEVEL!='1' ";
 	     		}else{
-	     			where6 = " AND SH_LEVEL='1'";
+	     			where6 = " AND SH_LEVEL='1' ";
 	     		}
 	     	}
 	     	 
 	     	//每页条数
-			var select = document.getElementById("select2");
-			var index = document.getElementById("select2").selectedIndex;
-			var myts = select.options[index].value;
+			var myts =  $("#select2").children('option:selected').val();
 			//拼接param
 			param["nowpage"]=yema;
 			param["shownum"]=myts;
@@ -113,8 +106,8 @@ function selectdata1(user_code,xmid,shenhe,yema){
 		servId = "TS_BMSH_NOPASS";
 		fenye="fenyeu3";
 		table = "nopasstable";
-		var name = document.getElementById("xm3").value;
-	    var renlicode =  document.getElementById("rlzybm3").value;
+		var name = $("#xm3").val();
+	    var renlicode =  $("#rlzybm3").val();
 	    var where1 = "";
 	    var where2 = "";
 	    var where3 = "";
@@ -130,10 +123,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
 	  
 	     	 where4 = " AND XM_ID="+"'"+xmid+"'";
 	     	 where5 = "AND SH_OTHER like '%"+user_code+"%'";
-	     	 
-	     	var type =  document.getElementById("zhuangtai2");
-	     	var index = type.selectedIndex;
-	     	var  zhuangtai = type.options[index].value;
+	     	var  zhuangtai = $("#zhuangtai2").children('option:selected').val();
 	     	if(zhuangtai!="全部"){
 	     		if(zhuangtai=="进行中"){
 	     			where6 = " AND SH_LEVEL!='1'";
@@ -143,9 +133,7 @@ function selectdata1(user_code,xmid,shenhe,yema){
 	     	}
 	     	 
 	     	//每页条数
-			var select = document.getElementById("select3");
-			var index = document.getElementById("select3").selectedIndex;
-			var myts = select.options[index].value;
+			var myts = $("#select3").children('option:selected').val();
 			//拼接param
 			param["nowpage"]=yema;
 			param["shownum"]=myts;
@@ -260,11 +248,10 @@ function selectdata1(user_code,xmid,shenhe,yema){
 			 $("#"+fenye).append('<li id="yema'+id+'" onclick=chaxun('+shenhe+','+j+')><a href="#">'+j+'</a></li>');
 					 
 				 }
-			 
 		 }
+			  
      		  //最后一页
 			 var last =yeshu+1;
-     	
 			 $("#"+fenye).append(' <li id="yema'+last+'" onclick="backward('+shenhe+','+last+')"><a  href="#">&raquo;</a></li>');
 			 //当前选中的页码  移除active
 			 $("li.active").removeClass();
@@ -458,7 +445,7 @@ var tabnum=1;
 	//保存自定义显示 的 数据 
 	function  savePX(){
 		//获取所有的td
-		var sentds = document.getElementsByName("rtcheckbox");
+		var sentds = $('input:checkbox[name=rtcheckbox]');
 		if(sentds.length==0){
 			alert("至少选择一条");
 			return;
@@ -510,12 +497,12 @@ function firall(){
 		}
 		function change(obj){
 			if($(obj).prop("checked")){
-				  var kslxArray = document.getElementsByName("checkboxa");
+				  var kslxArray = $('input:checkbox[name=checkboxa]');
 				  for(var i=0;i<kslxArray.length;i++){
 			     	kslxArray[i].checked=true;
 			     	}
 				}else{
-					 var kslxArray = document.getElementsByName("checkboxa");
+					 var kslxArray = $('input:checkbox[name=checkboxa]');
 					  for(var i=0;i<kslxArray.length;i++){
 				     	kslxArray[i].checked=false;
 				     	}
@@ -604,7 +591,6 @@ function firall(){
 					  param["nodeid"]=nodeid;
 					  FireFly.doAct("TS_BMSH_NOPASS","update",param);
 					  $('#tiJiao').modal('hide');
-
 					  shwtda();
 					  }else{
 						  alert("状态未改变");
@@ -651,12 +637,12 @@ function firall(){
 		}
 		function changec(obj){
 			if($(obj).prop("checked")){
-				  var kslxArray = document.getElementsByName("checkboxc");
+				  var kslxArray = $('input:checkbox[name=checkboxc]');
 				  for(var i=0;i<kslxArray.length;i++){
 			     	kslxArray[i].checked=true;
 			     	}
 				}else{
-					 var kslxArray = document.getElementsByName("checkboxc");
+					 var kslxArray = $('input:checkbox[name=checkboxc]');
 					  for(var i=0;i<kslxArray.length;i++){
 				     	kslxArray[i].checked=false;
 				     	}
@@ -747,9 +733,8 @@ function firall(){
 			});
 				//审核明细
 				function formsubmit(obj){
-					var bmid = obj.parentNode.id;
-					document.getElementById("bmid4").value=bmid;
-					$("form5").submit();
+					var bmids = obj.parentNode.id;
+					 doPost('bmshmx.jsp', {bmid: bmids});
 				}
 				//导出
 				//定义一个公共变量  当进行条件查询时  将 数据ID放入数组中
@@ -810,8 +795,10 @@ function form2submit(obj){
 	var bmid = obj.parentNode.id;
 		var param = {};
 		param["bmid"]=bmid;
+		alert(bmid);
 	var result = FireFly.doAct("TS_BMLB_BM","getSingle",param);
 	var data = result.list;
+	alert(data.length);
 	if(data.length!=2){
 	$(obj).attr("data-target","#userbminfo");
 	var pageEntity = JSON.parse(data);
@@ -833,12 +820,12 @@ function form2submit(obj){
 //左侧全选
 function checkall(obj){
 	if($(obj).prop("checked")){
-		  var kslxArray = document.getElementsByName("pxcheckbox");
+		  var kslxArray = $('input:checkbox[name=pxcheckbox]');
 		  for(var i=0;i<kslxArray.length;i++){
 	     	kslxArray[i].checked=true;
 	     	}
 		}else{
-			 var kslxArray = document.getElementsByName("pxcheckbox");
+			 var kslxArray = $('input:checkbox[name=pxcheckbox]');
 			  for(var i=0;i<kslxArray.length;i++){
 		     	kslxArray[i].checked=false;
 		     	}
@@ -848,12 +835,12 @@ function checkall(obj){
 //右侧全选
 function checkallright(obj){
 	if($(obj).prop("checked")){
-		  var kslxArray = document.getElementsByName("rtcheckbox");
+		  var kslxArray =$('input:checkbox[name=rtcheckbox]');
 		  for(var i=0;i<kslxArray.length;i++){
 	     	kslxArray[i].checked=true;
 	     	}
 		}else{
-			 var kslxArray = document.getElementsByName("rtcheckbox");
+			 var kslxArray = $('input:checkbox[name=rtcheckbox]');
 			  for(var i=0;i<kslxArray.length;i++){
 		     	kslxArray[i].checked=false;
 		     	}
@@ -1053,3 +1040,26 @@ function closemot(){
 	deletefiles();	
 	 document.getElementById("shanchu").parentNode.parentNode.remove();
 }
+
+function doPost(to, data) {  // to:提交动作（action）,data:参数
+    var myForm = document.createElement("form");
+    myForm.method = "post";
+    myForm.action = to;
+    for (var i in data) {
+        var myInput = document.createElement("input");
+        myInput.setAttribute("name", i);  // 为input对象设置name
+        myInput.setAttribute("value", data[i]);  // 为input对象设置value
+        myForm.appendChild(myInput);
+    }
+    document.body.appendChild(myForm);
+    myForm.submit();
+    document.body.removeChild(myForm);  // 提交后移除创建的form
+}
+//进行中  已结束 状态  onchange 事件
+jq("#zhuangtai1").change(function(){
+	var s = $(this).children('option:selected').val();
+	selectdata1(user_code,xmid,2,1); 
+});
+jq("#zhuangtai2").change(function(){
+	selectdata1(user_code,xmid,3,1); 
+});

@@ -190,11 +190,11 @@
 	      						 int bmshstate = bmbean.getInt("BM_SH_STATE");
 	      						 if(bmshstate==1){
 	      							 shstate = "恭喜您！审核已通过，请及时请假参加考试";
-	      						 }else if(bmshstate==2){
+	      						 }else if(bmshstate==3){
 	      							 shstate="不好意思！审核未通过，如有需要请及时上诉";
 	      						 }else if(bmshstate==0){
 	      							 shstate="已提交上诉申请，请耐心等待......";
-	      						 }else if(bmshstate==3){
+	      						 }else if(bmshstate==2){
 	      							 shstate="不好意思！审核未通过，您未获得考试资格";
 	      						 }
 	      						 String chexiao = bmbean.getStr("BM_STATE");
@@ -244,7 +244,6 @@
 	function goBack(){
 		window.history.go(-1);
 	}
-	alert("<%=bmid%>");
 	$(function(){
 		var bm = "<%=lbname%>";
 		var ksmc = "<%=bm_ksxz%>";
