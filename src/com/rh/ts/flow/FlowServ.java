@@ -155,7 +155,7 @@ public class FlowServ extends CommonServ {
 		String shUserCode = shBean.getStr("SHR_USERCODE");
 		String ydyBm = shBean.getStr("QJKLC_YDDEPT");
 		String zdyDeptCode = shBean.getStr("DEPT_CODE");
-		String shzw = shBean.getStr("QJKLC_SHZW");
+		String shzw = shBean.getStr("QJKLC_SHZW_CODE");
 		String colCodel = shBean.getStr("QJKLC_ZDDEPT_COLCODE");
 		
 		//1.审核人已填写
