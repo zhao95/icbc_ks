@@ -13,7 +13,7 @@ $(function () {
      */
     showTodoTip();
     jQuery("#loginOutBtn").unbind("click").click(clickAndLoginOut);
-    jQuery("#userInfo").unbind("click").click(userInfoPage);
+    jQuery("#TipUserInfo").unbind("click").click(userInfoPage);
 });
 
 /**
@@ -228,6 +228,7 @@ function showTodoTip() {
     tipListEl.html('');
     var data = {};
     data = {_NOPAGE_: true};
+    // data = {_extWhere: "and OWNER_CODE='" + System.getUser("USER_CODE") + "'", _NOPAGE_: true};
     var todoListPageList = FireFly.doAct("TS_COMM_TODO", 'query', data, false);
     var todoList = todoListPageList._DATA_;
 
@@ -244,9 +245,11 @@ function showTodoTip() {
     };
 
     tipListEl.append(
-        '<li class="header"><a href="#">待办 / 消息</a></li>' +
-        '<li class="body">'
+        '<li class="header"><a href="#">待办 / 消息</a></li>'
     );
+
+    var tipListBodyEl = jQuery('<li class="body"></li>');
+
     for (var i = 0; i < todoList.length; i++) {
         var item = todoList[i];
         //最多显示3个待办
@@ -281,7 +284,7 @@ function showTodoTip() {
             });
         }
 
-        tipListEl.append(
+        tipListBodyEl.append(
             jQuery([
                 '<div style="" class="todo-item">',
                 '   <div style="" class="todo-circle ' + colorClassName + '">',
@@ -291,9 +294,8 @@ function showTodoTip() {
             ].join('')).append(itemContent)
         );
     }
-    tipListEl.append(
-        '</li>'
-    );
+    tipListEl.append(tipListBodyEl);
+
     var tipViewAll = tipListEl.append(
         '<li class="footer" style="padding-top:30px;"><a href="#">查看所有待办 / 消息</a></li>'
     ).bind('click', function () {//跳转到页面详情（请假/借考/异议）
@@ -314,7 +316,7 @@ function clickAndLoginOut() {
  * 点击个人信息跳转到用户个人信息界面
  */
 function userInfoPage() {
-    var user_work_number = System.getUser("USER_CODE");
-    window.location.href = "/qt/jsp/user_info.jsp?USER_CODE=" + user_work_number;
+//    var user_work_number = System.getUser("USER_CODE");
+    window.location.href = "/qt/jsp/user_info.jsp";
 
 }

@@ -46,7 +46,7 @@
 <!--插件--> 
 <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/jquery.smart-form.js"></script> 
 <body class="hold-transition skin-black sidebar-mini">
-
+<%@ include file="header-logo.jsp"%>
 	<div class="" style="padding: 10px">
 		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><image style="padding-bottom:10px"
 				src="<%=CONTEXT_PATH%>/ts/image/u1155.png" id="shouye"></image></a> <span

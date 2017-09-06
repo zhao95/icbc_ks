@@ -13,13 +13,20 @@ $(function() {
 function userInfo() {
 	var userName = System.getVar("@USER_NAME@");
 	var odeptName = System.getVar("@ODEPT_NAME@");
-	$("#userInfo").append("<p>" + userName + "</p>").append(
-			"<p>" + odeptName + "</p>");
+	$("#userInfo").append("<div>" + userName + "</div>").append(
+			"<div>" + odeptName + "</div>");
 	var perImg = FireFly.getContextPath() + System.getUser("USER_IMG");
-	$("#userInfo2").append("<span class='hidden-xs'>" + userName + "</span>");
+	$("#userInfo2").append("<span class='hidden-xs' style='font-family: '黑体 Bold', '黑体 Regular', '黑体';font-weight: 700;font-style: normal;font-size: 16px;color: #FFFFFF;text-align: center;'>" + userName + "</span>");
+
 	$("#userInfo2").append("<span class='hidden-xs' style='margin-left:8px;'><i class='fa fa-chevron-circle-down'></i></span>");
+	if(preImg==""){
+		//	写死头像图片
+		$("#userImg1").attr('src',"/qt/img/left-logo-user.jpg"); 
+		$("#userImg2").attr('src',"/qt/img/left-logo-user.jpg"); 
+	}else{
 	$("#userImg1").attr('src',perImg); 
 	$("#userImg2").attr('src',perImg); 
+	}
 	$("#userImg3").attr('src',perImg);  
 }
 
