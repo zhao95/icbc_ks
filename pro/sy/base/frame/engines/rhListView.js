@@ -2354,18 +2354,26 @@ rh.vi.listView.prototype.getUserPvlg = function(){
  */
 rh.vi.listView.prototype._checkUserPvlg = function() {
 	var _self = this;
-//	console.log("userPvlg",_self._userPvlg);
+	console.log("用户权限",_self._userPvlg);
 	var odeptLv = System.getVar("@ODEPT_LEVEL@",0);
 	var deptCode = System.getVar("@DEPT_CODE@");
 	var deptPath = System.getVar("@CODE_PATH@");
 
-	var servPvlg = _self._userPvlg[_self.servId+"_PVLG"]
-//	console.log("servPvlg",servPvlg);
+	var servPvlg ;
+	if(_self._userPvlg){
+		
+		servPvlg = _self._userPvlg[_self.servId+"_PVLG"]
+	}
+	console.log("当前服务权限",servPvlg);
+	
+	if("admin" == System.getVar("@LOGIN_NAME@")){
+		return ;
+	}
 	
 	for(var key in servPvlg) {
 			
 		if(servPvlg[key] == 0) {
-			console.log(key,false);
+//			console.log(key,false);
 			$("a[actcode='"+key+"']").remove();
 		} else {
 				var ispvlg = false; // 是否有权限
@@ -2410,10 +2418,10 @@ rh.vi.listView.prototype._checkUserPvlg = function() {
 				
 				if(!ispvlg) {
 					$("a[actcode='"+key+"']").remove();
-					console.log(key,false);
+//					console.log(key,false);
 				} else {
 					
-					console.log(key,true);
+//					console.log(key,true);
 				}
 		}
 		

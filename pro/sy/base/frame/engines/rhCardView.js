@@ -119,7 +119,15 @@ rh.vi.cardView = function(options) {
 			this._userPvlg = FireFly.getCache(userCode,FireFly.userPvlg);
 		}
 	}
-   console.log("userPvlg",this._userPvlg);
+   console.log("用户权限",this._userPvlg);
+   
+   var servPvlg ;
+	if(this._userPvlg){
+		
+		var servPvlg = this._userPvlg[this.servId+"_PVLG"]
+	}
+   
+   console.log("当前服务权限",servPvlg);
 };
 
 /**
