@@ -32,8 +32,8 @@ function bindCard(){
 }		
 _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
-	var configStr = "TS_XMGL_BM_KSLBK,{'TARGET':'','SOURCE':'KSLBK_NAME~KSLBK_XL~KSLBK_MK~KSLBK_TYPE~KSLBK_ID'," +
-			"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
+	var configStr = "TS_XMGL_BM_KSLBK,{'TARGET':'','SOURCE':'KSLBK_NAME~KSLBK_CODE~KSLBK_XL~KSLBK_XL_CODE~KSLBK_MK~KSLBK_MKCODE~KSLBK_TYPE~KSLBK_TYPE_NAME~KSLBK_ID'," +
+			"'HIDE':'KSLBK_CODE~KSLBK_XL_CODE~KSLBK_MKCODE~KSLBK_TYPE_NAME','TYPE':'multi','HTMLITEM':''}";
 	var options = {
 		"config" :configStr,
 		"parHandler":_viewer,
@@ -44,6 +44,12 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	    	var mks = idArray.KSLBK_MK.split(",");
 	    	var types = idArray.KSLBK_TYPE.split(",");
 	    	var ids = idArray.KSLBK_ID.split(",");
+	    	var LBcodes = idArray.KSLBK_CODE.split(",");
+	    	var XLcodes = idArray.KSLBK_XL_CODE.split(",");
+	    	var MKcodes = idArray.KSLBK_MKCODE.split(",");
+	    	var typename = idArray.KSLBK_TYPE_NAME.split(",");
+	    	var paramjson={};
+	    	var paramlist = [];
 	    	for(var i=0;i<ids.length;i++){
 	    		//从数据库中查找数据
 	    		FireFly.doAct("TS_XMGL_BM_KSLB","finds",{"_WHERE_":"and KSQZ_ID = '"+qzId+"' and KSLBK_ID='"+ids[i]+"'"},true,false,function(data){
@@ -58,13 +64,21 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	   				param["XM_SZ_ID"] = XM_SZ_ID;
 	   				param["BM_ID"] = BM_ID;
 	   				param["XM_ID"] = XM_ID;
+	   				param["KSLB_CODE"]=LBcodes[i];
+	   				param["KSLB_XL_CODE"]=XLcodes[i];
+	   				param["KSLB_MKCODE"]=MKcodes[i];
+	   				param["KSLB_TYPE_NAME"]=typename[i];
+	   				paramlist.push(param);
 	   				console.log(param);
-	   				FireFly.doAct(_viewer.servId,"save", param, true);	
-	   				_viewer.refresh();
 	    	    }
     		});    
-	    		
 	    	}
+	    	paramjson["BATCHDATAS"]= paramlist;
+	    	var result =FireFly.batchSave(_viewer.servId,paramjson,"",false,true);	
+	    	/*console.log(result);
+	    	_viewer.listBarTip("保存成功");
+	    	_viewer.listBarTipError("选择失败");*/
+	    	_viewer.refresh();
 		}
 	}
 	
