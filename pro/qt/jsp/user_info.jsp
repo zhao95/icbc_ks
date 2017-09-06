@@ -73,21 +73,6 @@
 	<div class="" style="padding: 10px">
 		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom:10px" src="/ts/image/u1155.png" id="shouye"></a> <span style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;个人资料</span>
 	</div>
-	<!-- tab标签  主标题 考试详情 -->
-	<div>
-		<table id="myTab" class="nav nav-tabs"
-		style="margin-left: 10px; width: 98%; background-color: white">
-<!-- 		<tr style="height: 70px"> -->
-<!-- 			<td id="ksrltd"  class="active" -->
-<!-- 				style="border-bottom:white solid 1px;width: 33.3%; text-align: center; font-size: 25px"> -->
-<!-- 				<a id="ksrla" href="#home" data-toggle="tab"><span id="ksrlsp" -->
-<!-- 					style="color: lightseagreen">考试日历详情</span> -->
-<!-- 				</a> -->
-<!-- 			</td> -->
-<!-- 		</tr> -->
-	</table>
-	</div>
-
 	<!-- 显示主模块 -->
 	<div id="myTabContent" class="tab-content">
 		<div class="tab-pane fade active in" style="position:relative;" id="home">
@@ -98,22 +83,29 @@
 			<!-- 分割线 -->
 			<div id="xixian" style="margin-left: 10px; margin-top: 20px; background-color: lightgray; height:1px; width: 98%">
 			</div>
-			<!-- 考试信息主要数据展示区域 -->
-			<div id="kstable_div" class="" style="margin-top:20px;margin-left: 10px; width: 98%; margin:0 auto;text-align: center;">
-					<table class="rhGrid JPadding JColResizer" id="kstable" border="1">
-						<thead id="tem" class="">
-							
-						</thead>
-					<tbody id="tbody_data" ></tbody>
-					</table>
+			<!-- 用户个人信息主要数据展示区域 -->
+			<div id="table_div" class="" style="margin-top:20px;margin-left: 10px; width: 98%; margin:0 auto;text-align: center;">
+					
+				<div id="main-left" style="display:block;width:30%;float:left; background-color:red; height:20px;">
+					<img alt="" src="" id="user_photo">
+					<div><a>姓名：</a><a>123</a></div>
+					<div><a>职务：</a><a>666</a></div>
+					<div><a>部门：</a><a>456</a></div>
+					<div><a>上次登录时间：</a><a>8888-88-88</a></div>
+				</div>
+				<div id="main-data" style="display:block;width:70%;float:left;height:auto;">
+					<div>
+						<h4 style="text-align:left;">个人基本信息</h4>			
+						<div id="user_info_div"></div>		
+					</div>
+				</div>
 		</div>
 	</div>	
 					
 				</div>
-	</tbody></table>
 	
 	<!-- 引入相关js文件 -->
-	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
+<%-- 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script> --%>
 	<!-- Bootstrap 3.3.6 -->
 	<!-- FastClick -->
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
