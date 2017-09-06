@@ -66,7 +66,7 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	   				param["XM_ID"] = XM_ID;
 	   				param["KSLB_CODE"]=LBcodes[i];
 	   				param["KSLB_XL_CODE"]=XLcodes[i];
-	   				param["KSLB_MKCODE"]=MKcodes[i];
+	   				param["KSLB_MK_CODE"]=MKcodes[i];
 	   				param["KSLB_TYPE_NAME"]=typename[i];
 	   				paramlist.push(param);
 	   				console.log(param);
