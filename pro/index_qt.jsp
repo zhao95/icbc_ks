@@ -86,13 +86,13 @@
 						<!-- User Account: style can be found in dropdown.less -->
 						<li class="dropdown user user-menu">
 							<a id="userInfo2" href="#"
-							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;">
+							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;width: 150px;">
 							<img id= "userImg2"
-								src="qt/dist/img/user2-160x160.jpg" class="user-image"
+								src="/sy/theme/default/images/common/user0.png" class="user-image"
 								alt="User Image">
 								<!-- <span class="hidden-xs">Alexander Pierce</span> -->
 						</a>
-							<ul class="dropdown-menu" style="width:160px;">
+							<ul class="dropdown-menu" style="min-width:150px;width:150px;">
 <!-- 							<li class="user-header"></li> -->
 <!-- 							<li class="user-body"></li> -->
 							<li><a href="#" class="" id="TipUserInfo"><i class="fa fa-user-o fa-fw"></i>个人信息</a></li>
@@ -130,7 +130,7 @@
 				<!-- Sidebar user panel -->
 				<div class="user-panel text-center">
 					<div class=" image" style="position: absolute;padding-left: 10px;">
-						<img id="userImg1" style="max-width: 64px;" src="/qt/img/left-logo-user.jpg" class="img-circle" alt="User Image">
+						<img id="userImg1" style="max-width: 64px;" src="/sy/theme/default/images/common/user_64_64.png" class="img-circle" alt="User Image">
 					</div>
 					<div id="userInfo" class="text-center" style="line-height: 32px;height: 64px;margin-left: 74px;">
 						<!-- <p>刘小雨</p>
@@ -171,7 +171,7 @@
 				<div class="row">
 					<div class="col-md-8">
 																	<!-- /.box -->
-						<div class="box" style=" border-top: 1px solid #d2d6de;" >
+						<div class="panel panel-default box" style=" border-top: 1px solid #d2d6de;" >
 							<div class="box-header with-border"  style="background-color:#f9f9f9;height: 40px;">
 								<h3 class="box-title">资格考试项目进展状态</h3>
 								<div id="jdtMore" class="text">
@@ -374,7 +374,7 @@
 					</div>
 					<!-- /.col -->
 					<div class="col-md-4">
-						<div id="announcement-box" class="box" style="border-top: 1px solid #d2d6de;">
+						<div id="announcement-box" class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title" style="display: block;">
 									通知公告
