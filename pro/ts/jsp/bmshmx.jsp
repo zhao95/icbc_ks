@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<%@page import="com.rh.core.serv.OutBean"%>
+<%@page import="com.rh.core.serv.ServDao"%>
 <%@page import="javax.swing.text.StyledEditorKit.ForegroundAction"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -15,8 +15,9 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 <!-- 获取后台数据 -->
+
 <%@ include file="/sy/base/view/inHeader.jsp"%>
-<%@ page import="com.rh.core.serv.ServDao"%>
+	
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
@@ -54,8 +55,8 @@
 						
 		<tr style="backGround-color:WhiteSmoke; height: 30px">
 			<th style="width: 5%; text-align: center">序号</th>
-			<th style="width: 13%;">审核时间</th>
-			<th style="width: 13%;">审核人姓名</th>
+			<th style="width: 13%;text-align: center"">审核时间</th>
+			<th style="width: 13%;text-align: center"">审核人姓名</th>
 			<th style="width: 13%; text-align: center">审核人登录名</th>
 			<th style="width: 13%; text-align: center">审核级别</th>
 			<th style="width: 13%; text-align: center">审核状态</th>
@@ -65,10 +66,7 @@
 	</thead>
 	<tbody>
 	 <%
-	 String s =request.getQueryString();
-	 out.print(s);
-	 String bmid = request.getParameter("bmid4");
-	 out.print(bmid);
+	 String bmid = request.getParameter("bmid");
 	 String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
 	 List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
 	 for(int i=0;i<list.size();i++){
@@ -78,20 +76,29 @@
 		String shr = bean.getStr("SH_UNAME");
 		String shlog = bean.getStr("SH_ULOGIN");
 		String jibie = bean.getStr("SH_LEVEL");
-		String state = bean.getStr("SH_STATE");
+		String state = bean.getStr("SH_STATUS");
+			String status = "";
+		if("1".equals(state)){
+			status = "审核通过";
+		}else if("2".equals(state)){
+			status="审核未通过";
+		}
 		String liyou = bean.getStr("SH_MIND");
 		String address = bean.getStr("SH_UCODE");
 	%>
-		 <tr>
-		<td><%=j %></td><td><%=shdate %></td><td><%=shr %></td><td><%=shlog %></td><td><%=jibie %></td><td><%=state %></td><td><%=liyou %></td><td><%=address %></td>
+		 <tr height="50px">
+		<td align="center"><%=j %></td><td><%=shdate %></td><td align="center"><%=shr %></td><td align="center"><%=shlog %></td><td align="center"><%=jibie %></td><td align="center"><%=status %></td><td align="center"><%=liyou %></td><td align="center"><%=address %></td>
 		</tr> 
 		<%}%>
 	</tbody>
 	</table>
 	<script type="text/javascript">
-	 $(function(){
-	var table = document.getElementById("table");		
-	}); 
+	 var rows = $("#table").find("tr");  
+	    for(i = 1; i < rows.length; i++){  
+	        if(i % 2 == 0){  
+	            rows[i].style.backgroundColor = "Azure";  
+	       }  
+	    } 
 	</script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>

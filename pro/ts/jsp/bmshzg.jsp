@@ -122,6 +122,7 @@
 			<div id="xixian"
 				style="margin-left: 10px; margin-top: 10px; background-color: lightgray; height:1px; width: 98%">
 			</div>
+			<!--按钮  -->
 			<table style="margin-top:10px;width:50%">
 			<tr style="width:98%">
 				<td style="width:15%;text-align:right"><button  class="btn btn-success"  data-toggle="modal" style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheA()" id = "shenheA">审核</button></td>
@@ -131,6 +132,7 @@
 				<td style="width:20%;text-align:center"><button class="btn btn-success" style="border:none;color:white;height:30px;width:40%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
 			</tr>
 			</table>
+			<!--所有数据  -->
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
 					<table class="rhGrid JPadding JColResizer" id="staytable">
 					<thead>
@@ -186,7 +188,7 @@
 				<td style="width:15%"></td>
 				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm2" type="text"></input></td>
 						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm2" type="text"></input></td>
-						<td style="width:1%;text-align:left"><select id = "zhuangtai1" onchange="ztcx(审核通过)">
+						<td style="width:1%;text-align:left"><select id = "zhuangtai1">
 				            <option selected="selected">全部</option>
 				            <option value="进行中">进行中</option>
 				            <option value="已结束">已结束</option>
@@ -251,7 +253,7 @@
 						<td style="width:15%"></td>
 				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm3" type="text"></input></td>
 						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm3" type="text"></input></td>
-						<td style="width:1%;text-align:left"><select id = "zhuangtai2" onchange="ztcx(未通过)">
+						<td style="width:1%;text-align:left"><select id = "zhuangtai2">
 				            <option selected="selected">全部</option>
 				            <option value="进行中">进行中</option>
 				            <option value="已结束">已结束</option>
@@ -490,9 +492,7 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-			<form id="form5" style="display:none" method="post" action="bmshmx.jsp">
-				<input id = "bmid4" name="bmid4">
-			</form>
+			
 			<form id="form2" style="display:none" method="post" action="baomingglf.jsp">
 				<input id = "fzgtz" name="fzgtz"></input>
 			</form>
@@ -504,18 +504,17 @@
 	
 	<script>
 	var jq = $.noConflict(true);
-	//导入
 	</script>
 	<script src="<%=CONTEXT_PATH%>/ts/js/shenhe.js"></script>
 	 <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>	 
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/global.js"></script> 
-<!--插件--> 
-<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/jquery.smart-form.js"></script> 
-<script src="<%=CONTEXT_PATH%>/ts/js/jquery.iframe-transport.js"></script> 
-<script src="<%=CONTEXT_PATH%>/ts/js/jquery.ui.widget.js"></script> 
-<script src="<%=CONTEXT_PATH%>/ts/js/jquery.fileupload.js"></script>
+	<!--插件--> 
+	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/jquery.smart-form.js"></script> 
+	<script src="<%=CONTEXT_PATH%>/ts/js/jquery.iframe-transport.js"></script> 
+	<script src="<%=CONTEXT_PATH%>/ts/js/jquery.ui.widget.js"></script> 
+	<script src="<%=CONTEXT_PATH%>/ts/js/jquery.fileupload.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<!-- FastClick -->
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
