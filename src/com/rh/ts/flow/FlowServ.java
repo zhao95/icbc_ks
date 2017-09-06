@@ -171,19 +171,19 @@ public class FlowServ extends CommonServ {
 		    switch (ydyBm) {
 		    case "0":
 			//起草人部门
-			sqlWhere = "and dept_code = '"+deptCode+"' and USER_POST = '"+shzw+"'";
+			sqlWhere = "and dept_code = '"+deptCode+"' and DUTY_LV_CODE = '"+shzw+"'";
 			break;
 		    case "1":
 			//起草人机构
-			sqlWhere = "and odept_code = '"+odeptCode+"' and USER_POST = '"+shzw+"'";
+			sqlWhere = "and odept_code = '"+odeptCode+"' and DUTY_LV_CODE = '"+shzw+"'";
 			break;
 		    case "2":
 			//推送人部门
-			sqlWhere = "and dept_code = '"+shrDeptCode+"' and USER_POST = '"+shzw+"'";
+			sqlWhere = "and dept_code = '"+shrDeptCode+"' and DUTY_LV_CODE = '"+shzw+"'";
 			break;
 		    case "3":
 			//推送人机构
-			sqlWhere = "and odept_code = '"+shrOdeptCode+"' and USER_POST = '"+shzw+"'";
+			sqlWhere = "and odept_code = '"+shrOdeptCode+"' and DUTY_LV_CODE = '"+shzw+"'";
 			break;
 		    default:
 			break;
@@ -200,7 +200,7 @@ public class FlowServ extends CommonServ {
 		}
 		//3.自定义部门，审核人职位已填写
 		if((!zdyDeptCode.equals("")) &&(!shzw.equals(""))){
-		    List<Bean> userlist = ServDao.finds("SY_ORG_USER_ALL", "and dept_code = '"+zdyDeptCode+"' and USER_POST = '"+shzw+"'");
+		    List<Bean> userlist = ServDao.finds("SY_ORG_USER_ALL", "and dept_code = '"+zdyDeptCode+"' and DUTY_LV_CODE = '"+shzw+"'");
 		    for (int i = 0; i < userlist.size(); i++) {
 			Bean tmpUser = new Bean();
 			tmpUser.set("SHR_NAME", userlist.get(i).getStr("USER_NAME"));
@@ -212,7 +212,7 @@ public class FlowServ extends CommonServ {
 		if((!colCodel.equals("")) &&(!shzw.equals(""))){
 		    //指定部门
 		    String zdDept = formBean.getStr(colCodel);
-		    List<Bean> userlist = ServDao.finds("SY_ORG_USER_ALL", "and odept_code = '"+zdDept+"' and USER_POST = '"+shzw+"'");
+		    List<Bean> userlist = ServDao.finds("SY_ORG_USER_ALL", "and odept_code = '"+zdDept+"' and DUTY_LV_CODE = '"+shzw+"'");
 		    for (int i = 0; i < userlist.size(); i++) {
 			Bean tmpUser = new Bean();
 			tmpUser.set("SHR_NAME", userlist.get(i).getStr("USER_NAME"));
