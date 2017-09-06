@@ -19,7 +19,7 @@ function userInfo() {
 	$("#userInfo2").append("<span class='hidden-xs' style='font-family: '黑体 Bold', '黑体 Regular', '黑体';font-weight: 700;font-style: normal;font-size: 16px;color: #FFFFFF;text-align: center;'>" + userName + "</span>");
 
 	$("#userInfo2").append("<span class='hidden-xs' style='margin-left:8px;'><i class='fa fa-chevron-circle-down'></i></span>");
-	if(preImg==""){
+	if(perImg==undefined){
 		//	写死头像图片
 		$("#userImg1").attr('src',"/qt/img/left-logo-user.jpg"); 
 		$("#userImg2").attr('src',"/qt/img/left-logo-user.jpg"); 
