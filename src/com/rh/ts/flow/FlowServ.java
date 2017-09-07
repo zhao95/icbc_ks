@@ -147,10 +147,12 @@ public class FlowServ extends CommonServ {
 	    }else{
 		getStep = level - 1;
 	    }
+	    String nodeName = "";
 	    List<Bean> shList = ServDao.finds("TS_WFS_QJKLC", "AND WFS_ID = '"+wfsId+"' and NODE_STEPS = "+getStep+" and DEPT_CODE like '%"+odeptCode+"%'");
 	    List<Bean> resList = new ArrayList<Bean>();
 	    for (int k = 0; k < shList.size(); k++) {
 		Bean shBean = shList.get(k);
+		if(nodeName.equals("")){nodeName = shBean.getStr("NODE_NAME");}
 		String shrName = shBean.getStr("QJKLC_SHR");
 		String shUserCode = shBean.getStr("SHR_USERCODE");
 		String ydyBm = shBean.getStr("QJKLC_YDDEPT");
@@ -224,6 +226,7 @@ public class FlowServ extends CommonServ {
 	    }
 	    outBean.set("result", resList);
 	    outBean.set("NODE_STEPS", getStep);
+	    outBean.set("NODE_NAME", nodeName);
 	}
 	
 	return outBean;
