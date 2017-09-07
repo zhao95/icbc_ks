@@ -262,10 +262,6 @@
                 '	        style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"/>',
                 '	</td>',
                 '</tr>',
-                <%-- 							<input type="button" onclick="bianji(this)"style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"value="编辑" />
-                <input type="button" onclick="shanchu(this)"style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"value="删除" />
-                </td>
-                --%>
             ].join(''));
         }
 
@@ -285,36 +281,14 @@
             }
         }
         doPost('qjlb_qj.jsp', {bmids: bmids});
-//        document.getElementById("bmids").value = bmids;
-//        document.getElementById("formid").submit();
     }
 
     //已申请的请假列表 点击进行查看
     function chakan(obj) {
         var pkCode = obj.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML.trim();
-//        document.getElementById("qjid").value = pkCode;
-//        document.getElementById("hidden").value = 2;
         doPost('qjlb_qj2.jsp', {qjid: pkCode, hidden: ""});//hidden为空 查看
-//        document.getElementById("formchakan").submit();
     }
 
-    //    //点击进行编辑
-    //    function bianji(obj) {
-    //        var pkCode = obj.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML.trim();
-    ////        document.getElementById("qjid").value = pkCode;
-    ////        document.getElementById("hidden").value = 1;
-    //        doPost('qjlb_qj2.jsp', {qjid: pkCode, hidden: 1});
-    ////        document.getElementById("formchakan").submit();
-    //    }
-    //
-    //    //删除当前条请假数据
-    //    function shanchu(obj) {
-    //        var pkCode = obj.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML;
-    //        var param = {};
-    //        param["pkCode"] = pkCode;
-    //        FireFly.doAct("TS_QJLB_QJ", "deleteData", param);
-    //        window.history.go(0);
-    //    }
     /**
      * 实现post请求
      * @param to 例：/ts/jsp/qjlb_qj2.jsp

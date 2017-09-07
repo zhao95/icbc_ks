@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<%@page import="com.rh.core.serv.ServDao" %>
-<%@ page import="com.rh.ts.qjlb.QjlbServ" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
@@ -74,89 +72,102 @@
 //    String user_cmpy_date = userBean.getStr("USER_CMPY_DATE");
 
 %>
-<div style="padding-left: 15%;width: 90%;text-align: left;">
-    <img alt="中国工商银行" src="<%=CONTEXT_PATH %>/qt/img/u3148.png"> <img alt="考试系统"
-                                                                      src="<%=CONTEXT_PATH %>/qt/img/u3376.png">
-</div>
-<div style="background-color: #dfdfdf;padding-top: 10px;padding-left: 10%;padding-right: 10%;padding-bottom: 10px;">
-    <div style="background-color: #fdfdfd">
-        <table style="padding: 10px;width:100%;background-color: #5ab6a6;height: 80px;">
-            <tr style="backGround-color: #ababab; height: 30px">
-                <td style="text-align: center;">
-                    <span style="position: relative;left: 26px;top:3px;
-                     font-family: 'Arial Negreta', 'Arial Normal', 'Arial';
+<%@ include file="../../qt/jsp/header-logo.jsp" %>
+<div style="background-color: #dfdfdf;padding: 0 10%;">
+    <div style="background-color: #fdfdfd;padding-bottom: 30px" class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12 text-center" style="background-color: #ababab;">
+                <div style="min-height: 70px;padding:10px;">
+                    <div style="display: inline-block">
+                                <span style="position: relative;left: 26px;top:3px;
+                     font-family: 'Arial Negreta', 'Arial Normal', 'Arial',serif;
                      font-weight: 700;font-style: normal;font-size: 16px;color: #FFFFFF;">1</span>
-                    <img alt="u5520" src="<%=CONTEXT_PATH %>/ts/image/u5520.png">
-                    <span style="font-size: 25px;">&nbsp;&nbsp;填写申请单&nbsp;&nbsp;</span>
-                    <img alt="u5532" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">
-                    <span style="position: relative;left: 26px;top:3px;
-                     font-family: 'Arial Negreta', 'Arial Normal', 'Arial';
-                     font-weight: 700;font-style: normal;font-size: 16px;">2</span>
-                    <img alt="u5522" src="<%=CONTEXT_PATH %>/ts/image/u5522.png">
-                    <span style="font-size: 25px;">&nbsp;&nbsp;部门领导审批&nbsp;&nbsp;</span>
-                    <img alt="u5524" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">
-                    <span style="position: relative;left: 26px;top:3px;
-                     font-family: 'Arial Negreta', 'Arial Normal', 'Arial';
-                     font-weight: 700;font-style: normal;font-size: 16px;">3</span>
-                    <img alt="u5532" src="<%=CONTEXT_PATH %>/ts/image/u5524.png">
-                    <span style="font-size: 25px;">&nbsp;&nbsp;考务管理人员审批</span>
-                </td>
-            </tr>
-        </table>
-
-        <%-- <div style="background-color: #ffffff;">
-             <div class=""
-                  style="background-color: #fed1d1;border:1px solid red;border-radius: 5px;
-                  margin:15px auto 5px 20px;padding: 5px;min-width: 830px;max-width: 685px;">
-                 ！ 温馨提示：您今年已请假 <span style="color: red">2</span> 次，还可请假 <span style="color: red">1</span> 次。
-                 满 <span style="color: red">3</span> 次后，本年度将不允许再请假。请合理使用请假次数！
-             </div>
-         </div>--%>
-        <table id="" style="padding: 10px;width:100%;">
-            <tr>
-                <td style="/*text-align: center;*/padding-top: 15px;">
-                    <div style="background-color: #fed1d1;border:1px solid red;border-radius: 5px;
-                             margin: 0 123px;padding: 5px;min-width: 830px;max-width: 685px;">
-                        ！ 温馨提示：您今年已请假 <span style="color: red">2</span> 次，还可请假 <span style="color: red">1</span> 次。
-                        满 <span style="color: red">3</span> 次后，本年度将不允许再请假。请合理使用请假次数！
+                        <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5520.png">
+                        <span style="position: relative;font-size: 25px;top: 5px;">&nbsp;&nbsp;填写申请单&nbsp;&nbsp;</span>
                     </div>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align: left;padding-top: 5px;padding-left: 2%;">
-                    <span style="font-size: 18px;">请假申请</span><br/>
-                    <img alt="u5532" data-toggle="modal" data-target="#myModal"
-                         src="<%=CONTEXT_PATH %>/ts/image/u5540.png">
-                </td>
-            </tr>
-        </table>
+
+                    <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">
+
+                    <div style="display: inline-block">
+                                <span style="position: relative;left: 26px;top:3px;
+                     font-family: 'Arial Negreta', 'Arial Normal', 'Arial',serif;
+                     font-weight: 700;font-style: normal;font-size: 16px;">2</span>
+                        <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5522.png">
+                        <span style="position: relative;font-size: 25px;top: 5px;">&nbsp;&nbsp;部门领导审批&nbsp;&nbsp;</span>
+                    </div>
+
+                    <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">
+
+                    <div style="display: inline-block">
+                                <span style="position: relative;left: 26px;top:3px;
+                     font-family: 'Arial Negreta', 'Arial Normal', 'Arial',serif;
+                     font-weight: 700;font-style: normal;font-size: 16px;">3</span>
+                        <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5524.png">
+                        <span style="position: relative;font-size: 25px;top: 5px;">&nbsp;&nbsp;考务管理人员审批</span>
+                    </div>
+
+                    <%-- <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">
+
+                     <div style="display: inline-block">
+                                 <span style="position: relative;left: 26px;top:3px;
+                      font-family: 'Arial Negreta', 'Arial Normal', 'Arial';
+                      font-weight: 700;font-style: normal;font-size: 16px;">3</span>
+                         <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5524.png">
+                         <span style="position: relative;font-size: 25px;top: 5px;">&nbsp;&nbsp;考务管理人员审批</span>
+                     </div>--%>
+                </div>
+                <%--<table style="width:100%;height: 80px;">
+                    <tr style="backGround-color: #ababab; height: 30px">
+                        <td style="text-align: center;">
 
 
-        <div class="bkuan" style="">
-            <table style="padding: 10px;width:100%">
-                <tr>
-                    <td style="width: 10%;text-align: right;">请假标题&nbsp;&nbsp;<span
-                            style="color: red;font-weight: bold">*</span></td>
-                    <td colspan="3">
-                        <input style="width: 90%;height: 25px;" id="qjtitle" value="">
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width: 10%;text-align: right;">请假的考试&nbsp;&nbsp;</td>
-                    <td colspan="3">
-                        <div onclick="xuanze()" data-toggle="modal" data-target="#myModal"
-                             style="display: inline-block;cursor: pointer;color: #4cd4d4;">
-                            <i class="fa fa-search" aria-hidden="true" style="font-size: 24px;color: #91dce4;"></i>
-                            <span>选择</span>
-                        </div>
-                        <%--<img alt="选择" data-toggle="modal" data-target="#myModal"
-                             src="<%=CONTEXT_PATH %>/ts/image/uwxz.png">--%>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width: 10%;"></td>
-                    <td colspan="3">
-                        <table id="qjks-table" border="1" style="width: 95%;border-color: white;">
+
+                        </td>
+                    </tr>
+                </table>--%>
+            </div>
+        </div>
+
+        <div class="row" style="padding: 15px 0;">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-9">
+                <div style="background-color: #fed1d1;border:1px solid red;border-radius: 5px;padding: 5px;color: #570000;">
+                    ！ 温馨提示：您今年已请假 <span style="color: red">2</span> 次，还可请假 <span style="color: red">1</span> 次。
+                    满 <span style="color: red">3</span> 次后，本年度将不允许再请假。请合理使用请假次数！
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <span style="font-size: 18px">请假申请</span>
+                <hr/>
+            </div>
+        </div>
+
+        <form class="form-horizontal" style="padding-right: 50px">
+            <div class="form-group">
+                <label for="qjtitle" class="col-sm-2 control-label">
+                    请假标题
+                    <span style="color: red;font-weight: bold">*</span></label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="qjtitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="qjdks" class="col-sm-2 control-label">
+                    请假的考试
+                    <span style="color: red;font-weight: bold">*</span></label>
+                </label>
+                <div class="col-sm-10 bkuan">
+                    <div onclick="xuanze()" data-toggle="modal" data-target="#myModal" id="qjdks"
+                         style="display: inline-block;cursor: pointer;color: #4cd4d4;padding:5px;">
+                        <i class="fa fa-search" aria-hidden="true" style="font-size: 24px;color: #91dce4;"></i>
+                        <span>选择</span>
+                    </div>
+                    <div style="min-height: 120px">
+                        <table id="qjks-table" border="1" style="width: 100%;border-color: white;">
                             <thead>
                             <tr style="background-color: #f0f0f0;padding-left: 5px;text-align: center">
                                 <td width="35%">考试名称</td>
@@ -165,120 +176,117 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <%--<%
-                                String czglb = request.getParameter("bmids");
-                                String[] czgArray = czglb.split(",");
-                                for (int i = 0; i < czgArray.length; i++) {
-                                    String cwhere = "AND BM_ID=" + "'" + czgArray[i] + "'";
-                                    List<Bean> cbeanList = ServDao.finds("TS_BMLB_BM", cwhere);
-                                    for (int j = 0; j < cbeanList.size(); j++) {
-                                        Bean bmbean = cbeanList.get(j);
-                                        String tj_id = bmbean.getStr("BM_ID");
-                                        String tj_xl = bmbean.getStr("BM_XL");
-                                        String tj_mk = bmbean.getStr("BM_MK");
-                                        String tj_type = bmbean.getStr("BM_TYPE");
-                                        String tj_date = bmbean.getStr("BM_ENDDATE");
-                                        String tj_name = tj_type + "-" + tj_xl + "-" + tj_mk;
-
-                            %>
-                            <tr style="padding-left: 5px;text-align: center">
-                                <td class="rhGrid-td-hide"><%=tj_id%>
-                                </td>
-                                <td class="rhGrid-td-hide"><input type="text" name="bmids" id="tjid" value="<%=tj_id%>">
-                                </td>
-                                <td width="35%"><%=tj_name%>
-                                </td>
-                                <td width="35%"><%=tj_date%>
-                                </td>
-                                <td><a style="cursor:pointer;" onclick="delOne(this)" data-id="<%=tj_id%>">删除</a></td>
-                            </tr>
-                            <%
-                                    }
-                                }
-                            %>--%>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
 
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width: 10%;text-align: right;">请假人&nbsp;&nbsp;</td>
-                    <td style="width: 20%;">
-                        <input style="width: 90%;height: 25px;" value="<%=user_name%>" disabled>
-                    </td>
-                    <td style="width: 70%;" colspan="3">
-                        部门&nbsp;&nbsp;
-                        <input style="width: 90%;height: 25px;" id="bumen" value="<%=dept_name %>"></td>
-                </tr>
-                <tr>
-                    <td style="width: 10%;text-align: right;">请假事由&nbsp;&nbsp;</td>
-                    <td colspan="3"><textarea rows="3" cols="130" id="qjreason"></textarea></td>
-                </tr>
-                <tr>
-                    <td style="width: 10%;text-align: right;">证明材料&nbsp;&nbsp;</td>
-                    <td colspan="3" style="padding-top: 15px;">
-                        <form action="<%=CONTEXT_PATH%>/sy/base/frame/coms/ueditor/jsp/imageUp.jsp" method="post"
-                              id="imgformid" enctype="multipart/form-data">
-                            <div class="form-group" id="caseIma">
-                                <label class="" style="cursor:pointer;"><%--btn btn-primary--%>
-                                    <img alt="选择" src="<%=CONTEXT_PATH %>/ts/image/uqjsc.png">
-                                    <%--选择图片--%>
-                                    <input type="file" style="display: none;" class="form-control" id="caseImage"
-                                           name="file" onchange="viewImage(this)"/><%--viewImage   upImg--%>
-                                </label>
-                            </div>
-                            <input type="text" name="SERV_ID" value="TS_QJLB_QJ" style="display: none;"/>
-                            <input type="text" name="DATA_ID" value="" style="display: none;"/>
-                            <input type="text" name="FILE_CAT" value="IMAGE_CAT" style="display: none;"/>
-                            <input type="submit" value="传递" style="display: none;"/>
-                        </form>
-                    </td>
-                </tr>
-                <%--<tr>
-                    <td style="width: 10%;text-align: right;">证明材料&nbsp;&nbsp;</td>
-                    <td colspan="3" style="padding-top: 15px;">
-                        <img alt="选择" onclick="upImg()" src="<%=CONTEXT_PATH %>/ts/image/uqjsc.png">
-                        <form action="/file" name="formup" id="formContainer2" class="form form-horizontal"></form>
-                    </td>
-                </tr>--%>
-                <tr>
-                    <td style="width: 10%;"></td>
-                    <td style="width: 25%;text-align: right;padding-top: 10px;">
-                        <div id="localImag" style="display: none;">
-                            <img id="preview" width=-1 height=-1
-                                 style="diplay:none"/>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">
+                    请假人
+                </label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" value="<%=user_name%>" disabled>
+                </div>
+                <label class="col-sm-2 control-label">
+                    部门
+                </label>
+                <div class="col-sm-5">
+                    <input type="text" id="bumen" class="form-control" value="<%=dept_name %>">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="qjreason" class="col-sm-2 control-label">请假事由</label>
+                <div class="col-sm-10">
+                    <textarea id="qjreason" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">证明材料</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form action="<%=CONTEXT_PATH%>/sy/base/frame/coms/ueditor/jsp/imageUp.jsp" method="post"
+                                  id="imgformid" enctype="multipart/form-data">
+                                <div class="form-group" id="caseIma">
+                                    <label class="" style="cursor:pointer;"><%--btn btn-primary--%>
+                                        <img alt="选择" src="<%=CONTEXT_PATH %>/ts/image/uqjsc.png">
+                                        <%--选择图片--%>
+                                        <input type="file" style="display: none;" class="form-control" id="caseImage"
+                                               name="file" onchange="viewImage(this)"/><%--viewImage   upImg--%>
+                                    </label>
+                                </div>
+                                <input type="text" name="SERV_ID" value="TS_QJLB_QJ" style="display: none;"/>
+                                <input type="text" name="DATA_ID" value="" style="display: none;"/>
+                                <input type="text" name="FILE_CAT" value="IMAGE_CAT" style="display: none;"/>
+                                <input type="submit" value="传递" style="display: none;"/>
+                            </form>
                         </div>
-                    </td>
-                    <td colspan="2">
-                        <%--<a>下载</a>--%>&nbsp;&nbsp;<a id="deleteLocalImag" onclick="deleteImage()"
-                                                        style="display: none;cursor: pointer;">删除</a>
-                    </td>
-                </tr>
-            </table>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div id="localImag" style="display: block;height: 88px">
+                                <img id="preview"
+                                     style="display: none; width: 88px; height: 88px;"/>
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="line-height: 88px;">
+                            <a id="deleteLocalImag" onclick="deleteImage()"
+                               style="display: none;cursor: pointer;">删除</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+
+        <div class="row">
+            <div class="col-sm-offset-4 col-sm-3">
+                <button onclick="applyForLeave()" class="btn btn-success"
+                        style="width:100px;background-color: #00c2c2;">
+                    提交申请
+                </button>
+            </div>
+            <div class="col-sm-3">
+                <button onclick="back()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">
+                    返回
+                    <div id="serverResponse"></div>
+                </button>
+            </div>
         </div>
-        <div class="bkuan" style="">
-            <table style="padding: 10px;width:100%;text-align: center;">
-                <tr>
-                    <td>
-                        <button onclick="applyForLeave()" class="btn btn-success"
-                                style="width:100px;background-color: #00c2c2;">
-                            提交申请
-                        </button>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button onclick="back()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">
-                            返回
-                            <div id="serverResponse"></div>
-                        </button>
-                    </td>
-                </tr>
-            </table>
-        </div>
+
     </div>
 
+    <footer class="main-footer" id="main-fotter-div" style="background-color:#333333; margin-left: 0;">
+        <div align="center">
+            <img id="qt_footer_logo" class="img" src="/qt/img/u996.png">
+            <strong>中国工商银行考试系统</strong>
+        </div>
+        <div>
+            <table>
+                <tbody>
+                <tr id="qt_footer_tr">
+                    <td width="20%"><span>版权所有：中国工商银行 </span></td>
+                    <td><span>|</span></td>
+                    <td width="30%"><span>地址：北京市复兴门内大街55号</span></td>
+                    <td><span></span></td>
+                    <td width="16%"><span>邮编：100140 </span></td>
+                    <td><span>|</span></td>
+                    <td width="14%" align="right"><span style="font-family:'微软雅黑';font-weight: 400;color: #CCCCCC;">2017 年 6 月 </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </footer>
+
 </div>
+
 <%--模态窗口查询请假考试--%>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -302,33 +310,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <%--<% String where1 = " AND BM_CODE='" + user_code + "'";
-                        List<Bean> bmglList = ServDao.finds("TS_BMLB_BM", where1);
-                        for (int i = 0; i < bmglList.size(); i++) {
-                            Bean bean1 = bmglList.get(i);
-                            String bm_id = bean1.getStr("BM_ID");
-                            String bm_xl = bean1.getStr("BM_XL");
-                            String bm_mk = bean1.getStr("BM_MK");
-                            String bm_type = bean1.getStr("BM_TYPE");
-                            String ks_date = bean1.getStr("BM_ENDDATE");
-                            String qj_name = bm_type + "-" + bm_xl + "-" + bm_mk;
-                    %>
-                    <tr>
-                        <td style="text-align: center" width="10%">
-                            <input type="checkbox" name="checkname1" value="<%=bm_id%>">
-                        </td>
-                        <td align="center"><%=i + 1%>
-                        </td>
-                        <td align="center"><%=qj_name%>
-                        </td>
-                        <td style="text-align: center"><%=ks_date%>
-                        </td>
-                        <td class="rhGrid-td-hide"><%=bm_id%>
-                        </td>
-                    </tr>
-                    <%
-                        }
-                    %>--%>
                     </tbody>
                 </table>
             </div>
@@ -354,7 +335,7 @@
                     &times;
                 </button>
                 <h5 class="modal-title">
-                    选择需要请假的考试
+                    下一环节审批人
                 </h5>
             </div>
             <div class="modal-body zgks">
@@ -366,7 +347,7 @@
             </div>
             <div class="modal-footer" style="text-align: center;">
                 <button type="button" class="btn btn-success" data-dismiss="modal"
-                        style="width:100px;background-color: #00c2c2;" onclick="back()">确定
+                        style="width:100px;background-color: #00c2c2;">确定
                 </button>
             </div>
         </div><!-- /.modal-content -->
@@ -481,10 +462,8 @@
     //提交申请
     function applyForLeave() {
         var currentUserWorkNum = System.getUser("USER_WORK_NUM");
-//        var data = {USER_WORK_NUM: currentUserWorkNum};
 
         function saveData(fileId) {
-//        var imgformid = document.getElementById("imgformid");
             var qjtitle = document.getElementById("qjtitle").value;
             var bumen = document.getElementById("bumen").value;
             var qjreason = document.getElementById("qjreason").value;
@@ -535,7 +514,7 @@
 
         }
 
-        if ($('#localImag').css('display') === 'none') {
+        if ($('#preview').css('display') === 'none') {
             //没有证明材料不用上传
             saveData('');
         } else {
@@ -563,7 +542,7 @@
                         callback(returndata.url);
                     }
                 } else {
-                    Tip.showError('图片上传失败请重试！');
+                    alert('图片上传失败请重试！');
                 }
             },
             error: function (returndata) {
@@ -591,7 +570,7 @@
 
     }
     function deleteImage() {
-        $('#localImag').css('display', 'none');
+        $('#preview').css('display', 'none');
         $('#deleteLocalImag').css('display', 'none');
 
         var caseImage = document.getElementById('caseImage');
@@ -599,7 +578,7 @@
     }
 
     function viewImage(file) {
-        $('#localImag').css('display', 'block');
+        $('#preview').css('display', 'block');
         $('#deleteLocalImag').css('display', 'inline-block');
 
         var preview = document.getElementById('preview');
@@ -614,12 +593,12 @@
             //ie下，使用滤镜
             file.select();
             var imgSrc = document.selection.createRange().text;
-            var localImagId = document.getElementById("localImag");
+            var localImagEl = document.getElementById("localImag");
             //必须设置初始大小
-            localImagId.style.width = "88px";
-            localImagId.style.height = "88px";
+            localImagEl.style.width = "88px";
+            localImagEl.style.height = "88px";
             try {
-                localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+                localImagEl.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
                 locem("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
             } catch (e) {
                 alert("您上传的图片格式不正确，请重新选择!");

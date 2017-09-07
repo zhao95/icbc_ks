@@ -22,7 +22,7 @@ public class QjlbServ extends CommonServ {
     private final static String DONE_SERVID = "TS_COMM_TODO_DONE";
     private final static String COMM_MIND_SERVID = "TS_COMM_MIND";
 
-    private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final static String dateFormatString = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * 发起请假申请
@@ -41,7 +41,7 @@ public class QjlbServ extends CommonServ {
         String buMen = paramBean.getStr("bumen");
         String qjReason = paramBean.getStr("qjreason");
         String userCode = paramBean.getStr("user_code");
-        String userWorkNum = paramBean.getStr("user_work_num");//人力资源编码
+//        String userWorkNum = paramBean.getStr("user_work_num");//人力资源编码
         String bmidStr = paramBean.getStr("bmids");
         String[] bmids = bmidStr.split(",");
         String qjimg = paramBean.getStr("qjimg");
@@ -63,7 +63,7 @@ public class QjlbServ extends CommonServ {
         qjbean.set("USER_CODE", userCode);//用户编码
         qjbean.set("QJ_IMG", qjimg);//证明材料（fileId ）
         qjbean.set("QJ_STATUS", "1");   //  1"审核中"; 2  "已通过";3 "未通过";
-        qjbean.set("QJ_DATE", sdf.format(new Date()));//证明材料（fileId ）
+        qjbean.set("QJ_DATE", new SimpleDateFormat(dateFormatString).format(new Date()));
         qjbean.set("QJ_KSTIME", lbDate);//考试开始时间   todo  TS_BMSH_PASS  BM_ID  TS_BMLB_BM
         Bean qjbd = ServDao.create(servId, qjbean);
         //获取到请假id
@@ -127,13 +127,14 @@ public class QjlbServ extends CommonServ {
         shyjBean.set("SH_TYPE", "1");//审核类别 1 意见 2 审核记录
         shyjBean.set("SH_MIND", sh_reason);//意见内容
 
-        shyjBean.set("SH_NODE", nodeSteps + "todo 获取所在节点名称");//审核层级名称  //todo 获取所在节点名称
+        shyjBean.set("SH_NODE", todoBean.getStr("NODE_NAME"));//审核层级名称
         shyjBean.set("SH_LEVEL", nodeSteps);//审核层级
 
         shyjBean.set("SH_STATUS", sh_status);//审核状态// 同意 不同意
         shyjBean.set("SH_UCODE", currentUser.getCode());//审核人UID(人力资源编码)
         shyjBean.set("SH_ULOGIN", currentUser.getLoginName());//审核人登陆名
         shyjBean.set("SH_UNAME", currentUser.getName());//审核人姓名
+        shyjBean.set("S_DNAME", currentUser.getDeptName());//审核人部门名称
         ServDao.save(COMM_MIND_SERVID, shyjBean);
 
         //3、删除待办 插入已办
@@ -213,6 +214,8 @@ public class QjlbServ extends CommonServ {
             }
         } else {
             int nodeSteps = (int) shBean.get("NODE_STEPS");
+            String nodeName = shBean.getStr("NODE_NAME");
+            String wfsId = shBean.getStr("WFS_ID");
 
             StringBuilder shrNames = new StringBuilder();
             for (Bean bean : shList) {
@@ -230,6 +233,8 @@ public class QjlbServ extends CommonServ {
                 todoBean.set("TYPE", "0");//待办类型 1 请假 2借考  (? 0 请假)
                 todoBean.set("DATA_ID", qjId);
                 todoBean.set("NODE_STEPS", nodeSteps + "");//当前所在的流程级别
+                todoBean.set("NODE_NAME", nodeName);//当前所在的流程节点名称
+                todoBean.set("WFS_ID", wfsId);//流程id
 //            todoBean.set("SERV_ID", "0");//???
                 //发送人
                 todoBean.set("SEND_NAME", userBean.getName());
@@ -241,7 +246,7 @@ public class QjlbServ extends CommonServ {
                 todoBean.set("OWNER_CODE", shrUserCode2);
                 todoBean.set("OWNER_DEPT", shrDeptCode);
                 todoBean.set("OWNER_DEPT_NAME", shrUserDeptName);
-                todoBean.set("SEND_TIME", sdf.format(new Date()));
+                todoBean.set("SEND_TIME", new SimpleDateFormat(dateFormatString).format(new Date()));
                 //todoBean.set("DONE_TIME", "0");//???
                 ServDao.save(TODO_SERVID, todoBean);
             }

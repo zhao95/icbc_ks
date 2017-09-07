@@ -91,17 +91,17 @@ function showTodoContent() {
  * 可申请报名列表
  */
 function setApplyContent() {
-    // TS_XMGL;
     var userCode = System.getVar("@USER_CODE@");//当前登录用户code
     var userXmListBean = FireFly.doAct('TS_XMGL', 'getUserXm', {user_code: userCode});
     var userXmList = JSON.parse(userXmListBean.list);
 
-    $('#keshenqingbaomingSum').html(userXmList.length);
+    $('#keshenqingbaomingSum').html(userXmList.length);//可申请报名数目
 
-    var applyListEl = $('#apply-panel .grid-tbody');
+    var applyListEl = $('#apply-panel').find('.grid-tbody');
     applyListEl.html('');
     for (var i = 0; i < userXmList.length; i++) {
         if (i === 4) {
+            //展示4条
             return false;
         }
 
@@ -114,12 +114,12 @@ function setApplyContent() {
         //获取报名时间判断  报名状态
         var param1 = {};
         param1["xmid"] = xmId;
-        var result1 = FireFly.doAct("TS_XMGL_BMGL", "getBMState", param1);
-        var data1 = result1.list;
-        var pageEntity1 = JSON.parse(data1);
-        var startTime = pageEntity1[0].START_TIME;
-        var endTime = pageEntity1[0].END_TIME;
-        var state = pageEntity1[0].STATE;
+        var resultBean = FireFly.doAct("TS_XMGL_BMGL", "getBMState", param1);
+        var dataList = resultBean.list;
+        var list = JSON.parse(dataList);
+        var startTime = list[0].START_TIME;
+        var endTime = list[0].END_TIME;
+        var state = list[0].STATE;
 
         var canApply = false;
         if (state === "待报名") {
@@ -144,16 +144,12 @@ function setApplyContent() {
                 result = function () {
                     var postData = {zgtz: xmId};
                     doPost('/ts/jsp/bmzgks.jsp', postData);
-                    // document.getElementById("zgtz").value = id;
-                    // document.getElementById("form1").submit();
                 };
 
             } else {
                 result = function () {
                     postData = {fzgtz: xmId};
                     doPost('/ts/jsp/bmglf.jsp', postData);
-                    // document.getElementById("fzgtz").value = id;
-                    // document.getElementById("form2").submit();
                 };
             }
             return result;
@@ -174,7 +170,7 @@ function setApplyContent() {
 function setAnnouncementContent() {
     var data = {};
     var ggList = FireFly.doAct("TS_GG", 'query', data, false);
-    var tbodyEl = jQuery('#announcement-box .table tbody');
+    var tbodyEl = jQuery('#announcement-box').find('.table tbody');
     tbodyEl.html('');
 
     var circleColors = ['#398daf', '#b4dbc0', '#ff0000'];

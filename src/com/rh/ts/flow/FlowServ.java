@@ -15,7 +15,7 @@ public class FlowServ extends CommonServ {
 
     /**
      * 保存之后的拦截方法，由子类重载
-     * 
+     *
      * @param paramBean
      *            参数信息 可以通过paramBean获取数据库中的原始数据信息： Bean oldBean =
      *            paramBean.getSaveOldData();
@@ -90,19 +90,19 @@ public class FlowServ extends CommonServ {
 	String xmId = paramBean.getStr("xmId");
 	//表单Bean
 	Bean formBean = paramBean.getBean("form");
-	//1:报名审核流程 2:异地借考流程 3:请假审核流程	
-	int flowName = paramBean.getInt("flowName");  
+	//1:报名审核流程 2:异地借考流程 3:请假审核流程
+	int flowName = paramBean.getInt("flowName");
 	String shrUserCode = paramBean.getStr("shrUserCode");
 	//起草人
 	UserBean userBean = UserMgr.getUser(examerUserCode);
 	String deptCode = userBean.getDeptCode();
-	String odeptCode = userBean.getODeptCode(); 
+	String odeptCode = userBean.getODeptCode();
 	//推送人
 	UserBean shrUserBean = UserMgr.getUser(shrUserCode);
 	String shrDeptCode = shrUserBean.getDeptCode();
-	String shrOdeptCode = shrUserBean.getODeptCode(); 
-	
-	
+	String shrOdeptCode = shrUserBean.getODeptCode();
+
+
 	String wfsId = "";
 	List<Bean> list = ServDao.finds("TS_XMGL_FLOW_UTIL_V", "and xm_id ='"+xmId+"' and FLOW_TYPE = " + flowName);
 	if(list.size() > 0){
@@ -111,9 +111,9 @@ public class FlowServ extends CommonServ {
 	    outBean.setError("未绑定流程");
 	    return outBean;
 	}
-	
+
 	Bean wfsBean = ServDao.find("TS_WFS_APPLY", wfsId);
-	//审核类型  1:逐级审核  2:越级审核	
+	//审核类型  1:逐级审核  2:越级审核
 	int wfsType = wfsBean.getInt("WFS_TYPE");
 	int wfsSteps = wfsBean.getInt("WFS_STEPS");
 	if (flowName == 1) {
@@ -159,7 +159,7 @@ public class FlowServ extends CommonServ {
 		String zdyDeptCode = shBean.getStr("DEPT_CODE");
 		String shzw = shBean.getStr("QJKLC_SHZW_CODE");
 		String colCodel = shBean.getStr("QJKLC_ZDDEPT_COLCODE");
-		
+
 		//1.审核人已填写
 		if(!shUserCode.equals("")){
 		    Bean shUser = new Bean();
@@ -222,13 +222,14 @@ public class FlowServ extends CommonServ {
 			resList.add(tmpUser);
 		    }
 		}
-		
+
 	    }
 	    outBean.set("result", resList);
+        outBean.set("WFS_ID", wfsId);
 	    outBean.set("NODE_STEPS", getStep);
 	    outBean.set("NODE_NAME", nodeName);
 	}
-	
+
 	return outBean;
     }
 
