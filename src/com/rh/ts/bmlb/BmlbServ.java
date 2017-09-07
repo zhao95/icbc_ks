@@ -161,10 +161,18 @@ public class BmlbServ extends CommonServ {
 					String kslb_mk_code = (String) job.get("BM_MK");
 					String kslb_type = (String) job.get("BM_TYPE");
 					String kslb_id = (String) job.get("ID");
-					String wherelbk = "AND KSLBK_CODE=" + "'" + kslb_code + "'"
+					String wherelbk ="";
+					if(!kslb_mk_code.equals("")){
+					 wherelbk = "AND KSLBK_CODE=" + "'" + kslb_code + "'"
 							+ " AND KSLBK_XL_CODE=" + "'" + kslb_xl_code + "'"
 							+ " AND KSLBK_MKCODE=" + "'" + kslb_mk_code + "'"
 							+ " AND KSLBK_TYPE=" + "'" + kslb_type + "'";
+					}if(kslb_mk_code.equals("")){
+						 wherelbk = "AND KSLBK_CODE=" + "'" + kslb_code + "'"
+									+ " AND KSLBK_XL_CODE=" + "'" + kslb_xl_code + "'"
+									+ " AND KSLBK_MK='无模块'"
+									+ " AND KSLBK_TYPE=" + "'" + kslb_type + "'";
+							}
 					List<Bean> lbkList = ServDao.finds("TS_XMGL_BM_KSLBK",wherelbk);
 					String kslbk_id = "";
 					String kslb_name="";
@@ -179,8 +187,7 @@ public class BmlbServ extends CommonServ {
 						kslb_type_name = lbkList.get(0).getStr("KSLBK_TYPE_NAME");
 					}
 					// 获取到考试名称
-					String back_All = kslb_name + "-" + kslb_xl + "-" + kslb_mk
-							+ "-" + kslb_type;
+					String back_All = kslb_name + "-" + kslb_xl + "-" + kslb_mk+ "-" + kslb_type;
 					JSONArray yzgzArg = (JSONArray) yzgzstrjson.get(kslb_id);
 					int flag = 0;
 					String ad_rule = "";
