@@ -48,11 +48,11 @@
 </head>
 <body class="hold-transition skin-black sidebar-mini layout-boxed">
 	<div class="wrapper">
-		<div style="position: absolute; left: 15px; z-index: 10000;">
-			<img alt="中国工商银行" src="./qt/img/u3148.png">
-			<img alt="考试系统" src="./qt/img/u3376.png">
+		<div style="position: absolute; left: 15px; top:5px; z-index: 10000;">
+			<img alt="中国工商银行" src="./qt/img/u3148.png" id="logo_img1">
+			<img alt="考试系统" src="./qt/img/u3376.png"  id="logo_img2">
 		</div>
-		<header class="main-header">
+		<header class="main-header" style="height: 60px;/* box-shadow: rgb(190, 190, 190) 0px 0px 20px; */">
 			<!-- Logo -->
 			<!-- <div class="logo">
 				<span class="logo-lg"><b>考试系统</b></span>
@@ -69,33 +69,10 @@
 						
 						<!-- Notifications: style can be found in dropdown.less -->
 						<li class="dropdown notifications-menu"><a href="#"
-							class="dropdown-toggle" data-toggle="dropdown"> <i
+							class="dropdown-toggle" data-toggle="dropdown" style="height:60px"> <i
 								class="fa fa-bell-o"></i> <span class="label label-warning" id="tipSum">0</span>
 						</a>
 							<ul class="dropdown-menu index-qt-tip-list" style="left: -120px;">
-<!-- 								<li class="header">待办 / 消息</li> -->
-<!-- 								<li> -->
-<!-- 									inner menu: contains the actual data -->
-<!-- 									<ul class="menu"> -->
-<!-- 										<li><a href="#"> <i class="fa fa-users text-aqua"></i> -->
-<!-- 												5 new members joined today -->
-<!-- 										</a></li> -->
-<!-- 										<li><a href="#"> <i class="fa fa-warning text-yellow"></i> -->
-<!-- 												Very long description here that may not fit into the page -->
-<!-- 												and may cause design problems -->
-<!-- 										</a></li> -->
-<!-- 										<li><a href="#"> <i class="fa fa-users text-red"></i> -->
-<!-- 												5 new members joined -->
-<!-- 										</a></li> -->
-<!-- 										<li><a href="#"> <i -->
-<!-- 												class="fa fa-shopping-cart text-green"></i> 25 sales made -->
-<!-- 										</a></li> -->
-<!-- 										<li><a href="#"> <i class="fa fa-user text-red"></i> -->
-<!-- 												You changed your username -->
-<!-- 										</a></li> -->
-<!-- 									</ul> -->
-<!-- 								</li> -->
-<%-- 								<li class="footer"><a href="<%=CONTEXT_PATH%>/qt/jsp/todo.jsp">查看所有待办 / 消息</a></li> --%>
 							</ul></li>
 						<!-- Tasks: style can be found in dropdown.less -->
 						<!-- <li class="dropdown tasks-menu"><a href="#"
@@ -109,13 +86,13 @@
 						<!-- User Account: style can be found in dropdown.less -->
 						<li class="dropdown user user-menu">
 							<a id="userInfo2" href="#"
-							class="dropdown-toggle" data-toggle="dropdown">
+							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;width: 150px;">
 							<img id= "userImg2"
-								src="qt/dist/img/user2-160x160.jpg" class="user-image"
+								src="/sy/theme/default/images/common/user0.png" class="user-image"
 								alt="User Image">
 								<!-- <span class="hidden-xs">Alexander Pierce</span> -->
 						</a>
-							<ul class="dropdown-menu" style="width:160px;">
+							<ul class="dropdown-menu" style="min-width:150px;width:150px;">
 <!-- 							<li class="user-header"></li> -->
 <!-- 							<li class="user-body"></li> -->
 							<li><a href="#" class="" id="TipUserInfo"><i class="fa fa-user-o fa-fw"></i>个人信息</a></li>
@@ -146,81 +123,29 @@
 				</div>
 			</nav>
 		</header>
-
-		<aside class="main-sidebar" style="z-index:0;">
+		<div style="width: 90%;height: 1px;background-color: rgb(230,230,230);position: relative;left: 230px;box-shadow: rgb(190, 190, 190) 1px 3px 6px 0px;"></div>
+		<aside class="main-sidebar" style="z-index:0;top:30px;">
 			<!-- sidebar: style can be found in sidebar.less -->
 			<section class="sidebar">
 				<!-- Sidebar user panel -->
-				<div class="user-panel">
-					<div class="pull-left image" style="padding-left: 15px;">
-						<img id="userImg1" style="max-width: 55px;" src="qt/dist/img/user2-160x160.jpg"
-							class="img-circle" alt="User Image">
+				<div class="user-panel text-center">
+					<div class=" image" style="position: absolute;padding-left: 10px;">
+						<img id="userImg1" style="max-width: 64px;" src="/sy/theme/default/images/common/user_64_64.png" class="img-circle" alt="User Image">
 					</div>
-					<div id="userInfo" class="pull-left info" style="left: 65px;">
+					<div id="userInfo" class="text-center" style="line-height: 32px;height: 64px;margin-left: 74px;">
 						<!-- <p>刘小雨</p>
 						<p>工商银行总行</p> -->
 					</div>
 				</div>
 
-				<div style="margin-top: 20px;">
-					<div id="baoming" style="float: left;">
-						<a href="#">
-							<div class="box_2" style="background-color: rgba(41, 151, 192, 1); width: 44px; height: 44px; border-radius: 24px; margin-left: 20px;">
-								<div id="u3273_div" class="" tabindex="0">
-									<img id="u3273_img"
-										style="width: 24px; height: 24px; margin-left: 10px; margin-top: 10px;"
-										class="img" src="./qt/img/u3273.png">
-								</div>
-								<!-- Unnamed () -->
-							</div>
-							<div style="width:100%; margin-top:5px;">
-								<p align="center" style="margin-left: 20px;">
-									<span><font color="white">报名</font></span>
-								</p>
-							</div>
-						</a>
-					</div>
-					<div id="kaoshi" style="float: left;">
-						<a href="#">
-							<div class="box_2" style="background-color: rgba(112, 192, 179, 1); width: 44px; height: 44px; border-radius: 24px; margin-left: 20px;">
-								<div id="u3292_div" class="" tabindex="0">
-									<img id="u3292_img"
-										style="width: 24px; height: 24px; margin-left: 10px; margin-top: 10px;"
-										class="img" src="./qt/img/u3292.png">
-								</div>
-								<!-- Unnamed () -->
-							</div>
-							<div style="width: 100%; margin-top: 5px;">
-								<p align="center" style="margin-left: 20px;">
-									<span><font color="white">考试</font></span>
-								</p>
-							</div>
-						</a>
-					</div>
-					<div id="renzheng" style="float: left;">
-						<a href="eti/jsp/rzgj.jsp">
-							<div class="box_2"
-								style="background-color: rgba(0, 198, 198, 1); width: 44px; height: 44px; border-radius: 24px; margin-left: 20px;">
-								<div id="u3294_div" class="" tabindex="0">
-									<img id="u3391_img"
-										style="width: 24px; height: 24px; margin-left: 10px; margin-top: 10px;"
-										class="img" src="./qt/img/u3391.png">
-								</div>
-								<!-- Unnamed () -->
-							</div>
-							<div style="width: 100%; margin-top: 5px;">
-								<p align="center" style="margin-left: 20px;">
-									<span><font color="white">认证</font></span>
-								</p>
-							</div>
-						</a>
-					</div>
+				<div style="margin-top: 20px; text-align:center;">
+					<img src="/qt/img/left-logo.png" style="/* width: 195px; */">
 				</div>
 
 				<div class="user-panel" />
 				<!-- 分割线 -->
-				<div style="width: 100%; height: 1px; background-color: gray;"></div>
-				<ul class="sidebar-menu" id="sdfsdfsf">
+				<div style="width: 100%; height: 5px; background-color: #063c5d;position: absolute;top:12px;left: 0px;"></div>
+				<ul class="sidebar-menu" id="sdfsdfsf" style="position: relative;top: 15px;">
 					<!-- <li class="header"><i class="fa fa-book"></i><span>首页</span></li> -->
 					<!-- <li><a href="../../documentation/index.html"><i
 							class="fa fa-book"></i> <span>我的报名</span><span
@@ -246,7 +171,7 @@
 				<div class="row">
 					<div class="col-md-8">
 																	<!-- /.box -->
-						<div class="box">
+						<div class="panel panel-default box" style=" border-top: 1px solid #d2d6de;" >
 							<div class="box-header with-border"  style="background-color:#f9f9f9;height: 40px;">
 								<h3 class="box-title">资格考试项目进展状态</h3>
 								<div id="jdtMore" class="text">
@@ -375,7 +300,7 @@
 						<!-- /.box -->
 
 					<%--待办/提醒--%>
-					<div class="panel panel-default" id="todo-panel">
+					<div class="panel panel-default box" id="todo-panel" style="border-top: 1px solid #d2d6de;">
 						<div class="panel-heading" style="background-color: #f9f9f9">
 							<h3 class="panel-title">
 								待办 / 提醒 (<span id="todoListSum" style="color:red">0</span>)
@@ -406,7 +331,7 @@
 						</div>
 					</div>
 
-					<div class="panel panel-default" id="apply-panel">
+					<div class="panel panel-default box" id="apply-panel" style="border-top: 1px solid #d2d6de;">
 
 						<div class="panel-heading" style="background-color: #f9f9f9">
 							<h3 class="panel-title">
@@ -449,7 +374,7 @@
 					</div>
 					<!-- /.col -->
 					<div class="col-md-4">
-						<div id="announcement-box" class="box">
+						<div id="announcement-box" class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title" style="display: block;">
 									通知公告
@@ -492,7 +417,7 @@
 						</div>
 						<!-- /.box -->
 
-						<div class="box">
+						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title">Q&A 问答</h3>
 							</div>
@@ -507,7 +432,7 @@
 							<!-- /.box-body -->
 						</div>
 						<!-- /.box -->
-						<div class="box">
+						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 						<div class="box-header" icode="ksrl-header" style="background-color: #f9f9f9;height: 40px;">
 							<h3 class="box-title">考试日历</h3>
 							<p style="float:right;cursor:pointer;">
@@ -527,7 +452,7 @@
 						</div>
 						</div>
 						<!-- /.box -->
-						<div class="box">
+						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de; top:20px;">
 							<div class="box-header" style="background-color: #f9f9f9">
 								<h3 class="box-title">问卷调查</h3>
 							</div>
@@ -558,7 +483,7 @@
 							<!-- /.box-body -->
 						</div>
 						<!-- /.box -->
-						<div class="box">
+						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;top:20px;">
 							<div class="box-header" style="background-color: #f9f9f9">
 								<h3 class="box-title">我的认证轨迹</h3>
 							</div>
@@ -772,7 +697,8 @@
 		<!-- /.control-sidebar -->
 		<!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
-		<div class="control-sidebar-bg"></div>
+       <!-- 右侧隐藏工具栏 -->
+<!-- 		<div class="control-sidebar-bg"></div> -->
 	</div>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<!-- jQuery压缩版的引入 -->

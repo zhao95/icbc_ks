@@ -51,24 +51,7 @@
 </style>
 </head>
 <body class="hold-transition skin-black sidebar-mini" style="height: auto;">
-<!-- 	<div class="wrapper" style="background-color: rgb(6, 77, 120); height: auto;"> -->
-		<div style="position: absolute; left: 15px; z-index: 10000;">
-			<img alt="中国工商银行" src="<%=CONTEXT_PATH%>/qt/img/u3148.png"> 
-			<img alt="考试系统" src="<%=CONTEXT_PATH%>/qt/img/u3376.png">
-		</div>
-		<header class="main-header" style="background-color: white;">
-			<!-- Logo -->
-			<!-- <div class="logo">
-				<span class="logo-lg"><b>考试系统</b></span>
-			</div> -->
-			<!-- Header Navbar: style can be found in header.less -->
-			<nav class="navbar navbar-static-top">
-			</nav>
-		</header>
-<!-- 	</div> -->
-
-
-
+<%@ include file="header-logo.jsp"%>
 	<!-- 首页/返回 -->
 	<div class="" style="padding: 10px">
 		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom:10px" src="/ts/image/u1155.png" id="shouye"></a> <span style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;考试日历详情</span>
