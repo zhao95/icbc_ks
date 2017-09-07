@@ -14,6 +14,8 @@ $(function () {
     showTodoTip();
     jQuery("#loginOutBtn").unbind("click").click(clickAndLoginOut);
     jQuery("#TipUserInfo").unbind("click").click(userInfoPage);
+    /** 点击左侧认证轨迹图片跳转到认证轨迹*/
+    jQuery("#left-img-renzheng").unbind("click").click(function(){location.href="/eti/jsp/rzgj.jsp";});
 });
 
 /**
@@ -213,7 +215,6 @@ function doPost(to, data) {  //to:提交动作（action）,data:参数
     myForm.submit();
     document.body.removeChild(myForm);  // 提交后移除创建的form
 }
-
 /**
  * 首页上标题栏 提醒信息按钮的下拉框内容
  */
@@ -224,7 +225,7 @@ function showTodoTip() {
     tipListEl.html('');
     var data = {};
     data = {_NOPAGE_: true};
-    // data = {_extWhere: "and OWNER_CODE='" + System.getUser("USER_CODE") + "'", _NOPAGE_: true};
+     data = {_extWhere: "and OWNER_CODE='" + System.getUser("USER_CODE") + "'", _NOPAGE_: true};
     var todoListPageList = FireFly.doAct("TS_COMM_TODO", 'query', data, false);
     var todoList = todoListPageList._DATA_;
 
@@ -244,7 +245,7 @@ function showTodoTip() {
         '<li class="header"><a href="#">待办 / 消息</a></li>'
     );
 
-    var tipListBodyEl = jQuery('<li class="body"></li>');
+    tipListEl.append('<li class="body">');
 
     for (var i = 0; i < todoList.length; i++) {
         var item = todoList[i];
@@ -279,21 +280,21 @@ function showTodoTip() {
                 doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId});
             });
         }
-
-        tipListBodyEl.append(
-            jQuery([
-                '<div style="" class="todo-item">',
-                '   <div style="" class="todo-circle ' + colorClassName + '">',
-                '       <div style="padding:4px 4px;color: #fff"></div>',
-                '   </div>',
-                '</div>'
-            ].join('')).append(itemContent)
-        );
+       
+        tipListEl.append(itemContent);
     }
-    tipListEl.append(tipListBodyEl);
+    //如无数据，则提示
+    if(todoList.length==0){
+    	tipListEl.append(
+                [
+                 '<div style="text-align:center; min-height: 100px;font-size: 14px;color:#999999;padding-top:10px;">',
+                 '暂无消息/待办</div>'].join('')
+         );
+    }
+    tipListEl.append('</li>');
 
     var tipViewAll = tipListEl.append(
-        '<li class="footer" style="padding-top:30px;"><a href="#">查看所有待办 / 消息</a></li>'
+        '<li class="footer" style="padding-top:10px;border-top:1px solid #f4f4f4; "><a href="#">查看所有待办 / 消息</a></li>'
     ).bind('click', function () {//跳转到页面详情（请假/借考/异议）
         var user_work_num = System.getUser("USER_CODE");
 //        debugger;

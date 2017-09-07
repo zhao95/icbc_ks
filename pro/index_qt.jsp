@@ -8,6 +8,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" > -->
 <title>前台首页</title>
 <meta
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
@@ -72,33 +73,24 @@
 							class="dropdown-toggle" data-toggle="dropdown" style="height:60px"> <i
 								class="fa fa-bell-o"></i> <span class="label label-warning" id="tipSum">0</span>
 						</a>
-							<ul class="dropdown-menu index-qt-tip-list" style="left: -120px;">
-							</ul></li>
-						<!-- Tasks: style can be found in dropdown.less -->
-						<!-- <li class="dropdown tasks-menu"><a href="#"
-							class="dropdown-toggle" data-toggle="dropdown"> <i
-								class="fa fa-flag-o"></i> <span class="label label-danger">9</span>
-						</a>
-							<ul class="dropdown-menu">
-								<li class="header">You have 9 tasks</li>
-								<li class="footer"><a href="#">View all tasks</a></li>
-							</ul></li> -->
+							<ul class="dropdown-menu index-qt-tip-list" style="left: -120px;"></ul>
+						</li>
 						<!-- User Account: style can be found in dropdown.less -->
 						<li class="dropdown user user-menu">
 							<a id="userInfo2" href="#"
-							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;width: 150px;">
+							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;width: 160px;    text-align: center;">
 							<img id= "userImg2"
 								src="/sy/theme/default/images/common/user0.png" class="user-image"
-								alt="User Image">
+								alt="User Image" style="margin-right: 2px;">
 								<!-- <span class="hidden-xs">Alexander Pierce</span> -->
 						</a>
-							<ul class="dropdown-menu" style="min-width:150px;width:150px;">
+							<ul class="dropdown-menu" style="width:160px;">
 <!-- 							<li class="user-header"></li> -->
 <!-- 							<li class="user-body"></li> -->
 							<li><a href="#" class="" id="TipUserInfo"><i class="fa fa-user-o fa-fw"></i>个人信息</a></li>
 								<li><a href="#" class="" data-layout="layout-boxed"><i class="fa fa-cog fa-fw"></i>简约/平铺</a></li>
 <!-- 								<li><input type="checkbox" data-layout="layout-boxed" class="pull-right" checked="checked">简约/平铺</li> -->
-								<li><a href="#" class="" id="loginOutBtn"><i class="fa fa-power-off fa-fw"></i>注销用户</a></li>
+								<li><a  class="" id="loginOutBtn"><i class="fa fa-power-off fa-fw"></i>注销用户</a></li>
 							
 <!-- 							<li class="user-footer"></li> -->
 								
@@ -139,9 +131,8 @@
 				</div>
 
 				<div style="margin-top: 20px; text-align:center;">
-					<a href="eti/jsp/rzgj.jsp" target="_blank">
-						<img src="/qt/img/left-logo.png" style="/* width: 195px; */">
-					</a>
+					
+					<img  id="left-img-renzheng" src="/qt/img/left-logo.png">
 				</div>
 
 				<div class="user-panel" />
@@ -175,21 +166,20 @@
 																	<!-- /.box -->
 						<div class="panel panel-default box" style=" border-top: 1px solid #d2d6de;" >
 							<div class="box-header with-border"  style="background-color:#f9f9f9;height: 40px;">
-								<h3 class="box-title">资格考试项目进展状态</h3>
-								<div id="jdtMore" class="text">
-									<p>
-										<span style="font-family: '微软雅黑';">更多 </span> <span
-											style="font-family: '黑体'; color: #FF0000;">></span>
-									</p>
-								</div>
+								<h3 class="panel-title">资格考试项目进展状态
+									<a href="/qt/jsp/xmzt.jsp"  class="index-list-more-a">更多
+									<span style="color:red;">&gt;</span>
+									</a>
+								</h3>
+								<div style="width: 160px;height: 3px;position: relative;top: 11px;left: 0px;background-color: #ff0000;"></div>
 							</div>
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
 								<div id="jdtTitle" style="height: 50px;">
 									<div id="jdtNameT">报考项:</div>
-									<div id="jdtName">个人银行专业资格中级</div>
+									<div id="jdtName">暂未报名考试项目</div>
 									<div class="jdtNumClass">
-										<span id="jdtNum">60</span> <span>%</span>
+										<span id="jdtNum">0.0</span> <span style="color:#666666;">%</span>
 									</div>
 									<br />
 								</div>
@@ -283,7 +273,7 @@
 									<br />
 								</div>
 								<!-- 分割线 -->
-								<div style="width:678px;height: 2px;margin: 0 auto;border-bottom: 2px dashed #efefef;"></div>
+								<div style="width:100%;height: 2px;margin: 0 auto;border-bottom: 2px dashed #efefef;"></div>
 								<div id="jdtComment">
 									<div class="jdtColor" style="background-color: #ff0000;"></div>
 									<div class="jdtTEXT">进行中</div>
@@ -421,7 +411,7 @@
 
 						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 							<div class="box-header" style="background-color: #f9f9f9;">
-								<h3 class="box-title">Q&A 问答</h3>
+								<h3 class="box-title">Q&A问答</h3>
 							</div>
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
@@ -437,10 +427,10 @@
 						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 						<div class="box-header" icode="ksrl-header" style="background-color: #f9f9f9;height: 40px;">
 							<h3 class="box-title">考试日历</h3>
-							<p style="float:right;cursor:pointer;">
-								<span style="font-family:'微软雅黑';">更多</span>
-								<span style="font-family:'黑体';color:#ff0000;">></span>
-							</p>
+							<a href="/qt/jsp/ksrl.jsp" class="index-list-more-a">
+									更多
+									<span style="color:red;">&gt;</span>
+								</a>
 						</div>
 						<div class="TS_KS_CAL" style="height:250px;">
 						<!-- 						<div class="title_top"> -->
@@ -514,7 +504,7 @@
 			</div>
 			<div>
 				<table>
-					<tr id="qt_footer_tr">
+					<tr id="qt_footer_tr" style="width: 90%;">
 						<td width="20%"><span>版权所有：中国工商银行 </span></td>
 						<td><span>|</span></td>
 						<td width="30%"><span>地址：北京市复兴门内大街55号</span></td>

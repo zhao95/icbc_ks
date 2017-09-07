@@ -2230,7 +2230,7 @@ var Tools = {
 		return 0;
 	},
 	
-	getLanguageFromCookie() {
+	getLanguageFromCookie:function() {
 		var rhLanguage = Cookie.get("RhLanguage") || "zh";
 		return rhLanguage;
 	},
@@ -3854,10 +3854,13 @@ var dateFormat = function () {
 			mask = date;
 			date = undefined;
 		}
-
+		//日期转换为十进制，才可以正常运行，否则会抛异常  invalid date 
+		date = parseInt(date,10);
 		// Passing date through Date applies Date.parse, if necessary
-		date = date ? new Date(date) : new Date;
-		if (isNaN(date)) throw SyntaxError("invalid date");
+		date = date ? new Date(date) : new Date();
+		if (isNaN(date)){
+			throw SyntaxError("invalid date");
+		}
 
 		mask = String(dF.masks[mask] || mask || dF.masks["default"]);
 

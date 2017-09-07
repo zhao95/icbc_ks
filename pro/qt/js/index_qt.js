@@ -19,7 +19,7 @@ function userInfo() {
 	var perImg2 = FireFly.getContextPath() + System.getUser("USER_IMG");
 	$("#userInfo2").append("<span class='hidden-xs' style='font-family: '黑体 Bold', '黑体 Regular', '黑体';font-weight: 700;font-style: normal;font-size: 16px;color: #FFFFFF;text-align: center;'>" + userName + "</span>");
 
-	$("#userInfo2").append("<span class='hidden-xs' style='margin-left:8px;'><i class='fa fa-chevron-circle-down'></i></span>");
+	$("#userInfo2").append("<span class='hidden-xs' style='margin-left:10px;'><i class='fa fa-chevron-circle-down'></i></span>");
 	if(perImg1==""){
 		//	写死头像图片
 		$("#userImg1").attr('src',"/sy/theme/default/images/common/user_64_64.png"); 
