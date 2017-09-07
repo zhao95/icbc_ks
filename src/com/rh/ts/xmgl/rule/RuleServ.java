@@ -92,12 +92,19 @@ public class RuleServ extends CommonServ {
 				Bean bmBean = jsonToBean(obj);
 
 				SqlBean sql = new SqlBean();
-				sql.and("KSLB_NAME", bmBean.getStr("BM_LB"));// 类别
-				sql.and("KSLB_XL", bmBean.getStr("BM_XL"));// 序列
-				sql.and("KSLB_MK", bmBean.getStr("BM_MK"));// 模块
+				if(!bmBean.getStr("BM_MK").equals("")){
+				sql.and("KSLB_CODE", bmBean.getStr("BM_LB"));// 类别
+				sql.and("KSLB_XL_CODE", bmBean.getStr("BM_XL"));// 序列
+				sql.and("KSLB_MK_CODE", bmBean.getStr("BM_MK"));// 模块
 				sql.and("KSLB_TYPE", bmBean.getStr("BM_TYPE"));// 级别
 				sql.and("XM_ID", xmId); // 项目ID
-
+				}if(bmBean.getStr("BM_MK").equals("")){
+					sql.and("KSLB_CODE", bmBean.getStr("BM_LB"));// 类别
+					sql.and("KSLB_XL_CODE", bmBean.getStr("BM_XL"));// 序列
+					sql.and("KSLB_MK", "无模块");// 模块
+					sql.and("KSLB_TYPE", bmBean.getStr("BM_TYPE"));// 级别
+					sql.and("XM_ID", xmId); // 项目ID
+					}
 				List<Bean> kslbList = ServDao.finds(TsConstant.SERV_BM_KSLB, sql); // 报名的考试类别
 
 				if (kslbList != null && kslbList.size() != 0) {
