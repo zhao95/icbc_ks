@@ -12,6 +12,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.rh.core.org.mgr.UserMgr" %>
 <%@ page import="com.rh.core.base.Context" %>
+<%-- <%@ page import="java.util.HashMap" %> --%>
 <%@ include file="../../sy/base/view/inHeader.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -209,24 +210,20 @@ function post(URL, PARAMS) {        
 		<!-- 图表动态面板 (动态面板) -->
 		<div id="u5013" class="ax_default" data-label="图表动态面板">
 			<%
-				//获证信息
-				String serID = "TS_ETI_CERT_QUAL";
 				//用户的USER_CODE				
 				String USER_CODE=userBean.getCode();
-				String where = "and STU_PERSON_ID='" +USER_CODE+"'";
-				List<Bean> dataList = ServDao.finds(serID,where);				
+				//获证信息
+				List<Bean> dataList = ServDao.finds("TS_ETI_CERT_QUAL","and STU_PERSON_ID='" +USER_CODE+"'");				
 				//用户信息查询
-				String serviceID="SY_ORG_USER_INFO_SELF";
-				Bean stu=ServDao.find(serviceID,USER_CODE);
+				Bean stu=ServDao.find("SY_ORG_USER_INFO_SELF",USER_CODE);
 				//入职日期
 				String USER_CMPY_DATE="";
-				String CMPY_DATE="";
 				//职位名称
 				String USER_POST="";
 				if(stu!=null){				
 					USER_CMPY_DATE=stu.getStr("USER_CMPY_DATE");
 					if(!USER_CMPY_DATE.equals("")){
-					 CMPY_DATE=USER_CMPY_DATE.substring(0,4)+"年"+USER_CMPY_DATE.substring(4,6)+"月";
+						USER_CMPY_DATE=USER_CMPY_DATE.substring(0,4)+"年"+USER_CMPY_DATE.substring(4,6)+"月";
 					}				
 				    USER_POST=stu.getStr("USER_POST");
 				}
@@ -237,15 +234,15 @@ function post(URL, PARAMS) {        
 				<div id="u5013_state0_content" class="panel_state_content">
 					<%
 						for (int i = 0; i < dataList.size(); i++) {
-								String ISSUE_DATE = dataList.get(i).getStr("ISSUE_DATE");//日期
+								String ISSUE_DATE = dataList.get(i).getStr("ISSUE_DATE");//发证日期
 								ISSUE_DATE=ISSUE_DATE.substring(0,4)+"年"+ISSUE_DATE.substring(5,7)+"月";
-								String CERT_GRADE_CODE = dataList.get(i).getStr("CERT_GRADE_CODE");//名称
+								String CERT_GRADE_CODE = dataList.get(i).getStr("CERT_GRADE_CODE");//证书名称
 								String CERT_ID = dataList.get(i).getStr("CERT_ID");//证书内码
 								Integer QUALFY_STAT=dataList.get(i).getInt("QUALFY_STAT");//证书状态
 								 //证书管理
 								String servID = "TS_ETI_CERT_INFO";
 								String wher = "and CERT_ID='" + CERT_ID + "'";
-								List<Bean> bean = ServDao.finds(servID, wher); 
+								List<Bean> bean = ServDao.finds(servID,wher); 
 								Integer VALID_TERM=bean.get(0).getInt("VALID_TERM");
 								String state = "";
 								if(VALID_TERM==1){										
@@ -281,7 +278,7 @@ function post(URL, PARAMS) {        
 						<!-- Unnamed () -->
 						<div id="u5017" class="text">
 							<p>
-								<span><%=CMPY_DATE%></span>
+								<span><%=USER_CMPY_DATE%></span>
 							</p>
 						</div>
 
@@ -925,20 +922,22 @@ function post(URL, PARAMS) {        
 				}
 			%>
 			<%
-				if (dataList.size()==0) {
-					//查找用户序列名称
-					Bean ser=ServDao.find("SY_HRM_ZDSTAFFPOSITION",USER_CODE);
-					String STATION_NO="";
-					if(ser!=null){
-						STATION_NO=ser.getStr("STATION_NO");
-					}
-					
+			Bean ser=ServDao.find("SY_HRM_ZDSTAFFPOSITION",USER_CODE);
+			//查找用户序列名称
+			String STATION_NO="";
+			//职务层级编码
+			String DUTY_LV_CODE="";
+			if(ser!=null){
+				STATION_NO=ser.getStr("STATION_NO");
+				DUTY_LV_CODE=ser.getStr("DUTY_LV_CODE");	
+			}	
+				if (dataList.size()==0) {				
 					//根据职位名称查找岗位信息
-					List<Bean> bean=ServDao.finds("TS_ORG_POSTION","and POSTION_NAME='"+USER_POST+"'");
+					Bean bean=ServDao.find("TS_ORG_POSTION","and POSTION_ID='"+DUTY_LV_CODE+"'");
 					//岗位资格
 					String POSTION_QUALIFICATION="0";
-					if(bean.size()>0){															 				
-					 POSTION_QUALIFICATION=bean.get(0).getStr("POSTION_QUALIFICATION");
+					if(bean!=null){															 				
+					 POSTION_QUALIFICATION=bean.getStr("POSTION_QUALIFICATION");
 					}
 					String[] classs={" ","初级","中级","高级","专家级"};
 					Integer i=Integer.valueOf(POSTION_QUALIFICATION);
@@ -1008,7 +1007,7 @@ function post(URL, PARAMS) {        
 						<!-- Unnamed () -->
 						<div id="u5192" class="text">
 							<p>
-								<span><%=STATION_NO.equals("")?"无":STATION_NO%>序列</span>
+								<span><%=STATION_NO.equals("")?"":STATION_NO%>序列</span>
 							</p>
 						</div>
 					</div>
@@ -1030,7 +1029,7 @@ function post(URL, PARAMS) {        
 						<!-- Unnamed () -->
 						<div id="u5196" class="text">
 							<p>							 
-								<span id="tijiao" style="color: #666666;"><%=STATION_NO.equals("")?"无":STATION_NO%>序列 <%=POSTION_QUALIFICATION.equals("")?"":POSTION_QUALIFICATION%>（</span><span
+								<span id="tijiao" style="color: #666666;"><%=STATION_NO.equals("")?"":STATION_NO%>序列 <%=POSTION_QUALIFICATION.equals("")?"":POSTION_QUALIFICATION%>（</span><span
 									style="text-decoration: underline; color: #388CAE;"><a href="javascript:post('../../qt/jsp/examref.jsp',{REF_DYXL:'<%=STATION_NO%>'})">相关学习资料下载</a></span><span
 									style="color: #388CAE;">&nbsp;&nbsp; </span><span
 									style="text-decoration: underline; color: #388CAE;">工银大学</span><span>）</span>							
@@ -1095,22 +1094,39 @@ function post(URL, PARAMS) {        
 	<%
 			//追赶，同步，落后
 			int pre=0, after =0, other =0,nums=0,num=0;
-			if(!USER_POST.equals("")){
-			//查找同等序列下的人数
-			List<Bean> lists=ServDao.finds("SY_ORG_USER_INFO_SELF","and USER_POST='" +USER_POST+ "'");
-			num=lists.size();
-			//获取证书内码
-			List<Bean> infos=ServDao.finds("TS_ETI_CERT_INFO","and STATION_NO='"+USER_POST+"'");			
-			 pre=ServDao.finds("TS_ETI_CERT_QUAL","and CERT_ID='"+infos.get(dataList.size()).getStr("CERT_ID")+"'").size(); 
-			 if (dataList.size()>0) {
-				  other=ServDao.finds("TS_ETI_CERT_QUAL","and CERT_ID='"+infos.get(dataList.size()-1).getStr("CERT_ID")+"'").size()-1-pre;
+				HashMap<Object, Object> p=new HashMap<Object, Object>();
+				p.put("USER_POST",USER_POST);
+				Bean paramBean=new Bean(p);
+			if(!STATION_NO.equals("")){
+				//职务层级编码
+				//String DUTY_LV_CODE="";
+				//查找同等序列下的人数
+				//paramBean.set(USER_POST," count(*) COUNT_ where USER_POST='"+USER_POST+"'");
+				//List<Bean> lists=ServDao.finds("SY_ORG_USER_INFO_SELF","and USER_POST='"+USER_POST+"'");
+				//num=lists.size();
+				//num=ServDao.count("SY_ORG_USER_INFO_SELF",paramBean);
+				num=ServDao.count("SY_ORG_USER_INFO_SELF",paramBean);
+				//获取证书内码
+				List<Bean> infos=ServDao.finds("TS_ETI_CERT_INFO","and STATION_NO='"+USER_POST+"'");
+				 HashMap<Object, Object> t=new HashMap<Object, Object>();
+				 t.put("CERT_ID",infos.get(dataList.size()).getStr("CERT_ID"));
+				Bean param=new Bean(t); 
+				if(infos.size()>0){
+				 pre=ServDao.count("TS_ETI_CERT_QUAL",param); 
+				 if(dataList.size()>0){
+					 	t.put("CERT_ID",infos.get(dataList.size()-1).getStr("CERT_ID"));
+						 param=new Bean(t); 
+				 		other=ServDao.count("TS_ETI_CERT_QUAL",param)-1-pre;
+				}
+				 after=num-other-pre-1;
+				}else{
+					other=num-1;
+				}
 			}
-					after=num-other-pre;
-			}
-			if(USER_POST.equals("")){
-				num=ServDao.finds("SY_ORG_USER_INFO_SELF", "and USER_POST is null").size();
-				other =num-1;
-			}	
+			if(STATION_NO.equals("")){				
+				//num=ServDao.count("SY_HRM_ZDSTAFFPOSITION",paramBean);
+				other=num;
+			}	 
 		%>
 		<!-- Unnamed (矩形) -->
 		<div id="u5197" class="ax_default label">

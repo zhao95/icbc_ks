@@ -139,7 +139,9 @@
 				</div>
 
 				<div style="margin-top: 20px; text-align:center;">
-					<img src="/qt/img/left-logo.png" style="/* width: 195px; */">
+					<a href="eti/jsp/rzgj.jsp" target="_blank">
+						<img src="/qt/img/left-logo.png" style="/* width: 195px; */">
+					</a>
 				</div>
 
 				<div class="user-panel" />
