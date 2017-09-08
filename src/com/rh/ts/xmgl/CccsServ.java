@@ -19,7 +19,31 @@ public class CccsServ extends CommonServ {
     private static final String SERV_ID3 = "TS_KCZGL_GROUP";
     private static final String SERV_ID4 = "TS_KCZGL_KCGL";
     
-    /**
+    //考场关联机构
+    private static final String VIEW_GLJG = "TS_KCGL_GLJG_V";
+    //场次测算
+    private static final String VIEW_CCCS = "TS_XMGL_CCCS_V";
+    
+	protected void beforeQuery(ParamBean paramBean) {
+
+		if (paramBean.getServId().equals(VIEW_CCCS)) {
+
+			String xmId = paramBean.getStr("XM_ID");
+
+			paramBean.setQueryNoPageFlag(true);
+
+			StringBuffer sb = new StringBuffer();
+			
+			sb.append(" AND DEPT_CODE in (SELECT JG_CODE FROM ").append(VIEW_GLJG);
+			
+			sb.append(" WHERE XM_ID = '").append(xmId).append("')");
+
+			paramBean.setQueryExtWhere(sb.toString());
+		}
+
+	}
+
+	/**
      * 场次管理 倒入考试组管理
      * @param paramBean
      * @return
