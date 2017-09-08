@@ -203,21 +203,6 @@ public class XmglServ extends CommonServ {
 	public Bean getUserXm(Bean paramBean) {
 		Bean outBean = new Bean();
 		String user_code = paramBean.getStr("user_code");
-		// 从已报名的考试中找到已报名的考试信息 判断是否报名了 报的是什么
-		String where = "AND BM_CODE=" + "'" + user_code + "'";
-		List<Bean> baominglist = ServDao.finds("TS_BMLB_BM", where);
-		List<String> stringlist = new ArrayList<String>();
-		if (baominglist.size() != 0) {
-
-			for (int a = 0; a < baominglist.size(); a++) {
-				// 获取报名的 项目信息 的name 将报名项目名称放到array中
-				String XM_ID = baominglist.get(a).getStr("XM_ID");
-				if (XM_ID != "") {
-
-					stringlist.add(XM_ID);
-				}
-			}
-		}
 		// 本人所在的群组编码
 		String qz = GroupMgr.getGroupCodes(user_code);
 		List<Bean> list = ServDao.finds("TS_XMGL", "");
@@ -261,14 +246,13 @@ public class XmglServ extends CommonServ {
 			Bean bean = list.get(i);
 			// 项目中已存在array的 title 数据 将展示在 已报名信息中
 			String id = bean.getStr("XM_ID");
-			if (stringlist.contains(id) || !kjxm.contains(id)) {
+			if (!kjxm.contains(id)) {
 				// 已报名这个考试之后 或者他不能报名这个考试 中断循环 继续开始
 				continue;
 			} else {
 				lastlist.add(bean);
 			}
 		}
-
 		// 将lastlist转换为 json字符串传给前台
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter w = new StringWriter();
@@ -284,6 +268,7 @@ public class XmglServ extends CommonServ {
 		outBean.set("list", w.toString());
 		return outBean;
 	}
+
 
 	/**
 	 * 获取此人所在节点下 可审核 的 机构 根据机构 筛选可审核的项目
