@@ -11,6 +11,7 @@
 <%@ page import="com.rh.core.serv.bean.SqlBean" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.rh.core.org.mgr.UserMgr" %>
+<%@ page import="org.apache.commons.lang.time.StopWatch" %>
 <%@ page import="com.rh.core.base.Context" %>
 <%-- <%@ page import="java.util.HashMap" %> --%>
 <%@ include file="../../sy/base/view/inHeader.jsp" %>
@@ -163,8 +164,11 @@ function post(URL, PARAMS) {        
 		</div>
 
 		<!-- Unnamed (图像) -->
+		
 		<div id="u5005" class="ax_default image">
-			<a href="javascript:history.go(-1);"><img id="u5005_img" class="img " src="../images/u1155.png" /></a>
+			<a href="javascript:history.go(-1);">
+				<img id="u5005_img" class="img " src="../images/u1155.png" />
+			</a>
 			<!-- Unnamed () -->
 			<div id="u5006" class="text"
 				style="display: none; visibility: hidden">
@@ -173,7 +177,6 @@ function post(URL, PARAMS) {        
 				</p>
 			</div>
 		</div>
-
 		<!-- Unnamed (矩形) -->
 		<div id="u5007" class="ax_default label">
 			<div id="u5007_div" class=""></div>
@@ -213,38 +216,59 @@ function post(URL, PARAMS) {        
 				//用户的USER_CODE				
 				String USER_CODE=userBean.getCode();
 				//获证信息
-				List<Bean> dataList = ServDao.finds("TS_ETI_CERT_QUAL","and STU_PERSON_ID='" +USER_CODE+"'");				
+				StopWatch sw = new StopWatch();
+				//sw.start();
+				List<Bean> dataList = ServDao.finds("TS_ETI_CERT_QUAL","and STU_PERSON_ID='" +USER_CODE+"'");
+				//System.out.println("1.时间:"+sw.toString());//1.时间:0:00:00.002
+				// sw.stop();     
 				//用户信息查询
+				//sw.start();
 				Bean stu=ServDao.find("SY_ORG_USER_INFO_SELF",USER_CODE);
+				//System.out.println("2.时间:"+sw.toString());//2.时间:0:00:00.003
+				// sw.stop();   
 				//入职日期
 				String USER_CMPY_DATE="";
 				//职位名称
-				String USER_POST="";
+				//String USER_POST="";
 				if(stu!=null){				
 					USER_CMPY_DATE=stu.getStr("USER_CMPY_DATE");
 					if(!USER_CMPY_DATE.equals("")){
 						USER_CMPY_DATE=USER_CMPY_DATE.substring(0,4)+"年"+USER_CMPY_DATE.substring(4,6)+"月";
 					}				
-				    USER_POST=stu.getStr("USER_POST");
+				    //USER_POST=stu.getStr("USER_POST");
 				}
-				
-				if (dataList.size()> 0) {
+				//查找当前用户的序列
+				//sw.start();
+				Bean ser=ServDao.find("SY_HRM_ZDSTAFFPOSITION",USER_CODE); 
+				//System.out.println("3.时间:"+sw.toString());//3.时间:0:00:00.002
+				//sw.stop();  
+				//查找用户序列名称编码
+				String STATION_NO_CODE="";
+				String STATION_NO="";
+				//职务层级编码
+				String POSTION_ID="";
+				if(ser!=null){
+					STATION_NO_CODE=ser.getStr("STATION_NO_CODE");
+					STATION_NO=ser.getStr("STATION_NO");
+					POSTION_ID=ser.getStr("DUTY_LV_CODE");
+				}
+				//依据序列获取证书管理信息
+				if (dataList.size()>0) {
+					//sw.start();
 			%>
 			<div id="u5013_state0" class="panel_state" data-label="图" style="">
 				<div id="u5013_state0_content" class="panel_state_content">
-					<%
+					<%  
 						for (int i = 0; i < dataList.size(); i++) {
 								String ISSUE_DATE = dataList.get(i).getStr("ISSUE_DATE");//发证日期
 								ISSUE_DATE=ISSUE_DATE.substring(0,4)+"年"+ISSUE_DATE.substring(5,7)+"月";
 								String CERT_GRADE_CODE = dataList.get(i).getStr("CERT_GRADE_CODE");//证书名称
 								String CERT_ID = dataList.get(i).getStr("CERT_ID");//证书内码
 								Integer QUALFY_STAT=dataList.get(i).getInt("QUALFY_STAT");//证书状态
-								 //证书管理
-								String servID = "TS_ETI_CERT_INFO";
-								String wher = "and CERT_ID='" + CERT_ID + "'";
-								List<Bean> bean = ServDao.finds(servID,wher); 
-								Integer VALID_TERM=bean.get(0).getInt("VALID_TERM");
+							     //证书管理	   
+							     List<Bean> bean=ServDao.finds("TS_ETI_CERT_INFO","and CERT_ID='"+CERT_ID+"'");  
 								String state = "";
+								Integer VALID_TERM=bean.get(0).getInt("VALID_TERM");
 								if(VALID_TERM==1){										
 									if(QUALFY_STAT==1){
 										state = "正常";
@@ -255,9 +279,10 @@ function post(URL, PARAMS) {        
 									else{
 										state = "过期";
 									}
-								}else{
+								 }else{
 									state = "无效";
-								}
+								} 
+								
 					%>
 
 					<!-- Unnamed (垂直线)-->
@@ -840,6 +865,8 @@ function post(URL, PARAMS) {        
 										j++;//序号
 										String ISSUE_DATE = dataList.get(i).getStr("ISSUE_DATE");//发证日期
 										String CERT_GRADE_CODE = dataList.get(i).getStr("CERT_GRADE_CODE");//名称
+										Integer QUALFY_STAT=dataList.get(i).getInt("QUALFY_STAT");//证书状态
+										String CERT_ID=dataList.get(i).getStr("CERT_ID");
 										//有效日期
 										String BGN_DATE = dataList.get(i).getStr("BGN_DATE");//起始有效日期
 										String END_DATE = dataList.get(i).getStr("END_DATE");//结束有效日期
@@ -847,14 +874,10 @@ function post(URL, PARAMS) {        
 										if (!BGN_DATE.equals("") && !END_DATE.equals("")) {
 											date = BGN_DATE + "-" + END_DATE;
 										}
-										//获证状态
-										String CERT_ID = dataList.get(i).getStr("CERT_ID");//证书内码
-										Integer QUALFY_STAT=dataList.get(i).getInt("QUALFY_STAT");//证书状态
-										String servID = "ETI_CERTINFO_TS";
-										String wher = "and CERT_ID='" + CERT_ID + "'";
-										List<Bean> bean = ServDao.finds(servID, wher); 
-										Integer VALID_TERM=bean.get(0).getInt("VALID_TERM");
+										  //证书管理
+										   List<Bean> infos=ServDao.finds("TS_ETI_CERT_INFO","and CERT_ID='"+CERT_ID+"'");
 										String state = "";
+										Integer VALID_TERM=infos.get(0).getInt("VALID_TERM");
 										if(VALID_TERM==1){										
 											if(QUALFY_STAT==1){
 												state = "正常";
@@ -865,9 +888,9 @@ function post(URL, PARAMS) {        
 											else{
 												state = "过期";
 											}
-										}else{
+										 }else{
 											state = "无效";
-										}
+										} 
 							%>
 							<tr class="" style="height: 50px">
 								<td style="text-align: center"><%=j%></td>
@@ -919,29 +942,25 @@ function post(URL, PARAMS) {        
 				</div>
 			</div>
 			<%
-				}
+			// System.out.println("4.时间:"+sw.toString());//4.时间:0:00:00.011
+			 //sw.stop();
+			 }
 			%>
 			<%
-			Bean ser=ServDao.find("SY_HRM_ZDSTAFFPOSITION",USER_CODE);
-			//查找用户序列名称
-			String STATION_NO="";
-			//职务层级编码
-			String DUTY_LV_CODE="";
-			if(ser!=null){
-				STATION_NO=ser.getStr("STATION_NO");
-				DUTY_LV_CODE=ser.getStr("DUTY_LV_CODE");	
-			}	
-				if (dataList.size()==0) {				
-					//根据职位名称查找岗位信息
-					Bean bean=ServDao.find("TS_ORG_POSTION","and POSTION_ID='"+DUTY_LV_CODE+"'");
-					//岗位资格
-					String POSTION_QUALIFICATION="0";
+			//sw.start();
+			if (dataList.size()==0) {				
+				//根据职位名称查找岗位信息
+				//岗位资格
+				String POSTION_QUALIFICATION="0";
+				if(!POSTION_ID.equals("")){	
+					Bean bean=ServDao.find("TS_ORG_POSTION",POSTION_ID);
 					if(bean!=null){															 				
 					 POSTION_QUALIFICATION=bean.getStr("POSTION_QUALIFICATION");
 					}
-					String[] classs={" ","初级","中级","高级","专家级"};
-					Integer i=Integer.valueOf(POSTION_QUALIFICATION);
-					POSTION_QUALIFICATION=classs[i];
+				}
+				String[] classs={" ","初级","中级","高级","专家级"};
+				Integer i=Integer.valueOf(POSTION_QUALIFICATION);
+				POSTION_QUALIFICATION=classs[i];
 			%>
 			<div id="u5013_state0" class="panel_state" data-label="空白" style="">
 				
@@ -1088,45 +1107,64 @@ function post(URL, PARAMS) {        
 				</div>
 			</div>
 			<%
-				}
+			 //System.out.println("5.时间:"+sw.toString());//5.时间:0:00:00.000
+			 //sw.stop();	
+			}
 			%>
 		</div>
 	<%
 			//追赶，同步，落后
+			//000921857
+			//sw.start();
 			int pre=0, after =0, other =0,nums=0,num=0;
 				HashMap<Object, Object> p=new HashMap<Object, Object>();
-				p.put("USER_POST",USER_POST);
+				p.put("STATION_NO_CODE",STATION_NO_CODE);
 				Bean paramBean=new Bean(p);
-			if(!STATION_NO.equals("")){
-				//职务层级编码
-				//String DUTY_LV_CODE="";
+			if(!STATION_NO_CODE.equals("")){
 				//查找同等序列下的人数
-				//paramBean.set(USER_POST," count(*) COUNT_ where USER_POST='"+USER_POST+"'");
-				//List<Bean> lists=ServDao.finds("SY_ORG_USER_INFO_SELF","and USER_POST='"+USER_POST+"'");
-				//num=lists.size();
-				//num=ServDao.count("SY_ORG_USER_INFO_SELF",paramBean);
-				num=ServDao.count("SY_ORG_USER_INFO_SELF",paramBean);
-				//获取证书内码
-				List<Bean> infos=ServDao.finds("TS_ETI_CERT_INFO","and STATION_NO='"+USER_POST+"'");
-				 HashMap<Object, Object> t=new HashMap<Object, Object>();
-				 t.put("CERT_ID",infos.get(dataList.size()).getStr("CERT_ID"));
-				Bean param=new Bean(t); 
+				//sw.start();
+				HashMap<Object, Object> t=new HashMap<Object, Object>();
+				num=ServDao.count("SY_HRM_ZDSTAFFPOSITION",paramBean);
+				List<Bean> infos=ServDao.finds("TS_ETI_CERT_INFO","and STATION_NO='"+STATION_NO+"'");
+				//System.out.println("8.时间："+sw.toString());//8.时间：0:00:00.007
+				//sw.stop();
+				//sw.start();
 				if(infos.size()>0){
-				 pre=ServDao.count("TS_ETI_CERT_QUAL",param); 
-				 if(dataList.size()>0){
+				 if(dataList.size()<infos.size()){
+					t.put("CERT_ID",infos.get(dataList.size()).getStr("CERT_ID"));
+					Bean param=new Bean(t); 
+					 pre=ServDao.count("TS_ETI_CERT_QUAL",param);
+					 if(dataList.size()>0){
 					 	t.put("CERT_ID",infos.get(dataList.size()-1).getStr("CERT_ID"));
-						 param=new Bean(t); 
-				 		other=ServDao.count("TS_ETI_CERT_QUAL",param)-1-pre;
+						Bean par=new Bean(t); 
+				 		other=ServDao.count("TS_ETI_CERT_QUAL",par)-1-pre;  
+				 		after=num-other-pre-1;
+					 }
+					 if(dataList.size()==0){
+						 other=num-pre-1;
+					 }
+					 
 				}
-				 after=num-other-pre-1;
-				}else{
+				 if(dataList.size()==infos.size()){
+						 pre=0;
+						 t.put("CERT_ID",infos.get(dataList.size()-1).getStr("CERT_ID"));
+						 Bean param=new Bean(t); 
+					 	other=ServDao.count("TS_ETI_CERT_QUAL",param)-1-pre;  
+						 after=num-other-pre;
+				}
+				//System.out.println("9.时间："+sw.toString());//9.时间：0:00:00.006
+				//sw.stop();
+			}else{
 					other=num-1;
 				}
 			}
-			if(STATION_NO.equals("")){				
-				//num=ServDao.count("SY_HRM_ZDSTAFFPOSITION",paramBean);
+			if(STATION_NO_CODE.equals("")){				
 				other=num;
-			}	 
+			}	
+			//System.out.println("7.时间："+sw.toString());//7.时间：0:00:00.014
+			//sw.stop();
+			//System.out.println("页面时间:"+sw.toString());//页面时间:0:00:00.074
+			//sw.stop(); 
 		%>
 		<!-- Unnamed (矩形) -->
 		<div id="u5197" class="ax_default label">
