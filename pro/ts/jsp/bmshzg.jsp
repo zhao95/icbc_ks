@@ -41,10 +41,14 @@
 <body class="hold-transition skin-black sidebar-mini">
 
 <%
-
+String username = "";
+String loginname = "";
 if(userBean == null) {
 			 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
-			 RequestUtils.sendDisp(request, response, loginUrl);}
+			 RequestUtils.sendDisp(request, response, loginUrl);}else{
+				 username=userBean.getStr("USER_NAME");
+				 loginname=userBean.getStr("USER_LOGIN_NAME");
+			 }
 			 String xmid = request.getParameter("zgtz");
 			 %>
 <style>
@@ -330,9 +334,9 @@ if(userBean == null) {
 				<div>
 				<table style="height:125px">
 				<tr style="height:25%">
-				<td style="text-align:right;width:20%">审核人姓名</td><td style="width:5%"></td><td><input style="height:30px" type="text" value="<%if(userBean!=null)userBean.getStr("USER_NAME"); %>" name="shren"/></td>
+				<td style="text-align:right;width:20%">审核人姓名</td><td style="width:5%"></td><td><input style="height:30px" type="text" value="<%=username%>" name="shren"/></td>
 				<td style="width:3%"></td>
-				<td style="text-align:right">审核人登录名</td><td style="width:5%"></td><td><input style="height:30px" type="text" value="<%if(userBean!=null)userBean.getStr("USER_LOGIN_NAME"); %>" name="shdlming"/></td>
+				<td style="text-align:right">审核人登录名</td><td style="width:5%"></td><td><input style="height:30px" type="text" value="<%=loginname %>" name="shdlming"/></td>
 				</tr>
 				<tr style="height:25%">
 				<td style="text-align:right">审核状态</td><td style="width:5%"></td><td><label><input style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1" checked>审核通过</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

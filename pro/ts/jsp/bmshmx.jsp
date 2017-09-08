@@ -98,7 +98,6 @@
 	</tbody>
 	</table>
 	<script type="text/javascript">
-	alert("<%=bmid%>");
 	 var rows = $("#table").find("tr");  
 	    for(i = 1; i < rows.length; i++){  
 	        if(i % 2 == 0){  
