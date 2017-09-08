@@ -66,6 +66,10 @@
 	</thead>
 	<tbody>
 	 <%
+		if(userBean == null) {
+			 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
+			 RequestUtils.sendDisp(request, response, loginUrl);
+		  }else{
 	 String bmid = request.getParameter("bmid");
 	 String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
 	 List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
@@ -89,7 +93,7 @@
 		 <tr height="50px">
 		<td align="center"><%=j %></td><td><%=shdate %></td><td align="center"><%=shr %></td><td align="center"><%=shlog %></td><td align="center"><%=jibie %></td><td align="center"><%=status %></td><td align="center"><%=liyou %></td><td align="center"><%=address %></td>
 		</tr> 
-		<%}%>
+		<%}}%>
 	</tbody>
 	</table>
 	<script type="text/javascript">

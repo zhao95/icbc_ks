@@ -42,7 +42,9 @@
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 <body class="hold-transition skin-black sidebar-mini">
 
-
+<%if(userBean == null) {
+	 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
+	 RequestUtils.sendDisp(request, response, loginUrl);} %>
 
 	<div class="" style="padding: 10px">
 		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
@@ -70,7 +72,7 @@
 						<option value="2">已结束</option>
 				</select></td>
 				<td style="width: 5%"></td>
-				<td><button
+				<td><button id="search"
 						style="color: white; height: 30px; width: 35%; background: DarkTurquoise"
 						onclick="xzcu()">查询</button></td>
 			</tr>
@@ -101,10 +103,13 @@
 			style="position: absolute; right: 5%; bottom: -20;">
 			<table class="row">
 				<tr>
-					<td><ul id="fenyeul" class="pagination">
-							<li><a href="#">&laquo;</a>
-							<li><a href="#">&raquo;</a></li>
-						</ul></td>
+					<td><!-- 分页展示 -->
+					<div class="rhGrid-page">
+		            <span class="disabled ui-corner-4">上一页</span>
+		            <span class="current ui-corner-4">1</span>
+		            <span class="disabled ui-corner-4">下一页</span>
+		            <span class="allNum">共15条</span>
+        </div></td>
 					<td style="width: 5%"></td>
 					<td><select id="yema" onchange="fenyeselect()">
 							<option value="10" selected="selected">10条/页</option>
@@ -184,9 +189,6 @@
 	var user_code = System.getVar("@USER_CODE@");
 	var jq = $.noConflict(true);
 	jq(function (){
-		selectxmdata(user_code,1);
-		 var s ="yema"+1;
-		 $("#"+s).addClass("active");	 
 		//页面加载完执行
 		var table = document.getElementById("table");  
 		rowscolor(table);
@@ -198,58 +200,6 @@
 			document.getElementById("zgtz").value=id;
 			document.getElementById("form1").submit();
 	}
-	//分页
-	function fenyeselect(){
-		selectxmdata(user_code,1);
-	}
-	//查询
-	function xzcu(){
-		selectxmdata(user_code,1);
-	}
-	//上一页 按钮
-	function forward(){
-		//获取页码 数
-		var yema = document.querySelectorAll("li[class='active']")[0].innerText;
-		if(yema==1){
-			return false;
-		}else{
-			//要显示的页码
-			var yema1 = yema-1;
-			selectxmdata(user_code,yema1);
-			//table tr  背景色
-			var table = document.getElementById("table");   
-			rowscolor(table);
-		}
-	}
-	//下一页按钮
-	function backward(last){
-		//获取页码 数
-		var yema = document.querySelectorAll("li[class='active']")[0].innerText;
-		var lastyema = yema-1+2;
-		if(lastyema==last){
-			return false;
-		}else{
-			//要显示的页码数
-			 var yema1 = yema-1+2;
-			 selectxmdata(user_code,yema1);
-			//table tr  背景色
-			var table = document.getElementById("table");   
-			rowscolor(table);
-	     	  
-		}
-	}
-	//点击第几页跳转
-	 function chaxun(i){
-		var id = "yema"+i;
-		//点击第几页
-		var ym = document.getElementById(id).innerText;
-		//传入 要显示的页码数即可
-		selectxmdata(user_code,ym);
-		 
-		//table tr  背景色
-		var table = document.getElementById("table");   
-		rowscolor(table);
-	} 
 	function chakan(obj){
 		
 		//通过项目查找报名信息
@@ -273,135 +223,24 @@
 		$("#describe").attr("disabled","disabled");
 	}
 
-	//项目筛选  能审核的项目   
-	function selectxmdata(user_code,yema){
-		var name = document.getElementById("mc").value;
-	    var zuzhidanwei =  document.getElementById("zzdw").value;
-	    var where1 = "";
-	    var where2 = "";
-	    if(name!=""){
-	    	where1 = "AND XM_NAME like"+"'%"+name+"%'";
-	    }
-	    if(zuzhidanwei!=""){
-	    	where2 = " AND XM_FQDW_NAME like"+"'%"+zuzhidanwei+"%'"
-	    }
-	     	//下拉框值
-	     	var type =  document.getElementById("zhuangtai");
-	     	var index = type.selectedIndex;
-	     	var  zhuangtai = type.options[index].value;
-	     	
-	     	
-	     	//每页条数
-			var select = document.getElementById("yema");
-			 var index = document.getElementById("yema").selectedIndex;
-			var myts = select.options[index].value;
-			//重新计算 页码
-			var param={};
-			param["bm_zhuantai"]=zhuangtai;
-			param["user_code"]=user_code;
-			param["nowpage"]=yema;
-			param["shownum"]=myts;
-	     	param["where"]=where1 + where2;
-	     	//在某一结点下 可以查看哪些机构的 审核  过滤出来
-	     	var result = FireFly.doAct("TS_XMGL","getUncheckList",param);
-	     	
-	     	var result2 = FireFly.doAct("TS_XMGL","getShJsonList",param);
-			//data为json格式字符串
-			var data2 = result2.list;
-	     	var data = result.list;
-	     	//将json字符串 转换为 json对象
-	     	var first = (yema-1)*myts+1;
-	     	if(data.length==2){
-	     		$("#table tbody").html("");
-	     		$("#fenyeul").html("");
-	     		$("#fenyeul").append('<li><a href="#">&laquo;</a></li><li><a  href="#">&raquo;</a></li>');
-	     	}else{
-	     	var pageEntity=JSON.parse(data);
-	     	var pageEntity2 = JSON.parse(data2);
-	     	 //总条数/每页
-			//页数
-			 var yeshu = Math.floor(pageEntity2.length/myts);
-			 var yushu = pageEntity2.length%myts;
-			 $("#fenyeul").html("");
-			
-				 if(yushu!=0){
-					 //余数为0
-					 yeshu+=1;
-				 }
-				  for(var z=0;z<yeshu;z++){
-				  var j=z+1;
-					 if(z==0){
-				$("#fenyeul").append('<li onclick="forward()"><a href="#">&laquo;</a></li><li id="yema1" class="active" onclick="chaxun('+j+')"><a href="#">1</a></li>');
-					 }else {
-				 $("#fenyeul").append('<li id="yema'+j+'" onclick=chaxun('+j+')><a  href="#">'+j+'</a></li>');
-						 
-					 }
-			 }
-	     		  //最后一页
-				 var last =yeshu+1;
-				 $("#fenyeul").append(' <li id="yema'+last+'" onclick="backward('+last+')"><a  href="#">&raquo;</a></li>');
-				 $("li.active").removeClass();
-				 var s ="yema"+yema;
-				 $("#"+s).addClass("active");
-	     	$("#table tbody").html("");
-	     	  for(var i=0;i<pageEntity.length;i++){
-	     		  
-	     		 var name = pageEntity[i].XM_NAME;
-					var zzdw = pageEntity[i].XM_FQDW_NAME;
-					var startdate = pageEntity[i].XM_START;
-					var cjsj = pageEntity[i].S_ATIME;
-					var enddate = pageEntity[i].XM_END;
-					var xmtype = pageEntity[i].XM_TYPE;
-					var id = pageEntity[i].XM_ID;
-					var state = "已结束";
-					//创建新时间 判断 状态
-					var param1={};
-					param1["xmid"]=id;
-					var result1 = FireFly.doAct("TS_XMGL_BMGL","getBMState",param1);
-					var data1 = result1.list;
-					var pageEntity1 = JSON.parse(data1);
-					//报名开始时间
-					var startTime = pageEntity1[0].START_TIME;
-					var state1 = pageEntity1[0].STATE;
-					if(state1=="待报名"){
-						state="报名审核"
-					}else if(state1=="已结束"){
-						
-					}else{
-						state = "未开始";
-					}
-					//添加一行隐藏的项目id
-					var xuhao = first+i;
-	     		//为table重新appendtr
-					if(state=="报名审核"){
-	     			$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td><input class = "btn" type="button" onclick="tiaozhuan('+i+')" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');
-		     		
-					}else{
-						$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" class="btn" type="button" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');	
-					}
-	     	  }
-	     	
-	     	}	 
-	     	
-	   	 
-	}
+	
 	function rowscolor(table){
 		 var rows = table.getElementsByTagName("tr");  
 		    for(i = 1; i < rows.length; i++){  
 		        if(i % 2 == 0){  
-		   
 		            rows[i].style.backgroundColor = "Azure";  
 		       }  
 		    } 
 	}
 	function ztcx(){
-		selectxmdata(user_code,1);
+		listPage.prototype.fenyeselectss();
 	}
 	</script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
+	<script src="<%=CONTEXT_PATH%>/ts/js/fenye.js"></script>
 	<!-- FastClick -->
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
 	<!-- AdminLTE  -->
