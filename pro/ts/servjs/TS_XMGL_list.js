@@ -1,8 +1,8 @@
 var _viewer = this;
-var d = $("<div id='d' tabindex='1' style='background-color:#b6e1fd;border:1px solid #DCE6F5;display:none;'></div>");// 获取<div id="d">的  
+var d = $("<div id='d' tabindex='1' style='background-color:#b6e1fd;border:0px solid #DCE6F5;display:none;'></div>");// 获取<div id="d">的  
 var tableTag = $("body");  
-tableTag.append(d);  
-var dTag = d.get(0);  
+tableTag.append(d); 
+var dTag = d.get(0);
  //创建自定义字段，增加按钮
 $(".rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
@@ -11,17 +11,17 @@ $(".rhGrid").find("tr").each(function(index, item) {
      '<div><span id="span_'+XM_ID+'" >....</span></div>'
 	 );
 	 
-	 var btn = '<div id="div_'+XM_ID+'"  style="display:none;">'+
-     '<a style="cursor:pointer" id="TS_XMGL_look'+XM_ID+'"  rowpk="'+XM_ID+'"><span style="font-size:16px">查看</span></a>'+	
-     '<a style="cursor:pointer" id="TS_XMGL_copy'+XM_ID+'"  rowpk="'+XM_ID+'"><span style="font-size:16px">复制</span></a>'+
-     '<a style="cursor:pointer" id="TS_XMGL_edit'+XM_ID+'"  rowpk="'+XM_ID+'"><span style="font-size:16px">编辑</span></a>'+
-     '<a  style="cursor:pointer" id="TS_XMGL_set'+XM_ID+'"   rowpk="'+XM_ID+'"><span style="font-size:16px">设置</span></a>'+
-     '<a style="cursor:pointer" id="TS_XMGL_delete'+XM_ID+'"  rowpk="'+XM_ID+'"><span style="font-size:16px">删除</span></a>'+
+	 var btn = '<div id="div_'+XM_ID+'"  style="display:none;min-width:40px;min-height:25px">'+
+     '<a style="cursor:pointer" id="TS_XMGL_look'+XM_ID+'" actcode="look" rowpk="'+XM_ID+'"><span style="font-size:14px">&nbsp;查看 | </span></a>'+
+     '<a style="cursor:pointer" id="TS_XMGL_copy'+XM_ID+'" actcode="copy" rowpk="'+XM_ID+'"><span style="font-size:14px">复制 | </span></a>'+
+     '<a style="cursor:pointer" id="TS_XMGL_edit'+XM_ID+'" actcode="edit" rowpk="'+XM_ID+'"><span style="font-size:14px">编辑 | </span></a>'+
+     '<a style="cursor:pointer" id="TS_XMGL_set'+XM_ID+'"  actcode="set" rowpk="'+XM_ID+'"><span style="font-size:14px">设置 | </span></a>'+
+     '<a style="cursor:pointer" id="TS_XMGL_delete'+XM_ID+'" actcode="delete" rowpk="'+XM_ID+'"><span style="font-size:14px">删除&nbsp;</span></a>'+
      '</div>'
      
      tableTag.append(btn); 
 	 
-	bindCard();
+	 bindCard();
 	}
 });
 
@@ -41,19 +41,21 @@ jQuery("td[icode='buttons'] span").unbind("mouseover").bind("mouseover", functio
 	 var tdTag =this;
 	 var kk = $(this).parent().parent().get(0).clientWidth;
      var top = $(this).parent().parent().get(0).offsetTop;  
- 	var pkCode = $(this).parent().parent().parent().children().get(2).innerText;
- 	
- 	 var btn1 = $("#div_"+pkCode).css("display","block");
-	 d.append(btn1);
+ 	 var pkCode = $(this).parent().parent().parent().children().get(2).innerText;
+ 	 
+ 	 var btn = $("#div_"+pkCode).css("display","");
+ 	 
+ 	 d.append(btn.clone());
 	 
  	 dTag.style.display="block";
- 	 dTag.style.position="fixed";  
- 	 dTag.style.left= document.body.clientWidth-160-kk/2+"px"; 
- 	 dTag.style.top=top+75+"px";
+ 	 dTag.style.position="fixed";
+ 	 dTag.style.left= document.body.clientWidth-200-kk/2+"px"; 
+ 	 dTag.style.top=top+71+"px";
  	 p=[dTag.offsetLeft,dTag.offsetTop,dTag.clientWidth,dTag.clientHeight];
  	 var spanDiv= $(this).parent().get(0);
  	 spanLoc=[spanDiv.offsetLeft,spanDiv.offsetTop,spanDiv.clientWidth,spanDiv.clientHeight];
  	 d.focus();
+ 	 
  	 $("#TS_XMGL_look"+pkCode).unbind("click").bind("click", function(){
  	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
  	 });
@@ -86,12 +88,12 @@ $("#d").mouseout(function(e){
 		var x= e.clientX,y=e.clientY;
 		if((x>p[0] && x<p[0]+p[2] && y>p[1] && y<p[1]+p[3]) ){
 			dTag.style.display="block";
-			 console.log("b:"+p[0]+"   "+p[1]+"   "+p[2]+"   "+p[3]);
-			 console.log(x+"   "+y);
+//			 console.log("b:"+p[0]+"   "+p[1]+"   "+p[2]+"   "+p[3]);
+//			 console.log(x+"   "+y);
 		}else{
 			dTag.style.display="none";
-			console.log("d:"+p[0]+"   "+p[1]+"   "+p[2]+"   "+p[3]);
-			 console.log(x+"   "+y);
+//			console.log("d:"+p[0]+"   "+p[1]+"   "+p[2]+"   "+p[3]);
+//			 console.log(x+"   "+y);
 			p=null;
 		}
 	}
