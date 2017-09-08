@@ -347,6 +347,9 @@ function selectcreate(){
   var formnum =0;
   var idcode = -1;
   function tjyiyi(i){
+	  $("#liyou11").val("");
+	  $("#liyou11").removeAttr("disabled");
+	  $("#tjbutt").removeAttr("disabled");
 	  var bmid = document.getElementById("baomingid"+i).innerHTML;
 	  $("#yiyi"+i).attr("data-target",'#appeal');
 	  var param={};
@@ -358,10 +361,11 @@ function selectcreate(){
 	  $("#filehis").html("");
 	  $("#formContainer2").html("");
 	  if(pageEntity.length==0&&reason==""){
+		  
 	  }else{
 		  $("#liyou11").val(reason);
 		  $("#liyou11").attr("disabled","disabled");
-		  
+		  $("#tjbutt").attr("disabled","disabled");
 		  //已有上传文件记录
 		  //模态窗口 append上传的东西
 		  for(var i=0;i<pageEntity.length;i++){
@@ -370,7 +374,6 @@ function selectcreate(){
 		  }
 		  //将数据 保存
 		  //不能再提交 给按钮置灰
-		  document.getElementById("tjbutt").style.display="none";
 		  return;
 	  }
 		  $("#formContainer2").html("");
@@ -385,6 +388,8 @@ function selectcreate(){
                      
                  }); 
                  idcode=i;
+                 
+                 
 	  
   }
   //关闭上传模态页面
@@ -441,7 +446,7 @@ function selectcreate(){
 	 param["bmid"]=bmid
 	 param["liyou"]=liyou;
 	 FireFly.doAct("TS_BMSH_NOPASS","yiyi",param);
-	 fenye();
+	  listPage.prototype._fenye();
 }
  
  //报名项目列表调用(初始化后展示)
@@ -537,7 +542,6 @@ function selectcreate(){
       this.bldPage();
       var listPage=this;
     //查询条件按钮（设置查询考试名称和年份的条件）
-      this._fenye();
   };
   listPage.prototype._fenye=function(){
 	  var jb = document.getElementById("jb");
@@ -610,7 +614,6 @@ function selectcreate(){
   };
  /* 下一页*/
   listPage.prototype.nextPage = function() {
-	  debugger;
       var nextPage = parseInt(this._lPage.NOWPAGE) + 1;
       var pages = parseInt(this._lPage.PAGES);
       var nowPage = "" + ((nextPage > pages) ? pages:nextPage);
@@ -697,7 +700,8 @@ function selectcreate(){
 		    }
   	  
   	  }
-  	
+		var table = document.getElementById("ybmtable");  
+    	 rowscolor(table);
   }; 
  /* 添加分页展示*/
   listPage.prototype.bldPage = function () {
