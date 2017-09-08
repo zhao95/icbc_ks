@@ -157,18 +157,6 @@
 	/* /*     line-height:100px; */
 }
 
-#jdtMore {
-	display: block;
-	border-width: 0px;
-	position: relative;
-	float: right;
-	left: 0px;
-	top: 0px;
-	width: 50px;
-	word-wrap: break-word;
-	cursor: pointer;
-}
-
 #jdtMain .progress-bar {
 	position: clear;
 	/*     float:clear; */

@@ -93,7 +93,7 @@
         <div style="margin-top: -5px; margin-left: 19%; height: 5px; width: 190px; background-color: LightSeaGreen"></div>
         <div id="cuxian1"
              style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
-            <span style="margin-left: 50px; padding-top: 10px">可申请的请假</span>
+            <span style="margin-left: 50px; padding-top: 10px">可申请的借考</span>
             <div style="float:right;">
                 <a onclick="jiekao()"
                    style="color:white;font-size:20px;background-color:LightSeaGreen;height:45px;width:140px;margin:15px;cursor: pointer;">
@@ -179,10 +179,10 @@
 
         var currentUserCode = System.getUser("USER_CODE");
 
-        /*可申请的请假列表*/
+        /*可申请的借考列表*/
         var table1Tbody = jQuery('#ybmtable1 tbody');
         table1Tbody.html('');
-        //获取可申请的请假数据
+        //获取可申请的借考数据
         var data = {USER_CODE: currentUserCode};
         var userCanLeaveList = FireFly.doAct('TS_JKLB_JK', 'getUserCanLeaveList', data);
         for (var i = 0; i < userCanLeaveList._DATA_.length; i++) {
@@ -212,10 +212,10 @@
             ].join(''));
         }
 
-        /*已申请的请假*/
+        /*已申请的借考*/
         var table1Tbody2 = jQuery('#ybmtable2 tbody');
         table1Tbody2.html('');
-        //获取已申请的请假数据
+        //获取已申请的借考数据
         data = {_SELECT_: '*', _extWhere: "and USER_CODE='" + currentUserCode + "'", _NOPAGE_: true};
         var jkListBean = FireFly.doAct('TS_JKLB_JK', 'query', data);
         var jkList = jkListBean._DATA_;
@@ -271,7 +271,7 @@
 
     });
 
-    //请假跳转到请假页面
+    //跳转到借考页面
     function jiekao() {
         var pkCode = document.getElementsByName("bm_id");
         var bmids = "";
@@ -285,36 +285,14 @@
             }
         }
         doPost('jklb_jk.jsp', {bmids: bmids});
-//        document.getElementById("bmids").value = bmids;
-//        document.getElementById("formid").submit();
     }
 
-    //已申请的请假列表 点击进行查看
+    //已申请的借考列表 点击进行查看
     function chakan(obj) {
         var pkCode = obj.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML.trim();
-//        document.getElementById("qjid").value = pkCode;
-//        document.getElementById("hidden").value = 2;
         doPost('jklb_jk2.jsp', {jkid: pkCode});//hidden为空 查看
-//        document.getElementById("formchakan").submit();
     }
 
-    //    //点击进行编辑
-    //    function bianji(obj) {
-    //        var pkCode = obj.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML.trim();
-    ////        document.getElementById("qjid").value = pkCode;
-    ////        document.getElementById("hidden").value = 1;
-    //        doPost('qjlb_qj2.jsp', {qjid: pkCode, hidden: 1});
-    ////        document.getElementById("formchakan").submit();
-    //    }
-    //
-    //    //删除当前条请假数据
-    //    function shanchu(obj) {
-    //        var pkCode = obj.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML;
-    //        var param = {};
-    //        param["pkCode"] = pkCode;
-    //        FireFly.doAct("TS_QJLB_QJ", "deleteData", param);
-    //        window.history.go(0);
-    //    }
     /**
      * 实现post请求
      * @param to 例：/ts/jsp/qjlb_qj2.jsp

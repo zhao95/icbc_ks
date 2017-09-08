@@ -46,9 +46,18 @@
 
 
 <body class="hold-transition skin-black sidebar-mini">
+<!--判断用户是否登录  -->
 <%
+	String user_code="";
+	if(userBean == null) {
+		 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
+		 RequestUtils.sendDisp(request, response, loginUrl);
+	  }else{
+	  
+	user_code = userBean.getStr("USER_CODE");
+  }
+ 
 			//获取所有项目ID
-			String user_code = userBean.getStr("USER_CODE");
 			
 							%> 
 	<div class="" style="padding: 10px">
@@ -156,9 +165,12 @@
 			<div id="fenyediiv" style="position:absolute;right:5%;padding-bottom:-20px;">
 			<table class="row">
 			<tr>
-			<td><ul id="fenyeul" class="pagination">
-		    <li><a href="#">&laquo;</a><li ><a  href="#">&raquo;</a></li>
-		    </ul>
+			<td><div class="rhGrid-page">
+		            <span class="disabled ui-corner-4">上一页</span>
+		            <span class="current ui-corner-4">1</span>
+		            <span class="disabled ui-corner-4">下一页</span>
+		            <span class="allNum">共15条</span>
+		            </div>
 		    </td>
 		    <td style="width:5%"></td>
 		    <td><select id = "yema" onchange="fenyeselect()">

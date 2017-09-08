@@ -158,7 +158,7 @@
             <div class="form-group">
                 <label for="qjdks" class="col-sm-2 control-label">
                     请假的考试
-                    <span style="color: red;font-weight: bold">*</span></label>
+                    <span style="color: red;font-weight: bold">*</span>
                 </label>
                 <div class="col-sm-10 bkuan">
                     <div onclick="xuanze()" data-toggle="modal" data-target="#myModal" id="qjdks"

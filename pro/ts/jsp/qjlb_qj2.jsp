@@ -128,8 +128,8 @@
 //    String user_code = userBean.getStr("USER_CODE");
 //    //获取用户登录名
 //    String user_login_name = userBean.getStr("USER_LOGIN_NAME");
-    //获取用户部门名称
-    String dept_name = userBean.getDeptName();
+//    //获取用户部门名称
+//    String dept_name = userBean.getDeptName();
     //获取用户名
     String user_name = userBean.getStr("USER_NAME");
 %>
@@ -482,7 +482,7 @@
     });
 </script>
 <script type="text/javascript">
-
+    //加载流程图
     function showFlowView() {
         //        List<Bean> tsWfsNodeApplyList = ServDao.finds("TS_WFS_NODE_APPLY", "and WFS_ID ='" + wfsId + "'");
         var todoId = '<%=todoId%>';

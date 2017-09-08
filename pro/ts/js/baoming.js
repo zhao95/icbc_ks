@@ -10,7 +10,7 @@ function rowscolor(table){
 	    } 
 }
 
-//所有下拉框onchang进行  查询数据  资格非资格 进行筛选
+/*//所有下拉框onchang进行  查询数据  资格非资格 进行筛选
 function selectdata(user_code,yema){
 		var jb = document.getElementById("jb");
         var indexjb = jb.selectedIndex;
@@ -140,39 +140,11 @@ function selectdata(user_code,yema){
 		    }
      	  
      	  }
-     	 //总条数/每页
-		//页数
-		 var yeshu = Math.floor(pageEntity2.length/myts);
      	
-		 var yushu = pageEntity2.length%myts;
-		 $("#fenyeul").html("");
-			 if(yushu!=0){
-				 //余数为0
-				 yeshu+=1;
-			 }
-			  for(var z=0;z<yeshu;z++){
-				  
-			  var j=z+1;
-				 if(z==0){
-			$("#fenyeul").append('<li onclick="forward()"><a href="#">&laquo;</a></li><li id="yema1" class="active" onclick="chaxun('+j+')"><a href="#">1</a></li>');
-				 }else {
-			 $("#fenyeul").append('<li id="yema'+j+'" onclick=chaxun('+j+')><a  href="#">'+j+'</a></li>');
-					 
-				 }
-			 
-		 }
-     		  //最后一页
-			 var last =yeshu+1;
-     	
-			 $("#fenyeul").append(' <li id="yema'+last+'" onclick="backward('+last+')"><a  href="#">&raquo;</a></li>');
-     	}	 
-     	$("li.active").removeClass();
-    	var s ="yema"+yema;
-    	 $("#"+s).addClass("active");	
      	var table = document.getElementById("ybmtable");  
      	 rowscolor(table);
-     	
-}
+     	}
+}*/
 //-----------------------撤销按钮
 function chexiao(i){
 	var aid = "chexiao"+i;
@@ -194,55 +166,19 @@ function chexiao(i){
 	}else{
 		return false;
 	}
-	selectdata(user_code,1);
+	listPage.prototype._fenye();
 }
 
 //级别下拉框onchange事件
 function jibieonchange(){
-	selectdata(user_code,1);
+	listPage.prototype._fenye();
 }
 
 //每页多少条 添加onchange事件
 function fenyeselect(){	
 	//跟 级别 按钮 的onchange时间一样都要 筛选所有条件下的数据
-	selectdata(user_code,1);
+	listPage.prototype._fenye();
 }
-
-//上一页 按钮
-function forward(){
-	//获取页码 数
-	var yema = document.querySelectorAll("li[class='active']")[0].innerText;
-	if(yema==1){
-		return false;
-	}else{
-		//要显示的页码
-		var yema1 = yema-1;
-		selectdata(user_code,yema1);
-	}
-}
-
-
-//下一页按钮
-function backward(last){
-	//获取页码 数
-	var yema = document.querySelectorAll("li[class='active']")[0].innerText;
-	var lastyema = yema-1+2;
-	if(lastyema==last){
-		return false;
-	}else{
-		//要显示的页码数
-		 var yema1 = yema-1+2;
-		 selectdata(user_code,yema1);
-     	  
-	}
-}
-//点击第几页跳转
-function chaxun(i){
-	var id = "yema"+i;
-	//点击第几页
-	var ym = document.getElementById(id).innerText;
-	 selectdata(user_code,ym);
-} 
 
 //报名时根据类型跳转不同页面
 function tiaozhuan(i){
@@ -270,17 +206,15 @@ $('#akeshen').click(function(){
 	document.getElementById("yishen").style.color="black";
 	var table = document.getElementById("table");  
    rowscolor(table);
-	
 });
 $('#ayishen').click(function(){
 	document.getElementById("keshen").style.color="black";
 	document.getElementById("yishenimage").src="/ts/image/u7733.png";
 	document.getElementById("keshenimage").src="/ts/image/u1131.png";
 	document.getElementById("yishen").style.color="LightSeaGreen";
-	selectdata(user_code,1);
+	/*selectdata(user_code,1);*/
 	var table = document.getElementById("ybmtable");  
    rowscolor(table);
-   
 });
 //加载完毕  显示第一个 tab active  显示隐藏
 $(function () {
@@ -387,7 +321,7 @@ function selectcreate(){
  	            $next.find("option").first().attr('selected', true)
  	            $("#" + opt.targets[nextIndex+1]).find("option").attr('selected', false)
  	            $("#" + opt.targets[nextIndex+1]).find("option").first().attr('selected', true)
- 	           selectdata(user_code,1);
+ 	           listPage.prototype._fenye();
  	        });
  	    }
  	    var $this = $("#gangwei");
@@ -507,7 +441,7 @@ function selectcreate(){
 	 param["bmid"]=bmid
 	 param["liyou"]=liyou;
 	 FireFly.doAct("TS_BMSH_NOPASS","yiyi",param);
-	 selectdata(user_code,1);
+	 fenye();
 }
  
  //报名项目列表调用(初始化后展示)
@@ -571,3 +505,335 @@ function selectcreate(){
      myForm.submit();
      document.body.removeChild(myForm);  // 提交后移除创建的form
  }
+ 
+
+ //分页+查询
+ var listPage = function () {
+     // 构建页码所需参数
+     this.showPageNum = 5; // 最多显示的页码
+     this.startNum = 1; // 中间页码的第一个页码
+     this.endNum = this.startNum; // 中间页码的最后一个页码
+ };
+  listPage.prototype.getListData = function (num) {
+	//每页条数
+		var select = document.getElementById("yema");
+		 var index = document.getElementById("yema").selectedIndex;
+		var myts = select.options[index].value;
+		var param={};
+     	param["user_code"]=user_code;
+     	param["nowpage"]=num;
+		param["shownum"]=myts;
+		param["where"]=sqlWhere;
+      return FireFly.doAct("TS_BMLB_BM","getSelectedData",param);
+//      debugger;
+  };
+  //全局变量  sql查询条件(页面输入的搜索条件)
+  var sqlWhere= "";
+ // 创建页面显示数据的主体
+  listPage.prototype._bldBody = function (num) {
+      var listData = this.getListData(num);
+      this._lPage = listData._PAGE_;
+      this.bldTable(listData);
+      this.bldPage();
+      var listPage=this;
+    //查询条件按钮（设置查询考试名称和年份的条件）
+      this._fenye();
+  };
+  listPage.prototype._fenye=function(){
+	  var jb = document.getElementById("jb");
+	  var indexjb = jb.selectedIndex;
+	  var jbvalue = jb.options[indexjb].value;
+	  //第一个下拉框值
+	  var type1 =  document.getElementById("gangwei");
+	  var index1 = type1.selectedIndex;
+	  var  value1 = type1.options[index1].value;
+	  //第二个下拉框值
+	  var type2 =  document.getElementById("xulie");
+	  var index2 = type2.selectedIndex;
+	  var  value2 = type2.options[index2].value;
+	  //第三个下拉框值
+	  var type3 =  document.getElementById("mokuai");
+	  var index3 = type3.selectedIndex;
+	  var  value3 = type3.options[index3].value;
+	  var param={};
+	  param["user_code"]=user_code;
+	  //每页条数
+	  var select = document.getElementById("yema");
+	  var index = document.getElementById("yema").selectedIndex;
+	  var myts = select.options[index].value;
+	  //重新计算 页码
+	  param["nowpage"]=1;
+	  param["shownum"]=myts;
+	  if(value1=="" && jbvalue=="全部"){
+		  param["where"]="";
+	  }else if(value1=="" && jbvalue!=""){
+		  param["where"] = "AND BM_TYPE="+"'"+jbvalue+"'";
+	  }
+	  else if(value1!="" && value2=="" && jbvalue!="全部"){
+		  
+		  param["where"]="AND BM_LB="+"'"+value1+"' "+"AND BM_TYPE="+"'"+jbvalue+"'";
+		  
+	  }else if(value1!="" && value2=="" && jbvalue=="全部"){
+		  param["where"] = "AND BM_LB="+"'"+value1+"'";
+	  }else if(value1!="" && value2!="" && value3!="" && jbvalue=="全部"){
+		  param["where"]="AND BM_LB="+"'"+value1+"' "+"AND BM_XL="+"'"+value2+"' "+"AND BM_MK="+"'"+value3+"'";
+	  }else if(value1!="" && value2!="" && value3!="" && jbvalue!="全部"){
+		  param["where"]="AND BM_LB="+"'"+value1+"' "+"AND BM_XL="+"'"+value2+"' "+"AND BM_MK="+"'"+value3+"' "+"AND BM_TYPE="+"'"+jbvalue+"'";
+	  }else if(value1!="" && value2!="" && value3=="" && jbvalue!="全部"){
+		  param["where"]="AND BM_LB="+"'"+value1+"' "+"AND BM_XL="+"'"+value2+"' "+"AND BM_TYPE="+"'"+jbvalue+"'";
+	  }else if(value1!="" && value2!="" && value3=="" && jbvalue=="全部"){
+		  param["where"]="AND BM_LB="+"'"+value1+"' "+"AND BM_XL="+"'"+value2+"'";
+	  }
+	  
+	  /*sqlWhere= param["where"];*/
+	  //获取到查询后的数据
+	  var searchResult =  FireFly.doAct("TS_BMLB_BM","getSelectedData",param);;
+	  //将数据填入页面
+	  this._lPage = searchResult._PAGE_;
+	  this.bldTable(searchResult);
+	  this.bldPage();
+	 
+	  var listPage=this;
+	  function trimAll(str) {return str.replace(/\s+/g, "");}
+  };
+  
+/*  跳转到指定页*/
+  listPage.prototype.gotoPage = function (num) {
+ 	 
+      this._bldBody(num);
+  };
+/*  上一页*/
+  listPage.prototype.prePage = function() {
+      var prePage = parseInt(this._lPage.NOWPAGE) - 1;
+      var nowPage = "" + ((prePage > 0) ? prePage:1);
+      this.gotoPage(nowPage);
+  };
+ /* 下一页*/
+  listPage.prototype.nextPage = function() {
+	  debugger;
+      var nextPage = parseInt(this._lPage.NOWPAGE) + 1;
+      var pages = parseInt(this._lPage.PAGES);
+      var nowPage = "" + ((nextPage > pages) ? pages:nextPage);
+      this.gotoPage(nowPage);
+//      debugger;
+  };
+ /* 首页*/
+  listPage.prototype.firstPage = function() {
+      this.gotoPage(1);
+  };
+  /*末页*/
+  listPage.prototype.lastPage = function() {
+      this.gotoPage(this._lPage.PAGES);
+  };
+  listPage.prototype.bldTable = function (listData) {
+	  $("#ybmtable tbody").html("");
+	  var data = listData.list;
+	  var pageEntity=JSON.parse(data);
+	  var first = listData.first;
+	  for(var i=0;i<pageEntity.length;i++){
+		  var firint = parseInt(first);
+  		 var BM_TYPES = pageEntity[i].BM_TYPE;
+  		 var BM_TYPE="";
+  		 if(BM_TYPES=="1"){
+  			BM_TYPE="初级";
+  		 }else if(BM_TYPES=="2"){
+  			 BM_TYPE="中级";
+  		 }else if(BM_TYPES=="3"){
+  			 BM_TYPE="高级";
+  		 }
+			var BM_TITLE = pageEntity[i].BM_TITLE;
+			var BM_XL = pageEntity[i].BM_XL;
+			var BM_MK = pageEntity[i].BM_MK;
+			var BM_LB = pageEntity[i].BM_LB;
+		    var BM_STATE = pageEntity[i].BM_STATE;
+			var BM_STARTDATE = pageEntity[i].BM_STARTDATE;
+			var BM_ENDDATE = pageEntity[i].BM_ENDDATE;
+		    var BM_ID =  pageEntity[i].BM_ID;
+		    firint = firint+i;
+  		 //资格非资格
+		    var type = "";
+		    var leixng = "";
+		    if(BM_LB==""){
+		    	type="非资格";
+		    	leixng=BM_TITLE;
+		    }else{
+		    	type="资格";
+		    	var leixng = BM_TITLE+": "+BM_LB+"-"+BM_XL+"-"+BM_MK+"-"+BM_TYPE; 
+		    }
+		    var yiyistate = pageEntity[i].BM_YIYI_STATE;
+		    var sh_state = pageEntity[i].BM_SH_STATE;
+		    var sh_state_str = "审核通过";
+		    if(sh_state==0){
+		    	//审核中
+		    	  sh_state_str = "审核中"
+		    	}else if(sh_state==2||sh_state==3){
+		    		sh_state_str="审核未通过"
+		    	}
+  		//为table重新appendtr
+		    //已提交异议  
+		    if(yiyistate==1){
+		    	$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td icode="BM_OPTIONS" style="text-align: center"><a href="#" onclick="chakan('+i+')" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议详情</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    	
+		    }else{
+		    	//没有提交异议  且没有撤销
+		    	if(pageEntity[i].BM_STATE==1){
+		    		//判断审核状态
+		    		//审核未通过
+		    		if(sh_state==2){
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td  style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    		}else if(sh_state==1){
+		    			//审核通过 没有异议  没有撤销
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    		}else if(sh_state==0){
+		    			//待审核
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    		}else{
+		    			//审核未通过  没有手动审核
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    		}
+		    	}else{
+		    		$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">审核中</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">提交审核</td><td style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a style="color:red" id="chexiao">已撤销</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');	
+		    	}
+		    }
+  	  
+  	  }
+  	
+  }; 
+ /* 添加分页展示*/
+  listPage.prototype.bldPage = function () {
+      this._buildPageFlag = true;
+      var _self = this;
+      this._page = jQuery(".rhGrid-page");
+      this._page.html('');
+      //判断是否构建分页
+      if (this._buildPageFlag === "false" || this._buildPageFlag === false) {
+          this._page.addClass("rhGrid-page-none");
+      } else if (this._lPage.PAGES === null) {//没有总条数的情况
+          if (this._lPage.NOWPAGE > 1) {//上一页 {"ALLNUM":"1","SHOWNUM":"1000","NOWPAGE":"1","PAGES":"1"}
+// 		this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
+              this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
+                  _self.prePage();
+              }));
+          } else {
+// 		this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
+              this._page.append("<span class='disabled ui-corner-4'><</span>");
+          }
+          this._page.append("<span class='current ui-corner-4'>" + this._lPage.NOWPAGE + "</span>");	//当前页
+          if (this._lData.length === this._lPage.SHOWNUM) {//下一页
+// 		this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
+              this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+                  _self.nextPage();
+              }));
+          } else {
+// 		this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
+              this._page.append("<span class='disabled ui-corner-4'>></span>");
+          }
+      } else if (!jQuery.isEmptyObject(this._lPage)) {
+          // 当前页码
+          var currentPageNum = parseInt(this._lPage.NOWPAGE);
+          // 总页数
+          var sumPage = parseInt(this._lPage.PAGES);
+
+          if (this.startNum + this.showPageNum < sumPage) {
+              this.endNum = this.startNum + this.showPageNum
+          } else {
+              this.endNum = sumPage;
+          }
+
+          // 总条数
+          var allNum = parseInt(this._lPage.ALLNUM);
+          // 显示上一页
+          if (currentPageNum !== 1) {
+// 		this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
+              this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
+                  _self.prePage();
+              }));
+          } else {
+// 		this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
+              this._page.append("<span class='disabled ui-corner-4'><</span>");
+          }
+          // 移动页码
+          if (currentPageNum > this.startNum + Math.floor((this.endNum - this.startNum) / 2)) {// 如果点击了后面的页码，则后移
+              if (currentPageNum === sumPage) {// 点击了最后一页
+                  this.endNum = sumPage;
+
+                  if (this.endNum - this.showPageNum > 0) {
+                      this.startNum = this.endNum - this.showPageNum;
+                  } else {
+                      this.startNum = 1;
+                  }
+              } else {
+                  if (currentPageNum > this.showPageNum) {
+                      this.endNum = currentPageNum + 1;
+                      this.startNum = currentPageNum - this.showPageNum + 1;
+                  }
+              }
+          } else {// 否则前移
+              if (currentPageNum === 1) {// 点击了第一页
+                  this.startNum = 1;
+              } else {
+                  this.startNum = currentPageNum - 1;
+              }
+              if (this.startNum + this.showPageNum < sumPage) {
+                  this.endNum = this.startNum + this.showPageNum;
+              } else {
+                  this.endNum = sumPage;
+              }
+          }
+          // 显示首页
+          if (this.startNum !== 1) {
+              this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>1</a>").click(function () {
+                  _self.gotoPage(parseInt(jQuery(this).html()));
+              })).append("...");
+          }
+          // 如果总页数小于本页显示的最大页码
+          if (sumPage < this.endNum) {
+              this.endNum = sumPage;
+          }
+          // 显示中间页码
+          for (var i = this.startNum; i <= this.endNum; i++) {
+              if (i === currentPageNum) {// 构建当前页
+                  this._page.append("<span class='current ui-corner-4'>" + i + "</span>");
+              } else {
+                  this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + i + "</a>").click(function () {
+                      _self.gotoPage(parseInt(jQuery(this).html()));
+                  }));
+              }
+          }
+          // 显示尾页
+          if (sumPage > this.endNum) {
+              this._page.append("...").append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + sumPage + "</a>").click(function () {
+                  _self.lastPage();
+              }));
+          }
+          // 显示下一页
+          if (currentPageNum !== sumPage) {
+// 		this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
+              this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+                  _self.nextPage();
+              }));
+          } else {
+// 		this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
+              this._page.append("<span class='disabled ui-corner-4'>></span>");
+          }
+          // 显示跳转到指定页码
+          if (sumPage > 6) {
+              this._page.append("<input class='toPageNum ui-corner-4' type='text' value=''/>").append(jQuery("<input class='toPageBtn' type='button' value='GO' />").click(function () {
+                  try {
+                      var val = parseInt(jQuery(this).prev().val());
+                      if (val >= 1 && val <= sumPage) {
+                          _self.gotoPage(val);
+                      }
+                  } catch (e) {
+                      // 页码转换异常，忽略
+                  }
+              }));
+          }
+          //总条数显示
+// 	jQuery("<span class='allNum'></span>").text("共" + allNum + "条").appendTo(this._page);
+          jQuery("<span class='allNum'></span>").text(Language.transArr("rh_ui_grid_L1", [allNum])).appendTo(this._page);
+      }
+      return this._page;
+  };
+  //默认跳转到第一页
+  new listPage().gotoPage(1);

@@ -13,6 +13,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.CommonServ;
+import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ServDao;
 /**
  * 与项目一对一的报名管理 管理报名数据
@@ -31,6 +32,9 @@ public class BmServ extends CommonServ {
 		String xmid = paramBean.getStr("xmid");
 		String where1 = "AND XM_ID="+"'"+xmid+"'";
 		List<Bean> listbean = ServDao.finds("TS_XMGL_BMGL",where1);
+		if(listbean.size()==0){
+			return new OutBean().setOk("空项目");
+		}
 		Bean bmbean = listbean.get(0);
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
 		String startTime = bmbean.getStr("BM_START");

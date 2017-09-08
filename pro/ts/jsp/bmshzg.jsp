@@ -40,6 +40,13 @@
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 <body class="hold-transition skin-black sidebar-mini">
 
+<%
+
+if(userBean == null) {
+			 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
+			 RequestUtils.sendDisp(request, response, loginUrl);}
+			 String xmid = request.getParameter("zgtz");
+			 %>
 <style>
 	tr{cursor: pointer;}
 
@@ -50,8 +57,6 @@
     left: 0; 
     right: 0; 
     } 
-	
-
       #dshtable{
             margin: 100px auto;
             position: relative;
@@ -65,7 +70,6 @@
      #box{position:absolute;display:none;opacity:0.9;background:#fff;text-align: center;top:0;}
     </style>
 
-<% String xmid = request.getParameter("zgtz");%>
 	<div style="padding: 10px">
 		<a href="index_qt.jsp"><image style="padding-bottom:10px"
 				src="/ts/image/u1155.png" id="shouye"></image></a> <span
@@ -115,7 +119,7 @@
 						<td style="width:30%;text-align:center">人力资源编码&nbsp;&nbsp;<input  style="height:30px;width:50%" id="rlzybm1" type="text"></input></td>
 						
 				        
-				        <td style="width:12%;text-align:left;"><button class ="btn" style="color:white;height:30px;width:35%;background:DarkTurquoise" onclick="xzcu(1)"id = "chaxun">查询</button></td>
+				        <td style="width:12%;text-align:left;"><button id="check1" class ="btn" style="color:white;height:30px;width:35%;background:DarkTurquoise" onclick="xzcu(1)"id = "chaxun">查询</button></td>
 					</tr>
 				</tbody>
 			</table>
@@ -152,9 +156,13 @@
 		<div id="fenyediv1" style="position:absolute;right:5%;bottom:-20;">
 			<table class="row">
 			<tr>
-				<td><ul id="fenyeu1" class="pagination">
-			          <li><a href="#">&laquo;</a><li ><a  href="#">&raquo;</a></li>
-			        </ul>
+				<td><!-- 分页展示 -->
+					<div class="rhGrid-page">
+		            <span class="disabled ui-corner-4">上一页</span>
+		            <span class="current ui-corner-4">1</span>
+		            <span class="disabled ui-corner-4">下一页</span>
+		            <span class="allNum">共15条</span>
+		            </div>
 			    </td>
 			    <td style="width:5%"></td>
 			    <td><select id = "select1" onchange="fenyeselect(1)">
@@ -194,7 +202,7 @@
 				            <option value="已结束">已结束</option>
 				            </select>
 				        </td>
-				        <td style="width:8%;text-align:left"><button class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(2)"id = "chaxun">查询</button></td>
+				        <td style="width:8%;text-align:left"><button id="check2" class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(2)"id = "chaxun">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
@@ -218,9 +226,13 @@
 		<div id="fenyediv2" style="position:absolute;right:5%;bottom:-20;">
 			<table class="row">
 			<tr>
-				<td><ul id="fenyeu2" class="pagination">
-			          <li><a href="#">&laquo;</a><li ><a  href="#">&raquo;</a></li>
-			        </ul>
+				<td><!-- 分页展示 -->
+					<div class="rhGrid-page">
+		            <span class="disabled ui-corner-4">上一页</span>
+		            <span class="current ui-corner-4">1</span>
+		            <span class="disabled ui-corner-4">下一页</span>
+		            <span class="allNum">共15条</span>
+		            </div>
 			    </td>
 			    <td style="width:5%"></td>
 			    <td><select id = "select2" onchange="fenyeselect(2)">
@@ -259,7 +271,7 @@
 				            <option value="已结束">已结束</option>
 				            </select>
 				        </td>
-				        <td style="width:8%;text-align:left"><button class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(3)"id = "chaxun">查询</button></td>
+				        <td style="width:8%;text-align:left"><button id="check3" class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(3)"id = "chaxun">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
@@ -282,9 +294,13 @@
 		<div id="fenyediv3" style="position:absolute;right:5%;bottom:-20;">
 			<table class="row">
 			<tr>
-				<td><ul id="fenyeu3" class="pagination">
-			          <li><a href="#">&laquo;</a><li ><a  href="#">&raquo;</a></li>
-			        </ul>
+				<td>	<!-- 分页展示 -->
+					<div class="rhGrid-page">
+		            <span class="disabled ui-corner-4">上一页</span>
+		            <span class="current ui-corner-4">1</span>
+		            <span class="disabled ui-corner-4">下一页</span>
+		            <span class="allNum">共15条</span>
+		            </div>
 			    </td>
 			    <td style="width:5%"></td>
 			    <td><select id = "select3" onchange="fenyeselect(3)">
@@ -314,9 +330,9 @@
 				<div>
 				<table style="height:125px">
 				<tr style="height:25%">
-				<td style="text-align:right;width:20%">审核人姓名</td><td style="width:5%"></td><td><input style="height:30px" type="text" value="<%=userBean.getStr("USER_NAME") %>" name="shren"/></td>
+				<td style="text-align:right;width:20%">审核人姓名</td><td style="width:5%"></td><td><input style="height:30px" type="text" value="<%if(userBean!=null)userBean.getStr("USER_NAME"); %>" name="shren"/></td>
 				<td style="width:3%"></td>
-				<td style="text-align:right">审核人登录名</td><td style="width:5%"></td><td><input style="height:30px" type="text" value="<%=userBean.getStr("USER_LOGIN_NAME") %>" name="shdlming"/></td>
+				<td style="text-align:right">审核人登录名</td><td style="width:5%"></td><td><input style="height:30px" type="text" value="<%if(userBean!=null)userBean.getStr("USER_LOGIN_NAME"); %>" name="shdlming"/></td>
 				</tr>
 				<tr style="height:25%">
 				<td style="text-align:right">审核状态</td><td style="width:5%"></td><td><label><input style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1" checked>审核通过</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -505,7 +521,7 @@
 	<script>
 	var jq = $.noConflict(true);
 	</script>
-	<script src="<%=CONTEXT_PATH%>/ts/js/shenhe.js"></script>
+	 <script src="<%=CONTEXT_PATH%>/ts/js/shenhe.js"></script>
 	 <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>	 

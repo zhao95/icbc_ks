@@ -40,30 +40,11 @@
 	<style>.b table tr{height:30px;}</style>
 	<style>.zgks table td{padding-left: 5px;}</style>
 	<% 
-		//获取项目id
-		String bmid = request.getParameter("bmid4");
-		Bean bmbean = ServDao.find("TS_BMLB_BM",bmid);
-		if(bmbean.isEmpty()){
-			return;
-		}
-		String xm_id = bmbean.getStr("XM_ID");
-		Bean xmbean=ServDao.find("TS_XMGL", xm_id);
-		if(xmbean.isEmpty()){return;}
-		String xm_name = xmbean.getStr("XM_NAME");
-		//获取项目id
-		String where1 = "AND XM_ID="+"'"+xm_id+"'";
-		List<Bean> bmglList = ServDao.finds("TS_XMGL_BMGL", where1);
-		if(bmglList.size()==0){
-			return;
-		}
-		String bm_id = bmglList.get(0).getStr("BM_ID");
-		String bm_ksxz = bmglList.get(0).getStr("BM_KSXZ");
-		String bm_start = bmglList.get(0).getStr("BM_START");
-		String bm_end = bmglList.get(0).getStr("BM_END");
-		String bm_name = bmglList.get(0).getStr("BM_NAME");
-		//获取类型列表    
-		String where2 = "AND BM_ID="+"'"+bm_id+"'";
-		List<Bean> zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
+if(userBean == null) {
+			 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
+			 RequestUtils.sendDisp(request, response, loginUrl);
+			 }else{
+		 String bmid = request.getParameter("bmid4");
 		//获取用户编码
 		String user_code = userBean.getStr("USER_WORK_NUM");
 		//获取用户名称
@@ -99,7 +80,7 @@
        		<div style="background: white;width: 90%;text-align: center">
        		<table  style="height: 50px;width: 90%;">
        			<tr>
-       				<td><span style="font-size: 25px;color: #00C2C2;"><%=xm_name%></span></td>
+       				<td><span id="xmname" style="font-size: 25px;color: #00C2C2;"></span></td>
        			</tr>
        		</table>
        		</div>
@@ -107,8 +88,8 @@
        		<table  align="center" style="width: 90%;">
        			<tr>
        				<td colspan="4" height="120px"><p style="font-size: 15px;color:red;">报考须知，请仔细阅读！</p>
-       				<p style="color: red;"> 报名时间：<%=bm_start%>~~<%=bm_end %></p>
-       				<p style="color: red;"> <%=bm_ksxz%></p></td>
+       				<p style="color: red;" id="bmtime"> </p>
+       				<p style="color: red;" id="ksxzs"></p></td>
        			</tr>
        		</table>
        		<table  align="center" style="width: 90%;background-color: #fed1d1;">
@@ -160,66 +141,18 @@
        					<div style="padding-top: 10px;text-align: left;width:90%;"><span style="color: #ff0000">★ 已报名的考试</span>
        					<span style="color: #fdb64f;">(提示：)</span></div>
        					<table border="1" align="center" style="width: 90%;" id="tableid">
+       					<thead>
        						<tr style="background-color: #ffbdbd;">
 	       						<td width="10%">岗位类别</td>
        							<td width="15%">序列</td>
        							<td width="27%">模块</td>
        							<td width="10%">级别</td>
-       							<td width="20%">验证</td>
        							<td width="15%">验证结果</td>
        						</tr>
-	      						<% 
-	      						String lbname ="";
-	      						 String xlname ="";
-	      						 String mkname = "";
-	      						 String jb = "";
-	      						 String shstate = "";
-	      						 String cxstate = "";
-	      						  lbname = bmbean.getStr("BM_LB");
-	      						 xlname= bmbean.getStr("BM_XL");
-	      						 mkname = bmbean.getStr("BM_MK");
-	      						 String jibietype = bmbean.getStr("BM_TYPE");
-	      						 if("1".equals(jibietype)){
-	      							 jb="初级";
-	      						 }else if("2".equals(jibietype)){
-	      							 jb="中级";
-	      						 }else if("3".equals(jibietype)){
-	      							 jb="高级";
-	      						 }
-	      						 
-	      						 int bmshstate = bmbean.getInt("BM_SH_STATE");
-	      						 if(bmshstate==1){
-	      							 shstate = "恭喜您！审核已通过，请及时请假参加考试";
-	      						 }else if(bmshstate==3){
-	      							 shstate="不好意思！审核未通过，如有需要请及时上诉";
-	      						 }else if(bmshstate==0){
-	      							 shstate="已提交上诉申请，请耐心等待......";
-	      						 }else if(bmshstate==2){
-	      							 shstate="不好意思！审核未通过，您未获得考试资格";
-	      						 }
-	      						 String chexiao = bmbean.getStr("BM_STATE");
-	      						 if("2".equals(chexiao)){
-	      							 shstate = "您已取消此次考试，考试不能恢复，请等待下次考试......";
-	      						 }
-	      						 
-	      						%>
-       						<tr>
-	      						<td width="10%"><%=lbname%></td>
-	      						<td width="15%"><%=xlname%></td>
-	      						<td width="15%"><%=mkname%></td>
-	      						<td width="15%"><%=jb%></td>
-	      						<td width="20%">
-	      							<div>禁考规则</div>
-									<div>准入测试规则</div>
-									<div>本序列持证规则</div>
-									<div>多次考试规则</div>
-									<div>证书规则</div>
-									<div>岗位规则</div>
-	      						</td>
-	      						<td><%=shstate %></td>
+       							</thead>
+       							<tbody>
 	      						
-       						</tr>
-       						
+       						</tbody>
        					</table>
        					</div>
        					<div style="padding-top:20px;padding-bottom:20px">
@@ -227,9 +160,9 @@
        			</div>
        		</div>
        	</div>
+       	<input type="hidden" id="prbmid" value="<%=bmid %>">
        	</div>
-  	
-	
+	<script src="<%=CONTEXT_PATH%>/ts/js/zgchakan.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
@@ -245,18 +178,10 @@
 		window.history.go(-1);
 	}
 	$(function(){
-		var bm = "<%=lbname%>";
-		var ksmc = "<%=bm_ksxz%>";
-		if(bm==""){
-			//非资格
-			$("#tableid").html("");
-			$("#tableid").append("<thead><tr><th>考试名称</th><th>考试时间</th><th>审核结果</th></tr></thead>");
-			$("#tableid").append('<tbody><tr><td>'+ksmc+'</td><td></td><td>'+shstate+'</td></tr></tbody>')
-			
-		}
+		init();
+		
 	});
 	</script>
-	
-	
+	<% }%>
 </body>
 </html>

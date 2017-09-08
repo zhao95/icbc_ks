@@ -32,6 +32,7 @@ public class StayServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getUncheckList(Bean paramBean) {
+		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();
 		String servId = "TS_BMSH_STAY";
 		String NOWPAGE = paramBean.getStr("nowpage");
@@ -92,7 +93,14 @@ public class StayServ extends CommonServ {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		_PAGE_.set("ALLNUM", ALLNUM);
+		_PAGE_.set("NOWPAGE", NOWPAGE);
+		_PAGE_.set("PAGES", yeshu);
+		_PAGE_.set("SHOWNUM", SHOWNUM);
 		outBean.set("list", w.toString());
+		outBean.set("_PAGE_", _PAGE_);
+		outBean.set("first", chushi);
 		return outBean;
 	}
 
@@ -111,7 +119,7 @@ public class StayServ extends CommonServ {
 		String user_code = paramBean.getStr("user_code");
 		List<Bean> list = new ArrayList<Bean>();
 		if (list1.size() == 0) {
-			return new OutBean().setOk("数据为空");
+			return new OutBean();
 		}
 		for (Bean bean : list1) {
 			String other = bean.getStr("SH_OTHER");
@@ -138,7 +146,7 @@ public class StayServ extends CommonServ {
 		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
 		List<Bean> flowlist = outbean.getList("result");
 		for (Bean bean : flowlist) {
-			if (shenuser.equals(bean.getStr("S_USER"))) {
+			if (shenuser.equals(bean.getStr("SHR_USERCODE"))) {
 				levels = bean.getStr("NODE_STEPS");
 				nodeid = bean.getStr("NODE_NAME");
 			}
@@ -209,9 +217,9 @@ public class StayServ extends CommonServ {
 				for (int l = 0; l < list.size(); l++) {
 
 					if (l == list.size() - 1) {
-						allman += list.get(l).getStr("S_USER");
+						allman += list.get(l).getStr("SHR_USERCODE");
 					} else {
-						allman += list.get(l).getStr("S_USER") + ",";
+						allman += list.get(l).getStr("SHR_USERCODE") + ",";
 					}
 
 				}
@@ -389,14 +397,17 @@ public class StayServ extends CommonServ {
 			if (oneodeptcode1 != null) {
 				// 获取所有逗号分隔的字符串
 				codes = getusercodes(oneodeptcode1, s);
+				if("".equals("")){
+					codes=s;
+				}
 			}
 			String[] codesarr = codes.split(",");
 
-			int j = 6;
+			int j = 0;
 			for (int i = codesarr.length - 1; i >= 0; i--) {
 				// 最后一个 deptcodename
 				String evname = codesarr[i];
-				j--;
+				j++;
 				outBean.set("LEVEL" + j, evname);
 			}
 			String shuser = "";

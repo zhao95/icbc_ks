@@ -42,7 +42,7 @@ public class NoPassServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getUncheckList(Bean paramBean) {
-
+		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();
 		String servId = "TS_BMSH_NOPASS";
 		String NOWPAGE = paramBean.getStr("nowpage");
@@ -97,7 +97,16 @@ public class NoPassServ extends CommonServ {
 			e.printStackTrace();
 		}
 		outBean.set("list", w.toString());
+		_PAGE_.set("ALLNUM", ALLNUM);
+		_PAGE_.set("NOWPAGE", NOWPAGE);
+		_PAGE_.set("PAGES", yeshu);
+		_PAGE_.set("SHOWNUM", SHOWNUM);
+		outBean.set("list", w.toString());
+		outBean.set("_PAGE_", _PAGE_);
+		 int first=chushi;
+		 outBean.set("first", first);
 		return outBean;
+		
 	}
 
 	/**
@@ -122,7 +131,7 @@ public class NoPassServ extends CommonServ {
 		}
 
 		if (list.size() == 0) {
-			return new OutBean().setOk("nothing");
+			return new OutBean();
 		}
 
 		String shenuser = "";
@@ -143,7 +152,7 @@ public class NoPassServ extends CommonServ {
 		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
 		List<Bean> flowlist = outbean.getList("result");
 		for (Bean bean : flowlist) {
-			if (shenuser.equals(bean.getStr("S_USER"))) {
+			if (shenuser.equals(bean.getStr("SHR_USERCODE"))) {
 				levels = bean.getStr("NODE_STEPS");
 				nodeid = bean.getStr("NODE_NAME");
 			}
@@ -218,9 +227,9 @@ public class NoPassServ extends CommonServ {
 
 						if (l == list.size() - 1) {
 
-							allman += list.get(l).getStr("S_USER");
+							allman += list.get(l).getStr("SHR_USERCODE");
 						} else {
-							allman += list.get(l).getStr("S_USER") + ",";
+							allman += list.get(l).getStr("SHR_USERCODE") + ",";
 						}
 
 					}
@@ -358,9 +367,9 @@ public class NoPassServ extends CommonServ {
 
 				if (l == list1.size() - 1) {
 
-					allman += list1.get(l).getStr("S_USER");
+					allman += list1.get(l).getStr("SHR_USERCODE");
 				} else {
-					allman += list1.get(l).getStr("S_USER") + ",";
+					allman += list1.get(l).getStr("SHR_USERCODE") + ",";
 				}
 
 			}
