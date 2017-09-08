@@ -17,7 +17,6 @@ import jxl.read.biff.BiffException;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -156,38 +155,24 @@ public class BmlbServ extends CommonServ {
 					JSONObject job = json.getJSONObject(i); // 遍历 jsonarray
 															// 数组，把每一个对象转成 json
 															// 对象
-					String kslb_code = (String) job.get("BM_LB");
-					String kslb_xl_code = (String) job.get("BM_XL");
-					String kslb_mk_code = (String) job.get("BM_MK");
+					String kslb_name = (String) job.get("BM_LB");
+					String kslb_xl = (String) job.get("BM_XL");
+					String kslb_mk = (String) job.get("BM_MK");
 					String kslb_type = (String) job.get("BM_TYPE");
 					String kslb_id = (String) job.get("ID");
-					String wherelbk ="";
-					if(!kslb_mk_code.equals("")){
-					 wherelbk = "AND KSLBK_CODE=" + "'" + kslb_code + "'"
-							+ " AND KSLBK_XL_CODE=" + "'" + kslb_xl_code + "'"
-							+ " AND KSLBK_MKCODE=" + "'" + kslb_mk_code + "'"
+					String wherelbk = "AND KSLBK_NAME=" + "'" + kslb_name + "'"
+							+ " AND KSLBK_XL=" + "'" + kslb_xl + "'"
+							+ " AND KSLBK_MK=" + "'" + kslb_mk + "'"
 							+ " AND KSLBK_TYPE=" + "'" + kslb_type + "'";
-					}if(kslb_mk_code.equals("")){
-						 wherelbk = "AND KSLBK_CODE=" + "'" + kslb_code + "'"
-									+ " AND KSLBK_XL_CODE=" + "'" + kslb_xl_code + "'"
-									+ " AND KSLBK_MK='无模块'"
-									+ " AND KSLBK_TYPE=" + "'" + kslb_type + "'";
-							}
-					List<Bean> lbkList = ServDao.finds("TS_XMGL_BM_KSLBK",wherelbk);
+					List<Bean> lbkList = ServDao.finds("TS_XMGL_BM_KSLBK",
+							wherelbk);
 					String kslbk_id = "";
-					String kslb_name="";
-					String kslb_xl="";
-					String kslb_mk="";
-					String kslb_type_name="";
 					if (lbkList != null && lbkList.size() > 0) {
 						kslbk_id = lbkList.get(0).getStr("KSLBK_ID");
-						kslb_name = lbkList.get(0).getStr("KSLBK_NAME");
-						kslb_xl = lbkList.get(0).getStr("KSLBK_XL");
-						kslb_mk = lbkList.get(0).getStr("KSLBK_MK");
-						kslb_type_name = lbkList.get(0).getStr("KSLBK_TYPE_NAME");
 					}
 					// 获取到考试名称
-					String back_All = kslb_name + "-" + kslb_xl + "-" + kslb_mk+ "-" + kslb_type;
+					String back_All = kslb_name + "-" + kslb_xl + "-" + kslb_mk
+							+ "-" + kslb_type;
 					JSONArray yzgzArg = (JSONArray) yzgzstrjson.get(kslb_id);
 					int flag = 0;
 					String ad_rule = "";
@@ -224,10 +209,6 @@ public class BmlbServ extends CommonServ {
 					beans.set("BM_XL", kslb_xl);
 					beans.set("BM_MK", kslb_mk);
 					beans.set("BM_TYPE", kslb_type);
-					beans.set("BM_LB_CODE", kslb_code);
-					beans.set("BM_XL_CODE", kslb_xl_code);
-					beans.set("BM_MK_CODE", kslb_mk_code);
-					beans.set("BM_TYPE_NAME", kslb_type_name);
 					beans.set("XM_ID", xm_id);
 					beans.set("BM_TITLE", xm_name);
 					beans.set("BM_STARTDATE", bm_start);
@@ -280,7 +261,8 @@ public class BmlbServ extends CommonServ {
 					param.set("xmId", xm_id);
 					param.set("flowName", 1);
 					param.set("shrUserCode", user_code);
-					OutBean out = ServMgr.act("TS_WFS_APPLY", "backFlow", param);
+					OutBean out = ServMgr
+							.act("TS_WFS_APPLY", "backFlow", param);
 					List<Bean> blist = (List<Bean>) out.get("result");
 					String allman = "";
 					String node_name = "";
@@ -307,11 +289,6 @@ public class BmlbServ extends CommonServ {
 					shBean.set("BM_XL", kslb_xl);
 					shBean.set("BM_MK", kslb_mk);
 					shBean.set("BM_TYPE", kslb_type);
-					shBean.set("BM_LB_CODE", kslb_code);
-					shBean.set("BM_XL_CODE", kslb_xl_code);
-					shBean.set("BM_MK_CODE", kslb_mk_code);
-					shBean.set("BM_TYPE_NAME"
-							+ "", kslb_type_name);
 					shBean.set("SH_NODE", node_name);// 目前审核节点
 					shBean.set("SH_USER", allman);// 当前办理人
 					shBean.set("SH_OTHER", allman);// 其他办理人
@@ -348,19 +325,12 @@ public class BmlbServ extends CommonServ {
 
 	public Bean getMkvalue(Bean paramBean) {
 		String MK = paramBean.getStr("MK");
-		String XL = paramBean.getStr("xlname");
-		String LB = paramBean.getStr("lbname");
+		String XL = paramBean.getStr("pt_sequnce");
+		String LB = paramBean.getStr("pt_type");
 		String XM_ID = paramBean.getStr("xm_id");
-		String wheremk="";
-		if(!MK.equals("")){
-		 wheremk = "AND KSLB_NAME=" + "'" + LB + "'" + " AND KSLB_XL="
-				+ "'" + XL + "'" + " AND KSLB_MK_CODE=" + "'" + MK + "'"
+		String wheremk = "AND KSLB_NAME=" + "'" + LB + "'" + " AND KSLB_XL="
+				+ "'" + XL + "'" + " AND KSLB_MK=" + "'" + MK + "'"
 				+ " AND XM_ID=" + "'" + XM_ID + "'";
-		}if(MK.equals("")){
-			wheremk = "AND KSLB_NAME=" + "'" + LB + "'" + " AND KSLB_XL="
-					+ "'" + XL + "'" + " AND KSLB_MKE='无模块'"
-					+ " AND XM_ID=" + "'" + XM_ID + "'";
-		}
 		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", wheremk);
 		String KSLB_TYPE = "";
 		if (list != null && list.size() > 0) {
@@ -501,6 +471,7 @@ public class BmlbServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getSelectedData(Bean paramBean) {
+		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();
 		String servId = "TS_BMLB_BM";
 		String NOWPAGE = paramBean.getStr("nowpage");
@@ -556,7 +527,14 @@ public class BmlbServ extends CommonServ {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		outBean.set("list", w.toString());
+		_PAGE_.set("ALLNUM", list.size());
+		_PAGE_.set("NOWPAGE", NOWPAGE);
+		_PAGE_.set("PAGES", yeshu);
+		outBean.set("list", w.toString());
+		outBean.set("_PAGE_", _PAGE_);
+		outBean.set("first", chushi);
 		return outBean;
 	}
 
@@ -885,7 +863,7 @@ public class BmlbServ extends CommonServ {
 	}
 
 	/**
-	 * 从excel文件中读取试卷信息，并保存
+	 * 从excel文件中读取审核数据，并保存
 	 *
 	 * @param paramBean
 	 *            paramBean
@@ -905,5 +883,30 @@ public class BmlbServ extends CommonServ {
 			}
 		}
 		return outBean.setCount(count).setMsg("添加成功").setOk();
+	}
+	/**
+	 * 点击查看 展示报名信息
+	 */
+	public OutBean getShowData(Bean paramBean){
+		OutBean out = new OutBean();
+		String bmid = paramBean.getStr("bmids");
+		Bean bmbean = ServDao.find("TS_BMLB_BM",bmid);
+		if(bmbean.isEmpty()){
+			return out.setError("此数据不存在");
+		}
+		String xm_id = bmbean.getStr("XM_ID");
+		Bean xmbean=ServDao.find("TS_XMGL", xm_id);
+		if(xmbean.isEmpty()){return out.setError("项目消失");}
+		//获取项目id
+		String where1 = "AND XM_ID="+"'"+xm_id+"'";
+		List<Bean> bmglList = ServDao.finds("TS_XMGL_BMGL", where1);
+		if(bmglList.size()==0){
+			return out.setError("报名信息不存在");
+		}
+		Bean bmglbean = bmglList.get(0);
+		out.set("bmglbean",bmglbean);
+		out.set("bmbean", bmbean);
+		out.set("xmname", xmbean.getStr("XM_NAME"));
+		return out;
 	}
 }
