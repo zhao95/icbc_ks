@@ -1,6 +1,6 @@
 var _viewer = this;
 //设置卡片只读
-if(_viewer.opts.readOnly){
+if(_viewer.opts.readOnly == "true"){
 	_viewer.readCard();
 }
 
