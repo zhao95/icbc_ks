@@ -489,7 +489,7 @@ function selectcreate(){
  //审核明细
  function formsubmit(obj){
 	 var bmid = document.getElementById("baomingid"+obj).innerHTML;
-	  doPost('bmshmx.jsp', {bmid: bmid});
+	  doPost('bmshmx.jsp', {bmidmx: bmid});
  }
  function chakan(obj){
 	 var bmid = document.getElementById("baomingid"+obj).innerHTML;

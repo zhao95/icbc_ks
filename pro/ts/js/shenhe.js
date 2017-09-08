@@ -426,7 +426,7 @@ function firall(){
 				//审核明细
 				function formsubmit(obj){
 					var bmids = obj.parentNode.id;
-					 doPost('bmshmx.jsp', {bmid: bmids});
+					 doPost('bmshmx.jsp', {bmidmx: bmids});
 				}
 				//导出
 				//定义一个公共变量  当进行条件查询时  将 数据ID放入数组中
@@ -489,7 +489,6 @@ function form2submit(obj){
 		param["bmid"]=bmid;
 	var result = FireFly.doAct("TS_BMLB_BM","getSingle",param);
 	var data = result.list;
-	alert(data.length);
 	if(data.length!=2){
 	$(obj).attr("data-target","#userbminfo");
 	var pageEntity = JSON.parse(data);
@@ -732,7 +731,8 @@ function closemot(){
 	 document.getElementById("shanchu").parentNode.parentNode.remove();
 }
 
-function doPost(to, data) {  // to:提交动作（action）,data:参数
+function doPost(to, data) {  
+	// to:提交动作（action）,data:参数
     var myForm = document.createElement("form");
     myForm.method = "post";
     myForm.action = to;

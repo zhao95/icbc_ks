@@ -66,11 +66,12 @@
 	</thead>
 	<tbody>
 	 <%
+	 String bmid = "";
 		if(userBean == null) {
 			 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
 			 RequestUtils.sendDisp(request, response, loginUrl);
 		  }else{
-	 String bmid = request.getParameter("bmid");
+	  bmid = request.getParameter("bmidmx");
 	 String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
 	 List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
 	 for(int i=0;i<list.size();i++){
@@ -97,6 +98,7 @@
 	</tbody>
 	</table>
 	<script type="text/javascript">
+	alert("<%=bmid%>");
 	 var rows = $("#table").find("tr");  
 	    for(i = 1; i < rows.length; i++){  
 	        if(i % 2 == 0){  

@@ -71,7 +71,7 @@ if(userBean == null) {
     </style>
 
 	<div style="padding: 10px">
-		<a href="index_qt.jsp"><image style="padding-bottom:10px"
+		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
 				src="/ts/image/u1155.png" id="shouye"></image></a> <span
 			style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;我的报名</span>
 	</div>
