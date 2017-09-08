@@ -16,8 +16,8 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 <!-- 获取后台数据 -->
-
-<%@ include file="/sy/base/view/inHeader.jsp"%>
+<%@ include file="/qt/jsp/header-logo.jsp"%> 
+<%@ include file="/sy/base/view/inHeader-icbc.jsp"%>
 	
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
@@ -43,20 +43,40 @@
 <%
 String username = "";
 String loginname = "";
-if(userBean == null) {
-			 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
-			 RequestUtils.sendDisp(request, response, loginUrl);}else{
+if(userBean != null) {
 				 username=userBean.getStr("USER_NAME");
 				 loginname=userBean.getStr("USER_LOGIN_NAME");
 			 }
 			 String xmid = request.getParameter("zgtz");
 			 %>
 <style>
-	tr{cursor: pointer;}
 
+	tr{cursor: pointer;}
+	#excleupload .modal-dialog{
+	position: absolute; 
+    top: 20%; 
+    bottom: 200px; 
+    left: 20%; 
+    right: 0; 
+	}
+	#excleupload .modal-footer{
+	position: absolute; 
+    top: 70%; 
+    bottom: 200px; 
+    left: 0; 
+    right: 0; 
+	}
+	
 	#paixu .modal-dialog { 
     position: absolute; 
-    top: 0px; 
+    top: 50px; 
+    bottom: 200px; 
+    left: 0; 
+    right: 0; 
+    } 
+    #userbminfo .modal-dialog { 
+    position: absolute; 
+    top: 50px; 
     bottom: 200px; 
     left: 0; 
     right: 0; 
@@ -319,7 +339,7 @@ if(userBean == null) {
 		</div>
 		</div>
 	</div>
-			<div class="modal fade" id="tiJiao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal fade" id="tiJiao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding-top:5%">
 		<div class="modal-dialog" style="width:50%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
@@ -455,7 +475,7 @@ if(userBean == null) {
 	</div>
 	<div class="modal fade" id="excleupload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
-			<div class="modal-content" style="width:400px;height:300px">
+			<div class="modal-content"  style="width:400px;height:300px">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 						&times;
@@ -463,16 +483,13 @@ if(userBean == null) {
 					<h4 class="modal-title">
 						请选择文件
 					</h4>
-					
 				</div>
 				<div style="padding-left:50px;padding-top:30px;color:red">请导入要上传的excel</div>
 				<div id="uploadfile" style="padding-left:50px;color:lightseagreen;font-size:20px"><form action="/file" name="formup" id="excleupload11" class="form form-horizontal"></form></div>
-				
-				<div class="modal-footer" style="padding-top:30px;text-align:center;">
+				<div class="modal-footer" style="position:fixed;text-align:center;width:400px;">
 					<button id="excelimp" type="button" class="btn btn-primary" style="padding-left:30px;height:40px;background:lightseagreen;width:80px">导入</button>
 					<button type="button" onclick = "closemot()" class="btn btn-default" style="height:40px;width:80px" data-dismiss="modal">取消</button>
 				</div>
-				
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
@@ -487,26 +504,27 @@ if(userBean == null) {
 					<h4 class="modal-title">
 						报名详细信息
 					</h4>
-					
 				</div>
 				<div style="padding-left:30px;padding-top:20px;">
-				<table style="width:750px;font-size:20px;color:lightseagreen">
-				<tr height="50px">
-				<td style="width:30%;text-align:right;">考试标题：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="ks_title"></td><td style="width:30%;text-align:right;"></td><td style="font-size:14px;color:red;text-align:left;width:40%" ></td>
+				<table style="width:650px;font-size:15px;color:black">
+				<thead>
+				<tr>
+				<td style="text-align:right;font-size:20px;vertical-align:bottom">考试标题：&nbsp;</td><td style="font-size:18px;color:red;width:40%" id="ks_title"></td>
+				</tr>
+				</thead>
+				<tr height="40px">
+				<td style="width:20%;text-align:right;vertical-align:bottom">报名人：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;height:20px;color:red;width:15%;border-bottom:solid 1px black;" id="bm_name"></td><td style="vertical-align:bottom;width:20%;text-align:right;">人力编码：&nbsp;</td><td style="border-bottom:solid 1px black;vertical-align:bottom;font-size:14px;color:red;text-align:left;width:50%" id="work_num"></td>
 				</tr>
 				<tr height="50px">
-				<td style="width:30%;text-align:right;">报名人：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="bm_name"></td><td style="width:30%;text-align:right;">人力编码：&nbsp;</td><td style="font-size:14px;color:red;text-align:left;width:40%" id="work_num"></td>
+				<td style="width:20%;text-align:right;vertical-align:bottom">性别：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:red;width:15%;border-bottom:solid 1px black;" id="gender"></td><td style="vertical-align:bottom;width:20%;text-align:right;">电话：&nbsp;</td><td style="border-bottom:solid 1px black;vertical-align:bottom;font-size:14px;color:red;text-align:left;width:50%" id="phone_num"></td>
 				</tr>
 				<tr height="50px">
-				<td style="width:30%;text-align:right;">性别：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="gender"></td><td style="width:30%;text-align:right;">电话：&nbsp;</td><td style="font-size:14px;color:red;text-align:left;width:40%" id="phone_num"></td>
-				</tr>
-				<tr height="50px">
-				<td style="width:30%;text-align:right;">报名时间：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="starttime"></td><td style="width:30%;text-align:right;">所属机构：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="belongto"></td>
+				<td style="width:20%;text-align:right;vertical-align:bottom">报名时间：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:red;width:15%;border-bottom:solid 1px black;" id="starttime"></td><td style="vertical-align:bottom;width:20%;text-align:right;">所属机构：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:red;width:50%;border-bottom:solid 1px black;" id="belongto"></td>
 				</tr>
 				</table>
 				</div>
-				<div class="modal-footer" style="text-align:center;height:100px">
-					<button type="button" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">关闭</button>
+				<div class="modal-footer" style="text-align:center;height:70px">
+					<button type="button" class="btn btn-default" style="height:40px;width:80px" data-dismiss="modal">关闭</button>
 				</div>
 				
 			</div><!-- /.modal-content -->

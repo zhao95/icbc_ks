@@ -15,7 +15,8 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 <!-- 获取后台数据 -->
-<%@ include file="/sy/base/view/inHeader.jsp"%>
+<%@ include file="../../qt/jsp/header-logo.jsp"%> 
+<%@ include file="/sy/base/view/inHeader-icbc.jsp"%>
 <%@ page import="com.rh.core.serv.ServDao"%>
 <%@ page import="com.rh.core.serv.ServMgr"%>
 <%@ page import="com.rh.ts.pvlg.mgr.GroupMgr"%>
@@ -41,18 +42,36 @@
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 <body class="hold-transition skin-black sidebar-mini">
-
-<%if(userBean == null) {
-	 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
-	 RequestUtils.sendDisp(request, response, loginUrl);} %>
+<style>
+	 .trcss{
+		width:30%;
+		text-align:right;
+		vertical-align:bottom;
+		font-size:14px;
+		color:black;
+	}
+	.secss{
+	font-size:14px;
+	color:red;
+	width:20%;
+	border-bottom:solid 1px black;
+	vertical-align:bottom;
+	}
+	
+	#bminfo .modal-dialog { 
+    position: absolute; 
+    top: 50px; 
+    bottom: 200px; 
+    left: 0; 
+    right: 0; 
+    } 
+</style>
 
 	<div class="" style="padding: 10px">
 		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
 				src="<%=CONTEXT_PATH%>/ts/image/u1155.png" id="shouye"></image></a> <span
 			style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;报名审核</span>
 	</div>
-
-
 	<div id="cuxian1"
 		style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 		<span style="margin-left: 50px; padding-top: 10px">报名审核</span>
@@ -134,23 +153,23 @@
 					</h4>
 					
 				</div>
-				<div style="padding-left:30px;padding-top:20px;">
-				<table style="width:650px;font-size:20px;color:lightseagreen">
+				<div style="padding-left:10px;">
+				<table id="xminfotable" style="width:650px;font-size:20px;color:lightseagreen">
 				<tr height="50px">
-				<td style="width:30%;text-align:right;">报名编号：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="bmcode"></td><td style="width:30%;text-align:right;">报名名称：&nbsp;</td><td style="font-size:14px;color:red;text-align:left;width:40%" id="bmname" ></td>
+				<td class="trcss">报名编号：&nbsp;</td><td class="secss" id="bmcode"></td><td class="trcss">报名名称：&nbsp;</td><td class="secss" id="bmname" ></td>
 				</tr>
 				<tr height="50px">
-				<td style="width:30%;text-align:right;">创建人：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="creator"></td><td style="width:30%;text-align:right;">组织单位：&nbsp;</td><td style="font-size:14px;color:red;text-align:left;width:40%" id="oragnize"></td>
+				<td class="trcss">创建人：&nbsp;</td><td  class="secss" id="creator"></td><td class="trcss">组织单位：&nbsp;</td><td class="secss" id="oragnize"></td>
 				</tr>
 				<tr height="50px">
-				<td style="width:30%;text-align:right;">报名开始时间：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="starttime"></td><td style="width:30%;text-align:right;">报名结束时间：&nbsp;</td><td style="font-size:14px;color:red;text-align:left;width:40%" id="endtime"></td>
+				<td class="trcss">报名开始时间：&nbsp;</td><td class="secss" id="starttime"></td><td class="trcss">报名结束时间：&nbsp;</td><td class="secss" id="endtime"></td>
 				</tr>
 				<tr height="50px">
-				<td style="width:30%;text-align:right;">状态：&nbsp;</td><td style="font-size:14px;color:red;width:20%" id="status"></td><td style="width:30%;text-align:right;"></td><td style="font-size:14px;color:red;text-align:left;width:40%" ></td>
+				<td class="trcss">状态：&nbsp;</td><td class="secss" id="status"></td><td class="trcss"></td><td style="font-size:14px;color:red;text-align:left;width:40%" ></td>
 				</tr>
 				</table>
 				</div>
-				<div style="padding-top:10px;width:200px;font-size:20px;text-align:center;color:lightseagreen">
+				<div style="padding-top:10px;width:200px;font-size:16px;text-align:center;color:lightseagreen">
 				描述：
 				</div>
 				<table style="width:700px">
@@ -158,7 +177,7 @@
 				<td style="width:15%"></td><td style="disabled:disabled;height:100px;vertical-align:top"><textarea id="describe" style="border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table >
-				<div style="padding-top:10px;width:200px;font-size:20px;text-align:center;color:lightseagreen">
+				<div style="padding-top:10px;width:200px;font-size:16px;text-align:center;color:lightseagreen">
 				考试须知：
 				</div>
 				<table style="width:700px">
@@ -201,24 +220,28 @@
 			document.getElementById("form1").submit();
 	}
 	function chakan(obj){
-		
-		//通过项目查找报名信息
+		var param={};
 		 var hid = "XM_ID"+obj;
 		var id = document.getElementById(hid).innerHTML;
-		var param={};
 		param["xmid"]=id;
+		//通过项目查找报名信息
+		var result1 = FireFly.doAct("TS_XMGL_BMGL","getBMState",param);
+		var data1 = result1.list;
+		var pageEntity1 = JSON.parse(data1);
+		var state1 = pageEntity1[0].STATE;
+		
 		var result = FireFly.doAct("TS_XMGL_BMGL","getXmInfo",param);
 		var data = result.list;
 		var pageEntity = JSON.parse(data);
 		$("#bmcode").text(pageEntity[0].BM_ID);
 		$("#bmname").text(pageEntity[0].BM_NAME);
 		$("#creator").text(pageEntity[0].BM_USER);
-		$("#oragnize").text(pageEntity[0].ODEPT);
+		$("#oragnize").text(pageEntity[0].BM_ODEPT);
 		$("#starttime").text(pageEntity[0].BM_START);
 		$("#endtime").text(pageEntity[0].BM_END);
 		$("#mustknow").text(pageEntity[0].BM_KSXZ);
 		$("#mustknow").attr("disabled","disabled");
-		$("#status").text(pageEntity[0].BM_STATE);
+		$("#status").text(state1);
 		$("#describe").text(pageEntity[0].BM_DESC);
 		$("#describe").attr("disabled","disabled");
 	}

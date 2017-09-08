@@ -1109,7 +1109,7 @@ global.Fn.InitUploadImage1 = function(container, bmid) {
 									.append(
 											'<div width:"100px" id='
 													+ s
-													+ '><li>&nbsp;&nbsp;<a style="font-size:13px" href="/file/'
+													+ '><li>&nbsp;&nbsp;<a style="font-size:13px" href="#'
 													+ s
 													+ '&nbsp;&nbsp;点击下载" id="shanchu" onclick="xiazai()">'
 													+ s

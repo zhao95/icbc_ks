@@ -486,7 +486,7 @@ public class PassServ extends CommonServ {
 			if (userBean1.isEmpty()) {
 				return new OutBean().setError("ERROR:user_code 为空");
 			} else {
-				shuser = userBean.getStr("USER_NAME");
+				shuser = userBean1.getStr("USER_NAME");
 			}
 
 			// 其它办理人

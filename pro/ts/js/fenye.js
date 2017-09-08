@@ -199,6 +199,15 @@ var listPage = function () {
 			}else{
 				state = "未开始";
 			}
+			/*
+			//进行中 已结束 下拉框 进行筛选
+			var zhuangtai = $("#zhuangtai").children('option:selected').val();
+			if(zhuangtai=="1"&&state!="报名审核"){
+				//进行中的项目
+				continue;
+			}else if(zhuangtai=="2"&&state!="已结束"){
+				continue
+			}*/
 			//添加一行隐藏的项目id
 			var xuhao = first+i;
  		//为table重新appendtr
@@ -351,3 +360,6 @@ var listPage = function () {
  };
  //默认跳转到第一页
  new listPage().gotoPage(1);
+ jq("#zhuangtai").change(function(){
+	 new listPage().gotoPage(1);
+});

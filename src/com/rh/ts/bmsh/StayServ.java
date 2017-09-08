@@ -116,12 +116,27 @@ public class StayServ extends CommonServ {
 		String servId = "TS_BMSH_STAY";
 		String where1 = paramBean.getStr("where");
 		List<Bean> list1 = ServDao.finds(servId, where1);
+		List<Bean> list2 = ServDao.finds("TS_BMSH_PASS", where1);
+		List<Bean> list3 = ServDao.finds("TS_BMSH_NOPASS", where1);
 		String user_code = paramBean.getStr("user_code");
 		List<Bean> list = new ArrayList<Bean>();
-		if (list1.size() == 0) {
+		if (list1.size() == 0&&list2.size() == 0&&list3.size() == 0) {
 			return new OutBean();
 		}
+		
 		for (Bean bean : list1) {
+			String other = bean.getStr("SH_OTHER");
+			if (other.contains(user_code)) {
+				list.add(bean);
+			}
+		}
+		for (Bean bean : list2) {
+			String other = bean.getStr("SH_OTHER");
+			if (other.contains(user_code)) {
+				list.add(bean);
+			}
+		}
+		for (Bean bean : list3) {
 			String other = bean.getStr("SH_OTHER");
 			if (other.contains(user_code)) {
 				list.add(bean);
@@ -137,18 +152,32 @@ public class StayServ extends CommonServ {
 		String nodeid = "";
 		String levels = "";
 		ParamBean parambean = new ParamBean();
-		String bmcode = list1.get(0).getStr("BM_CODE");
+		String bmcode = list.get(0).getStr("BM_CODE");
+		
 		parambean.set("examerUserCode", bmcode);
 		parambean.set("level", 0);
-		parambean.set("shrUserCode", shenuser);
+		parambean.set("shrUserCode", bmcode);
 		parambean.set("flowName", 1);
 		parambean.set("xmId", xmid);
 		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
 		List<Bean> flowlist = outbean.getList("result");
+		String  nodesteps  = "";
 		for (Bean bean : flowlist) {
+			 nodesteps = bean.getStr("NODE_STEPS");
+		}
+		for(int j=(Integer.parseInt(nodesteps));j>0;j--){
+			parambean.set("examerUserCode", bmcode);
+			parambean.set("level", j);
+			parambean.set("shrUserCode", bmcode);
+			parambean.set("flowName", 1);
+			parambean.set("xmId", xmid);
+			OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
+			List<Bean> flowlist1 = outbean1.getList("result");
+			for (Bean bean : flowlist1) {
 			if (shenuser.equals(bean.getStr("SHR_USERCODE"))) {
 				levels = bean.getStr("NODE_STEPS");
 				nodeid = bean.getStr("NODE_NAME");
+			}
 			}
 		}
 		// ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化
@@ -415,7 +444,7 @@ public class StayServ extends CommonServ {
 			if (userBean1.isEmpty()) {
 				return new OutBean().setError("ERROR:user_code 为空");
 			} else {
-				shuser = userBean.getStr("USER_NAME");
+				shuser = userBean1.getStr("USER_NAME");
 			}
 			// 当前办理人
 			outBean.set("SH_USER", shuser);

@@ -70,6 +70,7 @@ public class BmServ extends CommonServ {
 			e.printStackTrace();
 		}
 	       outBean.set("list",w.toString());
+	       outBean.set("nojson", list);
 	       return outBean;
 		
 	}

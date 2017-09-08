@@ -598,7 +598,7 @@ public class NoPassServ extends CommonServ {
 			if (userBean1.isEmpty()) {
 				return new OutBean().setError("ERROR:user_code 为空");
 			} else {
-				shuser = userBean.getStr("USER_NAME");
+				shuser = userBean1.getStr("USER_NAME");
 			}
 			// 当前办理人
 			outBean.set("SH_USER", shuser);
