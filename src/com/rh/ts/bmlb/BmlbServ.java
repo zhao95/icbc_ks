@@ -155,24 +155,38 @@ public class BmlbServ extends CommonServ {
 					JSONObject job = json.getJSONObject(i); // 遍历 jsonarray
 															// 数组，把每一个对象转成 json
 															// 对象
-					String kslb_name = (String) job.get("BM_LB");
-					String kslb_xl = (String) job.get("BM_XL");
-					String kslb_mk = (String) job.get("BM_MK");
+					String kslb_code = (String) job.get("BM_LB");
+					String kslb_xl_code = (String) job.get("BM_XL");
+					String kslb_mk_code = (String) job.get("BM_MK");
 					String kslb_type = (String) job.get("BM_TYPE");
 					String kslb_id = (String) job.get("ID");
-					String wherelbk = "AND KSLBK_NAME=" + "'" + kslb_name + "'"
-							+ " AND KSLBK_XL=" + "'" + kslb_xl + "'"
-							+ " AND KSLBK_MK=" + "'" + kslb_mk + "'"
+					String wherelbk ="";
+					if(!kslb_mk_code.equals("")){
+					 wherelbk = "AND KSLBK_CODE=" + "'" + kslb_code + "'"
+							+ " AND KSLBK_XL_CODE=" + "'" + kslb_xl_code + "'"
+							+ " AND KSLBK_MKCODE=" + "'" + kslb_mk_code + "'"
 							+ " AND KSLBK_TYPE=" + "'" + kslb_type + "'";
-					List<Bean> lbkList = ServDao.finds("TS_XMGL_BM_KSLBK",
-							wherelbk);
+					}if(kslb_mk_code.equals("")){
+						 wherelbk = "AND KSLBK_CODE=" + "'" + kslb_code + "'"
+									+ " AND KSLBK_XL_CODE=" + "'" + kslb_xl_code + "'"
+									+ " AND KSLBK_MK='无模块'"
+									+ " AND KSLBK_TYPE=" + "'" + kslb_type + "'";
+							}
+					List<Bean> lbkList = ServDao.finds("TS_XMGL_BM_KSLBK",wherelbk);
 					String kslbk_id = "";
+					String kslb_name="";
+					String kslb_xl="";
+					String kslb_mk="";
+					String kslb_type_name="";
 					if (lbkList != null && lbkList.size() > 0) {
 						kslbk_id = lbkList.get(0).getStr("KSLBK_ID");
+						kslb_name = lbkList.get(0).getStr("KSLBK_NAME");
+						kslb_xl = lbkList.get(0).getStr("KSLBK_XL");
+						kslb_mk = lbkList.get(0).getStr("KSLBK_MK");
+						kslb_type_name = lbkList.get(0).getStr("KSLBK_TYPE_NAME");
 					}
 					// 获取到考试名称
-					String back_All = kslb_name + "-" + kslb_xl + "-" + kslb_mk
-							+ "-" + kslb_type;
+					String back_All = kslb_name + "-" + kslb_xl + "-" + kslb_mk+ "-" + kslb_type;
 					JSONArray yzgzArg = (JSONArray) yzgzstrjson.get(kslb_id);
 					int flag = 0;
 					String ad_rule = "";
@@ -195,7 +209,7 @@ public class BmlbServ extends CommonServ {
 						// 验证通过
 						ad_result = "1";
 					}
-					// 1自动审核, 2人工审核, 3自动+人工审核
+					// 0无审核,1自动审核, 2人工审核, 3自动+人工审核
 					int count = XmglMgr.existSh(xm_id);
 					Bean beans = new Bean();
 					beans.set("BM_CODE", user_code);
@@ -209,6 +223,10 @@ public class BmlbServ extends CommonServ {
 					beans.set("BM_XL", kslb_xl);
 					beans.set("BM_MK", kslb_mk);
 					beans.set("BM_TYPE", kslb_type);
+					beans.set("BM_LB_CODE", kslb_code);
+					beans.set("BM_XL_CODE", kslb_xl_code);
+					beans.set("BM_MK_CODE", kslb_mk_code);
+					beans.set("BM_TYPE_NAME", kslb_type_name);
 					beans.set("XM_ID", xm_id);
 					beans.set("BM_TITLE", xm_name);
 					beans.set("BM_STARTDATE", bm_start);
@@ -239,7 +257,7 @@ public class BmlbServ extends CommonServ {
 					Bean bmbean = ServDao.create(servId, beans);
 					// 获取到报名主键id
 					String bm_id = bmbean.getStr("BM_ID");
-					// 验证信息
+					// 验证信息添加
 					Bean yzBean = new Bean();
 					yzBean.set("BM_ID", bm_id);
 					yzBean.set("AD_NAME", back_All);
@@ -248,6 +266,7 @@ public class BmlbServ extends CommonServ {
 					yzBean.set("AD_RESULT", ad_result);
 					yzBean.set("AD_UNAME", user_name);
 					ServDao.save("TS_BMSH_AUDIT", yzBean);
+					
 					// 添加公共表
 					Bean objBean = new Bean();
 					objBean.set("DATA_ID", xm_id);
@@ -255,24 +274,24 @@ public class BmlbServ extends CommonServ {
 					objBean.set("INT1", 0);
 					ServDao.save("TS_OBJECT", objBean);
 
+					//获取流程相关信息
 					ParamBean param = new ParamBean();
 					param.set("examerUserCode", user_code);
 					param.set("level", 0);
 					param.set("xmId", xm_id);
 					param.set("flowName", 1);
 					param.set("shrUserCode", user_code);
-					OutBean out = ServMgr
-							.act("TS_WFS_APPLY", "backFlow", param);
-					List<Bean> blist = (List<Bean>) out.get("result");
+					OutBean out = ServMgr.act("TS_WFS_APPLY", "backFlow", param);
+					List<Bean> blist =  out.getList("result");
 					String allman = "";
 					String node_name = "";
 					if (blist != null && blist.size() > 0) {
 						node_name = blist.get(0).getStr("NODE_NAME");
 						for (int l = 0; l < blist.size(); l++) {
 							if (l == 0) {
-								allman = blist.get(l).getStr("S_USER");
+								allman = blist.get(l).getStr("SHR_USERCODE");
 							} else {
-								allman += blist.get(l).getStr("S_USER") + ",";
+								allman += blist.get(l).getStr("SHR_USERCODE") + ",";
 							}
 
 						}
@@ -289,6 +308,10 @@ public class BmlbServ extends CommonServ {
 					shBean.set("BM_XL", kslb_xl);
 					shBean.set("BM_MK", kslb_mk);
 					shBean.set("BM_TYPE", kslb_type);
+					shBean.set("BM_LB_CODE", kslb_code);
+					shBean.set("BM_XL_CODE", kslb_xl_code);
+					shBean.set("BM_MK_CODE", kslb_mk_code);
+					shBean.set("BM_TYPE_NAME", kslb_type_name);
 					shBean.set("SH_NODE", node_name);// 目前审核节点
 					shBean.set("SH_USER", allman);// 当前办理人
 					shBean.set("SH_OTHER", allman);// 其他办理人
@@ -319,18 +342,32 @@ public class BmlbServ extends CommonServ {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
+		outBean.set("strresult","提交成功");
 		return outBean;
 	}
-
+	
+	
+	/**
+	 * 资格考试报名模块与等级的设置
+	 * 
+	 * @param paramBean
+	 * @return
+	 */
 	public Bean getMkvalue(Bean paramBean) {
 		String MK = paramBean.getStr("MK");
-		String XL = paramBean.getStr("pt_sequnce");
-		String LB = paramBean.getStr("pt_type");
+		String XL = paramBean.getStr("xlname");
+		String LB = paramBean.getStr("lbname");
 		String XM_ID = paramBean.getStr("xm_id");
-		String wheremk = "AND KSLB_NAME=" + "'" + LB + "'" + " AND KSLB_XL="
-				+ "'" + XL + "'" + " AND KSLB_MK=" + "'" + MK + "'"
+		String wheremk="";
+		if(!MK.equals("")){
+		 wheremk = "AND KSLB_NAME=" + "'" + LB + "'" + " AND KSLB_XL="
+				+ "'" + XL + "'" + " AND KSLB_MK_CODE=" + "'" + MK + "'"
 				+ " AND XM_ID=" + "'" + XM_ID + "'";
+		}if(MK.equals("")){
+			wheremk = "AND KSLB_NAME=" + "'" + LB + "'" + " AND KSLB_XL="
+					+ "'" + XL + "'" + " AND KSLB_MKE='无模块'"
+					+ " AND XM_ID=" + "'" + XM_ID + "'";
+		}
 		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", wheremk);
 		String KSLB_TYPE = "";
 		if (list != null && list.size() > 0) {
