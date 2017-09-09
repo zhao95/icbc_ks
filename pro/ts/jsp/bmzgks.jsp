@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <%@page import="com.rh.core.serv.ServDao"%>
 <%@page import="com.rh.core.org.mgr.UserMgr"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/qt/jsp/header-logo.jsp"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%
 	final String CONTEXT_PATH = request.getContextPath();
 %>
@@ -34,18 +36,40 @@
        folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
-	<style type="text/css">.a table tr{height:40px;padding-left: 10px;}</style>
-	<style type="text/css">.a table td{padding-left: 20px;}</style>
-	<style type="text/css">.b table tr{height:30px;}</style>
-	<style type="text/css">.zgks table td{padding-left: 5px;}</style>
+<style type="text/css">
+.a table tr {
+	height: 40px;
+	padding-left: 10px;
+}
+</style>
+<style type="text/css">
+.a table td {
+	padding-left: 20px;
+}
+</style>
+<style type="text/css">
+.b table tr {
+	height: 30px;
+}
+</style>
+<style type="text/css">
+.zgks table td {
+	padding-left: 5px;
+}
+</style>
 <!-- 遮罩层 -->
-	<style type="text/css">     
-    .mask {       
-            position: absolute; top: 0px; filter: alpha(opacity=60); background-color: #777;
-            z-index: 1000; left: 0px;     
-            opacity:0.5; -moz-opacity:0.5;     
-        }     
-	</style>  
+<style type="text/css">
+.mask {
+	position: absolute;
+	top: 0px;
+	filter: alpha(opacity = 60);
+	background-color: #777;
+	z-index: 1000;
+	left: 0px;
+	opacity: 0.5;
+	-moz-opacity: 0.5;
+}
+</style>
 <body class="hold-transition skin-black sidebar-mini">
 	<% 
 		//获取项目id
@@ -114,93 +138,96 @@
 		if(zgList!=null && zgList.size()>0){
 		  zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
 		}
-		
 		%>
-	<div style="padding-left: 90px;width: 90%;text-align: left;">
-			<img alt="中国工商银行" src="<%=CONTEXT_PATH%>/qt/img/u3148.png"> <img alt="考试系统"src="<%=CONTEXT_PATH%>/qt/img/u3376.png">
-	</div>
-	<div style="background: #dfdfdf;padding-top: 10px"align="center">
-       	<div id="" style="background: white;width: 90%;">
-       		<div style="background: white;width: 90%;text-align: center">
-       		<table  style="height: 100px;width: 90%;">
-       			<tr>
-       				<td><span style="font-size: 25px;color: #00C2C2;"><%=xm_name%></span></td>
-       			</tr>
-       		</table>
-       		</div>
-       	<div class="a">
-       		<table  align="center" style="width: 90%;">
-       			<tr>
-       				<td colspan="4" height="120px"><p style="font-size: 15px;color:red;">报考须知，请仔细阅读！</p>
-       				<p style="color: red;"> 报名时间：<%=bm_start%>~~<%=bm_end %></p>
-       				<p style="color: red;"><%=bm_ksxz%></p></td>
-       			</tr>
-       		</table>
-       		<table  align="center" style="width: 90%;background-color: #fed1d1;">
-       			<tr>
-       				<td ><span style="color: #ff0000;">！</span> 温馨提示：</td>
-       				<td height="50px" align="left">
-       				1.您当前在 <span style="color: #ff0000;"><%=odept_name%></span> ，将视您办公所在地统一安排考场。如果您发现下面的信息不符，请于借考申请开放期间提交借考申请！
-       				</td>
-       			</tr>
-       			<tr>
-       				<td></td>
-       				<td height="50px" align="left">
-       				2. 您在本考试周已报名：0 个，还可报名： 3 个（本序列考试：1，跨序列考试：2）。如需重新报名，应先取消已有报名，然后再提交新的报名。
-       				</td>
-       			</tr>
-       		</table>
-       		<div style="padding-top: 10px;">
-       		<table border="1" align="center" style="width: 90%;padding-top: 10px;">
-       			<tr style="background-color: #f2f2f2;">
-       				<td colspan="6">个人基本信息</td>
-       			</tr>
-       			<tr>
-       				<td width="16.5%">人力资源编码</td>
-       				<td width="16.5%" ><%=user_code %></td>
-       				<td width="16.5%">姓名</td>
-       				<td width="16.5%"><%=user_name%></td>
-       				<td width="16.5%">性别</td>
-       				<td width="17.5%">
-       				<% if (user_sex == "1") { %>女<% } else { %>男<% } %>
-       				</td>
-       			</tr>
-       			<tr style="background-color: #f7fdff;">
-       				<td >所属机构</td>
-       				<td colspan="5"><%=odept_name %></td>
-       			</tr>
-       			<tr>
-       				<td width="16.5%">岗位类别</td>
-       				<td width="16.5%" ><%=STATION_TYPE%></td>
-       				<td width="16.5%">岗位序列</td>
-       				<td width="16.5%"><%=STATION_NO%></td>
-       				<td width="16.5%">职务层级</td>
-       				<td width="17.5%"><%=DUTY_LEVEL%></td>
-       			</tr>
-       			<tr style="background-color: #f7fdff;">
-       				<td width="16.5%">入行时间</td>
-       				<td width="16.5%"><%=user_cmpy_date%></td>
-       				<td width="16.5%">办公电话</td>
-       				<td width="16.5%"><%=user_office_phone %></td>
-       				<td width="16.5%">手机号码(<span style="color:red;">融e联绑定的手机号</span>)</td>
-       				<td width="17.5%"><input type="text" id="user_mobile1" value=""></td>
-       			</tr>
-       		</table>
-       		</div>
-       		<div style="padding-top: 10px;">
-       					<div style="padding-top: 10px;text-align: left;width:90%;"><span style="color: #ff0000">★ 应报名的考试</span>
-       					<span style="color: #fdb64f;">(提示：如果应考序列包含模块，请在下方选择具体的模块)</span></div>
-       					<table border="1" align="center" style="width: 90%;" id="tableid">
-       						<tr style="background-color: #ffbdbd;">
-	       						<td width="3%"></td>
-	       						<td width="10%">岗位类别</td>
-       							<td width="15%">序列</td>
-       							<td width="27%">模块</td>
-       							<td width="10%">级别</td>
-       							<td width="20%">验证</td>
-       							<td width="15%">验证结果</td>
-       						</tr>
-	      						<% 
+	<div style="background: #dfdfdf; padding-top: 10px" align="center">
+		<div id="" style="background: white; width: 90%;">
+			<div style="background: white; width: 90%; text-align: center">
+				<table style="height: 100px; width: 90%;">
+					<tr>
+						<td><span style="font-size: 25px; color: #00C2C2;"><%=xm_name%></span></td>
+					</tr>
+				</table>
+			</div>
+			<div class="a">
+				<table align="center" style="width: 90%;">
+					<tr>
+						<td colspan="4" height="120px"><p
+								style="font-size: 15px; color: red;">报考须知，请仔细阅读！</p>
+							<p style="color: red;">
+								报名时间：<%=bm_start%>~~<%=bm_end %></p>
+							<p style="color: red;"><%=bm_ksxz%></p></td>
+					</tr>
+				</table>
+				<table align="center" style="width: 90%; background-color: #fed1d1;">
+					<tr>
+						<td><span style="color: #ff0000;">！</span> 温馨提示：</td>
+						<td height="50px" align="left">1.您当前在 <span
+							style="color: #ff0000;"><%=odept_name%></span>
+							，将视您办公所在地统一安排考场。如果您发现下面的信息不符，请于借考申请开放期间提交借考申请！
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td height="50px" align="left">2. 您在本考试周已报名：0 个，还可报名： 3
+							个（本序列考试：1，跨序列考试：2）。如需重新报名，应先取消已有报名，然后再提交新的报名。</td>
+					</tr>
+				</table>
+				<div style="padding-top: 10px;">
+					<table border="1" align="center"
+						style="width: 90%; padding-top: 10px;">
+						<tr style="background-color: #f2f2f2;">
+							<td colspan="6">个人基本信息</td>
+						</tr>
+						<tr>
+							<td width="16.5%">人力资源编码</td>
+							<td width="16.5%"><%=user_code %></td>
+							<td width="16.5%">姓名</td>
+							<td width="16.5%"><%=user_name%></td>
+							<td width="16.5%">性别</td>
+							<td width="17.5%">
+								<% if (user_sex == "1") { %>女<% } else { %>男<% } %>
+							</td>
+						</tr>
+						<tr style="background-color: #f7fdff;">
+							<td>所属机构</td>
+							<td colspan="5"><%=odept_name %></td>
+						</tr>
+						<tr>
+							<td width="16.5%">岗位类别</td>
+							<td width="16.5%"><%=STATION_TYPE%></td>
+							<td width="16.5%">岗位序列</td>
+							<td width="16.5%"><%=STATION_NO%></td>
+							<td width="16.5%">职务层级</td>
+							<td width="17.5%"><%=DUTY_LEVEL%></td>
+						</tr>
+						<tr style="background-color: #f7fdff;">
+							<td width="16.5%">入行时间</td>
+							<td width="16.5%"><%=user_cmpy_date%></td>
+							<td width="16.5%">办公电话</td>
+							<td width="16.5%"><%=user_office_phone %></td>
+							<td width="16.5%">手机号码(<span style="color: red;">融e联绑定的手机号</span>)
+							</td>
+							<td width="17.5%"><input type="text" id="user_mobile1"
+								value=""></td>
+						</tr>
+					</table>
+				</div>
+				<div style="padding-top: 10px;">
+					<div style="padding-top: 10px; text-align: left; width: 90%;">
+						<span style="color: #ff0000">★ 应报名的考试</span> <span
+							style="color: #fdb64f;">(提示：如果应考序列包含模块，请在下方选择具体的模块)</span>
+					</div>
+					<table border="1" align="center" style="width: 90%;" id="tableid">
+						<tr style="background-color: #ffbdbd;">
+							<td width="3%"></td>
+							<td width="10%">岗位类别</td>
+							<td width="15%">序列</td>
+							<td width="27%">模块</td>
+							<td width="10%">级别</td>
+							<td width="20%">验证</td>
+							<td width="15%">验证结果</td>
+						</tr>
+						<% 
 	      						String wherexl = "AND KSLB_NAME="+"'"+STATION_TYPE+"'"+" AND KSLB_XL="+"'"+STATION_NO+"'"+" AND XM_ID="+"'"+xm_id+"'";
 	      						List<Bean> xlList = ServDao.finds("TS_XMGL_BM_KSLB", wherexl);
 	      						Bean mkBean = new Bean();
@@ -216,16 +243,16 @@
 	      						 lbcode= xlList.get(0).getStr("KSLB_CODE");
 	      						 xlcode= xlList.get(0).getStr("KSLB_XL_CODE");
 	      						%>
-       						<tr>
-	      						<td ><input class="rhGrid-td-hide" type="text"  name="checkboxaa"></td>
-	      						<td width="10%"><%=lbname%></td>
-	      						<td width="15%"><%=xlname%></td>
-	      						<% 
+						<tr>
+							<td><input class="rhGrid-td-hide" type="text"
+								name="checkboxaa"></td>
+							<td width="10%"><%=lbname%></td>
+							<td width="15%"><%=xlname%></td>
+							<% 
 	      						
 	      						%>
-	      						<td width="27%">
-	      						<select id="mkid" onchange="typeId(this)">
-	      						<% 
+							<td width="27%"><select id="mkid" onchange="typeId(this)">
+									<% 
 	      						//根据岗位名称，序列和项目id找到对应的模块
 	      						for (Bean bean : xlList) {
       									String type = bean.getStr("KSLB_TYPE");
@@ -246,171 +273,166 @@
 	      						for(Object mk: mkcodeBean.keySet()){
 	      							String mkcode =mkcodeBean.getStr(mk);
       							%>
-      							<option value="<%=mkcode%>"><%=mk%></option>
-      							<%
+									<option value="<%=mkcode%>"><%=mk%></option>
+									<%
 	      						}
 	      						%>
-	      						</select></td>
-	      						<td width="10%">
-	      						<select id="lxid" onchange="changeyk(this)">
-	      						<option></option>
-	      						</select></td>
-	      						<td class="rhGrid-td-hide" ><input type="text" id="zglbid" name="zgksname" value="<%=kslb_id%>"></td>
-	      						<td width="20%">
-	      						<div id="<%=kslb_id%>"></div>
-	      						</td>
-	      						<td width="15%"><div id="<%=kslb_id%>yzjg"></div></td>
-       						</tr>
-       						<% 
+							</select></td>
+							<td width="10%"><select id="lxid" onchange="changeyk(this)">
+									<option></option>
+							</select></td>
+							<td class="rhGrid-td-hide"><input type="text" id="zglbid"
+								name="zgksname" value="<%=kslb_id%>"></td>
+							<td width="20%">
+								<div id="<%=kslb_id%>"></div>
+							</td>
+							<td width="15%"><div id="<%=kslb_id%>yzjg"></div></td>
+						</tr>
+						<% 
 	      					}
        						%>
-       					</table>
-       					</div>
-	       				<div style="width:90%;60px;padding-top: 20px;text-align: left;" >
-	       				<span style="color: #0782cb;">★ 跨序列应报名的考试</span>
-	       				<span style="color: #fdb64f;">(提示：只允许选择两个跨序列的考试)</span>
-	       					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	       					<button class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#myModal">选择考试</button>
-	       					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	       					<button class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#deletec">删除</button>
-	       				</div>
-      				<div style="padding-top: 5px;">
-      					<table border="1" style="width: 90%" id="tablehang">
-	      					<tr style="background-color: #d9eeeb;">
-		       						<td width="3%"><input type="checkbox" ></td>
-		       						<td width="10%">岗位类别</td>
-	       							<td width="15%">序列</td>
-	       							<td width="27%">模块</td>
-	       							<td width="10%">级别</td>
-	       							<td width="20%">验证</td>
-	       							<td width="15%">验证结果</td>
-	       						</tr>
-      						 <tbody id="goods">
-         					
-      						</tbody>	
-      					</table>
-      				</div>
-       		<div style="height: 100px;padding: 20px;">
-       			
-       			<button id="zgyzbt" onclick="checky()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">1.资格验证</button>
-       			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-       			<button id="tjbt" class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#tiJiao" onclick="tijiao()">2.提交报名</button>
-       			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	
-       			<button  onclick="goBack()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">返回</button>	
-       		</div>
-       	</div>
-       	</div>
-    </div>
-  	<!-- 模态选择框跨序列（Modal） -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
+					</table>
+				</div>
+				<div style="width: 90%; 60 px; padding-top: 20px; text-align: left;">
+					<span style="color: #0782cb;">★ 跨序列应报名的考试</span> <span
+						style="color: #fdb64f;">(提示：只允许选择两个跨序列的考试)</span>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<button class="btn btn-success"
+						style="width: 100px; background-color: #00c2c2;"
+						data-toggle="modal" data-target="#myModal">选择考试</button>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<!-- 	       					<button class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#deletec">删除</button> -->
+				</div>
+				<div style="padding-top: 5px;">
+					<table border="1" style="width: 90%" id="tablehang">
+						<tr style="background-color: #d9eeeb;">
+							<td width="3%"><input type="checkbox"></td>
+							<td width="10%">岗位类别</td>
+							<td width="15%">序列</td>
+							<td width="27%">模块</td>
+							<td width="10%">级别</td>
+							<td width="20%">验证</td>
+							<td width="15%">验证结果</td>
+						</tr>
+						<tbody id="goods">
+
+						</tbody>
+					</table>
+				</div>
+				<div style="height: 100px; padding: 20px;">
+
+					<button id="zgyzbt" onclick="checky()" class="btn btn-success"
+						style="width: 100px; background-color: #00c2c2;">1.资格验证</button>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<button id="tjbt" class="btn btn-success"
+						style="width: 100px; background-color: #00c2c2;"
+						data-toggle="modal" data-target="#tiJiao" onclick="tijiao()">2.提交报名</button>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<button onclick="goBack()" class="btn btn-success"
+						style="width: 100px; background-color: #00c2c2;">返回</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 模态选择框跨序列（Modal） -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="width:700px;">
 			<div class="modal-content">
-				<div class="modal-header" style="background-color: #00c2c2;color: white">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
-					<h5 class="modal-title">
-						可选择的考试
-					</h5>
+				<div class="modal-header"
+					style="background-color: #00c2c2; color: white">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h5 class="modal-title">可选择的考试</h5>
 				</div>
 				<div class="modal-body zgks">
-					<table border="1" style="width: 100%;"  id="tabletjId">
-	       			<tr style="background-color: #d9eeeb;padding-left: 5px;">
-	   					<td width="10%"></td>
-	   					<td width="15%">岗位类别</td>
-	   					<td width="15%">序列</td>
-	   					<td width="45%">模块</td>
-	   					<td width="15%">级别</td>
-       				</tr>
-	       			<%
-					for(int i=0;i<zgList.size();i++){
-						Bean bean1 = zgList.get(i);
-						String kslb_id = bean1.getStr("KSLB_ID");
-						String kslb_name = bean1.getStr("KSLB_NAME");
-						String kslb_xl = bean1.getStr("KSLB_XL");
-						String kslb_mk = bean1.getStr("KSLB_MK");
-						String kslb_type_name = bean1.getStr("KSLB_TYPE_NAME");
-						String kslb_code = bean1.getStr("KSLB_CODE");
-						String kslb_xl_code = bean1.getStr("KSLB_XL_CODE");
-						String kslb_mk_code = bean1.getStr("KSLB_MK_CODE");
-						String kslb_type = bean1.getStr("KSLB_TYPE");
-					%>
-						<tr>
-							<td style="text-align: center" width="10%"><input type="checkbox" onchange="change(this)" name="checkname1" value="<%=bm_id%>" ></td>
-							<td width="15%"><%=kslb_name%></td>
-		       				<td width="15%"><%=kslb_xl%></td>
-		       				<td width="45%"><%=kslb_mk%></td>
-		       				<td width="15%"><%=kslb_type_name%></td>
-		       				<td class="rhGrid-td-hide" id="HANGHAO<%=i%>"><%=i %></td>
-							<td class="rhGrid-td-hide" ><%=kslb_id%></td>
-							<td class="rhGrid-td-hide"><%=kslb_code%></td>
-		       				<td class="rhGrid-td-hide"><%=kslb_xl_code%></td>
-		       				<td class="rhGrid-td-hide"><%=kslb_mk_code%></td>
-		       				<td class="rhGrid-td-hide"><%=kslb_type%></td>
-						</tr>
-					<%
-						}
-					%>
-	       			</table>
+					<div class="row" style="height: 450px;">
+						<div class="col-sm-4">
+							<div class="content-navTreeCont">
+								<div class="content-navTree" style="height: 450px;"></div>
+							</div>
+
+						</div>
+						<div class="col-sm-8" style="overflow-y: auto;height: 450px;">
+							<table border="1" style="width: 100%;" id="tabletjId">
+								<thead>
+									<tr style="background-color: #d9eeeb; padding-left: 5px;">
+										<th width="10%"></th>
+										<th width="15%">岗位类别</th>
+										<th width="15%">序列</th>
+										<th width="45%">模块</th>
+										<th width="15%">级别</th>
+									</tr>
+								</thead>
+								<tbody id="ksxxId">
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer" style="text-align: center;">
-					<button type="button" class="btn btn-success" data-dismiss="modal" style="width:100px;background-color: #00c2c2;"  onclick="fuzhi()">确定</button>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-       					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<button type="button" class="btn btn-default" data-dismiss="modal" style="width:100px;background-color: #00c2c2;">返回
-					</button>
+					<button type="button" class="btn btn-success" data-dismiss="modal"
+						style="width: 100px; background-color: #00c2c2;" onclick="fuzhi()">确定</button>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						style="width: 100px; background-color: #00c2c2;">返回</button>
 				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal -->
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
 	</div>
 	<!-- 模态提交框（Modal） -->
-	<div class="modal fade" id="tiJiao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="tiJiao" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-			<div id="mask" class="mask"></div> 
-				<div class="modal-header" style="background-color: #00c2c2;color: white">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
-					<h6 class="modal-title">
-						报名信息
-					</h6>
+				<div id="mask" class="mask"></div>
+				<div class="modal-header"
+					style="background-color: #00c2c2; color: white">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h6 class="modal-title">报名信息</h6>
 				</div>
 				<div class="b">
-					<table  id="motaitable" style="width:100%;height:50%">
-					<tbody id="xinxi" style="height:10px">
-						<tr style="font-size:15px">
-							<td style="width: 30%;color:lightseagreen;" align="right">姓名</td>
-							<td colspan="4" style="width: 70%;text-align:center"><%=user_name%></td>
-						<tr  id="tr2" style="height:10px;font-size:15px">
-							<td style="width: 30%;color:lightseagreen;text-align: right;">人力资源编码</td>
-							<td colspan="4" style="width: 70%;text-align:center;"><%=user_code %></td>	
-						</tr>
-						
+					<table id="motaitable" style="width: 100%; height: 50%">
+						<tbody id="xinxi" style="height: 10px">
+							<tr style="font-size: 15px">
+								<td style="width: 30%; color: lightseagreen;" align="right">姓名</td>
+								<td colspan="4" style="width: 70%; text-align: center"><%=user_name%></td>
+							<tr id="tr2" style="height: 10px; font-size: 15px">
+								<td style="width: 30%; color: lightseagreen; text-align: right;">人力资源编码</td>
+								<td colspan="4" style="width: 70%; text-align: center;"><%=user_code %></td>
+							</tr>
+
 						</tbody>
 					</table>
 					<table>
-					<tr style="height:100px;font-size:15px">
-							<td style="width: 35%;color:red;" align="right">融e联绑定的手机号</td>
-							<td style="width:3%"></td>
-							<td style="width: 20%;text-align:center"><input type="text" id="user_mobile2" style="width:100px;height:30px" id="user_mobile2">
+						<tr style="height: 100px; font-size: 15px">
+							<td style="width: 35%; color: red;" align="right">融e联绑定的手机号</td>
+							<td style="width: 3%"></td>
+							<td style="width: 20%; text-align: center"><input
+								type="text" id="user_mobile2" style="width: 100px; height: 30px"
+								id="user_mobile2"></td>
+							<td style="width: 3%"></td>
+							<td style="color: lightseagreen;">验证码：<input type="text"
+								style="width: 50px; height: 30px"> <input
+								style="height: 30px" type="button" value="获取验证码">
 							</td>
-							<td style="width:3%"></td>
-							<td style="color:lightseagreen;">
-								验证码：<input type="text"  style="width:50px;height:30px">
-								<input style="height:30px" type="button" value="获取验证码">
-								</td>
 						</tr>
 
 					</table>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary"  onclick="mttijiao()">提交</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="quxiao()">取消
-					</button>
+					<button type="button" class="btn btn-primary" onclick="mttijiao()">提交</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						onclick="quxiao()">取消</button>
 				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal -->
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
 	</div>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
@@ -422,12 +444,87 @@
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>
 	<!-- AdminLTE for demo purposes -->
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
+	<script src="<%=CONTEXT_PATH%>/sy/base/frame/coms/tree/jquery.tree.js"></script>
 	<script type="text/javascript">
+	function getFzgList(){
+		var param = {};
+ 		param["STATION_TYPE"]="<%=STATION_TYPE%>";
+ 		param["STATION_NO"]="<%=STATION_NO%>";
+ 		param["xm_id"]="<%=xm_id%>";
+ 		var fzgList= FireFly.doAct("TS_BMLB_BM", "getFzgValue", param,true,false);
+ 		console.log(fzgList);
+ 		return fzgList['_DATA_'];
+	}
+	
+	function showFzgList(showList){
+		jQuery('#ksxxId').html('');
+		for(var i=0; i<showList.length;i++){
+			var showItem = showList[i];
+			var kslb_id = showItem.KSLB_ID;
+			var kslb_name = showItem.KSLB_NAME;
+			var kslb_xl = showItem.KSLB_XL;
+			var kslb_mk = showItem.KSLB_MK;
+			var kslb_type_name = showItem.KSLB_TYPE_NAME;
+			var kslb_code = showItem.KSLB_CODE;
+			var kslb_xl_code = showItem.KSLB_XL_CODE;
+			var kslb_mk_code = showItem.KSLB_MK_CODE;
+			var kslb_type = showItem.KSLB_TYPE;
+			
+	jQuery('#ksxxId').append([
+		'<tr>',
+		'<td style="text-align: center" width="10%"><input type="checkbox" onchange="change(this)" name="checkname1" value="'+kslb_id+'" ></td>',
+		'<td width="15%">'+kslb_name+'</td>',
+		'<td width="15%">'+kslb_xl+'</td>',
+		'<td width="45%">'+kslb_mk+'</td>',
+		'<td width="15%">'+kslb_type_name+'</td>',
+		'<td class="rhGrid-td-hide" id="HANGHAO'+i+'">'+i +'</td>',
+		'<td class="rhGrid-td-hide" >'+kslb_id+'</td>',
+		'<td class="rhGrid-td-hide">'+kslb_code+'</td>',
+		'<td class="rhGrid-td-hide">'+kslb_xl_code+'</td>',
+		'<td class="rhGrid-td-hide">'+kslb_mk_code+'</td>',
+		'<td class="rhGrid-td-hide">'+kslb_type+'</td>',
+	'</tr>'
+	].join('')
+	);
+		}
+	}
+	
 	var yk={};
 	var xkArg=[];//考试结果
 	var yzgz;//资格验证后端返回到前端的数据
 	 $(function(){ 
 		 typeId(obj);
+		 var allList=getFzgList();
+		 
+		 showFzgList(allList);
+		 
+		 var setting={data
+	             :FireFly.getDict('TS_XMGL_BM_KSLBK'),
+	         dictId:"TS_XMGL_BM_KSLBK",expandLevel:1,
+	         extWhere:"",
+	         onnodeclick :function (item) {
+				 console.log(item);
+	        	var idName=item['NAME'];
+	        	 var showList=[];
+	        	for(var i=0; i<allList.length;i++){
+	        		var showItem = allList[i];
+	        		if(idName===showItem.KSLB_NAME || idName===showItem.KSLB_MK || idName===showItem.KSLB_XL){
+	        			showList.push(showItem);
+		        	}
+	        	}
+	   		 showFzgList(showList);
+
+	     		
+	         },
+	         rhItemCode:"KSLBK_PID",
+	         rhLeafIcon:"",
+	         rhexpand:false,
+				showcheck:false,
+	         theme: "bbit-tree-no-lines",
+	         url  :"SY_COMM_INFO.dict.do"
+	        };
+	         var tree = new rh.ui.Tree(setting);
+	         $('.content-navTree').append(tree.obj);
 	 });
 	//兼容火狐、IE8   
     //显示遮罩层    
@@ -464,7 +561,7 @@
 		var select = document.getElementById("lxid");
 		jQuery("#lxid").empty();          //把select对象的所有option清除掉
 		for(var i=0;i<tyArray.length;i++){
-			select.options[i]=new Option((tyArray[i]=="1")?"初级":(tyArray[i]=="2")?"中级":(tyArray[i]=="3")?"高级":"专家",tyArray[i]);
+			select.options[i]=new Option((tyArray[i]=="1")?"初级":(tyArray[i]=="2")?"中级":(tyArray[i]=="3")?"高级":"无",tyArray[i]);
 		}
 		var tab = document.getElementById("tableid");
 	    //表格行数
@@ -752,30 +849,33 @@
 		param["BM_START"] = "<%=bm_start%>";
 		param["BM_END"] = "<%=bm_end%>";
 		param["XM_NAME"] = "<%=xm_name%>";
-		param['BM_LIST'] = JSON.stringify(neAry);
-		param["YZGZ_LIST"] = JSON.stringify(yzgz);
-		 //本序列表格行数
-		var bxltabObj = document.getElementById("tableid");
-	    var bxlrows = bxltabObj.rows.length;
-	    //跨序列表格行数
-	    var kxlObj = document.getElementById("tablehang");
-	    var kxlrows = kxlObj.rows.length;
-	    if(bxlrows<2 && kxlrows<2){
-			alert("您没有选择考试")
-	    }if(bxlrows!=1 || kxlrows!=1){
-			if(ryl_mobile==""){
-				alert("手机号码不能为空");
-			}if(ryl_mobile!="" && ryl_mobile!=null){
-			 	var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param,true,false);		 	
-				showMask();
-			 	console.log(JSON.stringify(BM_ID.strresult));
-			 	if(BM_ID.strresult!=null ||BM_ID.strresult!="" ){
-			 	hideMask();
-			 	}
-	    		window.location.href="bm.jsp";
+			param['BM_LIST'] = JSON.stringify(neAry);
+			param["YZGZ_LIST"] = JSON.stringify(yzgz);
+			//本序列表格行数
+			var bxltabObj = document.getElementById("tableid");
+			var bxlrows = bxltabObj.rows.length;
+			//跨序列表格行数
+			var kxlObj = document.getElementById("tablehang");
+			var kxlrows = kxlObj.rows.length;
+			if (bxlrows < 2 && kxlrows < 2) {
+				alert("您没有选择考试")
 			}
-	    }
-}
-</script>
+			if (bxlrows != 1 || kxlrows != 1) {
+				if (ryl_mobile == "") {
+					alert("手机号码不能为空");
+				}
+				if (ryl_mobile != "" && ryl_mobile != null) {
+					var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param,
+							true, false);
+					showMask();
+					console.log(JSON.stringify(BM_ID.strresult));
+					if (BM_ID.strresult != null || BM_ID.strresult != "") {
+						hideMask();
+					}
+					window.location.href = "bm.jsp";
+				}
+			}
+		}
+	</script>
 </body>
 </html>

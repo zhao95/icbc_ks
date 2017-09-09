@@ -13,7 +13,7 @@
 <meta
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
-
+<%@ include file="/qt/jsp/header-logo.jsp"%>
 <%@ include file="/sy/base/view/inHeader.jsp"%>
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
