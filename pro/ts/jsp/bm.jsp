@@ -14,7 +14,8 @@
 <title>报名管理</title>
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <!-- 获取后台数据 -->
-<%@ include file="/sy/base/view/inHeader.jsp"%>
+<%@ include file="/qt/jsp/header-logo.jsp"%> 
+<%@ include file="/sy/base/view/inHeader-icbc.jsp"%>
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
 <!-- Font Awesome -->
@@ -43,17 +44,20 @@
 <script src="<%=CONTEXT_PATH%>/ts/js/jquery.iframe-transport.js"></script> 
 <script src="<%=CONTEXT_PATH%>/ts/js/jquery.ui.widget.js"></script> 
 <script src="<%=CONTEXT_PATH%>/ts/js/jquery.fileupload.js"></script> 
-
-
 <body class="hold-transition skin-black sidebar-mini">
+<style>
+#appeal .modal-dialog{
+	position: absolute; 
+    top: 10%; 
+    bottom: 200px; 
+    left: 0; 
+    right: 0; 
+}
+</style>
 <!--判断用户是否登录  -->
 <%
 	String user_code="";
-	if(userBean == null) {
-		 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
-		 RequestUtils.sendDisp(request, response, loginUrl);
-	  }else{
-	  
+	if(userBean != null) {
 	user_code = userBean.getStr("USER_CODE");
   }
  
@@ -103,7 +107,7 @@
 								<th id="BM_NAME" class="" style="width: 29.1%;">名称</th>
 								<th id="BM_ODEPT__NAME" class="" style="width: 15%;">组织单位</th>
 								<th id="S_ATIME" class="" style="width: 29.3%;">报名时间</th>
-								<th id="BM_STATE__NAME" class="" style="width: 10%;">状态</th>
+								 <th id="BM_STATE__NAME" class="" style="width: 10%;">状态</th>
 								<th id="BM_OPTIONS" class=""
 									style="width: 10%; text-align: center">操作</th>
 							</tr>
@@ -151,7 +155,7 @@
 								<th style="width: 5%; text-align: center">类型</th>
 								<th style="width: 20%; text-align: center">考试时间</th>
 								<th style="text-align: center; width: 14%;">审核状态</th>
-								<th style="width: 14%; text-align: center">状态</th>
+							<!-- 	<th style="width: 14%; text-align: center">状态</th> -->
 								<th id="BM_OPTIONS" class=""
 									style="width: 14%; text-align: center">操作</th>
 							</tr>
@@ -197,7 +201,7 @@
 		</div>
 		<!--异议模态窗口  -->
 		<div class="modal fade" id="appeal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog" style="width:50%">
+		<div class="modal-dialog" style="width:40%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -208,11 +212,11 @@
 					</h4>
 					
 				</div>
-				<div style="padding-top:20px;width:700px;font-size:20px;text-align:center;color:lightseagreen">
+				<div style="padding-top:20px;width:90%;font-size:20px;text-align:center;color:lightseagreen">
 				如确需报考，请说明并提交相关证明材料
 				</div>
 				<div style="padding-top:20px">
-				<table style="width:700px">
+				<table style="width:100%">
 				<tr>
 				<td style="width:15%"></td><td style="height:150px;vertical-align:top"><textarea id="liyou11" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
@@ -222,9 +226,9 @@
 				</table>
 				<div id="uploadfile" style="padding-left:50px;color:lightseagreen;font-size:20px"><form action="/file" name="formup" id="formContainer2" class="form form-horizontal"></form></div>
 				</div>
-				<div class="modal-footer" style="text-align:center;height:100px">
-					<button id="tjbutt" type="button" onclick="tijiaoyiyi()" class="btn btn-primary" style="height:50px;background:lightseagreen;width:100px">提交异议</button>
-					<button type="button" onclick = "closemotai()" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">取消</button>
+				<div class="modal-footer" style="text-align:center;height:60px">
+					<button id="tjbutt" type="button" onclick="tijiaoyiyi()" class="btn btn-primary" style="height:40px;background:lightseagreen;width:80px">提交异议</button>
+					<button type="button" onclick = "closemotai()" class="btn btn-default" style="height:40px;width:80px" data-dismiss="modal">取消</button>
 				</div>
 				
 			</div><!-- /.modal-content -->

@@ -13,8 +13,8 @@
 <meta
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
-
-<%@ include file="/sy/base/view/inHeader.jsp"%>
+<%@ include file="../../qt/jsp/header-logo.jsp"%> 
+<%@ include file="/sy/base/view/inHeader-icbc.jsp"%>
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
@@ -40,10 +40,7 @@
 	<style>.b table tr{height:30px;}</style>
 	<style>.zgks table td{padding-left: 5px;}</style>
 	<% 
-if(userBean == null) {
-			 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
-			 RequestUtils.sendDisp(request, response, loginUrl);
-			 }else{
+if(userBean != null) {
 		 String bmid = request.getParameter("bmid4");
 		//获取用户编码
 		String user_code = userBean.getStr("USER_WORK_NUM");
@@ -72,9 +69,7 @@ if(userBean == null) {
 		}
 		
 		%>
-	<div style="padding-left: 90px;width: 90%;text-align: left;">
-			<img alt="中国工商银行" src="<%=CONTEXT_PATH%>/qt/img/u3148.png"> <img alt="考试系统"src="<%=CONTEXT_PATH%>/qt/img/u3376.png">
-	</div>
+	
 	<div style="background: #dfdfdf;padding-top: 10px"align="center">
        	<div id="" style="background: white;width: 90%;">
        		<div style="background: white;width: 90%;text-align: center">

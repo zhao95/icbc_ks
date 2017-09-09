@@ -15,8 +15,8 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 <!-- 获取后台数据 -->
-
-<%@ include file="/sy/base/view/inHeader.jsp"%>
+<%@ include file="/qt/jsp/header-logo.jsp"%> 
+<%@ include file="/sy/base/view/inHeader-icbc.jsp"%>
 	
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
@@ -45,8 +45,8 @@
 			style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;我的报名</span>
 	</div>
 	<div  style="padding-left: 50px;padding-top:10px">
-		<a href="index_qt.jsp"><image style="padding-bottom:10px"
-				src="/ts/image/u1011.png" id="shouye"></image></a> <span
+		<image style="padding-bottom:10px"
+				src="/ts/image/u1011.png" id="shouye"></image><span
 			style="color: black; font-size: 25px">&nbsp;&nbsp;&nbsp;&nbsp;审核明细</span>
 	</div>
 	<table id="table" style="margin-left: 10px; margin-top: 20px; background-color: white; width: 98%">
@@ -66,11 +66,9 @@
 	</thead>
 	<tbody>
 	 <%
-		if(userBean == null) {
-			 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
-			 RequestUtils.sendDisp(request, response, loginUrl);
-		  }else{
-	 String bmid = request.getParameter("bmid");
+	 String bmid = "";
+		if(userBean != null) {
+	  bmid = request.getParameter("bmidmx");
 	 String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
 	 List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
 	 for(int i=0;i<list.size();i++){

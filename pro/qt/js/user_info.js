@@ -1,59 +1,71 @@
 $(function (){
+//	debugger;
 	initUserInfoPage();
 });
-
-function initUserInfoPage(user_code){
-	var user_code= System.getUser("USER_CODE");
-	debugger;
-	var userParam ={};
-	userParam["_extWhere"] = "and USER_CODE ='"+user_code+"'";
-	var resultUserInfo = FireFly.doAct("SY_ORG_USER","query",userParam);
-	var result = resultUserInfo._DATA_[0];
-	var img1 = resultUserInfo._DATA_[0].USER_CODE__IMG;
-	var img_src = FireFly.getContextPath() + System.getUser("USER_IMG_SRC");
-	$("#user_photo").attr("src",img_src);
-//	jQuery("#main-left").append(
-//			[
-//			'<tr style="backGround-color:WhiteSmoke; height: 30px; font-size:14px;">',
-//			'<th style="width: 6%; text-align: center">用户编码</th>',
-//			'<th style="width: 30%;	text-align: center">考试名称</th>',
-//			'<th style="width: 10%;	text-align: center">考试级别</th>',
-//			'<th style="width: 10%; text-align: center">开始时间</th>',
-//			'<th style="width: 10%; text-align: center">结束时间</th>',
-//			'<th style="width: 14%; text-align: center">备注</th>',
-//			'<th style="width: 8%; text-align: center">考试月份</th>',
-//		'</tr>'].join("")
-//	);
-	jQuery("#user_info_div").append(
-			[
-			 '<div style="backGround-color:WhiteSmoke; height: 30px; font-size:14px;">',
-				'<div style="display:inline-block;width: 30%; text-align: center;background-color:#ffffff; ">用户信息</div>',
-				'<div style="display:inline-block;width: 60%; text-align: left;padding:">'+result.USER_NAME+'</div>',
-			'</div>',
-			'<div style="backGround-color:WhiteSmoke; height: 30px; font-size:14px;">',
-				'<div style="display:inline-block; width: 30%;text-align: center">用户手机</div>',
-				'<div style="display:inline-block; width: 60%;text-align: left">'+result.USER_MOBILE+'</div>',
-			'</div>',
-			'<div style="backGround-color:WhiteSmoke; height: 30px; font-size:14px;">',
-				'<div style="display:inline-block; width: 30%;text-align: center">用户机构</div>',
-				'<div style="display:inline-block; width: 60%;text-align: left">'+result.DEPT_CODE__NAME+'</div>',
-			'</div>'
-			].join("")
-	);
+var user_state_type={
+		"1":"在职",
+		"2":"离职",
+		"3":"退休"
 }
 
+function initUserInfoPage(user_code){
 
-
-//获取get方式页面传递参数的方法
-function getParam() {
-    var url = location.search; //获取url中"?"符后的字串
-    var theRequest = new Object();
-    if (url.indexOf("?") != -1) {
-        var str = url.substr(1);
-        strs = str.split("&");
-        for (var i = 0; i < strs.length; i++) {
-            theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
-        }
-    }
-    return theRequest;
+	var aaa=jQuery(".content-wrapper").css("min-height","900px");
+//	jQuery(".content-wrapper").css("min-height",aaa);
+	debugger;
+	var user_code= System.getUser("USER_CODE");
+	var userParam1 ={};
+	userParam1["_extWhere"] = "and DATA_ID ='"+user_code+"' and SERV_ID='TS_BMLB_BM'";
+	var ts_obj_result=FireFly.doAct("TS_OBJECT","query",userParam1);
+	var ryl_mobile="暂无数据";
+	if(ts_obj_result._DATA_.length!=0){
+		ryl_mobile=ts_obj_result._DATA_[0].STR1;
+	}
+	var userParam ={};
+//	var resultUserInfo = FireFly.doAct("SY_ORG_USER","query",userParam);
+	var resultUserInfo = FireFly.doAct("SY_ORG_USER_INFO_SELF","query",userParam);
+	var result = resultUserInfo._DATA_[0];
+//	var img1 = resultUserInfo._DATA_[0].USER_CODE__IMG;
+	var img_src = FireFly.getContextPath() + result.USER_IMG_SRC;
+	if(result.USER_IMG_SRC==""){
+		$("#user_photo").attr("src","/qt/img/u844.jpg");
+		debugger;
+	}else{
+		$("#user_photo").attr("src",img_src);
+	}
+	debugger;
+	//给页面每一个对应的元素赋值
+	for(var i in result){
+		if(result[i]==""){
+			result[i]="暂无数据";
+		}
+	}
+	jQuery("#USER_NAME").html(result.USER_NAME);
+	jQuery("#USER_CODE").html(result.USER_CODE);
+	jQuery("#USER_LOGIN_NAME").html(result.USER_LOGIN_NAME);
+	jQuery("#CMPY_CODE").html(result.CMPY_CODE);
+	jQuery("#DEPT_CODE").html(result.DEPT_CODE__NAME);
+	jQuery("#USER_OFFICE_PHONE").html(result.USER_OFFICE_PHONE);
+	jQuery("#USER_MOBILE").html(result.USER_MOBILE);
+	jQuery("#RYL_MOBILE").html(ryl_mobile);
+	jQuery("#USER_EMAIL").html(result.USER_EMAIL);
+	jQuery("#USER_WORK_LOC").html(result.USER_WORK_LOC);
+	jQuery("#USER_POST").html(result.USER_POST);
+	jQuery("#USER_POST_LEVEL").html(result.USER_POST_LEVEL);
+	jQuery("#USER_WORK_NUM").html(result.USER_WORK_NUM);
+	jQuery("#USER_IDCARD").html(result.USER_IDCARD);
+	jQuery("#USER_BIRTHDAY").html(result.USER_BIRTHDAY);
+	jQuery("#USER_NATION").html(result.USER_NATION);
+	jQuery("#USER_SEX").html(result.USER_SEX__NAME);
+	jQuery("#USER_HOME_LAND").html(result.USER_HOME_LAND__NAME);
+	jQuery("#USER_POLITICS").html(result.USER_POLITICS);
+	jQuery("#USER_EDU_LEVLE").html(result.USER_EDU_LEVLE);
+	jQuery("#USER_EDU_SCHOOL").html(result.USER_EDU_SCHOOL);
+	jQuery("#USER_EDU_MAJOR").html(result.USER_EDU_MAJOR);
+	jQuery("#USER_TITLE").html(result.USER_TITLE);
+	jQuery("#USER_TITLE_DATE").html(result.USER_TITLE_DATE);
+	jQuery("#USER_WORK_DATE").html(result.USER_WORK_DATE);
+	jQuery("#USER_CMPY_DATE").html(result.USER_CMPY_DATE);
+	jQuery("#USER_STATE").html(user_state_type[result.USER_STATE]);
+//	jQuery("#").html(result.);
 }

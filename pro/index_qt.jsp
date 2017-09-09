@@ -50,8 +50,8 @@
 <body class="hold-transition skin-black sidebar-mini layout-boxed">
 	<div class="wrapper">
 		<div style="position: absolute; left: 15px; top:5px; z-index: 10000;">
-			<img alt="中国工商银行" src="./qt/img/u3148.png" id="logo_img1">
-			<img alt="考试系统" src="./qt/img/u3376.png"  id="logo_img2">
+			<img alt="中国工商银行" src="./qt/img/header-logo.png" id="logo_img1">
+			<img alt="考试系统" src="./qt/img/header-logo-text.png"  id="logo_img2">
 		</div>
 		<header class="main-header" style="height: 60px;/* box-shadow: rgb(190, 190, 190) 0px 0px 20px; */">
 			<!-- Logo -->
@@ -158,7 +158,7 @@
 			<!-- /.sidebar -->
 		</aside>
 
-		<div class="content-wrapper" style="min-height: 1000px;">
+		<div class="content-wrapper" >
 
 			<section class="content">
 				<div class="row">
@@ -368,7 +368,7 @@
 					<div class="col-md-4">
 						<div id="announcement-box" class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 							<div class="box-header" style="background-color: #f9f9f9;">
-								<h3 class="box-title" style="display: block;">
+								<h3 class="box-title" style="display: block; font-size:16px;">
 									通知公告
 									<a href="/qt/jsp/todo.jsp" class="index-list-more-a">
 										更多
@@ -411,7 +411,7 @@
 
 						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 							<div class="box-header" style="background-color: #f9f9f9;">
-								<h3 class="box-title">Q&A问答</h3>
+								<h3 class="box-title" style="font-size:16px;">Q&A 问答</h3>
 							</div>
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
@@ -426,7 +426,7 @@
 						<!-- /.box -->
 						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 						<div class="box-header" icode="ksrl-header" style="background-color: #f9f9f9;height: 40px;">
-							<h3 class="box-title">考试日历</h3>
+							<h3 class="box-title" style="font-size:16px;">考试日历</h3>
 							<a href="/qt/jsp/ksrl.jsp" class="index-list-more-a">
 									更多
 									<span style="color:red;">&gt;</span>
@@ -446,7 +446,7 @@
 						<!-- /.box -->
 						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de; top:20px;">
 							<div class="box-header" style="background-color: #f9f9f9">
-								<h3 class="box-title">问卷调查</h3>
+								<h3 class="box-title" style="font-size:16px;">问卷调查</h3>
 							</div>
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
@@ -477,7 +477,7 @@
 						<!-- /.box -->
 						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;top:20px;">
 							<div class="box-header" style="background-color: #f9f9f9">
-								<h3 class="box-title">我的认证轨迹</h3>
+								<h3 class="box-title" style="font-size:16px;">我的认证轨迹</h3>
 							</div>
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
@@ -706,8 +706,7 @@
 	<!-- 问答模块的js文件 -->
 <%-- 	<script src="<%=CONTEXT_PATH%>/qt/js/wdgl.js"></script> --%>
 
-	<!-- 首页待办/可申请报名js -->
-	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt_todo_apply.js"></script>
+	
 
 	<!-- 考试日历模块JS文件 -->
 	<script src="<%=CONTEXT_PATH%>/qt/js/jquery-ui-1.10.3.custom.js"></script>
@@ -717,5 +716,7 @@
 	<!-- 项目状态进度条展示的js文件 -->
 	<script src="<%=CONTEXT_PATH%>/qt/js/xmzt.js"></script>
 
+	<!-- 首页待办/可申请报名js -->
+	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt_todo_apply.js"></script>
 </body>
 </html>

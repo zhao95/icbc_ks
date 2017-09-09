@@ -1,0 +1,57 @@
+#user-photo .img-bottom-info{
+    border-width: 0px;
+    position: absolute;
+    left: 43px;
+    top: 381px;
+    width: 133px;
+    height: 20px;
+    font-family: '微软雅黑';
+}
+.info-left{
+	border-right:1px solid #e7e6e3;
+	background-color:#ffffff;
+	padding-left:0px;
+}
+.info-right{
+	background-color:#f8f8f7;
+}
+#main-data .row{
+/* 	padding:0px; */
+	text-align:left;
+	line-height:36px;
+	padding:0px;
+	font-family: '微软雅黑';
+	font-size: 14px;
+    font-style: normal;
+    color:#333333;
+    border-bottom: 1px solid #e7e6e3;
+    position:relative;
+    margin-left:3px;
+}
+#main-data row:last-child {
+	border-bottom:0px solid #e7e6e3;
+}
+
+.img-bottom-info{
+	margin-top:20px;
+	text-align:left;
+}
+#table_div{
+    background-color: #ffffff;
+}
+#img-bottom-div .img-bottom-info{
+	margin-top:20px;
+	margin-left:18%;
+	font-family: '微软雅黑';
+	font-size: 14px;
+    font-style: normal;
+}
+#img-bottom-div .img-bottom-info >span{
+	color:#333333;
+	font-family: '微软雅黑';
+	font-size: 14px;
+    font-style: normal;
+}
+.content-wrapper{
+	min-height: 1781px;
+}

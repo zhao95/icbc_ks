@@ -1,7 +1,7 @@
 var _viewer = this;
 
 //查看只读
-if(_viewer.opts.readOnly){
+if(_viewer.opts.readOnly == "true"){
 	_viewer.readCard();
 }
 

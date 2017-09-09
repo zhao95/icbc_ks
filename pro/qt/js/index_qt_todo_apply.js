@@ -313,7 +313,7 @@ function clickAndLoginOut() {
  * 点击个人信息跳转到用户个人信息界面
  */
 function userInfoPage() {
-//    var user_work_number = System.getUser("USER_CODE");
-    window.location.href = "/qt/jsp/user_info.jsp";
+    $.ajax('/qt/jsp/user_info.jsp').then(function(response){$('section[class="content"]').html(response);})
+//    window.location.href = "/qt/jsp/user_info.jsp";
 
 }

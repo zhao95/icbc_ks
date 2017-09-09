@@ -17,6 +17,11 @@
 	Context.setRequest(request);
 	String urlPath = request.getContextPath();
     UserBean userBean = Context.getUserBean(request);
+ 	// 如果没有登录则导向首页去登录
+    if(userBean == null) {
+  	 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/index.jsp");
+  	 RequestUtils.sendDir(response, loginUrl);
+    }
     String devUsers = Context.getSyConf("SY_DEV_USERS","");//开发用户
     String syFont = Context.getSyConf("SY_FONT_BIG","false");//系统大字体启用
     String zipModel = Context.getSyConf("SY_FRONT_ZIP_MODEL","false");//前端文件是否启用压缩模式

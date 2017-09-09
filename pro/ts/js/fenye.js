@@ -199,6 +199,15 @@ var listPage = function () {
 			}else{
 				state = "未开始";
 			}
+			/*
+			//进行中 已结束 下拉框 进行筛选
+			var zhuangtai = $("#zhuangtai").children('option:selected').val();
+			if(zhuangtai=="1"&&state!="报名审核"){
+				//进行中的项目
+				continue;
+			}else if(zhuangtai=="2"&&state!="已结束"){
+				continue
+			}*/
 			//添加一行隐藏的项目id
 			var xuhao = first+i;
  		//为table重新appendtr
@@ -209,6 +218,8 @@ var listPage = function () {
 				$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" class="btn" type="button" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');	
 			}
  	  }
+	var table= document.getElementById("table");
+	rowscolor(table);
  }; 
  
  /*添加分页展示*/
@@ -349,3 +360,6 @@ var listPage = function () {
  };
  //默认跳转到第一页
  new listPage().gotoPage(1);
+ jq("#zhuangtai").change(function(){
+	 new listPage().gotoPage(1);
+});
