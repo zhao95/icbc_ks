@@ -496,5 +496,8 @@
     text-align: left;
     line-height: normal;
 }
+.info-left{
+	border-right:1px solid ;
+}
 
 
