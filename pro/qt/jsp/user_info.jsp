@@ -67,8 +67,8 @@
 			<div id="table_div" class="container-fluid"
 				style="margin-top: 20px; margin-left: 10px; width: 98%; margin: 0 auto; text-align: center;">
 				<div class="row">
-					<div class="col-lg-12">
-						<div id="main-left" class="col-lg-4"
+					<div class="col-xs-12">
+						<div id="main-left" class="col-xs-4"
 							style="float: left; background-color: rgba(255, 255, 255, 1); /* height: 100%; */ padding-top:20px;">
 							<img alt="" src="/qt/img/u844.jpg" id="user_photo" style="width: 60%;">
 							<div id="img-bottom-div" >
@@ -102,7 +102,7 @@
 							</div>
 							
 						</div>
-						<div id="main-data" style="float: left; height: auto; border: 1px solid #e7e6e3;" class="col-lg-8">
+						<div id="main-data" style="float: left; height: auto; border: 1px solid #e7e6e3;" class="col-xs-8">
 						
 							<div class="row" style="border-bottom: 1px solid #e7e6e3;left: -2.2%; padding-left: 6px;background-color:#ffffff;">
 								<img src="/qt/img/u892.png" style="float: left;top: 7px;position: relative;">
@@ -110,79 +110,79 @@
 							</div>
 
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">工位号</div>
-								<div class="col-lg-8 info-right" id="USER_WORK_LOC" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">工位号</div>
+								<div class="col-xs-8 info-right" id="USER_WORK_LOC" style="float: left;">暂无数据</div>
 							</div>
 
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">职位</div>
-								<div class="col-lg-8 info-right" id="USER_POST" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">职位</div>
+								<div class="col-xs-8 info-right" id="USER_POST" style="float: left;">暂无数据</div>
 							</div>
 
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">职位级别</div>
-								<div class="col-lg-8 info-right" id="USER_POST_LEVEL" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">职位级别</div>
+								<div class="col-xs-8 info-right" id="USER_POST_LEVEL" style="float: left;">暂无数据</div>
 							</div>
 
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">工号</div>
-								<div class="col-lg-8 info-right" id="USER_WORK_NUM" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">工号</div>
+								<div class="col-xs-8 info-right" id="USER_WORK_NUM" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">身份证号</div>
-								<div class="col-lg-8 info-right" id="USER_IDCARD" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">身份证号</div>
+								<div class="col-xs-8 info-right" id="USER_IDCARD" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">出生日期</div>
-								<div class="col-lg-8 info-right" id="USER_BIRTHDAY" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">出生日期</div>
+								<div class="col-xs-8 info-right" id="USER_BIRTHDAY" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">民族</div>
-								<div class="col-lg-8 info-right" id="USER_NATION" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">民族</div>
+								<div class="col-xs-8 info-right" id="USER_NATION" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">性别</div>
-								<div class="col-lg-8 info-right" id="USER_SEX" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">性别</div>
+								<div class="col-xs-8 info-right" id="USER_SEX" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">籍贯</div>
-								<div class="col-lg-8 info-right" id="USER_HOME_LAND" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">籍贯</div>
+								<div class="col-xs-8 info-right" id="USER_HOME_LAND" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">政治面貌</div>
-								<div class="col-lg-8 info-right" id="USER_POLITICS" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">政治面貌</div>
+								<div class="col-xs-8 info-right" id="USER_POLITICS" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">学历</div>
-								<div class="col-lg-8 info-right" id="USER_EDU_LEVLE" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">学历</div>
+								<div class="col-xs-8 info-right" id="USER_EDU_LEVLE" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">毕业学校</div>
-								<div class="col-lg-8 info-right" id="USER_EDU_SCHOOL" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">毕业学校</div>
+								<div class="col-xs-8 info-right" id="USER_EDU_SCHOOL" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">专业</div>
-								<div class="col-lg-8 info-right" id="USER_EDU_MAJOR" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">专业</div>
+								<div class="col-xs-8 info-right" id="USER_EDU_MAJOR" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">职称</div>
-								<div class="col-lg-8 info-right" id="USER_TITLE" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">职称</div>
+								<div class="col-xs-8 info-right" id="USER_TITLE" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">职称日期</div>
-								<div class="col-lg-8 info-right" id="USER_TITLE_DATE" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">职称日期</div>
+								<div class="col-xs-8 info-right" id="USER_TITLE_DATE" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">参加工作日期</div>
-								<div class="col-lg-8 info-right" id="USER_WORK_DATE" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">参加工作日期</div>
+								<div class="col-xs-8 info-right" id="USER_WORK_DATE" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;">入职日期</div>
-								<div class="col-lg-8 info-right" id="USER_CMPY_DATE" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;">入职日期</div>
+								<div class="col-xs-8 info-right" id="USER_CMPY_DATE" style="float: left;">暂无数据</div>
 							</div>
 							<div class="row" style="">
-								<div class="col-lg-4 info-left" style="float: left;border-bottom:0px solid #333333;">状态</div>
-								<div class="col-lg-8 info-right" id="USER_STATE" style="float: left;">暂无数据</div>
+								<div class="col-xs-4 info-left" style="float: left;border-bottom:0px solid #333333;">状态</div>
+								<div class="col-xs-8 info-right" id="USER_STATE" style="float: left;">暂无数据</div>
 							</div>
 
 						</div>
