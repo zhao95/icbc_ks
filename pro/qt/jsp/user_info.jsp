@@ -6,7 +6,7 @@
 <%
 	final String CONTEXT_PATH = request.getContextPath();
 %>
-<head>
+<%--<head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>个人资料</title>
@@ -16,7 +16,7 @@
 <!-- 获取后台数据 -->
 <%@ include file="../../sy/base/view/inHeader-icbc.jsp"%>
 
-<!-- Bootstrap 3.3.6 -->
+ <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
 <!-- Font Awesome -->
@@ -34,17 +34,18 @@
 	
 <!-- AdminLTE App -->
 <script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>	
-<!-- 用户个人信息css -->
-<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/user_info.css">
+
 
 <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
-</head>
-<body class="hold-transition skin-black sidebar-mini"
-	style="height: auto;">
+</head> --%>
+<!-- <body class="hold-transition skin-black sidebar-mini"
+	style="height: auto;"> -->
 	<%-- <%@ include file="header-logo.jsp"%> --%>
+	<!-- 用户个人信息css -->
+<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/user_info.css">
 	<!-- 首页/返回 -->
 	<div class="" style="padding: 10px">
 		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img
@@ -191,16 +192,17 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- jQuery压缩版的引入 -->
+<script src="<%=CONTEXT_PATH%>/qt/js/user_info.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<%-- 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script> --%>
+<%-- 	<!-- jQuery压缩版的引入 -->
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
-	<!-- Bootstrap 3.3.6 -->
-	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
+	
 	<!-- FastClick -->
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
 	<!-- AdminLTE for demo purposes -->
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
 	<!-- 	当前登录用户信息展示JS引入 -->
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>
-	<script src="<%=CONTEXT_PATH%>/qt/js/user_info.js"></script>
-</body>
+	
+</body> --%>

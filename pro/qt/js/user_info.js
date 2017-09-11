@@ -1,18 +1,15 @@
 $(function (){
-//	debugger;
 	initUserInfoPage();
 });
-var user_state_type={
-		"1":"在职",
-		"2":"离职",
-		"3":"退休"
-}
+
 
 function initUserInfoPage(user_code){
-
+	var user_state_type={
+			"1":"在职",
+			"2":"离职",
+			"3":"退休"
+	}
 	var aaa=jQuery(".content-wrapper").css("min-height","900px");
-//	jQuery(".content-wrapper").css("min-height",aaa);
-	debugger;
 	var user_code= System.getUser("USER_CODE");
 	var userParam1 ={};
 	userParam1["_extWhere"] = "and DATA_ID ='"+user_code+"' and SERV_ID='TS_BMLB_BM'";
@@ -25,15 +22,12 @@ function initUserInfoPage(user_code){
 //	var resultUserInfo = FireFly.doAct("SY_ORG_USER","query",userParam);
 	var resultUserInfo = FireFly.doAct("SY_ORG_USER_INFO_SELF","query",userParam);
 	var result = resultUserInfo._DATA_[0];
-//	var img1 = resultUserInfo._DATA_[0].USER_CODE__IMG;
 	var img_src = FireFly.getContextPath() + result.USER_IMG_SRC;
 	if(result.USER_IMG_SRC==""){
 		$("#user_photo").attr("src","/qt/img/u844.jpg");
-		debugger;
 	}else{
 		$("#user_photo").attr("src",img_src);
 	}
-	debugger;
 	//给页面每一个对应的元素赋值
 	for(var i in result){
 		if(result[i]==""){
@@ -67,5 +61,4 @@ function initUserInfoPage(user_code){
 	jQuery("#USER_WORK_DATE").html(result.USER_WORK_DATE);
 	jQuery("#USER_CMPY_DATE").html(result.USER_CMPY_DATE);
 	jQuery("#USER_STATE").html(user_state_type[result.USER_STATE]);
-//	jQuery("#").html(result.);
 }
