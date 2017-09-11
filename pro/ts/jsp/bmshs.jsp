@@ -209,6 +209,7 @@
 	var jq = $.noConflict(true);
 	jq(function (){
 		//页面加载完执行
+		new listPage().gotoPage(1);
 		var table = document.getElementById("table");  
 		rowscolor(table);
 	});
@@ -255,9 +256,7 @@
 		       }  
 		    } 
 	}
-	function ztcx(){
-		listPage.prototype.fenyeselectss();
-	}
+	
 	</script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->

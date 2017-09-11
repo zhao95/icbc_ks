@@ -373,10 +373,8 @@
 				<div class="modal-footer" style="text-align: center;">
 					<button type="button" class="btn btn-success" data-dismiss="modal"
 						style="width: 100px; background-color: #00c2c2;" onclick="fuzhi()">确定</button>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<button type="button" class="btn btn-default" data-dismiss="modal"
-						style="width: 100px; background-color: #00c2c2;">返回</button>
+						style="width: 100px;margin-left:100px;background-color: #00c2c2;">返回</button>
 				</div>
 			</div>
 			<!-- /.modal-content -->
@@ -787,6 +785,7 @@
        			if(divtext1==null||divtext1.length==0){
        				var shArray=true;
        				for(var j=0;j<dataArray.length;j++){
+       					
        					if(dataArray[j].VLIDATE=="true"){
 	       					$("#"+a).append('<div><img src="<%=CONTEXT_PATH%>/ts/image/u4719.png">'+dataArray[j].NAME+'</div>');
 	       					
