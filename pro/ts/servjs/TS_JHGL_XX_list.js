@@ -1,15 +1,15 @@
 var _viewer = this;
-debugger;
 var params = _viewer.getParams();
 var projectId = params.JH_ID;
 var projectTitle = params.JH_TITLE;
-var isStop=params.isStop;
-var where = " and JH_PTITLE ='"+ projectId +"' ";
-if(isStop==true){
-	//判断isStop是否执行，停止刷新
-	params.isStop=2;
-	_viewer.setSearchWhereAndRefresh(where,false);
-}
+
+var add = _viewer.getBtn("add");
+add.unbind("click").bind("click",function() {
+	//打开添加页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
+    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,500],"xyArray":[200,100],"JH_ID":projectId,"JH_TITLE":projectTitle};
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+});
 
 //每一行添加编辑和删除
 _viewer.grid._table.find("tr").each(function(index, item) {
@@ -24,7 +24,7 @@ _viewer.grid._table.find("tr").each(function(index, item) {
 				 '<a class="rh-icon rhGrid-btnBar-a" operCode="optDeleteBtn"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'+
 				 '</td>');
 		// 为每个按钮绑定卡片
-		 bindCard();
+		bindCard();
 	}else{
 		$(item).append('<td class="rhGrid-td-center"></td>');
 	}
@@ -48,7 +48,6 @@ function bindCard(){
 	//当行编辑事件
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = $(this).parent().parent().attr("id");
-	    rowEdit(pkCode,_viewer,[1283,498],[200,100]);
+	    rowEdit(pkCode,_viewer,[800,500],[200,100]);
 	});
-	
 }

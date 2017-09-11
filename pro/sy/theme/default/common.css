@@ -584,8 +584,8 @@ white-space: nowrap;line-height:18px;
 .rhCard-tabs .ui-tabs-nav .rhCard-back:hover {}
 .rhCard-tabs .ui-tabs-nav .rhCard-close {cursor:pointer;width:30px;height:15px;margin-left:25px; background: url("images/common/i-window-close.png") no-repeat}
 .rhCard-tabs .ui-tabs-nav .rhCard-refreshLi {float:right;margin-right:10px;background:none;margin-top:9px;}
-.rhCard-tabs .ui-tabs-nav .rhCard-refresh {border:0px red solid;font-size:11px;font-weight:bold;cursor:pointer;width:30px;height:15px;line-height:12px;margin-top:5px;margin-left:25px;
-              background: url("images/common/i-window-close.png") no-repeat;text-align:center;font-family:微软雅黑;color:#606060;letter-spacing:2px;}
+.rhCard-tabs .ui-tabs-nav .rhCard-refresh {border:0px red solid;font-size:0px;font-weight:bold;cursor:pointer;width:30px;height:15px;line-height:12px;margin-top:5px;margin-left:25px;
+              /* background: url("images/common/i-window-close.png") no-repeat; */text-align:center;font-family:微软雅黑;color:#606060;letter-spacing:2px;}
 .rhCard-tabs .ui-tabs-nav .rhCard-refresh:hover {color:#121212;}
 .rhCard-tabs .ui-tabs-nav .rhCard-refresh:active {line-height:13px;text-indent:2px;}
 .rhCard-btnBar {background-color:#F6F6F6;padding:5px 0px 0px 8px;height:30px;}
@@ -608,7 +608,7 @@ white-space: nowrap;line-height:18px;
 .rhCard-tabs .conHeaderTitle-orange {background: url("images/common/block-orange-title.png") repeat scroll 0 0 transparent;}
 .rhCard-tabs .conHeaderTitle-skyBlue {background:none;background-color:#61a6d7;}
 .rhCard-tabs .conHeaderTitle-skyBlue li a {color:white;}
-.rhCard-tabs .conHeaderTitle-flower {background: url("images/common/block-flower-title.gif") repeat scroll 0 0 transparent;}
+/* .rhCard-tabs .conHeaderTitle-flower {background: url("images/common/block-flower-title.gif") repeat scroll 0 0 transparent;} */
 .rhCard-tabs .conHeaderTitle-tree {background: url("images/common/block-tree-title.gif") repeat scroll 0 0 transparent;}
 .rhCard-tabs .conHeaderTitle-blue {background: url("images/common/block-lightBlue-title.png") repeat scroll 0 0 transparent;}
 .rhCard-tabs .conHeaderTitle__festival {background: url("images/style/festival/block-festival-title.png") repeat scroll 0 0 transparent;}

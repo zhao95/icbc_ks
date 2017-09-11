@@ -10,11 +10,9 @@ _viewer.getItem("JH_ENDDATE").obj.unbind("click").bind("click", function() {
 	    });
 });
 
-var params = _viewer.getParHandler().getParams();
-var pkCode = params.JH_ID;
-var jhTitle = params.JH_TITLE;
-if(pkCode!=""){
-	document.getElementById("TS_JHGL_XX-JH_PTITLE").value=pkCode;
-	document.getElementById("TS_JHGL_XX-JH_TITLE").value=jhTitle;
+if(_viewer._actVar == "cardAdd"){
+	var JH_ID = _viewer.opts.JH_ID;
+	var JH_TITLE = _viewer.opts.JH_TITLE;
+	_viewer.getItem("JH_PTITLE").setValue(JH_ID);
+	_viewer.getItem("JH_TITLE").setValue(JH_TITLE);
 }
-

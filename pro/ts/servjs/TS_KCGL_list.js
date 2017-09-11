@@ -116,6 +116,20 @@ _viewer.getBtn("trash").unbind("click").bind("click", function(event) {
 /*
 * 删除前方法执行
 */
-rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+_viewer.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 };
+
+/**
+ * 目录管理
+ */
+_viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
+	
+	module = 'EXAM_ROOM';
+	
+	var params = {"isHide":"true", "CTLG_MODULE":module};
+	
+	var options = {"tTitle":"考场目录管理","url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
+	Tab.open(options);
+
+});
