@@ -37,20 +37,21 @@ function bindCard(){
 	//当行编辑事件
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = $(this).parent().parent().attr("id");
-	    rowEdit(pkCode,_viewer,[1283,498],[200,100]);
+	    rowEdit(pkCode,_viewer,[1000,498],[200,100]);
 	});
 	
 	//当行详细计划事件
 	jQuery("td [operCode='optViewBtn']").unbind("click").bind("click", function(){
 		var pkCode = $(this).parent().parent().attr("id");
 		var jhTitle = _viewer.grid.getRowItemValue(pkCode,"JH_TITLE");
-		//定义一个对象，将要传递的数据放入(isStop的值是随意定义的)
-		var params = {"JH_ID":pkCode,"IS_HIDE":true,"isStop":1,"JH_TITLE":jhTitle};
+		//定义一个对象
+		var strwhere = " and JH_PTITLE ='"+ pkCode +"' ";
+		var params = {"JH_ID":pkCode,"JH_TITLE":jhTitle,"_extWhere":strwhere};
 		var url ="TS_JHGL_XX.list.do";
 		var options = {
 			"url":url,
 			"params":params,
-			"menuFlag":2,
+			"menuFlag":3,
 		};
 		Tab.open(options);
 	});	
@@ -60,7 +61,7 @@ function bindCard(){
 _viewer.getBtn("fabu").unbind("click").bind("click", function() {
 	var pkAarry = _viewer.grid.getSelectPKCodes();
 	if (pkAarry.length == 0) {
-		_viewer.listBarTipError(Language.transStatic("rhListView_string6"));
+		_viewer.listBarTipError("请选择相应记录！");
 	} else {
 			var param = {};
 			param["pkCodes"] = pkAarry.join(",");
@@ -72,7 +73,7 @@ _viewer.getBtn("fabu").unbind("click").bind("click", function() {
 _viewer.getBtn("qxfb").unbind("click").bind("click", function() {
 	var pkAarry = _viewer.grid.getSelectPKCodes();
 	if (pkAarry.length == 0) {
-		_viewer.listBarTipError(Language.transStatic("rhListView_string6"));
+		_viewer.listBarTipError("请选择相应记录！");
 	} else {
 			var param = {};
 			param["pkCodes"] = pkAarry.join(",");
@@ -85,12 +86,8 @@ _viewer.getBtn("qxfb").unbind("click").bind("click", function() {
  * 目录管理
  */
 _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
-	
 	module = 'PLAN';
-	
 	var params = {"isHide":"true", "CTLG_MODULE":module};
-	
 	var options = {"url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
 	Tab.open(options);
-
 });
