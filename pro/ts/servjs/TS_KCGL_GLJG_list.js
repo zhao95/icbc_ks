@@ -1,6 +1,6 @@
 var _viewer = this;
-$(".rhGrid").find("tr").unbind("dblclick"); 
-$(".rhGrid").find("th[icode='del']").html("操作");
+$("#TS_KCGL_GLJG .rhGrid").find("tr").unbind("dblclick"); 
+$("#TS_KCGL_GLJG .rhGrid").find("th[icode='del']").html("操作");
 
 //删除单行数据
 _viewer.grid.getBtn("del").unbind("click").bind("click",function() {
@@ -11,6 +11,6 @@ _viewer.grid.getBtn("del").unbind("click").bind("click",function() {
 /*
 * 删除前方法执行
 */
-rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+_viewer.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 };
