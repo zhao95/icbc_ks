@@ -304,7 +304,45 @@ public class XmglServ extends CommonServ {
 	}
 
 	/**
+	 * 获取此人所在节点下 可审核 的 机构 根据机构 筛选可审核的项目
+	 */
+	public Bean getShJsonList(Bean paramBean) {
+		String where1 = paramBean.getStr("where");
+		String user_code = paramBean.getStr("user_code");
+		List<Bean> list = ServDao.finds("TS_XMGL", where1);
+		// 可审核的项目list
+		List<Bean> SHlist = new ArrayList<Bean>();
+		for (Bean bean : list) {
+			String id = bean.getId();
+			// 查询待审核 表 里的other字段判断 是否包含user_code
+			String where = "AND XM_ID="+"'"+id+"'"+" AND SH_OTHER like"+"'%"+user_code+"%'";
+			List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", where);
+			List<Bean> NOPASSlist = ServDao.finds("TS_BMSH_NOPASS", where);
+			List<Bean> PASSlist = ServDao.finds("TS_BMSH_PASS", where);
+			if(staylist.size()!=0||NOPASSlist.size()!=0||PASSlist.size()!=0){
+				SHlist.add(bean);
+			}
+		}
+		Bean outBean = new Bean();
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter w = new StringWriter();
+		try {
+			mapper.writeValue(w, SHlist);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		outBean.set("list", w.toString());
+		return outBean;
+	}
+
+
+	/**
 	 * 获取项目下所有 未审核的 报名 (某一页 每页多少条)
+	 *
 	 */
 	public Bean getUncheckList(Bean paramBean) {
 		Bean outBean = new Bean();
@@ -398,5 +436,4 @@ public class XmglServ extends CommonServ {
 		outBean.set("first", chushi);
 		return outBean;
 	}
-
 }
