@@ -1,5 +1,6 @@
 /** 服务卡片使用的js方法定义：开始fromTable */
 var _viewer = this;
+debugger;
 //针对时间的校验
 _viewer.getItem("XM_START").obj.unbind("click").bind("click", function() {
 	    WdatePicker({
@@ -44,42 +45,7 @@ _viewer.afterSave = function(resultdata){
 //		  nextBtn.hide();
 //	_viewer.readCard();
 //	
-	if(_viewer.opts.readOnly == "true"){
-		_viewer.readCard();
-	}
+if(_viewer.opts.readOnly == "true"){
+	_viewer.readCard();
+}
 
-	if(_viewer.getItem("SERV_ID").getValue() == ""){
-		_viewer.getItem("SERV_ID").setValue(_viewer.servId);
-	}
-
-	//打开自服务列表
-	if(typeof(_viewer.opts.paramData) !="undefined"){ 
-		var sid = _viewer.opts.paramData.showTab;
-		if(sid != ""){
-			var topObj = jQuery("li.rhCard-tabs-topLi[sid='" + sid + "']",_viewer.tabs);
-			topObj.find("a").click();
-		}
-	}
-
-	// 状态 0:新增未保存1:无效(待审核) 2:无效(审核未通过) 3:无效(审核中) 4:无效(扣分超过上限)5:有效
-	// 11,12,13,14:逻辑删除 
-	var jd = _viewer.getItem("XM_JD").getValue();
-	//var saveBtn = _viewer.getBtn("save");
-	//var applyBtn = _viewer.getBtn("apply");
-	var saveBtn=_viewer.getBtn("save");
-	var nextBtn=_viewer.getBtn("nextbtn");
-	// 创建数据机构
-	//var s_odept = _viewer.getItem("S_ODEPT").getValue();
-	//var odept = System.getVar("@ODEPT_CODE@");
-
-	// 只有创建机构能够修改数据和提交审批
-	if (!"".equals(jd) ) {
-		
-		cardReadOnly();
-	}
-
-	function cardReadOnly() {
-		saveBtn.hide();
-		nextBtn.hide();
-		_viewer.form.disabledAll();
-	}
