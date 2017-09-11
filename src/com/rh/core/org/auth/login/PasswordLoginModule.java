@@ -1,5 +1,10 @@
 package com.rh.core.org.auth.login;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
@@ -54,8 +59,33 @@ public class PasswordLoginModule extends AbstractLoginModule {
         //加密后进行判断
         password = EncryptUtils.encrypt(password, 
                 Context.getSyConf("SY_USER_PASSWORD_ENCRYPT", EncryptUtils.DES));
-        if (!password.equals(userBean.getPassword())) {
-            throw new RuntimeException("输入的密码错误。");
+        //先进行 临时用户密码判断   如果临时用户密码 有效启用临时密码
+        String s = userBean.getStr("USER_TEMP_PASSWORD_MADTIME");
+        if(!"".equals(s)){
+        	    try {
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					Date ss = sdf.parse(s);
+					long timeInMillis = sdf.parse(s).getTime();
+					Date datenow= new Date();
+					long between = datenow.getTime()-timeInMillis;
+					if(between>=(24* 3600000)){
+						//超过了一天 不能使用临时密码
+						if (!password.equals(userBean.getPassword())) {
+			        		throw new RuntimeException("输入的密码错误。");
+			        	}
+					}else{
+						if(!password.equals(userBean.getTempPassword())){
+							throw new RuntimeException("输入的密码错误。");
+						}
+					}
+				} catch (ParseException e) {
+					throw new RuntimeException("日期转换错误。");
+				}
+
+        }else{
+        	if (!password.equals(userBean.getPassword())) {
+        		throw new RuntimeException("输入的密码错误。");
+        	}
         }
         return userBean;
     }
