@@ -1063,4 +1063,10 @@ public class UserBean extends Bean {
    	public String getWorkNum() {
    		return this.getStr("USER_WORK_NUM");
    	}
+   	/**
+   	 * 临时登录密码
+   	 */
+   	public String getTempPassword(){
+   		return this.getStr("USER_TEMP_PASSWORD");
+   	}
 }

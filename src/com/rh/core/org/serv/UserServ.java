@@ -1,6 +1,8 @@
 package com.rh.core.org.serv;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -19,7 +21,6 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
-import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.Constant;
@@ -102,8 +103,20 @@ public class UserServ extends CommonServ {
         	paramBean.set("USER_EDU_SCHOOL", paramBean.getStr("USER_EMAIL").trim().toUpperCase());
         }
         
-        //if (!paramBean.containsKey("_JIANGANG_FLAG_")) {
-            if (paramBean.getAddFlag() && (paramBean.isEmpty("USER_PASSWORD"))) { //添加模式没有设密码则给缺省密码
+        	if(paramBean.isNotEmpty("USER_TEMP_PASSWORD")){
+        		//不启用用户临时登录密码
+        			 paramBean.set("USER_TEMP_PASSWORD", 
+        					 EncryptUtils.encrypt(paramBean.getStr("USER_TEMP_PASSWORD"), 
+        							 Context.getSyConf("SY_USER_PASSWORD_ENCRYPT", EncryptUtils.DES)));
+        			 
+        			 paramBean.set("USER_PASSWORD_REAL", paramBean.getStr("USER_TEMP_PASSWORD")); //记录真实密码给接口用
+        			 
+                     SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                     Date date= new Date();
+                     paramBean.set("USER_TEMP_PASSWORD_MADTIME",sim.format(date));
+        	}
+        	//if (!paramBean.containsKey("_JIANGANG_FLAG_")) {
+        	if (paramBean.getAddFlag() && (paramBean.isEmpty("USER_PASSWORD"))) { //添加模式没有设密码则给缺省密码
                 paramBean.set("USER_PASSWORD", Context.getSyConf("SY_USER_PASSWORD_INIT", "123456"));
             }
             if (paramBean.isNotEmpty("USER_PASSWORD")) {
@@ -114,7 +127,6 @@ public class UserServ extends CommonServ {
             } else if (paramBean.contains("USER_PASSWORD")) {
                 paramBean.remove("USER_PASSWORD");
             }
-        //}
     }
     
     /**
@@ -383,5 +395,4 @@ public class UserServ extends CommonServ {
         b.remove("ODEPT_CODE");
         b.remove("_OLDBEAN_");
     }
-
 }
