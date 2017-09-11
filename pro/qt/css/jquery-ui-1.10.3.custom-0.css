@@ -110,7 +110,7 @@
 	top: 0;
 	width: 1.8em;
 	height: 33px;
-	padding:0 5px;
+	padding:0 20px;
 	border-left: 1px solid #267EBD;
 	border-right: 1px solid #267EBD;
 	cursor:pointer;
@@ -162,11 +162,11 @@
 }
 .scalender .ui-datepicker table {
 	width: 100%;
-	font-size: .9em;
+	font-size: .8em;
 	border-collapse: collapse;
 	/* margin: 0 0 .4em; */
-	border-left:1px solid #dddddd;
-	border-right:1px solid #dddddd;
+	border-left:0px solid #dddddd;
+	border-right:0px solid #dddddd;
 	border-bottom:1px solid #dddddd;
 }
 .scalender .ui-datepicker th {
@@ -354,7 +354,7 @@
 .scalender .ui-widget-header .ui-datepicker-prev.ui-state-hover,
 .scalender .ui-widget-header .ui-datepicker-next.ui-state-hover{
 	/*border: 1px solid #0073ea;*/
-	background: #2884c7;
+/* 	background: #2884c7; */
 	font-weight: bold;
 	color: #ffffff;
 }
@@ -453,14 +453,14 @@
 }
 .scalender .ui-widget-header .ui-icon {
 	/*background-image: url(images/ui-icons_0073ea_256x240.png);*/
-	background-image: url(images/ui-icons_ffffff_256x240.png);
+	background-image: url(images/rh-icons.png);
 }
 .scalender .ui-state-default .ui-icon {
 	background-image: url(images/ui-icons_666666_256x240.png);
 }
 .scalender .ui-state-hover .ui-icon,
 .scalender .ui-state-focus .ui-icon {
-	background-image: url(images/ui-icons_ffffff_256x240.png);
+	background-image: url(images/rh-icons.png);
 }
 .scalender .ui-state-active .ui-icon {
 	background-image: url(images/ui-icons_454545_256x240.png);
@@ -477,11 +477,11 @@
 .scalender .ui-icon-blank { background-position: 16px 16px; }
 .scalender .ui-icon-carat-1-n { background-position: 0 0; }
 .scalender .ui-icon-carat-1-ne { background-position: -16px 0; }
-.scalender .ui-icon-carat-1-e { background-position: -32px 0; }
+.scalender .ui-icon-carat-1-e { background-position: -48px 0; }
 .scalender .ui-icon-carat-1-se { background-position: -48px 0; }
 .scalender .ui-icon-carat-1-s { background-position: -64px 0; }
 .scalender .ui-icon-carat-1-sw { background-position: -80px 0; }
-.scalender .ui-icon-carat-1-w { background-position: -96px 0; }
+.scalender .ui-icon-carat-1-w { background-position: -48px -16px; }
 .scalender .ui-icon-carat-1-nw { background-position: -112px 0; }
 .scalender .ui-icon-carat-2-n-s { background-position: -128px 0; }
 .scalender .ui-icon-carat-2-e-w { background-position: -144px 0; }
