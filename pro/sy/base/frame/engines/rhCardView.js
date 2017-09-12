@@ -450,7 +450,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
 		   } else {//默认body容器
 			   jQuery("#" + _self.dialogId).dialog("close");
 		   }
-		   if (_self._parentRefreshFlag) { //列表页面刷新
+//		   if (_self._parentRefreshFlag) { //列表页面刷新
 			   if (_self._parHandler) {
 				   try {
 					   _self._parHandler.refreshGrid(); 
@@ -458,7 +458,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
 					   //console.log(e.message);
 				   }
 			   }
-		   }
+//		   }
 		   
 		   if (_self._preTabHandlerRefresh) {//跨tab的句柄传递
 			   try {
