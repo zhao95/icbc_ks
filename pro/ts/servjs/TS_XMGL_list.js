@@ -43,9 +43,9 @@ jQuery("td[icode='buttons'] span").unbind("mouseover").bind("mouseover", functio
      var top = $(this).parent().parent().get(0).offsetTop;  
  	 var pkCode = $(this).parent().parent().parent().children().get(2).innerText;
  	 
- 	 var btn = $("#div_"+pkCode).css("display","");
+ 	 var btn = $("#div_"+pkCode);
  	 
- 	 d.append(btn.clone());
+ 	 d.append(btn.clone().css("display",""));
 	 
  	 dTag.style.display="block";
  	 dTag.style.position="fixed";
