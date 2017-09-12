@@ -1,6 +1,12 @@
 /**
  * 考试日历查看详情js
  */
+
+var ks_type_obj={
+		"1":"资格类考试",
+		"2":"非资格类考试"
+}
+
 //分页+查询
 var listPage = function () {
     // 构建页码所需参数
@@ -116,7 +122,10 @@ var listPage = function () {
          var trs = ['<tr>',
              '<td style="text-align: center;">' + item.ROWNUM_ + '</td>',
              '<td>' + item.CAL_NAME + '</td>',
-             '<td>' + item.CAL_TYPE + '</td>',
+             '<td>' + ks_type_obj[item.CAL_TYPE] + '</td>',
+             '<td>' + item.KS_LEVEL + '</td>',
+             '<td>' + item.BM_START_DATE + '</td>',
+             '<td>' + item.BM_END_DATE + '</td>',
              '<td>' + item.START_DATE + '</td>',
              '<td>' + item.END_DATE + '</td>',
              '<td>' + item.CAL_COMMENT + '</td>',

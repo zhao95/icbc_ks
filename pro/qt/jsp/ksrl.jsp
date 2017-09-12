@@ -113,11 +113,13 @@
 							<tr style="backGround-color:WhiteSmoke; height: 30px; font-size:14px;">
 								<th style="width: 6%; text-align: center">序号</th>
 								<th style="width: 30%;	text-align: center">考试名称</th>
-								<th style="width: 10%;	text-align: center">考试级别</th>
-								<th style="width: 10%; text-align: center">开始时间</th>
-								<th style="width: 10%; text-align: center">结束时间</th>
-								<th style="width: 14%; text-align: center">备注</th>
-								<th style="width: 8%; text-align: center">考试月份</th>
+								<th style="width: 8%;	text-align: center">考试类别</th>
+								<th style="width: 8%;	text-align: center">考试级别</th>
+								<th style="width: 10%; text-align: center">报名开始时间</th>
+								<th style="width: 10%; text-align: center">报名结束时间</th>
+								<th style="width: 10%; text-align: center">考试开始时间</th>
+								<th style="width: 10%; text-align: center">考试结束时间</th>
+								<th style="width: 10%; text-align: center">备注</th>
 							</tr>
 						</thead>
 					<tbody id="tbody_data" ></tbody>

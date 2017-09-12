@@ -1,17 +1,19 @@
 var _viewer = this;
 //每一行添加编辑和删除
 _viewer.grid._table.find("tr").each(function(index, item) {
-	var l = $("#TS_JHGL").find('table th').length;
+//	var l = $("#TS_JHGL").find('table th').length;
 	var isHavId = $("#TS_JHGL table").find("tbody").find("tr").eq(1).attr("id");
-	if (index == 0 && l==10) {
-		$(item).append('<th class="rhGrid-thead-th" id="oper" style="width:300px;">操作</th>');
-	}
+	debugger;
+//	if (index == 0) {
+//		$(item).append('<th class="rhGrid-thead-th" id="oper" style="width:300px;">操作</th>');
+//	}
+	var $oper=$(item).find('td[icode="oper"]');
 	if(index!=0 && isHavId != undefined){
-		$(item).append('<td class="rhGrid-td-center">'+
+		$oper.append(
 				 '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optEditBtn" operCode="optEditBtn"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
 				 '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_delete" operCode="delete"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'+
-				 '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optViewBtn" operCode="optViewBtn"><span class="rh-icon-inner">详细</span><span class="rh-icon-img btn-view"></span></a>'+
-				 '</td>');
+				 '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optViewBtn" operCode="optViewBtn"><span class="rh-icon-inner">详细</span><span class="rh-icon-img btn-view"></span></a>'
+				 );
 		// 为每个按钮绑定卡片
 		 bindCard();
 	}else{
@@ -42,21 +44,18 @@ function bindCard(){
 	
 	//当行详细计划事件
 	jQuery("td [operCode='optViewBtn']").unbind("click").bind("click", function(){
-		
 		var pkCode = $(this).parent().parent().attr("id");
 		var jhTitle = _viewer.grid.getRowItemValue(pkCode,"JH_TITLE");
 		//定义一个对象
 		var strwhere = " and JH_PTITLE ='"+ pkCode +"' ";
 		var params = {"JH_ID":pkCode,"JH_TITLE":jhTitle,"_extWhere":strwhere};
-		var url ="TS_JHGL_XX.list.do?&_extWhere="+strwhere;
+		var url ="TS_JHGL_XX.list.do";
 		var options = {
 			"url":url,
 			"params":params,
 			"menuFlag":3,
-			"top":true,
 		};
 		Tab.open(options);
-		/*window.open("http://localhost:8082/sy/base/view/stdListView.jsp?frameId=TS_JHGL_XX-tabFrame&sId=TS_JHGL_XX&paramsFlag=true&_extWhere="+strwhere);*/
 	});	
 
 }
@@ -91,12 +90,6 @@ _viewer.getBtn("qxfb").unbind("click").bind("click", function() {
 _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 	module = 'PLAN';
 	var params = {"isHide":"true", "CTLG_MODULE":module};
-	var options = {"url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3,"top":true};
+	var options = {"url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
 	Tab.open(options);
 });
-
-_viewer.getBtn("add").unbind("click").bind("click", function() {
-    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":"TS_JHGL","parHandler":_viewer,"widHeiArray":[900,450],"xyArray":[200,100]};
-    var cardView = new rh.vi.cardView(temp);
-    cardView.show();
-})
