@@ -24,16 +24,22 @@ $("#TS_KCGL .rhGrid").find("tr").each(function(index, item) {
 			$(item).find("td[icode='BUTTONS']").append('<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optBackTrashBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">撤销</span><span class="rh-icon-img btn-garbage"></span></a>');
 		}	
 		// 为每个按钮绑定卡片
-		bindCard();
+		kcgl_bindCard();
 	}
 });
 
 //绑定的事件     
-function bindCard(){
+function kcgl_bindCard(){
 	//当行查看事件
 	jQuery("td [operCode='optLookBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
+//	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+	    temp[UIConst.PK_KEY] = pkCode;
+	    temp["readOnly"] = true;
+	    var cardView = new rh.vi.cardView(temp);
+	    cardView.show();
+		
 	});
 	
 	//当行删除事件
@@ -43,7 +49,7 @@ function bindCard(){
 	});
 	
 	//复制
-	jQuery("td [operCode='optCopyBtn']").unbind("click").bind("click", function(){
+	jQuery("#TS_KCGL td [operCode='optCopyBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		FireFly.doAct("TS_UTIL","copy",{"servId":_viewer.servId,"pkCode":pkCode,"primaryColCode":"KC_ID"},true,false,function(data){
 			if(data._MSG_.indexOf("OK")!= -1){
@@ -53,9 +59,13 @@ function bindCard(){
 	});
 	
 	//当行编辑事件
-	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
+	jQuery("#TS_KCGL td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
+//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+	    temp[UIConst.PK_KEY] = pkCode;
+	    var cardView = new rh.vi.cardView(temp);
+	    cardView.show();
 	});
 	
 	//放入垃圾箱
@@ -80,23 +90,42 @@ function bindCard(){
 	
 	jQuery("td [operCode='optSeatBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_ZWDYB"});
+//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_ZWDYB"});
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+	    temp[UIConst.PK_KEY] = pkCode;
+	    temp["showTab"] = "TS_KCGL_ZWDYB";
+	    var cardView = new rh.vi.cardView(temp);
+	    cardView.show();
 	});
 	
 	jQuery("td [operCode='optJgBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_GLJG"});
+//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_GLJG"});
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+	    temp[UIConst.PK_KEY] = pkCode;
+	    temp["showTab"] = "TS_KCGL_GLJG";
+	    var cardView = new rh.vi.cardView(temp);
+	    cardView.show();
 	});
 	
 	jQuery("td [operCode='optIPScopeBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPSCOPE"});
+//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPSCOPE"});
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+	    temp[UIConst.PK_KEY] = pkCode;
+	    temp["showTab"] = "TS_KCGL_IPSCOPE";
+	    var cardView = new rh.vi.cardView(temp);
+	    cardView.show();
 	});
 	jQuery("td [operCode='optIPZwhBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPZWH"});
+//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPZWH"});
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+	    temp[UIConst.PK_KEY] = pkCode;
+	    temp["showTab"] = "TS_KCGL_IPZWH";
+	    var cardView = new rh.vi.cardView(temp);
+	    cardView.show();
 	});
-	
 }
 
 _viewer.getBtn("trash").unbind("click").bind("click", function(event) {
@@ -126,10 +155,14 @@ _viewer.beforeDelete = function(pkArray) {
 _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 	
 	module = 'EXAM_ROOM';
-	
 	var params = {"isHide":"true", "CTLG_MODULE":module};
-	
-	var options = {"tTitle":"考场目录管理","url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3,"top":true};
+	var options = {"tTitle":"考场目录管理","url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
+	options["top"] = true;
 	Tab.open(options);
+});
 
+_viewer.getBtn("add").unbind("click").bind("click", function(event) {
+    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,100]};
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
 });

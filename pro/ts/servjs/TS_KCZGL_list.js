@@ -26,12 +26,21 @@ function bindCard(){
 	//当行查看事件
 	jQuery("td [operCode='optLookBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
+//	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
+	    var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+	    temp[UIConst.PK_KEY] = pkCode;
+	    temp["readOnly"] = true;
+	    var cardView = new rh.vi.cardView(temp);
+	    cardView.show();
 	});
 	//当行编辑事件
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
+//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+	    temp[UIConst.PK_KEY] = pkCode;
+	    var cardView = new rh.vi.cardView(temp);
+	    cardView.show();
 	});
 	//当行删除事件
 	jQuery("td [operCode='optDeleteBtn']").unbind("click").bind("click", function(){
@@ -69,7 +78,12 @@ function bindCard(){
 	
 	jQuery("td [operCode='optZBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCZGL_GROUP"});
+//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCZGL_GROUP"});
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+	    temp[UIConst.PK_KEY] = pkCode;
+	    temp["showTab"] = "TS_KCZGL_GROUP";
+	    var cardView = new rh.vi.cardView(temp);
+	    cardView.show();
 	});
 	
 }
@@ -88,6 +102,11 @@ _viewer.getBtn("trash").unbind("click").bind("click", function(event) {
 	});
 });
 
+_viewer.getBtn("add").unbind("click").bind("click", function(event) {
+    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,100]};
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+});
 /*
  * 删除前方法执行
  */
