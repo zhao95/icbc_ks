@@ -1,7 +1,7 @@
 var _viewer = this;
-
 //查看只读
-if(_viewer.opts.readOnly == "true"){
+if(_viewer.opts.readOnly == true){
+	_viewer.getBtn("apply").hide();
 	_viewer.readCard();
 }
 
@@ -10,8 +10,8 @@ if(_viewer.getItem("SERV_ID").getValue() == ""){
 }
 
 //打开自服务列表
-if(typeof(_viewer.opts.paramData) !="undefined"){ 
-	var sid = _viewer.opts.paramData.showTab;
+if(typeof(_viewer.opts.showTab) !="undefined"){ 
+	var sid = _viewer.opts.showTab;
 	if(sid != ""){
 		var topObj = jQuery("li.rhCard-tabs-topLi[sid='" + sid + "']",_viewer.tabs);
 		topObj.find("a").click();
