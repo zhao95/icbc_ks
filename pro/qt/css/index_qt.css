@@ -36,6 +36,30 @@
 	height: 116px;
 }
 
+/**首页内容中的col8左侧所有box */
+#main_col8{
+	padding-left:15px;
+	padding-right:0;
+}
+#main_col8 .box{
+	margin-bottom:15px;
+}
+
+/**首页内容中的col4右侧所有box */
+#main_col4{
+	padding-left:15px;
+	padding-right:15px;
+}
+#main_col4 .box{
+	margin-bottom:15px;
+}
+
+/**首页通知模块的样式*/
+#announcement-box{
+	margin-bottom:15px;
+}
+
+
 /* //项目状态进度条样式 */
 #jdtMain {
 	position: relative;
@@ -196,6 +220,7 @@
 	clear: both;
 	position: relative;
 	top: 10px;
+	height:265px;
 }
 
 .TS_KS_CAL .ui-datepicker-div {
@@ -241,20 +266,26 @@
 }
 
 .TS_KS_CAL .item {
+    margin-top: 5px;
 	width: 48px;
-	height: 33px;
+	height: 25px;
+	line-height: 25px;
 	float: right;
 	text-align: center;
+	border:1px solid #cccccc;
+	border-radius:2px;
 }
 
 .TS_KS_CAL .item_select {
-	background: white;
+	background: #dfdfdf;
+    margin-top: 5px;
 	width: 48px;
-	height: 33px;
+    height: 25px;
+    line-height: 25px;
 	float: right;
 	text-align: center;
-	border-left: 1px #CCCCCC solid;
-	border-right: 1px #CCCCCC solid;
+	border-left: 0px #CCCCCC solid;
+	border-right: 0px #CCCCCC solid;
 }
 
 /** 日历样式覆盖 */
@@ -264,7 +295,7 @@
 
 .TS_KS_CAL .scalender .ui-widget-header {
 	background-image: none;
-	background-color: #ece9e9;
+	background-color: #ffffff;
 }
 
 .TS_KS_CAL .ui-widget-header {
@@ -273,26 +304,36 @@
 	color: #7D775C;
 }
 
+/**引入雪碧图的路径显示*/
 .scalender .ui-widget-header .ui-icon {
 	background-image:
-		url("/sy/comm/scalender/css/scalender/images/ui-icons_ff0084_256x240.png");
+		url("images/rh-icons.png");
+}
+.TS_KS_CAL .ui-datepicker-prev{
+/* 	margin-left:10px; */
+}
+.TS_KS_CAL .ui-datepicker-next{
+	
 }
 
 .TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-prev, .TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-next
 	{
-	border-left: 1px solid #CCCCCC;
-	width: 10px;
-	border-right: 1px solid #CCCCCC;
+	border-left: 0px solid #CCCCCC;
+	width: 20px;
+	border-right: 0px solid #CCCCCC;
 }
 
-.TS_KS_CAL .scalender .ui-widget-header .ui-state-hover, .TS_KS_CAL .scalender .ui-widget-header .ui-datepicker-prev.ui-state-hover,
+.TS_KS_CAL .scalender .ui-widget-header .ui-state-hover, .TS_KS_CAL .scalender .ui-widget-header .ui-datepicker-prev .ui-state-hover,
 	.TS_KS_CAL .scalender .ui-widget-header .ui-datepicker-next.ui-state-hover,
 	.TS_KS_CAL .ui-datepicker-prev-hover, .TS_KS_CAL .ui-datepicker-next-hover,
-	.TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-next-hover {
+	 {
 	background-image: none;
 	background-color: #CCCCCC;
 }
-
+.TS_KS_CAL .scalender .ui-datepicker-prev-hover, 
+.TS_KS_CAL .scalender  .ui-datepicker-next-hover{
+	background-color: #ffffff;
+}
 .TS_KS_CAL .scalender .ui-datepicker {
 	margin-right: 0;
 }
@@ -419,6 +460,7 @@
 /*超出省略号*/
 #announcement-box .table {
 	table-layout: fixed;
+	margin-top: 10px;
 }
 
 #announcement-box .table tr td {

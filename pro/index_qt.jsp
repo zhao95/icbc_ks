@@ -19,14 +19,11 @@
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
 <!-- Font Awesome -->
+<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/index_qt.css">
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/font-awesome-4.7.0/css/font-awesome.min.css">
 <!-- Ionicons -->
-<link rel="stylesheet"
-	href="<%=CONTEXT_PATH%>/qt/ionicons/css/ionicons.min.css">
-
-<!-- 首页模块css -->
-<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/index_qt.css">
+<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/ionicons/css/ionicons.min.css">
 
 <!-- 进度条css -->
 <%-- <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/jdt.css"> --%>
@@ -40,12 +37,14 @@
 <%-- <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/qt_todo.css"> --%>
 
 <!-- Theme style -->
-<link rel="stylesheet"
-	href="<%=CONTEXT_PATH%>/qt/dist/css/AdminLTE.min.css">
-<!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-<link rel="stylesheet"
-	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
+<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/dist/css/AdminLTE.min.css">
+
+<!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
+<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
+	
+<!-- 首页模块css -->
+
+
 </head>
 <body class="hold-transition skin-black sidebar-mini layout-boxed">
 	<div class="wrapper">
@@ -132,7 +131,7 @@
 
 				<div style="margin-top: 20px; text-align:center;">
 					
-					<img  id="left-img-renzheng" src="/qt/img/left-logo.png">
+					<img  id="left-img-renzheng" src="/qt/img/left-logo.png" style="cursor: pointer;">
 				</div>
 
 				<div class="user-panel" />
@@ -162,7 +161,7 @@
 
 			<section class="content">
 				<div class="row">
-					<div class="col-md-8">
+					<div class="col-md-8" id="main_col8">
 																	<!-- /.box -->
 						<div class="panel panel-default box" style=" border-top: 1px solid #d2d6de;" >
 							<div class="box-header with-border"  style="background-color:#f9f9f9;height: 40px;">
@@ -365,7 +364,7 @@
 						<!-- /.box -->
 					</div>
 					<!-- /.col -->
-					<div class="col-md-4">
+					<div class="col-md-4" id="main_col4" >
 						<div id="announcement-box" class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title" style="display: block; font-size:16px;">
@@ -432,7 +431,7 @@
 									<span style="color:red;">&gt;</span>
 								</a>
 						</div>
-						<div class="TS_KS_CAL" style="height:250px;">
+						<div class="TS_KS_CAL" style="height:265px;">
 						<!-- 						<div class="title_top"> -->
 						<!-- 		<div style="clear:right;"></div> -->
 						<!-- 	</div> -->
@@ -444,7 +443,7 @@
 						</div>
 						</div>
 						<!-- /.box -->
-						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de; top:20px;">
+						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 							<div class="box-header" style="background-color: #f9f9f9">
 								<h3 class="box-title" style="font-size:16px;">问卷调查</h3>
 							</div>
@@ -475,7 +474,7 @@
 							<!-- /.box-body -->
 						</div>
 						<!-- /.box -->
-						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;top:20px;">
+						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;/* top:20px; */">
 							<div class="box-header" style="background-color: #f9f9f9">
 								<h3 class="box-title" style="font-size:16px;">我的认证轨迹</h3>
 							</div>
@@ -628,7 +627,7 @@
 				<!-- /.tab-pane -->
 				<!-- Settings tab content -->
 				<div class="tab-pane" id="control-sidebar-settings-tab">
-					<form method="post">
+					<!-- <form method="post"> <!-- 废弃区域 -->
 						<h3 class="control-sidebar-heading">General Settings</h3>
 
 						<div class="form-group">
@@ -638,7 +637,7 @@
 
 							<p>Some information about this general settings option</p>
 						</div>
-						<!-- /.form-group -->
+						/.form-group
 
 						<div class="form-group">
 							<label class="control-sidebar-subheading"> Allow mail
@@ -647,7 +646,7 @@
 
 							<p>Other sets of options are available</p>
 						</div>
-						<!-- /.form-group -->
+						/.form-group
 
 						<div class="form-group">
 							<label class="control-sidebar-subheading"> Expose author
@@ -656,7 +655,7 @@
 
 							<p>Allow the user to show his name in blog posts</p>
 						</div>
-						<!-- /.form-group -->
+						/.form-group
 
 						<h3 class="control-sidebar-heading">Chat Settings</h3>
 
@@ -665,14 +664,14 @@
 								online <input type="checkbox" class="pull-right" checked>
 							</label>
 						</div>
-						<!-- /.form-group -->
+						/.form-group
 
 						<div class="form-group">
 							<label class="control-sidebar-subheading"> Turn off
 								notifications <input type="checkbox" class="pull-right">
 							</label>
 						</div>
-						<!-- /.form-group -->
+						/.form-group
 
 						<div class="form-group">
 							<label class="control-sidebar-subheading"> Delete chat
@@ -680,8 +679,8 @@
 									class="fa fa-trash-o"></i></a>
 							</label>
 						</div>
-						<!-- /.form-group -->
-					</form>
+						/.form-group
+					</form> -->
 				</div>
 				<!-- /.tab-pane -->
 			</div>

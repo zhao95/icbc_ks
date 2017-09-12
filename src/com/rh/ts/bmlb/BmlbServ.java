@@ -92,7 +92,8 @@ public class BmlbServ extends CommonServ {
 			param.set("flowName", 1);
 			param.set("shrUserCode", user_code);
 			OutBean out = ServMgr.act("TS_WFS_APPLY", "backFlow", param);
-			List<Bean> blist = (List<Bean>) out.get("result");
+			List<Bean> blist = out.getList("result");
+			/*List<Bean> blist = (List<Bean>) out.get("result");*/
 			String allman = "";
 			String node_name = "";
 			if (blist != null && blist.size() > 0) {

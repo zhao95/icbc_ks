@@ -9,20 +9,33 @@ var listPage = function () {
     this.endNum = this.startNum; // 中间页码的最后一个页码
 };
  listPage.prototype.getListData = function (num) {
-	 var select = document.getElementById("yema");
-	 var index = document.getElementById("yema").selectedIndex;
-	var myts = select.options[index].value;
-	////初始化页面
-	var type =  document.getElementById("zhuangtai");
- 	var index = type.selectedIndex;
- 	var  zhuangtai = type.options[index].value;
-
-     	var param={};
+	//每页条数
+		var select = document.getElementById("yema");
+		 var index = document.getElementById("yema").selectedIndex;
+		var myts = select.options[index].value;
+		
+	 var name = $("#mc").val();
+	    var zuzhidanwei =  $("#zzdw").val();
+	    var where1 = "";
+	    var where2 = "";
+	    if(jQuery.trim(name)!=""){
+	    	where1 = "AND XM_NAME like"+"'%"+name+"%'";
+	    }
+	    if(jQuery.trim(zuzhidanwei)!=""){
+	    	where2 = " AND XM_FQDW_NAME like"+"'%"+zuzhidanwei+"%'"
+	    }
+		var type =  document.getElementById("zhuangtai");
+	var index = type.selectedIndex;
+	var  zhuangtai = type.options[index].value;
+	sqlWhere = where1 + where2;
+	var param = {};
+	//页面的输入查询条件放入传递的参数中
+	var param={};
+	param["zhuangtai"]=zhuangtai;
 		param["user_code"]=user_code;
 		param["nowpage"]=num;
 		param["shownum"]=myts;
-		param["where"]=sqlWhere;
-		param["zhuangtai"]=zhuangtai;
+	param["where"] = sqlWhere;
 		
      	return FireFly.doAct("TS_XMGL","getUncheckList",param)
      /*return FireFly.getListData("TS_KS_CAL", data, false);*/
@@ -41,45 +54,10 @@ var listPage = function () {
      this.bldPage();
      var listPage=this;
    //查询条件按钮（设置查询考试名称和年份的条件）
-  jQuery("#search").unbind("click").click(function(){
-	  var select = document.getElementById("yema");
-		 var index = document.getElementById("yema").selectedIndex;
-		var myts = select.options[index].value;
-	  var name = $("#mc").val();
-	    var zuzhidanwei =  $("#zzdw").val();
-	    var where1 = "";
-	    var where2 = "";
-	    if(jQuery.trim(name)!=""){
-	    	where1 = "AND XM_NAME like"+"'%"+name+"%'";
-	    }
-	    if(jQuery.trim(zuzhidanwei)!=""){
-	    	where2 = " AND XM_FQDW_NAME like"+"'%"+zuzhidanwei+"%'"
-	    }
-		var type =  document.getElementById("zhuangtai");
-     	var index = type.selectedIndex;
-     	var  zhuangtai = type.options[index].value;
-     	sqlWhere = where1 + where2;
-     	var param = {};
-     	//页面的输入查询条件放入传递的参数中
-     	var param={};
-     	param["zhuangtai"]=zhuangtai;
-		param["user_code"]=user_code;
-		param["nowpage"]=num;
-		param["shownum"]=myts;
-     	param["where"] = sqlWhere;
-     	//获取到查询后的数据
-     	
-     	var searchResult = FireFly.doAct("TS_XMGL","getUncheckList",param);
-     	//将数据填入页面
-     	listPage._lPage = searchResult._PAGE_;
-     	listPage.bldTable(searchResult);
-     	listPage.bldPage();
-        //table tr  隔行改变背景色
-     	//var table = jQuery("#kstable");  
-     	//rowscolor(table);
-     	//去掉字符串中所有的空格方法
-     	 function trimAll(str) {return str.replace(/\s+/g, "");}
-     });
+ /* jQuery("#search").unbind("click").click(function(){
+	  alert("a");
+	  new listPage().gotoPage(1);
+     });*/
 
 		//渲染隔行背景色
   		//var table = jQuery("#kstable");  
@@ -95,49 +73,9 @@ var listPage = function () {
 		//}
  };
  function fenyeselect(){
-	 listPage.prototype.fenyeselectss();
+	 new listPage().gotoPage(1);
  }
- listPage.prototype.fenyeselectss=function(){
-	//每页条数
-		var select = document.getElementById("yema");
-		 var index = document.getElementById("yema").selectedIndex;
-		var myts = select.options[index].value;
-		
-	 var name = $("#mc").val();
-	    var zuzhidanwei =  $("#zzdw").val();
-	    var where1 = "";
-	    var where2 = "";
-	    if(jQuery.trim(name)!=""){
-	    	where1 = "AND XM_NAME like"+"'%"+name+"%'";
-	    }
-	    if(jQuery.trim(zuzhidanwei)!=""){
-	    	where2 = " AND XM_FQDW_NAME like"+"'%"+zuzhidanwei+"%'"
-	    }
-		var type =  document.getElementById("zhuangtai");
-  	var index = type.selectedIndex;
-  	var  zhuangtai = type.options[index].value;
-  	sqlWhere = where1 + where2;
-  	var param = {};
-  	//页面的输入查询条件放入传递的参数中
-  	var param={};
-  	param["zhuangtai"]=zhuangtai;
-		param["user_code"]=user_code;
-		param["nowpage"]=1;
-		param["shownum"]=myts;
-  	param["where"] = sqlWhere;
-  	//获取到查询后的数据
-  	var searchResult = FireFly.doAct("TS_XMGL","getUncheckList",param);
-  	//将数据填入页面
-  	this._lPage = searchResult._PAGE_;
-  	this.bldTable(searchResult);
-  	this.bldPage();
-  	var listPage = this; 
-     //table tr  隔行改变背景色
-  	//var table = jQuery("#kstable");  
-  	//rowscolor(table);
-  	//去掉字符串中所有的空格方法
-  	 function trimAll(str) {return str.replace(/\s+/g, "");}
- }
+ 
  /*跳转到指定页*/
  listPage.prototype.gotoPage = function (num) {
 	 
@@ -359,7 +297,14 @@ var listPage = function () {
      return this._page;
  };
  //默认跳转到第一页
- new listPage().gotoPage(1);
- jq("#zhuangtai").change(function(){
+/* new listPage().gotoPage(1);*/
+ function ztcx(){
 	 new listPage().gotoPage(1);
-});
+ }
+ function xzcu(){
+	 new listPage().gotoPage(1);
+ }
+/* jq("#zhuangtai").change(function(){
+	 alert("a");
+	 new listPage().gotoPage(1);
+});*/

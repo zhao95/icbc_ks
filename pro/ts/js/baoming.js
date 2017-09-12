@@ -30,18 +30,18 @@ function chexiao(i){
 	}else{
 		return false;
 	}
-	listPage.prototype._fenye();
+	new listPage().gotoPage(1);
 }
 
 //级别下拉框onchange事件
 function jibieonchange(){
-	listPage.prototype._fenye();
+	new listPage().gotoPage(1);
 }
 
 //每页多少条 添加onchange事件
 function fenyeselect(){	
 	//跟 级别 按钮 的onchange时间一样都要 筛选所有条件下的数据
-	listPage.prototype._fenye();
+	new listPage().gotoPage(1);
 }
 
 //报名时根据类型跳转不同页面
@@ -87,6 +87,7 @@ $(function () {
   //对每一行 进行  渲染 颜色
 	ksqxm();
    selectcreate();
+   new listPage().gotoPage(1);
  }); 
 //---------------------下拉框生成
 function selectcreate(){
@@ -185,7 +186,7 @@ function selectcreate(){
  	            $next.find("option").first().attr('selected', true)
  	            $("#" + opt.targets[nextIndex+1]).find("option").attr('selected', false)
  	            $("#" + opt.targets[nextIndex+1]).find("option").first().attr('selected', true)
- 	           listPage.prototype._fenye();
+ 	           new listPage().gotoPage(1);
  	        });
  	    }
  	    var $this = $("#gangwei");
@@ -310,7 +311,7 @@ function selectcreate(){
 	 param["bmid"]=bmid
 	 param["liyou"]=liyou;
 	 FireFly.doAct("TS_BMSH_NOPASS","yiyi",param);
-	  listPage.prototype._fenye();
+	 new listPage().gotoPage(1);
 }
  
  //报名项目列表调用(初始化后展示)
@@ -385,29 +386,7 @@ function selectcreate(){
  };
   listPage.prototype.getListData = function (num) {
 	//每页条数
-		var select = document.getElementById("yema");
-		 var index = document.getElementById("yema").selectedIndex;
-		var myts = select.options[index].value;
-		var param={};
-     	param["user_code"]=user_code;
-     	param["nowpage"]=num;
-		param["shownum"]=myts;
-		param["where"]=sqlWhere;
-      return FireFly.doAct("TS_BMLB_BM","getSelectedData",param);
-//      debugger;
-  };
-  //全局变量  sql查询条件(页面输入的搜索条件)
-  var sqlWhere= "";
- // 创建页面显示数据的主体
-  listPage.prototype._bldBody = function (num) {
-      var listData = this.getListData(num);
-      this._lPage = listData._PAGE_;
-      this.bldTable(listData);
-      this.bldPage();
-      var listPage=this;
-    //查询条件按钮（设置查询考试名称和年份的条件）
-  };
-  listPage.prototype._fenye=function(){
+	  debugger;
 	  var jb = document.getElementById("jb");
 	  var indexjb = jb.selectedIndex;
 	  var jbvalue = jb.options[indexjb].value;
@@ -430,7 +409,7 @@ function selectcreate(){
 	  var index = document.getElementById("yema").selectedIndex;
 	  var myts = select.options[index].value;
 	  //重新计算 页码
-	  param["nowpage"]=1;
+	  param["nowpage"]=num;
 	  param["shownum"]=myts;
 	  if(value1=="" && jbvalue=="全部"){
 		  param["where"]="";
@@ -452,19 +431,20 @@ function selectcreate(){
 	  }else if(value1!="" && value2!="" && value3=="" && jbvalue=="全部"){
 		  param["where"]="AND BM_LB="+"'"+value1+"' "+"AND BM_XL="+"'"+value2+"'";
 	  }
-	  
-	  /*sqlWhere= param["where"];*/
-	  //获取到查询后的数据
-	  var searchResult =  FireFly.doAct("TS_BMLB_BM","getSelectedData",param);;
-	  //将数据填入页面
-	  this._lPage = searchResult._PAGE_;
-	  this.bldTable(searchResult);
-	  this.bldPage();
-	 
-	  var listPage=this;
-	  function trimAll(str) {return str.replace(/\s+/g, "");}
+      return FireFly.doAct("TS_BMLB_BM","getSelectedData",param);
   };
-  
+  //全局变量  sql查询条件(页面输入的搜索条件)
+  var sqlWhere= "";
+ // 创建页面显示数据的主体
+  listPage.prototype._bldBody = function (num) {
+      var listData = this.getListData(num);
+      this._lPage = listData._PAGE_;
+      this.bldTable(listData);
+      this.bldPage();
+      var listPage=this;
+    //查询条件按钮（设置查询考试名称和年份的条件）
+  };
+
 /*  跳转到指定页*/
   listPage.prototype.gotoPage = function (num) {
  	 
@@ -541,8 +521,6 @@ function selectcreate(){
 		    	//没有提交异议  且没有撤销
 		    	if(pageEntity[i].BM_STATE==1){
 		    		if(yiyistate==2){
-		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td icode="BM_OPTIONS" style="text-align: center"><a href="#" onclick="chakan('+i+')" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议详情</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
-		    		
 		    		//判断审核状态
 		    		//审核未通过 没有手动审核
 		    		if(sh_state==2){
@@ -550,7 +528,7 @@ function selectcreate(){
 		    		}else if(sh_state==1){
 		    			//审核通过 没有异议  没有撤销
 		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="color:red;text-align: center">'+sh_state_str+'</td><td style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
-		    		}else{
+		    		}else if(sh_state==3){
 		    			//审核未通过  手动审核
 		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: center">'+BM_STARTDATE+"-"+BM_ENDDATE+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="color:red;text-align: center">'+sh_state_str+'</td><td style="text-align: center"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}
@@ -717,4 +695,4 @@ function selectcreate(){
       return this._page;
   };
   //默认跳转到第一页
-  new listPage().gotoPage(1);
+  /*new listPage().gotoPage(1);*/
