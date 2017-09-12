@@ -54,6 +54,7 @@ function bindCard(){
 			"menuFlag":3,
 		};
 		Tab.open(options);
+		/*window.open("http://localhost:8082/sy/base/view/stdListView.jsp?frameId=TS_JHGL_XX-tabFrame&sId=TS_JHGL_XX&paramsFlag=true&_extWhere="+strwhere);*/
 	});	
 
 }
@@ -86,8 +87,15 @@ _viewer.getBtn("qxfb").unbind("click").bind("click", function() {
  * 目录管理
  */
 _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
+	debugger;
 	module = 'PLAN';
 	var params = {"isHide":"true", "CTLG_MODULE":module};
 	var options = {"url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
 	Tab.open(options);
 });
+
+_viewer.getBtn("add").unbind("click").bind("click", function() {
+    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":"TS_JHGL","parHandler":_viewer,"widHeiArray":[900,450],"xyArray":[200,100]};
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+})

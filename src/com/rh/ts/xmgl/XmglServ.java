@@ -349,7 +349,6 @@ public class XmglServ extends CommonServ {
 		Bean _PAGE_ = new Bean();
 		String servId = "TS_XMGL";
 		String zhuangtai = paramBean.getStr("zhuangtai");
-		
 		String user_code = paramBean.getStr("user_code");
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
@@ -362,7 +361,11 @@ public class XmglServ extends CommonServ {
 			ParamBean paramb = new ParamBean();
 			paramb.set("xmid", id);
 			OutBean out = ServMgr.act("TS_XMGL_BMGL", "getBMState", paramb);
-			String state = out.getStr("STATE");
+			String state = "";
+			 List<Bean> list2 = out.getList("nojson");
+			 if(list2.size()!=0){
+				  state = list2.get(0).getStr("STATE");
+			 }
 			// 查询待审核 表 里的other字段判断 是否包含user_code
 			String where = "AND XM_ID="+"'"+id+"'"+" AND SH_OTHER like"+"'%"+user_code+"%'";
 			List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", where);
@@ -374,7 +377,7 @@ public class XmglServ extends CommonServ {
 					SHlist.add(bean);
 				}else if("2".equals(zhuangtai)&&"已结束".equals(state)){
 					SHlist.add(bean);
-				}else{
+				}else if("全部".equals(zhuangtai)){
 					SHlist.add(bean);
 				}
 			}
@@ -386,7 +389,7 @@ public class XmglServ extends CommonServ {
 		int yeshu = ALLNUM / meiye;
 		int yushu = ALLNUM % meiye;
 		// 获取总页数
-		if (yushu == 0 && yeshu != 0) {
+		if (yeshu == 0 && yushu != 0) {
 			yeshu += 1;
 		}
 
