@@ -42,16 +42,18 @@ function bindCard(){
 	
 	//当行详细计划事件
 	jQuery("td [operCode='optViewBtn']").unbind("click").bind("click", function(){
+		
 		var pkCode = $(this).parent().parent().attr("id");
 		var jhTitle = _viewer.grid.getRowItemValue(pkCode,"JH_TITLE");
 		//定义一个对象
 		var strwhere = " and JH_PTITLE ='"+ pkCode +"' ";
 		var params = {"JH_ID":pkCode,"JH_TITLE":jhTitle,"_extWhere":strwhere};
-		var url ="TS_JHGL_XX.list.do";
+		var url ="TS_JHGL_XX.list.do?&_extWhere="+strwhere;
 		var options = {
 			"url":url,
 			"params":params,
 			"menuFlag":3,
+			"top":true,
 		};
 		Tab.open(options);
 		/*window.open("http://localhost:8082/sy/base/view/stdListView.jsp?frameId=TS_JHGL_XX-tabFrame&sId=TS_JHGL_XX&paramsFlag=true&_extWhere="+strwhere);*/
@@ -90,7 +92,7 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 	debugger;
 	module = 'PLAN';
 	var params = {"isHide":"true", "CTLG_MODULE":module};
-	var options = {"url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
+	var options = {"url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3,"top":true};
 	Tab.open(options);
 });
 
