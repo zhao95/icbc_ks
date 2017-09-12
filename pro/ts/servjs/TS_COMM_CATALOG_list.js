@@ -113,7 +113,7 @@ _viewer.getBtn("ctlgMgr1").unbind("click").bind("click",function(event) {
 	
 	var params = {"isHide":"true", "CTLG_MODULE":module};
 	
-	var options = {"url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
+	var options = {"url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3,"top":true};
 	Tab.open(options);
 
 });

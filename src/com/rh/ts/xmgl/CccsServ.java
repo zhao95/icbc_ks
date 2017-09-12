@@ -79,9 +79,11 @@ public class CccsServ extends CommonServ {
 		    String kcId = kcBean.getId();
 		    kcBean.setId("");
 		    kcBean.remove("KC_ID");
+		    kcBean.remove("S_ATIME");
+		    kcBean.remove("S_MTIME");
 		    kcBean.set("SERV_ID", SERV_ID4);
 		    kcBean.set("GROUP_ID", newGroupId);
-		    Bean newKcBean = ServDao.save(SERV_ID4, groupBean);
+		    Bean newKcBean = ServDao.save(SERV_ID4, kcBean);
 		    String newKcId = newKcBean.getId();
 		    //子表数据复制	 
 		    List<Bean> linkServList = ServDao.finds("SY_SERV_LINK", "and SERV_ID = 'TS_KCZGL_KCGL' and S_FLAG = 1");

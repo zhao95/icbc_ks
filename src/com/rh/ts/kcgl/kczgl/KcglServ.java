@@ -7,6 +7,7 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.core.util.Strings;
 
 public class KcglServ extends CommonServ{
     
@@ -22,6 +23,10 @@ public class KcglServ extends CommonServ{
 	String groupId = paramBean.getStr("groupId");
 	for (int i = 0; i < kcIds.split(",").length; i++) {
 	    String kcId = kcIds.split(",")[i];
+	    
+	    if (Strings.isBlank(kcId)) {
+			continue;
+		}
 	    Bean kcBean = ServDao.find("TS_KCGL", kcId);
 	    kcBean = delSysCol(kcBean);
 	    kcBean.set("GROUP_ID", groupId);
