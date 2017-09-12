@@ -11,6 +11,7 @@ import com.rh.core.util.Constant;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -21,7 +22,7 @@ public class QjlbServ extends CommonServ {
     private final static String TODO_SERVID = "TS_COMM_TODO";
     private final static String DONE_SERVID = "TS_COMM_TODO_DONE";
     private final static String COMM_MIND_SERVID = "TS_COMM_MIND";
-
+    private final static String TSQJ_BM_SERVID="TS_QJLB_BM";
     private final static String dateFormatString = "yyyy-MM-dd HH:mm:ss";
 
     /**
@@ -371,4 +372,41 @@ public class QjlbServ extends CommonServ {
         return result;
     }
 
+    /**
+     * 请假次数统计
+     */
+    public int getLeaveCount(String userCode) {
+        //今年审批过的请假
+        String where = "and USER_CODE = '" + userCode + "' and QJ_STATUS = '2'" +
+                " and to_date(QJ_DATE,'yyyy-MM-dd hh24:mi:ss') between to_date(to_char(sysdate, 'yyyy' )||'-01-01','yyyy-mm-dd') and to_date((to_char(sysdate, 'yyyy' )+1)||'-01-01','yyyy-mm-dd')";
+        List<Bean> queryQjList = ServDao.finds(TSQJ_SERVID, where);//获得当前已经请假的数据
+        //2个考试周   请假场次6   6个考试   考前、考后多个考试请假算一次
+       //1遍历是否超过请假两个周期
+//        //if(){
+//        	
+//        }
+//        for (Bean queryQj : queryQjList) {
+//        	
+//            String qjDate = queryQj.getStr("QJ_ID");
+//
+//        }
+//
+        return 0;
+    }
+//    
+    /**
+     *通过QJ_ID获取考试名称日期
+     */
+    public  boolean getBooleanWeek(String qjid){
+    	String  whereTsqjBm="and QJ_ID='"+qjid+"'";
+    	List<Bean> ksList=ServDao.finds(TSQJ_BM_SERVID,whereTsqjBm);
+    	List<String>   dateList=new ArrayList();
+    	for(Bean ks: ksList ){
+    		String lbDate=ks.getStr("LB_DATE");
+    		dateList.add(lbDate);
+    	}
+    	return  true;
+    }
+    
+    
 }

@@ -70,7 +70,9 @@
 //    String user_mobile = userBean.getStr("USER_MOBILE");
 //    //获取用户入行时间
 //    String user_cmpy_date = userBean.getStr("USER_CMPY_DATE");
-
+      
+       	
+    	
 %>
 <%@ include file="../../qt/jsp/header-logo.jsp" %>
 <div style="background-color: #dfdfdf;padding: 0 10%;">
@@ -135,7 +137,7 @@
             <div class="col-sm-9">
                 <div style="background-color: #fed1d1;border:1px solid red;border-radius: 5px;padding: 5px;color: #570000;">
                     ！ 温馨提示：您今年已请假 <span style="color: red">2</span> 次，还可请假 <span style="color: red">1</span> 次。
-                    满 <span style="color: red">3</span> 次后，本年度将不允许再请假。请合理使用请假次数！
+                    满 <span id="counts" style="color: red"></span> 次后，本年度将不允许再请假。请合理使用请假次数！
                 </div>
             </div>
         </div>
@@ -356,7 +358,19 @@
 <script type="text/javascript">
 
     $(function () {
-
+    	
+    	//获取最大请假的次数显示
+     	var  countCon=System.getVar("@C_TS_KSQJ_SETCONUTS@");
+    	$("#counts").html(countCon);
+    	//考生已经借考过多少次
+    	//1.一个周内不能请假6次。2.不能超过2个考试周。3.考试的前后加减一天
+    	var userCode=System.getUser("USER_CODE");
+    	//获取系统时间年
+    	 var date=new Date;
+         var year=date.getFullYear(); 
+         var nowYear = year.toString();
+         
+    	var  where="and USER_CODE='"+userCode+"' and QJ_STATUS='"+2+"'and S_ATIME "
         /*可申请的请假列表*/
         var table1Tbody = jQuery('#tabletjId tbody');
         table1Tbody.html('');
@@ -610,6 +624,8 @@
         return true;
     }
 </script>
+
+
 <!-- FastClick -->
 <script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
 <!-- AdminLTE App -->

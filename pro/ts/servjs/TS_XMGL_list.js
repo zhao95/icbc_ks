@@ -49,7 +49,7 @@ jQuery("td[icode='buttons'] span").unbind("mouseover").bind("mouseover", functio
 	 
  	 dTag.style.display="block";
  	 dTag.style.position="fixed";
- 	 dTag.style.left= document.body.clientWidth-200-kk/2+"px"; 
+ 	 dTag.style.left= document.body.clientWidth-230-kk/2+"px"; 
  	 dTag.style.top=top+71+"px";
  	 p=[dTag.offsetLeft,dTag.offsetTop,dTag.clientWidth,dTag.clientHeight];
  	 var spanDiv= $(this).parent().get(0);
