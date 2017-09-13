@@ -46,32 +46,51 @@ function bindCard(){
 	//当行查看事件
 	jQuery("td [operCode='optLookBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
+//	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
+		openMyCard(pkCode,true);
 	});
 	
 	jQuery("td [operCode='optIPScopeBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPSCOPE"});
+//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPSCOPE"});
+		openMyCard(pkCode,"","TS_KCGL_IPSCOPE");
 	});
 	jQuery("td [operCode='optIPZwhBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPZWH"});
+//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPZWH"});
+		openMyCard(pkCode,"","TS_KCGL_IPZWH");
 	});
 	jQuery("td [operCode='optJgBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_GLJG"});
+//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_GLJG"});
+		openMyCard(pkCode,"","TS_KCGL_GLJG");
 	});
 	
 	//当行编辑事件
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
+//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
+		openMyCard(pkCode);
 	});
 	//当行删除事件
 	jQuery("td [operCode='optDeleteBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
 	});
+}
+
+//列表操作按钮 弹dialog
+function openMyCard(dataId,readOnly,showTab){
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+    temp[UIConst.PK_KEY] = dataId;
+    if(readOnly != ""){
+    	temp["readOnly"] = readOnly;
+    }
+    if(showTab != ""){
+    	temp["showTab"] = showTab;
+    }
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
 }
 
 _viewer.getBtn("updateInfo").unbind("click").bind("click", function(event) {
