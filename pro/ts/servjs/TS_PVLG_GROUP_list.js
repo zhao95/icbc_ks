@@ -51,3 +51,30 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 	Tab.open(options);
 
 });
+
+/**
+ * 添加按钮
+ */
+_viewer.getBtn("add").unbind("click").bind("click",function() {
+	var width = jQuery(window).width()-200;
+	var height = jQuery(window).height()-200;
+	
+	var ctlgPcode = _viewer._transferData["CTLG_PCODE"];
+	
+	if(ctlgPcode == "" || typeof(ctlgPcode) == "undefined") {
+		alert("请选择目录 !");
+		return false;
+	}
+	var temp = {"act":UIConst.ACT_CARD_ADD,
+			"sId":_viewer.servId,
+			"transferData": _viewer._transferData,
+			"links":_viewer.links,
+			"parHandler":_viewer,
+			"widHeiArray":[width,height],
+			"xyArray":[100,100]
+	};
+	
+	var cardView = new rh.vi.cardView(temp);
+	cardView.show();
+	return false;
+});
