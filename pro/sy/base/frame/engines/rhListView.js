@@ -2366,9 +2366,7 @@ rh.vi.listView.prototype._checkUserPvlg = function() {
 	}
 	console.log("当前服务权限",servPvlg);
 	
-	if("admin" == System.getVar("@LOGIN_NAME@")){
-		return ;
-	}
+	if("admin" != System.getVar("@LOGIN_NAME@")){
 	
 	for(var key in servPvlg) {
 			
@@ -2426,7 +2424,7 @@ rh.vi.listView.prototype._checkUserPvlg = function() {
 		}
 		
 	}
-	
+	}
 //	$("a[id^='"+_self.servId+"']").each(function(index, item) {
 //		var actCode = $(item).attr("actcode");
 //		
