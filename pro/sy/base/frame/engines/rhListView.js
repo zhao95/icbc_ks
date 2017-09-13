@@ -840,19 +840,19 @@ rh.vi.listView.prototype._openCardView = function(act,pkCode,servId,readOnly,par
     backBtn = this.opts.cardBackBtn;
     //打开小卡片条件
     var widHeiArray = null;
-    if (window.self == window.top) {//最外层的打开显示
-        var miniCardWid = jQuery("body").width() - 100;
+//    if (window.self == window.top) {//最外层的打开显示
+        var miniCardWid = jQuery(window).width() - 200;
         var miniCardHei = jQuery(window).height() - 200;
         widHeiArray = [miniCardWid,miniCardHei];
     	backBtn = true;
-    }
+//    }
     this.cardView = null;
     var temp = {"act":_act,"sId":sId,"parHandler":this,"transferData":this._transferData,"readOnly":readFlag,"title":this._title,
     		    "paramData":paramData,"links":this.links,"pCon":this.opts.cardCon,"reset":this.opts.cardReset,
     		    "backBtn":backBtn,"widHeiArray":widHeiArray};
     temp[UIConst.PK_KEY] = pkCode || "";
     
-    if (window.ICBC && window.self != window.top) { //不是弹出页面，才弹出，否则不弹出
+    if (window.ICBC && window.self != window.top && false) { //不是弹出页面，才弹出，否则不弹出
     	var url = sId + ".card.do?pkCode=" + temp[UIConst.PK_KEY] + "&readOnly=" + readFlag;
     	url = _appendRhusSession(url);
     	temp.url = url;
@@ -867,7 +867,7 @@ rh.vi.listView.prototype._openCardView = function(act,pkCode,servId,readOnly,par
     	Tab.open(temp);
     } else {
     	this.cardView = new rh.vi.cardView(temp);
-        this.cardView.show();
+        this.cardView.show(temp);
     }
     //RHFile.bldDestroyBase(this.cardView);
 };

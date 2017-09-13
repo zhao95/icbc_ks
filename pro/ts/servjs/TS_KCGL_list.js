@@ -1,4 +1,8 @@
 var _viewer = this;
+
+var width = jQuery(window).width()-200;
+var height = jQuery(window).height()-200;
+
 //取消行点击事件
 $(".rhGrid").find("tr").unbind("dblclick");
 //列表需建一个code为BUTTONS的自定义字段
@@ -138,16 +142,19 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 	Tab.open(options);
 });
 
+/*
 _viewer.getBtn("add").unbind("click").bind("click", function(event) {
-    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,100]};
+	
+    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
 });
+*/
 
 
 //列表操作按钮 弹dialog
 function openMyCard(dataId,readOnly,showTab){
-	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
     temp[UIConst.PK_KEY] = dataId;
     if(readOnly != ""){
     	temp["readOnly"] = readOnly;
