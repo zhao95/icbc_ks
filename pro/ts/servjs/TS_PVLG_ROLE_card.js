@@ -46,6 +46,13 @@ if(resultP._DATA_) {
 }
 //console.log("roleCheckedP",roleCheckedP);
 
+/*
+ * 保存之前执行,业务代码可覆盖此方法
+ */
+_viewer.beforeSave = function() {
+	
+};
+
 /**
  * 渲染角色所有模块 (主方法)
  */
@@ -69,15 +76,15 @@ render = function() {
 		  var left = $("<span class='left form__left30'>").append(leftDiv);
 		
 		  //右侧功能区域
-		  var rightDiv = $('<div class="blank fl wp">').css({"float":"left","width":"92%","clear":"none","border-left":"none"});
+		  var rightDiv = $('<div class="blank fl wp">').css({"float":"left","width":"90%","clear":"none","border-left":"none"});
 		  
-		  var rightDiv1 = $('<div class="blank fl wp">').css({"float":"left","width":"6%","clear":"none","background":"#ECF5FF"});
+		  var rightDiv1 = $('<div class="blank fl wp">').css({"float":"left","width":"8%","clear":"none","background":"#ECF5FF"});
 		  
 		  var ckallSpan = $('<span id="TS_PVLG_ROLE-CHECK_ALL_SPAN_'+obj.ITEM_CODE+'" class="ui-checkbox-default">').appendTo(rightDiv1);
 		  
 		  var ckallObj = $('<input type="checkbox" id="TS_PVLG_ROLE-CHECK_ALL_'+obj.ITEM_CODE+'">').appendTo(ckallSpan);
 		  
-		  ckallSpan.append($("<label>全选</label>"));
+		  ckallSpan.append($("<label style='padding-left:5px'>全选</label>"));
 		  
 		  //全选功能
 		  ckallObj.change(function() {
