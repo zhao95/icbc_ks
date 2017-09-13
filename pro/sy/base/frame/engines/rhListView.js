@@ -841,7 +841,7 @@ rh.vi.listView.prototype._openCardView = function(act,pkCode,servId,readOnly,par
     //打开小卡片条件
     var widHeiArray = null;
     if (window.self == window.top) {//最外层的打开显示
-        var miniCardWid = jQuery("body").width() - 300;
+        var miniCardWid = jQuery("body").width() - 100;
         var miniCardHei = jQuery(window).height() - 200;
         widHeiArray = [miniCardWid,miniCardHei];
     	backBtn = true;

@@ -20,8 +20,17 @@ _viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
 	var XM_TYPE = _viewer.getItem("XM_TYPE").getValue();// 得到类型值
 	// 从项目管理到项目设置传参
 	var ext = " and XM_ID = '" + XM_ID + "'";
-	window.location.href = "stdListView.jsp?frameId=TS_XMGLSZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=false&title=项目管理设置&XM_ID="
-	+ XM_ID + "&extWhere=" + ext;
+	//window.location.href = "stdListView.jsp?frameId=TS_XMGLSZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=false&title=项目管理设置&XM_ID="
+	//+ XM_ID + "&extWhere=" + ext;
+	var url =   "stdListView.jsp?frameId=TS_XMGLSZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=true&title=项目管理设置&XM_ID="
+		+ XM_ID + "&extWhere=" + ext;
+	
+	var options = {
+		"url":url,
+		//"params":params,
+		"menuFlag":2 
+	};
+	Tab.open(options);
 });
 
 // 保存后的操作

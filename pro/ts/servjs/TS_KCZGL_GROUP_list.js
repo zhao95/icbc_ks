@@ -7,7 +7,7 @@ $("#TS_KCZGL_GROUP .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
 		$(item).find("td[icode='BUTTONS']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optKcBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">考场管理</span><span class="rh-icon-img btn-edit"></span></a>'+
+//				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optKcBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">考场管理</span><span class="rh-icon-img btn-edit"></span></a>'+
 				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optLookBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+
 				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optEditBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
 				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optDeleteBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
