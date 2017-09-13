@@ -56,7 +56,7 @@ _viewer.afterSave = function(resultdata) {
 // nextBtn.hide();
 // _viewer.readCard();
 //	
-if (_viewer.opts.readOnly == "true") {
-	_viewer.getBtn("nextBtn").hide();
+if (_viewer.opts.readOnly) {
+	_viewer.getBtn("nextbtn").hide();
 	_viewer.readCard();
 }

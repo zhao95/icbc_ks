@@ -3,6 +3,8 @@ var d = $("<div id='d' tabindex='1' style='background-color:#d6e0f5;border:0px s
 var tableTag = $("body");  
 tableTag.append(d); 
 var dTag = d.get(0);//dTag = div#d
+var height = jQuery(window).height()-200;
+var width = jQuery(window).width()-200;
  //创建自定义字段，增加按钮
 $(".rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
@@ -65,15 +67,13 @@ jQuery("td[icode='buttons'] span").unbind("mouseover").bind("mouseover", functio
  	 d.focus();
  	 //查看
  	 $("#TS_XMGL_look"+pkCode).unbind("click").bind("click", function(){
- 		
- 	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
- 		 //openMyCard(pkCode,true);
+// 	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
+ 		openMyCard(pkCode,true);
  	 });
  	 //编辑
  	 $("#TS_XMGL_edit"+pkCode).unbind("click").bind("click", function(){
- 		
- 	    rowEdit(pkCode,_viewer,[1000,500],[200,100]);
- 		 //openMyCard(pkCode);
+// 	    rowEdit(pkCode,_viewer,[1000,500],[200,100]);
+ 		openMyCard(pkCode);
  	 });
  	 //复制
  	 $("#TS_XMGL_copy"+pkCode).unbind("click").bind("click", function(){
@@ -84,7 +84,7 @@ jQuery("td[icode='buttons'] span").unbind("mouseover").bind("mouseover", functio
  	 });
  	 //设置
  	 $("#TS_XMGL_set"+pkCode).unbind("click").bind("click", function(){
-	 	var ext =  " and XM_ID = '" + pkCode + "'";
+	 	var ext = " and XM_ID = '" + pkCode + "'";
 	 	//window.location.href ="stdListView.jsp?frameId=TS_XMGL_SZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=false&title=项目管理设置&XM_ID="+pkCode+"&extWhere="+ext;
 	   var url =   "stdListView.jsp?frameId=TS_XMGL_SZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=true&title=项目管理设置&XM_ID="
 			+ pkCode + "&extWhere=" + ext;
@@ -124,24 +124,22 @@ $("#d").mouseout(function(e){
 });
 
 //列表操作按钮 弹dialog
-//function openMyCard(dataId,readOnly,showTab){
-//	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
-//    temp[UIConst.PK_KEY] = dataId;
-//    if(readOnly != ""){
-//    	temp["readOnly"] = readOnly;
-//    }
-//    if(showTab != ""){
-//    	temp["showTab"] = showTab;
-//    }
-//    var cardView = new rh.vi.cardView(temp);
-//    cardView.show();
-//}
+function openMyCard(dataId,readOnly,showTab){
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,50]};
+    temp[UIConst.PK_KEY] = dataId;
+    if(readOnly != ""){
+    	temp["readOnly"] = readOnly;
+    }
+    if(showTab != ""){
+    	temp["showTab"] = showTab;
+    }
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+}
 
-
-
-	/**
-	 * 目录管理
-	 */
+/**
+ * 目录管理
+ */
 _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 		module = 'PROJECT';
 		var params = {"isHide":"true", "CTLG_MODULE":module};
@@ -150,7 +148,11 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 
 });
 
-
+_viewer.getBtn("add").unbind("click").bind("click", function(event) {
+    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+});
 
 
 
