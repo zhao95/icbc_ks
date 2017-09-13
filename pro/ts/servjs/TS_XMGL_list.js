@@ -125,7 +125,7 @@ $("#d").mouseout(function(e){
 
 //列表操作按钮 弹dialog
 function openMyCard(dataId,readOnly,showTab){
-	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,50]};
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
     temp[UIConst.PK_KEY] = dataId;
     if(readOnly != ""){
     	temp["readOnly"] = readOnly;
