@@ -66,18 +66,23 @@
 
 				<div class="navbar-custom-menu">
 					<ul class="nav navbar-nav">
-						
+						<li><a style="height: 60px;border-left: 0px;">
+    						<img src="qt/css/images/to_ht.png" style="cursor: pointer;">
+    						</a>
+    					</li>
 						<!-- Notifications: style can be found in dropdown.less -->
 						<li class="dropdown notifications-menu"><a href="#"
-							class="dropdown-toggle" data-toggle="dropdown" style="height:60px"> <i
-								class="fa fa-bell-o"></i> <span class="label label-warning" id="tipSum">0</span>
+							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;border-left: 0px;"> 
+<!-- 							<i　class="fa fa-bell-o"></i> -->
+								<img src="qt/css/images/qt_bell.png">
+							<span class="label label-warning" id="tipSum">0</span>
 						</a>
 							<ul class="dropdown-menu index-qt-tip-list" style="left: -120px;"></ul>
 						</li>
 						<!-- User Account: style can be found in dropdown.less -->
 						<li class="dropdown user user-menu">
 							<a id="userInfo2" href="#"
-							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;width: 160px;    text-align: center;">
+							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;width:160px;text-align: center; border-left:0px">
 							<img id= "userImg2"
 								src="/sy/theme/default/images/common/user0.png" class="user-image"
 								alt="User Image" style="margin-right: 2px;">
@@ -166,7 +171,7 @@
 						<div class="panel panel-default box" style=" border-top: 1px solid #d2d6de;" >
 							<div class="box-header with-border"  style="background-color:#f9f9f9;height: 40px;">
 								<h3 class="panel-title">资格考试项目进展状态
-									<a href="/qt/jsp/xmzt.jsp"  class="index-list-more-a">更多
+									<a onclick="window.open('/qt/jsp/xmzt.jsp')" class="index-list-more-a">更多
 									<span style="color:red;">&gt;</span>
 									</a>
 								</h3>
@@ -295,8 +300,7 @@
 						<div class="panel-heading" style="background-color: #f9f9f9">
 							<h3 class="panel-title">
 								待办 / 提醒 (<span id="todoListSum" style="color:red">0</span>)
-								<a href="<%=CONTEXT_PATH%>/qt/jsp/todo.jsp"
-								   class="index-list-more-a">
+								<a onclick="window.open('/qt/jsp/todo.jsp')" class="index-list-more-a">
 									更多
 									<span style="color:red;">></span>
 								</a>
@@ -327,8 +331,7 @@
 						<div class="panel-heading" style="background-color: #f9f9f9">
 							<h3 class="panel-title">
 								可申请的报名 (<span id="keshenqingbaomingSum" style="color:red">0</span>)
-								<a href="<%=CONTEXT_PATH%>/ts/jsp/bm.jsp"
-								   class="index-list-more-a">
+								<a onclick="window.open('/ts/jsp/bm.jsp')" class="index-list-more-a">
 									更多
 									<span style="color:red;">></span>
 								</a>
@@ -369,7 +372,7 @@
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title" style="display: block; font-size:16px;">
 									通知公告
-									<a href="/qt/jsp/todo.jsp" class="index-list-more-a">
+									<a onclick="window.open('/qt/jsp/todo.jsp')" class="index-list-more-a">
 										更多
 										<span style="color:red;">&gt;</span>
 									</a>
@@ -426,7 +429,7 @@
 						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
 						<div class="box-header" icode="ksrl-header" style="background-color: #f9f9f9;height: 40px;">
 							<h3 class="box-title" style="font-size:16px;">考试日历</h3>
-							<a href="/qt/jsp/ksrl.jsp" class="index-list-more-a">
+							<a onclick="window.open('/qt/jsp/ksrl.jsp')"  class="index-list-more-a">
 									更多
 									<span style="color:red;">&gt;</span>
 								</a>

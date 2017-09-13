@@ -32,10 +32,10 @@ jQuery(document).ready(function(){
 		}
 	});
 	//考试日历的按钮（‘更多>’）.点击之后跳转到考试日历的详细介绍页面
-	jQuery("div[icode='ksrl-header']").unbind("click").click(function(){
-		var url = FireFly.getContextPath() + "/qt/jsp/ksrl.jsp";
-		window.location.href = url;
-		});
+//	jQuery("div[icode='ksrl-header']").unbind("click").click(function(){
+//		var url = FireFly.getContextPath() + "/qt/jsp/ksrl.jsp";
+//		window.location.href = url;
+//		});
 	
 	function doPick(target,type) {
 		hasCreate[type] = true;
