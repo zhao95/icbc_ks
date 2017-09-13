@@ -23,11 +23,7 @@ function bindCard(){
 	jQuery("td [operCode='optLookBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
-	    temp[UIConst.PK_KEY] = pkCode;
-	    temp["readOnly"] = true;
-	    var cardView = new rh.vi.cardView(temp);
-	    cardView.show();
+	    openMyCard(pkCode,true);
 	});
 	
 	//当行删除事件
@@ -40,21 +36,14 @@ function bindCard(){
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
-	    temp[UIConst.PK_KEY] = pkCode;
-	    var cardView = new rh.vi.cardView(temp);
-	    cardView.show();
+	    openMyCard(pkCode);
 	});
 		
 	//考场
 	jQuery("td [operCode='optKcBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCZGL_KCGL"});
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
-	    temp[UIConst.PK_KEY] = pkCode;
-	    temp["showTab"] = "TS_KCZGL_KCGL";
-	    var cardView = new rh.vi.cardView(temp);
-	    cardView.show();
+		openMyCard(pkCode,"","TS_KCZGL_KCGL");
 	});
 }
 
@@ -71,3 +60,17 @@ _viewer.getBtn("add").unbind("click").bind("click", function(event) {
 rh.vi.listView.prototype.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 };
+
+//列表操作按钮 弹dialog
+function openMyCard(dataId,readOnly,showTab){
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+    temp[UIConst.PK_KEY] = dataId;
+    if(readOnly != ""){
+    	temp["readOnly"] = readOnly;
+    }
+    if(showTab != ""){
+    	temp["showTab"] = showTab;
+    }
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+}

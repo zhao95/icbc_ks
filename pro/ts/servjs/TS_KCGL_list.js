@@ -34,11 +34,7 @@ function kcgl_bindCard(){
 	jQuery("td [operCode='optLookBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
-	    temp[UIConst.PK_KEY] = pkCode;
-	    temp["readOnly"] = true;
-	    var cardView = new rh.vi.cardView(temp);
-	    cardView.show();
+	    openMyCard(pkCode,true);
 		
 	});
 	
@@ -62,10 +58,7 @@ function kcgl_bindCard(){
 	jQuery("#TS_KCGL td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
-	    temp[UIConst.PK_KEY] = pkCode;
-	    var cardView = new rh.vi.cardView(temp);
-	    cardView.show();
+		 openMyCard(pkCode);
 	});
 	
 	//放入垃圾箱
@@ -91,40 +84,24 @@ function kcgl_bindCard(){
 	jQuery("td [operCode='optSeatBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_ZWDYB"});
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
-	    temp[UIConst.PK_KEY] = pkCode;
-	    temp["showTab"] = "TS_KCGL_ZWDYB";
-	    var cardView = new rh.vi.cardView(temp);
-	    cardView.show();
+	    openMyCard(pkCode,"","TS_KCGL_ZWDYB");
 	});
 	
 	jQuery("td [operCode='optJgBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_GLJG"});
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
-	    temp[UIConst.PK_KEY] = pkCode;
-	    temp["showTab"] = "TS_KCGL_GLJG";
-	    var cardView = new rh.vi.cardView(temp);
-	    cardView.show();
+	    openMyCard(pkCode,"","TS_KCGL_GLJG");
 	});
 	
 	jQuery("td [operCode='optIPScopeBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPSCOPE"});
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
-	    temp[UIConst.PK_KEY] = pkCode;
-	    temp["showTab"] = "TS_KCGL_IPSCOPE";
-	    var cardView = new rh.vi.cardView(temp);
-	    cardView.show();
+	    openMyCard(pkCode,"","TS_KCGL_IPSCOPE");
 	});
 	jQuery("td [operCode='optIPZwhBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPZWH"});
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
-	    temp[UIConst.PK_KEY] = pkCode;
-	    temp["showTab"] = "TS_KCGL_IPZWH";
-	    var cardView = new rh.vi.cardView(temp);
-	    cardView.show();
+	    openMyCard(pkCode,"","TS_KCGL_IPZWH");
 	});
 }
 
@@ -166,3 +143,18 @@ _viewer.getBtn("add").unbind("click").bind("click", function(event) {
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
 });
+
+
+//列表操作按钮 弹dialog
+function openMyCard(dataId,readOnly,showTab){
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+    temp[UIConst.PK_KEY] = dataId;
+    if(readOnly != ""){
+    	temp["readOnly"] = readOnly;
+    }
+    if(showTab != ""){
+    	temp["showTab"] = showTab;
+    }
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+}

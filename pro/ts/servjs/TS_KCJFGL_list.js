@@ -37,7 +37,21 @@ function bindCard(){
 	//当行编辑事件
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = $(this).parent().parent().attr("id");
-		rowEdit(pkCode,_viewer,[1283,588],[200,100]);
+//		rowEdit(pkCode,_viewer,[1283,588],[200,100]);
+		openMyCard(pkCode);
 	})
 }
 
+//列表操作按钮 弹dialog
+function openMyCard(dataId,readOnly,showTab){
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+    temp[UIConst.PK_KEY] = dataId;
+    if(readOnly != ""){
+    	temp["readOnly"] = readOnly;
+    }
+    if(showTab != ""){
+    	temp["showTab"] = showTab;
+    }
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+}
