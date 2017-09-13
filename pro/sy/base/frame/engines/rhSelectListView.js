@@ -44,8 +44,9 @@ rh.vi.rhSelectListView.prototype.show = function(event,positionArray, dialogSize
 
 rh.vi.rhSelectListView.prototype._lastInitHei = function(options) {
 	var lastHeight = $(".rh-select-container").height();
-	if(lastHeight > 450) {
-		lastHeight = 450;
+	
+	if(lastHeight > 600) {
+		lastHeight = 600;
 	}
 	this.winDialog.css("height",lastHeight + "px");
 }
@@ -146,7 +147,7 @@ rh.vi.rhSelectListView.prototype._layout = function(event,positionArray,dialogSi
 	
 	// 获取dialog的位置
 	var bodyWid = jQuery("body").width();
-	var wid = bodyWid - 100;
+	var wid = bodyWid/2 + 100;
 	var hei = GLOBAL.getDefaultFrameHei() - 100;
 	if (dialogSizeArray && $.isArray(dialogSizeArray) && dialogSizeArray.length == 2) {
 		hei = dialogSizeArray[1];

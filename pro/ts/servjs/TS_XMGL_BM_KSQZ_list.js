@@ -18,7 +18,7 @@ function bindCard(){
 	jQuery("td [operCode='optOption']").unbind("click").bind("click", function(){
 		var KSQZ_ID=$(this).parent().parent().attr("id");
 		//打开查看页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_BM_KSQZ","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[200,50]};
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_BM_KSQZ","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
 		temp[UIConst.PK_KEY]=KSQZ_ID;//修改时，必填	    
 		 var cardView = new rh.vi.cardView(temp);
 		cardView.show(true);		
