@@ -1,5 +1,5 @@
 var _viewer = this;
-var d = $("<div id='d' tabindex='1' style='background-color:#b6e1fd;border:0px solid #DCE6F5;display:none;'></div>");// 获取<div id="d">的  
+var d = $("<div id='d' tabindex='1' style='background-color:#d6e0f5;border:0px solid #DCE6F5;display:none;'></div>");// 获取<div id="d">的  
 var tableTag = $("body");  
 tableTag.append(d); 
 var dTag = d.get(0);
@@ -44,6 +44,8 @@ jQuery("td[icode='buttons'] span").unbind("mouseover").bind("mouseover", functio
  	 var pkCode = $(this).parent().parent().parent().children().get(2).innerText;
  	 
  	 var btn = $("#div_"+pkCode);
+ 	
+ 	 //btn.css("height":tdTag.height);
  	 
  	 d.append(btn.clone().css("display",""));
 	 
@@ -73,7 +75,16 @@ jQuery("td[icode='buttons'] span").unbind("mouseover").bind("mouseover", functio
  	 //设置
  	 $("#TS_XMGL_set"+pkCode).unbind("click").bind("click", function(){
 	 	var ext =  " and XM_ID = '" + pkCode + "'";
-	 	window.location.href ="stdListView.jsp?frameId=TS_XMGL_SZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=false&title=项目管理设置&XM_ID="+pkCode+"&extWhere="+ext;
+	 	//window.location.href ="stdListView.jsp?frameId=TS_XMGL_SZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=false&title=项目管理设置&XM_ID="+pkCode+"&extWhere="+ext;
+		var url =   "stdListView.jsp?frameId=TS_XMGLSZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=true&title=项目管理设置&XM_ID="
+			+ pkCode + "&extWhere=" + ext;
+		
+		var options = {
+			"url":url,
+			//"params":params,
+			"menuFlag":2 
+		};
+		Tab.open(options);
  	 });
  	 //删除
  	 $("#TS_XMGL_delete"+pkCode).unbind("click").bind("click", function(){
