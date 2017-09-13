@@ -49,11 +49,11 @@ jQuery("td[icode='buttons'] span").unbind("mouseover").bind("mouseover", functio
  	 
  	 d.append(btn.clone().css("display",""));
  	 
- 	var winWidth=windows.innerWidth;if (windows.innerWidth) {
-        winWidth = windows.innerWidth; 
-    }else if ((document.body) && (document.body.clientWidth)) {
-        winWidth = document.body.clientWidth; 
-}
+// 	var winWidth=windows.innerWidth;if (windows.innerWidth) {
+//        winWidth = windows.innerWidth; 
+//    }else if ((document.body) && (document.body.clientWidth)) {
+//        winWidth = document.body.clientWidth; 
+//}
 
  	 dTag.style.display="block";
  	 dTag.style.position="fixed";
@@ -66,14 +66,14 @@ jQuery("td[icode='buttons'] span").unbind("mouseover").bind("mouseover", functio
  	 //查看
  	 $("#TS_XMGL_look"+pkCode).unbind("click").bind("click", function(){
  		
- 	    //_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
- 		 openMyCard(pkCode,true);
+ 	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
+ 		 //openMyCard(pkCode,true);
  	 });
  	 //编辑
  	 $("#TS_XMGL_edit"+pkCode).unbind("click").bind("click", function(){
  		
- 	   // rowEdit(pkCode,_viewer,[1000,500],[200,100]);
- 		 openMyCard(pkCode);
+ 	    rowEdit(pkCode,_viewer,[1000,500],[200,100]);
+ 		 //openMyCard(pkCode);
  	 });
  	 //复制
  	 $("#TS_XMGL_copy"+pkCode).unbind("click").bind("click", function(){
@@ -86,14 +86,14 @@ jQuery("td[icode='buttons'] span").unbind("mouseover").bind("mouseover", functio
  	 $("#TS_XMGL_set"+pkCode).unbind("click").bind("click", function(){
 	 	var ext =  " and XM_ID = '" + pkCode + "'";
 	 	//window.location.href ="stdListView.jsp?frameId=TS_XMGL_SZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=false&title=项目管理设置&XM_ID="+pkCode+"&extWhere="+ext;
-		var url =   "stdListView.jsp?frameId=TS_XMGL_SZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=true&title=项目管理设置&XM_ID="
+	   var url =   "stdListView.jsp?frameId=TS_XMGL_SZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=true&title=项目管理设置&XM_ID="
 			+ pkCode + "&extWhere=" + ext;
 		//var params = {"isHide":"true", "XM_ID":pkCode};
-		//var options = {"url":"TS_XMGL_SZ.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3,"top":true};
-		
+		//var options = {"url":"TS_XMGL_SZ.list.do?isHide=true","params":params,"menuFlag":3,"top":true};
+		//Tab.open(options);
 		var options = {
 			"url":url,
-			//"params":params,
+//			//"params":params,
 			"menuFlag":3,
 			"top":true
 		};
@@ -124,18 +124,18 @@ $("#d").mouseout(function(e){
 });
 
 //列表操作按钮 弹dialog
-function openMyCard(dataId,readOnly,showTab){
-	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
-    temp[UIConst.PK_KEY] = dataId;
-    if(readOnly != ""){
-    	temp["readOnly"] = readOnly;
-    }
-    if(showTab != ""){
-    	temp["showTab"] = showTab;
-    }
-    var cardView = new rh.vi.cardView(temp);
-    cardView.show();
-}
+//function openMyCard(dataId,readOnly,showTab){
+//	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+//    temp[UIConst.PK_KEY] = dataId;
+//    if(readOnly != ""){
+//    	temp["readOnly"] = readOnly;
+//    }
+//    if(showTab != ""){
+//    	temp["showTab"] = showTab;
+//    }
+//    var cardView = new rh.vi.cardView(temp);
+//    cardView.show();
+//}
 
 
 
