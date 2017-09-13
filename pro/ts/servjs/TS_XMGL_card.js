@@ -22,7 +22,7 @@ _viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
 	var ext = " and XM_ID = '" + XM_ID + "'";
 	//window.location.href = "stdListView.jsp?frameId=TS_XMGLSZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=false&title=项目管理设置&XM_ID="
 	//+ XM_ID + "&extWhere=" + ext;
-	var url =   "stdListView.jsp?frameId=TS_XMGLSZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=true&title=项目管理设置&XM_ID="
+	var url =   "stdListView.jsp?frameId=TS_XMGL_SZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=true&title=项目管理设置&XM_ID="
 		+ XM_ID + "&extWhere=" + ext;
 	
 	var options = {
@@ -57,5 +57,6 @@ _viewer.afterSave = function(resultdata) {
 // _viewer.readCard();
 //	
 if (_viewer.opts.readOnly == "true") {
+	_viewer.getBtn("nextBtn").hide();
 	_viewer.readCard();
 }
