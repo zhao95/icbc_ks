@@ -121,10 +121,9 @@
 <%--导航栏--%>
 <div class="" style="padding: 10px">
     <a href="<%=CONTEXT_PATH%>/index_qt.jsp">
-        <image style="padding-bottom:10px;width: 15px"
-               src="<%=CONTEXT_PATH%>/ts/image/u1155.png" id="shouye"></image>
+       <img style="padding-bottom: 10px ;color: #388CAE;" src="/ts/image/Home_16x16.png" id="shouye">
     </a>
-    <span style="color: blue; font-size: 15px">&nbsp;&nbsp;/&nbsp;&nbsp;通知公告</span>
+    <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;通知公告</span>
 </div>
 
 <div id="myTabContent" class="tab-content">

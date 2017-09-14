@@ -175,10 +175,10 @@ function setAnnouncementContent() {
     var tbodyEl = jQuery('#announcement-box').find('.table tbody');
     tbodyEl.html('');
 
-    var circleColors = ['#398daf', '#b4dbc0', '#ff0000'];
+    var circleColors = ['#398daf', '#b4dbc0', '#ff0000','#62a9d8','#9521b8'];
 
     for (var i = 0; i < ggList._DATA_.length; i++) {
-        if (i === 3) {
+        if (i === 5) {
             return false;
         }
         var gg = ggList._DATA_[i];

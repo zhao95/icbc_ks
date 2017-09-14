@@ -150,7 +150,7 @@ function loginInit() {
     	if (isMbLogin(jQuery(this))) {
     		return true;
     	}
-//	   showLoginuser();
+	   showLoginuser();
 	});
 	jQuery("#USER_CODE").blur(function(){//失去焦点时
 		if (isMbLogin(jQuery(this))) {
@@ -164,7 +164,7 @@ function loginInit() {
     		return true;
     	}
 	   if ((event.keyCode != "40") && (event.keyCode != "38")) {
-//         showLoginuser(jQuery(this).val());
+         showLoginuser(jQuery(this).val());
        }
 	});
     jQuery("#USER_PASSWORDS").focus(function(){//密码框获取焦点时

@@ -22,8 +22,8 @@ function initUserInfoPage(user_code){
 //	var resultUserInfo = FireFly.doAct("SY_ORG_USER","query",userParam);
 	var resultUserInfo = FireFly.doAct("SY_ORG_USER_INFO_SELF","query",userParam);
 	var result = resultUserInfo._DATA_[0];
-	var img_src = FireFly.getContextPath() + result.USER_IMG_SRC;
-	if(result.USER_IMG_SRC==""){
+	var img_src = FireFly.getContextPath() + System.getUser("USER_IMG");
+	if(img_src==""){
 		$("#user_photo").attr("src","/qt/img/u844.jpg");
 	}else{
 		$("#user_photo").attr("src",img_src);
