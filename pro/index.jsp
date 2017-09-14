@@ -96,6 +96,9 @@
 	%>
 	<script type="text/javascript">
 		var homeUrl = "sy/comm/page/page.jsp";
+		if(window.ICBC){
+        	homeUrl = FireFly.getContextPath() + "/index_qt.jsp";
+        }
 		//设置cookie
 		document.cookie = "RhClientLogin=true";
 		window.location.href = homeUrl;
