@@ -71,7 +71,7 @@
 
 				<div class="navbar-custom-menu">
 					<ul class="nav navbar-nav">
-						<li><a style="height: 60px;border-left: 0px;">
+						<li><a href="#" onclick="window.open('/sy/comm/page/page.jsp?rhDevFlag=true','_blank');" style="height: 60px;border-left: 0px;">
     						<img src="qt/css/images/to_ht.png" style="cursor: pointer;">
     						</a>
     					</li>

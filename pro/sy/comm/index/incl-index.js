@@ -56,6 +56,9 @@ var LogMgr = function(id, pswds, cmpyCode, cmpyName) {
 	                jQuery("#msg").css("color","green");
 	                jQuery("#msg").html(msg);
 	                var homeUrl = FireFly.getContextPath() + "/sy/comm/page/page.jsp";
+	                if(window.ICBC){
+	                	homeUrl = FireFly.getContextPath() + "/index_qt.jsp";
+	                }
 	                if (jQuery("#rhClient").length == 1) {
 	                	homeUrl += "?rhClient=true";
 	                }
