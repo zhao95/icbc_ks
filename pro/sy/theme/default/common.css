@@ -81,7 +81,7 @@ background:#0F1829 url("images/common/i-window-top-back.png") repeat-x left -2px
 .rh-head-sea-icon {position:absolute;cursor:pointer;right:4px;top:2px;width:16px;height:20px;background:url(../../comm/page/img/bannericon.png) no-repeat 0px 5px;}
 .rh-head-per {position: absolute;top:4px;background:url(../../comm/page/img/banner_per_bg.png) no-repeat 0px 0px;}
 .rh-head-per-left {left:180px;}
-.rh-head-per-right {right:210px;background-color:#AAA}
+.rh-head-per-right {right:10px/* 210px */;background-color:#AAA}
 .rh-head-per-in {float:left;height:38px;padding:3px 6px 3px 0px;margin-left:6px;background:url(../../comm/page/img/banner_per_bg.png) no-repeat right -48px;}
 .rh-head-per-icon {width:32px;height:32px;display:block;float:left;border-radius:3px 3px;}
 .rh-head-per-tip {margin:1px 8px 0px 8px;display:inline-block;float:left;height:29px;color:white;font-family:微软雅黑;line-height:14px;}
