@@ -1235,3 +1235,14 @@ z-index:1;border-left:1px #F3F3F3 solid;border-right:1px #F3F3F3 solid;box-shado
 .ui-dialog .details-dialog.ui-dialog-content {overflow:hidden;}
 .details-dialog iframe {width:100%;min-height:520px;overflow:hidden;border: 0px;}
 /** 工作流详细信息页面结束 **/
+
+/** 考试系统 **/
+.hoverDiv {
+    background-color: #b6e1fd;
+    color: #0071c2;
+    opacity: 1;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    z-index: 10003;
+}
