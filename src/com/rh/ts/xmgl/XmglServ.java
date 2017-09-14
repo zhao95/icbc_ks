@@ -74,7 +74,7 @@ public class XmglServ extends CommonServ {
 		return result;
 	}
 
-	public void afterSaveToSz(Bean bean) {
+	public OutBean afterSaveToSz(Bean bean) {
 		String XMID = bean.getStr("XM_ID");
 		String XMGJ = bean.getStr("XM_GJ");
 		// 根据XM_ID查询，从数据库查询
@@ -165,6 +165,7 @@ public class XmglServ extends CommonServ {
 			String fzgks = "delete from  ts_xmgl_bm_fzgks  where  BM_ID='" + bmid + "'";
 			Transaction.getExecutor().execute(fzgks);
 		}
+		return new OutBean();
 	}
 
 	// 根据XM_ID删除项目管理设置数据
