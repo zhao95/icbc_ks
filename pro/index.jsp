@@ -114,7 +114,7 @@
 			<p id="notSupportIE6"></p>
 		</div>
 		<div
-			style="height: 150px; position: relative; left: 250px;top: -40px;">
+			style="height: 150px; position: relative; left: 250px;top: 10%;">
 			<div
 				style="display: inline-block; background: url(/qt/css/images/welcome.png) no-repeat center; height: 47px; line-height: 150px; width: 214px; position: relative; top: -50px; left: -40px;"></div>
 			<div
