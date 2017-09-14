@@ -90,7 +90,7 @@
 		String user_cmpy_date =userBean.getStr("USER_CMPY_DATE");
 		%>
 	<div style="background: #dfdfdf; padding-top: 10px" align="center">
-		<div id="" style="background: white; width: 90%;">
+		<div id="" style="padding-bottom:50px;background: white; width: 90%;">
 			<div style="background: white; width: 90%; text-align: center">
 				<table style="height: 100px; width: 90%;">
 					<tr>
@@ -210,7 +210,7 @@
 						</tbody>
 					</table>
 				</div>
-				<div style="height: 100px; padding: 20px;">
+				<div style="height: 100px; padding: 20px;padding-top:120px;">
 
 					<button id="zgyzbt" onclick="checky()" class="btn btn-success"
 						style="width: 100px; background-color: #00c2c2;">1.资格验证</button>
