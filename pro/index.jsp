@@ -106,6 +106,7 @@
 	<div id="logo">
 		<div id="top_logo"></div>
 		<div id="msg"></div>
+		<div id="rh-browser-check" class="rh-browser-check"><a style="font-size:14px;color:green;position: relative;top: -18px;text-align: left;left: 15px;" href="javascript:Tools.redirect('/sy/comm/index/activeTest.jsp');">系统插件测试页</a></div>
 		<div class=""
 			style="position: relative; right: 20px; top: -25px; text-align: right;">
 			<p>©中国工商银行 版权所有 2017</p>
@@ -123,14 +124,14 @@
 
 					<div class="form-table">
 
-						<div style="display: none">
+						<div style="display:none;">
 							<div id="form_cmpy">
 								公<span style="padding: 0px 6px;"></span>司:
 							</div>
 							<div>
 								<div id="cmpy">
 									<input id="CMPY_CODE" name="CMPY_CODE" type="text"
-										class="ipt-t" /><input id="CMPY_CODE__NAME"
+										class="ipt-t" value='icbc'/><input id="CMPY_CODE__NAME"
 										name="CMPY_CODE__NAME" type="text"
 										class="ipt-t icon-input-cmpy"
 										onfocus="this.className+=' ipt-t-focus icon-input-cmpy'"
@@ -145,8 +146,7 @@
 							<div style="display: inline-block;">
 								<div id="user">
 									<input id="USER_CODE" name="USER_CODE" type="text"
-										class="ipt-t" onfocus="this.className+=' ipt-t-focus'"
-										onblur="this.className='ipt-t'" />
+										class="ipt-t" />
 								</div>
 							</div>
 						</div>
