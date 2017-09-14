@@ -28,7 +28,7 @@ $("#TS_KCGL .rhGrid").find("tr").each(function(index, item) {
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optBackTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">撤销&nbsp</a>';
 		}	
 		
-		var divHeight = $(item).get(0).clientHeight;
+		var divHeight = $(item).get(0).offsetHeight;
 		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;'>"+abtns+"</div>";
 		$(".content-main").find("table").before(hoverDiv);
 				
@@ -48,13 +48,14 @@ $(".hoverDiv").bind("mouseleave", function(e){
 
 //绑定的事件     
 function bindCard(){
-	jQuery("td[icode='BUTTONS']").unbind("mouseover").bind("mouseover", function(){
+	jQuery("td[icode='BUTTONS']").unbind("mouseenter").bind("mouseenter", function(){
 		var pkCode = jQuery(this).parent().attr("id");
-		var trWidth = $(this).parent().get(0).clientWidth;
+		var trWidth = $(this).parent().get(0).offsetWidth;
 		var divWidth = $("#hoverDiv_"+pkCode).get(0).innerText.length*9.78;
 		var marginLeft = trWidth - divWidth;
 		var marginTop =$(this).get(0).offsetTop;
 		setTimeout(function(){
+			$(".hoverDiv").css('display','none');
 			$("#hoverDiv_"+pkCode).css('display','block'); 
 			$("#hoverDiv_"+pkCode).css('margin-left',marginLeft+'px'); 
 			$("#hoverDiv_"+pkCode).css('margin-top',marginTop+'px'); 
@@ -181,3 +182,9 @@ function openMyCard(dataId,readOnly,showTab){
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
 }
+
+$(".hoverDiv").find("a").hover(function(){
+	$(this).css("color","#014677");
+},function(){
+	$(this).css("color","#0071c2");
+});
