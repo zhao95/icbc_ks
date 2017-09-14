@@ -24,11 +24,11 @@
 <%@ include file="sy/base/view/inHeader.jsp"%>
 <!-- 引用公用头部资源文件：结束 -->
 <link rel="stylesheet" type="text/css"
-	href="<%=CONTEXT_PATH%>/sy/comm/index/incl-index1.css" charset="UTF-8" />
+	href="<%=CONTEXT_PATH%>/sy/comm/index/incl-index.css" charset="UTF-8" />
 </head>
 <body>
 	<script type="text/javascript"
-		src="<%=CONTEXT_PATH%>/sy/comm/index/incl-index1.js" charset="UTF-8"></script>
+		src="<%=CONTEXT_PATH%>/sy/comm/index/incl-index.js" charset="UTF-8"></script>
 	<script type="text/javascript"
 		src="<%=CONTEXT_PATH%>/sy/base/frame/i18n/language.js" charset="UTF-8"></script>
 	<script type="text/javascript">
