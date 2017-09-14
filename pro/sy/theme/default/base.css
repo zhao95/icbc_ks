@@ -83,7 +83,7 @@ a:focus {outline: none;}
 .wp18 {width:18%}
 .wp20 {width:20%}
 .wp24 {width:24%}
-.wp25 {width:25%}
+.wp25 {width:18%}/* 25%} */
 .wp26 {width:26%}
 .wp27 {width:27%}
 .wp28 {width:28%}
@@ -114,7 +114,7 @@ a:focus {outline: none;}
 .wp72 {width:72%}
 .wp73 {width:73%}
 .wp74 {width:74%}
-.wp75 {width:75%}
+.wp75 {width:82%}/* 75%} */
 .wp80 {width:80%}
 .wp90 {width:90%}
 .wp95 {width:95%}

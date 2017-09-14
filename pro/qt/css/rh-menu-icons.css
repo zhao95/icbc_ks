@@ -1,0 +1,34 @@
+/* .img{background:url(/qt/css/images/rh-menu-icons.png)  no-repeat;} */
+.rh_qt_icons{
+	display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    background:url(/qt/css/images/rh-menu-icons.png)  no-repeat;
+    position: relative;
+    top: 2px;
+    left: -2px;
+}
+.qj1{height:20px;width:20px;background-position:0 0;}
+.qj2{height:20px;width:20px;background-position:-20px 0;}
+.lx2{height:20px;width:20px;background-position:-40px 0;}
+.ks2{height:20px;width:20px;background-position:-380px 0;}
+.lx1{height:20px;width:20px;background-position:-60px 0;}
+.sh1{height:20px;width:20px;background-position:-80px 0;}
+.zx1{height:20px;width:20px;background-position:-120px 0;}
+.zx2{height:20px;width:20px;background-position:-140px 0;}
+.zkz2{height:20px;width:20px;background-position:-180px 0;}
+.sh2{height:20px;width:20px;background-position:-100px 0;}
+.zkz1{height:20px;width:20px;background-position:-160px 0;}
+.ckzl2{height:20px;width:20px;background-position:-220px 0;}
+.home1{height:20px;width:20px;background-position:-240px 0;}
+.ckzl1{height:20px;width:20px;background-position:-200px 0;}
+.bm1{height:20px;width:20px;background-position:-280px 0;}
+.bm2{height:20px;width:20px;background-position:-300px 0;}
+.home2{height:20px;width:20px;background-position:-260px 0;}
+.jk2{height:20px;width:20px;background-position:-340px 0;}
+.ks1{height:20px;width:20px;background-position:-360px 0;}
+.jk1{height:20px;width:20px;background-position:-320px 0;}
+.ht1{height:20px;width:20px;background-position:-400px 0;}
+.ht2{height:20px;width:20px;background-position:-420px 0;}

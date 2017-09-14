@@ -105,15 +105,19 @@ var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
 	     <div id="form_title" class="form-title textShadow radius5">请登录</div>
 	     <div class="form-con radius3" style="padding:8px;">
 	         <table class="form-table">
-	            <tr><td id="form_cmpy">公<span style="padding:0px 6px;"></span>司:</td>
-	                <td><div id="cmpy"><input id="CMPY_CODE" name="CMPY_CODE" type="text" class="ipt-t"/><input id="CMPY_CODE__NAME" name="CMPY_CODE__NAME" type="text" class="ipt-t icon-input-cmpy" onfocus="this.className+=' ipt-t-focus icon-input-cmpy'" onblur="this.className='ipt-t icon-input-cmpy'" value='' size='30'/><span class="dict-cmpy"></span></div></td>
+	            <tr style="display: none"><td id="form_cmpy">公<span style="padding:0px 6px;"></span>司:</td>
+	                <td><div id="cmpy"><input id="CMPY_CODE" name="CMPY_CODE" type="text" class="ipt-t"/><input id="CMPY_CODE__NAME" name="CMPY_CODE__NAME" type="text" class="ipt-t icon-input-cmpy" onfocus="this.className+=' ipt-t-focus icon-input-cmpy'" onblur="this.className='ipt-t icon-input-cmpy'" value='icbc' size='30'/><span class="dict-cmpy"></span></div></td>
 	            </tr>
 	            <tr><td id="form_username">用户名:</td>
-	                <td><div id="user"><input id="USER_CODE" name="USER_CODE" type="text" class="ipt-t" onfocus="this.className+=' ipt-t-focus'" onblur="this.className='ipt-t'" /></div>
+	                <td><div id="user"><input id="USER_CODE" name="USER_CODE" type="text" class="ipt-t" onfocus="this.className+=' ipt-t-focus'" onblur="this.className='ipt-t'" />
+	                <div style="top: 4px;position: relative;display: inline-block;width: 17px;height: 17px;background: url(/sy/comm/index/img/user-people.png) no-repeat center bottom;"></div>
+	                </div>
 	                </td>
 	            </tr>
 	            <tr><td id="form_password">密<span style="padding:0px 6px;"></span>码:</td>
-	                <td><div id="pwd"><input id="USER_PASSWORDS" name="USER_PASSWORDS" type="password" class="ipt-t" onfocus="this.className+=' ipt-t-focus'" onblur="this.className='ipt-t'" /></div>
+	                <td><div id="pwd"><input id="USER_PASSWORDS" name="USER_PASSWORDS" type="password" class="ipt-t" onfocus="this.className+=' ipt-t-focus'" onblur="this.className='ipt-t'" />
+	                <div style="top: 4px;position: relative;display: inline-block;width: 17px;height: 17px;background: url(/sy/comm/index/img/user-pwd.png) no-repeat center bottom;"></div>
+	                </div>
 	                </td>
 	            </tr>
 	         </table>

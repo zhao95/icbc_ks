@@ -3,7 +3,9 @@ package com.rh.ts.bmlb;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -957,5 +959,112 @@ public class BmlbServ extends CommonServ {
 		out.set("bmbean", bmbean);
 		out.set("xmname", xmbean.getStr("XM_NAME"));
 		return out;
+	}
+	
+	/**
+	 * 获取 项目kslb
+	 */
+	public OutBean getMatchData(Bean paramBean){
+		OutBean  out = new OutBean();
+		String wherexl=paramBean.getStr("where");
+		//获取到所有的模块 但可能重复
+		List<Bean> xlList = ServDao.finds("TS_XMGL_BM_KSLB", wherexl);
+			Bean mkBean = new Bean();
+			Bean mkcodeBean = new Bean();
+			if(xlList.size()!=0){
+				for (Bean bean : xlList) {
+						String type = bean.getStr("KSLB_TYPE");
+						String mk = bean.getStr("KSLB_MK");
+						String mkcode = bean.getStr("KSLB_MK_CODE");
+						if (mkBean.containsKey(mk)) {
+							List list = mkBean.getList(mk);
+							list.add(type);
+							mkBean.set(mk,list);
+							mkcodeBean.set(mk,mkcode);
+						} else {
+							List list = new ArrayList();
+							list.add(type);
+							mkBean.set(mk,list);
+							mkcodeBean.set(mk,mkcode);
+						}
+				}
+				Bean finalmkbean = new Bean();
+				for(Object mk: mkcodeBean.keySet()){
+					String mkcode =mkcodeBean.getStr(mk);
+					finalmkbean.set(mk,mkcode);
+				}
+				out.set("list", xlList);
+				out.set("mkoption", finalmkbean);
+	}else{
+		out.set("list", "");
+		out.set("mkoption", "");
+	}
+			return out;
+}
+	//获取统计数据  针对中级考试 已通过 或待审核
+	public OutBean getBmNum(Bean paramBean){
+		OutBean out = new OutBean();
+		String user_code = paramBean.getStr("user_code");
+		String xl_code = paramBean.getStr("xlcode");
+		String lb_code = paramBean.getStr("lbcode");
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String strdate = sdf.format(date);
+		//跨序列高级考试
+		String highwhere = "AND BM_CODE="+"'"+user_code+"' AND "+"'"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=3 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=2";
+		List<Bean> highlist = ServDao.finds("TS_BMLB_BM",highwhere);
+		out.set("highnum", highlist.size());
+		//夸序列中级考试
+		String where = "AND BM_CODE="+"'"+user_code+"' AND "+"'"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=2";
+		List<Bean> list = ServDao.finds("TS_BMLB_BM",where);
+		out.set("allnum", list.size());
+		//本序列考试
+		String where1 = "AND BM_CODE="+"'"+user_code+"' AND '"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND BM_LB_CODE='"+lb_code+"' AND BM_XL_CODE='"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=2";
+		List<Bean>list1 = ServDao.finds("TS_BMLB_BM", where1);
+		out.set("serianum", list1.size());
+		//夸序列  总数：
+		String where2 = "AND BM_CODE="+"'"+user_code+"' AND '"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=2";
+		List<Bean> list3 = ServDao.finds("TS_BMLB_BM", where2);
+		out.set("othernum",list3.size());
+		return out;
+	}
+	//获取层级数
+	public OutBean getcengji(Bean paramBean){
+		String DUTY_CODE=paramBean.getStr("DUTY_CODE");
+		String STATION_TYPE_CODE=paramBean.getStr("STATION_TYPE_CODE");
+		String STATION_NO_CODE=paramBean.getStr("STATION_NO_CODE");
+		String where = "AND POSTION_TYPE="+"'"+STATION_TYPE_CODE+"'"+" AND POSITION_NAME_CODE="+"'"+DUTY_CODE+"'"+"AND POSTION_SEQUENCE_ID='"+STATION_NO_CODE+"'";
+		List<Bean> finds = ServDao.finds("TS_ORG_STATION",where);
+		String cengji = "";
+		if(finds.size()!=0){
+			 cengji = finds.get(0).getStr("POSTION_QUALIFICATION");
+		}
+		return new OutBean().set("num", cengji);
+	}
+	
+	//将选中的考试 id查询出来 返回到页面显示
+	public OutBean getCheckedData(Bean paramBean){
+		List<Bean> list = new ArrayList<Bean>();
+		String checkedid = paramBean.getStr("checked");
+		String[] split = checkedid.split(",");
+		for(int i=0;i<split.length;i++){
+			if(!"".equals(split[i])){
+				Bean find = ServDao.find("TS_XMGL_BM_KSLBK",split[i]);
+				list.add(find);
+			}
+		}
+		return new OutBean().set("list", list);
+		
+	}
+	//获取已报名的此项目的考试  且 已通过
+	public OutBean getBmData(Bean paramBean){
+		String xmid = paramBean.getStr("xmid");
+		String user_code = paramBean.getStr("user_code");
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String strdate = sdf.format(date);
+		String highwhere = " AND XM_ID='"+xmid+"' AND BM_CODE="+"'"+user_code+"' AND "+"'"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND(BM_SH_STATE=0 or BM_SH_STATE=2) AND BM_STATE=2";
+		List<Bean> finds = ServDao.finds("TS_BMLB_BM",highwhere);
+		return new OutBean().set("list", finds);
 	}
 }

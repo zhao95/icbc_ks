@@ -47,15 +47,15 @@ function bindCard(){
 	});
 }
 
-_viewer.getBtn("add").unbind("click").bind("click", function(event) {
-	
-	var height = jQuery(window).height()-200;
-	var width = jQuery(window).width()-200;
-	
-    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
-    var cardView = new rh.vi.cardView(temp);
-    cardView.show();
-});
+//_viewer.getBtn("add").unbind("click").bind("click", function(event) {
+//	
+//	var height = jQuery(window).height()-200;
+//	var width = jQuery(window).width()-200;
+//	
+//    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+//    var cardView = new rh.vi.cardView(temp);
+//    cardView.show();
+//});
 
 
 /*
