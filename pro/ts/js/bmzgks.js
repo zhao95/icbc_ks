@@ -307,6 +307,7 @@ function xminfoshow(){
 	        	 for(var i=0; i<allList.length;i++){
 	        		 var showItem = allList[i];
 	        		 if(idName===showItem.KSLB_NAME || idName===showItem.KSLB_MK || idName===showItem.KSLB_XL){
+	        			 
 	        			 var strchecked = checked.join(",");
 	        				paramstr={};
 	        				paramstr["checked"]=strchecked;
@@ -738,12 +739,16 @@ var highnum=0;
 		var num = data.allnum;
 		$("#allnum").html(num);//中级
 		var maxnum = FireFly.getConfig("TS_BM_MIDDLE_MAXNUM").CONF_VALUE;//配置中级最大数
-		var cannum = maxnum-num;//剩余次数
+		var maxhigh = FireFly.getConfig("TS_BM_HIGH_MAXNUM").CONF_VALUE;//配置高级最大数
+		//高级剩余次数
+		var high = data.highnum;
+		var highcanum = maxhigh-high;
+		var cannum = maxnum-num;//剩余次数 中级
 		$("#cannum").html(cannum);
 		var serianum = data.serianum;//本序列已报名
 		var othernum = data.othernum;//夸序列所有
-		$("#serianum").html(serianum);
-		$("#otherseria").html(othernum);
+		$("#gaoji").html(high);
+		$("#canheighnum").html(highcanum);
 		
 		highnum=data.highnum;
 }

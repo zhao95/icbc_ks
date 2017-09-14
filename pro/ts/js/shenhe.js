@@ -232,10 +232,11 @@ function firall(){
     for(var i=0;i<pageEntity1.length;i++){
     	var name = pageEntity1[i].PX_NAME;
     	var px_column= pageEntity1[i].PX_COLUMN;
-    	$("#pxtable tbody").append('<tr style="border-bottom:solid 1px lightgray"><td id="fir'+i+'" name="firtd" style="padding-left:5px;text-align:left;height:20px;font-size:13px"><input style="width:50px;height=50px" type="checkbox" id='+px_column+' onclick="changetd(this)" value='+name+'  name="pxcheckbox">'+name+'</td></tr>');
+    	$("#pxtable tbody").append('<tr style="border-bottom:solid 1px lightgray"><td id="fir'+i+'" name="firtd" style="padding-left:5px;text-align:left;height:20px;font-size:13px"><input style="background:white;width:50px;height=50px" type="checkbox" id='+px_column+' value='+name+'  name="pxcheckbox">'+name+'</td></tr>');
     }
 
 }
+
 //-----------------------------------------------------------------------------------------------------审核按钮
 		//checkbox全选   第一个table
 		function shenheA(){
@@ -419,6 +420,7 @@ function firall(){
 			jq(function(){
 				appendTh(user_code);
 				firall();
+				
 				new listPage().gotoPage(1);
 				var table = document.getElementById("cxkuang");  
 				rowscolor(table);

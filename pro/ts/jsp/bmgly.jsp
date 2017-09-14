@@ -14,7 +14,7 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 
-<%@ include file="/sy/base/view/inHeader.jsp"%>
+<%@ include file="/sy/base/view/inHeader-icbc.jsp"%>
 
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"

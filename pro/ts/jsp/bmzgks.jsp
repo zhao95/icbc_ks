@@ -15,8 +15,8 @@
 <meta
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
-
-<%@ include file="/sy/base/view/inHeader.jsp"%>
+	 <%@ include file="../../sy/base/view/inHeader.jsp" %>
+ <%-- <%@ include file="/sy/base/view/inHeader-icbc.jsp"%>  --%>
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
@@ -118,8 +118,8 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td height="50px" align="left">2. 您在本考试周已报名中级考试：<span id='allnum'></span>个，还可报名中级考试： <span id='cannum'></span>
-							个（本序列考试：<span id='serianum'></span>，跨序列考试：<span id='otherseria'></span>）。如需重新报名，应先取消已有报名，然后再提交新的报名。</td>
+						<td height="50px" align="left">2. 您在本考试周已报名中级考试：<span id='allnum'></span>个（还可报名： <span id='cannum'></span>
+							个）、高级：<span id='gaoji'></span>个（还可报名：<span id='canheighnum'></span>）个。如超过报名总数，应先取消已有报名，然后再提交新的报名。</td>
 					</tr>
 				</table>
 				<div style="padding-top: 10px;">
@@ -211,16 +211,15 @@
 					</table>
 				</div>
 				<div style="height: 100px; padding: 20px;padding-top:120px;">
-
 					<button id="zgyzbt" onclick="checky()" class="btn btn-success"
-						style="width: 100px; background-color: #00c2c2;">1.资格验证</button>
+						style="font-size:16px;width: 150px;height:50px; background-color: #00c2c2;">1.资格验证</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<button id="tjbt" class="btn btn-success"
-						style="width: 100px; background-color: #00c2c2;"
+						style="font-size:16px;width: 150px;height:50px; background-color: #00c2c2;"
 						data-toggle="modal" data-target="#tiJiao" onclick="tijiao()">2.提交报名</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<button onclick="goBack()" class="btn btn-success"
-						style="width: 100px; background-color: #00c2c2;">返回</button>
+						style="font-size:16px;width: 150px;height:50px; background-color: #00c2c2;">返回</button>
 				</div>
 			</div>
 		</div>
