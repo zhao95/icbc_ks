@@ -127,7 +127,7 @@ rh.vi.pageView.prototype._bldMenu = function() {
 //			var expandBar = jQuery("<a href='javascript:void(0);' title='收起边栏' class='leftMenu-close'></a>").appendTo(configCon);
 //			var configBar = jQuery("<a href='javascript:void(0);' title='风格配置' class='leftMenu-config'></a>").appendTo(configCon);
 			var expandBar = jQuery("<a href='javascript:void(0);' title='"+Language.transStatic("rhPageView_string1")+"' class='leftMenu-close'></a>").appendTo(configCon);
-			var configBar = jQuery("<a href='javascript:void(0);' title='"+Language.transStatic("rhPageView_string2")+"' class='leftMenu-config'></a>");//.appendTo(configCon);
+			var configBar = jQuery("<a href='javascript:void(0);' title='"+Language.transStatic("rhPageView_string2")+"' class='leftMenu-config'></a>").appendTo(configCon);
 			
 			var toggled = true; 
 			jQuery("ul[aria-expanded='true']").addClass("leftMenu-ul-show");

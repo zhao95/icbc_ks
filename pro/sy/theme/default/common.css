@@ -128,7 +128,7 @@ li.leftMenu-li-blur a {color:black;}
 .left-homeMenu .leftMenu-only-title  .leftMenu-ui-icon {display:none;}
 .left-homeMenu .leftMenu-only-title  .leftMenu-ui-icon {display:none;}
 .ui-state-hover {background-color:#3774B7;border-top:#7FADFB 1px solid;color:white;}
-.leftMenu-config {display:inline-block;height:32px;width:28px;font-size:18px;*font-size:28px;background:url(images/menu/leftMenuConfig.png) no-repeat 0px -1px;float:right;text-decoration:none;}
+.leftMenu-config {display:none/* inline-block */;height:32px;width:28px;font-size:18px;*font-size:28px;background:url(images/menu/leftMenuConfig.png) no-repeat 0px -1px;float:right;text-decoration:none;}
 .leftMenu-config:hover {background:url(images/menu/leftMenuConfig.png) no-repeat 0px -26px;}
 .leftMenu-close {display:inline-block;height:32px;width:28px;font-size:18px;*font-size:28px;background:url(images/menu/leftMenuConfig.png) no-repeat -28px -1px;float:right;text-decoration:none;}
 .leftMenu-close:hover {background:url(images/menu/leftMenuConfig.png) no-repeat -28px -26px;}
