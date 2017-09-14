@@ -48,9 +48,9 @@
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/user_info.css">
 	<!-- 首页/返回 -->
 	<div class="" style="padding: 10px">
-		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img
-			style="padding-bottom: 10px ;color: #388CAE;" src="/ts/image/u1155.png" id="shouye"></a>
-		<span style="color: #388CAE; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;个人信息</span>
+		<a href="<%=CONTEXT_PATH%>/index_qt.jsp">
+		<img style="padding-bottom: 10px ;color: #388CAE;" src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
+		<span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;个人信息</span>
 	</div>
 	<!-- 显示主模块 -->
 	<div id="myTabContent" class="tab-content">
