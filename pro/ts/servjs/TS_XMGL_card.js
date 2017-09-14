@@ -28,7 +28,8 @@ _viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
 	var options = {
 		"url":url,
 		//"params":params,
-		"menuFlag":2 
+		"menuFlag":3 ,
+		"top":true
 	};
 	Tab.open(options);
 });
