@@ -11,13 +11,13 @@ var LogMgr = function(id, pswds, cmpyCode, cmpyName) {
 //    	var msg = "正在进行登录验证，请稍候...";
         var msg = Language.transStatic("incl_index_string1");
         jQuery("#msg").html(msg);
-        if (cmpyName.length == 0 || cmpyCode.length == 0) {
-            jQuery("#CMPY_CODE__NAME").focus();
-//            msg = "公司不能为空，请输入";
-            msg = Language.transStatic("incl_index_string2")
-            jQuery("#msg").html(msg);
-            return;
-        }
+//        if (cmpyName.length == 0 || cmpyCode.length == 0) {
+//            jQuery("#CMPY_CODE__NAME").focus();
+////            msg = "公司不能为空，请输入";
+//            msg = Language.transStatic("incl_index_string2")
+//            jQuery("#msg").html(msg);
+//            return;
+//        }
         if (id.length == 0) {
             jQuery("#USER_CODE").focus();
 //            msg = "账号不能为空，请输入";

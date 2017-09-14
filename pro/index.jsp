@@ -104,16 +104,17 @@
 		} else {
 	%>
 	<div id="logo">
+		<div id="icbc-ks-logo"></div>
 		<div id="top_logo"></div>
 		<div id="msg"></div>
-		<div id="rh-browser-check" class="rh-browser-check"><a style="font-size:14px;color:green;position: relative;top: -18px;text-align: left;left: 15px;" href="javascript:Tools.redirect('/sy/comm/index/activeTest.jsp');">系统插件测试页</a></div>
+		<div id="rh-browser-check" class="rh-browser-check"><a style="font-size:14px;color:green;position: relative;top: -30px;text-align: left;left: 15px;" href="javascript:Tools.redirect('/sy/comm/index/activeTest.jsp');">系统插件测试页</a></div>
 		<div class=""
-			style="position: relative; right: 20px; top: -25px; text-align: right;">
-			<p>©中国工商银行 版权所有 2017</p>
+			style="position: relative; right: 20px; top: -50px; text-align: right;">
+			<p>© 中国工商银行 版权所有 2017</p>
 			<p id="notSupportIE6"></p>
 		</div>
 		<div
-			style="height: 150px; position: relative; left: 250px;">
+			style="height: 150px; position: relative; left: 250px;top: -40px;">
 			<div
 				style="display: inline-block; background: url(/qt/css/images/welcome.png) no-repeat center; height: 47px; line-height: 150px; width: 214px; position: relative; top: -50px; left: -40px;"></div>
 			<div
