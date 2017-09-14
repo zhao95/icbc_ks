@@ -107,9 +107,9 @@
 		<div id="icbc-ks-logo"></div>
 		<div id="top_logo"></div>
 		<div id="msg"></div>
-		<div id="rh-browser-check" class="rh-browser-check"><a style="font-size:14px;color:green;position: relative;top: -30px;text-align: left;left: 15px;" href="javascript:Tools.redirect('/sy/comm/index/activeTest.jsp');">系统插件测试页</a></div>
+		<div id="rh-browser-check" class="rh-browser-check"><a style="cursor:point;font-size:14px;color:green;position: relative;top: -30px;text-align: left;left: 15px;" href="javascript:Tools.redirect('/sy/comm/index/activeTest.jsp');">系统插件测试页</a></div>
 		<div class=""
-			style="position: relative; right: 20px; top: -50px; text-align: right;">
+			style="position: relative; right: 20px; top: -50px; text-align: right;z-index: -1;">
 			<p>© 中国工商银行 版权所有 2017</p>
 			<p id="notSupportIE6"></p>
 		</div>
