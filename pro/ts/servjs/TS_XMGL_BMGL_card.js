@@ -41,10 +41,10 @@ _viewer.getItem("BM_END").obj.unbind("click").bind("click", function() {
 	    });
 	});
 
-//返回按钮
-_viewer.getBtn("goback").unbind("click").bind("click", function() {
-	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
-});
+////返回按钮
+//_viewer.getBtn("goback").unbind("click").bind("click", function() {
+//	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
+//});
 
 
 

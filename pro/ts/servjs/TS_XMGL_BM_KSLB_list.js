@@ -87,9 +87,9 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	queryView.show(event);
 });
 
-//返回按钮
-_viewer.getBtn("goback").unbind("click").bind("click", function() {
-	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
-});
+////返回按钮
+//_viewer.getBtn("goback").unbind("click").bind("click", function() {
+//	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
+//});
 
 

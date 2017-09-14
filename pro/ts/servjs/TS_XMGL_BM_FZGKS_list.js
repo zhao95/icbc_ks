@@ -1,8 +1,8 @@
 var _viewer = this;
-//返回按钮
-_viewer.getBtn("goback").unbind("click").bind("click", function() {
-	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
-});
+////返回按钮
+//_viewer.getBtn("goback").unbind("click").bind("click", function() {
+//	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
+//});
 //列表需建一个code为BUTTONS的自定义字段，没行增加1个按钮
 $("#TS_XMGL_BM_FZGKS .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){

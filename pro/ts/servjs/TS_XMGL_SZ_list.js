@@ -174,10 +174,10 @@ function ap(pk){
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
 }
-//返回按钮
-_viewer.getBtn("goback").unbind("click").bind("click", function() {
-	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
-});
+////返回按钮
+//_viewer.getBtn("goback").unbind("click").bind("click", function() {
+//	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
+//});
 //通过名称绑定字典
 _viewer.grid._table.find("tr").each(function(index, item) {
 	 var  XM_SZ_NAME = $('td[icode="XM_SZ_NAME"]',item).text();

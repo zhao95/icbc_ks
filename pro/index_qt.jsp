@@ -18,8 +18,7 @@
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
-<!-- Font Awesome -->
-<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/index_qt.css">
+
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/font-awesome-4.7.0/css/font-awesome.min.css">
 <!-- Ionicons -->
@@ -36,14 +35,20 @@
 <!--代办/提醒列表样式-->
 <%-- <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/qt_todo.css"> --%>
 
+<!-- 首页menu菜单图标雪碧图css文件 -->
+<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/rh-menu-icons.css">
+
 <!-- Theme style -->
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/dist/css/AdminLTE.min.css">
+
+
 
 <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 	
 <!-- 首页模块css -->
-
+<!-- Font Awesome -->
+<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/index_qt.css">
 
 </head>
 <body class="hold-transition skin-black sidebar-mini layout-boxed">
@@ -345,7 +350,7 @@
 								<tr style="backGround-color:WhiteSmoke; height: 30px">
 									<th class="" style="width: 40%;">名称</th>
 									<th class="" style="width: 30%;">组织单位</th>
-									<th class="" style="width: 30%;">报名时间</th>
+									<th class="" style="width: 189px;">报名时间</th>
 								</tr>
 								</thead>
 								<tbody class="grid-tbody">
@@ -379,7 +384,7 @@
 								</h3>
 							</div>
 							<!-- /.box-header -->
-							<div class="box-body no-padding">
+							<div class="box-body no-padding" style="margin-bottom: 10px; min-height: 180px;">
 								<table class="table no-border">
 									<tr>
 										<td>
@@ -415,12 +420,13 @@
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title" style="font-size:16px;">Q&A 问答</h3>
 							</div>
+							<div style="height:72px;"></div>
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
 								<table class="table table-striped" id="qItem"></table>
 								<div align="center" id="question_div">
 									<button type="button" style="width: 40%; margin: 5px;"
-										class="btn btn-block btn-success"  >提问</button>
+										class="btn btn-block btn-success"  >我要提问</button>
 								</div>
 							</div>
 							<!-- /.box-body -->
@@ -434,7 +440,7 @@
 									<span style="color:red;">&gt;</span>
 								</a>
 						</div>
-						<div class="TS_KS_CAL" style="height:265px;">
+						<div class="TS_KS_CAL" style="height:245px;">
 						<!-- 						<div class="title_top"> -->
 						<!-- 		<div style="clear:right;"></div> -->
 						<!-- 	</div> -->
@@ -477,7 +483,7 @@
 							<!-- /.box-body -->
 						</div>
 						<!-- /.box -->
-						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;/* top:20px; */">
+						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;display:none;'">
 							<div class="box-header" style="background-color: #f9f9f9">
 								<h3 class="box-title" style="font-size:16px;">我的认证轨迹</h3>
 							</div>
