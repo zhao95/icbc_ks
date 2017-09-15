@@ -1048,7 +1048,14 @@ var listPage = function () {
 	    			paramcode["codes"]=pageEntity[i][column];
 	    			var resultname = FireFly.doAct("TS_BMSH_STAY","getusername",paramcode);
 	    			fir = resultname.usernames;
-	    		}     	    		
+	    		}     
+	    		if(column=="SH_STATUS"){
+	    			if(tabnum==1){
+	    				fir="审核中...."
+	    			}else if(tabnum==2){
+	    				fir="审核通过"
+	    			}
+	    		}
 	    		if(column=="BM_TYPE"){
 	    			if(fir=="1"){
 	    				BM_TYPE="初级";
