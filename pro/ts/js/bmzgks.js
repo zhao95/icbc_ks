@@ -90,12 +90,6 @@ function xminfoshow(){
        					$("#"+yzjg).append('审核不通过');
        					continue;
        				}
-       				if(neAry[0].BM_TYPE==2&&$("#cannum").text()=="0"){
-       					//中级跨序列已满 不能再报名
-       					shArray=false;
-       					$("#"+a).append('已达到报名最大数，如果想报名请先取消已报名的考试');
-       					$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
-       				}else{
        				for(var j=0;j<dataArray.length;j++){
        					if(dataArray[j].VLIDATE=="true"){
 	       					$("#"+a).append('<div><img src="/ts/image/u4719.png">'+dataArray[j].NAME+'</div>');
@@ -106,7 +100,7 @@ function xminfoshow(){
 						if(dataArray[j].VLIDATE=="false"){
 							shArray=false;
 						}
-					 }
+					 
        				}
        				if(shArray==false){
        					$("#"+yzjg).append('审核不通过');
@@ -444,7 +438,12 @@ function xminfoshow(){
 				}
 				//删除行
 				tab.deleteRow(j);
+				if(tds[4].innerText=="中级"){
 				middlenum--;
+					}else if(tds[4].innerText=="高级"){
+						highbmnum--;
+					}
+		     		
 				 var kslxArray2 = document.getElementsByName("checkname1");
 				 kslxArray2[hanghao].disabled=false;
 				
@@ -455,6 +454,7 @@ function xminfoshow(){
 	}
 	//页面已选中级考试数目
 	var middlenum=0;
+	var highbmnum=0;
 	//跨序列的考试
 	function fuzhi(){
 		var strchecked = checked.join(",");
@@ -489,6 +489,9 @@ function xminfoshow(){
 			       var kslb_type = alldata[i].KSLBK_TYPE;
 			       if(kslb_type==2){
 			    	   middlenum++;
+			       }
+			       if(kslb_type==3){
+			    	   highbmnum++;
 			       }
 			       tbody=document.getElementById("goods");
 			       var ntr = tbody.insertRow();
@@ -584,6 +587,12 @@ function xminfoshow(){
 	//获取应考试的值
 	function tijiao(){
 		var maxnum = FireFly.getConfig("TS_BM_MIDDLE_MAXNUM").CONF_VALUE;
+		var maxhigh = FireFly.getConfig("TS_BM_HIGH_MAXNUM").CONF_VALUE;
+		if(highbmnum>maxhigh){
+			alert("选择的高级考试数目超过上限，请删除再提交");
+			$("#tjbt").attr("data-target","");
+			return;
+		}
 		if(middlenum>maxnum){
 			alert("选择的中级考试数目超过上限，请删除再提交");
 			$("#tjbt").attr("data-target","");
@@ -757,7 +766,6 @@ var highnum=0;
 		var othernum = data.othernum;//夸序列所有
 		$("#gaoji").html(high);
 		$("#canheighnum").html(highcanum);
-		
 		highnum=data.highnum;
 }
 	//删除已报名的考试
