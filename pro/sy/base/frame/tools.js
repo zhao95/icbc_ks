@@ -4171,3 +4171,42 @@ function rowEdit(pkCode,viewer,widHeiArray,xyArray){
     cardView.show();
 }
 
+function getDialog(dialogId,title,wid,hei) {
+	
+	var winDialog = jQuery("<div></div>").addClass("selectDialog").attr("id",dialogId).attr("title",title);
+	winDialog.appendTo(jQuery("body"));
+	if(hei == null || wid == null || hei == "" || wid == "") {
+		wid = 800;
+		hei = 600;
+	}
+	var posArray = [30,30];
+	
+	if (event) {
+		var cy = event.clientY;
+		var cx = event.clientX;
+	    posArray[0] = cx-80;
+	    posArray[1] = cy+50;
+	}
+  
+	jQuery("#" + dialogId).dialog({
+		autoOpen: false,
+		height: hei,
+		width: wid,
+		modal: true,
+		resizable:true,
+		position:posArray,
+		open: function() {
+
+		},
+		close: function() {
+			jQuery("#" + dialogId).remove();
+			//_viewer.refresh();
+		}
+	});
+	
+	//手动打开dialog
+	var dialogObj = jQuery("#" + dialogId);
+	dialogObj.dialog("open");
+	dialogObj.focus();
+};
+

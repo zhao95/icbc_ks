@@ -296,7 +296,7 @@ public class BmlbServ extends CommonServ {
 					List<Bean> blist = out.getList("result");
 					String allman = "";
 					String node_name = "";
-					if (blist != null && blist.size() > 0) {
+					if (blist.size() > 0) {
 						node_name = blist.get(0).getStr("NODE_NAME");
 						for (int l = 0; l < blist.size(); l++) {
 							if (l == 0) {
@@ -326,28 +326,30 @@ public class BmlbServ extends CommonServ {
 					shBean.set("SH_NODE", node_name);// 目前审核节点
 					shBean.set("SH_USER", allman);// 当前办理人
 					shBean.set("SH_OTHER", allman);// 其他办理人
-					// if (count == 0) {
-					// ServDao.save("TS_BMSH_PASS", shBean);
-					// }
-					// if (count == 1) {
-					// if (ad_result.equals("1")) {
-					// ServDao.save("TS_BMSH_PASS", shBean);
-					// }
-					// if (ad_result.equals("2")) {
-					// ServDao.save("TS_BMSH_NOPASS", shBean);
-					// }
-					// }
-					// if (count == 2) {
-					// ServDao.save("TS_BMSH_STAY", shBean);
-					// }
-					// if (count == 3) {
-					// if (ad_result.equals("1")) {
-					// ServDao.save("TS_BMSH_PASS", shBean);
-					// }
-					// if (ad_result.equals("2")) {
-					// ServDao.save("TS_BMSH_NOPASS", shBean);
-					// }
-					// }
+					 if (count == 0) {
+					 ServDao.save("TS_BMSH_PASS", shBean);
+					 }
+					 //自动审核 无手动
+					 if (count == 1) {
+					 if (ad_result.equals("1")) {
+					 ServDao.save("TS_BMSH_PASS", shBean);
+					 }else if(ad_result.equals("2")){
+						 ServDao.save("TS_BMSH_NOPASS", shBean);
+						 }
+					 }
+					//只有手动审核
+					 if (count == 2) {
+					 ServDao.save("TS_BMSH_STAY", shBean);
+					 }
+					 //自动加手动
+					 if (count == 3) {
+					 if (ad_result.equals("1")) {
+					 ServDao.save("TS_BMSH_PASS", shBean);
+					 }
+					 if (ad_result.equals("2")) {
+					 ServDao.save("TS_BMSH_NOPASS", shBean);
+					 }
+					}
 				}
 			}
 		} catch (JSONException e) {
@@ -1066,5 +1068,26 @@ public class BmlbServ extends CommonServ {
 		String highwhere = " AND XM_ID='"+xmid+"' AND BM_CODE="+"'"+user_code+"' AND "+"'"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND(BM_SH_STATE=0 or BM_SH_STATE=2) AND BM_STATE=2";
 		List<Bean> finds = ServDao.finds("TS_BMLB_BM",highwhere);
 		return new OutBean().set("list", finds);
+	}
+	//获取所有的几点
+	public OutBean getKSLBK_IDs(Bean paramBean){
+		OutBean out = new OutBean();
+		String xmid = paramBean.getStr("xmid");
+		String id = paramBean.getStr("ids");
+		String where = "AND CODE_PATH like"+"'%"+id+"%'";
+		List<Bean> finds = ServDao.finds("TS_XMGL_BM_KSLBK", where);
+		String s = "";
+		for (Bean bean : finds) {
+			s+="'"+bean.getStr("KSLBK_ID")+"',";
+		}
+		String dohao = s.substring(0,s.length()-1);
+		String where1 = "AND KSLBK_ID in ("+dohao+") AND XM_ID="+"'"+xmid+"'";
+		List<Bean> finds2 = ServDao.finds("TS_XMGL_BM_KSLB", where1);
+		String ss = "";
+		for (Bean bean : finds2) {
+			ss+=bean.getStr("KSLBK_ID")+",";
+		}
+		ss+=id;
+		return out.set("idss", ss);
 	}
 }

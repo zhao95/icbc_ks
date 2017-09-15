@@ -56,18 +56,14 @@
 </style>
 <!--判断用户是否登录  -->
 <%
-	String user_code="";
-	if(userBean != null) {
-	user_code = userBean.getStr("USER_CODE");
-  }
+	String user_code = userBean.getStr("USER_CODE");
  
 			//获取所有项目ID
 			
 							%> 
 	<div class="" style="padding: 10px">
-		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
-				src="<%=CONTEXT_PATH%>/ts/image/u1155.png" id="shouye"></image></a> <span
-			style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;我的报名</span>
+		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;" src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
+		 <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;我的报名</span>
 	</div>
 	<table id="myTab" class="nav nav-tabs"
 		style="margin-left: 10px; width: 98%; background-color: white">

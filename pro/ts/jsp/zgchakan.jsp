@@ -40,10 +40,10 @@
 	<style>.b table tr{height:30px;}</style>
 	<style>.zgks table td{padding-left: 5px;}</style>
 	<% 
-if(userBean != null) {
+
 		 String bmid = request.getParameter("bmid4");
 		//获取用户编码
-		String user_code = userBean.getStr("USER_WORK_NUM");
+		String user_code = userBean.getStr("USER_CODE");
 		//获取用户名称
 		String user_name = userBean.getStr("USER_NAME");
 		//获取用户性别
@@ -65,7 +65,6 @@ if(userBean != null) {
 		if(gwList.size()!=0){
 		 pt_type=gwList.get(0).getStr("POSTION_TYPE");
 		 pt_sequnce= gwList.get(0).getStr("POSTION_SEQUENCE");
-			
 		}
 		
 		%>
@@ -116,11 +115,11 @@ if(userBean != null) {
        			</tr>
        			<tr>
        				<td width="16.5%">岗位类别</td>
-       				<td width="16.5%" ><%=pt_type %></td>
+       				<td width="16.5%" id="gwlb"></td>
        				<td width="16.5%">岗位序列</td>
-       				<td width="16.5%"><%=pt_sequnce%></td>
+       				<td width="16.5%" id="gwxl"></td>
        				<td width="16.5%">职务层级</td>
-       				<td width="17.5%"><%=user_post%></td>
+       				<td width="17.5%" id="zwcj"></td>
        			</tr>
        			<tr style="background-color: #f7fdff;">
        				<td width="16.5%">入行时间</td>
@@ -174,9 +173,21 @@ if(userBean != null) {
 	}
 	$(function(){
 		init();
-		
+		debugger;
+		var user_code = "<%=user_code%>"
+		var result =  FireFly.byId("SY_HRM_ZDSTAFFPOSITION",user_code);
+		if(result!=null){
+			 STATION_TYPE_CODE=result.STATION_TYPE_CODE;
+			 STATION_TYPE = result.STATION_TYPE;
+			 STATION_NO = result.STATION_NO;
+			 STATION_NO_CODE= result.STATION_NO_CODE;
+			 ADMIN_DUTY = result.ADMIN_DUTY;
+			 $("#gwlb").html(STATION_TYPE);
+			 $("#gwxl").html(STATION_NO);
+			 $("#zwcj").html(ADMIN_DUTY);
+		}
 	});
 	</script>
-	<% }%>
+	
 </body>
 </html>

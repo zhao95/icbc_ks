@@ -45,10 +45,10 @@ rh.vi.rhSelectListView.prototype.show = function(event,positionArray, dialogSize
 rh.vi.rhSelectListView.prototype._lastInitHei = function(options) {
 	var lastHeight = $(".rh-select-container").height();
 	
-	if(lastHeight > 600) {
-		lastHeight = 600;
-	}
-	this.winDialog.css("height",lastHeight + "px");
+//	if(lastHeight > 600) {
+//		lastHeight = 600;
+//	}
+//	this.winDialog.css("height",lastHeight + "px");
 }
 /*
  * 重置参数

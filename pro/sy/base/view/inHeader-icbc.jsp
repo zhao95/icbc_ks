@@ -176,7 +176,7 @@
 	<script type="text/javascript" src="<%=urlPath%>/sy/comm/page/icbc_style.js"></script>
 	
 	<!-- 各个子系统自己的专有样式 -->
-	<link rel="stylesheet" type="text/css" href="<%=urlPath%>/product/project.css"/>
+	<!-- link rel="stylesheet" type="text/css" href="<%=urlPath%>/product/project.css"/-->
 	
 	<!-- 打印JS引用 -->
 	<script type="text/javascript" src="<%=urlPath%>/sy/print/printThis.js"></script>

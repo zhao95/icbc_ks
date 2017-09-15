@@ -131,11 +131,13 @@ function saveRuleVar(dataId,val,json) {
 //	console.log(param);
 	
 	//false表示成功不提示。2表示成功、失败都不提示
-	var tipFlag = true;
+	var tipFlag = false;
 	var result = FireFly.doAct(_viewer.servId, "save", param, tipFlag, false,function(data){
 		
 		if(data._MSG_.indexOf("OK")!= -1) {
 			_viewer.refresh();
+			var dialogId = "setting-dialog-"+dataId;
+			jQuery("#" + dialogId).remove();
 		}
 		
 	});

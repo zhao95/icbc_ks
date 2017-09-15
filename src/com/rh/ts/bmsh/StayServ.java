@@ -162,6 +162,15 @@ public class StayServ extends CommonServ {
 		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
 		List<Bean> flowlist = outbean.getList("result");
 		String  nodesteps  = "";
+		//若是越级审核 肯定会有值
+		for (Bean bean : flowlist) {
+			if (shenuser.equals(bean.getStr("SHR_USERCODE"))) {
+				levels = bean.getStr("NODE_STEPS");
+				nodeid = bean.getStr("NODE_NAME");
+			}
+		}
+		if("".equals(nodeid)){
+			//没有值就是逐级审核  nodesteps  就是 最低级审核节点
 		for (Bean bean : flowlist) {
 			 nodesteps = bean.getStr("NODE_STEPS");
 		}
@@ -179,6 +188,7 @@ public class StayServ extends CommonServ {
 				nodeid = bean.getStr("NODE_NAME");
 			}
 			}
+		}
 		}
 		// ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化
 		ObjectMapper mapper = new ObjectMapper();

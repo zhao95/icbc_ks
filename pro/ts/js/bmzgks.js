@@ -77,7 +77,6 @@ function xminfoshow(){
        			var divtext1 = $("#"+a).html();
        			if(divtext1==null||divtext1.length==0){
        				var shArray=true;
-       				debugger;
        				//判断此考试是否已报名  如果已报名审核通过 必须删除 才能提交
        					var resdata = results.list;
        					var FLAG = false;
@@ -333,7 +332,8 @@ function xminfoshow(){
 	         rhItemCode:"KSLBK_PID",
 	         rhLeafIcon:"",
 	         rhexpand:false,
-				showcheck:true,
+			 showcheck:true,
+			 childOnly:true,
 	         theme: "bbit-tree-no-lines",
 	         url  :"SY_COMM_INFO.dict.do"
 	        };
@@ -574,7 +574,6 @@ function xminfoshow(){
 	
 	//获取应考试的值
 	function tijiao(){
-		debugger;
 		var maxnum = FireFly.getConfig("TS_BM_MIDDLE_MAXNUM").CONF_VALUE;
 		if(middlenum>maxnum){
 			alert("选择的中级考试数目超过上限，请删除再提交");

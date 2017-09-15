@@ -86,9 +86,10 @@
 		String user_cmpy_date =userBean.getStr("USER_CMPY_DATE");
 	
 		%>
-		<div style="padding-left: 90px;width: 90%;text-align: left;">
-				<img alt="中国工商银行" src="./qt/img/u3148.png"> <img alt="考试系统"src="./qt/img/u3376.png">
-		</div>
+		<div class="" style="padding: 10px">
+		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;" src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
+		 <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;非资格报名</span>
+	</div>
 	<div style="background: #dfdfdf;padding-top: 10px"align="center">
        	<div id="" style="background: white;width: 90%;">
        		<div style="background: white;width: 90%;text-align: center">
