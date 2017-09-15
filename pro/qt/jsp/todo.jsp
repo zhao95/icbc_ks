@@ -348,7 +348,7 @@
                 tr.append('<td>' + typeNameMap[item.TYPE] + '</td>');
                 tr.append('<td>' + item.SEND_NAME + '</td>');
                 tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
-                tr.append('<td>' + new Date(item.SEND_TIME).format("yyyy-mm-dd HH:MM") + '</td>');
+                tr.append('<td>' + ((item.SEND_TIME&&item.SEND_TIME.length>=16) ? item.SEND_TIME.substring(0,16) : '') + '</td>');
                 rhGridTBody.append(tr);
             }
         };
@@ -610,7 +610,7 @@
                 tr.append('<td>' + typeNameMap[item.TYPE] + '</td>');
                 tr.append('<td>' + item.SEND_NAME + '</td>');
                 tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
-                tr.append('<td>' + new Date(item.SEND_TIME).format("yyyy-mm-dd HH:MM") + '</td>');
+                tr.append('<td>' + ((item.SEND_TIME&&item.SEND_TIME.length>=16) ? item.SEND_TIME.substring(0,16) : '')  + '</td>');
                 rhGridTBody.append(tr);
             }
         };

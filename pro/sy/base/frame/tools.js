@@ -3854,8 +3854,7 @@ var dateFormat = function () {
 			mask = date;
 			date = undefined;
 		}
-		//日期转换为十进制，才可以正常运行，否则会抛异常  invalid date 
-		date = parseInt(date,10);
+		// date = parseInt(date,10);
 		// Passing date through Date applies Date.parse, if necessary
 		date = date ? new Date(date) : new Date();
 		if (isNaN(date)){

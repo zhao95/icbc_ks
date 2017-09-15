@@ -199,7 +199,7 @@
                     '<tr id="' + gg.GG_ID + '" style="height: 40px">',
                     '<td class="col-md-4" style="width: 6%; text-align: center">' + (i + 1) + '</td>',//序号
                     '<td class="col-md-4" style="width: 20%;text-align: center">' + gg.GG_TITLE + '</td>',
-                    '<td class="col-md-4" style="width: 20%;text-align: center">' + new Date(gg.S_ATIME).format("yyyy-mm-dd") + '</td>',//yyyy-mm-dd HH:MM
+                    '<td class="col-md-4" style="width: 20%;text-align: center">' + ((gg.S_ATIME&&gg.S_ATIME.length>=10) ? gg.S_ATIME.substring(0,10) : '') + '</td>',//yyyy-mm-dd HH:MM
                     ' <td style="width: 20%;text-align: center">',
                     ' <a href="javascript:post(' + "'" + FireFly.getContextPath() + '/qt/jsp/gg.jsp' + "'" + ',{id:' + "'" + gg.GG_ID + "'" + '});" style="display:inline;" class="gg-title" style="cursor:pointer;">' + '详情' + '</a>',
                     '   </td>',
