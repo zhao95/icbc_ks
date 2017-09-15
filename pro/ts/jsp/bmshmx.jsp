@@ -40,9 +40,8 @@
 
 <body class="hold-transition skin-black sidebar-mini">
 	<div class="" style="padding: 10px">
-		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
-				src="/ts/image/u1155.png" id="shouye"></image></a> <span
-			style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;我的报名</span>
+		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;" src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
+		 <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;报名明细</span>
 	</div>
 	<div  style="padding-left: 50px;padding-top:10px">
 		<image style="padding-bottom:10px"
@@ -69,9 +68,9 @@
 	 String bmid = "";
 		if(userBean != null) {
 	  bmid = request.getParameter("bmidmx");
-	 String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
-	 List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
-	 for(int i=0;i<list.size();i++){
+	  String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
+	  List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
+	  for(int i=0;i<list.size();i++){
 		Bean bean = list.get(i);
 		int j = i+1;
 		String shdate = bean.getStr("S_ATIME");
