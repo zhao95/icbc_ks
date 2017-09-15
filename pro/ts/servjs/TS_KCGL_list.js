@@ -36,14 +36,12 @@ $("#TS_KCGL .rhGrid").find("tr").each(function(index, item) {
 		bindCard();
 	}
 });
+
 //隐藏列表行按钮条
 $(".hoverDiv").bind("mouseleave", function(e){
-//	var pkCode = jQuery(this).attr("id");
 	setTimeout(function(){
-//		$("#"+pkCode).css('display','none');
 		$(".hoverDiv").css('display','none');
 	},1);	
-	
 });
 
 //绑定的事件     
