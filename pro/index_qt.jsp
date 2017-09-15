@@ -45,7 +45,7 @@
 
 <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
-	
+
 <!-- 首页模块css -->
 <!-- Font Awesome -->
 <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/css/index_qt.css">
@@ -77,7 +77,7 @@
     					</li>
 						<!-- Notifications: style can be found in dropdown.less -->
 						<li class="dropdown notifications-menu"><a href="#"
-							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;border-left: 0px;"> 
+							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;border-left: 0px;">
 <!-- 							<i　class="fa fa-bell-o"></i> -->
 								<img src="qt/css/images/qt_bell.png">
 							<span class="label label-warning" id="tipSum">0</span>
@@ -100,10 +100,10 @@
 								<li><a href="#" class="" data-layout="layout-boxed"><i class="fa fa-cog fa-fw"></i>简约/平铺</a></li>
 <!-- 								<li><input type="checkbox" data-layout="layout-boxed" class="pull-right" checked="checked">简约/平铺</li> -->
 								<li><a  class="" id="loginOutBtn"><i class="fa fa-power-off fa-fw"></i>注销用户</a></li>
-							
+
 <!-- 							<li class="user-footer"></li> -->
-								
-							
+
+
 <!-- 									<a href="#" class="btn btn-default btn-flat">Profile</a> -->
 <!-- 									<a href="#" class="btn btn-default btn-flat" data-layout="layout-boxed">简约/平铺</a> -->
 <!-- 									<a href="#" class="btn btn-default btn-flat">Sign out</a> -->
@@ -140,7 +140,7 @@
 				</div>
 
 				<div style="margin-top: 20px; text-align:center;">
-					
+
 					<img  id="left-img-renzheng" src="/qt/img/left-logo.png" style="cursor: pointer;">
 				</div>
 
@@ -377,7 +377,7 @@
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title" style="display: block; font-size:16px;">
 									通知公告
-									<a onclick="window.open('/qt/jsp/todo.jsp')" class="index-list-more-a">
+									<a onclick="window.open('/qt/jsp/ggList.jsp')" class="index-list-more-a">
 										更多
 										<span style="color:red;">&gt;</span>
 									</a>
@@ -420,7 +420,7 @@
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title" style="font-size:16px;">Q&A 问答</h3>
 							</div>
-							<div style="height:72px;"></div>
+							<div style="min-height:72px;"></div>
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
 								<table class="table table-striped" id="qItem"></table>
@@ -714,7 +714,7 @@
 	<!-- 问答模块的js文件 -->
 <%-- 	<script src="<%=CONTEXT_PATH%>/qt/js/wdgl.js"></script> --%>
 
-	
+
 
 	<!-- 考试日历模块JS文件 -->
 	<script src="<%=CONTEXT_PATH%>/qt/js/jquery-ui-1.10.3.custom.js"></script>

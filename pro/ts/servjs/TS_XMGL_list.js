@@ -228,37 +228,38 @@ $(".rhGrid").find("tr").each(function(index, item) {
 		$(item).find("td[icode='buttons']").append("<div operCode='option' rowpk='"+XM_ID+"'><font size='3'>···</font></div>"); 
 	
 		var btns = //'<div id="div_'+XM_ID+'"  style="display:none;min-width:40px;min-height:25px">'+
-     '<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+XM_ID+'"><span style="font-size:14px">&nbsp;查看  </span></a>'+
-     '<a style="cursor:pointer" id="TS_XMGL_copy" actcode="copy" rowpk="'+XM_ID+'"><span style="font-size:14px">复制  </span></a>'+
-     '<a style="cursor:pointer" id="TS_XMGL_edit" actcode="edit" rowpk="'+XM_ID+'"><span style="font-size:14px">编辑  </span></a>'+
-     '<a style="cursor:pointer" id="TS_XMGL_set"  actcode="set" rowpk="'+XM_ID+'"><span style="font-size:14px">设置  </span></a>'+
-     '<a style="cursor:pointer" id="TS_XMGL_delete" actcode="delete" rowpk="'+XM_ID+'"><span style="font-size:14px">删除&nbsp;</span></a>'
+			'<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+XM_ID+'">&nbsp查看&nbsp</a>'+
+			'<a style="cursor:pointer" id="TS_XMGL_copy" actcode="copy" rowpk="'+XM_ID+'">复制&nbsp</a>'+
+			'<a style="cursor:pointer" id="TS_XMGL_edit" actcode="edit" rowpk="'+XM_ID+'">编辑&nbsp</a>'+
+			'<a style="cursor:pointer" id="TS_XMGL_set"  actcode="set" rowpk="'+XM_ID+'">设置&nbsp</a>'+
+			'<a style="cursor:pointer" id="TS_XMGL_delete" actcode="delete" rowpk="'+XM_ID+'">删除&nbsp</a>';
      //'</div>'
      //'<a class="rhGrid-td-rowBtnObj" operCode="optEditBtn" rowpk="'+dataId+'" style="cursor:pointer">编辑&nbsp</a>'+
      //tableTag.append(btn); 
 		//}
     
-     var divHeight = $(item).get(0).offsetHeight;
-		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+XM_ID+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;'>"+btns+"</div>";
+		var divHeight = $(item).get(0).offsetHeight;
+		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+XM_ID+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display:none;'>"+btns+"</div>";
 		$(".content-main").find("table").before(hoverDiv);
-	 bindCard();
+		bindCard();
 	}
 });
 
-
 //隐藏列表行按钮条
 $(".hoverDiv").bind("mouseleave", function(e){
-//	var pkCode = jQuery(this).attr("id");
 	setTimeout(function(){
-//		$("#"+pkCode).css('display','none');
 		$(".hoverDiv").css('display','none');
 	},1);	
-	
 });
 
-//按钮的操作
-//var p=null;//div位置
-//var spanLoc=null;//span位置
+/*
+ * 删除前方法执行
+ */
+rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+	showVerify(pkArray,_viewer);
+};	
+	
+
 function bindCard(){
 jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter", function(){
 	//var pkCode = $(this).parent().parent().parent().children().get(2).innerText;
@@ -275,14 +276,7 @@ jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter", function()
 		$("#hoverDiv_"+pkCode).focus();
 	},10);
 });	
-debugger;
-/*
- * 删除前方法执行
- */
-rh.vi.listView.prototype.beforeDelete = function(pkArray) {
-	showVerify(pkArray,_viewer);
-};	
-	
+
 	
 //当行查看事件
 //jQuery(".hoverDiv [operCode='optLookBtn']").unbind("click").bind("click", function(){

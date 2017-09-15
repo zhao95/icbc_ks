@@ -29,51 +29,77 @@ $("#TS_KCZGL_KCGL .rhGrid").find("tr").each(function(index, item) {
 		var dataId = item.id;
 		var state = $(item).find("td[icode='KC_STATE']").attr("title");
 		
-		$(item).find("td[icode='BUTTONS']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optLookBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+	
-				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optIPScopeBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">考场IP段设置</span><span class="rh-icon-img btn-edit"></span></a>'+
-				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optIPZwhBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">考场IP座位号</span><span class="rh-icon-img btn-edit"></span></a>'+
-				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optJgBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">关联机构</span><span class="rh-icon-img btn-edit"></span></a>'+
-				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optEditBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
-				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optDeleteBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
-				);	
+		$(item).find("td[icode='BUTTONS']").append("<div operCode='option' rowpk='"+dataId+"'><font size='3'>···</font></div>");
+
+		var abtns = '<a class="rhGrid-td-rowBtnObj " operCode="optLookBtn" rowpk="'+dataId+'" style="cursor:pointer">&nbsp查看&nbsp</a>'+	
+		'<a class="rhGrid-td-rowBtnObj " operCode="optIPScopeBtn" rowpk="'+dataId+'" style="cursor:pointer">考场IP段设置&nbsp</a>'+
+		'<a class="rhGrid-td-rowBtnObj " operCode="optIPZwhBtn" rowpk="'+dataId+'" style="cursor:pointer">考场IP座位号&nbsp</a>'+
+		'<a class="rhGrid-td-rowBtnObj " operCode="optJgBtn" rowpk="'+dataId+'" style="cursor:pointer">关联机构&nbsp</a>'+
+		'<a class="rhGrid-td-rowBtnObj " operCode="optEditBtn" rowpk="'+dataId+'" style="cursor:pointer">编辑&nbsp</a>'+
+		'<a class="rhGrid-td-rowBtnObj " operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>';
+		
+		var divHeight = $(item).get(0).offsetHeight;
+		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;'>"+abtns+"</div>";
+		$("#TS_KCZGL_KCGL .content-main").find("table").before(hoverDiv);
+		
 		// 为每个按钮绑定卡片
 		bindCard();
 	}
 });
 
+//隐藏列表行按钮条
+$(".hoverDiv").bind("mouseleave", function(e){
+	setTimeout(function(){
+		$(".hoverDiv").css('display','none');
+	},1);	
+});
+
 function bindCard(){	
+	jQuery("td[icode='BUTTONS']").unbind("mouseenter").bind("mouseenter", function(){
+		var pkCode = jQuery(this).parent().attr("id");
+		var trWidth = $(this).parent().get(0).offsetWidth;
+		var divWidth = $("#hoverDiv_"+pkCode).get(0).innerText.length*11.1;//9.78;
+		var marginLeft = trWidth - divWidth ;
+		var marginTop =$(this).get(0).offsetTop;
+		setTimeout(function(){
+			$(".hoverDiv").css('display','none');
+			$("#hoverDiv_"+pkCode).css('display','block'); 
+			$("#hoverDiv_"+pkCode).css('margin-left',marginLeft+'px'); 
+			$("#hoverDiv_"+pkCode).css('margin-top',marginTop+'px'); 
+			$("#hoverDiv_"+pkCode).focus();
+		},10);
+	});	
 	//当行查看事件
-	jQuery("td [operCode='optLookBtn']").unbind("click").bind("click", function(){
+	jQuery(".hoverDiv [operCode='optLookBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
 		openMyCard(pkCode,true);
 	});
 	
-	jQuery("td [operCode='optIPScopeBtn']").unbind("click").bind("click", function(){
+	jQuery(".hoverDiv [operCode='optIPScopeBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPSCOPE"});
 		openMyCard(pkCode,"","TS_KCGL_IPSCOPE");
 	});
-	jQuery("td [operCode='optIPZwhBtn']").unbind("click").bind("click", function(){
+	jQuery(".hoverDiv [operCode='optIPZwhBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPZWH"});
 		openMyCard(pkCode,"","TS_KCGL_IPZWH");
 	});
-	jQuery("td [operCode='optJgBtn']").unbind("click").bind("click", function(){
+	jQuery(".hoverDiv [operCode='optJgBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_GLJG"});
 		openMyCard(pkCode,"","TS_KCGL_GLJG");
 	});
 	
 	//当行编辑事件
-	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
+	jQuery(".hoverDiv [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
 		openMyCard(pkCode);
 	});
 	//当行删除事件
-	jQuery("td [operCode='optDeleteBtn']").unbind("click").bind("click", function(){
+	jQuery(".hoverDiv [operCode='optDeleteBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
 	});

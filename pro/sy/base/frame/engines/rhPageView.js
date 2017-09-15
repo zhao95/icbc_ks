@@ -450,8 +450,8 @@ rh.vi.pageView.prototype._bldBanner = function() {
 	var userSex = System.getVar("@USER_SEX@");
 	var perImg = FireFly.getContextPath() + System.getUser("USER_IMG");
 	var perDiv = jQuery("<img class='rh-head-per-icon'></img>").attr("src",perImg).appendTo(perConIn);
-	var perTip = jQuery("<div class='rh-head-per-tip'><span>" + System.getUser("DEPT_NAME")
-			+ "</span><span>" + System.getUser("USER_NAME") + "</span></div>").appendTo(perConIn);
+	var perTip = jQuery("<div class='rh-head-per-tip'><span style='font-size:14px;'>" + System.getUser("USER_NAME")
+			+ "</span><span style='margin-left:20px;font-size:14px;'>" + System.getUser("DEPT_NAME") + "</span></div>").appendTo(perConIn);
 	//委托
 	if (false) {
 		var perWei = jQuery("<div class='rh-head-per-wei'></div>").appendTo(perConIn);
@@ -459,7 +459,7 @@ rh.vi.pageView.prototype._bldBanner = function() {
 		jQuery("<img class='rh-head-per-wei-img'/>").attr("src",FireFly.getContextPath() +"/sy/comm/page/img/jian.png").appendTo(perWei);
 	}
 	//兼岗
-	var jianGangContainer = jQuery("<div class='rh-head-per-jian'></div>").appendTo(perConIn);
+//	var jianGangContainer = jQuery("<div class='rh-head-per-jian'></div>").appendTo(perConIn);
 	//根据系统配置启用进入个人信息、查看资料完整度功能
 	var showUserInfoFlag = System.getVar("@C_SY_HOME_SHOWUSERINFO@");
 	if(!showUserInfoFlag || showUserInfoFlag != "false"){
@@ -472,19 +472,19 @@ rh.vi.pageView.prototype._bldBanner = function() {
 			Tab.open(options);
 		});
 		var userPercent = jQuery("<img src='../../comm/page/img/userPercent.png' class='rh-head-per-jian--percent'/>");
-		userPercent.appendTo(jianGangContainer);
+//		userPercent.appendTo(jianGangContainer);
 //		var selfInfo = jQuery("<span title='个人资料完整度' id='rh-head-per--rate' class='rh-head-per--rate'></span>").appendTo(jianGangContainer);
-		var selfInfo = jQuery("<span title='"+Language.transStatic('rhPageView_string12')+"' id='rh-head-per--rate' class='rh-head-per--rate'></span>").appendTo(jianGangContainer);
-		selfInfo.on("click", function(event) {//弹出个人基本信息
-//			var options = {"url":"SY_ORG_USER_CENTER.show.do","menuFlag":2,"menuId":"SY_USER_INFO__" + System.getVar("@CMPY_CODE@"),"tTitle":"个人基本资料"};
-			var options = {"url":"SY_ORG_USER_CENTER.show.do","menuFlag":2,"menuId":"SY_USER_INFO__" + System.getVar("@CMPY_CODE@"),"tTitle":Language.transStatic("rhPageView_string13")};
-			Tab.open(options);
-		});
+//		var selfInfo = jQuery("<span title='"+Language.transStatic('rhPageView_string12')+"' id='rh-head-per--rate' class='rh-head-per--rate'></span>").appendTo(jianGangContainer);
+//		selfInfo.on("click", function(event) {//弹出个人基本信息
+////			var options = {"url":"SY_ORG_USER_CENTER.show.do","menuFlag":2,"menuId":"SY_USER_INFO__" + System.getVar("@CMPY_CODE@"),"tTitle":"个人基本资料"};
+//			var options = {"url":"SY_ORG_USER_CENTER.show.do","menuFlag":2,"menuId":"SY_USER_INFO__" + System.getVar("@CMPY_CODE@"),"tTitle":Language.transStatic("rhPageView_string13")};
+//			Tab.open(options);
+//		});
 	}
 	if (System.getVar("@JIAN_CODES@").length > 0) {
 //		var jianGang = jQuery("<div id='jiangang' title='查看兼岗情况'></div>").html("<a href='javascript:void(0);' class='left-topBar-jian-text-con'></a>").addClass("left-topBar-jian-text");
 		var jianGang = jQuery("<div id='jiangang' title='"+Language.transStatic('rhPageView_string14')+"'></div>").html("<a href='javascript:void(0);' class='left-topBar-jian-text-con'></a>").addClass("left-topBar-jian-text");
-		jianGang.appendTo(jianGangContainer);
+//		jianGang.appendTo(jianGangContainer);
 		jianGang.bind("click", function() {
 			var obj = jQuery(".left-topBar-jian-list");
 			if (obj.length == 1) {

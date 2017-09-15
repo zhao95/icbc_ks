@@ -49,7 +49,7 @@
 			//jQuery("#mb-link-img").attr("src",imgLink);
 			checkLang();
 			if(window.screen.height<=768){
-				jQuery("#form-div").css("top","-10px");
+				jQuery("#form-div").css("top","-20px");
 			}else if(window.screen.height > 768){
 				jQuery("#form-div").css("top","8%");
 			}
@@ -127,7 +127,7 @@
 			<div
 				style="display: inline-block; background: url(/qt/css/images/welcome.png) no-repeat center; height: 47px; line-height: 150px; width: 214px; position: relative; top: -50px; left: -40px;"></div>
 			<div
-				style="display: inline-block; border-left: 2px solid #dcb3b0; width: 1px; height: 150px;"></div>
+				style="display: inline-block; border-left: 1px solid red; width: 1px; height: 150px;"></div>
 			<div id="form" style="position: absolute; display: inline-block;" class="radius5">
 				<div id="form_title" class="form-title textShadow radius5"></div>
 				<div class="form-con radius3" style="padding: 8px;">
@@ -151,7 +151,7 @@
 							</div>
 						</div>
 
-						<div>
+						<div style="margin-bottom:6px;">
 							<div id="form_username" style="display: inline-block;">用户名:</div>
 							<div style="display: inline-block;">
 								<div id="user">
@@ -176,8 +176,8 @@
 						</div>
 					</div>
 					<div id="submit"
-						style="border: 0px red solid; margin-top: 0px; margin-top: 5px; margin-left: 60px;">
-						<input type="submit" id="btnLogin" class="submit textShadow"
+						style="border: 0px red solid; margin-top: 5px; margin-left: 65px;">
+						<input type="submit" id="btnLogin" class="submit textShadow" style=" width:170px;color: white;text-shadow: 0 0;"
 							title="登录" value="登录" />
 					</div>
 					<!-- 		         <div id="remb" style=""><label id="form_rem" class="loginAuto-lb">记住密码</label><input id="LOGIN_AUTO" name="LOGIN_AUTO" type="checkbox" class="loginAuto-check"/></div> -->
