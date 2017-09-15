@@ -21,7 +21,7 @@ if(_viewer.params.BUT){
 
 function  lookCard(){
 	
-	jQuery("td [actcode='look'").unbind("click").bind("click",function(){
+	jQuery("td [actcode='look']").unbind("click").bind("click",function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		// 定义一个对象
 		var strwhere = "and G_ID ='" + pkCode + "'";
@@ -49,7 +49,7 @@ $("#TS_PVLG_GROUP .rhGrid").find("tr").each(function(index, item) {
 //绑定的事件     
 function bindCard() {
 	//当行删除事件
-	jQuery("td [id='TS_PVLG_GROUP-delete'").unbind("click").bind("click", function() {
+	jQuery("td [id='TS_PVLG_GROUP-delete']").unbind("click").bind("click", function() {
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
 	});

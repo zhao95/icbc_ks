@@ -315,17 +315,13 @@ jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter", function()
  	 //设置
  	 $(".hoverDiv [actcode='set']").unbind("click").bind("click", function(){
  		var pkCode = jQuery(this).attr("rowpk");
- 		//d.empty();
-	 	var ext = " and XM_ID = '" + pkCode + "'";
-	 	//window.location.href ="stdListView.jsp?frameId=TS_XMGL_SZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=false&title=项目管理设置&XM_ID="+pkCode+"&extWhere="+ext;
-	   var url =   "stdListView.jsp?frameId=TS_XMGL_SZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=true&title=项目管理设置&XM_ID="
-			+ pkCode + "&extWhere=" + ext;
-		   var options = {
-			"url":url,
-			"menuFlag":3,
-			"top":true
-		};
+	 	var extWhere = "and XM_ID = '" + pkCode + "'";
+		var params = {"XM_ID" : pkCode,"_extWhere" : extWhere};
+		var url = "TS_XMGL_SZ.list.do?&_extWhere=" + extWhere;
+		var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
 		Tab.open(options);
+	 	//window.location.href ="stdListView.jsp?frameId=TS_XMGL_SZ-tabFrame&sId=TS_XMGL_SZ&paramsFlag=false&title=项目管理设置&XM_ID="+pkCode+"&extWhere="+ext;
+
  	 });
  	 //删除
  	 $(".hoverDiv [actcode='delete']").unbind("click").bind("click", function(){
