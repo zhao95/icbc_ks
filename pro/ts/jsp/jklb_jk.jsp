@@ -77,7 +77,7 @@
     <div style="background-color: #fdfdfd;padding-bottom: 30px" class="container-fluid">
 
         <div class="row">
-            <div class="col-sm-12 text-center" style="background-color: #ababab;">
+            <div class="col-sm-12 text-center" style="background-color:#dfdfdf;">
                 <div style="min-height: 70px;padding:10px;">
                     <div style="display: inline-block">
                                 <span style="position: relative;left: 26px;top:3px;
@@ -129,10 +129,10 @@
             </div>
         </div>
 
-        <div class="row" style="padding: 15px 0;">
+        <div class="row" style="padding-top:80px">
             <div class="col-sm-2">
             </div>
-            <div class="col-sm-9">
+            <div  class="col-sm-9">
                 <div style="background-color: #fed1d1;border:1px solid red;border-radius: 5px;padding: 5px;color: #570000;">
                     ！ 温馨提示：您今年已请假 <span style="color: red">2</span> 次，还可请假 <span style="color: red">1</span> 次。
                     满 <span style="color: red">3</span> 次后，本年度将不允许再请假。请合理使用请假次数！
@@ -265,12 +265,12 @@
         <div class="row">
             <div class="col-sm-offset-4 col-sm-3">
                 <button onclick="applyForLeave()" class="btn btn-success"
-                        style="width:100px;background-color: #00c2c2;">
+                        style="width:150px;height:50px;background-color: #00c2c2;">
                     提交申请
                 </button>
             </div>
             <div class="col-sm-3">
-                <button onclick="back()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">
+                <button onclick="back()" class="btn btn-success" style="width:150px;height:50px;background-color: #00c2c2;">
                     返回
                     <div id="serverResponse"></div>
                 </button>

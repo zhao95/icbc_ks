@@ -1010,22 +1010,22 @@ public class BmlbServ extends CommonServ {
 		String xl_code = paramBean.getStr("xlcode");
 		String lb_code = paramBean.getStr("lbcode");
 		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 		String strdate = sdf.format(date);
 		//跨序列高级考试
-		String highwhere = "AND BM_CODE="+"'"+user_code+"' AND "+"'"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=3 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=1";
+		String highwhere = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=3 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=1";
 		List<Bean> highlist = ServDao.finds("TS_BMLB_BM",highwhere);
 		out.set("highnum", highlist.size());
 		//夸序列中级考试
-		String where = "AND BM_CODE="+"'"+user_code+"' AND "+"'"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=1";
+		String where = "AND BM_CODE="+"'"+user_code+"' AND  BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=1";
 		List<Bean> list = ServDao.finds("TS_BMLB_BM",where);
 		out.set("allnum", list.size());
 		//本序列考试
-		String where1 = "AND BM_CODE="+"'"+user_code+"' AND '"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND BM_LB_CODE='"+lb_code+"' AND BM_XL_CODE='"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=1";
+		String where1 = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE='"+lb_code+"' AND BM_XL_CODE='"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=1";
 		List<Bean>list1 = ServDao.finds("TS_BMLB_BM", where1);
 		out.set("serianum", list1.size());
 		//夸序列  总数：
-		String where2 = "AND BM_CODE="+"'"+user_code+"' AND '"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=1";
+		String where2 = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE=1";
 		List<Bean> list3 = ServDao.finds("TS_BMLB_BM", where2);
 		out.set("othernum",list3.size());
 		return out;

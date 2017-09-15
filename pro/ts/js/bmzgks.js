@@ -26,7 +26,6 @@ function xminfoshow(){
 		var bm_name = bminfojson[0].BM_NAME;
 		//给jsp赋值
 		$("#xmnamecon").html(xm_name);
-		$("#bmddatecon").html("报名时间："+bm_start+"~~"+bm_end);
 		$("#ksxzcon").html(bm_ksxz);
 	});
 }
@@ -278,6 +277,15 @@ function xminfoshow(){
 		/*var cengji =  FireFly.doAct("TS_BMLB_BM","getcengji",param1);
 		var cengjinum = cengji.num;
 		var sqlstr = " AND (KSLBK_TYPE<="+cengjinum+" or KSLBK_TYPE is null";*/
+		 
+		 /*if(cengjinum==1){
+			 //只能报
+			 $("#allnum").html(0);
+			 $("#canheighnum").html(0);
+		 }else if(cengjinum==2){
+			 //
+			 
+		 }*/
         var extWhere="AND KSLBK_ID IN ((select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))))union(select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')))union(SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))union(select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))";
 		 var setting={data
 	             :FireFly.getDict('TS_XMGL_BM_KSLBK','KSLBK_PID',extWhere),

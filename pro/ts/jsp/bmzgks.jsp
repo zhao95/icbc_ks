@@ -37,6 +37,9 @@
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 <style type="text/css">
+#tabletjId{
+	border:lightgray;
+}
 .a table tr {
 	height: 40px;
 	padding-left: 10px;
@@ -264,7 +267,7 @@
 					<button type="button" class="btn btn-success" data-dismiss="modal"
 						style="width: 100px; background-color: #00c2c2;" onclick="fuzhi()">确定</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal"
-						style="width: 100px;margin-left:100px;background-color: #00c2c2;">返回</button>
+						style="color:white;width: 100px;margin-left:100px;background-color: #00c2c2;">返回</button>
 				</div>
 			</div>
 			<!-- /.modal-content -->
