@@ -501,7 +501,7 @@ function form2submit(obj){
 	 $("#starttime").text(pageEntity[0].S_MTIME);
 	 if(pageEntity[0].BM_SEX==0){
 		 $("#gender").text("女");
-	 }else if(pageEntity[0].BM_SEX==1){
+	 }else{
 		 $("#gender").text("男");
 	 }
 	 $("#belongto").text(pageEntity[0].ODEPT_NAME);
