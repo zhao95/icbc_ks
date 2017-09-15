@@ -31,12 +31,14 @@ _viewer.getItem("BM_TZ_END").obj.unbind("click").bind("click", function() {
 //针对报名时间的校验
 _viewer.getItem("BM_START").obj.unbind("click").bind("click", function() {
 	    WdatePicker({
+		    dateFmt: 'yyyy-MM-dd HH:mm:ss',
 	        maxDate : "#F{$dp.$D('" + _viewer.servId + "-BM_END')}"
 	    });
 	});
 _viewer.getItem("BM_END").obj.unbind("click").bind("click", function() {
 
 	    WdatePicker({
+		    dateFmt: 'yyyy-MM-dd HH:mm:ss',
 	        minDate : "#F{$dp.$D('" + _viewer.servId + "-BM_START')}"
 	    });
 	});
