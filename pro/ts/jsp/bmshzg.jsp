@@ -94,10 +94,9 @@ if(userBean != null) {
      #box{position:absolute;display:none;opacity:0.9;background:#fff;text-align: center;top:0;}
     </style>
 
-	<div style="padding: 10px">
-		<a href="/index_qt.jsp"><image style="padding-bottom:10px"
-				src="/ts/image/u1155.png" id="shouye"></image></a> <span
-			style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;我的报名</span>
+	<div class="" style="padding: 10px">
+		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;" src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
+		 <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;报名审核</span>
 	</div>
 	<table id="myTab" class="nav nav-tabs"
 		style="margin-left: 10px; width: 98%; background-color: white">
@@ -416,7 +415,7 @@ if(userBean != null) {
 				     <div style="position:relative;left:370px;top:-330px">
 				   <a id="rightalla" onclick="rightall()" href="#"><image id="rightall" src="/ts/image/1552.png"></image></a>
 				    </div>
-				      <div id="pxtable2div" style="height:500px;overflow-y:scroll;width:330px;position:relative;left:420px;top:-630px">
+				      <div id="pxtable2div" style="height:500px;overflow-y:scroll;width:330px;position:relative;left:420px;top:-629px">
 				   <table id="pxtable2" style="width:310px;">
 				     <thead style="background-color:lightgray;width:200px;border-bottom:solid 1px lightgray">
 				      <tr>
