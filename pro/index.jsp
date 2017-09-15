@@ -48,6 +48,12 @@
 			//var imgLink = FireFly.getHttpHost() + FireFly.contextPath + "/file?act=qrCode&value=" + tempValue + "&size=150";
 			//jQuery("#mb-link-img").attr("src",imgLink);
 			checkLang();
+			if(window.screen.height<=768){
+				jQuery("#form-div").css("top","-10px");
+			}else if(window.screen.height > 768){
+				jQuery("#form-div").css("top","8%");
+			}
+			
 		});
 		function zh() {
 			//设置cookie
@@ -96,6 +102,9 @@
 	%>
 	<script type="text/javascript">
 		var homeUrl = "sy/comm/page/page.jsp";
+		if(window.ICBC){
+        	homeUrl = FireFly.getContextPath() + "/index_qt.jsp";
+        }
 		//设置cookie
 		document.cookie = "RhClientLogin=true";
 		window.location.href = homeUrl;
@@ -104,15 +113,17 @@
 		} else {
 	%>
 	<div id="logo">
+		<div id="icbc-ks-logo"></div>
 		<div id="top_logo"></div>
 		<div id="msg"></div>
+		<div id="rh-browser-check" class="rh-browser-check"><a style="cursor:point;font-size:14px;color:green;position: relative;top: -30px;text-align: left;left: 15px;" href="javascript:Tools.redirect('/sy/comm/index/activeTest.jsp');">系统插件测试页</a></div>
 		<div class=""
-			style="position: relative; right: 20px; top: -25px; text-align: right;">
-			<p>©中国工商银行 版权所有 2017</p>
+			style="position: relative; right: 20px; top: -50px; text-align: right;z-index: -1;">
+			<p>© 中国工商银行 版权所有 2017</p>
 			<p id="notSupportIE6"></p>
 		</div>
-		<div
-			style="height: 150px; position: relative; left: 250px;">
+		<div id="form-div"
+			style="height: 150px; position: relative; left: 250px;top: 1%;">
 			<div
 				style="display: inline-block; background: url(/qt/css/images/welcome.png) no-repeat center; height: 47px; line-height: 150px; width: 214px; position: relative; top: -50px; left: -40px;"></div>
 			<div
@@ -123,14 +134,14 @@
 
 					<div class="form-table">
 
-						<div style="display: none">
+						<div style="display:none;">
 							<div id="form_cmpy">
 								公<span style="padding: 0px 6px;"></span>司:
 							</div>
 							<div>
 								<div id="cmpy">
 									<input id="CMPY_CODE" name="CMPY_CODE" type="text"
-										class="ipt-t" /><input id="CMPY_CODE__NAME"
+										class="ipt-t" value='icbc'/><input id="CMPY_CODE__NAME"
 										name="CMPY_CODE__NAME" type="text"
 										class="ipt-t icon-input-cmpy"
 										onfocus="this.className+=' ipt-t-focus icon-input-cmpy'"
@@ -145,8 +156,7 @@
 							<div style="display: inline-block;">
 								<div id="user">
 									<input id="USER_CODE" name="USER_CODE" type="text"
-										class="ipt-t" onfocus="this.className+=' ipt-t-focus'"
-										onblur="this.className='ipt-t'" />
+										class="ipt-t" />
 								</div>
 							</div>
 						</div>

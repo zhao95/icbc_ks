@@ -435,7 +435,7 @@ rh.vi.pageView.prototype._bldBanner = function() {
 				Tab.open(opts);
 			}
 		});
-		seaCon.appendTo(jQuery("#banner"));	
+//		seaCon.appendTo(jQuery("#banner"));	
 	}
 	//个人、兼岗、委托区
 	var perCon = jQuery("<div></div>").addClass("rh-head-per");

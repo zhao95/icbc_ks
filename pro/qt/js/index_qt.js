@@ -36,7 +36,7 @@ function userInfo() {
  * 菜单列表
  */
 function showMenu() {
-	var data = FireFly.doAct("TS_UTIL", "getMenu", {});
+	var data = FireFly.doAct("TS_UTIL", "getMenu", {"S_FLAG":1});
 	if (data.menuList.length > 0) {
 		for (var i = 0; i < data.menuList.length; i++) {
 //			debugger;

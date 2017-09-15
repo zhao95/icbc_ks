@@ -81,7 +81,7 @@ background:#0F1829 url("images/common/i-window-top-back.png") repeat-x left -2px
 .rh-head-sea-icon {position:absolute;cursor:pointer;right:4px;top:2px;width:16px;height:20px;background:url(../../comm/page/img/bannericon.png) no-repeat 0px 5px;}
 .rh-head-per {position: absolute;top:4px;background:url(../../comm/page/img/banner_per_bg.png) no-repeat 0px 0px;}
 .rh-head-per-left {left:180px;}
-.rh-head-per-right {right:210px;background-color:#AAA}
+.rh-head-per-right {right:10px/* 210px */;background-color:#AAA}
 .rh-head-per-in {float:left;height:38px;padding:3px 6px 3px 0px;margin-left:6px;background:url(../../comm/page/img/banner_per_bg.png) no-repeat right -48px;}
 .rh-head-per-icon {width:32px;height:32px;display:block;float:left;border-radius:3px 3px;}
 .rh-head-per-tip {margin:1px 8px 0px 8px;display:inline-block;float:left;height:29px;color:white;font-family:微软雅黑;line-height:14px;}
@@ -128,7 +128,7 @@ li.leftMenu-li-blur a {color:black;}
 .left-homeMenu .leftMenu-only-title  .leftMenu-ui-icon {display:none;}
 .left-homeMenu .leftMenu-only-title  .leftMenu-ui-icon {display:none;}
 .ui-state-hover {background-color:#3774B7;border-top:#7FADFB 1px solid;color:white;}
-.leftMenu-config {display:inline-block;height:32px;width:28px;font-size:18px;*font-size:28px;background:url(images/menu/leftMenuConfig.png) no-repeat 0px -1px;float:right;text-decoration:none;}
+.leftMenu-config {display:none/* inline-block */;height:32px;width:28px;font-size:18px;*font-size:28px;background:url(images/menu/leftMenuConfig.png) no-repeat 0px -1px;float:right;text-decoration:none;}
 .leftMenu-config:hover {background:url(images/menu/leftMenuConfig.png) no-repeat 0px -26px;}
 .leftMenu-close {display:inline-block;height:32px;width:28px;font-size:18px;*font-size:28px;background:url(images/menu/leftMenuConfig.png) no-repeat -28px -1px;float:right;text-decoration:none;}
 .leftMenu-close:hover {background:url(images/menu/leftMenuConfig.png) no-repeat -28px -26px;}
@@ -1235,3 +1235,14 @@ z-index:1;border-left:1px #F3F3F3 solid;border-right:1px #F3F3F3 solid;box-shado
 .ui-dialog .details-dialog.ui-dialog-content {overflow:hidden;}
 .details-dialog iframe {width:100%;min-height:520px;overflow:hidden;border: 0px;}
 /** 工作流详细信息页面结束 **/
+
+/** 考试系统 **/
+.hoverDiv {
+    background-color: #b6e1fd;
+    color: #0071c2;
+    opacity: 1;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    z-index: 10003;
+}
