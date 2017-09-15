@@ -45,6 +45,15 @@
           href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 
     <style>
+     #tabletjId {
+    border:lightgray;
+}
+    #myModal .modal-dialog{
+	position: absolute; 
+    	top:8%;
+    	left:30%;
+    }
+    
         .bkuan table td {
             height: 50px;
         }
@@ -79,7 +88,7 @@
     <div style="background-color: #fdfdfd;padding-bottom: 30px" class="container-fluid">
 
         <div class="row">
-            <div class="col-sm-12 text-center" style="background-color: #ababab;">
+            <div class="col-sm-12 text-center" style="background-color: #dfdfdf;">
                 <div style="min-height: 70px;padding:10px;">
                     <div style="display: inline-block">
                                 <span style="position: relative;left: 26px;top:3px;
@@ -131,7 +140,7 @@
             </div>
         </div>
 
-        <div class="row" style="padding: 15px 0;">
+        <div class="row" style="padding-top: 50px;">
             <div class="col-sm-2">
             </div>
             <div class="col-sm-9">
@@ -143,7 +152,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <span style="font-size: 18px">请假申请</span>
+                <span style="font-size: 18px;margin-left:60px">请假申请</span>
                 <hr/>
             </div>
         </div>
@@ -165,19 +174,18 @@
                 <div class="col-sm-10 bkuan">
                     <div onclick="xuanze()" data-toggle="modal" data-target="#myModal" id="qjdks"
                          style="display: inline-block;cursor: pointer;color: #4cd4d4;padding:5px;">
-                        <i class="fa fa-search" aria-hidden="true" style="font-size: 24px;color: #91dce4;"></i>
-                        <span>选择</span>
+                        <a href="#"><i class="fa fa-search" aria-hidden="true" style="font-size: 15px;"></i>请选择</a>
                     </div>
                     <div style="min-height: 120px">
-                        <table id="qjks-table" border="1" style="width: 100%;border-color: white;">
+                        <table id="qjks-table"  style="width: 100%;border-color: white;">
                             <thead>
-                            <tr style="background-color: #f0f0f0;padding-left: 5px;text-align: center">
+                            <tr style="padding-left: 5px;text-align: center">
                                 <td width="35%">考试名称</td>
                                 <td width="35%">考试开始时间</td>
                                 <td width="30%">操作</td>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody style="background-color: #f0f0f0;border="1"">
                             </tbody>
                         </table>
                     </div>
@@ -215,7 +223,7 @@
                                   id="imgformid" enctype="multipart/form-data">
                                 <div class="form-group" id="caseIma">
                                     <label class="" style="cursor:pointer;"><%--btn btn-primary--%>
-                                        <img alt="选择" src="<%=CONTEXT_PATH %>/ts/image/uqjsc.png">
+                                        <img style = "padding-left:15px" alt="选择" src="<%=CONTEXT_PATH %>/ts/image/u323.png">&nbsp;&nbsp;<a href="#">点击图标上传</a>
                                         <%--选择图片--%>
                                         <input type="file" style="display: none;" class="form-control" id="caseImage"
                                                name="file" onchange="viewImage(this)"/><%--viewImage   upImg--%>
@@ -250,12 +258,12 @@
         <div class="row">
             <div class="col-sm-offset-4 col-sm-3">
                 <button onclick="applyForLeave()" class="btn btn-success"
-                        style="width:100px;background-color: #00c2c2;">
+                        style="width:150px;height:50px;background-color: #00c2c2;">
                     提交申请
                 </button>
             </div>
             <div class="col-sm-3">
-                <button onclick="back()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">
+                <button onclick="back()" class="btn btn-success" style="width:150px;height:50px;background-color: #00c2c2;">
                     返回
                     <div id="serverResponse"></div>
                 </button>
@@ -264,10 +272,9 @@
 
     </div>
 
-    <footer class="main-footer" id="main-fotter-div" style="background-color:#333333; margin-left: 0;">
+    <!-- <footer class="main-footer" id="main-fotter-div" style="background-color:#333333; margin-left: 0;">
         <div align="center">
-            <img id="qt_footer_logo" class="img" src="/qt/img/u996.png">
-            <strong>中国工商银行考试系统</strong>
+            <img id="qt_footer_logo" class="img" src="/qt/img/666.png">
         </div>
         <div>
             <table>
@@ -285,7 +292,7 @@
                 </tbody>
             </table>
         </div>
-    </footer>
+    </footer> -->
 
 </div>
 
@@ -304,7 +311,7 @@
             <div class="modal-body zgks">
                 <table border="1" style="width: 100%;" id="tabletjId">
                     <thead>
-                    <tr>
+                    <tr style="height:30px;">
                         <td style="text-align: center" width="10%"></td>
                         <td width="10%" align="center">序号</td>
                         <td width="55%" align="center">名称</td>
@@ -322,7 +329,7 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="button" class="btn btn-default" data-dismiss="modal"
-                        style="width:100px;background-color: #00c2c2;">返回
+                        style="color:white;width:100px;background-color: #00c2c2;">返回
                 </button>
             </div>
         </div><!-- /.modal-content -->

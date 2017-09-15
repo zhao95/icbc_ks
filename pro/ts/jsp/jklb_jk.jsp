@@ -45,6 +45,15 @@
           href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 
     <style>
+    #tabletjId {
+    border:lightgray;
+}
+    
+    #myModal .modal-dialog{
+	position: absolute; 
+    	top:8%;
+    	left:30%;
+    }
         .bkuan table td {
             height: 50px;
         }
@@ -129,7 +138,7 @@
             </div>
         </div>
 
-        <div class="row" style="padding-top:80px">
+        <div class="row" style="padding-top:50px">
             <div class="col-sm-2">
             </div>
             <div  class="col-sm-9">
@@ -142,7 +151,7 @@
 
         <div class="row">
             <div class="col-sm-12">
-                <span style="font-size: 18px">借考申请</span>
+                <span style="font-size: 18px;margin-left:60px;">借考申请</span>
                 <hr/>
             </div>
         </div>
@@ -180,19 +189,18 @@
                 <div class="col-sm-10 bkuan">
                     <div onclick="xuanze()" data-toggle="modal" data-target="#myModal" id="jkdks"
                          style="display: inline-block;cursor: pointer;color: #4cd4d4;padding:5px;">
-                        <i class="fa fa-search" aria-hidden="true" style="font-size: 24px;color: #91dce4;"></i>
-                        <span>选择</span>
+                         <a href="#" onmouseover="请选择"><i class="fa fa-search" aria-hidden="true" style="font-size: 15px;"></i>请选择</a>
                     </div>
                     <div style="min-height: 120px">
-                        <table id="jkks-table" border="1" style="width: 100%;border-color: white;">
+                        <table id="jkks-table"  style="width: 100%;border-color: white;">
                             <thead>
-                            <tr style="background-color: #f0f0f0;padding-left: 5px;text-align: center">
+                            <tr style="padding-left: 5px;text-align: center">
                                 <td width="35%">考试名称</td>
                                 <td width="35%">考试开始时间</td>
                                 <td width="30%">操作</td>
                             </tr>
                             </thead>
-                            <tbody>
+                              <tbody border="1" style="background-color: #f0f0f0;width: 100%;border-color: lightgray;">
                             </tbody>
                         </table>
                     </div>
@@ -230,7 +238,9 @@
                                   id="imgformid" enctype="multipart/form-data">
                                 <div class="form-group" id="caseIma">
                                     <label class="" style="cursor:pointer;"><%--btn btn-primary--%>
-                                        <img alt="选择" src="<%=CONTEXT_PATH %>/ts/image/uqjsc.png">
+                                    	
+                                         <img style="padding-left:20px;font-size:10px" alt="选择" src="<%=CONTEXT_PATH %>/ts/image/u323.png">&nbsp;&nbsp;<a href="#">点击图标上传</a>
+                                   		
                                         <%--选择图片--%>
                                         <input type="file" style="display: none;" class="form-control" id="caseImage"
                                                name="file" onchange="viewImage(this)"/><%--viewImage   upImg--%>
@@ -295,7 +305,7 @@
             <div class="modal-body zgks">
                 <table border="1" style="width: 100%;" id="tabletjId">
                     <thead>
-                    <tr>
+                    <tr style="height:30px">
                         <td style="text-align: center" width="10%"></td>
                         <td width="10%" align="center">序号</td>
                         <td width="55%" align="center">名称</td>
@@ -313,7 +323,7 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="button" class="btn btn-default" data-dismiss="modal"
-                        style="width:100px;background-color: #00c2c2;">返回
+                        style="color:white;width:100px;background-color: #00c2c2;">返回
                 </button>
             </div>
         </div><!-- /.modal-content -->
