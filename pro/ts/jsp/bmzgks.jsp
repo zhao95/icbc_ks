@@ -229,13 +229,12 @@
 	</div>
 	<!-- 模态选择框跨序列（Modal） -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true">
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div class="modal-dialog" style="width:700px;">
 			<div class="modal-content">
 				<div class="modal-header"
 					style="background-color: #00c2c2; color: white">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-hidden="true">&times;</button>
+					
 					<h5 class="modal-title">可选择的考试</h5>
 				</div>
 				<div class="modal-body zgks">
@@ -276,14 +275,13 @@
 	</div>
 	<!-- 模态提交框（Modal） -->
 	<div class="modal fade" id="tiJiao" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true">
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div id="mask" class="mask"></div>
 				<div class="modal-header"
 					style="background-color: #00c2c2; color: white">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-hidden="true">&times;</button>
+					
 					<h6 class="modal-title">报名信息</h6>
 				</div>
 				<div class="b">

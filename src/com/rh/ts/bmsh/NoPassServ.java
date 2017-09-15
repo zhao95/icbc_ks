@@ -500,6 +500,10 @@ public class NoPassServ extends CommonServ {
 							parambeansss);
 					name = outBeans.getStr("usernames");
 				}
+				if("SH_STATUS".equals(namecol)){
+					//审核状态;
+					name = "审核未通过";
+				}
 				if ("JOB_LB".equals(namecol)) {
 					name = bean.getStr("BM_LB");
 				}

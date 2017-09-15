@@ -300,13 +300,19 @@ function selectcreate(){
 	 //删除页面
 	 document.getElementById(id).remove();
  }
- //提交意义
+ //提交异议
  function tijiaoyiyi(){
-	 $('#appeal').modal('hide');
+	 
 	 //将数据从审核未通过中删除
 	 //加入到待审核中
 	 var bmid = $("#baomingid"+idcode).html();
 	 var liyou = $("#liyou11").val();
+	 var lis = $("#formContainer2").find("li");
+	 if(lis.length==0&&liyou==""){
+		 alert("信息不能为空");
+		 return;
+	 }
+	 $('#appeal').modal('hide');
 	 var param ={};
 	 param["bmid"]=bmid
 	 param["liyou"]=liyou;
@@ -346,7 +352,7 @@ function selectcreate(){
 		}
 		//append数据
 		var j=i+1;
-		$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+j+'</td><td class="rhGrid-td-hide" id="BM_TYPE'+i+'" >'+type+'</td><td class="rhGrid-td-hide" id="BM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-left " id="BM_NAME'+i+'" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " id="BM_ODEPT__NAME" style="text-align: left">'+dept+'</td><td class="rhGrid-td-left " id="S_ATIME" style="text-align: left" >'+startTime+'</td><td class="rhGrid-td-left " id="BM_STATE__NAME" style="text-align: left">'+state+'</td><td id="BM_OPTIONS"><button class="btn btn-success" type="button" onclick="tiaozhuan('+i+')" style="margin-left:30px;display:'+display+';color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px">报名</button></td></tr>');
+		$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+j+'</td><td class="rhGrid-td-hide" id="BM_TYPE'+i+'" >'+type+'</td><td class="rhGrid-td-hide" id="BM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-left " id="BM_NAME'+i+'" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " id="BM_ODEPT__NAME" style="text-align: center">'+dept+'</td><td class="rhGrid-td-left " id="S_ATIME" style="text-align: center" >'+startTime+'</td><td  id="BM_STATE__NAME" style="text-align: left">'+state+'</td><td id="BM_OPTIONS"><button class="btn btn-success" type="button" onclick="tiaozhuan('+i+')" style="margin-left:30px;display:'+display+';color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px">报名</button></td></tr>');
 	}
 	var table = document.getElementById("table");  
 	   rowscolor(table);

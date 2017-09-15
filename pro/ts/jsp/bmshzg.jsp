@@ -338,13 +338,11 @@ if(userBean != null) {
 		</div>
 		</div>
 	</div>
-			<div class="modal fade" id="tiJiao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding-top:5%">
+			<div class="modal fade" id="tiJiao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true" style="padding-top:5%">
 		<div class="modal-dialog" style="width:50%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
+					
 					<h5 class="modal-title">
 						批量审核
 					</h5>
@@ -380,13 +378,11 @@ if(userBean != null) {
 		</div><!-- /.modal -->
 	</div>
 	
-	<div class="modal fade" id="paixu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="paixu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
 		<div class="modal-dialog" style="width:50%;">
 			<div class="modal-content" style="height:630px">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
+						
 					<h5 style="font-size:16px">
 					自定义显示列
 					</h5>
@@ -436,13 +432,11 @@ if(userBean != null) {
 		</div>
 	</div>
 	
-	<div class="modal fade" id="yiyi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="yiyi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
+						
 					<h4 class="modal-title">
 						异议
 					</h4>
@@ -472,13 +466,11 @@ if(userBean != null) {
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-	<div class="modal fade" id="excleupload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="excleupload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
 			<div class="modal-content"  style="width:400px;height:300px">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
+						
 					<h4 class="modal-title">
 						请选择文件
 					</h4>
@@ -493,13 +485,11 @@ if(userBean != null) {
 		</div><!-- /.modal -->
 	</div>
 	<!--报名详细信息  -->
-	<div class="modal fade" id="userbminfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="userbminfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
+						
 					<h4 class="modal-title">
 						报名详细信息
 					</h4>

@@ -101,9 +101,9 @@
 								<th id="BM_XUHAO" class=""
 									style="width: 6.6%; text-align: center">序号</th>
 								<th id="BM_NAME" class="" style="width: 29.1%;">名称</th>
-								<th id="BM_ODEPT__NAME" class="" style="width: 15%;">组织单位</th>
-								<th id="S_ATIME" class="" style="width: 29.3%;">报名时间</th>
-								 <th id="BM_STATE__NAME" class="" style="width: 10%;">状态</th>
+								<th   style="text-align: center;width: 15%;">组织单位</th>
+								<th   style="text-align: center;width: 35%;">报名时间</th>
+								 <th id="BM_STATE__NAME" class="" style="width: 5%;">状态</th>
 								<th id="BM_OPTIONS" class=""
 									style="width: 10%; text-align: center">操作</th>
 							</tr>
@@ -196,13 +196,11 @@
 			</form>
 		</div>
 		<!--异议模态窗口  -->
-		<div class="modal fade" id="appeal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="appeal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div class="modal-dialog" style="width:40%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
+						
 					<h4 class="modal-title">
 						异议
 					</h4>

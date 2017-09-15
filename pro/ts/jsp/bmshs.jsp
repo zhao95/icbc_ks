@@ -140,13 +140,11 @@
 			</table>
 		</div>
 	</div>
-	<div class="modal fade" id="bminfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="bminfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
+						
 					<h4 class="modal-title">
 						报名详细信息
 					</h4>

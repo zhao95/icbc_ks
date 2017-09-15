@@ -1054,6 +1054,8 @@ var listPage = function () {
 	    				fir="审核中...."
 	    			}else if(tabnum==2){
 	    				fir="审核通过"
+	    			}else{
+	    				fir="审核不通过";
 	    			}
 	    		}
 	    		if(column=="BM_TYPE"){

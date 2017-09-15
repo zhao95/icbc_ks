@@ -174,6 +174,7 @@ public class StayServ extends CommonServ {
 		for (Bean bean : flowlist) {
 			 nodesteps = bean.getStr("NODE_STEPS");
 		}
+		if(!"".equals(nodesteps)){
 		for(int j=(Integer.parseInt(nodesteps));j>0;j--){
 			parambean.set("examerUserCode", bmcode);
 			parambean.set("level", j);
@@ -188,6 +189,7 @@ public class StayServ extends CommonServ {
 				nodeid = bean.getStr("NODE_NAME");
 			}
 			}
+		}
 		}
 		}
 		// ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化
@@ -671,6 +673,10 @@ public class StayServ extends CommonServ {
 					parambeansss.set("codes", bean.getStr("SH_OTHER"));
 					Bean outBeans = getusername(bean);
 					name = outBeans.getStr("usernames");
+				}
+				if("SH_STATUS".equals(namecol)){
+					//审核状态;
+					name = "审核中...";
 				}
 				if ("JOB_LB".equals(namecol)) {
 					name = bean.getStr("BM_LB");
