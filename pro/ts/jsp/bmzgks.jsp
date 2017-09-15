@@ -118,7 +118,7 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td height="50px" align="left">2. 您在本考试周已报名中级考试：<span id='allnum'></span>个（还可报名： <span id='cannum'></span>
+						<td height="50px" align="left">2. 您在本年度已报名中级考试：<span id='allnum'></span>个（还可报名： <span id='cannum'></span>
 							个）、高级：<span id='gaoji'></span>个（还可报名：<span id='canheighnum'></span>）个。如超过报名总数，应先取消已有报名，然后再提交新的报名。</td>
 					</tr>
 				</table>

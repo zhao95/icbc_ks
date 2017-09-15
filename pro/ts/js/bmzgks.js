@@ -436,6 +436,7 @@ function xminfoshow(){
 				}
 				//删除行
 				tab.deleteRow(j);
+				middlenum--;
 				 var kslxArray2 = document.getElementsByName("checkname1");
 				 kslxArray2[hanghao].disabled=false;
 				
@@ -756,5 +757,6 @@ var highnum=0;
 		var j=obj.parentNode.parentNode.parentNode.rowIndex;
 		var tab = document.getElementById("tablehang");
 		tab.deleteRow(j);
+		
 	}
 	

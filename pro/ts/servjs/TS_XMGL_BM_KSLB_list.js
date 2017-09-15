@@ -74,17 +74,19 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
     		});    
 	    	}
 	    	paramjson["BATCHDATAS"]= paramlist;
-	    	var result =FireFly.batchSave(_viewer.servId,paramjson,"",false,true);	
+	    	var result =FireFly.batchSave(_viewer.servId,paramjson,"",false,false);	
 	    	/*console.log(result);
 	    	_viewer.listBarTip("保存成功");
 	    	_viewer.listBarTipError("选择失败");*/
 	    	_viewer.refresh();
 		}
+	
 	}
 	
 	//2.用系统的查询选择组件 rh.vi.rhSelectListView()
 	var queryView = new rh.vi.rhSelectListView(options);
 	queryView.show(event);
+	
 });
 
 ////返回按钮
