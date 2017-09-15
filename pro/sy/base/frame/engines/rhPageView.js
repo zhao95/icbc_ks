@@ -449,9 +449,14 @@ rh.vi.pageView.prototype._bldBanner = function() {
 	var perConIn = jQuery("<div></div>").addClass("rh-head-per-in").attr("title", System.getUser("ODEPT_NAME")).appendTo(perCon);
 	var userSex = System.getVar("@USER_SEX@");
 	var perImg = FireFly.getContextPath() + System.getUser("USER_IMG");
-	var perDiv = jQuery("<img class='rh-head-per-icon'></img>").attr("src",perImg).appendTo(perConIn);
-	var perTip = jQuery("<div class='rh-head-per-tip'><span style='font-size:14px;'>" + System.getUser("USER_NAME")
-			+ "</span><span style='margin-left:20px;font-size:14px;'>" + System.getUser("DEPT_NAME") + "</span></div>").appendTo(perConIn);
+	var perDiv = jQuery("<img class='rh-head-per-icon' id='rh-header-user-img'></img>").attr("src",perImg).appendTo(perConIn);
+	//如果用户头像加载错误，则设置默认图片
+	$('#rh-header-user-img').error(function(){
+        $(this).attr('src', "/sy/theme/default/images/common/user0.png");
+     });
+	var perTip = jQuery("<div class='rh-head-per-tip'><span style='font-size:14px;width:70px;' title='"+System.getUser("USER_NAME")+"'>" + System.getUser("USER_NAME")
+			+ "</span><span style='margin-left:5px;font-size:14px;width:70px;' title='"+System.getUser("DEPT_NAME")+"'>" + System.getUser("DEPT_NAME") + "</span></div>"+"<div style='position: absolute; right: 40px;height: 25px;'><div title='注销用户' id='ht_loginOut' style='background: url(img/power-off.png) no-repeat;height: 25px;position: relative;width: 25px;top: 8%;left: 66px;cursor:pointer;'></div></div>").appendTo(perConIn);
+	
 	//委托
 	if (false) {
 		var perWei = jQuery("<div class='rh-head-per-wei'></div>").appendTo(perConIn);
@@ -526,7 +531,15 @@ rh.vi.pageView.prototype._bldBanner = function() {
 			}
 		});
 	}
+	//元素添加到页面并渲染
 	perCon.appendTo(jQuery("#banner"));
+	
+	//	注销用户的实现
+	jQuery("#ht_loginOut").unbind("click").click(function(){
+		var param = {};
+	    FireFly.doAct("SY_ORG_LOGIN", "logout", param);
+	    window.location.href = "/logout.jsp";
+	});
 	var serverClusterNodeInfoCon = jQuery("<div style='position:absolute;top:4px;right:4px;'></div>").appendTo(jQuery("#banner"));
 	serverClusterNodeInfoCon.text(__SERVER_NAME);
 };
