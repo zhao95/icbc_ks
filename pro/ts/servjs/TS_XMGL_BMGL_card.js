@@ -16,12 +16,14 @@ if(_viewer.opts.act == "cardAdd"){
 //针对时间的校验
 _viewer.getItem("BM_TZ_START").obj.unbind("click").bind("click", function() {
 	    WdatePicker({
+		    dateFmt: 'yyyy-MM-dd HH:mm:ss',
 	        maxDate : "#F{$dp.$D('" + _viewer.servId + "-BM_TZ_END')}"
 	    });
 	});
 _viewer.getItem("BM_TZ_END").obj.unbind("click").bind("click", function() {
 
 	    WdatePicker({
+		    dateFmt: 'yyyy-MM-dd HH:mm:ss',
 	        minDate : "#F{$dp.$D('" + _viewer.servId + "-BM_TZ_START')}"
 	    });
 	});
