@@ -87,6 +87,10 @@ if ((bannerTabBack.length() > 0) && (!bannerTabBack.equals(urlPath))) {%>
 <body class="pageBody icbcBody">
 <div id="pageBody-container" class="pageBody-container">
 <div id="banner" style="text-align:center;height:45px;">
+			<div onclick="window.location.href='/index_qt.jsp'"  style="position: absolute; top: 11px; right: 130px; width: 25px; color: white; height: 25px;cursor:pointer;" >
+				<div style="background: url(img/ht-to-qt-25x25.png) no-repeat; background-size: 100%; width: 25px; height: 25px; position: relative; right: 250px; top: 0px;"></div>
+				<a style="position: absolute; top: 3px; right: 200px; font-size: 14px; width: 50px; color: white; height: 25px;">前台</a>
+			</div>
  <div id="logo" class="banner-logo" style="width:100%;height:45px;float:left;"></div>
  <div id="rh-slideMsg" class="rh-slideMsg"></div><!-- 消息下拉面板 -->
 </div>
