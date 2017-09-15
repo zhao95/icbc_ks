@@ -256,9 +256,14 @@ $(".hoverDiv").bind("mouseleave", function(e){
 	
 });
 
-//按钮的操作
-//var p=null;//div位置
-//var spanLoc=null;//span位置
+/*
+ * 删除前方法执行
+ */
+rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+	showVerify(pkArray,_viewer);
+};	
+	
+
 function bindCard(){
 jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter", function(){
 	//var pkCode = $(this).parent().parent().parent().children().get(2).innerText;
@@ -275,14 +280,7 @@ jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter", function()
 		$("#hoverDiv_"+pkCode).focus();
 	},10);
 });	
-debugger;
-/*
- * 删除前方法执行
- */
-rh.vi.listView.prototype.beforeDelete = function(pkArray) {
-	showVerify(pkArray,_viewer);
-};	
-	
+
 	
 //当行查看事件
 //jQuery(".hoverDiv [operCode='optLookBtn']").unbind("click").bind("click", function(){
