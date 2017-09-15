@@ -2,6 +2,44 @@
 .skin-black .sidebar-menu>li>a:hover{
 	border-left: 3px solid #0ff;
 }
+/* 图标字体间距 */
+.skin-black .sidebar-menu>li>a>i{
+    margin-right: 15px;
+}
+/* 更换图标 */
+.skin-black .sidebar-menu>li>a:hover .qj1{
+	background-position: -20px 0;
+}
+.skin-black .sidebar-menu>li>a:hover .lx2{
+	background-position: -60px 0;
+}
+.skin-black .sidebar-menu>li>a:hover .ks1{
+	background-position: -380px 0;
+}
+.skin-black .sidebar-menu>li>a:hover .sh1{
+	background-position: -100px 0;
+}
+.skin-black .sidebar-menu>li>a:hover .zx1{
+	background-position: -140px 0;
+}
+.skin-black .sidebar-menu>li>a:hover .zkz1{
+	background-position: -180px 0;
+}
+.skin-black .sidebar-menu>li>a:hover .ckzl1{
+	background-position: -220px 0;
+}
+.skin-black .sidebar-menu>li>a:hover .home1{
+	background-position: -260px 0;
+}
+.skin-black .sidebar-menu>li>a:hover .bm1{
+	background-position: -300px 0;
+}
+.skin-black .sidebar-menu>li>a:hover .jk1{
+	background-position: -340px 0;
+}
+.skin-black .sidebar-menu>li>a:hover .ht1{
+	background-position: -420px 0;
+}
 
 #qt_footer_logo+strong {
 	font-family: '微软雅黑 Bold', '微软雅黑 Regular', '微软雅黑';
@@ -549,7 +587,7 @@
     font-weight: 400;
     font-style: normal;
     font-size: 16px;
-   /*  color: #333333; */
+    color:#58c4df;
     text-align: left;
     line-height: normal;
 }

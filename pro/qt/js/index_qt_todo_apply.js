@@ -15,7 +15,9 @@ $(function () {
     jQuery("#loginOutBtn").unbind("click").click(clickAndLoginOut);
     jQuery("#TipUserInfo").unbind("click").click(userInfoPage);
     /** 点击左侧认证轨迹图片跳转到认证轨迹*/
-    jQuery("#left-img-renzheng").unbind("click").click(function(){location.href="/eti/jsp/rzgj.jsp";});
+    jQuery("#left-img-renzheng").unbind("click").click(function () {
+        location.href = "/eti/jsp/rzgj.jsp";
+    });
 });
 
 /**
@@ -59,7 +61,7 @@ function showTodoContent() {
                 '<div id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '" style="" class="todo-content">',
                 '   <div style="min-height: 17px;">' + item.TITLE + '</div>',
                 '   <div style="font-size: 12px;color:#999999;min-height: 17px;">',
-                '   ' + item.SEND_DEPT_NAME + ' ' + item.SEND_NAME + ' ' + new Date(item.SEND_TIME).format("yyyy-mm-dd HH:MM"),
+                '   ' + item.SEND_DEPT_NAME + ' ' + item.SEND_NAME + ' ' + ((item.SEND_TIME&&item.SEND_TIME.length>=16) ? item.SEND_TIME.substring(0,16) : ''),
                 '   </div>',
                 '</div>'].join('')
         );
@@ -128,13 +130,21 @@ function setApplyContent() {
             //当前可报名
             canApply = true;
         }
+        var startTimeStr = '';
+        var endTimeStr = '';
+        if (startTime && startTime.length >= 10) {
+            startTimeStr = startTime.substring(0, 10);
+        }
+        if (endTime && endTime.length >= 10) {
+            endTimeStr = endTime.substring(0, 10);
+        }
 
         var trEl = jQuery(
             [
                 '<tr>',
                 '   <td>' + name + '</td>',
                 '   <td>' + deptCode + '</td>',
-                '   <td>' + startTime + ' － ' + endTime + '</td>',
+                '   <td>' + startTimeStr + ' － ' + endTimeStr + '</td>',
                 '</tr>'
             ].join('')
         );
@@ -175,7 +185,7 @@ function setAnnouncementContent() {
     var tbodyEl = jQuery('#announcement-box').find('.table tbody');
     tbodyEl.html('');
 
-    var circleColors = ['#398daf', '#b4dbc0', '#ff0000','#62a9d8','#9521b8'];
+    var circleColors = ['#398daf', '#b4dbc0', '#ff0000', '#62a9d8', '#9521b8'];
 
     for (var i = 0; i < ggList._DATA_.length; i++) {
         if (i === 5) {
@@ -188,7 +198,7 @@ function setAnnouncementContent() {
             '       <span style="color: ' + circleColors[i] + ';width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;">●</span>',
             '       <a href="' + FireFly.getContextPath() + '/qt/jsp/gg.jsp?id=' + gg.GG_ID + '"target="_blank" style="display:inline;cursor:pointer;" class="gg-title">' + gg.GG_TITLE + '</a>',
             '   </td>',
-            '<td class="col-md-4">' + new Date(gg.S_ATIME).format("yyyy-mm-dd") + '</td>',//yyyy-mm-dd HH:MM
+            '<td class="col-md-4">' +((gg.S_ATIME&&gg.S_ATIME.length>=10) ? gg.S_ATIME.substring(0,10) : '') + '</td>',//yyyy-mm-dd HH:MM
             '</tr>'
         ].join(''));
         trEl.appendTo(tbodyEl);
@@ -225,7 +235,7 @@ function showTodoTip() {
     tipListEl.html('');
     var data = {};
     data = {_NOPAGE_: true};
-     data = {_extWhere: "and OWNER_CODE='" + System.getUser("USER_CODE") + "'", _NOPAGE_: true};
+    data = {_extWhere: "and OWNER_CODE='" + System.getUser("USER_CODE") + "'", _NOPAGE_: true};
     var todoListPageList = FireFly.doAct("TS_COMM_TODO", 'query', data, false);
     var todoList = todoListPageList._DATA_;
 
@@ -263,7 +273,7 @@ function showTodoTip() {
                 '<div id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '" style="text-lign:center;margin-left: 10px;" class="todo-content">',
                 '   <div style="min-height: 17px;">' + item.TITLE + '</div>',
                 '   <div style="font-size: 12px;color:#999999;min-height: 15px; cursor: pointer;">', '<i class="fa fa-envelope-o fa-fw"></i>',
-                '   ' + item.SEND_DEPT_NAME + ' ' + item.SEND_NAME + ' ' + new Date(item.SEND_TIME).format("yyyy-mm-dd HH:MM"),
+                '   ' + item.SEND_DEPT_NAME + ' ' + item.SEND_NAME + ' ' + ((item.SEND_TIME&&item.SEND_TIME.length>=16) ? item.SEND_TIME.substring(0,16) : ''),
                 '   </div>',
                 '</div>'].join('')
         );
@@ -280,16 +290,16 @@ function showTodoTip() {
                 doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId});
             });
         }
-       
+
         tipListEl.append(itemContent);
     }
     //如无数据，则提示
-    if(todoList.length==0){
-    	tipListEl.append(
-                [
-                 '<div style="text-align:center; min-height: 100px;font-size: 14px;color:#999999;padding-top:10px;">',
-                 '暂无消息/待办</div>'].join('')
-         );
+    if (todoList.length == 0) {
+        tipListEl.append(
+            [
+                '<div style="text-align:center; min-height: 100px;font-size: 14px;color:#999999;padding-top:10px;">',
+                '暂无消息/待办</div>'].join('')
+        );
     }
     tipListEl.append('</li>');
 
@@ -313,7 +323,9 @@ function clickAndLoginOut() {
  * 点击个人信息跳转到用户个人信息界面
  */
 function userInfoPage() {
-    $.ajax('/qt/jsp/user_info.jsp').then(function(response){$('section[class="content"]').html(response);})
+    $.ajax('/qt/jsp/user_info.jsp').then(function (response) {
+        $('section[class="content"]').html(response);
+    })
 //    window.location.href = "/qt/jsp/user_info.jsp";
 
 }

@@ -1,9 +1,11 @@
 var _viewer = this;
+
 _viewer.getBtn("impGroup").unbind("click").bind("click", function(event) {
 	var configStr = "TS_PVLG_GROUP,{'TARGET':'G_ID~G_NAME~G_DEAD_BEGIN~G_DEAD_END~S_USER','SOURCE':'G_ID~G_NAME~G_DEAD_BEGIN~G_DEAD_END~S_USER'," +
 	"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
 	var options = {
 			"config" :configStr,
+			"params":{BUT:true},
 			"parHandler":_viewer,
 			"formHandler":_viewer.form,
 			"replaceCallBack":function(idArray) {//回调，idArray为选中记录的相应字段的数组集合
@@ -12,6 +14,7 @@ _viewer.getBtn("impGroup").unbind("click").bind("click", function(event) {
 				var gbegin = idArray.G_DEAD_BEGIN.split(",");
 				var gend = idArray.G_DEAD_END.split(",");
 				var suser = idArray.S_USER.split(",");
+				
 				var paramArray = [];
 				for(var i=0;i<codes.length;i++) {
 					var param = {};
@@ -26,6 +29,8 @@ _viewer.getBtn("impGroup").unbind("click").bind("click", function(event) {
 					param.RYSZQZ_STARTTIME = gbegin[i];
 					param.RYSZQZ_ENDTTIME = gend[i];
 					param.RYSZQZ_USER = suser[i];
+					
+					//$(".rhGrid").find("th[icode='set']").html("操作");
 					paramArray.push(param);
 				}
 				console.log(_viewer.servId,paramArray);

@@ -1,5 +1,37 @@
 var _viewer = this;
 
+//查询选择时呈现的操作.
+if(_viewer.params.BUT){
+	//取消行点击事件
+	$(".rhGrid").find("tr").unbind("dblclick");
+	$("#TS_PVLG_GROUP .rhGrid-thead tr").append('<th icode="button" class="rhGrid-thead-th" style="width:18.2%;">操作</th>');
+	$("#TS_PVLG_GROUP .rhGrid-tbody ").find("tr").each(function(index, item) {//icode="button" class="rhGrid-thead-th" style="width:18.2%;"
+			var dataId = item.id;
+			$(item).append('<td icode="button" class="rhGrid-td-center " style="width:18.2%;"></td>');
+			$(item).find("td[icode='button']").append(
+					//'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP-upd" actcode="look" rowpk="'+dataId+'"><span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-edit"></span></a>'
+					//'<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+dataId+'">&nbsp查看&nbsp</a>'
+					'<a class="rh-icon rhGrid-btnBar-a" id="TS_PVLG_GROUP_look" actcode="look" rowpk="'+dataId+'"><span class="rh-icon-inner">详细</span><span class="rh-icon-img btn-view"></span></a>'
+			);
+			// 为每个按钮绑定卡片
+			lookCard();
+		
+	});
+}
+
+function  lookCard(){
+	
+	jQuery("td [actcode='look']").unbind("click").bind("click",function(){
+		var pkCode = jQuery(this).attr("rowpk");
+		// 定义一个对象
+		var strwhere = "and G_ID ='" + pkCode + "'";
+		var params = {"G_ID" : pkCode,"_extWhere" : strwhere};
+		var url = "TS_PVLG_GROUP_USER.list.do?&_extWhere=" + strwhere;
+		var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
+		Tab.open(options);
+	});
+	
+}
 //每一行添加编辑和删除
 $("#TS_PVLG_GROUP .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0) {
@@ -17,7 +49,7 @@ $("#TS_PVLG_GROUP .rhGrid").find("tr").each(function(index, item) {
 //绑定的事件     
 function bindCard() {
 	//当行删除事件
-	jQuery("td [id='TS_PVLG_GROUP-delete'").unbind("click").bind("click", function() {
+	jQuery("td [id='TS_PVLG_GROUP-delete']").unbind("click").bind("click", function() {
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
 	});

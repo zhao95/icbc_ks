@@ -71,6 +71,8 @@ if (wbimFlag) {//即时通讯模块所需文件引用%>
   <script type="text/javascript" src="<%=urlPath%>/sy/base/frame/coms/file/js/fileprogress.js"></script>
   <script type="text/javascript" src="<%=urlPath%>/sy/base/frame/coms/file/js/handlers.js"></script>
   <link rel="stylesheet" type="text/css" href="<%=urlPath%>/sy/plug/webim/chat/webim.css"/>
+  <!-- 添加图标样式表 -->
+  <link rel="stylesheet" href="<%=urlPath%>/qt/font-awesome-4.7.0/css/font-awesome.min.css">
   <script type="text/javascript" src="<%=urlPath%>/sy/plug/webim/chat/rhWbimView.js"></script>
   
 <%}%>

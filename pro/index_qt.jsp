@@ -88,8 +88,8 @@
 						<li class="dropdown user user-menu">
 							<a id="userInfo2" href="#"
 							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;width:160px;text-align: center; border-left:0px">
-							<img id= "userImg2"
-								src="/sy/theme/default/images/common/user0.png" class="user-image"
+							<img id= "userImg2" onerror="this.src='/sy/theme/default/images/common/user0.png'" 
+								class="user-image"
 								alt="User Image" style="margin-right: 2px;">
 								<!-- <span class="hidden-xs">Alexander Pierce</span> -->
 						</a>
@@ -131,7 +131,8 @@
 				<!-- Sidebar user panel -->
 				<div class="user-panel text-center">
 					<div class=" image" style="position: absolute;padding-left: 10px;">
-						<img id="userImg1" style="max-width: 64px;" src="/sy/theme/default/images/common/user_64_64.png" class="img-circle" alt="User Image">
+						<img id="userImg1" style="min-width: 64px; max-width: 65px;"  onerror="this.src='/sy/theme/default/images/common/user_64_64.png'" class="img-circle" alt="User Image">
+<!-- 						<img id="userImg1" style="max-width: 64px;" src="/sy/theme/default/images/common/user_64_64.png" onerror="this.src='/sy/theme/default/images/common/user_64_64.png'" class="img-circle" alt="User Image"> -->
 					</div>
 					<div id="userInfo" class="text-center" style="line-height: 32px;height: 64px;margin-left: 74px;">
 						<!-- <p>刘小雨</p>
