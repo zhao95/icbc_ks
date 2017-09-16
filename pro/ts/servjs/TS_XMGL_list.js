@@ -226,9 +226,8 @@ $(".rhGrid").find("tr").each(function(index, item) {
     // '<div><span id="span_'+XM_ID+'" >···</span></div>'
 	// );
 		$(item).find("td[icode='buttons']").append("<div operCode='option' rowpk='"+XM_ID+"'><font size='3'>···</font></div>"); 
-	
-		var btns = //'<div id="div_'+XM_ID+'"  style="display:none;min-width:40px;min-height:25px">'+
-			'<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+XM_ID+'">&nbsp查看&nbsp</a>'+
+		//'<div id="div_'+XM_ID+'"  style="display:none;min-width:40px;min-height:25px">'+
+		var btns ='<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+XM_ID+'">&nbsp查看&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_copy" actcode="copy" rowpk="'+XM_ID+'">复制&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_edit" actcode="edit" rowpk="'+XM_ID+'">编辑&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_set"  actcode="set" rowpk="'+XM_ID+'">设置&nbsp</a>'+

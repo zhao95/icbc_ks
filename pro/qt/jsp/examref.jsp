@@ -80,33 +80,11 @@
 
 <body class="hold-transition skin-black sidebar-mini">
 
-<%--页首--%>
-<div style="position: absolute; left: 15px; z-index: 10000;">
-    <img alt="中国工商银行" src="<%=CONTEXT_PATH%>/qt/img/u3148.png">
-    <img alt="考试系统" src="<%=CONTEXT_PATH%>/qt/img/u3376.png">
-</div>
-<header class="main-header" style="background-color: white;">
-    <!-- Logo -->
-    <!-- <div class="logo">
-        <span class="logo-lg"><b>考试系统</b></span>
-    </div> -->
-    <!-- Header Navbar: style can be found in header.less -->
-    <nav class="navbar navbar-static-top">
-        <!-- Sidebar toggle button-->
-        <!-- <a href="/" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-<span class="sr-only">Toggle navigation</span>
-</a> -->
-    </nav>
-</header>
-
-<%--导航栏--%>
-<div class="" style="padding: 10px">
-    <a href="<%=CONTEXT_PATH%>/index_qt.jsp">
-        <image style="padding-bottom:10px;width: 15px"
-               src="<%=CONTEXT_PATH%>/ts/image/u1155.png" id="shouye"></image>
-    </a>
-    <span style="color: blue; font-size: 15px">&nbsp;&nbsp;/&nbsp;&nbsp;参考资料</span>
-</div>
+<%@ include file="header-logo.jsp"%>
+	<div class="" style="padding: 10px">
+		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;" src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
+		 <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;项目进度一览表</span>
+	</div>
 
 <div id="myTabContent" class="tab-content">
     <div class="tab-pane fade in active" style="position:relative;" id="home">

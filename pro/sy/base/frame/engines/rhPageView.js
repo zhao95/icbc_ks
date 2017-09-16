@@ -455,7 +455,8 @@ rh.vi.pageView.prototype._bldBanner = function() {
         $(this).attr('src', "/sy/theme/default/images/common/user0.png");
      });
 	var perTip = jQuery("<div class='rh-head-per-tip'><span style='font-size:14px;width:70px;' title='"+System.getUser("USER_NAME")+"'>" + System.getUser("USER_NAME")
-			+ "</span><span style='margin-left:5px;font-size:14px;width:70px;' title='"+System.getUser("DEPT_NAME")+"'>" + System.getUser("DEPT_NAME") + "</span></div>"+"<div style='position: absolute; right: 40px;height: 25px;'><div title='注销用户' id='ht_loginOut' style='background: url(img/power-off.png) no-repeat;height: 25px;position: relative;width: 25px;top: 8%;left: 66px;cursor:pointer;'></div></div>").appendTo(perConIn);
+			+ "</span><span style='margin-left:5px;font-size:14px;width:70px;' title='"+System.getUser("DEPT_NAME")+"'>" + System.getUser("DEPT_NAME") + "</span></div>"
+			+"<div title='退出用户' style='position: absolute; right: 40px;height: 25px;cursor: pointer;'><div  id='ht_loginOut' style='background: url(img/power-off.png) no-repeat;height: 25px;position: relative;width: 25px;top: 8%;left: 66px;'></div><div style='position: absolute;left: 95px;top: 6px; min-width: 35px;font-size: 14px;color: white;'>退出</div></div>").appendTo(perConIn);
 	
 	//委托
 	if (false) {
