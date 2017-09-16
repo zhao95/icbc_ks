@@ -52,6 +52,13 @@ if(userBean != null) {
 <style>
 
 	tr{cursor: pointer;}
+	#yiyi .modal-dialog{
+	position: absolute; 
+    top: 20%; 
+    bottom: 200px; 
+    left: 20%; 
+    right: 0; 
+	}
 	#excleupload .modal-dialog{
 	position: absolute; 
     top: 20%; 
