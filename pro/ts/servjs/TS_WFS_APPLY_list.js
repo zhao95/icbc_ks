@@ -1,4 +1,6 @@
 var _viewer = this;
+var height = jQuery(window).height()-200;
+var width = jQuery(window).width()-200;
 //列表需要建一个code为buttons的自定义字段。
 $("#TS_WFS_APPLY .rhGrid").find("tr").each(function(index,item){
 	if(index !=0){
@@ -22,11 +24,27 @@ function bindCard(){
 	//编辑
 	jQuery("td [id='TS_WFS_APPLY_edit']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		rowEdit(pkCode,_viewer,[1000,500],[200,100]);
+		openMyCard(pkCode);
 	});
 	//当行删除事件
 	jQuery("td [id='TS_WFS_APPLY_delete']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
 	});
+}
+
+
+//列表操作按钮 弹dialog
+function openMyCard(dataId,readOnly,showTab){
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+    temp[UIConst.PK_KEY] = dataId;
+    if(readOnly != ""){
+    	temp["readOnly"] = readOnly;
+    }
+    if(showTab != ""){
+    	temp["showTab"] = showTab;
+    }
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+   
 }

@@ -99,7 +99,7 @@
 							<li><a href="#" class="" id="TipUserInfo"><i class="fa fa-user-o fa-fw"></i>个人信息</a></li>
 								<li><a href="#" class="" data-layout="layout-boxed"><i class="fa fa-cog fa-fw"></i>简约/平铺</a></li>
 <!-- 								<li><input type="checkbox" data-layout="layout-boxed" class="pull-right" checked="checked">简约/平铺</li> -->
-								<li><a  class="" id="loginOutBtn"><i class="fa fa-power-off fa-fw"></i>注销用户</a></li>
+								<li><a  class="" id="loginOutBtn"><i class="fa fa-power-off fa-fw"></i>用户退出</a></li>
 
 <!-- 							<li class="user-footer"></li> -->
 
@@ -178,7 +178,7 @@
 							<div class="box-header with-border"  style="background-color:#f9f9f9;height: 40px;">
 								<h3 class="panel-title">资格考试项目进展状态
 									<a onclick="window.open('/qt/jsp/xmzt.jsp')" class="index-list-more-a">更多
-									<span style="color:red;">&gt;</span>
+									<span style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></span>
 									</a>
 								</h3>
 								<div style="width: 160px;height: 3px;position: relative;top: 11px;left: 0px;background-color: #ff0000;"></div>
@@ -308,7 +308,7 @@
 								待办 / 提醒 (<span id="todoListSum" style="color:red">0</span>)
 								<a onclick="window.open('/qt/jsp/todo.jsp')" class="index-list-more-a">
 									更多
-									<span style="color:red;">></span>
+									<span style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></span>
 								</a>
 							</h3>
 							<div style="width: 109px;height: 3px;position: relative;top: 11px;left: -5px;background-color: #ff0000;">
@@ -339,7 +339,7 @@
 								可申请的报名 (<span id="keshenqingbaomingSum" style="color:red">0</span>)
 								<a onclick="window.open('/ts/jsp/bm.jsp')" class="index-list-more-a">
 									更多
-									<span style="color:red;">></span>
+									<span style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></span>
 								</a>
 							</h3>
 							<div style="width: 124px;height: 3px;position: relative;top: 11px;left: -5px;background-color: #ff0000;">
@@ -380,7 +380,7 @@
 									通知公告
 									<a onclick="window.open('/qt/jsp/ggList.jsp')" class="index-list-more-a">
 										更多
-										<span style="color:red;">&gt;</span>
+										<span style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></span>
 									</a>
 								</h3>
 							</div>
@@ -421,7 +421,7 @@
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title" style="font-size:16px;">Q&A 问答</h3>
 							</div>
-							<div style="min-height:72px;"></div>
+							<div style="min-height:64px;"></div>
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
 								<table class="table table-striped" id="qItem"></table>
@@ -438,7 +438,7 @@
 							<h3 class="box-title" style="font-size:16px;">考试日历</h3>
 							<a onclick="window.open('/qt/jsp/ksrl.jsp')"  class="index-list-more-a">
 									更多
-									<span style="color:red;">&gt;</span>
+									<span style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></span>
 								</a>
 						</div>
 						<div class="TS_KS_CAL" style="height:245px;">
@@ -453,7 +453,7 @@
 						</div>
 						</div>
 						<!-- /.box -->
-						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;">
+						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;margin-top: 30px;">
 							<div class="box-header" style="background-color: #f9f9f9">
 								<h3 class="box-title" style="font-size:16px;">问卷调查</h3>
 							</div>

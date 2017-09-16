@@ -289,7 +289,7 @@ jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter", function()
  	 $(".hoverDiv [actcode='look']").unbind("click").bind("click", function(){
  		
  		//var pkCode = jQuery(this).parent().attr("id");
- 		var pkCode = jQuery(this).attr("rowpk");debugger;
+ 		var pkCode = jQuery(this).attr("rowpk");
  		
  		//d.empty();
 // 	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
@@ -392,7 +392,7 @@ function openMyCard(dataId,readOnly,showTab){
     }
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
-    d.empty();
+    
 }
 
 /**

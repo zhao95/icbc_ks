@@ -24,8 +24,9 @@ public class VerifyCodeServlet extends HttpServlet {
     private int codeCount = 4;// 验证码个数
     private int lineCount = 19;// 混淆线个数
 
-    char[] codeSequence = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
-	    'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+//    char[] codeSequence = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+//	    'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+    char[] codeSequence = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
