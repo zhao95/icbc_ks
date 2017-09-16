@@ -21,7 +21,7 @@
   // 如果没有登录则导向首页去登录
   if(userBean == null) {
 	 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/");
-	 RequestUtils.sendDisp(request, response, loginUrl);
+	 RequestUtils.sendDir(response, loginUrl);
   }
   String func = RequestUtils.getStr(request,"func");
   String todoServId = RequestUtils.getStr(request,"todoServId");
