@@ -22,6 +22,7 @@ import com.rh.core.base.db.RowHandler;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.comm.CacheMgr;
 import com.rh.core.org.auth.acl.mgr.DataAclMgr;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDef;
 import com.rh.core.serv.ServMgr;
@@ -29,9 +30,11 @@ import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.Constant;
 import com.rh.core.util.DateUtils;
 import com.rh.core.util.Lang;
+import com.rh.core.util.Strings;
 import com.rh.core.util.file.FileHelper;
 import com.rh.core.util.lang.ListHandler;
 import com.rh.resource.Resource;
+import com.rh.ts.util.RoleUtil;
 
 /**
  * 数据字典帮助类.
@@ -77,6 +80,10 @@ public class DictMgr {
 
     /** 上下文，设置字典过滤条件 */
     public static final String THREAD_DICT_EXT_WHERE = "THREAD_DICT_EXT_WHERE";
+    
+    /** 上下文，设置调用字典的服务 */
+    public static final String THREAD_DICT_USE_SERV_ID = "THREAD_DICT_USE_SERV_ID";
+    
     
     /** 字典类型:叶子. */
     public static final int DIC_TYPE_LEAF = 4;
@@ -733,6 +740,12 @@ public class DictMgr {
                //分级获取数据，包含当前层级
                 treeList = recurSubList(dict, dataList, disLayer);
             }
+            
+            if (!dict.isEmpty("DICT_PVLG")) {//工行考试系统 根据权限过滤tree
+				//根据权限过滤
+            	treeList = getTreeListByPvlg(dict, treeList);
+			}
+            
         } else {
             treeList = new ArrayList<Bean>();
         }
@@ -1472,6 +1485,74 @@ public class DictMgr {
         ParamBean param = new ParamBean(ServMgr.SY_SERV_DICT, ServMgr.ACT_SAVE);
         param.setId(id).set("S_MTIME", mtime);
         ServMgr.act(param);
+    }
+    
+    public static List<Bean> getTreeListByPvlg(Bean dict, List<Bean> treeList) {
+    	
+        List<Bean> outList = new ArrayList<Bean>(treeList.size());
+        
+        String pvlgField = dict.getStr("DICT_PVLG");
+        
+        
+        String servId = Context.getThreadStr(DictMgr.THREAD_DICT_USE_SERV_ID);//从线程中获取servId
+        
+		if (!Strings.isBlank(servId) && Context.getUserBean() != null) {
+            
+            Context.removeThread(DictMgr.THREAD_DICT_USE_SERV_ID); //删除线程变量
+            
+			if (Context.getUserBean() == null) {
+				throw new RuntimeException("获取用户信息失败");
+			}
+            
+            String userCode = Context.getUserBean().getCode();
+            
+            Bean pvlgBean = RoleUtil.getPvlgRole(userCode,servId);
+            
+            String userDCodes = "";
+            
+			for (Object key : pvlgBean.keySet()) {
+				
+				if (!pvlgBean.getStr(key).equals("0")) {
+					
+					Bean bean = pvlgBean.getBean(key);
+					//用户权限 (机构)
+	            	userDCodes = bean.getStr("ROLE_DCODE");
+				}
+				
+			}
+            
+            for (Bean item : treeList) {
+            	
+            	String itemDeptCode = item.getStr(pvlgField); //item机构编码 
+            	
+            	String itemCodePath = OrgMgr.getDept(itemDeptCode).getCodePath();
+            	
+            	String[] userDCodeArg = userDCodes.split(",");
+            	
+				for (String userDeptCode : userDCodeArg) {
+					
+					String userCodePath = OrgMgr.getDept(userDeptCode).getCodePath();
+					
+					if (userCodePath.indexOf(itemDeptCode) > 0) { //用户当前机构及 上级机构
+						
+						outList.add(item);
+						
+						break;
+					} else { //用户下级机构
+						
+						if (itemCodePath.indexOf(userDeptCode) > 0) { //用户下级机构
+							
+							outList.add(item);
+							
+							break;
+						}
+						
+					}
+				}
+            }
+        }
+        
+        return outList;
     }
     
 }
