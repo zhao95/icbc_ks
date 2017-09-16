@@ -29,6 +29,8 @@ function bindCard(){
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
 	});
+
+	
 }		
 _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
