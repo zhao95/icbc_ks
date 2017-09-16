@@ -55,4 +55,8 @@ _viewer.beforeSave = function() {
 	if (state == 0) {
 		_viewer.getItem("KC_STATE").setValue(1);
 	}
+	if($("#TS_KCGL-KC_GLY_div .rhGrid-tbody").find("td").length == 1){
+		$("#TS_KCGL-KC_GLY_div").find(".ui-dataservice-container,.fl,.wp").addClass("blankError").addClass("errorbox");
+		return false;
+	}
 };

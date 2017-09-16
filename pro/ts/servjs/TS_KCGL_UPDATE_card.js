@@ -1,5 +1,9 @@
 var _viewer = this;
 if (_viewer._actVar == "cardAdd") {
+	if(_viewer.getItem("KC_ID").getValue() == ""){
+		var kcId = _viewer.getParHandler().getParHandler().getPKCode();
+		_viewer.getItem("KC_ID").setValue(kcId);
+	}
 	var msg = "新建一条申请";
 	if (confirm(msg) == true) {
 		_viewer._saveForm();
@@ -19,7 +23,7 @@ _viewer.getBtn("commit").unbind("click").bind("click", function(event) {
 	_viewer._saveForm();
 });
 
-var servId = _viewer.getParHandler().servId;
+var servId = _viewer.getParHandler().getParHandler().servId;
 if (servId == "TS_KCGL_SH") {
 	_viewer.getBtn("commit").hide();
 } else {
