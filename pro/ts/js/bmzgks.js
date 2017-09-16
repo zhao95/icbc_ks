@@ -31,6 +31,7 @@ function xminfoshow(){
 }
 //进行资格验证
 	function checky(){
+		debugger;
 		var param = {};
 		var bminfo={};
 		bminfo['XM_ID'] = xm_id;
@@ -53,7 +54,6 @@ function xminfoshow(){
 		
 		param['BM_INFO'] = JSON.stringify(bminfo);
 		param['BM_LIST'] = JSON.stringify(neAry);
-		console.log(JSON.stringify(param));
 		//已报名的考试
 		var parambm = {};
 			
@@ -61,7 +61,7 @@ function xminfoshow(){
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, true,false,function(data){
-    		console.log(data);
+			debugger;
     		yzgz=data;
     		//获取后台传过来的key
     		var zgArray = document.getElementsByName("zgksname");
@@ -91,16 +91,20 @@ function xminfoshow(){
        					continue;
        				}
        				for(var j=0;j<dataArray.length;j++){
+       					if(j==0){
+       						$("#"+a).append('<div style="height:5px;"></div>');
+       					}
        					if(dataArray[j].VLIDATE=="true"){
-	       					$("#"+a).append('<div><img src="/ts/image/u4719.png">'+dataArray[j].NAME+'</div>');
+	       					$("#"+a).append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'</div>');
 	       					
 						}if(dataArray[j].VLIDATE=="false"){
-							$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">'+dataArray[j].NAME+'</div>');
+							
+							$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');
 						}
 						if(dataArray[j].VLIDATE=="false"){
 							shArray=false;
 						}
-					 
+						$("#"+a).append('<div style="height:5px;"></div>');
        				}
        				if(shArray==false){
        					$("#"+yzjg).append('审核不通过');
@@ -115,7 +119,6 @@ function xminfoshow(){
 	}
 	//提交所有数据
 	function mttijiao(){
-		checky();
 		//获取手机号码
 		var ryl_mobile = document.getElementById("user_mobile2").value
 		//获取到资格考试类型主键id
@@ -280,7 +283,7 @@ function xminfoshow(){
 			 //
 			 
 		 }*/
-        var extWhere="AND KSLBK_ID IN ((select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))))union(select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')))union(SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))union(select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))";
+        var extWhere="AND KSLBK_ID IN ((select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))))union(select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')))union(SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))union(select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')) AND KSLBK_CODE<>'"+STATION_TYPE_CODE+"' AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)";
 		 var setting={data
 	             :FireFly.getDict('TS_XMGL_BM_KSLBK','KSLBK_PID',extWhere),
 	         dictId:"TS_XMGL_BM_KSLBK",expandLevel:1,
@@ -469,7 +472,7 @@ function xminfoshow(){
 					for(var j=0;j<arrChk.length;j++){
 						var tr = arrChk[j].parentNode.parentNode;
 						var tds=tr.getElementsByTagName("td");
-						var kslb_id=tds[8].innerText;
+						var kslb_id=tds[9].innerText;
 						if(kslb_id==alldata[i].KSLBK_ID){
 							paduan=true;
 						}
@@ -501,6 +504,7 @@ function xminfoshow(){
 			       '<td >'+kslb_xl+'</td>'+
 			       '<td >'+kslb_mk+'</td>'+
 			       '<td >'+kslb_type_name+'</td>'+
+			       '<td class="rhGrid-td-hide"><div>cannot</div></td>'+
 			       '<td ><div id="'+kslbk_id+'"></div></td>'+
 			       '<td ><div id="'+kslbk_id+'yzjg"></div></td>'+
 				   '<td class="rhGrid-td-hide" ><input type="text" name="zgksname" value="'+kslbk_id+'"></td>'+
@@ -604,17 +608,43 @@ function xminfoshow(){
 			$("#tjbt").attr("data-target","");
 			return;
 		}
-		$("#tjbt").attr("data-target","#tiJiao");
+		
 		//获取手机号码
 		 	var ryl_mobile = document.getElementById("user_mobile2").value=document.getElementById("user_mobile1").value; 
 			//获取 当前页面中checkbox选中的数据
+		 	//判断是否已经 进行了资格验证
 			var arrChk=$("input[name='checkboxaa']"); 
 			tbody=document.getElementById("xinxi");
 			for(var i=0;i<arrChk.length;i++){
 			 //得到tr
 			  var tr=arrChk[i].parentNode.parentNode;
 		      var tds=tr.getElementsByTagName("td");
+		      if($(tds[6]).find("div").length<2){
+		    	  alert("请先进行资格验证");
+		    	  $("#tjbt").attr("data-target","");
+		    	  return;
+		      }
 		      var ntr = tbody.insertRow();
+		      
+		      if(tds.length==11){
+		    	  //本序列
+		    	  if(i==0){
+				      ntr.innerHTML=
+				      '<td style="text-align:right;color:lightseagreen">报考类型</td>'+
+				      '<td style="text-align:center">'+tds[1].innerHTML+'</td>'+
+				      '<td style="text-align:left">'+tds[2].innerHTML+'</td>'+
+				      '<td style="text-align:left">'+$("#mkid").children('option:selected').text()+'</td>'+
+				      '<td style="text-align:left">'+$("#lxid").children('option:selected').text()+'</td>';
+			     	}else{
+			    	   ntr.innerHTML=
+					       '<td style="text-align:center;color:blue"></td>'+
+					       '<td style="text-align:center">'+tds[1].innerHTML+'</td>'+
+					       '<td style="text-align:left">'+tds[2].innerHTML+'</td>'+
+					       '<td style="text-align:left">'+$("#mkid").children('option:selected').text()+'</td>'+
+					       '<td style="text-align:left">'+$("#lxid").children('option:selected').text()+'</td>';
+			       }
+		    	  continue;
+		      }
 		      if(i==0){
 			      ntr.innerHTML=
 			      '<td style="text-align:right;color:lightseagreen">报考类型</td>'+
@@ -631,6 +661,7 @@ function xminfoshow(){
 				       '<td style="text-align:left">'+tds[4].innerHTML+'</td>';
 		       }
 			}
+			 $("#tjbt").attr("data-target","#tiJiao");
 	}
 	
 
@@ -670,7 +701,8 @@ function xminfoshow(){
 				if(result1.list==""){
 					return;
 				}
-			var pageEntity = JSON.parse(result.list);
+				debugger;
+			var pageEntity = result1.list;
 			 var kslb_id = pageEntity[0].KSLB_ID;
 			  lbname = pageEntity[0].KSLB_NAME;
 			  xlname= pageEntity[0].KSLB_XL;
@@ -678,33 +710,30 @@ function xminfoshow(){
 			  xlcode= pageEntity[0].KSLB_XL_CODE;
 			 //拼接 tr
 			 var tr = document.createElement('tr');
-			 var newTd1 = tr.insertCell();
-			 var newTd2 = tr.insertCell();
-			 var newTd3 = tr.insertCell();
-			 var newTd4 = tr.insertCell();
-			 var newTd5 = tr.insertCell();
-			 var newTd6 = tr.insertCell();
-			 var newTd7 = tr.insertCell();
-			 var newTd8 = tr.insertCell();
-			 newTd1.innerHTML = '<td><input class="rhGrid-td-hide" type="text" name="checkboxaa"></td>';
-			 newTd2.innerHTML='<td>'+lbname+'</td>';
-			 newTd3.innerHTML='<td>'+xlname+'</td>';
-			 newTd4.innerHTML='	<td width="27%"><select id="mkid" onchange="typeId(this)"></select></td>';
-			 newTd5.innerHTML='	<td width="10%"><select id="lxid" onchange="changeyk(this)"><option></option></select></td>';
-			 newTd6.innerHTML='<td class="rhGrid-td-hide"><input type="text" id="zglbid" name="zgksname" value='+kslb_id+'></td>';
-			 newTd7.innerHTML='<td width="20%"><div id='+kslb_id+'></div></td>';
-			 newTd8.innerHTML='<td width="15%"><div id="'+kslb_id+'yzjg"></div></td>';
+			tr.innerHTML='<td><input class="rhGrid-td-hide" type="text" name="checkboxaa"></td>'+
+				'<td>'+lbname+'</td>'+
+				'<td>'+xlname+'</td>'+
+				'<td width="27%"><select id="mkid" onchange="typeId(this)"></select></td>'+
+				'<td width="10%"><select id="lxid" onchange="changeyk(this)"><option></option></select></td>'+
+				'<td class="rhGrid-td-hide"><input type="text" id="zglbid" name="zgksname" value='+kslb_id+'></td>'+
+				'<td width="20%"><div id='+kslb_id+'></div></td>'+
+				'<td width="15%"><div id="'+kslb_id+'yzjg"></div></td>'+
+				'<td class="rhGrid-td-hide"><div>cannot</div></td>'+
+				'<td class="rhGrid-td-hide"><div>biaoshi</div></td>'+
+				'<td class="rhGrid-td-hide"><div>biaoshi</div></td>';
+			
 			 $("#tableid tbody").append(tr);
 	
 	}
 			
 			//模块改变事件
 			function typeId(obj){
+				debugger;
 				var tab = document.getElementById("tableid");
 			    //表格行数
 			    var rows = tab.rows.length;
 			    if(rows>1){
-				var mkvalue= document.getElementById("mkid").value;
+				var mkvalue= $("#mkid").children('option:selected').val();
 				var param = {};
 				param["MK"]=mkvalue;
 				param["lbname"]=lbname;
@@ -733,15 +762,21 @@ function xminfoshow(){
 				}
 			}
 function mkfuzhi(){
+
 	var obj = result1.mkoption;
 	if(obj==""){
 		return;
 	}
-	var jsobj = JSON.parse(obj);
+	var i=0;
 	var select = document.getElementById("mkid");
 	jQuery("#mkid").empty();
-	for(var key in jsobj){
-		select.options[i]=new Option(jsobj[key],key);
+	for(var key in obj){
+		if(i==0){
+			select.options[i]=new Option(key,obj[key],true,true);
+		}else{
+			select.options[i]=new Option(key,obj[key]);
+		}
+		i++;
 	}
 }
 var highnum=0;
