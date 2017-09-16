@@ -77,6 +77,10 @@ public class RoleUtil {
 	}
 
 	public static Bean getPvlgRole(String userCode) {
+		return getPvlgRole(userCode, "");
+	}
+	
+	public static Bean getPvlgRole(String userCode,String servId) {
 		// 用户所有功能及可见权限
 		Bean allOpt = new Bean();
 
@@ -92,7 +96,13 @@ public class RoleUtil {
 		}
 
 		// 字典设置的所有模块
-		List<Bean> mdList = DictMgr.getItemList(TsConstant.DICT_ROLE_MOD);
+		List<Bean> mdList = null;
+		
+		if (!Strings.isBlank(servId)) {
+			mdList = DictMgr.getItemList(TsConstant.DICT_ROLE_MOD);
+		} else {
+			mdList = DictMgr.getItemList(servId + "_PVLG");
+		}
 
 		for (Bean md : mdList) {
 			// 模块编码 (服务编码_PVLG)
@@ -152,7 +162,7 @@ public class RoleUtil {
 
 		UserBean userBean = Context.getUserBean();
 
-		int curLv = userBean.getODeptLevel() - 1; // 用户机构层级
+		int curLv = userBean.getODeptLevel(); // 用户机构层级 总行1，分行2，支行3
 
 		String[] deptLvArg = deptLvs.split(",");
 
@@ -184,5 +194,4 @@ public class RoleUtil {
 
 		return orgs;
 	}
-
 }
