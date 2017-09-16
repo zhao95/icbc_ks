@@ -586,6 +586,9 @@ function xminfoshow(){
 		var sel = document.getElementById("lxid");
 		var selected_val = sel.options[sel.selectedIndex].value;
 		yk["BM_TYPE"]=selected_val;
+		 var tds = $("#tableid tbody").find("tr").find("td");
+		    $($(tds[7]).find("div").eq(0)).html("")
+		   $($(tds[6]).find("div").eq(0)).html("");
 	}	
 	
 	//获取应考试的值
@@ -728,7 +731,6 @@ function xminfoshow(){
 			
 			//模块改变事件
 			function typeId(obj){
-				debugger;
 				var tab = document.getElementById("tableid");
 			    //表格行数
 			    var rows = tab.rows.length;
@@ -760,6 +762,9 @@ function xminfoshow(){
 					yk["BM_TYPE"]=selected_val;
 			       }
 				}
+			    var tds = $("#tableid tbody").find("tr").find("td");
+			    $($(tds[7]).find("div").eq(0)).html("")
+			   $($(tds[6]).find("div").eq(0)).html("");
 			}
 function mkfuzhi(){
 
