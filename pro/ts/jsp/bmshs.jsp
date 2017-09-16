@@ -91,7 +91,7 @@
 				</select></td>
 				<td style="width: 5%"></td>
 				<td><button id="search"
-						style="color: white; height: 30px; width: 35%; background: DarkTurquoise"
+						style="color: white; height: 30px; width: 25%; background: DarkTurquoise" class="btn"
 						onclick="xzcu()">查询</button></td>
 			</tr>
 		</tbody>
