@@ -46,7 +46,7 @@ ICBC.showTopMenu = function() {
  */
 ICBC.showRightContent = function() {
 	return false;
-	//ICBC.showTopMenu() && System.getVar("@C_PAGE_RIGHT_CONTENT_SHOW@") != "false";
+//	ICBC.showTopMenu() && System.getVar("@C_PAGE_RIGHT_CONTENT_SHOW@") != "false";
 }
 
 /**
@@ -54,7 +54,8 @@ ICBC.showRightContent = function() {
  */
 ICBC.getMenuHtml = function() {
 	var menuArr = ICBC.getMenuList();
-	var menuCon = jQuery('<div class="top_menu">');
+	//隐藏掉首页header的红色栏
+	var menuCon = jQuery('<div class="top_menu" style="display:none;">');//top_menu
 	jQuery.each(menuArr, function(index, menu) {
 		if(menu.EN_JSON){
 			menu.NAME = Language.transDynamic("MENU_NAME", menu.EN_JSON, menu.NAME);
@@ -66,12 +67,12 @@ ICBC.getMenuHtml = function() {
 			//选中样式修改
 			jQuery(".top_menu .item").removeClass("select");
 			jQuery(this).addClass("select");
-			
-			//如果左侧菜单收起，自动展开
+//			
+//			//如果左侧菜单收起，自动展开
 			if (jQuery("#left-homeMenu").hasClass("leftHide")) {
 				jQuery(".leftMenu-close").click();
 			}
-			
+//			
 			if (menu.INFO) {
 			    if (menu.TYPE == 1) { //服务
 			    	opts = {"url":menu.INFO + ".list.do","tTitle":menu.NAME,"menuFlag":1,"menuId":menu.ID,"closeFlag":false};
@@ -98,7 +99,7 @@ ICBC.openFirstTab = function() {
 
 /**
  * 取得菜单HTML
- */
+ */	
 ICBC.getRightContentHtml = function() {
 	//是否显示右侧模块
 	if (!ICBC.showRightContent()) {
