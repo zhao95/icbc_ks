@@ -13,7 +13,7 @@ function rowscolor(table){
 var btns = document.getElementsByTagName('button');
 for(var z=0;z<btns.length;z++){
 	 btns[z].onmouseover = function() {
-		 this.style.backgroundColor = 'red';
+		 this.style.backgroundColor = '#23c0b9';
 	 }
 	 btns[z].onmouseout = function() {
 	        this.style.background = 'lightseagreen';
@@ -188,7 +188,7 @@ var tabnum=1;
 						firtds[j].children[0].name="rtcheckbox";
 						var s =  firtds[j].parentNode.innerHTML;
 						firtds[j].parentNode.remove();
-						 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px lightgray">'+s+'</tr>')
+						 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px #f5f5f5">'+s+'</tr>')
 					}
 				}
 		}
@@ -232,7 +232,7 @@ function firall(){
     for(var i=0;i<pageEntity1.length;i++){
     	var name = pageEntity1[i].PX_NAME;
     	var px_column= pageEntity1[i].PX_COLUMN;
-    	$("#pxtable tbody").append('<tr style="border-bottom:solid 1px lightgray"><td id="fir'+i+'" name="firtd" style="padding-left:5px;text-align:left;height:20px;font-size:13px"><input style="background:white;width:50px;height=50px" type="checkbox" id='+px_column+' value='+name+'  name="pxcheckbox">'+name+'</td></tr>');
+    	$("#pxtable tbody").append('<tr style="border-bottom:solid 1px #f5f5f5"><td id="fir'+i+'" name="firtd" position="absolute"; style="line-height: 30px;padding-left:20px;text-align:left;height:20px;font-size:13px"><input style="position:relative;top:5px;background:white;width:15px;height=15px" type="checkbox" id='+px_column+' value='+name+'  name="pxcheckbox">&nbsp;&nbsp;'+name+'</td></tr>');
     }
 
 }
@@ -544,7 +544,7 @@ function removeleft(){
 		  $(this).attr("name","rtcheckbox");
 		 var s =  this.parentNode.parentNode.innerHTML;
 		 this.parentNode.parentNode.remove();
-		 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px lightgray">'+s+'</tr>')
+		 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px #f5f5f5">'+s+'</tr>')
 	  });
 	document.getElementById("daixuan").checked=false;
 	 tuodongtr();
@@ -554,7 +554,7 @@ function removeright(){
 		  $(this).attr("name","pxcheckbox");
 		 var s =  this.parentNode.parentNode.innerHTML;
 		 this.parentNode.parentNode.remove();
-		 $("#pxtable tbody").append('<tr style="border-bottom:solid 1px lightgray">'+s+'</tr>')
+		 $("#pxtable tbody").append('<tr style="border-bottom:solid 1px #f5f5f5">'+s+'</tr>')
 	  });
 	  document.getElementById("daixuanrt").checked=false;
 	  tuodongtr();
@@ -565,7 +565,7 @@ jq("#leftalla").click(function(){
 		  $(this).attr("name","rtcheckbox");
 		 var s =  this.parentNode.parentNode.innerHTML;
 		 this.parentNode.parentNode.remove();
-		 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px lightgray">'+s+'</tr>')
+		 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px #f5f5f5">'+s+'</tr>')
 	  });
 	 tuodongtr();
 });
@@ -574,7 +574,7 @@ jq("#rightalla").click(function(){
 		  $(this).attr("name","pxcheckbox");
 		 var s =  this.parentNode.parentNode.innerHTML;
 		 this.parentNode.parentNode.remove();
-		 $("#pxtable tbody").append('<tr style="border-bottom:solid 1px lightgray">'+s+'</tr>')
+		 $("#pxtable tbody").append('<tr style="border-bottom:solid 1px #f5f5f5">'+s+'</tr>')
 	  });
 	 tuodongtr();
 });
@@ -630,7 +630,7 @@ function tuodongtr(){
 	for(var z=0;z<btns.length;z++){
 		var td = btns[z].parentNode;
 		td.onmouseover = function() {
-			 this.style.backgroundColor = 'red';
+			 this.style.backgroundColor = '#e9e9e9';
 		 }
 		 td.onmouseout = function() {
 		        this.style.background = 'white';

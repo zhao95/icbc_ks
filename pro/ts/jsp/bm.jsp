@@ -222,7 +222,7 @@
 				</div>
 				<div class="modal-footer" style="text-align:center;height:60px">
 					<button id="tjbutt" type="button" onclick="tijiaoyiyi()" class="btn btn-primary" style="height:40px;background:lightseagreen;width:80px">提交异议</button>
-					<button type="button" onclick = "closemotai()" class="btn btn-default" style="height:40px;width:80px" data-dismiss="modal">取消</button>
+					<button type="button" onclick = "closemotai()" class="btn btn-default" style="height:40px;width:80px;margin-left:100px;" data-dismiss="modal">取消</button>
 				</div>
 				
 			</div><!-- /.modal-content -->

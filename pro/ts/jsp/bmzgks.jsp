@@ -104,11 +104,11 @@
 			<div class="a">
 				<table align="center" style="width: 90%;">
 					<tr>
-						<td colspan="4" height="120px"><p
-								style="font-size: 15px; color: red;">报考须知，请仔细阅读！</p>
+						<td colspan="4" height="120px"><strong
+								style="font-size: 15px; color: #ff7721;">报考须知，请仔细阅读！</strong>
 							<p id="bmddatecon" style="color: red;">
 								</p>
-							<p id="ksxzcon" style="color: red;"></p></td>
+							<p id="ksxzcon" style="color: #ff7721;"></p></td>
 					</tr>
 				</table>
 				<table align="center" style="width: 90%; background-color: #fed1d1;">

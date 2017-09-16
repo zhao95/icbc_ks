@@ -61,7 +61,7 @@ if(userBean != null) {
 	}
 	#excleupload .modal-footer{
 	position: absolute; 
-    top: 70%; 
+    top: 78%; 
     bottom: 200px; 
     left: 0; 
     right: 0; 
@@ -341,15 +341,12 @@ if(userBean != null) {
 			<div class="modal fade" id="tiJiao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true" style="padding-top:5%">
 		<div class="modal-dialog" style="width:50%">
 			<div class="modal-content">
-				<div class="modal-header" style="background-color: #00c2c2;color: white">
-					
-					<h5 class="modal-title">
+				<div class="modal-header" style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
 						批量审核
-					</h5>
 				</div>
 				<form id="formmotai" method="post" action="bmshzg.jsp">
 				<div>
-				<table style="height:125px">
+				<table style="height:125px;font-size:14px;">
 				<tr style="height:25%">
 				<td style="text-align:right;width:20%">审核人姓名</td><td style="width:5%"></td><td><input style="height:30px" type="text" value="<%=username%>" name="shren"/></td>
 				<td style="width:3%"></td>
@@ -369,9 +366,9 @@ if(userBean != null) {
 				</div>
 				<input type="hidden" id="mokuai"></input>
 				</form>
-				<div class="modal-footer" style="text-align:center;height:100px">
-					<button type="button" class="btn btn-primary" style="height:50px;background:lightseagreen;width:100px" onclick="mttijiao()">审核</button>
-					<button type="button" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">关闭
+				<div class="modal-footer" style="text-align:center;height:60px">
+					<button type="button" class="btn btn-primary" style="height:35px;background:lightseagreen;width:80px" onclick="mttijiao()">审核</button>
+					<button type="button" class="btn btn-default" style="background:lightseagreen;margin-left:100px;color:white;height:35px;width:80px" data-dismiss="modal">关闭
 					</button>
 				</div>
 			</div><!-- /.modal-content -->
@@ -380,21 +377,23 @@ if(userBean != null) {
 	
 	<div class="modal fade" id="paixu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
 		<div class="modal-dialog" style="width:50%;">
-			<div class="modal-content" style="height:630px">
-				<div class="modal-header" style="background-color: #00c2c2;color: white">
+			<div class="modal-content" style="height:650px">
+				<div class="modal-header" style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
 						
-					<h5 style="font-size:16px">
 					自定义显示列
-					</h5>
 					
 				</div>
-				<div id ="pxtablediv" style="height:500px;overflow-y:scroll;width:360px">
-				<table id="pxtable" style="width:340px;">
+				<div >
+				<table style="width:360px;">
 				    <thead style="background-color:lightgray;border-bottom:solid 1px lightgray">
-				      <tr>
-				        <th style="padding-left:20px;width:40%;text-align:left"><input type="checkbox" style="font-size:13px;width:20px;height:20px" id="daixuan" onclick="checkall(this)">待选</th>
+				      <tr style="height:35px;">
+				        <th style="padding-left:20px;width:40%;text-align:left"><input type="checkbox" style="font-size:13px;width:16px;height:16px" id="daixuan" onclick="checkall(this)">待选</th>
 				      </tr>
 				      </thead>
+				      </table>
+				</div>
+				<div id ="pxtablediv" style="height:500px;overflow-y:auto;width:360px">
+				<table id="pxtable" style="width:340px;">
 				      <tbody>
 				      </tbody>
 				    </table>
@@ -411,21 +410,25 @@ if(userBean != null) {
 				     <div style="position:relative;left:370px;top:-330px">
 				   <a id="rightalla" onclick="rightall()" href="#"><image id="rightall" src="/ts/image/1552.png"></image></a>
 				    </div>
-				      <div id="pxtable2div" style="height:500px;overflow-y:scroll;width:330px;position:relative;left:420px;top:-629px">
-				   <table id="pxtable2" style="width:310px;">
+				    <div style="width:330px;position:relative;left:420px;top:-666px">
+				     <table style="width:330px;">
 				     <thead style="background-color:lightgray;width:200px;border-bottom:solid 1px lightgray">
-				      <tr>
-				        <th style="padding-left:20px;text-align:left"><input type="checkbox" style="width:20px;height:20px" id="daixuanrt" onclick="checkallright(this)">已选&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+				      <tr style="height:35px;">
+				        <th style="padding-left:20px;text-align:left"><input type="checkbox" style="width:16px;height:16px" id="daixuanrt" onclick="checkallright(this)">已选&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 				      </tr>
 				      </thead>
+				      </table>
+				    </div>
+				      <div id="pxtable2div" style="height:500px;overflow-y:auto;width:330px;position:relative;left:420px;top:-664px">
+				   <table id="pxtable2" style="width:310px;">
 				      <tbody>
 				    
 				      </tbody>
 				    </table>
 				    </div>
-				<div  class="modal-footer" style="position:relative;top:-635px;text-align:center;height:32px">
-					<button type="button" class="btn btn-primary" style="font-size:13px;height:40px;background:lightseagreen;width:70px" onclick="savePX()">保存</button>
-					<button type="button" class="btn btn-default" style="font-size:13px;margin-left:100px;height:40px;width:70px" data-dismiss="modal">关闭
+				<div  class="modal-footer" style="position:relative;top:-660px;text-align:center;height:32px">
+					<button type="button" class="btn btn-primary" style="font-size:16px;height:35px;background:lightseagreen;width:80px" onclick="savePX()">保存</button>
+					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;font-size:16px;margin-left:100px;height:35px;width:80px" data-dismiss="modal">关闭
 					</button>
 				</div>
 			</div>
@@ -435,12 +438,9 @@ if(userBean != null) {
 	<div class="modal fade" id="yiyi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
 			<div class="modal-content">
-				<div class="modal-header" style="background-color: #00c2c2;color: white">
+				<div class="modal-header" style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
 						
-					<h4 class="modal-title">
 						异议
-					</h4>
-					
 				</div>
 				<div style="padding-top:20px;width:300px;font-size:20px;text-align:center;color:lightseagreen">
 				申诉理由：
@@ -460,7 +460,7 @@ if(userBean != null) {
 				
 				</div>
 				<div class="modal-footer" style="text-align:center;height:100px">
-					<button type="button" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;font-size:16px;height:50px;width:100px" data-dismiss="modal">取消</button>
 				</div>
 				
 			</div><!-- /.modal-content -->
@@ -468,18 +468,15 @@ if(userBean != null) {
 	</div>
 	<div class="modal fade" id="excleupload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
-			<div class="modal-content"  style="width:400px;height:300px">
-				<div class="modal-header" style="background-color: #00c2c2;color: white">
-						
-					<h4 class="modal-title">
+			<div class="modal-content"  style="width:400px;height:280px">
+				<div class="modal-header" style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
 						请选择文件
-					</h4>
 				</div>
-				<div style="padding-left:50px;padding-top:30px;color:red">请导入要上传的excel</div>
-				<div id="uploadfile" style="padding-left:50px;color:lightseagreen;font-size:20px"><form action="/file" name="formup" id="excleupload11" class="form form-horizontal"></form></div>
-				<div class="modal-footer" style="position:fixed;text-align:center;width:400px;">
-					<button id="excelimp" type="button" class="btn btn-primary" style="padding-left:30px;height:40px;background:lightseagreen;width:80px">导入</button>
-					<button type="button" onclick = "closemot()" class="btn btn-default" style="height:40px;width:80px" data-dismiss="modal">取消</button>
+				<div style="position:absolute;padding-left:30px;padding-top:30px;color:gray">请导入要上传的  Excel</div>
+				<div id="uploadfile"  style="width:200px;position:relative;top:60px;color:lightseagreen;font-size:20px"><form action="/file" name="formup" id="excleupload11" class="form form-horizontal" style="width:200%"></form></div>
+				<div class="modal-footer" style="text-align:center;width:400px;">
+					<button id="excelimp" type="button" class="btn btn-primary" style="height:35px;background:lightseagreen;width:80px">导入</button>
+					<button type="button" onclick = "closemot()" class="btn btn-default" style="color:white;background:lightseagreen;margin-left:100px;height:35px;width:80px;font-size:16px;" data-dismiss="modal">取消</button>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
@@ -488,11 +485,9 @@ if(userBean != null) {
 	<div class="modal fade" id="userbminfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
 			<div class="modal-content">
-				<div class="modal-header" style="background-color: #00c2c2;color: white">
+				<div class="modal-header" style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
 						
-					<h4 class="modal-title">
 						报名详细信息
-					</h4>
 				</div>
 				<div style="padding-left:30px;padding-top:20px;">
 				<table style="width:650px;font-size:15px;color:black">
@@ -513,7 +508,7 @@ if(userBean != null) {
 				</table>
 				</div>
 				<div class="modal-footer" style="text-align:center;height:70px">
-					<button type="button" class="btn btn-default" style="height:40px;width:80px" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;height:35px;width:80px;font-size:16px;"data-dismiss="modal">关闭</button>
 				</div>
 				
 			</div><!-- /.modal-content -->
