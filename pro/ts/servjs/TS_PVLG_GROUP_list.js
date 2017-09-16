@@ -9,8 +9,6 @@ if(_viewer.params.BUT){
 			var dataId = item.id;
 			$(item).append('<td icode="button" class="rhGrid-td-center " style="width:18.2%;"></td>');
 			$(item).find("td[icode='button']").append(
-					//'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP-upd" actcode="look" rowpk="'+dataId+'"><span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-edit"></span></a>'
-					//'<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+dataId+'">&nbsp查看&nbsp</a>'
 					'<a class="rh-icon rhGrid-btnBar-a" id="TS_PVLG_GROUP_look" actcode="look" rowpk="'+dataId+'"><span class="rh-icon-inner">详细</span><span class="rh-icon-img btn-view"></span></a>'
 			);
 			// 为每个按钮绑定卡片

@@ -54,7 +54,8 @@ $("#TS_XMGL_BM_RYSZQZ .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
 		$(item).find("td[icode='buttons']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BM_RYSZQZ_delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BM_RYSZQZ_delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'+
+				'<a class="rh-icon rhGrid-btnBar-a" id="TS_XMGL_BM_RYSZQZ_look" actcode="look" rowpk="'+dataId+'"><span class="rh-icon-inner">详细</span><span class="rh-icon-img btn-view"></span></a>'
 		);
 		// 为按钮绑定卡片
 		bindCard();
@@ -73,5 +74,17 @@ function bindCard(){
 	jQuery("td [id='TS_XMGL_BM_RYSZQZ_delete']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
+	});
+	
+	//详情val
+	jQuery("td [id='TS_XMGL_BM_RYSZQZ_look']").unbind("click").bind("click", function(){
+		var ryszqzCode = jQuery(this).parent().parent().find('td[icode="RYSZQZ_CODE"]').html().trim();
+		debugger;
+		// 定义一个对象
+		var strwhere = "and G_ID ='" + ryszqzCode + "'";
+		var params = {"G_ID" : ryszqzCode,"_extWhere" : strwhere};
+		var url = "TS_PVLG_GROUP_USER.list.do?&_extWhere=" + strwhere;
+		var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
+		Tab.open(options);
 	});
 }
