@@ -1,7 +1,8 @@
 var _viewer = this;
+var kcId = _viewer.getParHandler().getParHandler().getPKCode();
+var pkCode = _viewer.getPKCode();
 if (_viewer._actVar == "cardAdd") {
 	if(_viewer.getItem("KC_ID").getValue() == ""){
-		var kcId = _viewer.getParHandler().getParHandler().getPKCode();
 		_viewer.getItem("KC_ID").setValue(kcId);
 	}
 	var msg = "新建一条申请";
@@ -13,7 +14,6 @@ if (_viewer._actVar == "cardAdd") {
 }
 
 _viewer.getBtn("save").css("right", "500px");
-
 _viewer.getBtn("commit").unbind("click").bind("click", function(event) {
 	if (_viewer.getItem("KC_COMMIT").getValue() == 1) {
 		alert("申请单已提交过，无需重复提交");
@@ -34,7 +34,9 @@ if (servId == "TS_KCGL_SH") {
 _viewer.getBtn("shTgBtn").unbind("click").bind("click", function(event) {
 	if (_viewer.getItem("UPDATE_AGREE").getValue() == 0) {
 		_viewer.getItem("UPDATE_AGREE").setValue(1);
-		saveChild();
+		FireFly.doAct("TS_KCGL_SH","updateShInfo",{"kcId":kcId,"updateId":pkCode},true,false,function(data){
+			
+		});
 		_viewer._saveForm();
 	} else {
 		alert("已审核过");
@@ -49,34 +51,4 @@ _viewer.getBtn("shBtgBtn").unbind("click").bind("click", function(event) {
 		alert("已审核过");
 	}
 });
-
-/**
- * TS_KCGL_IPSCOPE
- */
-function saveChild(){
-	//主单 TS_KCGL_UPDATE_MX
-	//var preesArry = FireFly.doAct("SY_COMM_ENTITY","finds",{"_SELECT_":"TITLE","_WHERE_":" and DATA_ID='"+dataId+"'"});
-	FireFly.doAct("TS_KCGL_UPDATE_MX","finds",{"_WHERE_":""},true,false,function(data){
-		
-	});
-	
-	
-	//相关子表 TS_KCGL_UPDATE_GLY TS_KCGL_UPDATE_IPSCOPE TS_KCGL_UPDATE_IPZWH TS_KCGL_UPDATE_GLJG TS_KCGL_UPDATE_ZWDYB
-	var tables1 = new Array()
-	tables1[0] = "TS_KCGL_UPDATE_GLY";
-	tables1[1] = "TS_KCGL_UPDATE_IPSCOPE";
-	tables1[2] = "TS_KCGL_UPDATE_IPZWH";
-	tables1[3] = "TS_KCGL_UPDATE_GLJG";
-	tables1[4] = "TS_KCGL_UPDATE_ZWDYB";
-	var tables2 = new Array()
-	tables2[0] = "TS_KCGL_GLY";
-	tables2[1] = "TS_KCGL_IPSCOPE";
-	tables2[2] = "TS_KCGL_IPZWH";
-	tables2[3] = "TS_KCGL_GLJG";
-	tables2[4] = "TS_KCGL_ZWDYB";
-	
-	
-	
-}
-
 
