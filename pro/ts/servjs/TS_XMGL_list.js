@@ -227,11 +227,11 @@ $(".rhGrid").find("tr").each(function(index, item) {
 	// );
 		$(item).find("td[icode='buttons']").append("<div operCode='option' rowpk='"+XM_ID+"'><font size='3'>···</font></div>"); 
 		//'<div id="div_'+XM_ID+'"  style="display:none;min-width:40px;min-height:25px">'+
-		var btns ='<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+XM_ID+'">&nbsp查看&nbsp</a>'+
+		var btns ='<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+XM_ID+'">&nbsp&nbsp查看&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_copy" actcode="copy" rowpk="'+XM_ID+'">复制&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_edit" actcode="edit" rowpk="'+XM_ID+'">编辑&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_set"  actcode="set" rowpk="'+XM_ID+'">设置&nbsp</a>'+
-			'<a style="cursor:pointer" id="TS_XMGL_delete" actcode="delete" rowpk="'+XM_ID+'">删除&nbsp</a>';
+			'<a style="cursor:pointer" id="TS_XMGL_delete" actcode="delete" rowpk="'+XM_ID+'">删除&nbsp&nbsp</a>';
      //'</div>'
      //'<a class="rhGrid-td-rowBtnObj" operCode="optEditBtn" rowpk="'+dataId+'" style="cursor:pointer">编辑&nbsp</a>'+
      //tableTag.append(btn); 
@@ -264,7 +264,7 @@ jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter", function()
 	//var pkCode = $(this).parent().parent().parent().children().get(2).innerText;
 	var pkCode = jQuery(this).parent().attr("id");
 	var trWidth = $(this).parent().get(0).offsetWidth;
-	var divWidth = $("#hoverDiv_"+pkCode).get(0).innerText.length*9.78;
+	var divWidth = $("#hoverDiv_"+pkCode).get(0).innerText.length*8.7;
 	var marginLeft = trWidth - divWidth;
 	var marginTop =$(this).get(0).offsetTop;
 	setTimeout(function(){
@@ -327,7 +327,7 @@ jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter", function()
  		var pkCode = jQuery(this).attr("rowpk");
  		rowDelete(pkCode,_viewer);
  	 });
- 	
+}	
 // 	 d.empty();
 //	 var tdTag =this;
 //	 var kk = $(this).parent().parent().get(0).clientWidth;//操作td的宽度
@@ -358,7 +358,7 @@ jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter", function()
 // 	 d.focus();
  	 //debugger;
  
-}
+
 	
 
 //$("#d").mouseout(function(e){
@@ -412,11 +412,11 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 //    cardView.show();
 //});
 
-
+//
 $(".hoverDiv").find("a").hover(function(){
 	$(this).css("color","#014677");
 },function(){
-	$(this).css("color","#0071c2");
+	$(this).css("color","#707070");
 }); 
 
 
