@@ -10,11 +10,11 @@ $(".rhGrid").find("tr").each(function(index, item) {
 		var XM_ID = item.id;
 
 		$(item).find("td[icode='buttons']").append("<div operCode='option' rowpk='"+XM_ID+"'><font size='3'>···</font></div>"); 
-		var btns ='<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+XM_ID+'">&nbsp查看&nbsp</a>'+
+		var btns ='<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+XM_ID+'">&nbsp&nbsp查看&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_copy" actcode="copy" rowpk="'+XM_ID+'">复制&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_edit" actcode="edit" rowpk="'+XM_ID+'">编辑&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_set"  actcode="set" rowpk="'+XM_ID+'">设置&nbsp</a>'+
-			'<a style="cursor:pointer" id="TS_XMGL_delete" actcode="delete" rowpk="'+XM_ID+'">删除&nbsp</a>';
+			'<a style="cursor:pointer" id="TS_XMGL_delete" actcode="delete" rowpk="'+XM_ID+'">删除&nbsp&nbsp</a>';
     
 		var divHeight = $(item).get(0).offsetHeight;
 		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+XM_ID+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display:none;'>"+btns+"</div>";
@@ -41,7 +41,7 @@ function bindCard() {
 	jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter",function() {
 		var pkCode = jQuery(this).parent().attr("id");
 		var trWidth = $(this).parent().get(0).offsetWidth;
-		var divWidth = $("#hoverDiv_" + pkCode).get(0).innerText.length * 9.78;
+		var divWidth = $("#hoverDiv_" + pkCode).get(0).innerText.length * 8.7;
 		var marginLeft = trWidth - divWidth;
 		var marginTop = $(this).get(0).offsetTop;
 		setTimeout(function() {
@@ -112,7 +112,7 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 });
 
 $(".hoverDiv").find("a").hover(function() {
-	$(this).css("color", "#014677");
+	$(this).css("color", "#707070");
 }, function() {
 	$(this).css("color", "#0071c2");
 }); 
