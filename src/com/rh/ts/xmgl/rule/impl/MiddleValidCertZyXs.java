@@ -1,7 +1,7 @@
 package com.rh.ts.xmgl.rule.impl;
 
-import java.util.List;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import com.rh.core.base.Bean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
@@ -9,7 +9,7 @@ import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.rule.IRule;
 
 /**
- * 已获专业类、销售类中级及以上证书且有效
+ * 已获专业类、销售类中级及以上证书且有效  (终止有效期 >= 时间参数)
  * 
  * @author zjl
  *
@@ -21,39 +21,41 @@ public class MiddleValidCertZyXs implements IRule {
 		// 报名者人力资源编码
 		String user = param.getStr("BM_CODE");
 
-		String[] mkCodes = {};
+		String jsonStr = param.getStr("MX_VALUE2");
 
-		SqlBean sql = new SqlBean();
+		JSONObject obj;
 
-		sql.andIn("KSLBK_NAME", "专业类", "销售类");
+		try {
+			
+			obj = new JSONObject(jsonStr);
 
-		sql.andIn("KSLBK_TYPE", "inter", "high");
-		//考试类别库找到编号
-		List<Bean> list = ServDao.finds(TsConstant.SERV_BM_KSLBK, sql);
+			String endDate = obj.getString("val"); //有效期时间
 
-		for (int i = 0; i < list.size(); i++) {
+			String zyCode = "023002"; // 专业类
+			String xsCode = "023003"; // 销售类
 
-			String mkCode = list.get(i).getStr("KSLBK_MKCODE");
+			SqlBean sql = new SqlBean();
 
-			mkCodes[i] = mkCode;
-		}
+			sql.and("STU_PERSON_ID", user);// 人员编码
 
-		sql = new SqlBean();
+			sql.andGTE("END_DATE", endDate);// 终止有效期 >= endDate
 
-		sql.and("STU_PERSON_ID", user);// 人员编码
+			sql.andIn("STATION_TYPE", zyCode, xsCode);// 类别编号
 
-		sql.andIn("CERT_MODULE_CODE", mkCodes);// 证书模块编号
+			sql.andIn("CERT_GRADE_CODE", "2", "3");// 证书等级编号
 
-		sql.andIn("CERT_GRADE_CODE", "inter", "high");// 证书等级编号
+			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
 
-		sql.andNot("QUALFY_STAT", 3);// 获证状态(1-正常;2-获取中;3-过期)
+			sql.and("S_FLAG", 1);
 
-		sql.and("S_FLAG", 1);
+			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sql);
 
-		int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL, sql);
+			if (count > 0) {
+				return true;
+			}
+		} catch (JSONException e) {
 
-		if (count > 0) {
-			return true;
+			e.printStackTrace();
 		}
 
 		return false;

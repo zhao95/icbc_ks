@@ -2,6 +2,9 @@ package com.rh.ts.xmgl.rule.impl;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.rh.core.base.Bean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
@@ -21,29 +24,42 @@ public class AdmitTest implements IRule {
 		// 报名者人力资源编码
 		String user = param.getStr("BM_CODE");
 
-		// 序列
-		String bmXl = param.getStr("BM_XL");
+		String jsonStr = param.getStr("MX_VALUE2");
 
-		SqlBean sql = new SqlBean();
+		JSONObject obj;
 
-		sql.and("USER_CODE", user);
+		try {
 
-		sql.and("AD_XL", bmXl);
+			obj = new JSONObject(jsonStr);
 
-		sql.desc("AD_TIME");
+			int grade = obj.getInt("val");// 通过成绩
 
-		List<Bean> list = ServDao.finds(TsConstant.SERV_BMSH_ADMIT, sql);
+			// 序列
+			String bmXl = param.getStr("BM_XL");
 
-		if (list != null && list.size() > 0) {
+			SqlBean sql = new SqlBean();
 
-			Bean bean = list.get(0);
+			sql.and("USER_CODE", user);
 
-			int grade = bean.getInt("AD_GRADE");
+			sql.and("AD_XL", bmXl);
 
-			if (grade >= 60) {
-				return true;
+			sql.desc("AD_TIME");
+
+			List<Bean> list = ServDao.finds(TsConstant.SERV_BMSH_ADMIT, sql);
+
+			if (list != null && list.size() > 0) {
+
+				Bean bean = list.get(0);
+
+				int adGrade = bean.getInt("AD_GRADE");
+
+				if (adGrade >= grade) {
+					return true;
+				}
 			}
+		} catch (JSONException e) {
 
+			e.printStackTrace();
 		}
 
 		return false;

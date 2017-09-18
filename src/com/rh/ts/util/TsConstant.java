@@ -20,6 +20,9 @@ public class TsConstant {
 	/** 获证服务 */
 	public static final String SERV_ETI_CERT_QUAL = "TS_ETI_CERT_QUAL";
 	
+	/** 获证服务 */
+	public static final String SERV_ETI_CERT_QUAL_V = "TS_ETI_CERT_QUAL_V";
+	
 	/** 证书管理服务 */
 	public static final String SERV_ETI_CERT_INFO = "TS_ETI_CERT_INFO";
 	

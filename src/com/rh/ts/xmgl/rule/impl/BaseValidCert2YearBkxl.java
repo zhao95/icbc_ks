@@ -9,12 +9,11 @@ import org.json.JSONObject;
 import com.rh.core.base.Bean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
-import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.rule.IRule;
 
 /**
- * 已获报考序列初级证书满2年且有效
+ * 已获报考序列初级证书满N年且有效 (起始有效日期 <= N年前日期)
  * 
  * @author zjl
  *
@@ -26,15 +25,15 @@ public class BaseValidCert2YearBkxl implements IRule {
 		// 报名者人力资源编码
 		String user = param.getStr("BM_CODE");
 
-		// 报名模块编码
-		String mkCde = param.getStr("KSLBK_MKCODE");
+		// 报名序列编码
+		String xl = param.getStr("BM_XL");
 
 		// 报名结束时间
 		String bmEnd = param.getStr("BM_ENDDATE");
 
 		String jsonStr = param.getStr("MX_VALUE2");
 
-		String twoYearAgo = ""; // 2年前日期yyyy-mm-dd
+		String twoYearAgo = ""; // N年前日期yyyy-mm-dd
 
 		JSONObject obj;
 
@@ -68,15 +67,15 @@ public class BaseValidCert2YearBkxl implements IRule {
 
 			sql.andLTE("BGN_DATE", twoYearAgo);// 起始有效日期 <= dateTime
 
-			sql.and("CERT_MODULE_CODE", mkCde);// 证书模块编号
+			sql.and("STATION_NO", xl);// 序列编号
 
-			sql.and("CERT_GRADE_CODE", "low");// 证书等级编号
+			sql.and("CERT_GRADE_CODE", "1");// 证书等级编号
 
 			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
 
 			sql.and("S_FLAG", 1);
 
-			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL, sql);
+			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sql);
 
 			if (count > 0) {
 				return true;

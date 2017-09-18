@@ -1,6 +1,7 @@
 package com.rh.ts.xmgl.rule.impl;
 
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.ServDao;
@@ -9,7 +10,7 @@ import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.rule.IRule;
 
 /**
- * 已获运行类、客服类高级证书且有效
+ * 已获运行类、客服类高级证书且有效 (证书终止有效期 >= datetime时间参数)
  * 
  * @author zjl
  *
@@ -21,42 +22,41 @@ public class HighValidCertYxKf implements IRule {
 		// 报名者人力资源编码
 		String user = param.getStr("BM_CODE");
 
-		String[] mkCodes = {};
+		String jsonStr = param.getStr("MX_VALUE2");
 
-		SqlBean sql = new SqlBean();
-
-		sql.andIn("KSLBK_NAME", "运行类", "客服类");
-
-		sql.andIn("KSLBK_TYPE", "high");
+		JSONObject obj;
 		
-		sql.andNotNull("KSLBK_MKCODE");
-		// 查询考试类别库 找到模块编号
-		List<Bean> list = ServDao.finds(TsConstant.SERV_BM_KSLBK, sql);
+		try {
+			
+			obj = new JSONObject(jsonStr);
+			
+			String endDate = obj.getString("val"); //有效期时间
+			
+			String yxCode = "023004"; // 运行类
+			String kfCode = "023005"; // 客服类
 
-		for (int i = 0; i < list.size(); i++) {
+			SqlBean sql = new SqlBean();
 
-			String mkCode = list.get(i).getStr("KSLBK_MKCODE");
+			sql.and("STU_PERSON_ID", user);// 人员编码
 
-			mkCodes[i] = mkCode;
-		}
-		
+			sql.andGTE("END_DATE", endDate);// 终止有效期 >= endDate
 
-		sql = new SqlBean();
+			sql.andIn("STATION_TYPE", yxCode, kfCode);// 类别编号
 
-		sql.and("STU_PERSON_ID", user);// 人员编码
+			sql.andIn("CERT_GRADE_CODE", "3");// 证书等级编号
 
-		sql.andIn("CERT_MODULE_CODE", mkCodes);// 证书模块编号
+			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
 
-		sql.and("CERT_GRADE_CODE", "high");// 证书等级编号
+			sql.and("S_FLAG", 1);
 
-		sql.andIn("QUALFY_STAT", 1,2);// 获证状态(1-正常;2-获取中;3-过期)
+			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sql);
 
-		sql.and("S_FLAG", 1);
+			if (count > 0) {
+				return true;
+			}
+		} catch (JSONException e) {
 
-		int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL, sql);
-
-		if (count > 0) {
-			return true;
+			e.printStackTrace();
 		}
 
 		return false;
