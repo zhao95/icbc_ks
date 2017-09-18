@@ -216,11 +216,12 @@
                     <span style="color: red;font-weight: bold">*</span>
                 </label>
                 <div class="col-sm-10 bkuan">
-                    <div onclick="xuanze()" data-toggle="modal" data-target="#myModal" id="jkdks"
+                    <%-- <div onclick="xuanze()" data-toggle="modal" data-target="#myModal" id="jkdks"
                          style="display: inline-block;cursor: pointer;color: #4cd4d4;padding:5px;">
+                          <img   src="<%=CONTEXT_PATH %>/ts/image/0255.png"/>
                         <i class="fa fa-search" aria-hidden="true" style="font-size: 24px;color: #91dce4;"></i>
                         <span>选择</span>
-                    </div>
+                    </div>--%>
                     <div style="min-height: 120px">
                         <table id="jkks-table" border="1" style="width: 100%;border-color: white;">
                             <thead>
