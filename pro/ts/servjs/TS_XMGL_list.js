@@ -17,7 +17,7 @@ $(".rhGrid").find("tr").each(function(index, item) {
 			'<a style="cursor:pointer" id="TS_XMGL_delete" actcode="delete" rowpk="'+XM_ID+'">删除&nbsp&nbsp</a>';
     
 		var divHeight = $(item).get(0).offsetHeight;
-		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+XM_ID+"' style=' height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display:none;color:#505050'>"+btns+"</div>";
+		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+XM_ID+"' style=' height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display:none;color:#666666'>"+btns+"</div>";
 		$(".content-main").find("table").before(hoverDiv);//="color:#F00">
 		bindCard();
 	}
@@ -112,9 +112,9 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 });
 
 $(".hoverDiv").find("a").hover(function() {
-	$(this).css("color", "#0071c2");//鼠标移入
+	$(this).css("color", "#0066FF");//鼠标移入
 }, function() {
-	$(this).css("color", "#505050");//鼠标移出
+	$(this).css("color", "#666666");//鼠标移出
 }); 
 
 

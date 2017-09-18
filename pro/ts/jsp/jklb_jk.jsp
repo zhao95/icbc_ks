@@ -188,9 +188,11 @@
                 </label>
                 <div class="col-sm-10 bkuan">
                     <div onclick="xuanze()" data-toggle="modal" data-target="#myModal" id="jkdks"
-                         style="display: inline-block;cursor: pointer;color: #4cd4d4;padding:5px;">
-                         <a href="#" onmouseover="请选择"><i class="fa fa-search" aria-hidden="true" style="font-size: 15px;"></i>请选择</a>
-                    </div>
+                         style="display: inline-block;cursor: pointer;color: #91dce4;padding:5px;">
+                         <a href="#"  style="font-size: 15px ; color: #91dce4; onmouseover="请选择">
+                          <img   src="<%=CONTEXT_PATH %>/ts/image/0255.png"/>
+                         <%--<i class="fa fa-search" aria-hidden="true" style="font-size: 15px;"></i>--%>请选择</a>
+                    </div><%--#4cd4d4 --%>
                     <div style="min-height: 120px">
                         <table id="jkks-table"  style="width: 100%;border-color: white;">
                             <thead>
@@ -239,7 +241,7 @@
                                 <div class="form-group" id="caseIma">
                                     <label class="" style="cursor:pointer;"><%--btn btn-primary--%>
                                     	
-                                         <img style="padding-left:20px;font-size:10px" alt="选择" src="<%=CONTEXT_PATH %>/ts/image/u323.png">&nbsp;&nbsp;<a href="#">点击图标上传</a>
+                                         <img style="padding-left:20px;font-size:10px" alt="选择" src="<%=CONTEXT_PATH %>/ts/image/005.png">&nbsp;&nbsp;<a style="color: #91dce4;" href="#">上传</a>
                                    		
                                         <%--选择图片--%>
                                         <input type="file" style="display: none;" class="form-control" id="caseImage"
