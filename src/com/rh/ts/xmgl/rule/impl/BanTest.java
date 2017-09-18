@@ -1,5 +1,8 @@
 package com.rh.ts.xmgl.rule.impl;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.rh.core.base.Bean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
@@ -7,7 +10,7 @@ import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.rule.IRule;
 
 /**
- * 禁止考试
+ * 禁止考试  禁考期限 <= datetime参数
  * 
  * @author
  *
@@ -19,21 +22,32 @@ public class BanTest implements IRule {
 		// 报名者人力资源编码
 		String user = param.getStr("BM_CODE");
 
-		// 报名结束时间
-		String bmEnd = param.getStr("BM_ENDDATE");
+		String jsonStr = param.getStr("MX_VALUE2");
 
-		SqlBean sql = new SqlBean();
+		JSONObject obj;
 
-		sql.and("JKGL_RLZY", user);// 人员编码
+		try {
 
-		sql.andGTE("JKGL_END_DATE", bmEnd);// 禁考期限 >= 报名结束时间
+			obj = new JSONObject(jsonStr);
 
-		sql.and("S_FLAG", 1);
+			String endDate = obj.getString("val"); // 有效期时间
 
-		int count = ServDao.count(TsConstant.SERV_JKGL, sql);
+			SqlBean sql = new SqlBean();
 
-		if (count == 0) {
-			return true;
+			sql.and("JKGL_RLZY", user);// 人员编码
+
+			sql.andGTE("JKGL_END_DATE", endDate);// 禁考期限 <= datetime
+
+			sql.and("S_FLAG", 1);
+
+			int count = ServDao.count(TsConstant.SERV_JKGL, sql);
+
+			if (count == 0) {
+				return true;
+			}
+		} catch (JSONException e) {
+
+			e.printStackTrace();
 		}
 
 		return false;
