@@ -11,14 +11,14 @@ $(".rhGrid").find("tr").each(function(index, item) {
 
 		$(item).find("td[icode='buttons']").append("<div operCode='option' rowpk='"+XM_ID+"'><font size='3'>···</font></div>"); 
 		var btns ='<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+XM_ID+'">&nbsp&nbsp查看&nbsp</a>'+
-			'<a style="cursor:pointer" id="TS_XMGL_copy" actcode="copy" rowpk="'+XM_ID+'">复制&nbsp</a>'+
+			'<a style="cursor:pointer " id="TS_XMGL_copy" actcode="copy" rowpk="'+XM_ID+'">复制&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_edit" actcode="edit" rowpk="'+XM_ID+'">编辑&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_set"  actcode="set" rowpk="'+XM_ID+'">设置&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_delete" actcode="delete" rowpk="'+XM_ID+'">删除&nbsp&nbsp</a>';
     
 		var divHeight = $(item).get(0).offsetHeight;
-		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+XM_ID+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display:none;'>"+btns+"</div>";
-		$(".content-main").find("table").before(hoverDiv);
+		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+XM_ID+"' style=' height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display:none;color:#707070'>"+btns+"</div>";
+		$(".content-main").find("table").before(hoverDiv);//="color:#F00">
 		bindCard();
 	}
 });
@@ -112,9 +112,9 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 });
 
 $(".hoverDiv").find("a").hover(function() {
-	$(this).css("color", "#707070");
+	$(this).css("color", "##0071c2");//鼠标移入
 }, function() {
-	$(this).css("color", "#0071c2");
+	$(this).css("color", "#707070");//鼠标移出
 }); 
 
 
