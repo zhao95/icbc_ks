@@ -39,3 +39,13 @@ $("#TS_KCGL_UPDATE-delete").unbind("click").bind("click",function(){
 	var resultData = FireFly.listDelete("TS_KCGL_UPDATE",temp,true);
 	_viewer.refresh();
 });
+
+$("#TS_KCGL_UPDATE .rhGrid").find("tr").each(function(index, item) {
+	if(index != 0){
+		var commit = $(item).find("td[icode='KC_COMMIT']").text();
+		var agree = $(item).find("td[icode='UPDATE_AGREE']").text();
+		if(commit == '1' && agree == '0'){
+			$(item).css("color","blue");
+		}
+	}
+});
