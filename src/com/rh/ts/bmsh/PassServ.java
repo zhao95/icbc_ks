@@ -586,7 +586,7 @@ public class PassServ extends CommonServ {
 				}
 			}
 		}
-		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%' AND XM_ID='"+xmid+"'";
+		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
 		//根据审核  机构 匹配当前机构下的所有人
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();

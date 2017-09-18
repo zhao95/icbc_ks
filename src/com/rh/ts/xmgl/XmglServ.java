@@ -404,23 +404,10 @@ public class XmglServ extends CommonServ {
 					}
 				}
 			 
-			/*// 查询待审核 表 里的other字段判断 是否包含user_code
-			String where = "AND XM_ID="+"'"+id+"'"+" AND SH_OTHER like"+"'%"+user_code+"%'";
-			List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", where);
-			List<Bean> NOPASSlist = ServDao.finds("TS_BMSH_NOPASS", where);
-			List<Bean> PASSlist = ServDao.finds("TS_BMSH_PASS", where);
-			if(staylist.size()!=0||NOPASSlist.size()!=0||PASSlist.size()!=0){
-				if("1".equals(zhuangtai)&&"待报名".equals(state)){
-					
-					SHlist.add(bean);
-				}else if("2".equals(zhuangtai)&&"已结束".equals(state)){
-					SHlist.add(bean);
-				}else if("全部".equals(zhuangtai)){
-					SHlist.add(bean);
-				}
-			}*/
+		
 			
 		}
+		
 		int ALLNUM = SHlist.size();
 		// 计算页数
 		int meiye = Integer.parseInt(SHOWNUM);
