@@ -110,7 +110,7 @@
 						style="width: 20%; text-align: left">组织单位</th>
 					<th id="S_ATIME" class="" style="width: 20%; text-align: left">创建时间</th>
 					<th id="BM_STATE__NAME" class="" style="width: 5%;">状态</th>
-					<th id="BM_OPTIONS" class="" style="width: 10%; text-align: center">操作</th>
+					<th id="BM_OPTIONS" class="" style="width: 20%; text-align: center">操作</th>
 				</tr>
 			</thead>
 			<tbody class="">
@@ -197,6 +197,10 @@
 		action="bmshfzg.jsp">
 		<input id="fzgtz" name="fzgtz"></input>
 	</form>
+	<form id="form3" style="display: none" method="post"
+		action="belongto.jsp">
+		<input id="zgtzzz" name="zgtz"></input>
+	</form>
 
 
 	<input type="hidden" id="xmid" />
@@ -216,6 +220,13 @@
 			var id = document.getElementById(hid).innerHTML;
 			document.getElementById("zgtz").value=id;
 			document.getElementById("form1").submit();
+	}
+	function chakanbelong(i){
+		 var hid = "XM_ID"+i;
+		 var xmtypeid = "XM_TYPE"+i;
+			var id = document.getElementById(hid).innerHTML;
+			document.getElementById("zgtzzz").value=id;
+			document.getElementById("form3").submit();
 	}
 	function chakan(obj){
 		var param={};

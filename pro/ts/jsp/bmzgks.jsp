@@ -111,7 +111,7 @@
 							<p id="ksxzcon" style="color: #ff7721;"></p></td>
 					</tr>
 				</table>
-				<table align="center" style="width: 90%; background-color: #fed1d1;">
+				<table align="center" style="border-radius:5px;width: 90%; background-color: #fed1d1;">
 					<tr>
 						<td><span style="color: #ff0000;">！</span> 温馨提示：</td>
 						<td height="50px" align="left">1.您当前在 <span

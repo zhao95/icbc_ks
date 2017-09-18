@@ -108,4 +108,18 @@ public class BmServ extends CommonServ {
     return outBean;
 	}
 	
+	/**
+	 * 获取是否查看辖内所有  报名数据
+	 */
+	public OutBean getShowLook(Bean paramBean){
+		String showlook="2";
+		String xmid = paramBean.getStr("xmid");
+		String where = "AND XM_ID='"+xmid+"'";
+		//获取到项目报名名的数据
+		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH",where);
+		for (Bean bean : finds) {
+			 showlook = bean.getStr("SH_LOOK");
+		}
+		return new OutBean().set("showlook", showlook);
+	}
 }

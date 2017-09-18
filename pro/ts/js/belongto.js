@@ -803,13 +803,14 @@ var listPage = function () {
 	
 	//param
 	var where5 = " AND XM_ID="+"'"+xmid+"'";
-	var where6 = "AND SH_OTHER like '%"+user_code+"%'";
 	 var param = {};
 	 param["shownum"]=myts;
 	 param["nowpage"]=num;
 	 param["user_code"]=user_code;
-	 param["where"]=where5+where6+where3;
-     return FireFly.doAct(servid,"getUncheckList",param);
+	 param["xmid"]=xmid;
+	 param["where"]=where5+where3;
+     return FireFly.doAct(servid,"getBelongToList",param);
+     
 //     debugger;
  };
 // 创建页面显示数据的主体
@@ -831,7 +832,6 @@ var listPage = function () {
 	    var where3 = "";
 	    var where4="";
 	    var where5 = " AND XM_ID="+"'"+xmid+"'";
-		var where6 = "AND SH_OTHER like '%"+user_code+"%'";
 	   
 	    if(jQuery.trim(shjshu)!=""){
 	    	where3 = " AND SH_NODE like "+"'%"+shjshu+"%'";
@@ -843,13 +843,14 @@ var listPage = function () {
      		where2 = " AND BM_CODE like "+"'%"+renlicode+"%'";
      	}
      	var param={};
-     	param["where"]=where1 + where2+where3+where5+where6;
+     	param["where"]=where1 + where2+where3+where5;
     	 param["shownum"]=myts;
+    	 param["xmid"]=xmid;
     	 param["nowpage"]=1;
     	 param["user_code"]=user_code;
      	//页面的输入查询条件放入传递的参数中
      	//获取到查询后的数据
-     	var searchResult = FireFly.doAct("TS_BMSH_STAY","getUncheckList",param);
+     	var searchResult = FireFly.doAct("TS_BMSH_STAY","getBelongToList",param);
      	//将数据填入页面
      	listPage._lPage = searchResult._PAGE_;
      	listPage._lData = searchResult.list;
@@ -869,7 +870,6 @@ var listPage = function () {
     var where2 = "";
     var where3 = "";
     var where5 = " AND XM_ID="+"'"+xmid+"'";
-	var where6 = "AND SH_OTHER like '%"+user_code+"%'";
  	if(jQuery.trim(name)!==""){
  		where1 = "AND BM_NAME like "+"'%"+name+"%'";
  	}
@@ -887,13 +887,14 @@ var listPage = function () {
  	}
  	
  	var param={};
- 	param["where"]=where1 + where2+where3+where5+where6;
+ 	param["where"]=where1 + where2+where3+where5;
 	 param["shownum"]=myts;
 	 param["nowpage"]=1;
+	 param["xmid"]=xmid;
 	 param["user_code"]=user_code;
  	//页面的输入查询条件放入传递的参数中
  	//获取到查询后的数据
- 	var searchResult = FireFly.doAct("TS_BMSH_PASS","getUncheckList",param);
+ 	var searchResult = FireFly.doAct("TS_BMSH_PASS","getBelongToList",param);
  	//将数据填入页面
  	listPage._lPage = searchResult._PAGE_;
  	listPage._lData = searchResult.list;
@@ -910,7 +911,6 @@ var listPage = function () {
     var where2 = "";
     var where3 = "";
     var where5 = " AND XM_ID="+"'"+xmid+"'";
-	var where6 = "AND SH_OTHER like '%"+user_code+"%'";
  	if(jQuery.trim(name)!==""){
  		where1 = "AND BM_NAME like "+"'%"+name+"%'";
  	}
@@ -928,13 +928,14 @@ var listPage = function () {
  	}
  	
  	var param={};
- 	param["where"]=where1 + where2+where3+where5+where6;
+ 	param["where"]=where1 + where2+where3+where5;
 	 param["shownum"]=myts;
 	 param["nowpage"]=1;
+	 param["xmid"]=xmid;
 	 param["user_code"]=user_code;
  	//页面的输入查询条件放入传递的参数中
  	//获取到查询后的数据
- 	var searchResult = FireFly.doAct("TS_BMSH_NOPASS","getUncheckList",param);
+ 	var searchResult = FireFly.doAct("TS_BMSH_NOPASS","getBelongToList",param);
  	//将数据填入页面
  	listPage._lPage = searchResult._PAGE_;
  	listPage._lData = searchResult.list;
@@ -1122,6 +1123,18 @@ var listPage = function () {
     	 if(tabnum==1){
     		 Drag("dshtable",table);
     	 }
+    	 debugger;
+    	 var xmparam={};
+    	 xmparam["xmid"]=xmid;
+    	 var resultnum = FireFly.doAct("TS_BMSH_STAY","tongjinum",xmparam);
+    	 var staynum = resultnum.staynum;
+    	 var passnum = resultnum.passnum;
+    	 var nopassnum = resultnum.nopassnum;
+    	 var allnum = resultnum.allnum;
+    	 $("#allnum").html(allnum);
+    	 $("#staynum").html(staynum);
+    	 $("#passnum").html(passnum);
+    	 $("#nopassnum").html(nopassnum);
  }; 
  
  /*添加分页展示*/
@@ -1263,3 +1276,8 @@ var listPage = function () {
  };
  //默认跳转到第一页
  new listPage().gotoPage(1);
+ 
+function tongji(){
+	//总数量
+	
+} 

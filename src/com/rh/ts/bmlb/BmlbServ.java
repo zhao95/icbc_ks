@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.StyledEditorKit.ForegroundAction;
+
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -146,7 +148,7 @@ public class BmlbServ extends CommonServ {
 		String xm_name = paramBean.getStr("XM_NAME");
 		String liststr = paramBean.getStr("BM_LIST");
 		String yzgzstr = paramBean.getStr("YZGZ_LIST");
-
+		String odept_code = paramBean.getStr("ODEPT_CODE");
 		OutBean outBean = new OutBean();
 		JSONArray json;
 		JSONObject yzgzstrjson;
@@ -234,6 +236,7 @@ public class BmlbServ extends CommonServ {
 					beans.set("BM_STARTDATE", bm_start);
 					beans.set("BM_ENDDATE", bm_end);
 					beans.set("KSLBK_ID", kslbk_id);
+					beans.set("ODEPT_CODE",odept_code);
 					if (count == 0) {
 						beans.set("BM_SH_STATE", 1);
 					}
@@ -635,7 +638,20 @@ public class BmlbServ extends CommonServ {
 			dataBean.set("BM_STATE", 2);
 			ServDao.update(servId, dataBean);
 		}
-
+		//删除  审核中 审核通过   审核未通过数据
+		String wherebm = "AND BM_ID='"+id+"'";
+		List<Bean> finds = ServDao.finds("TS_BMSH_STAY", wherebm);
+		for (Bean bean : finds) {
+			ServDao.delete("TS_BMSH_STAY", bean);
+		}
+		List<Bean> finds2 = ServDao.finds("TS_BMSH_PASS", wherebm);
+		for (Bean bean : finds2) {
+			ServDao.delete("TS_BMSH_PASS", bean);
+		}
+		List<Bean> finds3 = ServDao.finds("TS_BMSH_NOPASS", wherebm);
+		for (Bean bean : finds3) {
+			ServDao.delete("TS_BMSH_NOPASS", bean);
+		}
 	}
 
 	public Bean lookstate(Bean paramBean) {
