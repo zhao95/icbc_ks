@@ -1,8 +1,12 @@
 package com.rh.ts.kcgl;
 
+import java.util.List;
+
+import com.rh.core.base.Bean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
+import com.rh.core.serv.ServDao;
 
 public class KcglServ  extends CommonServ{
     /**
@@ -12,6 +16,68 @@ public class KcglServ  extends CommonServ{
      * @return
      */
     public OutBean updateShInfo(ParamBean paramBean) {
+	String kcId = paramBean.getStr("kcId");
+	String pkCode = paramBean.getStr("pkCode");
+	//主单 
+	List<Bean> list = ServDao.finds("TS_KCGL_UPDATE_MX", "and UPDATE_ID = '"+pkCode+"'");
+	if(list.size() > 0){
+	    Bean dataBean = new Bean();
+	    dataBean.setId(kcId);
+		for (int i = 0; i < list.size(); i++) {
+		    String mxCol = list.get(i).getStr("MX_COL");
+		    String mxData = list.get(i).getStr("MX_DATA");
+		    String mxData2 = list.get(i).getStr("MX_DATA2");
+		    String mxData3 = list.get(i).getStr("MX_DATA3");
+		    String mxData4 = list.get(i).getStr("MX_DATA4");
+		    if(mxCol.equals("KC_ODEPTCODE")){
+			dataBean.set("KC_ODEPTCODE", mxData2);
+			dataBean.set("KC_ODEPTNAME", mxData3);
+		    }else if(mxCol.equals("KC_LEVEL")){
+			dataBean.set(mxCol, mxData4);
+		    }else{
+			dataBean.set(mxCol, mxData);
+		    }
+		}
+		ServDao.save("TS_KCGL", dataBean);
+	}
+	
+	//相关子表
+	String[] tables1 = {"TS_KCGL_UPDATE_GLY","TS_KCGL_UPDATE_IPSCOPE","TS_KCGL_UPDATE_IPZWH","TS_KCGL_UPDATE_GLJG","TS_KCGL_UPDATE_ZWDYB"};
+	String[] tables2 = {"TS_KCGL_GLY","TS_KCGL_IPSCOPE","TS_KCGL_IPZWH","TS_KCGL_GLJG","TS_KCGL_ZWDYB"};
+	for (int i = 0; i < tables1.length; i++) {
+	    List<Bean> listTmp = ServDao.finds(tables1[i], "and UPDATE_ID = '"+pkCode+"'");
+	    for (int j = 0; j < listTmp.size(); j++) {
+		Bean dataBean = listTmp.get(j);
+		String actionCode = "";
+		switch (i) {
+		case 0:
+		    actionCode = "GLY_ACTION";
+		    break;
+		case 1:
+		    actionCode = "IPS_ACTION";
+		    break;
+		case 2:
+		    actionCode = "IPZ_ACTION";
+		    break;
+		case 3:
+		    actionCode = "JG_ACTION";
+		    break;
+		case 4:
+		    actionCode = "ZW_ACTION";
+		    break;
+		}
+		String action = listTmp.get(j).getStr(actionCode);
+		if(action.equals("add") || action.equals("update")){
+		    dataBean.remove(actionCode);
+		    dataBean.remove("UPDATE_ID");
+		    dataBean.set("KC_ID", kcId);
+		    ServDao.save(tables2[i], dataBean);
+		}else if(action.equals("delete")){
+		    ServDao.delete(tables2[i], dataBean.getId());
+		}
+	    }
+	}
+	
 	OutBean outBean = new OutBean();
 	outBean.setOk();
 	return outBean;
