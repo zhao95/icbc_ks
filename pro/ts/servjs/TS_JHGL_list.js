@@ -26,13 +26,35 @@ function bindCard() {
 	// 当行删除事件
 	jQuery("td [operCode='delete']").unbind("click").bind("click", function() {
 		var pkCode = $(this).parent().parent().attr("id");
-		rowDelete(pkCode, _viewer);
+		//删除前判断是否已发布
+		var paramfb = {};
+		paramfb["_extWhere"] = "and JH_ID ='"+pkCode+"'";
+		var beanFb = FireFly.doAct(_viewer.servId, "query", paramfb);
+		//判断是否已发布，否则提示已经发布 
+		if(beanFb._DATA_[0].JH_STATUS=="2"){
+			_viewer.listBarTipError("请取消发布后再删除！");
+		}else if(beanFb._DATA_[0].JH_STATUS=="1"){
+			var paramDele = {};
+			paramDele['_extWhere'] = "and JH_ID ='"+pkCode+"'";
+			var result1 = FireFly.doAct("TS_JHGL","query",paramDele);
+			rowDelete(pkCode, _viewer);
+			Tip.show("删除计划成功！");
+		}
 	});
 
 	// 当行编辑事件
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click",function() {
 		var pkCode = $(this).parent().parent().attr("id");
-		openMyCard(pkCode);
+		//编辑修改前判断是否已发布
+		var paramModify = {};
+		paramModify["_extWhere"] = "and JH_ID ='"+pkCode+"'";
+		var beanFb = FireFly.doAct(_viewer.servId, "query", paramModify);
+		//判断是否已发布，否则提示已经发布，不能修改 
+		if(beanFb._DATA_[0].JH_STATUS=="2"){
+			Tip.show("请取消发布后再编辑！");
+		}else if(beanFb._DATA_[0].JH_STATUS=="1"){
+			openMyCard(pkCode);
+		}
 	});
 
 	// 当行详细计划事件
@@ -53,10 +75,23 @@ _viewer.getBtn("fabu").unbind("click").bind("click", function() {
 	if (pkAarry.length == 0) {
 		_viewer.listBarTipError("请选择相应记录！");
 	} else {
-		var param = {};
-		param["pkCodes"] = pkAarry.join(",");
-		FireFly.doAct(_viewer.servId, "UpdateStatusStart", param);
-		_viewer.refresh();
+		//遍历所选的所有大计划，依次进行判断执行。
+		for (var i = 0; i < pkAarry.length; i++) {
+			var paramfb = {};
+			paramfb["_extWhere"] = "and JH_ID ='"+pkAarry[i]+"'";
+			var beanFb = FireFly.doAct(_viewer.servId, "query", paramfb);
+			//判断是否已发布，否则提示已经发布 
+			if(beanFb._DATA_[0].JH_STATUS=="2"){
+				_viewer.listBarTipError("所选计划已发布！");
+			}else if(beanFb._DATA_[0].JH_STATUS=="1"){
+				var param = {};
+				param["pkCodes"] = pkAarry[i];
+				FireFly.doAct(_viewer.servId, "UpdateStatusStart", param,false,false,function(){
+					Tip.show("计划发布成功！");
+				});
+				_viewer.refresh();
+			}	
+		}
 	}
 })
 // 点击时取消发布
@@ -68,6 +103,7 @@ _viewer.getBtn("qxfb").unbind("click").bind("click", function() {
 		var param = {};
 		param["pkCodes"] = pkAarry.join(",");
 		FireFly.doAct(_viewer.servId, "UpdateStatusStop", param);
+		Tip.show("计划已取消发布！");
 		_viewer.refresh();
 	}
 })
