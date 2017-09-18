@@ -361,6 +361,7 @@ public class XmglServ extends CommonServ {
 		String where1 = paramBean.getStr("where");
 		List<Bean> list = ServDao.finds(servId, where1);
 		List<Bean> SHlist = new ArrayList<Bean>();
+		
 		for (Bean bean : list) {
 			//根据报名id找到审核数据的状态
 			String id = bean.getId();
@@ -372,7 +373,38 @@ public class XmglServ extends CommonServ {
 			 if(list2.size()!=0){
 				  state = list2.get(0).getStr("STATE");
 			 }
-			// 查询待审核 表 里的other字段判断 是否包含user_code
+			//根据项目id找到流程下的所有节点
+				String belongwhere = "AND XM_ID='"+id+"'";
+				List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
+				if(finds.size()!=0){
+					String wfsid = finds.get(0).getStr("WFS_ID");
+					//根据流程id查找所有审核节点
+					String wfswhere = "AND WFS_ID='"+wfsid+"'";
+					List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+					//遍历审核节点  获取 当前人的审核机构
+					for (Bean nodebean : finds2) {
+						//根据流程id获取 流程绑定的人和审核机构
+						String nodeid = nodebean.getStr("NODE_ID");
+						String nodewhere = "AND NODE_ID='"+nodeid+"'";
+						List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
+						for (Bean codebean : finds3) {
+							if(user_code.equals(codebean.getStr("SHR_USERCODE"))){
+								//此流程内包含此审核人
+								if("1".equals(zhuangtai)&&"待报名".equals(state)){
+									
+									SHlist.add(bean);
+								}else if("2".equals(zhuangtai)&&"已结束".equals(state)){
+									SHlist.add(bean);
+								}else if("全部".equals(zhuangtai)){
+									SHlist.add(bean);
+								}
+								
+							}
+						}
+					}
+				}
+			 
+			/*// 查询待审核 表 里的other字段判断 是否包含user_code
 			String where = "AND XM_ID="+"'"+id+"'"+" AND SH_OTHER like"+"'%"+user_code+"%'";
 			List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", where);
 			List<Bean> NOPASSlist = ServDao.finds("TS_BMSH_NOPASS", where);
@@ -386,7 +418,7 @@ public class XmglServ extends CommonServ {
 				}else if("全部".equals(zhuangtai)){
 					SHlist.add(bean);
 				}
-			}
+			}*/
 			
 		}
 		int ALLNUM = SHlist.size();
@@ -444,5 +476,4 @@ public class XmglServ extends CommonServ {
 		outBean.set("_PAGE_", _PAGE_);
 		outBean.set("first", chushi);
 		return outBean;
-	}
-}
+	}}
