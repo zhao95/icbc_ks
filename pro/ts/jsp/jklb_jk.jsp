@@ -141,12 +141,12 @@
         <div class="row" style="padding-top:50px">
             <div class="col-sm-2">
             </div>
-            <div  class="col-sm-9">
+            <%-- <div  class="col-sm-9">
                 <div style="background-color: #fed1d1;border:1px solid red;border-radius: 5px;padding: 5px;color: #570000;">
                     ！ 温馨提示：您今年已请假 <span style="color: red">2</span> 次，还可请假 <span style="color: red">1</span> 次。
                     满 <span style="color: red">3</span> 次后，本年度将不允许再请假。请合理使用请假次数！
                 </div>
-            </div>
+            </div>--%>
         </div>
 
         <div class="row">
@@ -188,9 +188,11 @@
                 </label>
                 <div class="col-sm-10 bkuan">
                     <div onclick="xuanze()" data-toggle="modal" data-target="#myModal" id="jkdks"
-                         style="display: inline-block;cursor: pointer;color: #4cd4d4;padding:5px;">
-                         <a href="#" onmouseover="请选择"><i class="fa fa-search" aria-hidden="true" style="font-size: 15px;"></i>请选择</a>
-                    </div>
+                         style="display: inline-block;cursor: pointer;color: #91dce4;padding:5px;">
+                         <a href="#"  style="font-size: 15px ; color: #91dce4; onmouseover="请选择">
+                          <img   src="<%=CONTEXT_PATH %>/ts/image/0255.png"/>
+                         <%--<i class="fa fa-search" aria-hidden="true" style="font-size: 15px;"></i>--%>请选择</a>
+                    </div><%--#4cd4d4 --%>
                     <div style="min-height: 120px">
                         <table id="jkks-table"  style="width: 100%;border-color: white;">
                             <thead>
@@ -239,7 +241,7 @@
                                 <div class="form-group" id="caseIma">
                                     <label class="" style="cursor:pointer;"><%--btn btn-primary--%>
                                     	
-                                         <img style="padding-left:20px;font-size:10px" alt="选择" src="<%=CONTEXT_PATH %>/ts/image/u323.png">&nbsp;&nbsp;<a href="#">点击图标上传</a>
+                                         <img style="padding-left:20px;font-size:10px" alt="选择" src="<%=CONTEXT_PATH %>/ts/image/005.png">&nbsp;&nbsp;<a style="color: #91dce4;" href="#">上传</a>
                                    		
                                         <%--选择图片--%>
                                         <input type="file" style="display: none;" class="form-control" id="caseImage"

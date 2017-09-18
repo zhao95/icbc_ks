@@ -19,8 +19,11 @@ public class CertDue implements IRule {
 		// 报名者人力资源编码
 		String user = param.getStr("BM_CODE");
 
-		// 报名模块
-		String mkCde = param.getStr("KSLBK_MKCODE");
+		// 报名序列
+//		String xlCde = param.getStr("BM_XL");
+				
+		// 报名类别
+		String mkCde = param.getStr("BM_LB");
 
 		// 报名等级
 		String lvCode = param.getStr("BM_TYPE");
@@ -31,7 +34,9 @@ public class CertDue implements IRule {
 
 		sql.and("STU_PERSON_ID", user);// 人员编码
 
-		sql.and("CERT_MODULE_CODE", mkCde);// 证书模块编号
+		sql.and("STATION_TYPE", mkCde);// 类别编号
+		
+//		sql.and("STATION_NO", xlCde);// 序列编号
 
 		sql.and("CERT_GRADE_CODE", lvCode);// 证书等级编号
 

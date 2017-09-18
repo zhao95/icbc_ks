@@ -77,6 +77,7 @@
 	top: 0px;
 	width: 100%;
 	height: 116px;
+    margin-top: 30px;
 }
 
 /**首页内容中的col8左侧所有box */
@@ -597,4 +598,7 @@
 	border-right:1px solid ;
 }
 
+/* #question_div{ */
+/* 	padding-bottom:10px; */
+/* } */
 

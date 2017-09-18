@@ -357,15 +357,20 @@ public class QjlbServ extends CommonServ {
 
         List<Bean> xmSzList = ServDao.finds("TS_XMGL_SZ", "and XM_ID ='" + xmId + "' and XM_SZ_NAME ='请假'");
         if (xmSzList.size() > 0) {
+            //项目中有请假模块
             Bean xmSz = xmSzList.get(0);
-            String xmSzId = xmSz.getId();
-            List<Bean> tsXmglQjglList = ServDao.finds("TS_XMGL_QJGL", "and XM_SZ_ID ='" + xmSzId + "'");
-            if (tsXmglQjglList.size() > 0) {
-                String qjStadate = (String) tsXmglQjglList.get(0).get("QJ_STADATE");
-                String qjEnddate = (String) tsXmglQjglList.get(0).get("QJ_ENDDATE");
-                //在申请时间内
-                if (new Date().getTime() > sdf.parse(qjStadate).getTime() && new Date().getTime() < sdf.parse(qjEnddate).getTime()) {
-                    result = true;
+            String xmSzType = xmSz.getStr("XM_SZ_TYPE");
+            if ("考前请假开放中".equals(xmSzType) || "考后请假开放中".equals(xmSzType)) {
+                //请假开放中
+                String xmSzId = xmSz.getId();
+                List<Bean> tsXmglQjglList = ServDao.finds("TS_XMGL_QJGL", "and XM_SZ_ID ='" + xmSzId + "'");
+                if (tsXmglQjglList.size() > 0) {
+                    String qjStadate = (String) tsXmglQjglList.get(0).get("QJ_STADATE");
+                    String qjEnddate = (String) tsXmglQjglList.get(0).get("QJ_ENDDATE");
+                    //在申请时间内
+                    if (new Date().getTime() > sdf.parse(qjStadate).getTime() && new Date().getTime() < sdf.parse(qjEnddate).getTime()) {
+                        result = true;
+                    }
                 }
             }
         }

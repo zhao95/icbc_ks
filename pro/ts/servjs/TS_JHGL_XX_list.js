@@ -6,6 +6,13 @@ var height = jQuery(window).height()-200;
 var width = jQuery(window).width()-200;
 $(".rhGrid").find("tr").unbind("dblclick");
 _viewer.getBtn("add").unbind("click").bind("click",function() {
+	var paramDelete = {};
+	paramDelete["_extWhere"] = "and JH_ID ='"+projectId+"'";
+	var resultDe = FireFly.doAct("TS_JHGL","query",paramDelete);
+	if(resultDe._DATA_[0].JH_STATUS =="2"){
+		Tip.show("请取消发布后再进行添加！");
+		return false;
+	}
 	//打开添加页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
     var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100],"JH_ID":projectId,"JH_TITLE":projectTitle};
     var cardView = new rh.vi.cardView(temp);
@@ -29,6 +36,13 @@ _viewer.grid._table.find("tr").each(function(index, item) {
  * 删除前方法执行
  */
 rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+	var paramDelete = {};
+	paramDelete["_extWhere"] = "and JH_ID ='"+projectId+"'";
+	var resultDe = FireFly.doAct("TS_JHGL","query",paramDelete);
+	if(resultDe._DATA_[0].JH_STATUS =="2"){
+		Tip.show("请取消发布后再进行删除！");
+		return false;
+	}
 	showVerify(pkArray,_viewer);
 };
 
@@ -43,7 +57,16 @@ function bindCard(){
 	//当行编辑事件
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = $(this).parent().parent().attr("id");
-	    openMyCard(pkCode);
+		//编辑修改前判断是否已发布
+		var paramModify = {};
+		paramModify["_extWhere"] = "and JH_ID ='"+pkCode+"'";
+		var beanFb = FireFly.doAct(_viewer.servId, "query", paramModify);
+		//判断是否已发布，否则提示已经发布，不能修改 
+		if(beanFb._DATA_[0].JH_STATUS=="2"){
+			Tip.show("请取消发布后再编辑！");
+		}else if(beanFb._DATA_[0].JH_STATUS=="1"){
+			openMyCard(pkCode);
+		}
 	});
 }
 

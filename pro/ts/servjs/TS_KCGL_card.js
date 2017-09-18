@@ -60,3 +60,10 @@ _viewer.beforeSave = function() {
 		return false;
 	}
 };
+
+/**
+ * 状态
+ */
+if(_viewer.getItem("KC_STATE").getValue() < 4 || _viewer.getItem("KC_STATE").getValue() > 5){
+	_viewer.tabHide("TS_KCGL_UPDATE");
+}

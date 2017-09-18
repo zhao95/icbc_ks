@@ -198,6 +198,7 @@ public class PassServ extends CommonServ {
 		String[] ss = s.split(",");
 		String state = paramBean.getStr("radiovalue");
 		String liyou = paramBean.getStr("liyou");
+		List<String> noPassBmIdList = new ArrayList<>();//审核通过后，后又审核不通过的bmId
 		for (String id : ss) {
 			if (!"".equals(id)) {
 				// 获取当前对象
@@ -251,8 +252,18 @@ public class PassServ extends CommonServ {
 				mindbean.set("SH_TYPE", 1);
 				mindbean.set("SH_NODE", nodeid);
 				ServDao.save("TS_COMM_MIND", mindbean);
+				noPassBmIdList.add(bmid);
 			}
 
+		}
+		try{
+			//中止流转中的借考流程
+			ParamBean jkParamBean = new ParamBean();
+			jkParamBean.set("bmIdList",noPassBmIdList);
+			ServMgr.act("TS_JKLB_JK", "cancelFlow", jkParamBean);
+		}catch (Exception e){
+			log.error("中止流转中的借考流程失败");
+			log.error(e);
 		}
 		return new OutBean().setOk();
 	}

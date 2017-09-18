@@ -20,11 +20,11 @@ public class FirstExamScorePass implements IRule {
 		// 报名者人力资源编码
 		String user = param.getStr("BM_CODE");
 
-		// 模块编码
-		String mkCde = param.getStr("KSLBK_MKCODE");
+		// 类别编码
+		String lbCode = param.getStr("BM_LB");
 
 		// 等级编码
-		String lvCode = param.getStr("KSLBK_TYPE");
+		String lvCode = param.getStr("BM_TYPE");
 
 		// String jsonStr = param.getStr("MX_VALUE2");
 
@@ -32,7 +32,7 @@ public class FirstExamScorePass implements IRule {
 
 		sql.and("STU_PERSON_ID", user);// 人员编码
 
-		sql.and("CERT_MODULE_CODE", mkCde);// 证书模块编号
+		sql.and("STATION_TYPE", lbCode);// 类别编号
 
 		sql.and("CERT_GRADE_CODE", lvCode);// 证书等级编号
 
@@ -44,7 +44,7 @@ public class FirstExamScorePass implements IRule {
 
 		sql.and("S_FLAG", 1);
 		// 本年是否获得证书
-		int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL, sql);
+		int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sql);
 		// 没有获得证书 返回true
 		if (count == 0) {
 			return true;

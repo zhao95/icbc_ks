@@ -4,6 +4,12 @@ var _viewer = this;
 $("#TS_KCGL_SH .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
+		FireFly.doAct("TS_KCGL_UPDATE","count",{"_WHERE_":"and kc_id='"+dataId+"' and kc_commit = 1 and UPDATE_AGREE = 0"},true,false,function(data){
+			if(data._DATA_ > 0){
+				$(item).css("color","blue");
+			}
+		});
+		
 		var state = $(item).find("td[icode='KC_STATE']").attr("title");
 		
 		$(item).find("td[icode='BUTTONS']").append(
@@ -23,11 +29,6 @@ function bindCard(){
 	});
 }
 
-//_viewer.getBtn("add").unbind("click").bind("click", function(event) {
-//    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,100]};
-//    var cardView = new rh.vi.cardView(temp);
-//    cardView.show();
-//});
 /*
 * 删除前方法执行
 */

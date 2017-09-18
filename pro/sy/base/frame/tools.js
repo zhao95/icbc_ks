@@ -4183,8 +4183,8 @@ function getDialog(dialogId,title,wid,hei) {
 	if (event) {
 		var cy = event.clientY;
 		var cx = event.clientX;
-	    posArray[0] = cx-80;
-	    posArray[1] = cy+50;
+	    posArray[0] = cx-100;
+	    posArray[1] = cy-50;
 	}
   
 	jQuery("#" + dialogId).dialog({

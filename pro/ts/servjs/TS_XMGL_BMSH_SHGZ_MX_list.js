@@ -5,13 +5,13 @@ $("#TS_XMGL_BMSH_SHGZ_MX .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0) {
 		var value1 = $('td[icode="MX_VALUE1"]',item).text();
 		
-		if(value1 == 1) {
+		var val = $('td[icode="MX_VALUE2"]',item).text();
+		
+		if(value1 == 1 && val.length >0) {
 			
 			var dataId = item.id;
 			
 			var name = $('td[icode="MX_NAME"]',item).text();
-			
-			var val = $('td[icode="MX_VALUE2"]',item).text();
 			
 			var val2 = val.replace(/\'/ig,"\"");
 			

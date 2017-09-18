@@ -3,7 +3,6 @@ package com.rh.ts.xmgl.rule.impl;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import org.json.JSONObject;
 
@@ -15,7 +14,7 @@ import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.rule.IRule;
 
 /**
- * 投行用-已获对公、营销、信贷初级满2年
+ * 投行用-已获对公、营销、信贷初级满N年 (起始有效日期 <= N年前日期)
  * 
  * @author zjl
  *
@@ -59,42 +58,26 @@ public class BaseCert2YearDgYxXd implements IRule {
 			Date y = c.getTime();
 
 			twoYearAgo = format.format(y);
-			
+
 			SqlBean sql = new SqlBean();
-
-			sql.andIn("KSLBK_XL", "对公客户经理", "营销","信贷");
-
-			sql.andIn("KSLBK_TYPE", "low");// 证书等级编号
-			
-			sql.andNotNull("KSLBK_MKCODE");
-			// 查询考试类别库 找到模块编号
-			List<Bean> list = ServDao.finds(TsConstant.SERV_BM_KSLBK, sql);
-			
-			String mkCodes[] = {};
-
-			for (int i = 0; i < list.size(); i++) {
-
-				String mkCode = list.get(i).getStr("KSLBK_MKCODE");
-
-				mkCodes[i] = mkCode;
-			}
-			
-
-			sql = new SqlBean();
 
 			sql.and("STU_PERSON_ID", user);// 人员编码
 
 			sql.andLTE("BGN_DATE", twoYearAgo);// 起始有效日期 <= dateTime
 
-			sql.andIn("CERT_MODULE_CODE", mkCodes);// 证书模块编号
+			String xd = "A000000000000000013"; // 信贷
+			String yx = "A000000000000000006"; // 营销
+			String dg = "A000000000000000022"; // 对公客户经理
 
-			sql.and("CERT_GRADE_CODE", "low");// 证书等级编号
-			
+			sql.andIn("STATION_NO", xd, yx, dg);// 证书序列编号
+
+			sql.and("CERT_GRADE_CODE", "1");// 证书等级编号
+
 			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
 
 			sql.and("S_FLAG", 1);
 
-			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL, sql);
+			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sql);
 
 			if (count > 0) {
 				return true;

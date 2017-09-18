@@ -72,7 +72,7 @@
 				<div class="navbar-custom-menu">
 					<ul class="nav navbar-nav">
 						<li><a href="#" onclick="window.open('/sy/comm/page/page.jsp?rhDevFlag=true','_blank');" style="height: 60px;border-left: 0px;">
-    						<img src="qt/css/images/to_ht.png" style="cursor: pointer;">
+    						<img title="进入后台管理" src="qt/css/images/to_ht.png" style="cursor: pointer;">
     						</a>
     					</li>
 						<!-- Notifications: style can be found in dropdown.less -->
@@ -99,7 +99,7 @@
 							<li><a href="#" class="" id="TipUserInfo"><i class="fa fa-user-o fa-fw"></i>个人信息</a></li>
 								<li><a href="#" class="" data-layout="layout-boxed"><i class="fa fa-cog fa-fw"></i>简约/平铺</a></li>
 <!-- 								<li><input type="checkbox" data-layout="layout-boxed" class="pull-right" checked="checked">简约/平铺</li> -->
-								<li><a  class="" id="loginOutBtn"><i class="fa fa-power-off fa-fw"></i>用户退出</a></li>
+								<li><a  class="" id="loginOutBtn"><i class="fa fa-power-off fa-fw"></i>退出系统</a></li>
 
 <!-- 							<li class="user-footer"></li> -->
 
@@ -423,9 +423,10 @@
 							</div>
 							<div style="min-height:64px;"></div>
 							<!-- /.box-header -->
-							<div class="box-body no-padding">
+<!-- 							<div class="box-body no-padding"> -->
+							<div class="box-body">
 								<table class="table table-striped" id="qItem"></table>
-								<div align="center" id="question_div">
+								<div align="center" id="question_div" style="/* padding-bottom:10px; */">
 									<button type="button" style="width: 40%; margin: 5px;"
 										class="btn btn-block btn-success"  >我要提问</button>
 								</div>

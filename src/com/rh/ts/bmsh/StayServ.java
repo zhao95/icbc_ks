@@ -237,6 +237,7 @@ public class StayServ extends CommonServ {
 		String[] ss = s.split(",");
 		String state = paramBean.getStr("radiovalue");
 		String liyou = paramBean.getStr("liyou");
+		List<String> noPassBmIdList = new ArrayList<>();//审核通过后，后又审核不通过的bmId
 		// 获取当前的审核层级 如果是最高层级审核结束只留下最高级的审核人
 		for (String id : ss) {
 			if (!"".equals(id)) {
@@ -359,6 +360,7 @@ public class StayServ extends CommonServ {
 					if (bm_bean != null) {
 						bm_bean.set("BM_SH_STATE", "2");
 					}
+					noPassBmIdList.add(bmid);
 				}
 				// 审核明细表中插入此次审核数据
 				Bean mindbean = new Bean();
@@ -373,6 +375,16 @@ public class StayServ extends CommonServ {
 				mindbean.set("SH_NODE", nodeid);
 				ServDao.save("TS_COMM_MIND", mindbean);
 			}
+		}
+
+		try{
+			//中止流转中的借考流程
+			ParamBean jkParamBean = new ParamBean();
+			jkParamBean.set("bmIdList",noPassBmIdList);
+			ServMgr.act("TS_JKLB_JK", "cancelFlow", jkParamBean);
+		}catch (Exception e){
+			log.error("中止流转中的借考流程失败");
+			log.error(e);
 		}
 
 		return new OutBean().setOk();

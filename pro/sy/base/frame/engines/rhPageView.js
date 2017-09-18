@@ -456,7 +456,7 @@ rh.vi.pageView.prototype._bldBanner = function() {
      });
 	var perTip = jQuery("<div class='rh-head-per-tip'><span style='font-size:14px;width:70px;' title='"+System.getUser("USER_NAME")+"'>" + System.getUser("USER_NAME")
 			+ "</span><span style='margin-left:5px;font-size:14px;width:70px;' title='"+System.getUser("DEPT_NAME")+"'>" + System.getUser("DEPT_NAME") + "</span></div>"
-			+"<div title='退出用户' style='position: absolute; right: 40px;height: 25px;cursor: pointer;'><div  id='ht_loginOut' style='background: url(img/power-off.png) no-repeat;height: 25px;position: relative;width: 25px;top: 8%;left: 66px;'></div><div style='position: absolute;left: 95px;top: 6px; min-width: 35px;font-size: 14px;color: white;'>退出</div></div>").appendTo(perConIn);
+			+"<div  style='position: absolute; right: 40px;height: 25px;'  id='ht_loginOut_all' ><div class='ht_loginOut' title='退出用户' style='background: url(img/power-off.png) no-repeat;height: 25px;position: relative;width: 25px;top: 8%;left: 66px;cursor: pointer;'></div><div title='退出用户' class='ht_loginOut' style='position: absolute;left: 95px;top: 6px; min-width: 35px;font-size: 14px;color: white;cursor: pointer;'>退出</div></div>").appendTo(perConIn);
 	
 	//委托
 	if (false) {
@@ -536,7 +536,7 @@ rh.vi.pageView.prototype._bldBanner = function() {
 	perCon.appendTo(jQuery("#banner"));
 	
 	//	注销用户的实现
-	jQuery("#ht_loginOut").unbind("click").click(function(){
+	jQuery(".ht_loginOut").unbind("click").click(function(){
 		var param = {};
 	    FireFly.doAct("SY_ORG_LOGIN", "logout", param);
 	    window.location.href = "/logout.jsp";

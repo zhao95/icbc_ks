@@ -2,6 +2,7 @@ package com.rh.ts.jhgl;
 import java.util.List;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.TipException;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.ServDao;
 import com.rh.core.util.Constant;
@@ -15,7 +16,7 @@ public class JhglServ extends CommonServ {
 	 * 
 	 */
 	public void UpdateStatusStart(Bean paramBean){
-			
+			try {
 			//获取服务ID
 			String servId=paramBean.getStr(Constant.PARAM_SERV_ID);
 			//获取 主键id  list
@@ -39,7 +40,8 @@ public class JhglServ extends CommonServ {
 					ServDao.save("TS_JHGL", jhxxList.get(i));
 					//创建bean存储日历表中数据，将计划管理的计划详细逐条添加到日历表中
 					Bean CalBean = new Bean();
-					CalBean.set("CAL_ID",jhxxList.get(i).getStr("JH_ID"));
+//					CalBean.setId(jhxxList.get(i).getStr("JH_ID"));
+					CalBean.set("CAL_ID", jhxxList.get(i).getStr("JH_ID"));
 					CalBean.set("CAL_NAME",jhxxList.get(i).getStr("JH_CTITLE"));
 					CalBean.set("START_DATE",jhxxList.get(i).getStr("JH_CREATEDATE"));
 					CalBean.set("END_DATE",jhxxList.get(i).getStr("JH_ENDDATE"));
@@ -56,6 +58,7 @@ public class JhglServ extends CommonServ {
 					CalBean.set("S_FLAG",jhxxList.get(i).getStr("S_FLAG"));
 					CalBean.set("S_CMPY",jhxxList.get(i).getStr("S_CMPY"));
 					CalBean.set("S_DEPT",jhxxList.get(i).getStr("S_DEPT"));
+					//判断数据库中是否有该数据
 					//保存到日历数据库表中
 					ServDao.save("TS_KS_CAL", CalBean);
 				}
@@ -73,6 +76,9 @@ public class JhglServ extends CommonServ {
 				//保存到数据库
 				ServDao.save(servId, bean);
 			}
+		} catch (Exception e) {
+				throw new TipException("服务器异常，发布失败！");
+		}
 		}
 	/**
 	 * 批量改变 状态(取消发布)

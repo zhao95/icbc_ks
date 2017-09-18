@@ -38,6 +38,7 @@ public class XmglServ extends CommonServ {
 	 * 
 	 */
 	public void copy(Bean paramBean) {
+		//OutBean NBean = new OutBean();
 		// 获取服务ID
 		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
 		// 获取 主键id list
@@ -46,7 +47,7 @@ public class XmglServ extends CommonServ {
 		Bean bean = ServDao.find(servId, dataId);
 		Bean NBean = new Bean();
 		NBean.set("XM_TITLE", bean.getStr("XM_TITLE"));
-		NBean.set("XM_NAME", bean.getStr("XM_NAME"));
+		NBean.set("XM_NAME", bean.getStr("XM_NAME")+"_复制");
 		NBean.set("XM_FQDW_NAME", bean.getStr("XM_FQDW_NAME"));
 		NBean.set("XM_TYPE", bean.getStr("XM_TYPE"));
 		NBean.set("XM_START", bean.getStr("XM_START"));
@@ -54,8 +55,12 @@ public class XmglServ extends CommonServ {
 		NBean.set("XM_GJ", bean.getStr("XM_GJ"));
 		NBean.set("XM_FQDW_CODE", bean.getStr("XM_FQDW_CODE"));
 		// 保存到数据库
-		ServDao.save(servId, NBean);
-
+		Bean res=ServDao.save(servId, NBean);
+		// 从数据库得到xm_id和xm_gj；
+		//String XMID = res.getStr("XM_ID");
+		//NBean.setSaveIds(XMID);
+		//afterSaveToSz(NBean);
+		//return NBean;
 	}
 
 	// 下一步
@@ -175,14 +180,14 @@ public class XmglServ extends CommonServ {
 		Transaction.getExecutor().execute(sql);
 	}
 
-	@Override
-	protected void afterDelete(ParamBean paramBean, OutBean outBean) {
-		String XM_IDs = outBean.getDeleteIds();
-		if (!StringUtil.isBlank(XM_IDs)) {
-			String sql = "delete from ts_xmgl_sz where XM_ID in ('" + XM_IDs.replace(",", "','") + "')";
-			Transaction.getExecutor().execute(sql);
-		}
-	}
+//	@Override
+//	protected void afterDelete(ParamBean paramBean, OutBean outBean) {
+//		String XM_IDs = outBean.getDeleteIds();
+//		if (!StringUtil.isBlank(XM_IDs)) {
+//			String sql = "delete from ts_xmgl_sz where XM_ID in ('" + XM_IDs.replace(",", "','") + "')";
+//			Transaction.getExecutor().execute(sql);
+//		}
+//	}
 
 	public Bean getXmList(Bean paramBean) {
 		List<Bean> list = ServDao.finds("TS_XMGL", "");
