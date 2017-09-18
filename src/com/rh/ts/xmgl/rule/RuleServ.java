@@ -101,7 +101,7 @@ public class RuleServ extends CommonServ {
 				}if(bmBean.getStr("BM_MK").equals("")){
 					sql.and("KSLB_CODE", bmBean.getStr("BM_LB"));// 类别
 					sql.and("KSLB_XL_CODE", bmBean.getStr("BM_XL"));// 序列
-					sql.and("KSLB_MK", "无模块");// 模块
+					sql.and("KSLB_MK", "-1");// 模块
 					sql.and("KSLB_TYPE", bmBean.getStr("BM_TYPE"));// 级别
 					sql.and("XM_ID", xmId); // 项目ID
 					}
