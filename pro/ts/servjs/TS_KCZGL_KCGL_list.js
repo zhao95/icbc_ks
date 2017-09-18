@@ -39,7 +39,7 @@ $("#TS_KCZGL_KCGL .rhGrid").find("tr").each(function(index, item) {
 		'<a class="rhGrid-td-rowBtnObj " operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>';
 		
 		var divHeight = $(item).get(0).offsetHeight;
-		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;'>"+abtns+"</div>";
+		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;color:#505050;'>"+abtns+"</div>";
 		$("#TS_KCZGL_KCGL .content-main").find("table").before(hoverDiv);
 		
 		// 为每个按钮绑定卡片
@@ -149,3 +149,9 @@ if(kczId != ""){
 rh.vi.listView.prototype.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 };
+
+$(".hoverDiv").find("a").hover(function(){
+	$(this).css("color","#0071c2");
+},function(){
+	$(this).css("color","#505050");
+});
