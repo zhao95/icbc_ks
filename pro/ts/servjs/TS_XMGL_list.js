@@ -112,7 +112,7 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 });
 
 $(".hoverDiv").find("a").hover(function() {
-	$(this).css("color", "##0071c2");//鼠标移入
+	$(this).css("color", "#0071c2");//鼠标移入
 }, function() {
 	$(this).css("color", "#505050");//鼠标移出
 }); 
