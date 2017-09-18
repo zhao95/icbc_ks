@@ -25,6 +25,7 @@ if (scVal != "" && scVal != null) {
 							if (cjVal == "1") {
 								param["_WHERE_"] = "and xm_id = '"+ xmId + "' and KC_LEVEL = '一级' and KC_ODEPTCODE='"+ dataId + "'";
 								var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", param)._DATA_;
+								console.log("TS_XMGL_CCCS_UTIL_V 只有一个考场",kcArr);
 								if (kcArr.length > 0) {
 									var kcNum = kcArr.length;
 									$(item).find("td[icode='CC_KC_NUM']").html(kcNum);
@@ -70,6 +71,7 @@ if (scVal != "" && scVal != null) {
 								var deptNameA = "<a href='javascript:void(0);' class='deptNameA' myType='1'>"+ deptName + "</>";
 								$(item).find("td[icode='DEPT_NAME']").html(deptNameA);
 								var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", param)._DATA_;
+								console.log("TS_XMGL_CCCS_UTIL_V 一级考场",kcArr);
 								if(kcArr.length > 0){
 									kcNumSum += kcArr.length;
 									var result = getResult(kcArr);
@@ -83,13 +85,20 @@ if (scVal != "" && scVal != null) {
 								}
 								
 								//2级考场
-								var odept3Arr = FireFly.doAct("TS_ORG_ODEPT_ALL","finds", {"_SELECT_":"DEPT_CODE","_WHERE_" : "AND DEPT_PCODE = '" + dataId+ "'"})._DATA_;
+								var param = {};
+								param["_SELECT_"] = "DEPT_CODE";
+								param["DEPT_PCODE"] = dataId;
+								param["DEPT_TYPE"] = "2";
+								param["S_FLAG"] = "1";
+								
+								var odept3Arr = FireFly.doAct("TS_ORG_ODEPT_ALL","finds", param)._DATA_;
 								if(odept3Arr.length > 0){
 									for(var i=0;i<odept3Arr.length;i++){
 										var deptCode = odept3Arr[i].DEPT_CODE;
 										var tempParam = {};
 										tempParam["_WHERE_"] = "and xm_id = '" + xmId+ "' and KC_LEVEL = '二级' and KC_ODEPTCODE='" + deptCode + "'";
 										var kcArrTemp = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", tempParam)._DATA_;
+										console.log("TS_XMGL_CCCS_UTIL_V 二级考场",kcArrTemp);
 										if(kcArrTemp.length > 0){
 											kcNumSum += kcArrTemp.length;
 											var result = getResult(kcArrTemp);
