@@ -350,19 +350,80 @@ public class JklbServ extends CommonServ {
 
         List<Bean> xmSzList = ServDao.finds("TS_XMGL_SZ", "and XM_ID ='" + xmId + "' and XM_SZ_NAME ='异地借考'");
         if (xmSzList.size() > 0) {
+            //项目中有借考模块
             Bean xmSz = xmSzList.get(0);
-            String xmSzId = xmSz.getId();
-            List<Bean> tsXmglQjglList = ServDao.finds("TS_XMGL_YDJK", "and XM_SZ_ID ='" + xmSzId + "'");
-            if (tsXmglQjglList.size() > 0) {
-                String qjStadate = (String) tsXmglQjglList.get(0).get("YDJK_STADATE");
-                String qjEnddate = (String) tsXmglQjglList.get(0).get("YDJK_ENDDATE");
-                //在申请时间内
-                if (new Date().getTime() > sdf.parse(qjStadate).getTime() && new Date().getTime() < sdf.parse(qjEnddate).getTime()) {
-                    result = true;
+            String xmSzType = xmSz.getStr("XM_SZ_TYPE");
+            if ("异地借考开放中".equals(xmSzType)) {
+                //异地借考开放中
+                String xmSzId = xmSz.getId();
+                List<Bean> tsXmglQjglList = ServDao.finds("TS_XMGL_YDJK", "and XM_SZ_ID ='" + xmSzId + "'");
+                if (tsXmglQjglList.size() > 0) {
+                    String qjStadate = (String) tsXmglQjglList.get(0).get("YDJK_STADATE");
+                    String qjEnddate = (String) tsXmglQjglList.get(0).get("YDJK_ENDDATE");
+                    //在申请时间内
+                    if (new Date().getTime() > sdf.parse(qjStadate).getTime() && new Date().getTime() < sdf.parse(qjEnddate).getTime()) {
+                        result = true;
+                    }
                 }
             }
         }
         return result;
     }
 
+    /**
+     * 报名被设置不通过后 取消流转中的流程
+     *
+     * @param paramBean
+     * @return
+     * @throws ParseException
+     */
+    public OutBean cancelFlow(ParamBean paramBean) throws ParseException {
+        OutBean outBean = new OutBean();
+        List<String> successIdList = new ArrayList<>();
+
+        List<String> bmIdList = paramBean.getList("bmIdList");//通过后 又被审批为不通过的报名Id
+        for (String bmId : bmIdList) {
+            //根据bmId查找出审核中的借考流程
+            List<Bean> queryJkList = ServDao.finds(TSJK_SERVID, "and JK_KSNAME like '%" + bmId + "%' and JK_STATUS in('1')");
+            for (Bean jkBean : queryJkList) {
+                //每个bmId的处理进行 事务操作
+                Transaction.begin();
+                try {
+                    String jkId = jkBean.getId();
+                    List<Bean> todoList = ServDao.finds(TODO_SERVID, "and DATA_ID = '" + jkId + "'");
+                    if (todoList.size() > 0) {//待办是否存在
+                        //删除待办
+                        for (Bean todoBean : todoList) {
+                            ServDao.delete(TODO_SERVID, todoBean.getId());
+                        }
+                        //添加审核意见信息
+                        Bean shyjBean = new Bean();
+                        shyjBean.set("DATA_ID", jkId);
+                        shyjBean.set("SH_TYPE", "1");//审核类别 1 意见 2 审核记录
+                        shyjBean.set("SH_MIND", "该借考中的报名被修改为审核不通过，改借考流程中止");//意见内容
+                        shyjBean.set("SH_NODE", "系统处理");//审核层级名称
+                        shyjBean.set("SH_LEVEL", "");//审核层级
+                        shyjBean.set("SH_STATUS", "2");//审核状态// 1 同意 2 不同意
+                        shyjBean.set("SH_UCODE", "");//审核人UID(人力资源编码)
+                        shyjBean.set("SH_ULOGIN", "");//审核人登陆名
+                        shyjBean.set("SH_UNAME", "系统");//审核人姓名
+                        shyjBean.set("S_DNAME", "");//审核人部门名称
+                        ServDao.save(COMM_MIND_SERVID, shyjBean);
+                        //修改为不通过
+                        String jk_status = "";
+                        jkBean.set("JK_STATUS", "3");
+                        ServDao.update(TSJK_SERVID, jkBean);
+                    }
+                    Transaction.commit();
+                    successIdList.add(bmId);
+                } catch (Exception e) {
+                    Transaction.rollback();
+                } finally {
+                    Transaction.end();
+                }
+            }
+        }
+        outBean.set("successIdList", successIdList);
+        return outBean;
+    }
 }
