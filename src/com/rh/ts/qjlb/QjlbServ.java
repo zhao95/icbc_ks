@@ -382,21 +382,29 @@ public class QjlbServ extends CommonServ {
      */
     public int getLeaveCount(String userCode) {
         //今年审批过的请假
-        String where = "and USER_CODE = '" + userCode + "' and QJ_STATUS = '2'" +
-                " and to_date(QJ_DATE,'yyyy-MM-dd hh24:mi:ss') between to_date(to_char(sysdate, 'yyyy' )||'-01-01','yyyy-mm-dd') and to_date((to_char(sysdate, 'yyyy' )+1)||'-01-01','yyyy-mm-dd')";
-        List<Bean> queryQjList = ServDao.finds(TSQJ_SERVID, where);//获得当前已经请假的数据TS_QJLB_QJ
+       // String where = "and USER_CODE = '" + userCode + "' and QJ_STATUS = '2'" +
+              //  " and to_date(QJ_DATE,'yyyy-MM-dd hh24:mi:ss') between to_date(to_char(sysdate, 'yyyy' )||'-01-01','yyyy-mm-dd') and to_date((to_char(sysdate, 'yyyy' )+1)||'-01-01','yyyy-mm-dd')";
+    	String  where="and  QJ_STATUS='2'";
+    	List<Bean> queryQjList = ServDao.finds(TSQJ_SERVID, where);//获得当前已经请假的数据TS_QJLB_QJ
         //2个考试周   请假场次6   6个考试   考前、考后多个考试请假算一次
-       //1遍历是否超过请假两个周期
-//        //if(){
-//        	
-//        }
-//        for (Bean queryQj : queryQjList) {
-//        	
-//            String qjDate = queryQj.getStr("QJ_ID");
-//
-//        }
-//
-        return 0;
+       //1遍历是否超过请假已经达到6次
+        int   count=0;
+        if(queryQjList!=null && !queryQjList.isEmpty()){
+        	//不为空的情况
+        	 for (Bean queryQj : queryQjList) {
+                 String qjDates = queryQj.getStr("QJ_KSNAME");
+                 //判断字符串的长
+                 if(qjDates.length()>20){
+                	 String[]  qjDate=qjDates.split(","); 
+                	  count=qjDate.length;
+                 }else if(qjDates.length()>0 && qjDates.length()<20){
+                	 count++;
+                 }
+             }
+        	}else {
+        		count=0;
+        	}
+          return count;
     }
 //    
     /**

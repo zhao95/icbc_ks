@@ -49,3 +49,5 @@ $("#TS_KCGL_UPDATE .rhGrid").find("tr").each(function(index, item) {
 		}
 	}
 });
+
+$("#TS_KCGL_UPDATE .rhGrid").find("th[icode='view']").html("操作");

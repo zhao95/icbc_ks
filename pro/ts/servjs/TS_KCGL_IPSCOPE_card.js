@@ -10,5 +10,3 @@ if(_viewer.opts.act == "cardAdd"){
 
 
 
-
-

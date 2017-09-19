@@ -18,7 +18,7 @@ $("#TS_KCZGL .rhGrid").find("tr").each(function(index, item) {
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optBackTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">撤销&nbsp</a>';
 		}	
 		var divHeight = $(item).get(0).offsetHeight;
-		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;color:#505050;'>"+abtns+"</div>";
+		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;color:#666666;'>"+abtns+"</div>";
 		$(".content-main").find("table").before(hoverDiv);	
 		// 为每个按钮绑定卡片
 		bindCard();
@@ -50,23 +50,27 @@ function bindCard(){
 	//当行查看事件
 	jQuery(".hoverDiv [operCode='optLookBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
+		$(".hoverDiv").css('display','none');
 //	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
 		openMyCard(pkCode,true);
 	});
 	//当行编辑事件
 	jQuery(".hoverDiv [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
+		$(".hoverDiv").css('display','none');
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
 		openMyCard(pkCode);
 	});
 	//当行删除事件
 	jQuery(".hoverDiv [operCode='optDeleteBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
+		$(".hoverDiv").css('display','none');
 		rowDelete(pkCode,_viewer);
 	});
 	//复制
 	jQuery(".hoverDiv [operCode='optCopyBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
+		$(".hoverDiv").css('display','none');
 		FireFly.doAct("TS_UTIL","copy",{"servId":_viewer.servId,"pkCode":pkCode,"primaryColCode":"KCZ_ID"},true,false,function(data){
 			if(data._MSG_.indexOf("OK")!= -1){
 				window.location.reload();
@@ -76,6 +80,7 @@ function bindCard(){
 	//放入垃圾箱
 	jQuery(".hoverDiv [operCode='optTrashBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
+		$(".hoverDiv").css('display','none');
 		FireFly.doAct("TS_UTIL","trash",{"servId":_viewer.servId,"pkCodes":pkCode,"stateColCode":"KCZ_STATE","action":"add"},true,false,function(data){
 			if(data._MSG_.indexOf("OK")!= -1){
 //				_viewer.onRefreshGridAndTree();
@@ -86,6 +91,7 @@ function bindCard(){
 	//从垃圾箱收回
 	jQuery(".hoverDiv [operCode='optBackTrashBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
+		$(".hoverDiv").css('display','none');
 		FireFly.doAct("TS_UTIL","trash",{"servId":_viewer.servId,"pkCodes":pkCode,"stateColCode":"KCZ_STATE","action":"del"},true,false,function(data){
 			if(data._MSG_.indexOf("OK")!= -1){
 				window.location.reload();
@@ -95,6 +101,7 @@ function bindCard(){
 	
 	jQuery(".hoverDiv [operCode='optZBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
+		$(".hoverDiv").css('display','none');
 //		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCZGL_GROUP"});
 	    openMyCard(pkCode,"","TS_KCZGL_GROUP");
 	});
@@ -139,7 +146,7 @@ function openMyCard(dataId,readOnly,showTab){
 }
 
 $(".hoverDiv").find("a").hover(function(){
-	$(this).css("color","#0071c2");
+	$(this).css("color","#0066FF");
 },function(){
-	$(this).css("color","#505050");
+	$(this).css("color","#666666");
 });

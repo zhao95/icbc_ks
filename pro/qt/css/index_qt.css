@@ -348,6 +348,15 @@
 	color: #7D775C;
 }
 
+/* 当前日期显示在首页的样式 */
+.currentDayShow a{
+     background: red !important;
+     margin:0 auto;
+     width:26px;
+     border-radius:  35px !important;
+     color:white !important;
+}
+
 /**引入雪碧图的路径显示*/
 .scalender .ui-widget-header .ui-icon {
 	background-image:

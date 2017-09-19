@@ -53,3 +53,16 @@ if (_viewer.opts.readOnly) {
 	_viewer.getBtn("nextbtn").hide();
 	_viewer.readCard();
 }
+
+
+//根据选择是否人工审核
+_viewer.getItem("XM_TYPE").change(function(){
+	var flowSerTmp = _viewer.getItem("XM_TYPE").getValue(); 
+	
+	if( "资格类考试"==flowSerTmp){
+		  _viewer.getItem("XM_KHDKZ").setValue(1);
+	}else {
+		 _viewer.getItem("XM_KHDKZ").setValue(2);
+	}
+});	
+	

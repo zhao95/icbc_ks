@@ -56,11 +56,13 @@ function bindCard() {
  	 //查看
  	 $(".hoverDiv [actcode='look']").unbind("click").bind("click", function(){
  		var pkCode = jQuery(this).attr("rowpk");
+ 		$(".hoverDiv").css('display','none');
  		openMyCard(pkCode,true);
  	 });
  	 //编辑
  	 $(".hoverDiv [actcode='edit']").unbind("click").bind("click", function(){
  		var pkCode = jQuery(this).attr("rowpk");
+ 		$(".hoverDiv").css('display','none');
  		openMyCard(pkCode);
  	 });
  	 //复制
