@@ -3,7 +3,7 @@
 "DICT_NAME_LAYER":"0",
 "S_PUBLIC":"1",
 "TABLE_SELECT":"",
-"S_MTIME":"2017-09-19 10:16:29:901",
+"S_MTIME":"2017-09-19 14:09:41:095",
 "TABLE_WHERE":"",
 "SY_SERV_DICT_ITEM":
 [
@@ -37,9 +37,9 @@
 "CODE_PATH":"",
 "EN_JSON":"",
 "ITEM_ORDER":"1",
-"ITEM_ID":"3xO7obcJR9Iphrle5NBi",
+"ITEM_ID":"2YWsto0rZGB33US0PMBR",
 "ITEM_LEVEL":"0",
-"_PK_":"3xO7obcJR9Iphrle5NBi",
+"_PK_":"2YWsto0rZGB33US0PMBR",
 "S_CMPY":"icbc",
 "ITEM_NAME":"进行中",
 "ITEM_PCODE":"",
@@ -57,13 +57,13 @@
 "CODE_PATH":"",
 "EN_JSON":"",
 "ITEM_ORDER":"2",
-"ITEM_ID":"2YWsto0rZGB33US0PMBR",
+"ITEM_ID":"3xO7obcJR9Iphrle5NBi",
 "ITEM_LEVEL":"0",
-"_PK_":"2YWsto0rZGB33US0PMBR",
+"_PK_":"3xO7obcJR9Iphrle5NBi",
 "S_CMPY":"icbc",
-"ITEM_NAME":"已完成",
+"ITEM_NAME":"已结束",
 "ITEM_PCODE":"",
-"ITEM_CODE":"已完成",
+"ITEM_CODE":"已结束",
 "ITEM_LEAF":"1",
 "DICT_ID":"TS_XMGL_BM"
 }
