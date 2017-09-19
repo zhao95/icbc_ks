@@ -182,8 +182,8 @@
 				<td style="width:15%"></td><td style="height:100px;vertical-align:top"><textarea id="mustknow" style="border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
-				<div class="modal-footer" style="text-align:center;height:100px">
-					<button type="button" class="btn btn-default" style="height:50px;width:100px" data-dismiss="modal">关闭</button>
+				<div class="modal-footer" style="text-align:center;height:80px">
+					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;height:50px;width:100px" data-dismiss="modal">关闭</button>
 				</div>
 				
 			</div><!-- /.modal-content -->

@@ -194,6 +194,19 @@ public class PassServ extends CommonServ {
 		} else {
 			shenuser = userBean.getStr("USER_CODE");
 		}
+		
+		String xmid = paramBean.getStr("xmid");
+		//判断逐级  越级
+				String flag = "";
+				String wherewfs = "AND XM_ID = '"+xmid+"'";
+				List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", wherewfs);
+				for (Bean bean2 : finds) {
+				String wfsid = 	bean2.getStr("WFS_ID");
+				Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
+				flag = find.getStr("WFS_TYPE");
+				}
+		
+		
 		// 被选中的id
 		String[] ss = s.split(",");
 		String state = paramBean.getStr("radiovalue");
@@ -231,7 +244,40 @@ public class PassServ extends CommonServ {
 				// 不再推送 当前审核人就是下级审核人
 				newBean.set("SH_USER", shenuser);
 				newBean.set("SH_LEVEL", level);
-				newBean.set("SH_OTHER", shenuser);
+				if(flag.equals("1")){
+					if(level==1){
+						String newother = newBean.getStr("SH_OTHER");
+						newBean.set("SH_OTHER", newother);
+					}else{
+						String newother = newBean.getStr("SH_OTHER")+","+shenuser;
+						newBean.set("SH_OTHER", newother);
+					}
+				}else{
+					//越级  所有人可见
+					ParamBean parambean1 = new ParamBean();
+					parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
+					parambean1.set("level", 0);
+					parambean1.set("shrUserCode", shenuser);
+					parambean1.set("flowName", 1);
+					parambean1.set("xmId", xmid);
+					OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
+							parambean1);
+					List<Bean> list1 = outbean1.getList("result");
+
+					String allman1 = "";
+					for (int l = 0; l < list1.size(); l++) {
+
+						if (l == list.size() - 1) {
+							allman1 += list.get(l).getStr("SHR_USERCODE");
+						} else {
+							allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+						}
+
+					}
+					newBean.set("SH_USER", shenuser);
+					newBean.set("SH_LEVEL", level);
+					newBean.set("SH_OTHER", allman1);
+				}
 				ServDao.save("TS_BMSH_NOPASS", newBean);
 				// 修改报名状态
 				Bean bm_bean = ServDao.find("TS_BMLB_BM", bmid);
@@ -570,21 +616,14 @@ public class PassServ extends CommonServ {
 		if(finds.size()!=0){
 			String wfsid = finds.get(0).getStr("WFS_ID");
 			//根据流程id查找所有审核节点
-			String wfswhere = "AND WFS_ID='"+wfsid+"'";
-			List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+			String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
+			List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
 			//遍历审核节点  获取 当前人的审核机构
 			for (Bean bean : finds2) {
-				//根据流程id获取 流程绑定的人和审核机构
-				String nodeid = bean.getStr("NODE_ID");
-				String nodewhere = "AND NODE_ID='"+nodeid+"'";
-				List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
-				for (Bean bean2 : finds3) {
-					if(user_code.equals(bean2.getStr("SHR_USERCODE"))){
-						belongdeptcode = bean2.getStr("DEPT_CODE");
+						belongdeptcode = bean.getStr("DEPT_CODE");
 						
-					}
 				}
-			}
+			
 		}
 		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
 		//根据审核  机构 匹配当前机构下的所有人

@@ -314,6 +314,7 @@ function firall(){
 					  param["checkedid"]=s;
 					  param["radiovalue"]=radiovalue;
 					  param["liyou"]=liyou;
+					  param["xmid"]=xmid;
 					  param["level"]=nowlevel;
 					  param["nodeid"]=nodeid;
 					  FireFly.doAct("TS_BMSH_PASS","update",param);
@@ -807,6 +808,7 @@ var listPage = function () {
 	 var param = {};
 	 param["shownum"]=myts;
 	 param["nowpage"]=num;
+	 param["xmid"]=xmid;
 	 param["user_code"]=user_code;
 	 param["where"]=where5+where6+where3;
      return FireFly.doAct(servid,"getUncheckList",param);
@@ -890,6 +892,7 @@ var listPage = function () {
  	param["where"]=where1 + where2+where3+where5+where6;
 	 param["shownum"]=myts;
 	 param["nowpage"]=1;
+	 param["xmid"]=xmid;
 	 param["user_code"]=user_code;
  	//页面的输入查询条件放入传递的参数中
  	//获取到查询后的数据
@@ -931,6 +934,7 @@ var listPage = function () {
  	param["where"]=where1 + where2+where3+where5+where6;
 	 param["shownum"]=myts;
 	 param["nowpage"]=1;
+	 param["xmid"]=xmid;
 	 param["user_code"]=user_code;
  	//页面的输入查询条件放入传递的参数中
  	//获取到查询后的数据

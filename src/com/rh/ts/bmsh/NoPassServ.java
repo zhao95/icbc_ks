@@ -213,7 +213,6 @@ public class NoPassServ extends CommonServ {
 				String bmid = bean.getStr("BM_ID");
 				String allman = "";
 
-				int nowlevel = 0;
 				if (level != 1) {
 
 					ParamBean parambean = new ParamBean();
@@ -252,7 +251,6 @@ public class NoPassServ extends CommonServ {
 				Bean newBean = new Bean();
 				newBean.copyFrom(bean);
 				newBean.set("SH_LEVEL", level);
-				newBean.set("SH_OTHER", shenuser);
 				ServDao.save("TS_BMSH_PASS", newBean);
 				if (level == 1) {
 					// 不用再去待审核中直接去 审核通过中 且数据无改动
@@ -260,7 +258,7 @@ public class NoPassServ extends CommonServ {
 					Bean newBean1 = new Bean();
 					newBean1.copyFrom(bean);
 					newBean1.set("SH_OTHER", allman);
-					newBean1.set("SH_LEVEL", nowlevel);
+					newBean1.set("SH_LEVEL", level);
 					ServDao.save("TS_BMSH_STAY", newBean1);
 				}
 				// 修改报名状态
@@ -665,21 +663,14 @@ public class NoPassServ extends CommonServ {
 		if(finds.size()!=0){
 			String wfsid = finds.get(0).getStr("WFS_ID");
 			//根据流程id查找所有审核节点
-			String wfswhere = "AND WFS_ID='"+wfsid+"'";
-			List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+			String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
+			List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
 			//遍历审核节点  获取 当前人的审核机构
 			for (Bean bean : finds2) {
-				//根据流程id获取 流程绑定的人和审核机构
-				String nodeid = bean.getStr("NODE_ID");
-				String nodewhere = "AND NODE_ID='"+nodeid+"'";
-				List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
-				for (Bean bean2 : finds3) {
-					if(user_code.equals(bean2.getStr("SHR_USERCODE"))){
-						belongdeptcode = bean2.getStr("DEPT_CODE");
+						belongdeptcode = bean.getStr("DEPT_CODE");
 						
-					}
 				}
-			}
+			
 		}
 		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
 		//根据审核  机构 匹配当前机构下的所有人

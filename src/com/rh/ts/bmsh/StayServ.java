@@ -114,7 +114,6 @@ public class StayServ extends CommonServ {
 		OutBean out = new OutBean();
 		UserBean user = Context.getUserBean();
 		String user_code = user.getStr("USER_CODE");
-		String belongdeptcode = "";
 		String xmid = paramBean.getStr("xmid");
 		//根据项目id找到流程下的所有节点
 		String belongwhere = "AND XM_ID='"+xmid+"'";
@@ -129,10 +128,10 @@ public class StayServ extends CommonServ {
 			for (Bean bean : finds2) {
 				//根据流程id获取 流程绑定的人和审核机构
 				String nodeid = bean.getStr("NODE_ID");
-				String nodewhere = "AND NODE_ID='"+nodeid+"'";
 			Bean finds3 = ServDao.find("TS_WFS_NODE_APPLY", nodeid);
-			out.set("level", finds3.getStr("NODE_STEPS"));
-			out.set("node_id", finds3.getStr("NODE_NAME"));
+				
+				out.set("level", finds3.getStr("NODE_STEPS"));
+				out.set("node_id", finds3.getStr("NODE_NAME"));
 			}
 		}
 		return out;
@@ -154,6 +153,17 @@ public class StayServ extends CommonServ {
 		}
 		String s = paramBean.getStr("checkedid");
 		String xmid = paramBean.getStr("xmid");
+		
+		//判断逐级  越级
+		String flag = "";
+		String wherewfs = "AND XM_ID = '"+xmid+"'";
+		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", wherewfs);
+		for (Bean bean2 : finds) {
+		String wfsid = 	bean2.getStr("WFS_ID");
+		Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
+		flag = find.getStr("WFS_TYPE");
+		}
+		
 		String shenuser = "";
 		UserBean userBean = Context.getUserBean();
 		if (userBean.isEmpty()) {
@@ -229,24 +239,79 @@ public class StayServ extends CommonServ {
 						Bean newBean = newlist.get(0);
 						newBean.copyFrom(bean);
 						newBean.set("SH_USER", shenuser);
-						if (level == 1) {
-							// 最后一级审核
-							newBean.set("SH_OTHER", shenuser);
-						} else {
+						newBean.set("SH_LEVEL", level);
+						if(flag.equals("1")){
+							//    逐级  
+							newBean.set("SH_USER", shenuser);
+							newBean.set("SH_LEVEL", level);
+							String newother = newBean.getStr("SH_OTHER")+","+shenuser;
+							newBean.set("SH_OTHER", newother);
+						}else{
+							//越级  所有人可见
+							ParamBean parambean1 = new ParamBean();
+							parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
+							parambean1.set("level", 0);
+							parambean1.set("shrUserCode", shenuser);
+							parambean1.set("flowName", flowname);
+							parambean1.set("xmId", xmid);
+							OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
+									parambean1);
+							List<Bean> list1 = outbean1.getList("result");
 
-							newBean.set("SH_OTHER", allman + "," + shenuser);
+							String allman1 = "";
+							for (int l = 0; l < list1.size(); l++) {
+
+								if (l == list.size() - 1) {
+									allman1 += list.get(l).getStr("SHR_USERCODE");
+								} else {
+									allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+								}
+
+							}
+							newBean.set("SH_USER", shenuser);
+							newBean.set("SH_LEVEL", level);
+							newBean.set("SH_OTHER", allman1);
 						}
+						
 						ServDao.save("TS_BMSH_PASS", newBean);
 					} else {
 						Bean newBean = new Bean();
 						newBean.copyFrom(bean);
 						newBean.set("SH_USER", shenuser);
-						if (level == 1) {
-							// 最后一级审核
-							newBean.set("SH_OTHER", shenuser);
-						} else {
+						newBean.set("SH_LEVEL", level);
+						
+						
+						if(flag.equals("1")){
+							//    逐级  
+							newBean.set("SH_USER", shenuser);
+							newBean.set("SH_LEVEL", level);
+							String newother = newBean.getStr("SH_OTHER")+","+shenuser;
+							newBean.set("SH_OTHER", newother);
+						}else{
+							//越级  所有人可见
+							ParamBean parambean1 = new ParamBean();
+							parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
+							parambean1.set("level", 0);
+							parambean1.set("shrUserCode", shenuser);
+							parambean1.set("flowName", flowname);
+							parambean1.set("xmId", xmid);
+							OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
+									parambean1);
+							List<Bean> list1 = outbean1.getList("result");
 
-							newBean.set("SH_OTHER", allman + "," + shenuser);
+							String allman1 = "";
+							for (int l = 0; l < list1.size(); l++) {
+
+								if (l == list.size() - 1) {
+									allman1 += list.get(l).getStr("SHR_USERCODE");
+								} else {
+									allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+								}
+
+							}
+							newBean.set("SH_USER", shenuser);
+							newBean.set("SH_LEVEL", level);
+							newBean.set("SH_OTHER", allman1);
 						}
 						ServDao.save("TS_BMSH_PASS", newBean);
 					}
@@ -272,10 +337,40 @@ public class StayServ extends CommonServ {
 					bean.remove("_PK_");
 					bean.remove("ROW_NUM_");
 					newBean.copyFrom(bean);
-					// 只有 当前人能让审核再次进行下去
-					newBean.set("SH_USER", shenuser);
-					newBean.set("SH_OTHER", shenuser);
-					ServDao.save("TS_BMSH_NOPASS", newBean);
+					
+					if(flag.equals("1")){
+						// 只有 当前人能让审核再次进行下去   逐级  
+						newBean.set("SH_USER", shenuser);
+						newBean.set("SH_LEVEL", level);
+						String newother = newBean.getStr("SH_OTHER")+","+shenuser;
+						newBean.set("SH_OTHER", newother);
+					}else{
+						//越级  所有人可见
+						ParamBean parambean1 = new ParamBean();
+						parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
+						parambean1.set("level", 0);
+						parambean1.set("shrUserCode", shenuser);
+						parambean1.set("flowName", flowname);
+						parambean1.set("xmId", xmid);
+						OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
+								parambean1);
+						List<Bean> list1 = outbean1.getList("result");
+
+						String allman1 = "";
+						for (int l = 0; l < list1.size(); l++) {
+
+							if (l == list.size() - 1) {
+								allman1 += list.get(l).getStr("SHR_USERCODE");
+							} else {
+								allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+							}
+
+						}
+						newBean.set("SH_USER", shenuser);
+						newBean.set("SH_LEVEL", level);
+						newBean.set("SH_OTHER", allman1);
+					}
+					ServDao.save("TS_BMSH_NOPASS", newBean);   
 					ServDao.delete("TS_BMSH_STAY", id);
 					String where = "AND BM_ID=" + "'" + bean.getStr("BM_ID")
 							+ "'";
@@ -733,21 +828,14 @@ public class StayServ extends CommonServ {
 		if(finds.size()!=0){
 			String wfsid = finds.get(0).getStr("WFS_ID");
 			//根据流程id查找所有审核节点
-			String wfswhere = "AND WFS_ID='"+wfsid+"'";
-			List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+			String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
+			List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
 			//遍历审核节点  获取 当前人的审核机构
 			for (Bean bean : finds2) {
-				//根据流程id获取 流程绑定的人和审核机构
-				String nodeid = bean.getStr("NODE_ID");
-				String nodewhere = "AND NODE_ID='"+nodeid+"'";
-				List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
-				for (Bean bean2 : finds3) {
-					if(user_code.equals(bean2.getStr("SHR_USERCODE"))){
-						belongdeptcode = bean2.getStr("DEPT_CODE");
+						belongdeptcode = bean.getStr("DEPT_CODE");
 						
-					}
 				}
-			}
+			
 		}
 		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
 		//根据审核  机构 匹配当前机构下的所有人
@@ -818,5 +906,43 @@ public class StayServ extends CommonServ {
 		
 	}
 
-	
+	/**
+	 * 获取各模块 数量
+	 */
+	public OutBean tongjinum(Bean paramBean){
+		//当前审核人
+				UserBean user = Context.getUserBean();
+				String user_code = user.getStr("USER_CODE");
+				String belongdeptcode = "";
+				String xmid = paramBean.getStr("xmid");
+				//根据项目id找到流程下的所有节点
+				String belongwhere = "AND XM_ID='"+xmid+"'";
+				List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
+				if(finds.size()!=0){
+					String wfsid = finds.get(0).getStr("WFS_ID");
+					//根据流程id查找所有审核节点
+					String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
+					List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
+					//遍历审核节点  获取 当前人的审核机构
+					for (Bean bean : finds2) {
+								belongdeptcode = bean.getStr("DEPT_CODE");
+								
+						}
+					
+				}
+		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%' AND XM_ID='"+xmid+"'";
+		//根据审核  机构 匹配当前机构下的所有人
+		String where1 = deptwhere;
+		List<Bean> list = ServDao.finds("TS_BMSH_STAY", where1);
+		List<Bean> list1 = ServDao.finds("TS_BMSH_PASS", where1);
+		List<Bean> list2 = ServDao.finds("TS_BMSH_NOPASS", where1);
+		
+		OutBean out = new OutBean();
+		out.set("staynum", list.size());
+		out.set("passnum", list1.size());
+		out.set("nopassnum", list2.size());
+		out.set("allnum", list.size()+list1.size()+list2.size());
+		return out;
+	}
+
 }
