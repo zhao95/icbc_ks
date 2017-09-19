@@ -142,7 +142,7 @@
 
 				<div style="margin-top: 20px; text-align:center;">
 
-					<img  id="left-img-renzheng" src="/qt/img/left-logo.png" style="cursor: pointer;">
+					<img  id="left-img-renzheng"  onclick="window.open('/eti/jsp/rzgj.jsp')" src="/qt/img/left-logo.png" style="cursor: pointer;">
 				</div>
 
 				<div class="user-panel" />
