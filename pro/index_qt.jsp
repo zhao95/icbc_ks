@@ -318,13 +318,12 @@
 
 							<div class="index-qt-todo-list">
 								<div style="" class="todo-item">
-									<div style="" class="todo-circle yiyi">
-										<div style="padding:10px 4px;color: #fff">异议</div>
+									<div style="" class="">
+										<div ></div>
 									</div>
 									<div class="todo-content">
-										<div>2017年（第8周）资格考试报名异议申请</div>
-										<div style="font-size: 12px;color:#999999">
-											河南分行郑州市分行郑东区支行天津路营业部 孙少洋 2017.05.12 16:40
+										<div></div>
+										<div>
 										</div>
 									</div>
 								</div>
