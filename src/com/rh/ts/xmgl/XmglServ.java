@@ -255,10 +255,12 @@ public class XmglServ extends CommonServ {
 			if (!kjxm.contains(id)) {
 				// 已报名这个考试之后 或者他不能报名这个考试 中断循环 继续开始
 				continue;
-			} else {
+			} 
+			if("1".equals(bean.getStr("XM_STATE"))){
 				lastlist.add(bean);
 			}
 		}
+		
 		// 将lastlist转换为 json字符串传给前台
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter w = new StringWriter();

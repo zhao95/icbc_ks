@@ -353,7 +353,7 @@ public class JklbServ extends CommonServ {
             //项目中有借考模块
             Bean xmSz = xmSzList.get(0);
             String xmSzType = xmSz.getStr("XM_SZ_TYPE");
-            if ("异地借考开放中".equals(xmSzType)) {
+            if ("进行中".equals(xmSzType)) {
                 //异地借考开放中
                 String xmSzId = xmSz.getId();
                 List<Bean> tsXmglQjglList = ServDao.finds("TS_XMGL_YDJK", "and XM_SZ_ID ='" + xmSzId + "'");
