@@ -146,7 +146,7 @@
             <div class="col-sm-9">
                 <div style="background-color: #fed1d1;border:1px solid red;border-radius: 5px;padding: 5px;color: #570000;">
                     ！ 温馨提示：您今年已在<span style="color: red">1</span>周内请假 <span style="color: red">2</span> 次，还可请假 <span style="color: red">1</span> 次。
-                    满 <span id="weekes" style="color: red"></span> <span id="counts" style="color: red"></span> 次后，本年度将不允许再请假。请合理使用请假次数！
+                    满 <span id="weekes" style="color: red"></span>周且满 <span id="counts" style="color: red"></span> 次后，本年度将不允许再请假。请合理使用请假次数！
                 </div>
             </div>
         </div>
@@ -371,15 +371,17 @@
     	//获取最大请假的次数显示
      	var  countCon=System.getVar("@C_TS_KSQJ_SETCONUTS@");
     	$("#counts").html(countCon);
+    	//
+    	var  weekes=System.getVar("@C_TS_KSQJ_WEEK_MAXNUM@");
+    	$("#weekes").html(weekes);
     	//考生已经借考过多少次
     	//1.一个周内不能请假6次。2.不能超过2个考试周。3.考试的前后加减一天
-    	var userCode=System.getUser("USER_CODE");
+    	<%--var userCode=System.getUser("USER_CODE");
     	//获取系统时间年
     	 var date=new Date;
          var year=date.getFullYear(); 
          var nowYear = year.toString();
-         
-    	var  where="and USER_CODE='"+userCode+"' and QJ_STATUS='"+2+"'and S_ATIME "
+    	var  where="and USER_CODE='"+userCode+"' and QJ_STATUS='"+2+"'and S_ATIME "--%>
         /*可申请的请假列表*/
         var table1Tbody = jQuery('#tabletjId tbody');
         table1Tbody.html('');

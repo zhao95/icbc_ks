@@ -453,7 +453,7 @@
 						</div>
 						</div>
 						<!-- /.box -->
-						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;margin-top: 30px;">
+						<div class="panel panel-default box" style="border-top: 1px solid #d2d6de;margin-top: 15px;">
 							<div class="box-header" style="background-color: #f9f9f9">
 								<h3 class="box-title" style="font-size:16px;">问卷调查</h3>
 							</div>
