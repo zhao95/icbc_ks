@@ -3,7 +3,7 @@
 "DICT_NAME_LAYER":"0",
 "S_PUBLIC":"1",
 "TABLE_SELECT":"",
-"S_MTIME":"2017-07-27 19:01:22:375",
+"S_MTIME":"2017-09-19 13:42:44:280",
 "TABLE_WHERE":"",
 "SY_SERV_DICT_ITEM":
 [
@@ -41,9 +41,9 @@
 "ITEM_LEVEL":"0",
 "_PK_":"3bG7xEdn50grU5IFWi1i",
 "S_CMPY":"icbc",
-"ITEM_NAME":"审核中",
+"ITEM_NAME":"进行中",
 "ITEM_PCODE":"",
-"ITEM_CODE":"审核中",
+"ITEM_CODE":"进行中",
 "ITEM_LEAF":"1",
 "DICT_ID":"TS_XMGL_SH"
 },
@@ -89,6 +89,7 @@
 "EN_JSON":"",
 "DICT_DIS_LAYER":"0",
 "DICT_F_PARENT":"",
+"DICT_PVLG":"",
 "DICT_F_LEVEL":"",
 "TABLE_ORDER":"ITEM_ORDER",
 "_PK_":"TS_XMGL_SH",
