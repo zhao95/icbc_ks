@@ -314,6 +314,7 @@ public class BmlbServ extends CommonServ {
 					// 添加到审核表中
 					Bean shBean = new Bean();
 					shBean.set("XM_ID", xm_id);
+					shBean.set("ODEPT_CODE", odept_code);
 					shBean.set("BM_ID", bm_id);
 					shBean.set("BM_NAME", user_name);
 					shBean.set("BM_CODE", user_code);

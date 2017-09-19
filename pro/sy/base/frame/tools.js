@@ -4144,7 +4144,8 @@ function rowDelete(pkCode,viewer){
 			if(!viewer.beforeDelete(pkCode)){
 				return false;
 			}
-    		var strs = pkCode.join(",");
+//    		var strs = pkCode.join(",");
+    		var strs = pkCode;
     		var temp = {};
 			temp[UIConst.PK_KEY]=strs;
     		var resultData = FireFly.listDelete(viewer.opts.sId,temp,viewer.getNowDom());

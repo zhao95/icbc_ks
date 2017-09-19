@@ -32,7 +32,6 @@ function xminfoshow(){
 }
 //进行资格验证
 	function checky(){
-		debugger;
 		var param = {};
 		var bminfo={};
 		bminfo['XM_ID'] = xm_id;
@@ -53,15 +52,13 @@ function xminfoshow(){
 		    }
 		}
 		
-		param['BM_INFO'] = JSON.stringify(bminfo);
-		param['BM_LIST'] = JSON.stringify(neAry);
-		//已报名的考试
-		var parambm = {};
-			
+			param['BM_INFO'] = JSON.stringify(bminfo);
+			param['BM_LIST'] = JSON.stringify(neAry);
+			//已报名的考试
+			var parambm = {};
 			parambm["user_code"]=user_code;
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
-			console.log(param);
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, true,false,function(data){
     		yzgz=data;
     		console.log(data);
@@ -82,7 +79,7 @@ function xminfoshow(){
        					var resdata = results.list;
        					var FLAG = false;
        				for(var z=0;z<resdata.length;z++){
-       					if(resdata[z].KSLBK_ID==neAry[0].KSLBK_ID){
+       					if(resdata[z].KSLBK_ID==a){
        						FLAG = true;
        					}
        				}
@@ -594,6 +591,16 @@ function xminfoshow(){
 	function tijiao(){
 		var motaitable = document.getElementById("motaitable");
 		var rowlength = motaitable.rows.length-1;
+		var div = $("div[name=existedbm]");
+		if(div.length!=0){
+			alert("请先删除已有的报名");
+			$("#tjbt").attr("data-target","");
+			//获取到table
+			for(var i=rowlength;i>1;i--){
+				motaitable.deleteRow(i);
+			}
+			return;
+		}
 		var canhightnum = $("#canheighnum").text();
 		var canmiddlenum = $("#cannum").text();
 		if(highbmnum>canhightnum){
@@ -606,17 +613,9 @@ function xminfoshow(){
 			return;
 		}
 		if(middlenum>canmiddlenum){
+			alert(middlenum);
+			alert(canmiddlenum);
 			alert("选择的中级考试数目超过上限，请删除再提交");
-			$("#tjbt").attr("data-target","");
-			//获取到table
-			for(var i=rowlength;i>1;i--){
-				motaitable.deleteRow(i);
-			}
-			return;
-		}
-		var div = $("div[name=existedbm]");
-		if(div.length!=0){
-			alert("请先删除已有的报名");
 			$("#tjbt").attr("data-target","");
 			//获取到table
 			for(var i=rowlength;i>1;i--){
@@ -829,6 +828,14 @@ var highnum=0;
 }
 	//删除已报名的考试
 	function deleterow(obj){
+		var tr = obj.parentNode.parentNode.parentNode;
+		var tds = $(tr).find("td");
+		alert(tds[4].innerText);
+		if(tds[4].innerText=="中级"){
+			middlenum--;
+		}else if(tds[4].innerText=="高级"){
+			highbmnum--;
+		}
 		var j=obj.parentNode.parentNode.parentNode.rowIndex;
 		var tab = document.getElementById("tablehang");
 		tab.deleteRow(j);
