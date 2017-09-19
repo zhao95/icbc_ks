@@ -15,6 +15,13 @@ import com.rh.ts.xmgl.rule.IRule;
  *
  */
 public class ObtainCert implements IRule {
+	
+	static final String wyCode = "A000000000000000004"; // 文员序列code
+	static final String ywclCode = "A000000000000000005"; // 业务处理序列code
+	static final String thgwCode = "A000000000000000016"; // 投行顾问序列code
+	static final String yxCode = "A000000000000000006"; // 营销序列code
+	static final String dgCode = "A000000000000000022"; // 对公客户经理序列code
+	static final String xdCode = "A000000000000000013"; // 信贷序列code
 
 	public boolean validate(Bean param) {
 
@@ -42,61 +49,60 @@ public class ObtainCert implements IRule {
 		certSql.and("STU_PERSON_ID", user).andNot("QUALFY_STAT", 3);
 
 		// 报考初级无持证要求
-		if (lvCode.equals("low")) {
+		if (lvCode.equals("1")) {
 			return true;
 		}
-
-		if ("文员".equals(xl)) { // 文员序列各层级资格不设置考试，取得业务类其他各序列同等级专业资格视同取得文员序列专业资格
-			xl = "业务处理";
+		
+		if (wyCode.equals(xl)) { // 文员序列各层级资格不设置考试，取得业务类其他各序列同等级专业资格视同取得文员序列专业资格
+			xl = ywclCode;
 		}
 
-		if (lvCode.equals("inter")) { // 报考中级，需要初级资质
+		if (lvCode.equals("2")) { // 报考中级，需要初级资质
 
 			// 投行顾问序列初级资格不设置考试，取得营销、对公客户经理序列初级专业资格，信贷A类初级和信贷B类初级专业资质，可视为取得投行顾问序列初级资格
-			if ("投行顾问".equals(xl)) {
+			if (thgwCode.equals(xl)) {
 
-				postSql.and("POSTION_QUALIFICATION", "1").andIn("POSTION_SEQUENCE", "营销", "对公客户经理", "信贷");
+				postSql.and("POSTION_QUALIFICATION", "1").andIn("POSTION_SEQUENCE_ID", yxCode, dgCode, xdCode);
 
-				xlArg = new String[] { "营销", "对公客户经理", "信贷" };
+				xlArg = new String[] { yxCode, dgCode, xdCode };
 
 			} else {
 
-				postSql.and("POSTION_QUALIFICATION", "1").and("POSTION_SEQUENCE", xl);
+				postSql.and("POSTION_QUALIFICATION", "1").and("POSTION_SEQUENCE_ID", xl);
 			}
 
-			certSql.and("CERT_GRADE_CODE", "low");
+			certSql.and("CERT_GRADE_CODE", "1");
 
-		} else if (lvCode.equals("high")) { // 报考高级，需要中级资质
+		} else if (lvCode.equals("3")) { // 报考高级，需要中级资质
 
-			postSql.and("POSTION_QUALIFICATION", "2").and("POSTION_SEQUENCE", xl);
+			postSql.and("POSTION_QUALIFICATION", "2").and("POSTION_SEQUENCE_ID", xl);
 
-			certSql.and("CERT_GRADE_CODE", "inter");
+			certSql.and("CERT_GRADE_CODE", "2");
 
 		} else { // 报考专家级，需要高级资质
 
-			postSql.and("POSTION_QUALIFICATION", "3").and("POSTION_SEQUENCE", xl);
+			postSql.and("POSTION_QUALIFICATION", "3").and("POSTION_SEQUENCE_ID", xl);
 
-			certSql.and("CERT_GRADE_CODE", "high");
+			certSql.and("CERT_GRADE_CODE", "3");
 		}
 
 		// 获证sql 设置证书模块条件
-		if (xlArg != null && xlArg.length > 0) {
+//		if (xlArg != null && xlArg.length > 0) {
+//
+//			certSql.andIn("CERT_MODULE_CODE", getMkCodes(lvCode, xlArg));
+//
+//		} else {
+//
+//			certSql.andIn("CERT_MODULE_CODE", getMkCodes(lvCode, xl));
+//		}
 
-			certSql.andIn("CERT_MODULE_CODE", getMkCodes(lvCode, xlArg));
-
-		} else {
-
-			certSql.andIn("CERT_MODULE_CODE", getMkCodes(lvCode, xl));
-		}
-
-		int certCount = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL, certSql);
+		int certCount = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, certSql);
 
 		if (certCount > 0) {
 			return true;
 		}
 
-		// List<Bean> postList =
-		// ServDao.finds(TsConstant.SERV_ORG_POSTION,postSql);
+		// List<Bean> postList =  ServDao.finds(TsConstant.SERV_ORG_POSTION,postSql);
 
 		return false;
 	}

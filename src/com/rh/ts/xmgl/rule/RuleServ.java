@@ -172,6 +172,8 @@ public class RuleServ extends CommonServ {
 
 				} else {
 					Bean data = new Bean();
+					
+					data.set("NAME", "无审核规则"); // 规则名称
 
 					data.set("VLIDATE", false);
 

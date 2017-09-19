@@ -24,7 +24,7 @@ public class StaffPost implements IRule {
 		// 报名者人力资源编码
 		String user = param.getStr("BM_CODE");
 
-		UserBean userBean = UserMgr.getUserByWorkNum(user);
+		UserBean userBean = UserMgr.getUser(user);
 
 		if (userBean == null) {
 			return false;
