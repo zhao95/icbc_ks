@@ -360,7 +360,7 @@ public class QjlbServ extends CommonServ {
             //项目中有请假模块
             Bean xmSz = xmSzList.get(0);
             String xmSzType = xmSz.getStr("XM_SZ_TYPE");
-            if ("考前请假开放中".equals(xmSzType) || "考后请假开放中".equals(xmSzType)) {
+            if ("进行中".equals(xmSzType)) {
                 //请假开放中
                 String xmSzId = xmSz.getId();
                 List<Bean> tsXmglQjglList = ServDao.finds("TS_XMGL_QJGL", "and XM_SZ_ID ='" + xmSzId + "'");
