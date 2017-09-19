@@ -111,103 +111,30 @@ public class StayServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getAllData(Bean paramBean) {
+		OutBean out = new OutBean();
+		UserBean user = Context.getUserBean();
+		String user_code = user.getStr("USER_CODE");
 		String xmid = paramBean.getStr("xmid");
-		Bean outBean = new Bean();
-		String servId = "TS_BMSH_STAY";
-		String where1 = paramBean.getStr("where");
-		List<Bean> list1 = ServDao.finds(servId, where1);
-		List<Bean> list2 = ServDao.finds("TS_BMSH_PASS", where1);
-		List<Bean> list3 = ServDao.finds("TS_BMSH_NOPASS", where1);
-		String user_code = paramBean.getStr("user_code");
-		List<Bean> list = new ArrayList<Bean>();
-		if (list1.size() == 0&&list2.size() == 0&&list3.size() == 0) {
-			return new OutBean();
-		}
-		
-		for (Bean bean : list1) {
-			String other = bean.getStr("SH_OTHER");
-			if (other.contains(user_code)) {
-				list.add(bean);
+		//根据项目id找到流程下的所有节点
+		String belongwhere = "AND XM_ID='"+xmid+"'";
+		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
+		if(finds.size()!=0){
+			String wfsid = finds.get(0).getStr("WFS_ID");
+			//根据流程id查找所有审核节点
+			String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
+			
+			List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
+			//遍历审核节点  获取 当前人的审核机构
+			for (Bean bean : finds2) {
+				//根据流程id获取 流程绑定的人和审核机构
+				String nodeid = bean.getStr("NODE_ID");
+			Bean finds3 = ServDao.find("TS_WFS_NODE_APPLY", nodeid);
+				
+				out.set("level", finds3.getStr("NODE_STEPS"));
+				out.set("node_id", finds3.getStr("NODE_NAME"));
 			}
 		}
-		for (Bean bean : list2) {
-			String other = bean.getStr("SH_OTHER");
-			if (other.contains(user_code)) {
-				list.add(bean);
-			}
-		}
-		for (Bean bean : list3) {
-			String other = bean.getStr("SH_OTHER");
-			if (other.contains(user_code)) {
-				list.add(bean);
-			}
-		}
-		String shenuser = "";
-		UserBean userBean = Context.getUserBean();
-		if (userBean.isEmpty()) {
-			return new OutBean().setError("ERROR:user_code 为空");
-		} else {
-			shenuser = userBean.getStr("USER_CODE");
-		}
-		String nodeid = "";
-		String levels = "";
-		ParamBean parambean = new ParamBean();
-		String bmcode = list.get(0).getStr("BM_CODE");
-		
-		parambean.set("examerUserCode", bmcode);
-		parambean.set("level", 0);
-		parambean.set("shrUserCode", bmcode);
-		parambean.set("flowName", 1);
-		parambean.set("xmId", xmid);
-		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
-		List<Bean> flowlist = outbean.getList("result");
-		String  nodesteps  = "";
-		//若是越级审核 肯定会有值
-		for (Bean bean : flowlist) {
-			if (shenuser.equals(bean.getStr("SHR_USERCODE"))) {
-				levels = bean.getStr("NODE_STEPS");
-				nodeid = bean.getStr("NODE_NAME");
-			}
-		}
-		if("".equals(nodeid)){
-			//没有值就是逐级审核  nodesteps  就是 最低级审核节点
-		for (Bean bean : flowlist) {
-			 nodesteps = bean.getStr("NODE_STEPS");
-		}
-		if(!"".equals(nodesteps)){
-		for(int j=(Integer.parseInt(nodesteps));j>0;j--){
-			parambean.set("examerUserCode", bmcode);
-			parambean.set("level", j);
-			parambean.set("shrUserCode", bmcode);
-			parambean.set("flowName", 1);
-			parambean.set("xmId", xmid);
-			OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
-			List<Bean> flowlist1 = outbean1.getList("result");
-			for (Bean bean : flowlist1) {
-			if (shenuser.equals(bean.getStr("SHR_USERCODE"))) {
-				levels = bean.getStr("NODE_STEPS");
-				nodeid = bean.getStr("NODE_NAME");
-			}
-			}
-		}
-		}
-		}
-		// ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter w = new StringWriter();
-		try {
-			mapper.writeValue(w, list);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		outBean.set("list", w.toString());
-		outBean.set("level", levels);
-		outBean.set("node_id", nodeid);
-		return outBean;
+		return out;
 	}
 
 	/**
@@ -226,6 +153,17 @@ public class StayServ extends CommonServ {
 		}
 		String s = paramBean.getStr("checkedid");
 		String xmid = paramBean.getStr("xmid");
+		
+		//判断逐级  越级
+		String flag = "";
+		String wherewfs = "AND XM_ID = '"+xmid+"'";
+		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", wherewfs);
+		for (Bean bean2 : finds) {
+		String wfsid = 	bean2.getStr("WFS_ID");
+		Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
+		flag = find.getStr("WFS_TYPE");
+		}
+		
 		String shenuser = "";
 		UserBean userBean = Context.getUserBean();
 		if (userBean.isEmpty()) {
@@ -301,24 +239,79 @@ public class StayServ extends CommonServ {
 						Bean newBean = newlist.get(0);
 						newBean.copyFrom(bean);
 						newBean.set("SH_USER", shenuser);
-						if (level == 1) {
-							// 最后一级审核
-							newBean.set("SH_OTHER", shenuser);
-						} else {
+						newBean.set("SH_LEVEL", level);
+						if(flag.equals("1")){
+							//    逐级  
+							newBean.set("SH_USER", shenuser);
+							newBean.set("SH_LEVEL", level);
+							String newother = newBean.getStr("SH_OTHER")+","+shenuser;
+							newBean.set("SH_OTHER", newother);
+						}else{
+							//越级  所有人可见
+							ParamBean parambean1 = new ParamBean();
+							parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
+							parambean1.set("level", 0);
+							parambean1.set("shrUserCode", shenuser);
+							parambean1.set("flowName", flowname);
+							parambean1.set("xmId", xmid);
+							OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
+									parambean1);
+							List<Bean> list1 = outbean1.getList("result");
 
-							newBean.set("SH_OTHER", allman + "," + shenuser);
+							String allman1 = "";
+							for (int l = 0; l < list1.size(); l++) {
+
+								if (l == list.size() - 1) {
+									allman1 += list.get(l).getStr("SHR_USERCODE");
+								} else {
+									allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+								}
+
+							}
+							newBean.set("SH_USER", shenuser);
+							newBean.set("SH_LEVEL", level);
+							newBean.set("SH_OTHER", allman1);
 						}
+						
 						ServDao.save("TS_BMSH_PASS", newBean);
 					} else {
 						Bean newBean = new Bean();
 						newBean.copyFrom(bean);
 						newBean.set("SH_USER", shenuser);
-						if (level == 1) {
-							// 最后一级审核
-							newBean.set("SH_OTHER", shenuser);
-						} else {
+						newBean.set("SH_LEVEL", level);
+						
+						
+						if(flag.equals("1")){
+							//    逐级  
+							newBean.set("SH_USER", shenuser);
+							newBean.set("SH_LEVEL", level);
+							String newother = newBean.getStr("SH_OTHER")+","+shenuser;
+							newBean.set("SH_OTHER", newother);
+						}else{
+							//越级  所有人可见
+							ParamBean parambean1 = new ParamBean();
+							parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
+							parambean1.set("level", 0);
+							parambean1.set("shrUserCode", shenuser);
+							parambean1.set("flowName", flowname);
+							parambean1.set("xmId", xmid);
+							OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
+									parambean1);
+							List<Bean> list1 = outbean1.getList("result");
 
-							newBean.set("SH_OTHER", allman + "," + shenuser);
+							String allman1 = "";
+							for (int l = 0; l < list1.size(); l++) {
+
+								if (l == list.size() - 1) {
+									allman1 += list.get(l).getStr("SHR_USERCODE");
+								} else {
+									allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+								}
+
+							}
+							newBean.set("SH_USER", shenuser);
+							newBean.set("SH_LEVEL", level);
+							newBean.set("SH_OTHER", allman1);
 						}
 						ServDao.save("TS_BMSH_PASS", newBean);
 					}
@@ -327,6 +320,7 @@ public class StayServ extends CommonServ {
 					Bean bm_bean = ServDao.find("TS_BMLB_BM", bmid);
 					if (bm_bean != null) {
 						bm_bean.set("BM_SH_STATE", "1");
+						ServDao.save("TS_BMLB_BM", bm_bean);
 					}
 				} else {
 					// 审核未通过的数据不再往上提交 将审核权限 只放在当前人手中、
@@ -343,10 +337,40 @@ public class StayServ extends CommonServ {
 					bean.remove("_PK_");
 					bean.remove("ROW_NUM_");
 					newBean.copyFrom(bean);
-					// 只有 当前人能让审核再次进行下去
-					newBean.set("SH_USER", shenuser);
-					newBean.set("SH_OTHER", shenuser);
-					ServDao.save("TS_BMSH_NOPASS", newBean);
+					
+					if(flag.equals("1")){
+						// 只有 当前人能让审核再次进行下去   逐级  
+						newBean.set("SH_USER", shenuser);
+						newBean.set("SH_LEVEL", level);
+						String newother = newBean.getStr("SH_OTHER")+","+shenuser;
+						newBean.set("SH_OTHER", newother);
+					}else{
+						//越级  所有人可见
+						ParamBean parambean1 = new ParamBean();
+						parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
+						parambean1.set("level", 0);
+						parambean1.set("shrUserCode", shenuser);
+						parambean1.set("flowName", flowname);
+						parambean1.set("xmId", xmid);
+						OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
+								parambean1);
+						List<Bean> list1 = outbean1.getList("result");
+
+						String allman1 = "";
+						for (int l = 0; l < list1.size(); l++) {
+
+							if (l == list.size() - 1) {
+								allman1 += list.get(l).getStr("SHR_USERCODE");
+							} else {
+								allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+							}
+
+						}
+						newBean.set("SH_USER", shenuser);
+						newBean.set("SH_LEVEL", level);
+						newBean.set("SH_OTHER", allman1);
+					}
+					ServDao.save("TS_BMSH_NOPASS", newBean);   
 					ServDao.delete("TS_BMSH_STAY", id);
 					String where = "AND BM_ID=" + "'" + bean.getStr("BM_ID")
 							+ "'";
@@ -359,6 +383,7 @@ public class StayServ extends CommonServ {
 					Bean bm_bean = ServDao.find("TS_BMLB_BM", bmid);
 					if (bm_bean != null) {
 						bm_bean.set("BM_SH_STATE", "2");
+						ServDao.save("TS_BMLB_BM", bm_bean);
 					}
 					noPassBmIdList.add(bmid);
 				}
@@ -784,4 +809,140 @@ public class StayServ extends CommonServ {
 		outBean.set("usernames", s);
 		return outBean;
 	}
+	
+	/**
+	 * 获取辖内机构某一页的数据
+	 * 
+	 * @param paramBean
+	 * @return
+	 */
+	public Bean getBelongToList(Bean paramBean) {
+		//当前审核人
+		UserBean user = Context.getUserBean();
+		String user_code = user.getStr("USER_CODE");
+		String belongdeptcode = "";
+		String xmid = paramBean.getStr("xmid");
+		//根据项目id找到流程下的所有节点
+		String belongwhere = "AND XM_ID='"+xmid+"'";
+		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
+		if(finds.size()!=0){
+			String wfsid = finds.get(0).getStr("WFS_ID");
+			//根据流程id查找所有审核节点
+			String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
+			List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
+			//遍历审核节点  获取 当前人的审核机构
+			for (Bean bean : finds2) {
+						belongdeptcode = bean.getStr("DEPT_CODE");
+						
+				}
+			
+		}
+		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
+		//根据审核  机构 匹配当前机构下的所有人
+		Bean _PAGE_ = new Bean();
+		Bean outBean = new Bean();
+		String servId = "TS_BMSH_STAY";
+		String NOWPAGE = paramBean.getStr("nowpage");
+		String SHOWNUM = paramBean.getStr("shownum");
+		String where1 = paramBean.getStr("where")+deptwhere;
+		List<Bean> list = ServDao.finds(servId, where1);
+
+		int ALLNUM = list.size();
+		// 计算页数
+		int meiye = Integer.parseInt(SHOWNUM);
+		int yeshu = ALLNUM / meiye;
+		int yushu = ALLNUM % meiye;
+		// 获取总页数
+		if (yeshu == 0 && yushu != 0) {
+			yeshu += 1;
+		}
+
+		int nowpage = Integer.parseInt(NOWPAGE);
+		int showpage = Integer.parseInt(SHOWNUM);
+		// 计算第一项 开始
+		int chushi = (nowpage - 1) * showpage + 1;
+		// 计算结束项
+		int jieshu = (nowpage - 1) * showpage + showpage;
+		// 放到Array中
+		List<Bean> list2 = new ArrayList<Bean>();
+		if (ALLNUM == 0) {
+			// 没有数据
+		} else {
+
+			if (jieshu <= ALLNUM) {
+				// 循环将数据放入list2中返回给前台
+				for (int i = chushi; i <= jieshu; i++) {
+					list2.add(list.get(i - 1));
+				}
+
+			} else {
+				for (int j = chushi; j < ALLNUM + 1; j++) {
+					list2.add(list.get(j - 1));
+				}
+			}
+		}
+		// ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter w = new StringWriter();
+		try {
+			mapper.writeValue(w, list2);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		outBean.set("list", w.toString());
+		_PAGE_.set("ALLNUM", ALLNUM);
+		_PAGE_.set("NOWPAGE", NOWPAGE);
+		_PAGE_.set("PAGES", yeshu);
+		_PAGE_.set("SHOWNUM", SHOWNUM);
+		outBean.set("list", w.toString());
+		outBean.set("_PAGE_", _PAGE_);
+		 int first=chushi;
+		 outBean.set("first", first);
+		return outBean;
+		
+	}
+
+	/**
+	 * 获取各模块 数量
+	 */
+	public OutBean tongjinum(Bean paramBean){
+		//当前审核人
+				UserBean user = Context.getUserBean();
+				String user_code = user.getStr("USER_CODE");
+				String belongdeptcode = "";
+				String xmid = paramBean.getStr("xmid");
+				//根据项目id找到流程下的所有节点
+				String belongwhere = "AND XM_ID='"+xmid+"'";
+				List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
+				if(finds.size()!=0){
+					String wfsid = finds.get(0).getStr("WFS_ID");
+					//根据流程id查找所有审核节点
+					String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
+					List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
+					//遍历审核节点  获取 当前人的审核机构
+					for (Bean bean : finds2) {
+								belongdeptcode = bean.getStr("DEPT_CODE");
+								
+						}
+					
+				}
+		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%' AND XM_ID='"+xmid+"'";
+		//根据审核  机构 匹配当前机构下的所有人
+		String where1 = deptwhere;
+		List<Bean> list = ServDao.finds("TS_BMSH_STAY", where1);
+		List<Bean> list1 = ServDao.finds("TS_BMSH_PASS", where1);
+		List<Bean> list2 = ServDao.finds("TS_BMSH_NOPASS", where1);
+		
+		OutBean out = new OutBean();
+		out.set("staynum", list.size());
+		out.set("passnum", list1.size());
+		out.set("nopassnum", list2.size());
+		out.set("allnum", list.size()+list1.size()+list2.size());
+		return out;
+	}
+
 }

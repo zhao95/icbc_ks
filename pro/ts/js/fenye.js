@@ -137,6 +137,9 @@ var listPage = function () {
 			}else{
 				state = "未开始";
 			}
+			//是否展示审核人所在的 审核机构下的所有人
+			var resultlook = FireFly.doAct("TS_XMGL_BMGL","getShowLook",param1);
+			var showlook = resultlook.showlook;
 			/*
 			//进行中 已结束 下拉框 进行筛选
 			var zhuangtai = $("#zhuangtai").children('option:selected').val();
@@ -149,12 +152,27 @@ var listPage = function () {
 			//添加一行隐藏的项目id
 			var xuhao = first+i;
  		//为table重新appendtr
-			if(state=="报名审核"){
+		/*	if(state=="报名审核"){
  			$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td><input class = "btn" type="button" onclick="tiaozhuan('+i+')" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');
      		
 			}else{
 				$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" class="btn" type="button" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></td></tr>');	
+			}*/
+			if(state=="报名审核"){
+				if(showlook==1){
+					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td><input class = "btn" type="button" onclick="tiaozhuan('+i+')" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input>&nbsp;&nbsp;<input onclick="chakanbelong('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:100px" value="辖内报名情况"></input></td></tr>');
+				}else{
+					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td><input class = "btn" type="button" onclick="tiaozhuan('+i+')" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');
+				}
+			}else{
+				if(showlook==1){
+					
+					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" class="btn" type="button" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看">&nbsp;&nbsp;<input onclick="chakanbelong('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:100px" value="辖内报名情况"></input></td></tr>');	
+				}else{
+					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" class="btn" type="button" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');	
+				}
 			}
+ 	  
  	  }
 	var table= document.getElementById("table");
 	rowscolor(table);
@@ -304,12 +322,4 @@ var listPage = function () {
  function xzcu(){
 	 new listPage().gotoPage(1);
  }
- //所辖机构人员
-/* </input>&nbsp;&nbsp<input onclick="belongbminfo('+i+')" class="btn" type="button" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value=""></input>*/
- //查找当前人在审核流程里对应的审核 机构     xmid.dept 查询出所有数据
-function belongbminfo(obj){
-	var xm = "XM_ID"+obj;
-	var xmid = $("#"+xm).val();
-		document.getElementById("xmid").value=id;
-		document.getElementById("form1").submit();
-}
+ 

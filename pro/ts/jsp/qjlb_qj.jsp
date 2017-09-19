@@ -145,8 +145,8 @@
             </div>
             <div class="col-sm-9">
                 <div style="background-color: #fed1d1;border:1px solid red;border-radius: 5px;padding: 5px;color: #570000;">
-                    ！ 温馨提示：您今年已请假 <span style="color: red">2</span> 次，还可请假 <span style="color: red">1</span> 次。
-                    满 <span id="counts" style="color: red"></span> 次后，本年度将不允许再请假。请合理使用请假次数！
+                    ！ 温馨提示：您今年已在<span style="color: red">1</span>周内请假 <span style="color: red">2</span> 次，还可请假 <span style="color: red">1</span> 次。
+                    满 <span id="weekes" style="color: red"></span> <span id="counts" style="color: red"></span> 次后，本年度将不允许再请假。请合理使用请假次数！
                 </div>
             </div>
         </div>

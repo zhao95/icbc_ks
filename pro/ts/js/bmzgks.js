@@ -2,6 +2,7 @@ var user_code = System.getVar("@USER_CODE@");
 var user_name = System.getVar("@USER_NAME@");
 var user_sex = System.getVar("@USER_SEX@");
 var odept_name = System.getVar("@ODEPT_NAME@");
+var odept_code = System.getVar("@ODEPT_CODE@");
 var user_office_phone = System.getVar("@USER_OFFICE_PHONE@");
 var user_cmpy_date = System.getVar("@USER_CMPY_DATE@");
 var xm_id  = $("#xmidval").val();
@@ -60,9 +61,10 @@ function xminfoshow(){
 			parambm["user_code"]=user_code;
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
+			console.log(param);
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, true,false,function(data){
-			debugger;
     		yzgz=data;
+    		console.log(data);
     		//获取后台传过来的key
     		var zgArray = document.getElementsByName("zgksname");
          	for(var i=0;i<zgArray.length;i++){
@@ -110,6 +112,8 @@ function xminfoshow(){
        					$("#"+yzjg).append('审核不通过');
        				
        				}if(shArray==true){
+       					$("#"+a).append('<div></div>');
+       					$("#"+a).append('<div></div>');
        					$("#"+yzjg).append('审核通过');
        				}
 	       		}
@@ -157,6 +161,7 @@ function xminfoshow(){
 		param["BM_START"] = bm_start;
 		param["BM_END"] = bm_end;
 		param["XM_NAME"] = xm_name;
+		param["ODEPT_CODE"]=odept_code;
 			param['BM_LIST'] = JSON.stringify(neAry);
 			param["YZGZ_LIST"] = JSON.stringify(yzgz);
 			//本序列表格行数
@@ -176,7 +181,6 @@ function xminfoshow(){
 					var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param,
 							true, false);
 					showMask();
-					console.log(JSON.stringify(BM_ID.strresult));
 					if (BM_ID.strresult != null || BM_ID.strresult != "") {
 						hideMask();
 					}
@@ -342,7 +346,6 @@ function xminfoshow(){
 	         theme: "bbit-tree-no-lines",
 	         url  :"SY_COMM_INFO.dict.do"
 	        };
-		 console.log(setting);
 	         var tree = new rh.ui.Tree(setting);
 	         $('.content-navTree').append(tree.obj);
 	 });
@@ -353,7 +356,6 @@ function xminfoshow(){
 	 		param["STATION_NO"]=STATION_NO;
 	 		param["xm_id"]=xm_id;
 	 		var fzgList= FireFly.doAct("TS_BMLB_BM", "getFzgValue", param,true,false);
-	 		console.log(fzgList);
 	 		return fzgList['_DATA_'];
 		}
 	
@@ -447,9 +449,6 @@ function xminfoshow(){
 						highbmnum--;
 					}
 		     		
-				 var kslxArray2 = document.getElementsByName("checkname1");
-				 kslxArray2[hanghao].disabled=false;
-				
 					}
 		     	}
 	     		
@@ -593,22 +592,36 @@ function xminfoshow(){
 	
 	//获取应考试的值
 	function tijiao(){
-		var maxnum = FireFly.getConfig("TS_BM_MIDDLE_MAXNUM").CONF_VALUE;
-		var maxhigh = FireFly.getConfig("TS_BM_HIGH_MAXNUM").CONF_VALUE;
-		if(highbmnum>maxhigh){
+		var motaitable = document.getElementById("motaitable");
+		var rowlength = motaitable.rows.length-1;
+		var canhightnum = $("#canheighnum").text();
+		var canmiddlenum = $("#cannum").text();
+		if(highbmnum>canhightnum){
 			alert("选择的高级考试数目超过上限，请删除再提交");
 			$("#tjbt").attr("data-target","");
+			//获取到table
+			for(var i=rowlength;i>1;i--){
+				motaitable.deleteRow(i);
+			}
 			return;
 		}
-		if(middlenum>maxnum){
+		if(middlenum>canmiddlenum){
 			alert("选择的中级考试数目超过上限，请删除再提交");
 			$("#tjbt").attr("data-target","");
+			//获取到table
+			for(var i=rowlength;i>1;i--){
+				motaitable.deleteRow(i);
+			}
 			return;
 		}
 		var div = $("div[name=existedbm]");
 		if(div.length!=0){
 			alert("请先删除已有的报名");
 			$("#tjbt").attr("data-target","");
+			//获取到table
+			for(var i=rowlength;i>1;i--){
+				motaitable.deleteRow(i);
+			}
 			return;
 		}
 		
@@ -625,6 +638,12 @@ function xminfoshow(){
 		      if($(tds[6]).find("div").length<2){
 		    	  alert("请先进行资格验证");
 		    	  $("#tjbt").attr("data-target","");
+		    	//获取到table
+		  		var motaitable = document.getElementById("motaitable");
+		  		var rowlength = motaitable.rows.length-1;
+		  		for(var i=rowlength;i>1;i--){
+		  			motaitable.deleteRow(i);
+		  		}
 		    	  return;
 		      }
 		      var ntr = tbody.insertRow();
