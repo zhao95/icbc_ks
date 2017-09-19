@@ -1250,7 +1250,7 @@ global.Fn.InitUploadImage = function(container, bmid) {
 						i++;
 						$(".upload-list>ul", $upload)
 								.append(
-										'<div width:"100px" id='
+										'<div width:"100px" style="font-size:13px" id='
 												+ s
 												+ '><li name="filedown">'
 												+ s

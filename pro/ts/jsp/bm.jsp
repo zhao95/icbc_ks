@@ -206,23 +206,23 @@
 					</h4>
 					
 				</div>
-				<div style="padding-top:20px;width:90%;font-size:20px;text-align:center;color:lightseagreen">
-				如确需报考，请说明并提交相关证明材料
+				<div style="padding-top:20px;width:90%;font-size:16px;text-align:left;color:lightseagreen">
+				<span style="padding-left:16%">如确需报考，请说明并提交相关证明材料</span>
 				</div>
 				<div style="padding-top:20px">
 				<table style="width:100%">
 				<tr>
-				<td style="width:15%"></td><td style="height:150px;vertical-align:top"><textarea id="liyou11" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="color:lightseagreen;font-size:13px;height:150px;vertical-align:top"><textarea id="liyou11" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
 				<table id="filehis">
 				
 				</table>
-				<div id="uploadfile" style="padding-left:50px;color:lightseagreen;font-size:20px"><form action="/file" name="formup" id="formContainer2" class="form form-horizontal"></form></div>
+				<div id="uploadfile" style="color:lightseagreen;font-size:20px"><form action="/file" name="formup" id="formContainer2" class="form form-horizontal"></form></div>
 				</div>
 				<div class="modal-footer" style="text-align:center;height:60px">
 					<button id="tjbutt" type="button" onclick="tijiaoyiyi()" class="btn btn-primary" style="height:40px;background:lightseagreen;width:80px">提交异议</button>
-					<button type="button" onclick = "closemotai()" class="btn btn-default" style="background:lightseagreen;color:white;height:40px;width:80px;margin-left:100px;" data-dismiss="modal">取消</button>
+					<button type="button" onclick = "closemotai()" class="btn btn-default" style="background:lightseagreen;color:white;height:40px;width:80px;margin-left:20%;" data-dismiss="modal">取消</button>
 				</div>
 				
 			</div><!-- /.modal-content -->
