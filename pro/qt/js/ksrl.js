@@ -40,7 +40,11 @@ jQuery(document).ready(function(){
 	function doPick(target,type) {
 		hasCreate[type] = true;
 		eventArr = getMonthData("",type);
-		//获取所有的月份
+
+		
+		
+		
+	    //获取所有的月份
 		var picker = target.datepicker({
 			inline: true,
 			firstDay:0,
@@ -50,6 +54,7 @@ jQuery(document).ready(function(){
 			regional:$.datepicker.regional[ "zh-CN" ],
 			//获取考试的内容和考试的时间
 			beforeShowDay:function(date){
+				
 				//获取考试的时间
 				var d = date.getTime();
 				//获取考试的日期
@@ -70,6 +75,21 @@ jQuery(document).ready(function(){
 						titleArr.push(n.CAL_NAME);
 					}
 				});
+				
+				//指定当前日期突出显示
+				var showMM=new Date().getMonth();
+		        var showDATE=new Date().getDate();
+		        var showYYYY=new Date().getFullYear();
+		        var formatDate=showYYYY+"-"+(showMM+1)+"-"+showDATE;//此处日期的格式化和speciald中的格式一样
+		        var cMM = date.getMonth();
+		        var cDate = date.getDate();
+		        var cYYYY = date.getFullYear();
+		        var currentDataformat = cYYYY+"-"+(cMM+1)+"-"+cDate;
+		        //inArray实现数组的匹配
+		        if(formatDate == currentDataformat){
+		            //此处要返回一个数组，specialdays是添加样式的类
+		            return [true,"currentDayShow",titleArr.join("<br>"),"select"];
+		        }
 				//如果存储考试信息的数组不为空，在每一行的考试后面添加换行标签
 				if (titleArr.length > 0) {
 					
