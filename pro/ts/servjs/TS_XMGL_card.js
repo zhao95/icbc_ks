@@ -60,10 +60,8 @@ _viewer.getItem("XM_TYPE").change(function(){
 	var flowSerTmp = _viewer.getItem("XM_TYPE").getValue(); 
 	
 	if( "资格类考试"==flowSerTmp){
-		var a=1;
-		  _viewer.getItem("XM_KHDKZ").setValue(a);
+		  _viewer.getItem("XM_KHDKZ").setValue(1);
 	}else {
-		var a=2;
 		 _viewer.getItem("XM_KHDKZ").setValue(2);
 	}
 });	

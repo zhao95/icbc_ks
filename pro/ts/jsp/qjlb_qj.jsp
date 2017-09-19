@@ -367,15 +367,18 @@
 <script type="text/javascript">
 
     $(function () {
-    	
+    	//获取用户usercode
+    	var data = {USER_CODE: System.getUser("USER_CODE")};
     	//获取最大请假的次数显示
      	var  countCon=System.getVar("@C_TS_KSQJ_SETCONUTS@");
     	$("#counts").html(countCon);
-    	//
+    	//获取最大的周次数
     	var  weekes=System.getVar("@C_TS_KSQJ_WEEK_MAXNUM@");
     	$("#weekes").html(weekes);
     	//考生已经借考过多少次
     	//1.一个周内不能请假6次。2.不能超过2个考试周。3.考试的前后加减一天
+    	var getLeaveCount = FireFly.doAct('TS_QJLB_QJ', 'getLeaveCount', data);
+    	 
     	<%--var userCode=System.getUser("USER_CODE");
     	//获取系统时间年
     	 var date=new Date;
@@ -386,7 +389,6 @@
         var table1Tbody = jQuery('#tabletjId tbody');
         table1Tbody.html('');
         //获取可申请的请假数据
-        var data = {USER_CODE: System.getUser("USER_CODE")};
         var userCanLeaveList = FireFly.doAct('TS_QJLB_QJ', 'getUserCanLeaveList', data);
         for (var i = 0; i < userCanLeaveList._DATA_.length; i++) {
             var userCanLeave = userCanLeaveList._DATA_[i];
