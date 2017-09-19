@@ -2,7 +2,7 @@ var _viewer = this;
 $(".rhGrid").find("tr").unbind("dblclick");  
 //列表需建一个code为BUTTONS的自定义字段
 //每一行添加编辑和删除
-$(".rhGrid").find("tr").each(function(index, item) {
+$("#TS_KCGL_IPZWH .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
 		$(item).find("td[icode='BUTTONS']").append(

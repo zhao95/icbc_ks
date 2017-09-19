@@ -73,35 +73,36 @@ function bindCard(){
 	//当行查看事件
 	jQuery(".hoverDiv [operCode='optLookBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-//	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
+		$(".hoverDiv").css('display','none');
 		openMyCard(pkCode,true);
 	});
 	
 	jQuery(".hoverDiv [operCode='optIPScopeBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPSCOPE"});
+		$(".hoverDiv").css('display','none');
 		openMyCard(pkCode,"","TS_KCGL_IPSCOPE");
 	});
 	jQuery(".hoverDiv [operCode='optIPZwhBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_IPZWH"});
+		$(".hoverDiv").css('display','none');
 		openMyCard(pkCode,"","TS_KCGL_IPZWH");
 	});
 	jQuery(".hoverDiv [operCode='optJgBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCGL_GLJG"});
+		$(".hoverDiv").css('display','none');
 		openMyCard(pkCode,"","TS_KCGL_GLJG");
 	});
 	
 	//当行编辑事件
 	jQuery(".hoverDiv [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
+		$(".hoverDiv").css('display','none');
 		openMyCard(pkCode);
 	});
 	//当行删除事件
 	jQuery(".hoverDiv [operCode='optDeleteBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
+		$(".hoverDiv").css('display','none');
 		rowDelete(pkCode,_viewer);
 	});
 }
