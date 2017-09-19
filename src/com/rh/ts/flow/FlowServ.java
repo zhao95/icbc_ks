@@ -153,7 +153,10 @@ public class FlowServ extends CommonServ {
 	    for (int k = 0; k < shList.size(); k++) {
 		Bean shBean = shList.get(k);
 		if(nodeName.equals("")){nodeName = shBean.getStr("NODE_NAME");}
+		
+		int selType = shBean.getInt("QJKLC_SEL");
 		String shrName = shBean.getStr("QJKLC_SHR");
+		String shqzCode = shBean.getStr("QJKLC_SHQZ_CODE");
 		String shUserCode = shBean.getStr("SHR_USERCODE");
 		String ydyBm = shBean.getStr("QJKLC_YDDEPT");
 		String zdyDeptCode = shBean.getStr("DEPT_CODE");
@@ -161,11 +164,21 @@ public class FlowServ extends CommonServ {
 		String colCodel = shBean.getStr("QJKLC_ZDDEPT_COLCODE");
 
 		//1.审核人已填写
-		if(!shUserCode.equals("")){
-		    Bean shUser = new Bean();
-		    shUser.set("SHR_NAME", shrName);
-		    shUser.set("SHR_USERCODE", shUserCode);
-		    resList.add(shUser);
+		if(selType == 1){
+		    if(!shUserCode.equals("")){
+			Bean shUser = new Bean();
+			shUser.set("SHR_NAME", shrName);
+			shUser.set("SHR_USERCODE", shUserCode);
+			resList.add(shUser);
+		    }
+		}else if(selType == 2){
+		    List<Bean> list2 = ServDao.finds("TS_PVLG_GROUP_USER", "and G_ID = '"+shqzCode+"' and ODEPT_CODE='"+shrOdeptCode+"'");
+		    for (int i = 0; i < list2.size(); i++) {
+			Bean tmpUser = new Bean();
+			tmpUser.set("SHR_NAME", list2.get(i).getStr("USER_NAME"));
+			tmpUser.set("SHR_USERCODE", list2.get(i).getStr("USER_CODE"));
+			resList.add(tmpUser);
+		    }
 		}
 		//2.预定义部门，审核人职位已填写
 		if((!ydyBm.equals("")) &&(!shzw.equals(""))){
@@ -225,7 +238,7 @@ public class FlowServ extends CommonServ {
 
 	    }
 	    outBean.set("result", resList);
-        outBean.set("WFS_ID", wfsId);
+	    outBean.set("WFS_ID", wfsId);
 	    outBean.set("NODE_STEPS", getStep);
 	    outBean.set("NODE_NAME", nodeName);
 	}
