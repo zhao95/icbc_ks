@@ -15,9 +15,9 @@ $(function () {
     jQuery("#loginOutBtn").unbind("click").click(clickAndLoginOut);
     jQuery("#TipUserInfo").unbind("click").click(userInfoPage);
     /** 点击左侧认证轨迹图片跳转到认证轨迹*/
-    jQuery("#left-img-renzheng").unbind("click").click(function () {
-        location.href = "/eti/jsp/rzgj.jsp";
-    });
+//    jQuery("#left-img-renzheng").unbind("click").click(function () {
+//        location.href = "/eti/jsp/rzgj.jsp";
+//    });
 });
 
 /**
