@@ -18,7 +18,7 @@ $("#TS_KCZGL .rhGrid").find("tr").each(function(index, item) {
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optBackTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">撤销&nbsp</a>';
 		}	
 		var divHeight = $(item).get(0).offsetHeight;
-		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;color:#505050;'>"+abtns+"</div>";
+		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;color:#666666;'>"+abtns+"</div>";
 		$(".content-main").find("table").before(hoverDiv);	
 		// 为每个按钮绑定卡片
 		bindCard();
@@ -139,7 +139,7 @@ function openMyCard(dataId,readOnly,showTab){
 }
 
 $(".hoverDiv").find("a").hover(function(){
-	$(this).css("color","#0071c2");
+	$(this).css("color","#0066FF");
 },function(){
-	$(this).css("color","#505050");
+	$(this).css("color","#666666");
 });
