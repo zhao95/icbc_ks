@@ -37,17 +37,6 @@
 
     <!-- 表格样式的设置 -->
     <style>
-        .even {
-            background: #eefaff;
-        }
-
-        .odd {
-            background: #ffffff;
-        }
-
-        .selected {
-            background: #FF9900;
-        }
 
         /**/
         #nav-ul-id li {
@@ -68,13 +57,12 @@
             border-bottom: 16px solid transparent;
             border-left: 32px solid #7CFC00;
         }
+
+        #rz-table > tbody > tr:nth-of-type(even) {
+            background-color: #f1faff;
+        }
+
     </style>
-    <script type="text/javascript">
-        $(function () {
-            $("tr:odd").addClass("odd");
-            $("tr:even").addClass("even");
-        });
-    </script>
 </head>
 
 <body class="skin-black sidebar-mini layout-boxed" style="height: auto;">
@@ -137,13 +125,13 @@
                                  class="center-block">
                                 <div id="joined-bank" style="position: relative;float: left;width: 66px;">
                                     <div style="width: 66px;height: 66px;border-radius: 50%;background-color: #3a6ab3">
-                                        <img class="img " src="../images/u5074.png"
-                                             style="position: relative;top: 16px;left: 11px;">
+                                        <img class="img " src="<%=CONTEXT_PATH%>/eti/images/icbc32x32.png"
+                                             style="position: relative;top: 16px;left: 16px;"><%--u5074.png--%>
                                         <div id="USER_CMPY_DATE"
                                              style="position: absolute;top:80px;left:-26px;font-size: 20px;width: 150px;">
                                             日期
                                         </div>
-                                        <div style="height: 60px;width: 2px;background-color: #000;position: absolute;top: -60px;left: 31px;"></div>
+                                        <div style="height: 60px;width: 2px;background-color: #707070;position: absolute;top: -60px;left: 31px;"></div>
                                         <div style="position: absolute;top:-85px;left:0;width: 85px;font-size: 16px">
                                             加入工行
                                         </div>
@@ -158,7 +146,8 @@
                                     <div class="row">
                                         <div class="col-sm-12"
                                              style="font-size: 28px;color: #388CAE;margin-left: 120px;padding: 19px;">
-                                            <img id="u5189_img" class="img " src="../images/u5189.png">
+                                            <img id="u5189_img" class="img "
+                                                 src="<%=CONTEXT_PATH%>/eti/images/u5189.png">
                                             <span style="color: red;position: relative;top: 3px;left: -33px;">!</span>
                                             您还没有获得过相关资格证书
                                         </div>
@@ -176,7 +165,8 @@
                                                 您要获取的资格：
                                             </span>
                                             <span id="zgName"></span>序列
-                                            （相关学习资料下载 工银大学）
+                                            （
+                                            <a onclick="toExamRef()" href="#">相关学习资料下载</a> >工银大学）
                                         </div>
                                     </div>
                                 </div>
@@ -248,17 +238,17 @@
                 var data = dataList[i];
                 $rzTableTbody.append([
                     '<tr class="" style="height: 50px">',
-                    ' <td style="text-align: center"><%=1%>',
+                    '   <td style="text-align: center">' + (i + 1),
                     '   </td>',
-                    '    <td style="text-align: center">',
+                    '   <td style="text-align: center">',
                     '   ' + data.ISSUE_DATE_STR,
                     '   </td>',
                     '   <td style="text-align: center">' + data.FNAME_CHN + '</td>',//CERT_GRADE_CODE
                     '   <td style="text-align: center">' + data.date + '</td>',
                     '   <td style="text-align: center">' + data.state + '</td>',
-                    '    <td style="text-align: center">' +
-                    '       <a href="../jsp/zhengshu.jsp">',
-                    '            <img src="../images/chankan.png">',
+                    '   <td style="text-align: center">' +
+                    '       <a href="<%=CONTEXT_PATH%>/eti/jsp/zhengshu.jsp">',
+                    '            <img src="<%=CONTEXT_PATH%>/eti/images/chankan.png">',
                     '       </a>',
                     '    </td>',
                     '</tr>'
@@ -268,7 +258,7 @@
 
             $rzTableTbody.append([
                 '<tr class="" style="height: 50px">',
-                '   <td style="text-align: center">1',
+                '   <td style="text-align: center">' + (i + 1),
                 '   </td>',
                 '   <td style="text-align: center">',
                 '   ' + this.info.USER_CMPY_DATE,
@@ -281,67 +271,82 @@
             ].join(''));
         },
         initView: function () {
-            var dataList = this.info.dataList;
+            var $noCert = $('#no-cert');
+            var $hasCert = $('#has-cert');
+            var dataList = this.info.currentDataList;//this.info.dataList;//this.info.currentDataList;
             if (dataList.length > 0) {
-                $('#no-cert').css('display', 'none');
-                $('#has-cert').css('display', 'block');
+                $noCert.css('display', 'none');
+                $hasCert.css('display', 'block');
             } else {
-                $('#no-cert').css('display', 'block');
-                $('#has-cert').css('display', 'none');
+                $noCert.css('display', 'block');
+                $hasCert.css('display', 'none');
             }
+
+            //u5076.png u5080.png u5084.png u5090.png
             var settings = [
-                {name: '初级', imgUrl: '../images/u5076.png', color: '#529c85', height: 80},
-                {name: '中级', imgUrl: '../images/u5080.png', color: '#e19b25', height: 110},
-                {name: '高级', imgUrl: '../images/u5084.png', color: '#a53f38', height: 150},
-                {name: '专家级', imgUrl: '../images/u5090.png', color: '#67686e', height: 200},
-                null
+                {name: '初级', imgUrl: '<%=CONTEXT_PATH%>/eti/images/primary32x32.png', color: '#529c85', height: 80},
+                {
+                    name: '中级',
+                    imgUrl: '<%=CONTEXT_PATH%>/eti/images/intermediate32x32.png',
+                    color: '#e19b25',
+                    height: 110
+                },
+                {name: '高级', imgUrl: '<%=CONTEXT_PATH%>/eti/images/high32x32.png', color: '#a53f38', height: 150},
+                {name: '专家级', imgUrl: '<%=CONTEXT_PATH%>/eti/images/expert32x32.png', color: '#67686e', height: 200},
             ];
 
-            //获证信息
-            var lineWidths = [300, 200, 100, 100];
-            var lineWidth = lineWidths[dataList.length];
-            $('#has-cert').css('width', (66 + (dataList.length + 1) * (lineWidth + 66)) + 'px');
+            //1加入工行
+            //2获证信息
+            var count = 0;//获证数
+            count = dataList.length > 4 ? 4 : dataList.length;//最多展示4个
+            var lineWidths = [200, 120, 100, 100];
+            var lineWidth = lineWidths[count - 1];
+            $hasCert.css('width', (66 + (count) * (lineWidth + 66)) + 'px');
             for (var i = 0; i < dataList.length; i++) {
                 var data = dataList[i];
                 var setting = settings[i];
-                $('#has-cert').append([
+                if (i === count) {
+                    //最多展示4个
+                    return;
+                }
+                $hasCert.append([
                     '<div style="position: relative;float: left;margin-left: ' + lineWidth + 'px;width: 66px;">',
                     '   <div style="background-color: #c9cbd0;width: ' + lineWidth + 'px;height:2px;position: absolute;top:33px;left: -' + lineWidth + 'px;"></div>',
                     '       <div style="width: 66px;height: 66px;border-radius: 50%;background-color: ' + setting.color + '">',
                     '       <img class="img " src="' + setting.imgUrl + '"',
-                    '       style="position: relative;top: 16px;left: 15px;height: 33px;">',
+                    '       style="position: relative;top: 17px;left: 17px;">',
                     '       <div style="position: absolute;top:80px;left:-10px;font-size: 20px;width: 150px;">' + data.ISSUE_DATE_STR + '</div>',
-                    '       <div style="height: ' + setting.height + 'px;width: 2px;background-color: #000;position: absolute;top: -' + setting.height + 'px;left: 31px;"></div>',
+                    '       <div style="height: ' + setting.height + 'px;width: 2px;background-color: #707070;position: absolute;top: -' + setting.height + 'px;left: 31px;"></div>',
                     '       <div style="text-align:center;position: absolute;top:' + (-setting.height - 43) + 'px;left:-58px;font-size: 16px;width: 185px;">',
                     '           <div style="text-overflow: ellipsis;overflow: hidden;white-space:nowrap;">' + data.FNAME_CHN + '</div>',
                     '           <div>(' + data.state + ')</div>',
                     '       </div>',
                     '       <div class="triangle-left" style="border-left: 33px solid ' + setting.color + ';position: absolute;top: -' + setting.height + 'px;left: 34px;"></div>',
                     '   </div>',
-                    '</div>',
+                    '</div>'
 
                 ].join(''));
             }
 
-
             var jbArr = ['初级', '中级', '高级', '资深专家'];
-            var jb = jbArr[dataList.length];
+            var jb = jbArr[count];
 
             //下一级 next
             setting = settings[i];
             if (setting !== null) {
-                $('#has-cert').append([
+                $hasCert.css('width', $hasCert.width() + (lineWidth + 66));
+                $hasCert.append([
                     '<div style="position: relative;float: left;margin-left:  ' + lineWidth + 'px;width: 66px;">',
                     '   <div style="border-bottom: 2px dashed #999ba0;width:  ' + lineWidth + 'px;height:0;position: absolute;top:33px;left: -' + lineWidth + 'px;"></div>',
-                    '       <img class="img " src="' + setting.imgUrl + '"',
+                    '       <img class="img " src="<%=CONTEXT_PATH%>/eti/images/next32x32.png"',
                     '       style="position: relative;top: 16px;left: 15px;height: 33px;">',
-                    '       <img src="../images/u5088.png" style="position: absolute;left:0;">',
+                    '       <img src="<%=CONTEXT_PATH%>/eti/images/u5088.png" style="position: absolute;left:0;">',
                     '       <div style="position: absolute;top:80px;left:8px;font-size: 20px;width: 150px;">NEXT</div>',
                     '       <div style="height: ' + setting.height + 'px;width: 0;border-left: 2px dashed #999ba0;position: absolute;top: -' + setting.height + 'px;left: 31px;"></div>',
                     '       <div style="position: absolute;top:' + (-setting.height) + 'px;left:38px;width:200px;">',
                     '           <div style="width: 25px;height: 22px;background-color: #94b94e;float: left"></div>',
-                    '           <div style="float: left;margin-left: 2px;">' + this.info.STATION_NO + jb + ' | ',
-                    '               <a target="_blank" href="javascript:doPost(\'../../qt/jsp/examref.jsp\',{REF_DYXL:\'' + this.info.STATION_NO + '\'})">了解详情 ></a>' +
+                    '           <div style="float: left;margin-left: 2px;">' + this.info.STATION_NO + ' | ',
+                    '               <a onclick="toExamRef()" href="#">了解详情 ></a>' +
                     '           </div>',
                     '       </div>',
                     '   </div>',
@@ -351,6 +356,13 @@
             }
         }
     };
+
+    /**
+     * 跳转到参考资料
+     **/
+    function toExamRef() {
+        doPost('<%=CONTEXT_PATH%>/qt/jsp/examref.jsp', {REF_DYXL: RzgjObject.info.STATION_NO});
+    }
 
     /**
      * 实现post请求

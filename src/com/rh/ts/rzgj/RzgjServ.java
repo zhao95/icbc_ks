@@ -6,9 +6,9 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.core.util.Constant;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by shenh on 2017/9/19.
@@ -21,19 +21,22 @@ public class RzgjServ extends CommonServ {
         //用户的USER_CODE
         String USER_CODE = Context.getUserBean().getCode();
         //获证信息
-        List<Bean> dataList = ServDao.finds("TS_ETI_CERT_QUAL_V", "and STU_PERSON_ID='" + USER_CODE + "'");
+        ParamBean queryParamBean = new ParamBean();
+        queryParamBean.set(Constant.PARAM_WHERE, "and STU_PERSON_ID='" + USER_CODE + "'");
+        queryParamBean.set(Constant.PARAM_ORDER, "ISSUE_DATE desc");
+        List<Bean> dataList = ServDao.finds("TS_ETI_CERT_QUAL_V", queryParamBean);
         //用户信息查询
         Bean stu = ServDao.find("SY_ORG_USER_INFO_SELF", USER_CODE);
 
         //入职日期
         String USER_CMPY_DATE = "";
-        String userCmpyDate = "";
+        String userCmpyDateStr = "";
         //职位名称
         //String USER_POST="";
         if (stu != null) {
             USER_CMPY_DATE = stu.getStr("USER_CMPY_DATE");
             if (!USER_CMPY_DATE.equals("")) {
-                userCmpyDate = USER_CMPY_DATE.substring(0, 4) + "年" + USER_CMPY_DATE.substring(4, 6) + "月";
+                userCmpyDateStr = USER_CMPY_DATE.substring(0, 4) + "年" + USER_CMPY_DATE.substring(4, 6) + "月";
             }
             //USER_POST=stu.getStr("USER_POST");
         }
@@ -145,15 +148,25 @@ public class RzgjServ extends CommonServ {
             other = num;
         }
 
-//        dataList = new ArrayList<>();
+        //过滤出用户当前序列的获证信息
+        List<Bean> copyDataList = new ArrayList<>(dataList);//用户当前序列的获证信息
+        Collections.reverse(copyDataList);
+        for (Iterator<Bean> iterator = copyDataList.iterator(); iterator.hasNext(); ) {
+            Bean copyData = iterator.next();
+            if (!STATION_NO_CODE.equals(copyData.get("STATION_NO"))) {
+                iterator.remove();
+            }
+        }
+
         outBean.set("dataList", dataList);
+        outBean.set("currentDataList", copyDataList);
 
         outBean.set("STATION_NO", STATION_NO);//当前序列
         //初级 中级 高级
         outBean.set("POSTION_QUALIFICATION", POSTION_QUALIFICATION);
         outBean.set("POSTION_QUALIFICATION_STR", POSTION_QUALIFICATION_STR);
 
-        outBean.set("USER_CMPY_DATE", userCmpyDate); //入公司日期
+        outBean.set("USER_CMPY_DATE", userCmpyDateStr); //入公司日期
 
         outBean.set("num", num);//当前序列有
 
