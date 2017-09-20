@@ -59,6 +59,13 @@
 .zgks table td {
 	padding-left: 5px;
 }
+ #loadingdialog{
+ font-family: Arial;
+ border: 2px solid #379082;
+ border-radius: 20px;
+ padding: 30px 30px;
+ width: 330px;
+}
 </style>
 <!-- 遮罩层 -->
 <style type="text/css">
@@ -333,9 +340,9 @@ position: absolute;
 		<!-- 模态选择框跨序列（Modal） -->
 	<div class="modal fade" id="loading" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
-		<div class="modal-dialog" style="width:700px;">
-			<div class="modal-content" style="background:lightgray;height:100px;width:50%">
-				<div style="padding-left:30%;padding-top:9%;font-size:16px;">正在验证请稍候.....</div>
+		<div  class="modal-dialog" style="width:700px;">
+			<div id="loadingdialog" class="modal-content" style="background:lightyellow;height:100px;width:50%">
+				<div style="padding-left:30%;padding-top:4%;font-size:16px;">正在验证请稍候.....</div>
 			</div>
 			<!-- /.modal-content -->
 		</div>
@@ -355,7 +362,7 @@ position: absolute;
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
 	<script src="<%=CONTEXT_PATH%>/sy/base/frame/coms/tree/jquery.tree.js"></script>
 	
-
+	
 	<%-- //模块改变事件
 	function typeId(obj){
 		var tab = document.getElementById("tableid");
