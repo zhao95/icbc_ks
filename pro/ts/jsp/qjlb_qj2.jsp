@@ -509,9 +509,9 @@
                 flowView.append(
                     [
                         '<div style="display: inline-block">',
-                        '<span style="position: relative;left: 18px;top:2px;',
-                        'font-weight: 700;font-style: normal;font-size: 14px;color: #FFFFFF;">1</span>',
-                        '<img alt="" style="width:20px;" src="<%=CONTEXT_PATH %>/ts/image/u5522.png">',
+                        '<span style="position: relative;left: 26px;top:3px;',
+                        'font-weight: 700;font-style: normal;font-size: 21px;color: #FFFFFF;">1</span>',
+                        '<img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5522.png">',//style="width:20px;"
                         '<span style="position: relative;font-size: 15px;top: 5px;">&nbsp;&nbsp;填写申请单&nbsp;&nbsp;</span>',
                         '</div>'
                     ].join('')
@@ -524,9 +524,9 @@
                         [
                             '<img alt=""  style="width:50px;height:5px;" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">',
                             '<div style="display: inline-block">',
-                            '   <span style="position: relative;left: 18px;top:2px;',
-                            '       font-weight: 700;font-style: normal;font-size: 14px;color: #FFFFFF;">' + (i + 2) + '</span>',
-                            '   <img alt="" style="width:20px;" src="<%=CONTEXT_PATH %>/ts/image/' + (nodeSteps === todoBean.NODE_STEPS ? 'u5520.png' : 'u5522.png') + '">',
+                            '   <span style="position: relative;left: 28px;top:3px;',
+                            '       font-weight: 700;font-style: normal;font-size: 21px;color: #FFFFFF;">' + (i + 2) + '</span>',
+                            '   <img alt="" src="<%=CONTEXT_PATH %>/ts/image/' + (nodeSteps === todoBean.NODE_STEPS ? 'u5520.png' : 'u5522.png') + '">',
                             '   <span style="position: relative;font-size: 15px;top: 5px;">&nbsp;&nbsp;' + nodeName + '&nbsp;&nbsp;</span>',
                             '</div>'
                         ].join('')
