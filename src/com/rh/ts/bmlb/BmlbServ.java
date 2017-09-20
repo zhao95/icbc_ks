@@ -27,8 +27,10 @@ import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.BeanUtils;
+import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
 import com.rh.core.comm.FileMgr;
+import com.rh.core.org.UserBean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -45,6 +47,13 @@ public class BmlbServ extends CommonServ {
 	 * @return
 	 */
 	public void addData(Bean paramBean) {
+		UserBean userBean = Context.getUserBean();
+		String odept_code = "";
+		if(userBean.isEmpty()){
+			
+		}else{
+			odept_code = userBean.getODeptCode();
+		}
 		// 获取服务ID
 		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
 		// 获取前台传过来的值
@@ -65,6 +74,7 @@ public class BmlbServ extends CommonServ {
 			String fzgks_date2 = bean.getStr("FZGKS_ENDDATE");
 			String fzgks_name = bean.getStr("FZGKS_NAME");
 			Bean beans = new Bean();
+			beans.set("ODEPT_CODE", odept_code);
 			beans.set("BM_CODE", user_code);
 			beans.set("BM_NAME", user_name);
 			beans.set("BM_SEX", user_sex);
@@ -117,6 +127,7 @@ public class BmlbServ extends CommonServ {
 			shBean.set("BM_ID", bm_id);
 			shBean.set("BM_NAME", user_name);
 			shBean.set("BM_CODE", user_code);
+			shBean.set("ODEPT_CODE", odept_code);
 			shBean.set("SH_NODE", node_name);// 目前审核节点
 			shBean.set("SH_USER", allman);// 当前办理人
 			shBean.set("SH_OTHER", allman);// 其他办理人
