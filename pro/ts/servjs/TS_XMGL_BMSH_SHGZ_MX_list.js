@@ -145,3 +145,7 @@ function saveRuleVar(dataId,val,json) {
 	
 
 }
+
+_viewer.beforeDelete = function(pkArray) {
+	showVerify(pkArray,_viewer);
+};
