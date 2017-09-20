@@ -374,7 +374,7 @@
     	$("#counts").html(countCon);
     	//获取最大的周次数
     	var  weekes=System.getVar("@C_TS_KSQJ_WEEK_MAXNUM@");
-    	$("#weekes").html(weekes);
+    	$("#weekes").html(weekes);debugger;
     	//考生已经借考过多少次
     	//1.一个周内不能请假6次。2.不能超过2个考试周。3.考试的前后加减一天
     	var getLeaveCount = FireFly.doAct('TS_QJLB_QJ', 'getLeaveCount', data);

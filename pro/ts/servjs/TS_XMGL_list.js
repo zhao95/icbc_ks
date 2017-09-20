@@ -119,8 +119,29 @@ $(".hoverDiv").find("a").hover(function() {
 	$(this).css("color", "#666666");//鼠标移出
 }); 
 
-
-
+/**
+ * 发布按钮的功能
+ */
+_viewer.getBtn("fabu").unbind("click").bind("click",function(){
+	//点击选择框，获取数据的id；
+	var pkAarry = _viewer.grid.getSelectPKCodes();
+	if(pkAarry.length==0){
+		_viewer.listBarTipError("请选择要发布的项目！");
+	}else{
+		 var  paramXm={};
+		 paramXm["pkCodes"]=pkAarry.join(',');
+		FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm);
+//		for (var i = 0; i < pkAarry.length; i++) {
+//			var  where="and  XM_ID ='"+pkAarry[i]+"'";
+//		var data={_extWhere:where};
+//			var beanFb = FireFly.doAct("TS_XMGL", "query", data);
+//			alert(beanFb);debugger;
+//		}
+		//var  where="and  XM_ID in'"+pkAarry+"'";
+		//FireFly.doAct(_viewer.servId, "finds", where);
+		alert("计划发布成功！");
+	}
+});
 
 
 
