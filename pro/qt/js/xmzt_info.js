@@ -26,95 +26,98 @@ $(function() {
 	for (var i = 0; i < resultBM._DATA_.length; i++) {
 		var xm_id = resultBM._DATA_[i].XM_ID;
 		var paramXM = {};
-		paramXM["_extWhere"] = "and XM_ID = '" + xm_id + "'";
+		paramXM["_extWhere"] = "and XM_ID = '" + xm_id + "' and XM_STATE ='1'";
 		var resultXM = FireFly.doAct("TS_XMGL", "query", paramXM);
 		// 判断项目是否已经存在，-1 不存在 >0 存在
 		var distinct_num = xm_distinct_arr.indexOf(xm_id);
 		if (distinct_num < 0) {
 			xm_distinct_arr.push(xm_id);
-			// 判断项目进度是否小于100%
-			if (resultXM._DATA_[0].XM_JD < 10) {
-				var xm_rowNum = resultBM._DATA_[i].ROWNUM_;
-				// 获取项目相关的数据， 用于拼接到状态更多页面 xmzt_info.jsp
-				var xm_name = resultXM._DATA_[0].XM_NAME;
-				var xm_type = resultXM._DATA_[0].XM_TYPE;
-				// 根据返回值可以找到查询数据字典后的结果，直接拿来用即可。数据为发起单位。
-				var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME;
-//				var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME__NAME;
-				var xm_start = resultXM._DATA_[0].XM_START;
-				var xm_end = resultXM._DATA_[0].XM_END;
-				var xm_jd = resultXM._DATA_[0].XM_JD;
-				var xm_currentState = "";
+			
+			if(resultXM._DATA_.length!=0){
+				// 判断项目进度是否小于100%
+				if (resultXM._DATA_[0].XM_JD < 10) {
+					var xm_rowNum = resultBM._DATA_[i].ROWNUM_;
+					// 获取项目相关的数据， 用于拼接到状态更多页面 xmzt_info.jsp
+					var xm_name = resultXM._DATA_[0].XM_NAME;
+					var xm_type = resultXM._DATA_[0].XM_TYPE;
+					// 根据返回值可以找到查询数据字典后的结果，直接拿来用即可。数据为发起单位。
+					var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME;
+//					var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME__NAME;
+					var xm_start = resultXM._DATA_[0].XM_START;
+					var xm_end = resultXM._DATA_[0].XM_END;
+					var xm_jd = resultXM._DATA_[0].XM_JD;
+					var xm_currentState = "";
 
-				// 通过项目ID和用户人力资源编码查询到标志，设置按钮的内容
-				var paramObj1 = {};
-				paramObj1["_extWhere"] = "and STR1='" + user_code
-						+ "' AND DATA_ID ='" + xm_id + "'";
-				var resultObj = FireFly.doAct("TS_XMZT", "query", paramObj1);
-				if (resultObj._DATA_.length != 0) {
-					if (resultObj._DATA_[0].INT1 === "1") {
-						var xm_opera = "首页显示中";
+					// 通过项目ID和用户人力资源编码查询到标志，设置按钮的内容
+					var paramObj1 = {};
+					paramObj1["_extWhere"] = "and STR1='" + user_code
+							+ "' AND DATA_ID ='" + xm_id + "'";
+					var resultObj = FireFly.doAct("TS_XMZT", "query", paramObj1);
+					if (resultObj._DATA_.length != 0) {
+						if (resultObj._DATA_[0].INT1 === "1") {
+							var xm_opera = "首页显示中";
+						}
+					} else {
+						var xm_opera = "首页未显示";
 					}
-				} else {
-					var xm_opera = "首页未显示";
-				}
-				// 获取到项目挂接所有模块姓名
-				var paramXMSZ = {};
-				paramXMSZ["_extWhere"] = "and XM_ID = '" + xm_id + "'";
-				var resultXMSZ = FireFly
-						.doAct("TS_XMGL_SZ", "query", paramXMSZ);
-				// 遍历所有模块名字，取出满足要求的模块状态
-				for (var j = 0; j < resultXMSZ._DATA_.length; j++) {
-					var gj_name = resultXMSZ._DATA_[j].XM_SZ_TYPE;
-					// 如果项目挂接模块处于进行中，则给页面赋值
-					if (typeMap[gj_name] == "c2") {
-						xm_currentState = gj_name;
+					// 获取到项目挂接所有模块姓名
+					var paramXMSZ = {};
+					paramXMSZ["_extWhere"] = "and XM_ID = '" + xm_id + "'";
+					var resultXMSZ = FireFly
+							.doAct("TS_XMGL_SZ", "query", paramXMSZ);
+					// 遍历所有模块名字，取出满足要求的模块状态
+					for (var j = 0; j < resultXMSZ._DATA_.length; j++) {
+						var gj_name = resultXMSZ._DATA_[j].XM_SZ_TYPE;
+						// 如果项目挂接模块处于进行中，则给页面赋值
+						if (typeMap[gj_name] == "c2") {
+							xm_currentState = gj_name;
+						}
 					}
-				}
-				// 数据输入到页面
-				jQuery("#table1_tbody").append(
-								'<tr class="rhGrid-td-left" XM_ID="'+ xm_id+ '" style="height: 50px">'+
-								'<td class="indexTD" style="text-align: center">'+ xm_rowNum1+ '</td>'+
-								'<td class="rhGrid-td-left " id="xm_name"style="text-align: center">'+ xm_name+'</td>'+ 
-								'<td class="rhGrid-td-left " id="xm_type" style="text-align: center">'+ xm_type+'</td>'+
-								'<td class="rhGrid-td-left " id="xm_dept" style="text-align: center">'+ xm_dept+'</td>'+
-								'<td class="rhGrid-td-left " id="xm_start"style="text-align: center" >'+ xm_start+'</td>'+
-								'<td class="rhGrid-td-left " id="S_MTIME" style="text-align: center" >'+ xm_end+'</td>'+ 
-								'<td class="rhGrid-td-left " id="xm_end" style="text-align: center" >'+ xm_jd+'0.0%</td>'+ 
-								'<td class="rhGrid-td-left " id="xm_currentState" style="text-align: center">'+ xm_currentState+'</td>'+
-								'<td id="BM_OPTIONS" style="text-align: center;">'+
-									'<input type="button" class="opera_btn" style="margin:0 auto;display:block;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="'+ xm_opera + '"></input>'+
-								'</td>'+'</tr>');
-				xm_rowNum1++;
+					// 数据输入到页面
+					jQuery("#table1_tbody").append(
+									'<tr class="rhGrid-td-left" XM_ID="'+ xm_id+ '" style="height: 50px">'+
+									'<td class="indexTD" style="text-align: center">'+ xm_rowNum1+ '</td>'+
+									'<td class="rhGrid-td-left " id="xm_name"style="text-align: center">'+ xm_name+'</td>'+ 
+									'<td class="rhGrid-td-left " id="xm_type" style="text-align: center">'+ xm_type+'</td>'+
+									'<td class="rhGrid-td-left " id="xm_dept" style="text-align: center">'+ xm_dept+'</td>'+
+									'<td class="rhGrid-td-left " id="xm_start"style="text-align: center" >'+ xm_start+'</td>'+
+									'<td class="rhGrid-td-left " id="S_MTIME" style="text-align: center" >'+ xm_end+'</td>'+ 
+									'<td class="rhGrid-td-left " id="xm_end" style="text-align: center" >'+ xm_jd+'0.0%</td>'+ 
+									'<td class="rhGrid-td-left " id="xm_currentState" style="text-align: center">'+ xm_currentState+'</td>'+
+									'<td id="BM_OPTIONS" style="text-align: center;">'+
+										'<input type="button" class="opera_btn" style="margin:0 auto;display:block;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="'+ xm_opera + '"></input>'+
+									'</td>'+'</tr>');
+					xm_rowNum1++;
 
-			}
-			// 项目进度大于100%的显示在已完成中
-			else {
-				var xm_rowNum = resultBM._DATA_[i].ROWNUM_;
-				var xm_name = resultXM._DATA_[0].XM_NAME;
-				var xm_type = resultXM._DATA_[0].XM_TYPE;
-				// 根据返回值可以找到查询数据字典后的结果，直接拿来用即可。
-				var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME;
-				var xm_start = resultXM._DATA_[0].XM_START;
-				var xm_end = resultXM._DATA_[0].XM_END;
-				var xm_jd = resultXM._DATA_[0].XM_JD;
-				var xm_currentState = "";
-				// 数据输入到页面
-				jQuery("#table2_tbody").append(
-						'<tr class="rhGrid-td-left" XM_ID="'+ xm_id+ '" style="height: 50px">'+
-						'<td class="indexTD" style="text-align: center">'+ xm_rowNum2+ '</td>'+
-						'<td class="rhGrid-td-left " id="xm_name"style="text-align: center">'+ xm_name+'</td>'+ 
-						'<td class="rhGrid-td-left " id="xm_type" style="text-align: center">'+ xm_type+'</td>'+
-						'<td class="rhGrid-td-left " id="xm_dept" style="text-align: center">'+ xm_dept+'</td>'+
-						'<td class="rhGrid-td-left " id="xm_start"style="text-align: center" >'+ xm_start+'</td>'+
-						'<td class="rhGrid-td-left " id="S_MTIME" style="text-align: center" >'+ xm_end+'</td>'+ 
-						'<td class="rhGrid-td-left " id="xm_end" style="text-align: center" >'+ xm_jd+'0.0%</td>'+ 
-						'<td class="rhGrid-td-left " id="xm_currentState" style="text-align: center">已结束</td>'+
-//						'<td id="BM_OPTIONS" style="text-align: center;">'+
-//							'<input type="button" class="opera_btn" style="margin:0 auto;display:block;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="'+ xm_opera + '"></input>'+
-//						'</td>'+
-						'</tr>');
-				xm_rowNum2++;
+				}
+				// 项目进度大于100%的显示在已完成中
+				else {
+					var xm_rowNum = resultBM._DATA_[i].ROWNUM_;
+					var xm_name = resultXM._DATA_[0].XM_NAME;
+					var xm_type = resultXM._DATA_[0].XM_TYPE;
+					// 根据返回值可以找到查询数据字典后的结果，直接拿来用即可。
+					var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME;
+					var xm_start = resultXM._DATA_[0].XM_START;
+					var xm_end = resultXM._DATA_[0].XM_END;
+					var xm_jd = resultXM._DATA_[0].XM_JD;
+					var xm_currentState = "";
+					// 数据输入到页面
+					jQuery("#table2_tbody").append(
+							'<tr class="rhGrid-td-left" XM_ID="'+ xm_id+ '" style="height: 50px">'+
+							'<td class="indexTD" style="text-align: center">'+ xm_rowNum2+ '</td>'+
+							'<td class="rhGrid-td-left " id="xm_name"style="text-align: center">'+ xm_name+'</td>'+ 
+							'<td class="rhGrid-td-left " id="xm_type" style="text-align: center">'+ xm_type+'</td>'+
+							'<td class="rhGrid-td-left " id="xm_dept" style="text-align: center">'+ xm_dept+'</td>'+
+							'<td class="rhGrid-td-left " id="xm_start"style="text-align: center" >'+ xm_start+'</td>'+
+							'<td class="rhGrid-td-left " id="S_MTIME" style="text-align: center" >'+ xm_end+'</td>'+ 
+							'<td class="rhGrid-td-left " id="xm_end" style="text-align: center" >'+ xm_jd+'0.0%</td>'+ 
+							'<td class="rhGrid-td-left " id="xm_currentState" style="text-align: center">已结束</td>'+
+//							'<td id="BM_OPTIONS" style="text-align: center;">'+
+//								'<input type="button" class="opera_btn" style="margin:0 auto;display:block;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="'+ xm_opera + '"></input>'+
+//							'</td>'+
+							'</tr>');
+					xm_rowNum2++;
+				}
 			}
 		}
 		// 若项目已经存在页面中
