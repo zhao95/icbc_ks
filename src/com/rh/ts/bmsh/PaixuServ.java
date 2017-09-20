@@ -31,7 +31,7 @@ public class PaixuServ extends CommonServ {
 		String icode = paramBean.getStr("id");
 		// 两个字段可以确认 一条记录 唯一的
 		String where = "AND USER_CODE = " + "'" + user_code
-				+ "' order by PX_XUHAO";
+				+ "' order by to_number(PX_XUHAO)";
 		if ("1".equals(xuhao)) {
 			// 删除以前的数据重新加载
 			List<Bean> list = ServDao.finds("TS_BMSH_PX", where);
@@ -58,7 +58,7 @@ public class PaixuServ extends CommonServ {
 	 */
 	public Bean getShenhelist(Bean paramBean) {
 		Bean outBean = new Bean();
-		String where1 = "AND USER_CODE is null order by PX_XUHAO";
+		String where1 = "AND USER_CODE is null order by to_number(PX_XUHAO)";
 		// 默认没有保存过 的排序
 		List<Bean> listall = ServDao.finds("TS_BMSH_PX", where1);
 		ObjectMapper mapper = new ObjectMapper();
@@ -87,7 +87,7 @@ public class PaixuServ extends CommonServ {
 	public Bean getUserList(Bean paramBean) {
 		String user_code = paramBean.getStr("user_code");
 		String where = "AND USER_CODE=" + "'" + user_code
-				+ "' order by PX_XUHAO";
+				+ "' order by to_number(PX_XUHAO)";
 		List<Bean> list = ServDao.finds("TS_BMSH_PX", where);
 		Bean outBean = new Bean();
 
@@ -120,7 +120,7 @@ public class PaixuServ extends CommonServ {
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter w = new StringWriter();
 		if (list.size() == 0) {
-			String where1 = "AND USER_CODE is null order by PX_XUHAO";
+			String where1 = "AND USER_CODE is null order by to_number(PX_XUHAO)";
 			// 默认没有保存过 的排序
 			List<Bean> listall = ServDao.finds("TS_BMSH_PX", where1);
 
