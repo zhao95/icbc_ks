@@ -359,7 +359,7 @@
         </div>
 
         <%--审批意见--%>
-        <div class="row" id="shxxid" style="margin-top:20px">
+        <div class="row" id="shxxid" style="margin-top:60px">
             <div class="col-sm-12">
                 <%--时间轴 审批意见--%>
                 <div class="times">
@@ -608,13 +608,17 @@
                 } else {
                     //模态框
                     var $tiJiao = $('#tiJiao');
-                    $('#shrNames').html(response.shrNames);
-                    //关闭提示框后返回到请假页面
-                    $tiJiao.on('hidden.bs.modal', function (/*e*/) {
+                    if (response.shrNames) {
+                        $('#shrNames').html(response.shrNames);
+                        //关闭提示框后返回到请假页面
+                        $tiJiao.on('hidden.bs.modal', function (/*e*/) {
+                            fanhui();
+                        });
+                        //显示提示框
+                        $tiJiao.modal('show');
+                    } else {
                         fanhui();
-                    });
-                    //显示提示框
-                    $tiJiao.modal('show');
+                    }
                 }
             }
         });
