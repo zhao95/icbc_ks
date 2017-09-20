@@ -63,14 +63,14 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 /**
  * 刷新按钮
  */
-$("a[actcode='refresh']").unbind("mousedown").unbind("click").bind("click",function(event) {
-	var _loadbar = new rh.ui.loadbar();
-	_loadbar.show(true);
-	var where = " AND CTLG_MODULE = '"+ module +"'";
-	_viewer.refreshTreeGrid(where,where);
-	_viewer._transferData = {};
-	_loadbar.hideDelayed();
-});
+//$("a[actcode='refresh']").unbind("mousedown").unbind("click").bind("click",function(event) {
+//	var _loadbar = new rh.ui.loadbar();
+//	_loadbar.show(true);
+//	var where = " AND CTLG_MODULE = '"+ module +"'";
+//	_viewer.refreshTreeGrid(where,where);
+//	_viewer._transferData = {};
+//	_loadbar.hideDelayed();
+//});
 
 /**
  * 初始化按钮
