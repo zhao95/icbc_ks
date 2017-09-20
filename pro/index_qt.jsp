@@ -99,7 +99,7 @@
 							<li><a href="#" class="" id="TipUserInfo"><i class="fa fa-user-o fa-fw"></i>个人信息</a></li>
 								<li><a href="#" class="" data-layout="layout-boxed"><i class="fa fa-cog fa-fw"></i>简约/平铺</a></li>
 <!-- 								<li><input type="checkbox" data-layout="layout-boxed" class="pull-right" checked="checked">简约/平铺</li> -->
-								<li><a  class="" id="loginOutBtn"><i class="fa fa-power-off fa-fw"></i>退出系统</a></li>
+								<li><a  class="" id="loginOutBtn" style="cursor:pointer;"><i class="fa fa-power-off fa-fw"></i>退出系统</a></li>
 
 <!-- 							<li class="user-footer"></li> -->
 
