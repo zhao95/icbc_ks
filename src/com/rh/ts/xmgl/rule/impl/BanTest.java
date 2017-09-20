@@ -1,5 +1,7 @@
 package com.rh.ts.xmgl.rule.impl;
 
+import java.text.SimpleDateFormat;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,12 +33,14 @@ public class BanTest implements IRule {
 			obj = new JSONObject(jsonStr);
 
 			String endDate = obj.getString("val"); // 有效期时间
+			
+			SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
 
 			SqlBean sql = new SqlBean();
 
-			sql.and("JKGL_RLZY", user);// 人员编码
+			sql.and("JKGL_USER_CODE", user);// 人员编码
 
-			sql.andGTE("JKGL_END_DATE", endDate);// 禁考期限 <= datetime
+			sql.andGTE("JKGL_END_DATE", sf.format(endDate));// 禁考期限 >= datetime
 
 			sql.and("S_FLAG", 1);
 
