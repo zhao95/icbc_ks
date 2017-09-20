@@ -147,11 +147,10 @@
 							<tr style="backGround-color: WhiteSmoke; height: 30px">
 							<th id="BM_XUHAO" class=""
 									style="width: 6.6%; text-align: center">序号</th>
-								<th style="width: 20%; text-align: center">名称</th>
+								<th style="width: 25%; text-align: center">名称</th>
 								<th style="width: 5%; text-align: center">类型</th>
-								<th style="width: 20%; text-align: center">考试时间</th>
 								<th style="text-align: center; width: 14%;">审核状态</th>
-							<!-- 	<th style="width: 14%; text-align: center">状态</th> -->
+							 	<th style="width: 10%; text-align: center">状态</th>
 								<th id="BM_OPTIONS" class=""
 									style="width: 14%; text-align: center">操作</th>
 							</tr>
