@@ -447,13 +447,13 @@
                     &times;
                 </button>
                 <h5 class="modal-title">
-                    下一环节审批人
+                    <span id="tiJiaoTip">下一环节审批人</span>
                 </h5>
             </div>
             <div class="modal-body zgks">
                 <table style="width: 100%;height: 100px;border: 0;">
                     <tr>
-                        <td style="text-align: center" width="10%">已经提交给<span id="shrNames"></span>进行审核</td>
+                        <td id="tiJiaoContent"  style="text-align: center" width="10%">已经提交给<span id="shrNames"></span>进行审核</td>
                     </tr>
                 </table>
             </div>
@@ -658,15 +658,18 @@
                     var $tiJiao = $('#tiJiao');
                     if (response.shrNames) {
                         $('#shrNames').html(response.shrNames);
-                        //关闭提示框后返回到请假页面
-                        $tiJiao.on('hidden.bs.modal', function (/*e*/) {
-                            fanhui();
-                        });
-                        //显示提示框
-                        $tiJiao.modal('show');
+                        $('#tiJiaoTip').html('下一环节审批人');
+                        $('#tiJiaoContent').html('已经提交给<span id="shrNames">' + response.shrNames + '</span>进行审核');
                     } else {
-                        fanhui();
+                        $('#tiJiaoTip').html('提示信息');
+                        $('#tiJiaoContent').html('审批已处理');
                     }
+                    //关闭提示框后返回到请假页面
+                    $tiJiao.on('hidden.bs.modal', function (/*e*/) {
+                        fanhui();
+                    });
+                    //显示提示框
+                    $tiJiao.modal('show');
                 }
             }
         });
