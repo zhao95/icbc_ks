@@ -449,11 +449,12 @@ rh.vi.pageView.prototype._bldBanner = function() {
 	var perConIn = jQuery("<div></div>").addClass("rh-head-per-in").attr("title", System.getUser("ODEPT_NAME")).appendTo(perCon);
 	var userSex = System.getVar("@USER_SEX@");
 	var perImg = FireFly.getContextPath() + System.getUser("USER_IMG");
-	var perDiv = jQuery("<img class='rh-head-per-icon' id='rh-header-user-img'></img>").attr("src",perImg).appendTo(perConIn);
+	var perDiv = jQuery("<img class='rh-head-per-icon' id='rh-header-user-img' onerror=\"this.src='/sy/theme/default/images/common/user0.png'\" ></img>").attr("src",perImg).appendTo(perConIn);
+	
 	//如果用户头像加载错误，则设置默认图片
-	$('#rh-header-user-img').error(function(){
-        $(this).attr('src', "/sy/theme/default/images/common/user0.png");
-     });
+//	$('#rh-header-user-img').error(function(){
+//        $(this).attr('src', "/sy/theme/default/images/common/user0.png");
+//     });
 	var perTip = jQuery("<div class='rh-head-per-tip'><span style='font-size:14px;width:70px;' title='"+System.getUser("USER_NAME")+"'>" + System.getUser("USER_NAME")
 			+ "</span><span style='margin-left:5px;font-size:14px;width:70px;' title='"+System.getUser("DEPT_NAME")+"'>" + System.getUser("DEPT_NAME") + "</span></div>"
 			+"<div  style='position: absolute; right: 40px;height: 25px;'  id='ht_loginOut_all' ><div class='ht_loginOut' title='退出用户' style='background: url(img/power-off.png) no-repeat;height: 25px;position: relative;width: 25px;top: 8%;left: 66px;cursor: pointer;'></div><div title='退出用户' class='ht_loginOut' style='position: absolute;left: 95px;top: 6px; min-width: 35px;font-size: 14px;color: white;cursor: pointer;'>退出</div></div>").appendTo(perConIn);
