@@ -114,7 +114,7 @@ public class PaixuServ extends CommonServ {
 	public Bean getShenheJson(Bean paramBean) {
 		String user_code = paramBean.getStr("user_code");
 		String where = "AND USER_CODE=" + "'" + user_code
-				+ "' order by PX_XUHAO";
+				+ "' order by  to_number(PX_XUHAO)";
 		List<Bean> list = ServDao.finds("TS_BMSH_PX", where);
 		Bean outBean = new Bean();
 		ObjectMapper mapper = new ObjectMapper();
