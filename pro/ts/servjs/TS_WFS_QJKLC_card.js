@@ -6,16 +6,19 @@ if(sel == 0){
 	_viewer.getItem("QJKLC_SHQZ").hide();
 	_viewer.showGroup("dept");
 	_viewer.showGroup("post");
+	_viewer.getItem("QJKLC_ZDDEPT_COLCODE").hide();
 }else if(sel == 1){
 	_viewer.getItem("QJKLC_SHR").show();
 	_viewer.getItem("QJKLC_SHQZ").hide();
 	_viewer.hideGroup("dept");
 	_viewer.hideGroup("post");
+	_viewer.getItem("QJKLC_ZDDEPT_COLCODE").hide();
 }else{
 	_viewer.getItem("QJKLC_SHR").hide();
 	_viewer.getItem("QJKLC_SHQZ").show();
 	_viewer.hideGroup("dept");
 	_viewer.hideGroup("post");
+	_viewer.getItem("QJKLC_ZDDEPT_COLCODE").show();
 }
 
 _viewer.getItem("QJKLC_SEL").change(function(){
@@ -25,16 +28,19 @@ _viewer.getItem("QJKLC_SEL").change(function(){
 		_viewer.getItem("QJKLC_SHQZ").hide();
 		_viewer.showGroup("dept");
 		_viewer.showGroup("post");
+		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").hide();
 	}else if(sel == 1){
 		_viewer.getItem("QJKLC_SHR").show();
 		_viewer.getItem("QJKLC_SHQZ").hide();
 		_viewer.hideGroup("dept");
 		_viewer.hideGroup("post");
+		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").hide();
 	}else{
 		_viewer.getItem("QJKLC_SHR").hide();
 		_viewer.getItem("QJKLC_SHQZ").show();
 		_viewer.hideGroup("dept");
 		_viewer.hideGroup("post");
+		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").show();
 	}
 });
 
