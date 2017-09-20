@@ -54,8 +54,8 @@
 						
 		<tr style="backGround-color:WhiteSmoke; height: 30px">
 			<th style="width: 5%; text-align: center">序号</th>
-			<th style="width: 13%;text-align: center"">审核时间</th>
-			<th style="width: 13%;text-align: center"">审核人姓名</th>
+			<th style="width: 13%;text-align: center">审核时间</th>
+			<th style="width: 13%;text-align: center">审核人姓名</th>
 			<th style="width: 13%; text-align: center">审核人登录名</th>
 			<th style="width: 13%; text-align: center">审核级别</th>
 			<th style="width: 13%; text-align: center">审核状态</th>
@@ -65,17 +65,18 @@
 	</thead>
 	<tbody>
 	 <%
-	 String bmid = "";
+	 	
+	 	String bmid = "";
 		if(userBean != null) {
-	  bmid = request.getParameter("bmidmx");
-	  String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
-	  List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
-	  for(int i=0;i<list.size();i++){
+	    bmid = request.getParameter("bmidmx"); 
+	    String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
+	    List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
+	    for(int i=0;i<list.size();i++){
 		Bean bean = list.get(i);
 		int j = i+1;
 		String shdate = bean.getStr("S_ATIME");
 		String shr = bean.getStr("SH_UNAME");
-		String shlog = bean.getStr("SH_ULOGIN");
+		String shlog = bean.getStr("SH_UCODE");
 		String jibie = bean.getStr("SH_LEVEL");
 		String state = bean.getStr("SH_STATUS");
 			String status = "";
@@ -85,7 +86,7 @@
 			status="审核未通过";
 		}
 		String liyou = bean.getStr("SH_MIND");
-		String address = bean.getStr("SH_UCODE");
+		String address = bean.getStr("SH_ULOGIN");
 	%>
 		 <tr height="50px">
 		<td align="center"><%=j %></td><td><%=shdate %></td><td align="center"><%=shr %></td><td align="center"><%=shlog %></td><td align="center"><%=jibie %></td><td align="center"><%=status %></td><td align="center"><%=liyou %></td><td align="center"><%=address %></td>

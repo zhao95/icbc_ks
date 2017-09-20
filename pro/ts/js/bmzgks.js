@@ -109,9 +109,9 @@ function xminfoshow(){
        					$("#"+yzjg).append('审核不通过');
        				
        				}if(shArray==true){
-       					$("#"+a).append('<div></div>');
-       					$("#"+a).append('<div></div>');
        					$("#"+yzjg).append('审核通过');
+       					$("#"+a).append('<div></div>');
+       					$("#"+a).append('<div><a href="examref.jsp">相关学习材料</a></div>');
        				}
 	       		}
        			
@@ -685,7 +685,6 @@ function xminfoshow(){
 			 $("#tjbt").attr("data-target","#tiJiao");
 	}
 	
-
 	//岗位类别名称代码
 	var STATION_TYPE_CODE="";
 	//岗位类别名称
@@ -722,7 +721,6 @@ function xminfoshow(){
 				if(result1.list==""){
 					return;
 				}
-				debugger;
 			var pageEntity = result1.list;
 			 var kslb_id = pageEntity[0].KSLB_ID;
 			  lbname = pageEntity[0].KSLB_NAME;
@@ -755,6 +753,9 @@ function xminfoshow(){
 			    if(rows>1){
 				var mkvalue= $("#mkid").children('option:selected').val();
 				var param = {};
+				param["typecode"]=STATION_TYPE_CODE;
+				param["xlcode"]=STATION_NO_CODE;
+				param["zhiwu"]=DUTY_LEVEL;
 				param["MK"]=mkvalue;
 				param["lbname"]=lbname;
 				param["xlname"]=xlname;
@@ -764,6 +765,7 @@ function xminfoshow(){
 				var tyArray = hh.split(",");
 				var select = document.getElementById("lxid");
 				jQuery("#lxid").empty();          //把select对象的所有option清除掉
+				
 				for(var i=0;i<tyArray.length;i++){
 					select.options[i]=new Option((tyArray[i]=="1")?"初级":(tyArray[i]=="2")?"中级":(tyArray[i]=="3")?"高级":"无",tyArray[i]);
 				}

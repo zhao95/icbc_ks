@@ -2,6 +2,7 @@ package com.rh.ts.bmsh;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -269,12 +270,25 @@ public class NoPassServ extends CommonServ {
 				}
 				ServDao.delete("TS_BMSH_NOPASS", id);
 				// 审核明细表中插入此次审核数据
+				String localip="";
+				 InetAddress ia=null; 
+			        try { 
+			            ia=ia.getLocalHost(); 
+			             localip=ia.getHostAddress(); 
+
+			        } catch (Exception e) { 
+
+			            // TODO Auto-generated catch block 
+
+			            e.printStackTrace(); 
+
+			        } 
 				Bean mindbean = new Bean();
 				mindbean.set("SH_LEVEL", level);
 				mindbean.set("SH_MIND", liyou);
 				mindbean.set("DATA_ID", bean.getStr("BM_ID"));
 				mindbean.set("SH_STATUS", 1);
-				mindbean.set("SH_ULOGIN", userBean.getLoginName());
+				mindbean.set("SH_ULOGIN",localip);
 				mindbean.set("SH_UNAME", userBean.getName());
 				mindbean.set("SH_UCODE", shenuser);
 				mindbean.set("SH_TYPE", 1);
