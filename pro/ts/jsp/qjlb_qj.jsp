@@ -45,15 +45,16 @@
           href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 
     <style>
-     #tabletjId {
-    border:lightgray;
-}
-    #myModal .modal-dialog{
-	position: absolute; 
-    	top:8%;
-    	left:30%;
-    }
-    
+        #tabletjId {
+            border: lightgray;
+        }
+
+        #myModal .modal-dialog {
+            position: absolute;
+            top: 8%;
+            left: 30%;
+        }
+
         .bkuan table td {
             height: 50px;
         }
@@ -79,9 +80,8 @@
 //    String user_mobile = userBean.getStr("USER_MOBILE");
 //    //获取用户入行时间
 //    String user_cmpy_date = userBean.getStr("USER_CMPY_DATE");
-      
-       	
-    	
+
+
 %>
 <%@ include file="../../qt/jsp/header-logo.jsp" %>
 <div style="background-color: #dfdfdf;padding: 0 10%;">
@@ -143,10 +143,12 @@
         <div class="row" style="padding-top: 50px;">
             <div class="col-sm-2">
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-9" style="padding: 0;">
                 <div style="background-color: #fed1d1;border:1px solid red;border-radius: 5px;padding: 5px;color: #570000;">
-                    ！ 温馨提示：您今年已在<span style="color: red">1</span>周内请假 <span style="color: red">2</span> 次，还可请假 <span style="color: red">1</span> 次。
-                    满 <span id="weekes" style="color: red"></span>周且满 <span id="counts" style="color: red"></span> 次后，本年度将不允许再请假。请合理使用请假次数！
+                    ！ 温馨提示：您今年已在<span style="color: red">1</span>周内请假 <span style="color: red">2</span> 次，还可请假 <span
+                        style="color: red">1</span> 次。
+                    满 <span id="weekes" style="color: red"></span>周且满 <span id="counts" style="color: red"></span>
+                    次后，本年度将不允许再请假。请合理使用请假次数！
                 </div>
             </div>
         </div>
@@ -175,11 +177,11 @@
                     <div onclick="xuanze()" data-toggle="modal" data-target="#myModal" id="qjdks"
                          style="display: inline-block;cursor: pointer;color: #4cd4d4;padding:5px;">
                         <a href="#" style="font-size: 15px ; color: #91dce4;">
-                        <img   src="<%=CONTEXT_PATH %>/ts/image/0255.png"/>
-                        <%-- <i class="fa fa-search" aria-hidden="true" style="font-size: 15px ; color: #91dce4;"></i>--%>请选择</a>
+                            <img src="<%=CONTEXT_PATH %>/ts/image/0255.png"/>
+                            <%-- <i class="fa fa-search" aria-hidden="true" style="font-size: 15px ; color: #91dce4;"></i>--%>请选择</a>
                     </div>
                     <div style="min-height: 120px">
-                        <table id="qjks-table"  style="width: 100%;border-color: white;">
+                        <table id="qjks-table" style="width: 100%;border-color: white;">
                             <thead>
                             <tr style="padding-left: 5px;text-align: center">
                                 <td width="35%">考试名称</td>
@@ -187,7 +189,7 @@
                                 <td width="30%">操作</td>
                             </tr>
                             </thead>
-                            <tbody style="background-color: #f0f0f0;border="1"">
+                            <tbody style="background-color: #f0f0f0;" border="1">
                             </tbody>
                         </table>
                     </div>
@@ -225,7 +227,9 @@
                                   id="imgformid" enctype="multipart/form-data">
                                 <div class="form-group" id="caseIma">
                                     <label class="" style="cursor:pointer;"><%--btn btn-primary--%>
-                                        <img style = "padding-left:15px" alt="选择" src="<%=CONTEXT_PATH %>/ts/image/005.png"/>&nbsp;&nbsp;<a  style="color: #91dce4;" href="#">上传</a>
+                                        <img style="padding-left:15px" alt="选择"
+                                             src="<%=CONTEXT_PATH %>/ts/image/005.png"/>&nbsp;&nbsp;<a
+                                                style="color:#81bbb3;" href="#">上传</a>
                                         <%--选择图片--%>
                                         <input type="file" style="display: none;" class="form-control" id="caseImage"
                                                name="file" onchange="viewImage(this)"/><%--viewImage   upImg--%>
@@ -260,12 +264,13 @@
         <div class="row">
             <div class="col-sm-offset-4 col-sm-3">
                 <button onclick="applyForLeave()" class="btn btn-success"
-                        style="width:150px;height:50px;background-color: #00c2c2;">
+                        style="width:150px;height:45px;background-color: #00c2c2;">
                     提交申请
                 </button>
             </div>
             <div class="col-sm-3">
-                <button onclick="back()" class="btn btn-success" style="width:150px;height:50px;background-color: #00c2c2;">
+                <button onclick="back()" class="btn btn-success"
+                        style="width:150px;height:45px;background-color: #00c2c2;">
                     返回
                     <div id="serverResponse"></div>
                 </button>
@@ -367,24 +372,24 @@
 <script type="text/javascript">
 
     $(function () {
-    	//获取用户usercode
-    	var data = {USER_CODE: System.getUser("USER_CODE")};
-    	//获取最大请假的次数显示
-     	var  countCon=System.getVar("@C_TS_KSQJ_SETCONUTS@");
-    	$("#counts").html(countCon);
-    	//获取最大的周次数
-    	var  weekes=System.getVar("@C_TS_KSQJ_WEEK_MAXNUM@");
-    	$("#weekes").html(weekes);
-    	//考生已经借考过多少次
-    	//1.一个周内不能请假6次。2.不能超过2个考试周。3.考试的前后加减一天
-    	var getLeaveCount = FireFly.doAct('TS_QJLB_QJ', 'getLeaveCount', data);
-    	 
-    	<%--var userCode=System.getUser("USER_CODE");
-    	//获取系统时间年
-    	 var date=new Date;
-         var year=date.getFullYear(); 
+        //获取用户usercode
+        var data = {USER_CODE: System.getUser("USER_CODE")};
+        //获取最大请假的次数显示
+        var countCon = System.getVar("@C_TS_KSQJ_SETCONUTS@");
+        $("#counts").html(countCon);
+        //获取最大的周次数
+        var weekes = System.getVar("@C_TS_KSQJ_WEEK_MAXNUM@");
+        $("#weekes").html(weekes);
+        //考生已经借考过多少次
+        //1.一个周内不能请假6次。2.不能超过2个考试周。3.考试的前后加减一天
+        var getLeaveCount = FireFly.doAct('TS_QJLB_QJ', 'getLeaveCount', data);
+
+        <%--var userCode=System.getUser("USER_CODE");
+        //获取系统时间年
+         var date=new Date;
+         var year=date.getFullYear();
          var nowYear = year.toString();
-    	var  where="and USER_CODE='"+userCode+"' and QJ_STATUS='"+2+"'and S_ATIME "--%>
+        var  where="and USER_CODE='"+userCode+"' and QJ_STATUS='"+2+"'and S_ATIME "--%>
         /*可申请的请假列表*/
         var table1Tbody = jQuery('#tabletjId tbody');
         table1Tbody.html('');
