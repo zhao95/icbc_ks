@@ -76,7 +76,7 @@
 position: absolute; 
     top: 20%; 
     bottom: 200px; 
-    left: 0; 
+    left: 20%; 
     right: 0; 
 }
 </style>
@@ -334,8 +334,8 @@ position: absolute;
 	<div class="modal fade" id="loading" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div class="modal-dialog" style="width:700px;">
-			<div class="modal-content" style="background:lightgray;height:100px;width:80%">
-				<div style="padding-left:40%;padding-top:7%;font-size:16px;">正在验证请稍后.....</div>
+			<div class="modal-content" style="background:lightgray;height:100px;width:50%">
+				<div style="padding-left:30%;padding-top:9%;font-size:16px;">正在验证请稍候.....</div>
 			</div>
 			<!-- /.modal-content -->
 		</div>
