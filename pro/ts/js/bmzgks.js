@@ -32,7 +32,8 @@ function xminfoshow(){
 }
 //进行资格验证
 	function checky(){
-	
+		
+		//加载状态为complete时移除loading效果
 		var param = {};
 		var bminfo={};
 		bminfo['XM_ID'] = xm_id;
@@ -119,6 +120,7 @@ function xminfoshow(){
        			
        		}
     	});	
+		$("#loading").modal("hide");
 	}
 	//提交所有数据
 	function mttijiao(){
@@ -845,4 +847,29 @@ var highnum=0;
 		tab.deleteRow(j);
 		
 	}
-	
+function yanzheng(){
+	var checkboxss = $('input[name=checkboxaa]');
+	if(checkboxss.length==0){
+		alert("请先选择考试");
+		$("#zgyzbt").attr("data-target","");
+		return;
+	}
+	var yanzhengflag = false;
+	$('input[name=checkboxaa]').each(function(){
+		
+		var divlength = $($(this.parentNode.parentNode).find("td").eq(6)).find("div").length;
+		
+		if(divlength<2){
+			yanzhengflag=true;
+		}
+	})
+	if(yanzhengflag){
+		window.setTimeout(function(){   
+			checky(); 
+		},1000);
+		$("#zgyzbt").attr("data-target","#loading");
+	}else{
+		$("#zgyzbt").attr("data-target","");
+	}
+}
+

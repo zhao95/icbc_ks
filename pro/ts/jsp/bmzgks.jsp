@@ -72,6 +72,13 @@
 	opacity: 0.5;
 	-moz-opacity: 0.5;
 }
+#loading .modal-dialog{
+position: absolute; 
+    top: 20%; 
+    bottom: 200px; 
+    left: 0; 
+    right: 0; 
+}
 </style>
 <body class="hold-transition skin-black sidebar-mini">
 	<% 
@@ -214,7 +221,7 @@
 					</table>
 				</div>
 				<div style="height: 100px; padding: 20px;padding-top:120px;">
-					<button id="zgyzbt" onclick="checky()" class="btn btn-success"
+					<button id="zgyzbt"  class="btn btn-success"  onclick ="yanzheng()" data-toggle="modal" data-target=""
 						style="font-size:16px;width: 150px;height:50px; background-color: #00c2c2;">1.资格验证</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<button id="tjbt" class="btn btn-success"
@@ -321,8 +328,20 @@
 			</div>
 			<!-- /.modal-content -->
 		</div>
+		</div>
+		<!-- /.modal -->
+		<!-- 模态选择框跨序列（Modal） -->
+	<div class="modal fade" id="loading" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div class="modal-dialog" style="width:700px;">
+			<div class="modal-content" style="background:lightgray;height:100px;width:80%">
+				<div style="padding-left:40%;padding-top:7%;font-size:16px;">正在验证请稍后.....</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
 		<!-- /.modal -->
 	</div>
+	<div id = 'chufa'></div>
 	<input type="hidden" id='xmidval' value="<%=xm_id %>">
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
