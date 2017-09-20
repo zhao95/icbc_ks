@@ -419,7 +419,7 @@ if(userBean != null) {
 				   <a id="rightalla" onclick="rightall()" href="#"><image id="rightall" src="/ts/image/1552.png"></image></a>
 				    </div>
 				    <div style="width:330px;position:relative;left:420px;top:-666px">
-				     <table style="width:330px;">
+				     <table style="width:339px;">
 				     <thead style="background-color:lightgray;width:200px;border-bottom:solid 1px lightgray">
 				      <tr style="height:35px;">
 				        <th style="padding-left:20px;text-align:left"><input type="checkbox" style="width:16px;height:16px" id="daixuanrt" onclick="checkallright(this)">已选&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
@@ -427,7 +427,7 @@ if(userBean != null) {
 				      </thead>
 				      </table>
 				    </div>
-				      <div id="pxtable2div" style="height:500px;overflow-y:auto;width:330px;position:relative;left:420px;top:-664px">
+				      <div id="pxtable2div" style="height:500px;overflow-y:auto;width:338px;position:relative;left:420px;top:-664px">
 				   <table id="pxtable2" style="width:310px;">
 				      <tbody>
 				    
@@ -501,17 +501,17 @@ if(userBean != null) {
 				<table style="width:650px;font-size:15px;color:black">
 				<thead>
 				<tr>
-				<td style="text-align:right;font-size:20px;vertical-align:bottom">考试标题：&nbsp;</td><td style="font-size:18px;color:red;width:40%" id="ks_title"></td>
+				<td style="text-align:right;font-size:20px;vertical-align:bottom">考试标题：&nbsp;</td><td style="font-size:18px;color:gray;width:40%" id="ks_title"></td>
 				</tr>
 				</thead>
 				<tr height="40px">
-				<td style="width:20%;text-align:right;vertical-align:bottom">报名人：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;height:20px;color:red;width:15%;border-bottom:solid 1px black;" id="bm_name"></td><td style="vertical-align:bottom;width:20%;text-align:right;">人力编码：&nbsp;</td><td style="border-bottom:solid 1px black;vertical-align:bottom;font-size:14px;color:red;text-align:left;width:50%" id="work_num"></td>
+				<td style="color:gray;width:20%;text-align:right;vertical-align:bottom">报名人：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;height:20px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="bm_name"></td><td style="color:gray;vertical-align:bottom;width:20%;text-align:right;">人力编码：&nbsp;</td><td style="border-bottom:solid 1px lightgray;vertical-align:bottom;font-size:14px;color:gray;text-align:left;width:50%" id="work_num"></td>
 				</tr>
 				<tr height="50px">
-				<td style="width:20%;text-align:right;vertical-align:bottom">性别：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:red;width:15%;border-bottom:solid 1px black;" id="gender"></td><td style="vertical-align:bottom;width:20%;text-align:right;">电话：&nbsp;</td><td style="border-bottom:solid 1px black;vertical-align:bottom;font-size:14px;color:red;text-align:left;width:50%" id="phone_num"></td>
+				<td style="color:gray;width:20%;text-align:right;vertical-align:bottom">性别：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="gender"></td><td style="color:gray;vertical-align:bottom;width:20%;text-align:right;">电话：&nbsp;</td><td style="border-bottom:solid 1px lightgray;vertical-align:bottom;font-size:14px;color:gray;text-align:left;width:50%" id="phone_num"></td>
 				</tr>
 				<tr height="50px">
-				<td style="width:20%;text-align:right;vertical-align:bottom">报名时间：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:red;width:15%;border-bottom:solid 1px black;" id="starttime"></td><td style="vertical-align:bottom;width:20%;text-align:right;">所属机构：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:red;width:50%;border-bottom:solid 1px black;" id="belongto"></td>
+				<td style="color:gray;width:20%;text-align:right;vertical-align:bottom">报名时间：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="starttime"></td><td style="color:gray;vertical-align:bottom;width:20%;text-align:right;">所属机构：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:50%;border-bottom:solid 1px lightgray;" id="belongto"></td>
 				</tr>
 				</table>
 				</div>
