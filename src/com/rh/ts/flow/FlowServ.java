@@ -148,7 +148,7 @@ public class FlowServ extends CommonServ {
 		getStep = level - 1;
 	    }
 	    String nodeName = "";
-	    List<Bean> shList = ServDao.finds("TS_WFS_QJKLC", "AND WFS_ID = '"+wfsId+"' and NODE_STEPS = "+getStep+" and DEPT_CODE like '%"+odeptCode+"%'");
+	    List<Bean> shList = ServDao.finds("TS_WFS_QJKLC", "AND WFS_ID = '"+wfsId+"' and NODE_STEPS = "+getStep);
 	    List<Bean> resList = new ArrayList<Bean>();
 	    for (int k = 0; k < shList.size(); k++) {
 		Bean shBean = shList.get(k);
