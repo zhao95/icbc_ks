@@ -434,8 +434,7 @@ function firall(){
 					var url = "TS_COMM_MIND.list.do?";
 					var options = {"url" : url,"params" : params,"menuFlag" : 3};
 					Tab.open(options);*/
-					/* doPost('bmshmx.jsp', {bmidmx: bmids});*/
-					window.open("bmshmx.jsp");
+					doPost('bmshmx.jsp', {bmidmx: bmids});
 				}
 				//导出
 				//定义一个公共变量  当进行条件查询时  将 数据ID放入数组中
@@ -744,6 +743,7 @@ function doPost(to, data) {  // to:提交动作（action）,data:参数
     var myForm = document.createElement("form");
     myForm.method = "post";
     myForm.action = to;
+    myForm.target="_blank";
     for (var i in data) {
         var myInput = document.createElement("input");
         myInput.setAttribute("name", i);  // 为input对象设置name
