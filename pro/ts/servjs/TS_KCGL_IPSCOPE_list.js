@@ -1,7 +1,7 @@
 var _viewer = this;
 
-$(".rhGrid").find("th[icode='del']").html("操作");
-$(".rhGrid").find("tr").unbind("dblclick");
+$("#TS_KCGL_IPSCOPE  .rhGrid").find("th[icode='del']").html("操作");
+$("#TS_KCGL_IPSCOPE  .rhGrid").find("tr").unbind("dblclick");
 //删除单行数据
 _viewer.grid.getBtn("del").unbind("click").bind("click",function() {
 	var pk = jQuery(this).attr("rowpk");//获取主键信息
