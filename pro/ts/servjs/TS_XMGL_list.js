@@ -131,7 +131,6 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){
 		 var  paramXm={};
 		 paramXm["pkCodes"]=pkAarry.join(',');
 		FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm);
-		
 //		for (var i = 0; i < pkAarry.length; i++) {
 //			var  where="and  XM_ID ='"+pkAarry[i]+"'";
 //		var data={_extWhere:where};
