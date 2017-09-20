@@ -3,7 +3,7 @@ $(function() {
 	var typeMap = {
 		"未开启" : "c1",
 		"已结束" : "c3",
-		"报名中" : "c2",
+		"进行中" : "c2",
 		"审核中" : "c2",
 		"考前请假开放中" : "c2",
 		"考后请假开放中" : "c2",
@@ -39,7 +39,8 @@ $(function() {
 				var xm_name = resultXM._DATA_[0].XM_NAME;
 				var xm_type = resultXM._DATA_[0].XM_TYPE;
 				// 根据返回值可以找到查询数据字典后的结果，直接拿来用即可。数据为发起单位。
-				var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME__NAME;
+				var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME;
+//				var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME__NAME;
 				var xm_start = resultXM._DATA_[0].XM_START;
 				var xm_end = resultXM._DATA_[0].XM_END;
 				var xm_jd = resultXM._DATA_[0].XM_JD;
@@ -66,7 +67,7 @@ $(function() {
 				for (var j = 0; j < resultXMSZ._DATA_.length; j++) {
 					var gj_name = resultXMSZ._DATA_[j].XM_SZ_TYPE;
 					// 如果项目挂接模块处于进行中，则给页面赋值
-					if (typeMap[gj_name] === "c2") {
+					if (typeMap[gj_name] == "c2") {
 						xm_currentState = gj_name;
 					}
 				}
@@ -74,7 +75,7 @@ $(function() {
 				jQuery("#table1_tbody").append(
 								'<tr class="rhGrid-td-left" XM_ID="'+ xm_id+ '" style="height: 50px">'+
 								'<td class="indexTD" style="text-align: center">'+ xm_rowNum1+ '</td>'+
-								'<td class="rhGrid-td-left " id="xm_currentState"style="text-align: center">'+ xm_name+'</td>'+ 
+								'<td class="rhGrid-td-left " id="xm_name"style="text-align: center">'+ xm_name+'</td>'+ 
 								'<td class="rhGrid-td-left " id="xm_type" style="text-align: center">'+ xm_type+'</td>'+
 								'<td class="rhGrid-td-left " id="xm_dept" style="text-align: center">'+ xm_dept+'</td>'+
 								'<td class="rhGrid-td-left " id="xm_start"style="text-align: center" >'+ xm_start+'</td>'+
@@ -102,7 +103,7 @@ $(function() {
 				jQuery("#table2_tbody").append(
 						'<tr class="rhGrid-td-left" XM_ID="'+ xm_id+ '" style="height: 50px">'+
 						'<td class="indexTD" style="text-align: center">'+ xm_rowNum2+ '</td>'+
-						'<td class="rhGrid-td-left " id="xm_currentState"style="text-align: center">'+ xm_name+'</td>'+ 
+						'<td class="rhGrid-td-left " id="xm_name"style="text-align: center">'+ xm_name+'</td>'+ 
 						'<td class="rhGrid-td-left " id="xm_type" style="text-align: center">'+ xm_type+'</td>'+
 						'<td class="rhGrid-td-left " id="xm_dept" style="text-align: center">'+ xm_dept+'</td>'+
 						'<td class="rhGrid-td-left " id="xm_start"style="text-align: center" >'+ xm_start+'</td>'+
