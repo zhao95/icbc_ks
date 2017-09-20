@@ -108,7 +108,7 @@ function openMyCard(dataId,readOnly,showTab){
 _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 	module = 'PROJECT';
 	var params = {"isHide":"true", "CTLG_MODULE":module};
-	var options = {"url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3,"top":true};
+	var options = {"url":"TS_COMM_CATALOG_PROJECT.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3,"top":true};
 	Tab.open(options);
 });
 
