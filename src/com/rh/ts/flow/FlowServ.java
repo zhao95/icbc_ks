@@ -148,7 +148,7 @@ public class FlowServ extends CommonServ {
 		getStep = level - 1;
 	    }
 	    String nodeName = "";
-	    List<Bean> shList = ServDao.finds("TS_WFS_QJKLC", "AND WFS_ID = '"+wfsId+"' and NODE_STEPS = "+getStep+" and DEPT_CODE like '%"+odeptCode+"%'");
+	    List<Bean> shList = ServDao.finds("TS_WFS_QJKLC", "AND WFS_ID = '"+wfsId+"' and NODE_STEPS = "+getStep);
 	    List<Bean> resList = new ArrayList<Bean>();
 	    for (int k = 0; k < shList.size(); k++) {
 		Bean shBean = shList.get(k);
@@ -174,7 +174,15 @@ public class FlowServ extends CommonServ {
 			continue;
 		    }
 		}else if(selType == 2){
-		    List<Bean> list2 = ServDao.finds("TS_PVLG_GROUP_USER", "and G_ID = '"+shqzCode+"' and ODEPT_CODE='"+shrOdeptCode+"'");
+		    String sqlWhere = "";
+		    if(colCodel.equals("")){
+			sqlWhere = "and G_ID = '"+shqzCode+"' and ODEPT_CODE='"+shrOdeptCode+"'";
+		    }else{
+			String formOdept = formBean.getStr(colCodel);
+			sqlWhere = "and G_ID = '"+shqzCode+"' and ODEPT_CODE='"+formOdept+"'";
+		    }
+		    
+		    List<Bean> list2 = ServDao.finds("TS_PVLG_GROUP_USER",sqlWhere );
 		    for (int i = 0; i < list2.size(); i++) {
 			Bean tmpUser = new Bean();
 			tmpUser.set("SHR_NAME", list2.get(i).getStr("USER_NAME"));
@@ -227,17 +235,17 @@ public class FlowServ extends CommonServ {
 		    }
 		}
 		//4.制定部门编码，审核人职位已填写
-		if((!colCodel.equals("")) &&(!shzw.equals(""))){
-		    //指定部门
-		    String zdDept = formBean.getStr(colCodel);
-		    List<Bean> userlist = ServDao.finds("SY_ORG_USER_ALL", "and odept_code = '"+zdDept+"' and DUTY_LV_CODE = '"+shzw+"'");
-		    for (int i = 0; i < userlist.size(); i++) {
-			Bean tmpUser = new Bean();
-			tmpUser.set("SHR_NAME", userlist.get(i).getStr("USER_NAME"));
-			tmpUser.set("SHR_USERCODE", userlist.get(i).getStr("USER_CODE"));
-			resList.add(tmpUser);
-		    }
-		}
+//		if((!colCodel.equals("")) &&(!shzw.equals(""))){
+//		    //指定部门
+//		    String zdDept = formBean.getStr(colCodel);
+//		    List<Bean> userlist = ServDao.finds("SY_ORG_USER_ALL", "and odept_code = '"+zdDept+"' and DUTY_LV_CODE = '"+shzw+"'");
+//		    for (int i = 0; i < userlist.size(); i++) {
+//			Bean tmpUser = new Bean();
+//			tmpUser.set("SHR_NAME", userlist.get(i).getStr("USER_NAME"));
+//			tmpUser.set("SHR_USERCODE", userlist.get(i).getStr("USER_CODE"));
+//			resList.add(tmpUser);
+//		    }
+//		}
 	    }
 	    outBean.set("result", resList);
 	    outBean.set("WFS_ID", wfsId);

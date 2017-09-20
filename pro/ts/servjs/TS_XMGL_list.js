@@ -13,9 +13,8 @@ $(".rhGrid").find("tr").each(function(index, item) {
 		var btns ='<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+XM_ID+'">&nbsp&nbsp查看&nbsp</a>'+
 			'<a style="cursor:pointer " id="TS_XMGL_copy" actcode="copy" rowpk="'+XM_ID+'">复制&nbsp</a>'+
 			'<a style="cursor:pointer" id="TS_XMGL_edit" actcode="edit" rowpk="'+XM_ID+'">编辑&nbsp</a>'+
-			'<a style="cursor:pointer" id="TS_XMGL_set"  actcode="set" rowpk="'+XM_ID+'">设置&nbsp</a>'+
-			'<a style="cursor:pointer" id="TS_XMGL_delete" actcode="delete" rowpk="'+XM_ID+'">删除&nbsp&nbsp</a>';
-    
+			'<a style="cursor:pointer" id="TS_XMGL_delete" actcode="delete" rowpk="'+XM_ID+'">删除&nbsp&nbsp</a>'+
+			'<a style="cursor:pointer" id="TS_XMGL_set"  actcode="set" rowpk="'+XM_ID+'">设置&nbsp</a>';
 		var divHeight = $(item).get(0).offsetHeight;
 		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+XM_ID+"' style=' height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display:none;color:#666666'>"+btns+"</div>";
 		$(".content-main").find("table").before(hoverDiv);//="color:#F00">
@@ -128,18 +127,24 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){
 	if(pkAarry.length==0){
 		_viewer.listBarTipError("请选择要发布的项目！");
 	}else{
-		 var  paramXm={};
-		 paramXm["pkCodes"]=pkAarry.join(',');
-		FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm);
-//		for (var i = 0; i < pkAarry.length; i++) {
-//			var  where="and  XM_ID ='"+pkAarry[i]+"'";
-//		var data={_extWhere:where};
-//			var beanFb = FireFly.doAct("TS_XMGL", "query", data);
-//			alert(beanFb);debugger;
-//		}
-		//var  where="and  XM_ID in'"+pkAarry+"'";
-		//FireFly.doAct(_viewer.servId, "finds", where);
-		alert("计划发布成功！");
+		//判断数据库是否已经发布
+		for (var i = 0; i < pkAarry.length; i++) {
+			var  where="and XM_ID='"+pkAarry[i]+"'";
+			var  data={_extWhere:where};
+			var beanFb = FireFly.doAct("TS_XMGL", "query", data);
+			if(beanFb._DATA_[0].XM_STATE==1){
+				Tip.show("已经发布！");
+			}else if(beanFb._DATA_[0].XM_STATE==0){
+				 var  paramXm={};
+				// paramXm["pkCodes"]=pkAarry.join(',');debugger;
+				 paramXm["pkCodes"]=pkAarry[i];
+				FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
+					Tip.show("发布成功！");
+				});
+				_viewer.refresh();
+			}
+				
+		}
 	}
 });
 

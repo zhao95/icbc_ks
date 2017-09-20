@@ -30,6 +30,7 @@ import com.rh.ts.pvlg.mgr.GroupMgr;
 public class XmglServ extends CommonServ {
 	/** 群组角色服务编码 */
 	private static final String TS_XMGL_BMGL = "TS_XMGL_BMGL";
+	
 
 	/**
 	 * 项目管理
@@ -475,22 +476,14 @@ public class XmglServ extends CommonServ {
 
 public void UpdateStatusStart(ParamBean paramBean){
 		try {
-		//获取服务ID
-		//String servId=paramBean.getStr(Constant.PARAM_SERV_ID);
-		//获取 主键id  list
-		String dataId = paramBean.getStr("pkCodes");
-		
-		String[] dataIds = dataId.split(",");
-		//循环遍历 dataIds,
-		for(int  i=0;i<dataIds.length;i++){
-			//String  where="and  XM_ID ='"+dataIds[i]+"'";
-			String   dataid=dataIds[i];
-			Bean xmBean =   ServDao.find("TS_XMGL", dataid);
-			ServDao.save("TS_XMGL",xmBean.set("XM_STATE", 1) );
-		}
+		    String dataId = paramBean.getStr("pkCodes");
+			Bean xmBean = ServDao.find("TS_XMGL", dataId);
+			if(0==xmBean.getInt("XM_STATE")){
+				ServDao.save("TS_XMGL",xmBean.set("XM_STATE", 1) );
+			}
 	} catch (Exception e) {
 			throw new TipException("服务器异常，发布失败！");
 	}
-	}
+}
 
 }

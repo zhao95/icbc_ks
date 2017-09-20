@@ -58,7 +58,7 @@
     }
 
     .times ul {
-        margin-left: 164px;
+        /*margin-left: 164px;*/
         border-left: 2px solid #ddd;
     }
 
@@ -319,14 +319,15 @@
 
                                     <div class="radio" style="float: left;margin-right: 30px;">
                                         <label>
-                                            <input type="radio" name="sh_status" value="1" checked=""
-                                                   onclick="tongyi()">
+                                            <input type="radio" name="sh_status" value="1" checked="">
+                                            <%--onclick="tongyi()"--%>
                                             同意
                                         </label>
                                     </div>
                                     <div class="radio" style="float: left;">
                                         <label>
-                                            <input type="radio" name="sh_status" value="2" onclick="butongyi()">
+                                            <input type="radio" name="sh_status" value="2">
+                                            <%--onclick="butongyi()"--%>
                                             不同意
                                         </label>
                                     </div>
@@ -346,29 +347,43 @@
 
                 <div class="row" id="xyhjid1">
                     <div class="col-sm-4"></div>
-                    <div id="nextStep" class="col-sm-6">
+                    <div id="nextStep" class="col-sm-3">
                         <button onclick="bcnext()" class="btn btn-success"
-                                style="background-color: #00c2c2;">
-                            送下一环节审核
+                                style="width: 150px;height:45px;background-color: #00c2c2;">
+                            提交审批意见
                         </button>
                     </div>
-                    <div id="retreat" class="col-sm-6" style="display: none;">
+                    <div class="col-sm-4">
+                        <button onclick="fanhui()" class="btn btn-success"
+                                style="width:100px;height:45px;background-color: #00c2c2;">
+                            返回
+                        </button>
+                    </div>
+                    <%--<div id="retreat" class="col-sm-6" style="display: none;">
                         <button onclick="tuihui()" class="btn btn-success"
                                 style="width:100px;background-color: #00c2c2;">
                             退回
                         </button>
-                    </div>
+                    </div>--%>
                 </div>
 
             </div>
         </div>
 
+        <div class="row" style="padding-top:20px;display: none" id="fanhuiId">
+            <div class="col-sm-12 text-center">
+                <button onclick="fanhui()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">
+                    返回
+                </button>
+            </div>
+        </div>
+
         <%--审批意见--%>
-        <div class="row" id="shxxid">
+        <div class="row" id="shxxid" style="margin-top:20px">
             <div class="col-sm-12">
                 <%--时间轴 审批意见--%>
-                <div class="times">
-                    <ul>
+                <div class="times ">
+                    <ul class="col-sm-offset-2">
                         <%
                             String cwhere1 = "AND DATA_ID=" + "'" + jk_id + "'";
                             ParamBean paramBean = new ParamBean();
@@ -419,15 +434,6 @@
             </div>
         </div>
 
-        <div class="row" style="padding-top:20px;">
-            <div class="col-sm-12 text-center">
-                <button onclick="fanhui()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">
-                    返回
-                </button>
-            </div>
-        </div>
-
-
     </div>
 
 </div>
@@ -471,9 +477,13 @@
             //设置div签隐藏
             //查看
             document.getElementById("shenpi").style.display = "none";
+            document.getElementById("fanhuiId").style.display = "block";
+
         } else {
             //审批
             document.getElementById("shenpi").style.display = "block";
+            document.getElementById("fanhuiId").style.display = "none";
+
         }
 
         //借考一级分行
@@ -528,9 +538,9 @@
                 flowView.append(
                     [
                         '<div style="display: inline-block">',
-                        '<span style="position: relative;left: 18px;top:2px;',
-                        'font-weight: 700;font-style: normal;font-size: 14px;color: #FFFFFF;">1</span>',
-                        '<img alt="" style="width:20px;" src="<%=CONTEXT_PATH %>/ts/image/u5522.png">',
+                        '<span style="position: relative;left: 26px;top:3px;',
+                        'font-weight: 700;font-style: normal;font-size: 21px;color: #FFFFFF;">1</span>',
+                        '<img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5522.png">',//style="width:20px;"
                         '<span style="position: relative;font-size: 15px;top: 5px;">&nbsp;&nbsp;填写申请单&nbsp;&nbsp;</span>',
                         '</div>'
                     ].join('')
@@ -543,9 +553,9 @@
                         [
                             '<img alt=""  style="width:50px;height:5px;" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">',
                             '<div style="display: inline-block">',
-                            '   <span style="position: relative;left: 18px;top:2px;',
-                            '       font-weight: 700;font-style: normal;font-size: 14px;color: #FFFFFF;">' + (i + 2) + '</span>',
-                            '   <img alt="" style="width:20px;" src="<%=CONTEXT_PATH %>/ts/image/' + (nodeSteps === todoBean.NODE_STEPS ? 'u5520.png' : 'u5522.png') + '">',
+                            '   <span style="position: relative;left: 28px;top:3px;',
+                            '       font-weight: 700;font-style: normal;font-size: 21px;color: #FFFFFF;">' + (i + 2) + '</span>',
+                            '   <img alt="" src="<%=CONTEXT_PATH %>/ts/image/' + (nodeSteps === todoBean.NODE_STEPS ? 'u5520.png' : 'u5522.png') + '">',
                             '   <span style="position: relative;font-size: 15px;top: 5px;">&nbsp;&nbsp;' + nodeName + '&nbsp;&nbsp;</span>',
                             '</div>'
                         ].join('')
@@ -579,14 +589,21 @@
         var shstatus = "";
         for (i = 0; i < staArray.length; i++) {
             if (staArray[i].checked) {
-                shstatus = staArray[i].value;
+                shstatus = staArray[i].value.trim();
+                ;
             }
         }
         var param = {};
         param.todoId = '<%=todoId%>';
         param.shstatus = shstatus;
         param.shreason = shreason;
-        param.isRetreat = "false";
+        if (shstatus === '1') {
+            param.isRetreat = "false";
+            param.type = '';
+        } else {
+            param.isRetreat = "true";
+            param.type = 'tuihui';
+        }
         updateData(param);
 
         <%--FireFly.doAct("TS_QJLB_QJ", "updateData", param,);--%>
