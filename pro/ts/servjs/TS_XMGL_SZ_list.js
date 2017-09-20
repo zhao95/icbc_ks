@@ -213,7 +213,7 @@ _viewer.grid._table.find("tr").each(function(index, item) {
 			//sel.data("itemtype",UIConst.FITEM_ELEMENT_SELECT);
 		//	jQuery("<option value=''>---全部---</option>").appendTo(sel);
 			//jQuery("<option value=''>---"+Language.transStatic('rh_ui_ccexSearch_string3')+"---</option>").appendTo(sel);
-			jQuery("<option value=''></option>").appendTo(sel);
+			//jQuery("<option value=''></option>").appendTo(sel);
 			jQuery.each(temp,function(i,n) {
 				var id = n.ID;
 				var name = n.NAME;
