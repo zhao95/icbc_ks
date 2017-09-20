@@ -32,6 +32,7 @@ function xminfoshow(){
 }
 //进行资格验证
 	function checky(){
+	
 		var param = {};
 		var bminfo={};
 		bminfo['XM_ID'] = xm_id;
@@ -107,11 +108,12 @@ function xminfoshow(){
        				}
        				if(shArray==false){
        					$("#"+yzjg).append('审核不通过');
-       				
        				}if(shArray==true){
-       					$("#"+yzjg).append('审核通过');
        					$("#"+a).append('<div></div>');
-       					$("#"+a).append('<div><a href="examref.jsp">相关学习材料</a></div>');
+       					$("#"+a).append('<div></div>');
+       					$("#"+yzjg).append('审核通过');
+       					$("#"+yzjg).append('<div></div>');
+       					$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
        				}
 	       		}
        			
