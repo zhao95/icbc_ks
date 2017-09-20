@@ -51,8 +51,7 @@ $(function() {
 
 	// 因审核暂时使用的是用户编码，所以此时暂时使用USER_CODE
 	var CurrentUser_code = System.getUser("USER_CODE");
-	param1["_extWhere"] = "and STR1='" + CurrentUser_code
-			+ "' AND INT1 ='1'";
+	param1["_extWhere"] = "and STR1='" + CurrentUser_code + "' AND INT1 ='1'";
 	var resultUserAssociateXM = FireFly.doAct("TS_XMZT", "query", param1);
 	// 上面结果的项目id获取到，再查询到对应的项目的挂接模块
 	// 此时获取到的是项目挂接模块的名称以逗号分割的字符串
@@ -64,6 +63,7 @@ $(function() {
 		var param2 = {};
 		param2["_extWhere"] = "and XM_ID ='" + xm_id + "' AND XM_STATE ='1'";
 		var resultXM = FireFly.doAct("TS_XMGL", "query", param2);
+		
 		if(resultXM._DATA_.length!=0){
 			var xm_gj_str = resultXM._DATA_[0].XM_GJ;
 			var ks_name = resultXM._DATA_[0].XM_NAME;

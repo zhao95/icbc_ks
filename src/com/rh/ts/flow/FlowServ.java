@@ -55,19 +55,19 @@ public class FlowServ extends CommonServ {
 	    bean.set("NODE_STEPS", a + 1);
 	    switch (a + 1) {
 	    case 1:
-		bean.set("NODE_NAME", "一级审核人");
+		bean.set("NODE_NAME", "最终审核级别");
 		break;
 	    case 2:
-		bean.set("NODE_NAME", "二级审核人");
+		bean.set("NODE_NAME", "一级审核级别");
 		break;
 	    case 3:
-		bean.set("NODE_NAME", "三级审核人");
+		bean.set("NODE_NAME", "二级审核级别");
 		break;
 	    case 4:
-		bean.set("NODE_NAME", "四级审核人");
+		bean.set("NODE_NAME", "三级审核级别");
 		break;
 	    case 5:
-		bean.set("NODE_NAME", "五级审核人");
+		bean.set("NODE_NAME", "最低级审核级别");
 		break;
 	    default:
 		break;

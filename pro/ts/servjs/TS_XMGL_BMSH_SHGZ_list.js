@@ -43,8 +43,7 @@ function bindCard(){
  * 删除前方法执行
  */
 _viewer.beforeDelete = function(pkArray) {
-//	showVerify(pkArray,_viewer);
-	return true;
+	showVerify(pkArray,_viewer);
 };
 
 if(_viewer.getParHandler()) {
