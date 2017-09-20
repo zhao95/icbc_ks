@@ -127,21 +127,24 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){
 	if(pkAarry.length==0){
 		_viewer.listBarTipError("请选择要发布的项目！");
 	}else{
-		 var  paramXm={};
-		 paramXm["pkCodes"]=pkAarry.join(',');
-		FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
-			Tip.show("发布成功！");
-		});
-		_viewer.refresh();
-//		for (var i = 0; i < pkAarry.length; i++) {
-//			var  where="and  XM_ID ='"+pkAarry[i]+"'";
-//		var data={_extWhere:where};
-//			var beanFb = FireFly.doAct("TS_XMGL", "query", data);
-//			alert(beanFb);debugger;
-//		}
-		//var  where="and  XM_ID in'"+pkAarry+"'";
-		//FireFly.doAct(_viewer.servId, "finds", where);
-		
+		//判断数据库是否已经发布
+		for (var i = 0; i < pkAarry.length; i++) {
+			var  where="and XM_ID='"+pkAarry[i]+"'";
+			var  data={_extWhere:where};
+			var beanFb = FireFly.doAct("TS_XMGL", "query", data);
+			if(beanFb._DATA_[0].XM_STATE==1){
+				Tip.show("已经发布！");
+			}else if(beanFb._DATA_[0].XM_STATE==0){
+				 var  paramXm={};
+				// paramXm["pkCodes"]=pkAarry.join(',');debugger;
+				 paramXm["pkCodes"]=pkAarry[i];
+				FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
+					Tip.show("发布成功！");
+				});
+				_viewer.refresh();
+			}
+				
+		}
 	}
 });
 
