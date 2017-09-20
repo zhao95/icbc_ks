@@ -617,8 +617,6 @@ function xminfoshow(){
 			return;
 		}
 		if(middlenum>canmiddlenum){
-			alert(middlenum);
-			alert(canmiddlenum);
 			alert("选择的中级考试数目超过上限，请删除再提交");
 			$("#tjbt").attr("data-target","");
 			//获取到table
@@ -836,7 +834,6 @@ var highnum=0;
 	function deleterow(obj){
 		var tr = obj.parentNode.parentNode.parentNode;
 		var tds = $(tr).find("td");
-		alert(tds[4].innerText);
 		if(tds[4].innerText=="中级"){
 			middlenum--;
 		}else if(tds[4].innerText=="高级"){
