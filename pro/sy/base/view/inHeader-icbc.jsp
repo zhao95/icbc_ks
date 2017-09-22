@@ -104,6 +104,8 @@
 	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/base/frame/plugs/jquery-ui/jquery.ui.theme.css"/>
 	<!-- 平台UI核心样式 -->
 	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/theme/default/base.css"/>
+	<!-- colResizable -->
+	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/plugs/colResizable/colResizable-1.6.js"></script>
 	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/theme/default/common.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/theme/default/page.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/theme/default/form.css"/>
@@ -167,10 +169,7 @@
 	<!-- UEditor -->
 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/ueditor/editor_config.js"></script>
 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/ueditor/editor_all.js"></script>
-	
-	<!-- colResizable -->
-	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/plugs/colResizable/colResizable-1.6.js"></script>
-	
+		
 	<!-- 工商银行JS引用 -->
 	<link rel="stylesheet" type="text/css" href="<%=urlPath%>/sy/comm/page/icbc_style.css"/>
 	<script type="text/javascript" src="<%=urlPath%>/sy/comm/page/icbc_style.js"></script>
