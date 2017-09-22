@@ -66,12 +66,13 @@
 	font-family: '微软雅黑';
 	font-weight: 400;
 	color: #CCCCCC;
+	color: white;
 }
 
 #main-fotter-div {
 	margin-left: 0;
 	position: relative;
-	background-color: #333333;
+	background-color: #505050;
 	z-index: 1;
 	left: 0px;
 	top: 0px;

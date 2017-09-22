@@ -1,4 +1,5 @@
 $(function() {
+
 	// 用于查询对应的项目状态的对象
 	var typeMap = {
 		"未开启" : "c1",
@@ -32,8 +33,8 @@ $(function() {
 		var distinct_num = xm_distinct_arr.indexOf(xm_id);
 		if (distinct_num < 0) {
 			xm_distinct_arr.push(xm_id);
-			
-			if(resultXM._DATA_.length!=0){
+
+			if (resultXM._DATA_.length != 0) {
 				// 判断项目进度是否小于100%
 				if (resultXM._DATA_[0].XM_JD < 10) {
 					var xm_rowNum = resultBM._DATA_[i].ROWNUM_;
@@ -42,7 +43,7 @@ $(function() {
 					var xm_type = resultXM._DATA_[0].XM_TYPE;
 					// 根据返回值可以找到查询数据字典后的结果，直接拿来用即可。数据为发起单位。
 					var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME;
-//					var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME__NAME;
+					// var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME__NAME;
 					var xm_start = resultXM._DATA_[0].XM_START;
 					var xm_end = resultXM._DATA_[0].XM_END;
 					var xm_jd = resultXM._DATA_[0].XM_JD;
@@ -52,7 +53,8 @@ $(function() {
 					var paramObj1 = {};
 					paramObj1["_extWhere"] = "and STR1='" + user_code
 							+ "' AND DATA_ID ='" + xm_id + "'";
-					var resultObj = FireFly.doAct("TS_XMZT", "query", paramObj1);
+					var resultObj = FireFly
+							.doAct("TS_XMZT", "query", paramObj1);
 					if (resultObj._DATA_.length != 0) {
 						if (resultObj._DATA_[0].INT1 === "1") {
 							var xm_opera = "首页显示中";
@@ -63,8 +65,8 @@ $(function() {
 					// 获取到项目挂接所有模块姓名
 					var paramXMSZ = {};
 					paramXMSZ["_extWhere"] = "and XM_ID = '" + xm_id + "'";
-					var resultXMSZ = FireFly
-							.doAct("TS_XMGL_SZ", "query", paramXMSZ);
+					var resultXMSZ = FireFly.doAct("TS_XMGL_SZ", "query",
+							paramXMSZ);
 					// 遍历所有模块名字，取出满足要求的模块状态
 					for (var j = 0; j < resultXMSZ._DATA_.length; j++) {
 						var gj_name = resultXMSZ._DATA_[j].XM_SZ_TYPE;
@@ -74,19 +76,39 @@ $(function() {
 						}
 					}
 					// 数据输入到页面
-					jQuery("#table1_tbody").append(
-									'<tr class="rhGrid-td-left" XM_ID="'+ xm_id+ '" style="height: 50px">'+
-									'<td class="indexTD" style="text-align: center">'+ xm_rowNum1+ '</td>'+
-									'<td class="rhGrid-td-left " id="xm_name"style="text-align: center">'+ xm_name+'</td>'+ 
-									'<td class="rhGrid-td-left " id="xm_type" style="text-align: center">'+ xm_type+'</td>'+
-									'<td class="rhGrid-td-left " id="xm_dept" style="text-align: center">'+ xm_dept+'</td>'+
-									'<td class="rhGrid-td-left " id="xm_start"style="text-align: center" >'+ xm_start+'</td>'+
-									'<td class="rhGrid-td-left " id="S_MTIME" style="text-align: center" >'+ xm_end+'</td>'+ 
-									'<td class="rhGrid-td-left " id="xm_end" style="text-align: center" >'+ xm_jd+'0.0%</td>'+ 
-									'<td class="rhGrid-td-left " id="xm_currentState" style="text-align: center">'+ xm_currentState+'</td>'+
-									'<td id="BM_OPTIONS" style="text-align: center;">'+
-										'<input type="button" class="opera_btn" style="margin:0 auto;display:block;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="'+ xm_opera + '"></input>'+
-									'</td>'+'</tr>');
+					jQuery("#table1_tbody")
+							.append(
+									'<tr class="rhGrid-td-left" XM_ID="'
+											+ xm_id
+											+ '" style="height: 50px">'
+											+ '<td class="indexTD" style="text-align: center">'
+											+ xm_rowNum1
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="xm_name"style="text-align: center">'
+											+ xm_name
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="xm_type" style="text-align: center">'
+											+ xm_type
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="xm_dept" style="text-align: center">'
+											+ xm_dept
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="xm_start"style="text-align: center" >'
+											+ xm_start
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="S_MTIME" style="text-align: center" >'
+											+ xm_end
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="xm_end" style="text-align: center" >'
+											+ xm_jd
+											+ '0.0%</td>'
+											+ '<td class="rhGrid-td-left " id="xm_currentState" style="text-align: center">'
+											+ xm_currentState
+											+ '</td>'
+											+ '<td id="BM_OPTIONS" style="text-align: center;">'
+											+ '<input type="button" class="opera_btn" style="margin:0 auto;display:block;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="'
+											+ xm_opera + '"></input>' + '</td>'
+											+ '</tr>');
 					xm_rowNum1++;
 
 				}
@@ -102,20 +124,43 @@ $(function() {
 					var xm_jd = resultXM._DATA_[0].XM_JD;
 					var xm_currentState = "";
 					// 数据输入到页面
-					jQuery("#table2_tbody").append(
-							'<tr class="rhGrid-td-left" XM_ID="'+ xm_id+ '" style="height: 50px">'+
-							'<td class="indexTD" style="text-align: center">'+ xm_rowNum2+ '</td>'+
-							'<td class="rhGrid-td-left " id="xm_name"style="text-align: center">'+ xm_name+'</td>'+ 
-							'<td class="rhGrid-td-left " id="xm_type" style="text-align: center">'+ xm_type+'</td>'+
-							'<td class="rhGrid-td-left " id="xm_dept" style="text-align: center">'+ xm_dept+'</td>'+
-							'<td class="rhGrid-td-left " id="xm_start"style="text-align: center" >'+ xm_start+'</td>'+
-							'<td class="rhGrid-td-left " id="S_MTIME" style="text-align: center" >'+ xm_end+'</td>'+ 
-							'<td class="rhGrid-td-left " id="xm_end" style="text-align: center" >'+ xm_jd+'0.0%</td>'+ 
-							'<td class="rhGrid-td-left " id="xm_currentState" style="text-align: center">已结束</td>'+
-//							'<td id="BM_OPTIONS" style="text-align: center;">'+
-//								'<input type="button" class="opera_btn" style="margin:0 auto;display:block;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px" value="'+ xm_opera + '"></input>'+
-//							'</td>'+
-							'</tr>');
+					jQuery("#table2_tbody")
+							.append(
+									'<tr class="rhGrid-td-left" XM_ID="'
+											+ xm_id
+											+ '" style="height: 50px">'
+											+ '<td class="indexTD" style="text-align: center">'
+											+ xm_rowNum2
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="xm_name"style="text-align: center">'
+											+ xm_name
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="xm_type" style="text-align: center">'
+											+ xm_type
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="xm_dept" style="text-align: center">'
+											+ xm_dept
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="xm_start"style="text-align: center" >'
+											+ xm_start
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="S_MTIME" style="text-align: center" >'
+											+ xm_end
+											+ '</td>'
+											+ '<td class="rhGrid-td-left " id="xm_end" style="text-align: center" >'
+											+ xm_jd
+											+ '0.0%</td>'
+											+ '<td class="rhGrid-td-left " id="xm_currentState" style="text-align: center">已结束</td>'
+											+
+											// '<td id="BM_OPTIONS"
+											// style="text-align: center;">'+
+											// '<input type="button"
+											// class="opera_btn" style="margin:0
+											// auto;display:block;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px"
+											// value="'+ xm_opera +
+											// '"></input>'+
+											// '</td>'+
+											'</tr>');
 					xm_rowNum2++;
 				}
 			}
@@ -177,4 +222,43 @@ $(function() {
 							// window.location.reload();
 						});
 			});
+
+	//可选报名  已选报名字体图片改变
+	$('#akeshen').click(function(){
+		document.getElementById("keshen").style.color="LightSeaGreen";
+		document.getElementById("keshenimage").src="/ts/image/u975.png";
+		document.getElementById("yishenimage").src="/ts/image/u984.png";
+		document.getElementById("yishen").style.color="black";
+		var table = document.getElementById("table");  
+	   rowscolor(table);
+	});
+	$('#ayishen').click(function(){
+		document.getElementById("keshen").style.color="black";
+		document.getElementById("yishenimage").src="/ts/image/u7733.png";
+		document.getElementById("keshenimage").src="/ts/image/u1131.png";
+		document.getElementById("yishen").style.color="LightSeaGreen";
+		/*selectdata(user_code,1);*/
+		var table = document.getElementById("ybmtable");  
+	   rowscolor(table);
+	});
 })
+
+// tab标签页切换改变图标
+function changeImg($img) {
+	var str = "/ts/image/";
+
+	function changeImgAttr(imgName) {
+		$img.attr('src', str + imgName);
+	}
+
+	var src = $img.attr('src');
+	if (src.indexOf("u1131.png") >= 0) {
+		changeImgAttr("u975.png");
+	} else if (src.indexOf("u975.png") >= 0) {
+		changeImgAttr("u1131.png");
+	} else if (src.indexOf("u984.png") >= 0) {
+		changeImgAttr("u7733.png");
+	} else if (src.indexOf("u7733.png") >= 0) {
+		changeImgAttr("u984.png");
+	}
+}

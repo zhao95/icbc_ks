@@ -45,26 +45,52 @@
 <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/global.js"></script> 
 <!--插件--> 
 <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/jquery.smart-form.js"></script> 
+ <style>
+        /*tab标签页样式*/
+        #myTab .nav-name {
+            font-size: 25px;
+            color: black;
+        }
+
+        #myTab .active .nav-name {
+            color: lightseagreen;
+        }
+
+        #myTab .active div {
+            border: none;
+            border-bottom: 5px solid LightSeaGreen;
+        }
+
+        #myTab .active .todo-nav-tab-item {
+            border: none;
+            border-bottom: 5px solid LightSeaGreen;
+        }
+
+        #myTab .todo-nav-tab-item {
+            width: 200px;
+            text-align: center;
+            cursor: pointer;
+        }
+</style>
+
+
 <body class="hold-transition skin-black sidebar-mini">
 <%@ include file="header-logo.jsp"%>
 	<div class="" style="padding: 10px">
 		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;" src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
 		 <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;项目进度一览表</span>
 	</div>
-	<table id="myTab" class="nav nav-tabs"
-		style="margin-left: 10px; width: 98%; background-color: white">
+	
+	<table id="myTab" class="nav nav-tabs " style="margin-left: 10px; width: 98%; background-color: white">
 		<tr style="height: 70px">
-			<td id="keshenqingtd"  class="active"
-				style="border-bottom:white solid 1px;width: 50%; text-align: center; font-size: 25px"><image
-					style="margin-bottom:10px"
-					src="<%=CONTEXT_PATH%>/ts/image/u975.png" id="keshenimage">
-				<a id="akeshen" href="#home" data-toggle="tab"><span id="keshen"
-					style="color: lightseagreen">进行中的项目</span></a></td>
-			<td id="yishenqingtd" class="" style="border-bottom:lightgray solid 1px;width: 50%; text-align: center; font-size: 25px"><image
-					style="margin-bottom:10px"
-					src="<%=CONTEXT_PATH%>/ts/image/u984.png" id="yishenimage">
-				<a id="ayishen" href="#tab2" data-toggle="tab"><span id="yishen"
-					style="color: black">已完成的项目</span></a></td>
+			<td id="keshenqingtd"  class="active" style="border-bottom:white solid 1px;width: 50%; text-align: center; font-size: 25px">
+				<image style="margin-bottom:10px" src="<%=CONTEXT_PATH%>/ts/image/u975.png" id="keshenimage">
+				<a id="akeshen" href="#home" data-toggle="tab"><span id="keshen" style="color: lightseagreen" class="nav-name">进行中的项目</span></a>
+			</td>
+			<td id="yishenqingtd" class="" style="border-bottom:lightgray solid 1px;width: 50%; text-align: center; font-size: 25px">
+				<image style="margin-bottom:10px" src="<%=CONTEXT_PATH%>/ts/image/u984.png" id="yishenimage">
+				<a id="ayishen" href="#tab2" data-toggle="tab"><span id="yishen" style="color: black" class="nav-name">已完成的项目</span></a>
+			</td>
 		</tr>
 	</table>
 	<div id="myTabContent" class="tab-content">
