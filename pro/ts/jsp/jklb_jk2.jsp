@@ -211,17 +211,11 @@
             </div>
 
             <div class="form-group">
-                <label for="jkdks" class="col-sm-2 control-label">
+                <label  class="col-sm-2 control-label">
                     借考的考试
                     <span style="color: red;font-weight: bold">*</span>
                 </label>
                 <div class="col-sm-10 bkuan">
-                    <%-- <div onclick="xuanze()" data-toggle="modal" data-target="#myModal" id="jkdks"
-                         style="display: inline-block;cursor: pointer;color: #4cd4d4;padding:5px;">
-                          <img   src="<%=CONTEXT_PATH %>/ts/image/0255.png"/>
-                        <i class="fa fa-search" aria-hidden="true" style="font-size: 24px;color: #91dce4;"></i>
-                        <span>选择</span>
-                    </div>--%>
                     <div style="min-height: 120px">
                         <table id="jkks-table" border="1" style="width: 100%;border-color: white;">
                             <thead>
@@ -410,8 +404,10 @@
                                     <%=sh_node%>
                                 </div>
                                 <div style="padding-bottom: 20px;">
+                                    <%--FireFly.getContextPath() + System.getUser("USER_IMG")--%>
                                     <img style="position: absolute;margin-left: 11px;width: 55px;height:55px;"
-                                         src="/sy/theme/default/images/common/user1.png">
+                                         src="<%=CONTEXT_PATH%><%=Context.getUserBean().getStr("USER_IMG")%>"
+                                         onerror="this.src='<%=CONTEXT_PATH%>/sy/theme/default/images/common/user1.png'"><%----%>
                                     <div style="margin-left:78px;">
                                         <div style="font-size: 14px;">
                                             <span style="color:#666666;"><%=sh_uname%>：&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>
@@ -453,7 +449,8 @@
             <div class="modal-body zgks">
                 <table style="width: 100%;height: 100px;border: 0;">
                     <tr>
-                        <td id="tiJiaoContent"  style="text-align: center" width="10%">已经提交给<span id="shrNames"></span>进行审核</td>
+                        <td id="tiJiaoContent" style="text-align: center" width="10%">已经提交给<span id="shrNames"></span>进行审核
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -468,6 +465,14 @@
 
 <script type="text/javascript">
     $(function () {
+        var todoId = '<%=todoId%>';
+        var bmIdStr = '<%=jk_ksname%>';
+        initData();
+        setKsInfo(bmIdStr);//考试信息
+        showFlowView(todoId);
+    });
+
+    function initData() {
         if (parseInt('<%=shbeanList.size()%>') <= 0) {
             //设置div签隐藏
             //没有审批意见 隐藏审批意见
@@ -483,19 +488,19 @@
             //审批
             document.getElementById("shenpi").style.display = "block";
             document.getElementById("fanhuiId").style.display = "none";
-
         }
 
         //借考一级分行
         var jkYjfh = '<%=jk_yjfh%>';
         $('#jkyiji').val(FireFly.getDictNames(FireFly.getDict('TS_JKLB_JKCITY'), jkYjfh));
 
-        //考试信息
-        var bmIdStr = '<%=jk_ksname%>';
+    }
+    //考试信息
+    function setKsInfo(bmIdStr) {
         var params = {bmids: bmIdStr};
         var bmInfoListBean = FireFly.doAct('TS_JKLB_JK', 'getBmInfoByIds', params);
         var bmInfoList = bmInfoListBean._DATA_;
-        var $jkksTable = $('#jkks-table tbody');
+        var $jkksTable = $('#jkks-table').find('tbody');
         for (var i = 0; i < bmInfoList.length; i++) {
             var bmInfo = bmInfoList[i];
             $jkksTable.append([
@@ -513,74 +518,10 @@
                 '</tr>'
             ].join(''));
         }
-
-        showFlowView();
-
-    });
+    }
 </script>
 <script type="text/javascript">
 
-    //加载流程图
-    function showFlowView() {
-        //        List<Bean> tsWfsNodeApplyList = ServDao.finds("TS_WFS_NODE_APPLY", "and WFS_ID ='" + wfsId + "'");
-        var todoId = '<%=todoId%>';
-        if (todoId !== '') {
-            var data = {_PK_: todoId};
-            var sId = 'TS_COMM_TODO';
-            var todoBean = FireFly.doAct(sId, 'byid', data);
-            var wfsId = todoBean.WFS_ID;
-            data = {_ORDER_: 'NODE_STEPS desc', _extWhere: "and WFS_ID ='" + wfsId + "'", _NOPAGE_: true};
-            var nodeListBean = FireFly.doAct('TS_WFS_NODE_APPLY', 'query', data);
-            var nodeList = nodeListBean._DATA_;
-            if (nodeList.length > 0) {
-                var flowView = jQuery('#flowView');
-                flowView.html('');
-                flowView.append(
-                    [
-                        '<div style="display: inline-block">',
-                        '<span style="position: relative;left: 26px;top:3px;',
-                        'font-weight: 700;font-style: normal;font-size: 21px;color: #FFFFFF;">1</span>',
-                        '<img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5522.png">',//style="width:20px;"
-                        '<span style="position: relative;font-size: 15px;top: 5px;">&nbsp;&nbsp;填写申请单&nbsp;&nbsp;</span>',
-                        '</div>'
-                    ].join('')
-                );
-                for (var i = 0; i < nodeList.length; i++) {
-                    var node = nodeList[i];
-                    var nodeName = node.NODE_NAME;
-                    var nodeSteps = node.NODE_STEPS;
-                    flowView.append(
-                        [
-                            '<img alt=""  style="width:50px;height:5px;" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">',
-                            '<div style="display: inline-block">',
-                            '   <span style="position: relative;left: 28px;top:3px;',
-                            '       font-weight: 700;font-style: normal;font-size: 21px;color: #FFFFFF;">' + (i + 2) + '</span>',
-                            '   <img alt="" src="<%=CONTEXT_PATH %>/ts/image/' + (nodeSteps === todoBean.NODE_STEPS ? 'u5520.png' : 'u5522.png') + '">',
-                            '   <span style="position: relative;font-size: 15px;top: 5px;">&nbsp;&nbsp;' + nodeName + '&nbsp;&nbsp;</span>',
-                            '</div>'
-                        ].join('')
-                    );
-                }
-            }
-
-
-        }
-        //
-    }
-
-    function fanhui() {
-        window.history.go(-1);
-    }
-
-    function tongyi() {
-        $('#nextStep').css('display', 'block');
-        $('#retreat').css('display', 'none');
-    }
-
-    function butongyi() {
-        $('#nextStep').css('display', 'none');
-        $('#retreat').css('display', 'block');
-    }
     //修改请假(审批)
     function bcnext() {
         var staArray = document.getElementsByName("sh_status");
@@ -590,7 +531,6 @@
         for (i = 0; i < staArray.length; i++) {
             if (staArray[i].checked) {
                 shstatus = staArray[i].value.trim();
-                ;
             }
         }
         var param = {};
@@ -599,29 +539,10 @@
         param.shreason = shreason;
         if (shstatus === '1') {
             param.isRetreat = "false";
-            param.type = '';
         } else {
             param.isRetreat = "true";
-            param.type = 'tuihui';
         }
-        updateData(param);
-
-        <%--FireFly.doAct("TS_QJLB_QJ", "updateData", param,);--%>
-
-        /*if (shstatus === "不同意") {
-         //            var shsta = "1";
-         //            var qjstatus = "2";
-         var param = {};
-         param["qjid"] = "<!%=qj_id%>";
-         param["qjstatus"] = qjstatus;
-         param["shreason"] = shreason;
-         param["shstatus"] = shsta;
-         param["userloginname"] = "<！%=user_login_name%>";
-         param["deptname"] = "<!%=dept_name%>";
-         param["usercode"] = "<!%=user_code%>";
-         FireFly.doAct("TS_QJLB_QJ", "updateData", param,);
-         window.location.href = "qjlb.jsp";
-         }*/
+        updateData("TS_JKLB_JK", param);
     }
 
     //退回
@@ -641,46 +562,13 @@
         param.shreason = shreason;
         param.isRetreat = "true";
         param.type = 'tuihui';
-        updateData(param);
+        updateData("TS_JKLB_JK", param);
     }
 
-    //提交审批
-    function updateData(param) {
-        FireFly.doAct("TS_JKLB_JK", "updateData", param, false, false, function (response) {
-            if (response._MSG_.indexOf('ERROR,') >= 0) {
-                //发起申请出错
-                alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,'), response._MSG_.length));
-            } else {
-                if (param.type === 'tuihui') {
-                    fanhui();
-                } else {
-                    //模态框
-                    var $tiJiao = $('#tiJiao');
-                    if (response.shrNames) {
-                        $('#shrNames').html(response.shrNames);
-                        $('#tiJiaoTip').html('下一环节审批人');
-                        $('#tiJiaoContent').html('已经提交给<span id="shrNames">' + response.shrNames + '</span>进行审核');
-                    } else {
-                        $('#tiJiaoTip').html('提示信息');
-                        $('#tiJiaoContent').html('审批已处理');
-                    }
-                    //关闭提示框后返回到请假页面
-                    $tiJiao.on('hidden.bs.modal', function (/*e*/) {
-                        fanhui();
-                    });
-                    //显示提示框
-                    $tiJiao.modal('show');
-                }
-            }
-        });
-    }
-
-    //下载证明材料
-    function downImg(fileId) {
-        rh.ui.File.prototype.downloadFile(fileId);
-    }
 
 </script>
+<script src="<%=CONTEXT_PATH%>/ts/js/qj_jk_apply.js"></script>
+
 <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
