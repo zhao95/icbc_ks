@@ -36,8 +36,8 @@ $("#TS_KCZGL_KCGL .rhGrid").find("tr").each(function(index, item) {
 		'<a class="rhGrid-td-rowBtnObj " operCode="optIPScopeBtn" rowpk="'+dataId+'" style="cursor:pointer">考场IP段设置&nbsp</a>'+
 		'<a class="rhGrid-td-rowBtnObj " operCode="optIPZwhBtn" rowpk="'+dataId+'" style="cursor:pointer">考场IP座位号&nbsp</a>'+
 		'<a class="rhGrid-td-rowBtnObj " operCode="optJgBtn" rowpk="'+dataId+'" style="cursor:pointer">关联机构&nbsp</a>'+
-		'<a class="rhGrid-td-rowBtnObj " operCode="optEditBtn" rowpk="'+dataId+'" style="cursor:pointer">编辑&nbsp</a>'+
-		'<a class="rhGrid-td-rowBtnObj " operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>';
+		'<a class="rhGrid-td-rowBtnObj " operCode="optEditBtn" rowpk="'+dataId+'" style="cursor:pointer">编辑&nbsp</a>'
+//		'<a class="rhGrid-td-rowBtnObj " operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>';
 		
 		var divHeight = $(item).get(0).offsetHeight;
 		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;color:#222222;'>"+abtns+"</div>";
