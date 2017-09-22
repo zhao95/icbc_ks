@@ -107,7 +107,10 @@ public class InfoServ extends BaseServ {
                     //显示层级， 优先取外部参数，如果没有去字典定义配置，，如果没有则层级为0，取全部
                     int layer = paramBean.get("LEVEL", dict.getInt("DICT_DIS_LAYER"));
                     boolean showPid = paramBean.getBoolean("SHOWPID"); //支持设定输出信息是否带PID节点信息，缺省不带
-                    bean.set(DictMgr.CHILD_NODE, DictMgr.getTreeList(dictId, pId, layer, showPid));
+                    
+                    List<Bean> treeList = DictMgr.getTreeList(dictId, pId, layer, showPid,paramBean.getStr("USE_SERV_ID"));
+                    
+                    bean.set(DictMgr.CHILD_NODE, treeList);
                 }
             }
             if (bThread) { //恢复线程变量

@@ -1,5 +1,6 @@
 package com.rh.ts.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.rh.core.base.Bean;
@@ -89,7 +90,7 @@ public class RoleUtil {
 		}
 
 		// 获取用户所有角色的功能
-		Bean userOpt = RoleMgr.getRoleOptsByUser(userCode);
+		Bean userOpt = RoleMgr.getRoleOptsByUser(userCode,servId);
 
 		if (userOpt == null) {
 			userOpt = new Bean();
@@ -98,10 +99,12 @@ public class RoleUtil {
 		// 字典设置的所有模块
 		List<Bean> mdList = null;
 		
-		if (!Strings.isBlank(servId)) {
+		if (Strings.isBlank(servId)) {
 			mdList = DictMgr.getItemList(TsConstant.DICT_ROLE_MOD);
 		} else {
-			mdList = DictMgr.getItemList(servId + "_PVLG");
+			mdList = new ArrayList<Bean>();
+			Bean bean = new Bean().set("ITEM_CODE", servId + "_PVLG");
+			mdList.add(bean);
 		}
 
 		for (Bean md : mdList) {
@@ -118,11 +121,16 @@ public class RoleUtil {
 
 				if (userOpt.containsKey(mdCode)) {
 
-					String userOptStr = userOpt.getStr(mdCode);
-					// 用户已赋予功能
-					if (Strings.containsValue(userOptStr, optCode)) {
+					Bean userOptBean = userOpt.getBean(mdCode);
+					
+					if (userOptBean == null || userOptBean.isEmpty()) {
+						
+						optBean.put(optCode, 0);
+						
+					} else if (userOptBean.containsKey(optCode)) {// 用户已赋予功能
 						// 该功能可见范围
-						Bean optPvlg = userOpt.getBean("PVLG-" + mdCode).getBean(optCode);
+//						Bean optPvlg = userOpt.getBean("PVLG-" + mdCode).getBean(optCode);
+						Bean optPvlg = userOpt.getBean(mdCode).getBean(optCode);
 						// 关联机构层级的机构编码
 						String orgsLv = getOrgsByLv(userCode, optPvlg.getStr("ROLE_ORG_LV"));
 						// 关联部门和机构层级合并
@@ -132,8 +140,6 @@ public class RoleUtil {
 
 						optBean.put(optCode, optPvlg);
 
-					} else {
-						optBean.put(optCode, 0);
 					}
 				} else {
 					optBean.put(optCode, 0);
@@ -177,17 +183,22 @@ public class RoleUtil {
 				int lv = Integer.parseInt(deptLvArg[i]);
 
 				int differ = curLv - lv; // 当前机构层级 - 指定机构层级
+				
+				if(differ == 0 ) {
+					odeptBean = userBean.getODeptBean();
+				} else {
 
-				for (int j = 1; j <= differ; j++) {
-
-					odeptBean = userBean.getODeptBean().getParentDeptBean().getODeptBean();
-
-					System.out.println("上级 lv=" + odeptBean.getLevel() + "   curLv=" + curLv);
+					for (int j = 1; j <= differ; j++) {
+	
+						odeptBean = userBean.getODeptBean().getParentDeptBean().getODeptBean();
+	
+						System.out.println("上级 lv=" + odeptBean.getLevel() + "   curLv=" + curLv);
+					}
 				}
 
 				if (odeptBean != null && !odeptBean.isEmpty()) {
 
-					Strings.addValue(orgs, odeptBean.getODeptCode());
+					orgs = Strings.addValue(orgs, odeptBean.getODeptCode());
 				}
 			}
 		}

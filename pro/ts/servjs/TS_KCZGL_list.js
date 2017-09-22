@@ -150,3 +150,15 @@ $(".hoverDiv").find("a").hover(function(){
 },function(){
 	$(this).css("color","#666666");
 });
+
+/**
+ * 目录管理
+ */
+_viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
+	
+	module = 'EXAM_GROUP';
+	var params = {"isHide":"true", "CTLG_MODULE":module};
+	var options = {"tTitle":"考场组目录管理","url":"TS_COMM_CATALOG_EXAM_GROUP.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
+	options["top"] = true;
+	Tab.open(options);
+});

@@ -77,8 +77,8 @@ public class TsConstant {
 	/** 权限目录字段配置表 */
 	public static final String SERV_CTLG_CONF = "TS_PVLG_CTLG_CONF";
 	
-	/** 目录管理  */
-	public static final String SERV_CTLG = "TS_COMM_CATALOG";
+	/** 全部目录管理  */
+	public static final String SERV_CTLG_ALL = "TS_COMM_CATALOG";
 	
 	
 	/** 字典 角色模块定义*/

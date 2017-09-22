@@ -172,7 +172,7 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 	
 	module = 'EXAM_ROOM';
 	var params = {"isHide":"true", "CTLG_MODULE":module};
-	var options = {"tTitle":"考场目录管理","url":"TS_COMM_CATALOG.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
+	var options = {"tTitle":"考场目录管理","url":"TS_COMM_CATALOG_EXAM_ROOM.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
 	options["top"] = true;
 	Tab.open(options);
 });
