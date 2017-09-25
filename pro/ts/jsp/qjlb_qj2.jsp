@@ -185,7 +185,8 @@
             <div class="form-group">
                 <label for="qjtitle" class="col-sm-2 control-label">
                     请假标题
-                    <span style="color: red;font-weight: bold">*</span></label>
+                    <span style="color: red;font-weight: bold">*</span>
+                </label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="qjtitle" value="<%=qj_title%>" disabled>
                 </div>
@@ -391,7 +392,9 @@
                                 </div>
                                 <div style="padding-bottom: 20px;">
                                     <img style="position: absolute;margin-left: 11px;width: 55px;height:55px;"
-                                         src="/sy/theme/default/images/common/user1.png">
+                                         src="<%=CONTEXT_PATH%><%=Context.getUserBean().getStr("USER_IMG")%>"
+                                         onerror="this.src='<%=CONTEXT_PATH%>/sy/theme/default/images/common/user1.png'"><%----%>
+
                                     <div style="margin-left:78px;">
                                         <div style="font-size: 14px;">
                                             <span style="color:#666666;"><%=sh_uname%>：&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </span>
@@ -449,6 +452,14 @@
 
 <script type="text/javascript">
     $(function () {
+        var todoId = '<%=todoId%>';
+        var bmIdStr = '<%=qj_ksname%>';//报名id
+        initData();
+        setKsInfo(bmIdStr);
+        showFlowView(todoId);
+    });
+
+    function initData() {
         if (parseInt('<%=shbeanList.size()%>') <= 0) {
             //设置div签隐藏
             //没有审批意见 隐藏审批意见
@@ -464,9 +475,10 @@
             document.getElementById("shenpi").style.display = "block";
             document.getElementById("fanhuiId").style.display = "none";
         }
+    }
 
+    function setKsInfo(bmIdStr) {
         //考试信息
-        var bmIdStr = '<%=qj_ksname%>';
         var params = {bmids: bmIdStr};
         var bmInfoListBean = FireFly.doAct('TS_QJLB_QJ', 'getBmInfoByIds', params);
         var bmInfoList = bmInfoListBean._DATA_;
@@ -488,70 +500,8 @@
                 '</tr>'
             ].join(''));
         }
-
-        showFlowView();
-    });
-</script>
-<script type="text/javascript">
-    //加载流程图
-    function showFlowView() {
-        //        List<Bean> tsWfsNodeApplyList = ServDao.finds("TS_WFS_NODE_APPLY", "and WFS_ID ='" + wfsId + "'");
-        var todoId = '<%=todoId%>';
-        if (todoId !== '') {
-            var data = {_PK_: todoId};
-            var todoBean = FireFly.doAct('TS_COMM_TODO', 'byid', data);
-            var wfsId = todoBean.WFS_ID;
-            data = {_ORDER_: 'NODE_STEPS desc', _extWhere: "and WFS_ID ='" + wfsId + "'", _NOPAGE_: true};
-            var nodeListBean = FireFly.doAct('TS_WFS_NODE_APPLY', 'query', data);
-            var nodeList = nodeListBean._DATA_;
-            if (nodeList.length > 0) {
-                var flowView = jQuery('#flowView');
-                flowView.html('');
-                flowView.append(
-                    [
-                        '<div style="display: inline-block">',
-                        '<span style="position: relative;left: 26px;top:3px;',
-                        'font-weight: 700;font-style: normal;font-size: 21px;color: #FFFFFF;">1</span>',
-                        '<img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5522.png">',//style="width:20px;"
-                        '<span style="position: relative;font-size: 15px;top: 5px;">&nbsp;&nbsp;填写申请单&nbsp;&nbsp;</span>',
-                        '</div>'
-                    ].join('')
-                );
-                for (var i = 0; i < nodeList.length; i++) {
-                    var node = nodeList[i];
-                    var nodeName = node.NODE_NAME;
-                    var nodeSteps = node.NODE_STEPS;
-                    flowView.append(
-                        [
-                            '<img alt=""  style="width:50px;height:5px;" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">',
-                            '<div style="display: inline-block">',
-                            '   <span style="position: relative;left: 28px;top:3px;',
-                            '       font-weight: 700;font-style: normal;font-size: 21px;color: #FFFFFF;">' + (i + 2) + '</span>',
-                            '   <img alt="" src="<%=CONTEXT_PATH %>/ts/image/' + (nodeSteps === todoBean.NODE_STEPS ? 'u5520.png' : 'u5522.png') + '">',
-                            '   <span style="position: relative;font-size: 15px;top: 5px;">&nbsp;&nbsp;' + nodeName + '&nbsp;&nbsp;</span>',
-                            '</div>'
-                        ].join('')
-                    );
-                }
-            }
-
-
-        }
-        //
-    }
-    function fanhui() {
-        window.history.go(-1);
     }
 
-    //    function tongyi() {
-    //        $('#nextStep').css('display', 'block');
-    //        $('#retreat').css('display', 'none');
-    //    }
-    //
-    //    function butongyi() {
-    //        $('#nextStep').css('display', 'none');
-    //        $('#retreat').css('display', 'block');
-    //    }
     //修改请假(审批)
     function bcnext() {
         var staArray = document.getElementsByName("sh_status");
@@ -569,12 +519,10 @@
         param.shreason = shreason;
         if (shstatus === '1') {
             param.isRetreat = "false";
-            param.type = '';
         } else {
             param.isRetreat = "true";
-            param.type = 'tuihui';
         }
-        updateData(param);
+        updateData("TS_QJLB_QJ", param);
     }
 
     //退回
@@ -594,46 +542,11 @@
         param.shreason = shreason;
         param.isRetreat = "true";
         param.type = 'tuihui';
-        updateData(param);
-    }
-
-    //提交审批
-    function updateData(param) {
-        FireFly.doAct("TS_QJLB_QJ", "updateData", param, false, false, function (response) {
-            if (response._MSG_.indexOf('ERROR,') >= 0) {
-                //发起申请出错
-                alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,'), response._MSG_.length));
-            } else {
-                if (param.type === 'tuihui') {
-                    fanhui();
-                } else {
-                    //模态框
-                    var $tiJiao = $('#tiJiao');
-                    if (response.shrNames) {
-                        $('#shrNames').html(response.shrNames);
-                        $('#tiJiaoTip').html('下一环节审批人');
-                        $('#tiJiaoContent').html('已经提交给<span id="shrNames">' + response.shrNames + '</span>进行审核');
-                    } else {
-                        $('#tiJiaoTip').html('提示信息');
-                        $('#tiJiaoContent').html('审批已处理');
-                    }
-                    //关闭提示框后返回到请假页面
-                    $tiJiao.on('hidden.bs.modal', function (/*e*/) {
-                        fanhui();
-                    });
-                    //显示提示框
-                    $tiJiao.modal('show');
-                }
-            }
-        });
-    }
-
-    //下载证明材料
-    function downImg(fileId) {
-        rh.ui.File.prototype.downloadFile(fileId);
+        updateData("TS_QJLB_QJ", param);
     }
 
 </script>
+<script src="<%=CONTEXT_PATH%>/ts/js/qj_jk_apply.js"></script>
 <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>

@@ -1,6 +1,6 @@
 var _viewer = this;
 
-var module = "ROLE";
+var module = "PLAN";
 
 var params = _viewer.getParams();
 
@@ -54,7 +54,6 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 			"widHeiArray":[width,height],
 			"xyArray":[100,100]
 	};
-	console.log(temp);
 	var cardView = new rh.vi.cardView(temp);
 	cardView.show();
 	return false;
@@ -115,6 +114,7 @@ _viewer.beforeDelete = function(pkArray) {
  * 删除后方法执行
  */
 _viewer.afterDelete = function() {
-	var where = " AND CTLG_MODULE = '"+ module +"'";
-	_viewer.refreshTreeGrid(where,where);
+//	var where = " AND CTLG_MODULE = '"+ module +"'";
+//	_viewer.refreshTreeGrid(where,where);
+	_viewer.refresh();
 }

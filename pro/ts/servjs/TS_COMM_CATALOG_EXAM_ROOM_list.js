@@ -1,6 +1,6 @@
 var _viewer = this;
 
-var module = "PROJECT";
+var module = "EXAM_ROOM";
 
 var params = _viewer.getParams();
 
@@ -54,6 +54,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 			"widHeiArray":[width,height],
 			"xyArray":[100,100]
 	};
+	console.log(temp);
 	var cardView = new rh.vi.cardView(temp);
 	cardView.show();
 	return false;

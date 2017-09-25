@@ -23,8 +23,8 @@ public class RzgjServ extends CommonServ {
         //获证信息
         ParamBean queryParamBean = new ParamBean();
         queryParamBean.set(Constant.PARAM_WHERE, "and STU_PERSON_ID='" + USER_CODE + "'");
-        queryParamBean.set(Constant.PARAM_ORDER, "ISSUE_DATE desc");
-        List<Bean> dataList = ServDao.finds("TS_ETI_CERT_QUAL_V", queryParamBean);
+        queryParamBean.set(Constant.PARAM_ORDER, "ISSUE_DATE desc");//发证日期 倒序
+        List<Bean> dataList = ServDao.finds("TS_ETI_CERT_QUAL_V", queryParamBean);//用户获证信息
         //用户信息查询
         Bean stu = ServDao.find("SY_ORG_USER_INFO_SELF", USER_CODE);
 
@@ -42,15 +42,15 @@ public class RzgjServ extends CommonServ {
         }
         //查找当前用户的序列
         Bean ser = ServDao.find("SY_HRM_ZDSTAFFPOSITION", USER_CODE);
-        //查找用户序列名称编码
-        String STATION_NO_CODE = "";
-        String STATION_NO = "";
+        //查找用户序列名称编码   //DUTY_LV_CODE职务层级代码
+        String STATION_NO_CODE = "";//岗位序列代码
+        String STATION_NO = "";//岗位序列
         //职务层级编码
         String POSTION_ID = "";
         if (ser != null) {
             STATION_NO_CODE = ser.getStr("STATION_NO_CODE");
             STATION_NO = ser.getStr("STATION_NO");
-            POSTION_ID = ser.getStr("DUTY_LV_CODE");
+            POSTION_ID = ser.getStr("DUTY_LV_CODE");//DUTY_LV_CODE 职务层级代码
         }
 
         for (Bean data : dataList) {
@@ -69,9 +69,9 @@ public class RzgjServ extends CommonServ {
             }
 
             //证书管理
-            List<Bean> infos = ServDao.finds("TS_ETI_CERT_INFO", "and CERT_ID='" + CERT_ID + "'");
+//            List<Bean> infos = ServDao.finds("TS_ETI_CERT_INFO", "and CERT_ID='" + CERT_ID + "'");
             String state = "";
-            Integer VALID_TERM = infos.get(0).getInt("VALID_TERM");
+            Integer VALID_TERM = data.getInt("VALID_TERM");
             if (VALID_TERM == 1) {
                 if (QUALFY_STAT == 1) {
                     state = "正常";
@@ -106,48 +106,6 @@ public class RzgjServ extends CommonServ {
             POSTION_QUALIFICATION_STR = classs[i];
         }
 
-
-        //追赶，同步，落后
-        int pre = 0, after = 0, other = 0, num = 0;
-        HashMap<Object, Object> p = new HashMap<>();
-        p.put("STATION_NO_CODE", STATION_NO_CODE);
-        Bean queryBean = new Bean(p);
-        if (!STATION_NO_CODE.equals("")) {
-            //查找同等序列下的人数
-            HashMap<Object, Object> t = new HashMap<>();
-            num = ServDao.count("SY_HRM_ZDSTAFFPOSITION", queryBean);
-            List<Bean> infos = ServDao.finds("TS_ETI_CERT_INFO", "and STATION_NO='" + STATION_NO + "'");
-            if (infos.size() > 0) {
-                if (dataList.size() < infos.size()) {
-                    t.put("CERT_ID", infos.get(dataList.size()).getStr("CERT_ID"));
-                    Bean param = new Bean(t);
-                    pre = ServDao.count("TS_ETI_CERT_QUAL", param);
-                    if (dataList.size() > 0) {
-                        t.put("CERT_ID", infos.get(dataList.size() - 1).getStr("CERT_ID"));
-                        Bean par = new Bean(t);
-                        other = ServDao.count("TS_ETI_CERT_QUAL", par) - 1 - pre;
-                        after = num - other - pre - 1;
-                    }
-                    if (dataList.size() == 0) {
-                        other = num - pre - 1;
-                    }
-
-                }
-                if (dataList.size() == infos.size()) {
-                    pre = 0;
-                    t.put("CERT_ID", infos.get(dataList.size() - 1).getStr("CERT_ID"));
-                    Bean param = new Bean(t);
-                    other = ServDao.count("TS_ETI_CERT_QUAL", param) - 1 - pre;
-                    after = num - other - pre;
-                }
-            } else {
-                other = num - 1;
-            }
-        }
-        if (STATION_NO_CODE.equals("")) {
-            other = num;
-        }
-
         //过滤出用户当前序列的获证信息
         List<Bean> copyDataList = new ArrayList<>(dataList);//用户当前序列的获证信息
         Collections.reverse(copyDataList);
@@ -156,6 +114,30 @@ public class RzgjServ extends CommonServ {
             if (!STATION_NO_CODE.equals(copyData.get("STATION_NO"))) {
                 iterator.remove();
             }
+        }
+
+        //追赶，同步，落后
+        int pre = 0,
+                after = 0,
+                other = 0,
+                num = 0;//当前序列人数
+        Bean queryBean = new Bean();
+        queryBean.set("STATION_NO_CODE", STATION_NO_CODE);
+
+        if (!STATION_NO_CODE.equals("")) {
+            //查找同等序列下的人数
+            num = ServDao.count("SY_HRM_ZDSTAFFPOSITION", queryBean);
+            queryBean = new Bean();
+            queryBean.set(Constant.PARAM_WHERE, "and STATION_NO='" + STATION_NO_CODE + "' and CERT_GRADE_CODE between '1' and '" + POSTION_QUALIFICATION + "'");
+            after = ServDao.count("TS_ETI_CERT_QUAL_V", queryBean);
+
+            queryBean = new Bean();
+            queryBean.set(Constant.PARAM_WHERE, "and STATION_NO='" + STATION_NO_CODE + "' and CERT_GRADE_CODE between '" + POSTION_QUALIFICATION + "' and '4'");
+            pre = ServDao.count("TS_ETI_CERT_QUAL_V", queryBean);
+
+            queryBean = new Bean();
+            queryBean.set(Constant.PARAM_WHERE, "and STATION_NO='" + STATION_NO_CODE + "' and CERT_GRADE_CODE = '" + POSTION_QUALIFICATION + "'");
+            other = num - pre - after;
         }
 
         outBean.set("dataList", dataList);

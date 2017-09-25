@@ -507,8 +507,8 @@
 		</div>
 
 		<footer class="main-footer" id="main-fotter-div">
-			<div align="center">
-				<img id="qt_footer_logo" class="img" src="/qt/img/u996.png">
+			<div align="center" style="color: white;font-size: 20px;">
+<!-- 				<img id="qt_footer_logo" class="img" src="/qt/img/u996.png"> -->
 				<strong>中国工商银行考试系统</strong>
 			</div>
 			<div>
@@ -520,7 +520,7 @@
 						<td><span></span></td>
 						<td width="16%"><span>邮编：100140 </span></td>
 						<td><span>|</span></td>
-						<td width="14%" align="right"><span style="font-family:'微软雅黑';font-weight: 400;color: #CCCCCC;">2017 年 6 月 </span></td>
+						<td width="14%" align="right"><span>2017 年 6 月 </span></td>
 					</tr>
 				</table>
 			</div>

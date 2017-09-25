@@ -1,6 +1,7 @@
 package com.rh.ts.xmgl.rule.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,12 +36,16 @@ public class BanTest implements IRule {
 			String endDate = obj.getString("val"); // 有效期时间
 			
 			SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
+			
+			Date date  = sf.parse(endDate);
 
 			SqlBean sql = new SqlBean();
 
 			sql.and("JKGL_USER_CODE", user);// 人员编码
 
-			sql.andGTE("JKGL_END_DATE", sf.format(endDate));// 禁考期限 >= datetime
+			sf = new SimpleDateFormat("yyyy-MM-dd");
+			
+			sql.andGTE("JKGL_END_DATE", sf.format(date));// 禁考期限 >= datetime
 
 			sql.and("S_FLAG", 1);
 
@@ -49,7 +54,7 @@ public class BanTest implements IRule {
 			if (count == 0) {
 				return true;
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 
 			e.printStackTrace();
 		}

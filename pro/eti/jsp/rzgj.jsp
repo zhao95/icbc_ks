@@ -120,24 +120,43 @@
                 <div class="row">
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="view">
-
-                            <div id="has-cert" style=" padding: 200px 0 30px 0;width: 232px;display: none;"
-                                 class="center-block">
-                                <div id="joined-bank" style="position: relative;float: left;width: 66px;">
-                                    <div style="width: 66px;height: 66px;border-radius: 50%;background-color: #3a6ab3">
-                                        <img class="img " src="<%=CONTEXT_PATH%>/eti/images/icbc32x32.png"
-                                             style="position: relative;top: 16px;left: 16px;"><%--u5074.png--%>
-                                        <div id="USER_CMPY_DATE"
-                                             style="position: absolute;top:80px;left:-26px;font-size: 20px;width: 150px;">
-                                            日期
-                                        </div>
-                                        <div style="height: 60px;width: 2px;background-color: #707070;position: absolute;top: -60px;left: 31px;"></div>
-                                        <div style="position: absolute;top:-85px;left:0;width: 85px;font-size: 16px">
-                                            加入工行
-                                        </div>
-                                        <div style="background-color: #3a6ab3;width: 25px;height: 22px;position: absolute;top: -60px;left: 34px;"></div>
+                            <div id="has-cert" style="display: none;">
+                                <div class="row">
+                                    <div class="col-sm-offset-1 col-sm-11" style="margin-left: 100px;">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                                                   value="option1" onclick="RzgjObject.setValidViewData()"
+                                                   checked>
+                                            有效
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                                                   onclick="RzgjObject.setAllViewData()" value="option2">
+                                            全部
+                                        </label>
                                     </div>
                                 </div>
+
+                                <div id="cert-content" style="padding: 200px 0 30px 0;" class="center-block">
+                                    <div id="joined-bank" style="position: relative;float: left;width: 66px;">
+                                        <div style="width: 66px;height: 66px;border-radius: 50%;background-color: #3a6ab3">
+                                            <img class="img " src="<%=CONTEXT_PATH%>/eti/images/icbc32x32.png"
+                                                 style="position: relative;top: 16px;left: 16px;"><%--u5074.png--%>
+                                            <div id="USER_CMPY_DATE"
+                                                 style="position: absolute;top:80px;left:-26px;font-size: 20px;width: 150px;">
+                                                日期
+                                            </div>
+                                            <div style="height: 60px;width: 2px;background-color: #707070;position: absolute;top: -60px;left: 31px;"></div>
+                                            <div style="position: absolute;top:-85px;left:0;width: 85px;font-size: 16px">
+                                                加入工行
+                                            </div>
+                                            <div style="background-color: #3a6ab3;width: 25px;height: 22px;position: absolute;top: -60px;left: 34px;"></div>
+                                        </div>
+                                    </div>
+
+                                    <div id="add-cert-content" style="float: left;"></div>
+                                </div>
+
                             </div>
 
                             <div id="no-cert" style="display: none"
@@ -271,10 +290,30 @@
             ].join(''));
         },
         initView: function () {
+            this.setValidViewData();
+        },
+        setValidViewData: function () {
+            var result = [];
+            var dataList = this.info.currentDataList;//this.info.dataList;//this.info.currentDataList;
+            for (var i = 0; i < dataList.length; i++) {
+                var data = dataList[i];
+                if (data.state !== '无效') {
+                    result.add(data);
+                }
+            }
+            this._setViewContent(result, this.info.currentDataList.length > 0);
+        },
+        setAllViewData: function () {
+            var dataList = this.info.currentDataList;
+            this._setViewContent(dataList, this.info.currentDataList.length > 0);
+        },
+        _setViewContent: function (dataList, hasCert) {
             var $noCert = $('#no-cert');
             var $hasCert = $('#has-cert');
-            var dataList = this.info.currentDataList;//this.info.dataList;//this.info.currentDataList;
-            if (dataList.length > 0) {
+            var $certContent = $('#cert-content');
+            var $addCertContent = $('#add-cert-content');
+            $addCertContent.html('');
+            if (hasCert) {
                 $noCert.css('display', 'none');
                 $hasCert.css('display', 'block');
             } else {
@@ -300,8 +339,12 @@
             var count = 0;//获证数
             count = dataList.length > 4 ? 4 : dataList.length;//最多展示4个
             var lineWidths = [200, 120, 100, 100];
-            var lineWidth = lineWidths[count - 1];
-            $hasCert.css('width', (66 + (count) * (lineWidth + 66)) + 'px');
+            var index = count - 1;
+            if (index < 0) {
+                index = 0;
+            }
+            var lineWidth = lineWidths[index];
+            $certContent.css('width', (66 + count * (lineWidth + 66)) + 'px');
             for (var i = 0; i < dataList.length; i++) {
                 var data = dataList[i];
                 var setting = settings[i];
@@ -309,7 +352,7 @@
                     //最多展示4个
                     return;
                 }
-                $hasCert.append([
+                $addCertContent.append([
                     '<div style="position: relative;float: left;margin-left: ' + lineWidth + 'px;width: 66px;">',
                     '   <div style="background-color: #c9cbd0;width: ' + lineWidth + 'px;height:2px;position: absolute;top:33px;left: -' + lineWidth + 'px;"></div>',
                     '       <div style="width: 66px;height: 66px;border-radius: 50%;background-color: ' + setting.color + '">',
@@ -334,8 +377,8 @@
             //下一级 next
             setting = settings[i];
             if (setting !== null) {
-                $hasCert.css('width', $hasCert.width() + (lineWidth + 66));
-                $hasCert.append([
+                $certContent.css('width', $certContent.width() + (lineWidth + 66));
+                $addCertContent.append([
                     '<div style="position: relative;float: left;margin-left:  ' + lineWidth + 'px;width: 66px;">',
                     '   <div style="border-bottom: 2px dashed #999ba0;width:  ' + lineWidth + 'px;height:0;position: absolute;top:33px;left: -' + lineWidth + 'px;"></div>',
                     '       <img class="img " src="<%=CONTEXT_PATH%>/eti/images/next32x32.png"',

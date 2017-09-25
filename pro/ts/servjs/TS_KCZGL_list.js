@@ -10,7 +10,7 @@ $("#TS_KCZGL .rhGrid").find("tr").each(function(index, item) {
 		var abtns ='<a class="rhGrid-td-rowBtnObj" operCode="optLookBtn" rowpk="'+dataId+'" style="cursor:pointer">&nbsp查看&nbsp</a>'+	
 		'<a class="rhGrid-td-rowBtnObj" operCode="optZBtn" rowpk="'+dataId+'" style="cursor:pointer">组管理&nbsp</a>'+
 		'<a class="rhGrid-td-rowBtnObj" operCode="optEditBtn" rowpk="'+dataId+'" style="cursor:pointer">编辑&nbsp</a>'+
-		'<a class="rhGrid-td-rowBtnObj" operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>'+
+//		'<a class="rhGrid-td-rowBtnObj" operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>'+
 		'<a class="rhGrid-td-rowBtnObj" operCode="optCopyBtn" rowpk="'+dataId+'" style="cursor:pointer">复制&nbsp</a>';
 		if(state < 5){
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">垃圾箱&nbsp</a>';
@@ -149,4 +149,16 @@ $(".hoverDiv").find("a").hover(function(){
 	$(this).css("color","#0066FF");
 },function(){
 	$(this).css("color","#666666");
+});
+
+/**
+ * 目录管理
+ */
+_viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
+	
+	module = 'EXAM_GROUP';
+	var params = {"isHide":"true", "CTLG_MODULE":module};
+	var options = {"tTitle":"考场组目录管理","url":"TS_COMM_CATALOG_EXAM_GROUP.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
+	options["top"] = true;
+	Tab.open(options);
 });

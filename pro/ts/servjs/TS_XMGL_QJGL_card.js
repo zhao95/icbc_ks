@@ -14,14 +14,14 @@ if(_viewer.opts.act == "cardAdd"){
 //针对开始和结束时间的校验
 _viewer.getItem("QJ_STADATE").obj.unbind("click").bind("click", function() {
 	    WdatePicker({
-		 dateFmt: 'yyyy-MM-dd HH:mm:ss';
+		 dateFmt: 'yyyy-MM-dd HH:mm:ss',
 	        maxDate : "#F{$dp.$D('" + _viewer.servId + "-QJ_ENDDATE')}"
 	    });
 	});
 _viewer.getItem("QJ_ENDDATE").obj.unbind("click").bind("click", function() {
 
 	    WdatePicker({
-		 dateFmt: 'yyyy-MM-dd HH:mm:ss';
+		 dateFmt: 'yyyy-MM-dd HH:mm:ss',
 	        minDate : "#F{$dp.$D('" + _viewer.servId + "-QJ_STADATE')}"
 	    });
 	});

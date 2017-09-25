@@ -3,10 +3,10 @@ var _viewer = this;
 $("#TS_KCGL_IPSCOPE  .rhGrid").find("th[icode='del']").html("操作");
 $("#TS_KCGL_IPSCOPE  .rhGrid").find("tr").unbind("dblclick");
 //删除单行数据
-_viewer.grid.getBtn("del").unbind("click").bind("click",function() {
-	var pk = jQuery(this).attr("rowpk");//获取主键信息
-	rowDelete(pk,_viewer);
-});
+//_viewer.grid.getBtn("del").unbind("click").bind("click",function() {
+//	var pk = jQuery(this).attr("rowpk");//获取主键信息
+//	rowDelete(pk,_viewer);
+//});
 
 /*
 * 删除前方法执行
@@ -18,7 +18,7 @@ rh.vi.listView.prototype.beforeDelete = function(pkArray) {
 $("#TS_KCGL_IPSCOPE .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
-		$(item).find("td[icode='del']").prepend(
+		$(item).find("td[icode='BUTTONS']").prepend(
 				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optEditBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
 		);
 		bindCard();

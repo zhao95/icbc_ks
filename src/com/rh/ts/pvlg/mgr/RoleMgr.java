@@ -168,6 +168,10 @@ public class RoleMgr {
 
 		return false;
 	}
+	
+	public static Bean getRoleOptsByUser(String userCode) {
+		return getRoleOptsByUser(userCode,"");
+	}
 
 	/**
 	 * 获取用户所有功能 (多角色功能合并)
@@ -175,7 +179,7 @@ public class RoleMgr {
 	 * @param userCode
 	 * @return
 	 */
-	public static Bean getRoleOptsByUser(String userCode) {
+	public static Bean getRoleOptsByUser(String userCode,String servId) {
 		// 缓存获取用户 所有角色list 包含功能
 		List<RoleBean> rolelist = getRoleList(userCode);
 
@@ -195,6 +199,10 @@ public class RoleMgr {
 				String mdCode = md.getStr("MD_CODE");
 
 				String mdVal = md.getStr("MD_VAL");
+				
+				if (!Strings.isBlank(servId) && !mdCode.equals(servId+"_PVLG")) {
+					continue;
+				}
 
 				if (!Strings.isBlank(mdVal)) {
 
@@ -210,7 +218,8 @@ public class RoleMgr {
 					
 					if (!pvlg.isEmpty()) {
 						
-						roleOptBean.put("PVLG-" + mdCode, pvlg);
+//						roleOptBean.put("PVLG-" + mdCode, pvlg);
+						roleOptBean.put(mdCode, pvlg);
 					}
 				}
 			}

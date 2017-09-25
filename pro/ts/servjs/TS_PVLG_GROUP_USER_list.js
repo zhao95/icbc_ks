@@ -32,10 +32,11 @@ function bindCard() {
 }
 
 _viewer.getBtn("impUser").unbind("click").bind("click", function(event) {
-	var configStr = "SY_ORG_USER_SUB,{'TARGET':'USER_CODE~USER_NAME','SOURCE':'USER_CODE~USER_NAME'," +
+	var configStr = "TS_ORG_USER_ALL,{'TARGET':'USER_CODE~USER_NAME~USER_LOGIN_NAME','SOURCE':'USER_CODE~USER_NAME~USER_LOGIN_NAME'," +
 	"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
 	var options = {
 			"config" :configStr,
+//			"params" : {"_TABLE_":"SY_ORG_USER"},
 			"parHandler":_viewer,
 			"formHandler":_viewer.form,
 			"replaceCallBack":function(idArray) {//回调，idArray为选中记录的相应字段的数组集合

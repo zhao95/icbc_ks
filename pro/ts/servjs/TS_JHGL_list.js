@@ -6,7 +6,7 @@ _viewer.grid._table.find("tr").each(function(index, item) {
 		var dataId = item.id;
 		$(item).find("td[icode='BUTTONS']").append(
 			'<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optEditBtn" operCode="optEditBtn"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
-			+ '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_delete" operCode="delete"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+//			+ '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_delete" operCode="delete"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
 			+ '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optViewBtn" operCode="optViewBtn"><span class="rh-icon-inner">详细</span><span class="rh-icon-img btn-view"></span></a>'
 			);
 			// 为每个按钮绑定卡片

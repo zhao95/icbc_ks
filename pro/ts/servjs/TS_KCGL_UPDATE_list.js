@@ -49,9 +49,9 @@ $("#TS_KCGL_UPDATE .rhGrid").find("tr").each(function(index, item) {
 			$(item).css("color","blue");
 		}
 		
-		$(item).find("td[icode='view']").append(
-			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optDeleteBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
-		);
+//		$(item).find("td[icode='view']").append(
+//			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optDeleteBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+//		);
 		bindCard();
 	}
 });

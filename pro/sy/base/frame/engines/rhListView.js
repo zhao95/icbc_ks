@@ -1657,6 +1657,7 @@ rh.vi.listView.prototype._bldNavTree = function() {
 	                extWhere = Tools.itemVarReplace(extWhere,_self.links);
 	                var extWhere = Tools.parVarReplace(extWhere);
 	                extWhere += _self._treeExtWhere;
+	                params = jQuery.extend({}, params, {"USE_SERV_ID":_self.servId});
 					setting.data = FireFly.getDict(dictId,pId,extWhere,null,null,params);//s_menuData.TOPMENU;//// 设置树的初始化数据
 					var child = setting.data[0].CHILD;
 				    if (child.length == 1) {

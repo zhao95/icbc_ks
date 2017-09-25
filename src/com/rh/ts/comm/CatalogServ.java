@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.StopWatch;
 
 import com.rh.core.base.Bean;
-import com.rh.core.org.util.OrgConstant;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -116,7 +115,7 @@ public class CatalogServ extends CommonServ {
 		
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append(" AND NOT EXISTS (SELECT CTLG_CODE FROM ").append(TsConstant.SERV_CTLG);
+		sb.append(" AND NOT EXISTS (SELECT CTLG_CODE FROM ").append(TsConstant.SERV_CTLG_ALL);
 		
 		sb.append(" WHERE CTLG_MODULE = ? AND S_ODEPT = ?");
 		

@@ -1,6 +1,6 @@
 var _viewer = this;
 
-var module = "PROJECT";
+var module = "EXAM_GROUP";
 
 var params = _viewer.getParams();
 
