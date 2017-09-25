@@ -24,3 +24,12 @@ _viewer.getItem("SH_RGSH").change(function(){
 	}
 });	
 	
+//根据选择是否自动审核做改变
+_viewer.getItem("SH_ZDSH").change(function(){
+	var  auto=_viewer.getItem("SH_ZDSH").getValue();
+	if(auto==1){
+		_viewer.getItem("SH_TSY").show();
+	}else  if(auto==2){
+		_viewer.getItem("SH_TSY").hide();
+	}
+});
