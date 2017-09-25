@@ -441,7 +441,7 @@
 
 /*首页 待办/提醒 样式*/
 #todo-panel>.panel-body {
-	min-height: 230px;
+	min-height: 200px;
 }
 
 /*待办项样式*/
@@ -505,7 +505,7 @@
 
 /*首页 可申请报名列表*/
 #apply-panel>.panel-body {
-	min-height: 230px;
+	min-height: 190px;
 }
 
 #apply-table>tbody>tr:nth-of-type(even) {
