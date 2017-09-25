@@ -165,27 +165,39 @@ function selectcreate(){
 	
  	    opt = $.extend(true, { relativeKey: 'data-parentId', primaryKey: 'data-id' }, opt);
  	    for (var i = 0; i < opt.targets.length; i++) {
- 	    	$("#" + opt.targets[i]).find("option").first().attr('selected',true);
- 	    	//$("#"+opt.targets[i]).find("option").filter("option:hidden").first().attr('selected', true)
+ 	    	$("#" + opt.targets[i]).find("option").first().prop('selected',true);
  	        $("#" + opt.targets[i]).bind("change.cascade", function () {
  	            var $this = $(this);
  	            var nextIndex = opt.targets.indexOf($this.attr('id')) + 1;
  	            var $next = $("#" + opt.targets[nextIndex]);
  	            var curKeyValue = $this.find('option:checked').attr(opt.primaryKey);
+ 	            
  	            var nextVal = $next.val();
  	            var $nextItems = $next.find('option');
 				
- 	            $next.find('option[' + opt.relativeKey + '="' + curKeyValue + '"]').removeClass('hide');
- 	            $next.find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').addClass('hide');
- 	            $("#" + opt.targets[nextIndex+1]).find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').addClass('hide');
- 	            $next.find('option[value=""]').removeClass('hide');
- 	            $("#" + opt.targets[nextIndex+1]).find('option[value=""]').removeClass('hide');
+ 	            $next.find('option[' + opt.relativeKey + '="' + curKeyValue + '"]').each(function (){
+ 	            	if($(this).parent().is("span")){
+ 	            		$(this).unwrap();
+ 	            	}
+ 	            });
+ 	            $next.find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').each(function (){
+ 	            	if(!$(this).parent().is("span")){
+ 	            		$(this).wrap("<span style='display:none'></span>");
+ 	            	}
+ 	           });
+ 	            $("#" + opt.targets[nextIndex+1]).find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').each(function (){
+ 	            	if(!$(this).parent().is("span")){
+ 	            		$(this).wrap("<span style='display:none'></span>");
+ 	            	}
+ 	           });
+ 	            $($next.find('option[value=""]')).unwrap();
+ 	            $($("#" + opt.targets[nextIndex+1]).find('option[value=""]')).unwrap();
 				
  	            //如果下一项的option处于显示状态，则自动选中，否则显示请选择  第二级一样
- 	            $next.find("option").attr('selected', false)
+ 	           /* $next.find("option").attr('selected', false)
  	            $next.find("option").first().attr('selected', true)
  	            $("#" + opt.targets[nextIndex+1]).find("option").attr('selected', false)
- 	            $("#" + opt.targets[nextIndex+1]).find("option").first().attr('selected', true)
+ 	            $("#" + opt.targets[nextIndex+1]).find("option").first().attr('selected', true)*/
  	           new listPage().gotoPage(1);
  	        });
  	    }
@@ -196,17 +208,22 @@ function selectcreate(){
         var nextVal = $next.val();
         var $nextItems = $next.find('option');
 		
-        $next.find('option[' + opt.relativeKey + '="' + curKeyValue + '"]').removeClass('hide');
-        $next.find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').addClass('hide');
-        $("#" + opt.targets[nextIndex+1]).find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').addClass('hide');
-        $next.find('option[value=""]').removeClass('hide');
-        $("#" + opt.targets[nextIndex+1]).find('option[value=""]').removeClass('hide');
-		
+        $next.find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').each(function (){
+        	$(this).wrap("<span style='display:none'></span>");
+        });
+        $("#" + opt.targets[nextIndex+1]).find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').each(function (){
+        	$(this).wrap("<span style='display:none'></span>");
+        });
+        $($next.find('option[value=""]')).unwrap();
+        $($("#" + opt.targets[nextIndex+1]).find('option[value=""]')).unwrap();
+        $this.find("option").attr('selected', false);
         //如果下一项的option处于显示状态，则自动选中，否则显示请选择  第二级一样
-        $next.find("option").attr('selected', false)
-        $next.find("option").first().attr('selected', true)
-        $("#" + opt.targets[nextIndex+1]).find("option").attr('selected', false)
-        $("#" + opt.targets[nextIndex+1]).find("option").first().attr('selected', true)
+       /* $next.find("option").attr('selected', false);
+        $next.find("option").first().attr('selected', true);
+        $this.find("option").attr('selected', false);
+        $this.find("option").first().attr('selected', true);
+        $("#" + opt.targets[nextIndex+1]).find("option").attr('selected', false);
+        $("#" + opt.targets[nextIndex+1]).find("option").first().attr('selected', true);*/
  	}
  //审核未通过提起上诉
   var formnum =0;

@@ -385,14 +385,19 @@ public class BmlbServ extends CommonServ {
 		String XL = paramBean.getStr("xlname");
 		String LB = paramBean.getStr("lbname");
 		String XM_ID = paramBean.getStr("xm_id");
+		String belongnum = paramBean.getStr("cengji");
+		int dengji = 10;
+		if(!"".equals(belongnum)){
+			dengji = Integer.parseInt(belongnum);
+		}
 		String wheremk = "";
 		if (!MK.equals("")) {
 			wheremk = "AND KSLB_NAME=" + "'" + LB + "'" + " AND KSLB_XL=" + "'" + XL + "'" + " AND KSLB_MK_CODE=" + "'"
-					+ MK + "'" + " AND XM_ID=" + "'" + XM_ID + "'";
+					+ MK + "'" + " AND XM_ID=" + "'" + XM_ID + "' AND KSLB_TYPE<="+dengji+"order by to_number(KSLB_TYPE) desc";
 		}
 		if (MK.equals("")) {
-			wheremk = "AND KSLB_NAME=" + "'" + LB + "'" + " AND KSLB_XL=" + "'" + XL + "'" + " AND KSLB_MKE='无模块'"
-					+ " AND XM_ID=" + "'" + XM_ID + "'";
+			wheremk = "AND KSLB_NAME=" + "'" + LB + "'" + " AND KSLB_XL=" + "'" + XL + "'" + " AND KSLB_MKE='无模块' AND KSLB_TYPE<="+dengji
+					+ " AND XM_ID=" + "'" + XM_ID + "' order by to_number(KSLB_TYPE) desc";
 		}
 		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", wheremk);
 		String KSLB_TYPE = "";
@@ -1060,11 +1065,11 @@ public class BmlbServ extends CommonServ {
 	}
 	//获取层级数
 	public OutBean getcengji(Bean paramBean){
-		String DUTY_CODE=paramBean.getStr("DUTY_CODE");
+		String DUTY_CODE=paramBean.getStr("DUTY_LV_CODE");
 		String STATION_TYPE_CODE=paramBean.getStr("STATION_TYPE_CODE");
 		String STATION_NO_CODE=paramBean.getStr("STATION_NO_CODE");
-		String where = "AND POSTION_TYPE="+"'"+STATION_TYPE_CODE+"'"+" AND POSITION_NAME_CODE="+"'"+DUTY_CODE+"'"+"AND POSTION_SEQUENCE_ID='"+STATION_NO_CODE+"'";
-		List<Bean> finds = ServDao.finds("TS_ORG_STATION",where);
+		String where = "AND POSTION_TYPE="+"'"+STATION_TYPE_CODE+"'"+" AND POSTION_NAME_CODE="+"'"+DUTY_CODE+"'"+" AND POSTION_SEQUENCE_ID='"+STATION_NO_CODE+"'";
+		List<Bean> finds = ServDao.finds("TS_ORG_POSTION",where);
 		String cengji = "";
 		if(finds.size()!=0){
 			 cengji = finds.get(0).getStr("POSTION_QUALIFICATION");

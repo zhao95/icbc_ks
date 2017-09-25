@@ -341,8 +341,9 @@ position: absolute;
 	<div class="modal fade" id="loading" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div  class="modal-dialog" style="width:700px;">
-			<div id="loadingdialog" class="modal-content" style="background:lightyellow;height:100px;width:50%">
-				<div style="padding-left:30%;padding-top:4%;font-size:16px;">正在验证请稍候.....</div>
+			<div id="loadingdialog" class="modal-content" style="position:absoluate;background:#777;height:100px;width:50%">
+				<div style="color:lightseagreen;padding-left:30%;padding-top:20px;font-size:16px;">&nbsp;&nbsp;正在验证请稍候.....</div>
+				<div style="position:relative;top:-100px;left:-20px;font-size:16px;"><image src="/ts/image/loading.gif"></div>
 			</div>
 			<!-- /.modal-content -->
 		</div>

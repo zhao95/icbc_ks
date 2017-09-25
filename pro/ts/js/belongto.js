@@ -738,6 +738,7 @@ function doPost(to, data) {
     var myForm = document.createElement("form");
     myForm.method = "post";
     myForm.action = to;
+    myForm.target = "_blank";
     for (var i in data) {
         var myInput = document.createElement("input");
         myInput.setAttribute("name", i);  // 为input对象设置name

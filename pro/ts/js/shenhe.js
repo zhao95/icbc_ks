@@ -704,10 +704,10 @@ jq("#excelimp").click(function(){
 			 servid="TS_BMSH_NOPASS"
 		 }
 		 param["serv_id"]=servid;
-		 FireFly.doAct("TS_BMLB_BM","getDataFromXls",param);
+		 FireFly.doAct("TS_BMLB_BM","getDataFromXls",param,false,true);
 		 $("#excleupload").modal('hide');
-		 selectdata1(user_code,xmid,tabnum,1); 
 		 
+		 new listPage().gotoPage(1);
 	 }
 });
 //验证不是xls 或  xl 删除 

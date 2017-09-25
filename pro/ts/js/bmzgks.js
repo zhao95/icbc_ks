@@ -53,6 +53,18 @@ function xminfoshow(){
 		        }
 		    }
 		}
+		var checkArray = document.getElementsByName("checkboxaa");
+		debugger;
+		for(var m=0;m<checkArray.length;m++){
+			for(var n=0;n<neAry.length;n++){
+				var length= $($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("div").length;
+				if(length>2){
+					if(neAry[n].ID==$($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("div").eq(0).attr("id")){
+						neAry.splice(neAry[n],1);
+					}
+				}
+			}
+		}
 		
 			param['BM_INFO'] = JSON.stringify(bminfo);
 			param['BM_LIST'] = JSON.stringify(neAry);
@@ -61,7 +73,7 @@ function xminfoshow(){
 			parambm["user_code"]=user_code;
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
-		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, true,false,function(data){
+		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, false,true,function(data){
     		yzgz=data;
     		console.log(data);
     		//获取后台传过来的key
@@ -118,9 +130,9 @@ function xminfoshow(){
        				}
 	       		}
        			
-       		}
+         	}
+         	$("#loading").modal("hide");
     	});	
-		$("#loading").modal("hide");
 	}
 	//提交所有数据
 	function mttijiao(){
@@ -268,27 +280,34 @@ function xminfoshow(){
 		 xminfoshow();
 		 matchinfo();
 		 mkfuzhi();
+		 var param1 = {};
+		 param1["DUTY_LV_CODE"]=DUTY_LEVEL_CODE;
+		 param1["STATION_TYPE_CODE"]=STATION_TYPE_CODE;
+		 param1["STATION_NO_CODE"]=STATION_NO_CODE;
+		 var cengji =  FireFly.doAct("TS_BMLB_BM","getcengji",param1);
+		 var cengjinum = 1;
+		 var sqlstr = "";
+		 if(cengjinum==""){
+			 //防止抛异常
+			 cengjinum = 10;
+		 }else{
+			 cengjinum+=1;
+			 belongnum=cengjinum;
+			 sqlstr = " AND (KSLBK_TYPE<="+cengjinum+" or KSLBK_TYPE is null)";
+		 }
 		 typeId(obj);
 		 tongji();
 		 var allList=getFzgList();
 		 showFzgList(allList);
-		 var param1 = {};
-		 param1["DUTY_CODE"]=ADMIN_DUTY;
-		 param1["STATION_TYPE_CODE"]=STATION_TYPE_CODE;
-		 param1["STATION_NO_CODE"]=STATION_NO_CODE;
-		/*var cengji =  FireFly.doAct("TS_BMLB_BM","getcengji",param1);
-		var cengjinum = cengji.num;
-		var sqlstr = " AND (KSLBK_TYPE<="+cengjinum+" or KSLBK_TYPE is null";*/
 		 
-		 /*if(cengjinum==1){
+		 if(cengjinum==2){
 			 //只能报
-			 $("#allnum").html(0);
+			 $("#gaoji").html(0);
 			 $("#canheighnum").html(0);
-		 }else if(cengjinum==2){
-			 //
-			 
-		 }*/
-        var extWhere="AND KSLBK_ID IN ((select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))))union(select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')))union(SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))union(select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')) AND KSLBK_CODE<>'"+STATION_TYPE_CODE+"' AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)";
+		 }
+		 //没有数据的父节点不显示
+		 
+        var extWhere="AND KSLBK_ID IN ((select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))))union(select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')))union(SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))union(select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')) AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)" +sqlstr;
 		 var setting={data
 	             :FireFly.getDict('TS_XMGL_BM_KSLBK','KSLBK_PID',extWhere),
 	         dictId:"TS_XMGL_BM_KSLBK",expandLevel:1,
@@ -347,6 +366,18 @@ function xminfoshow(){
 	         theme: "bbit-tree-no-lines",
 	         url  :"SY_COMM_INFO.dict.do"
 	        };
+		 var data1 = setting.data;
+		 console.log(data1);
+		 for(var j=0;j<data1[0].CHILD.length;j++){
+			 for(var m=0;m<data1[0].CHILD[j].CHILD.length;m++){
+				 for(var n=0;n<data1[0].CHILD[j].CHILD[m].CHILD.length;n++){
+					 if(data1[0].CHILD[j].CHILD[m].CHILD[n].length==0){
+						 data1[0].CHILD[j].CHILD[m].splice(data1[0].CHILD[j].CHILD[m].CHILD[n],1);
+					 }
+				 }
+			 }
+		 }
+		 setting.data=data1;
 	         var tree = new rh.ui.Tree(setting);
 	         $('.content-navTree').append(tree.obj);
 	 });
@@ -696,7 +727,8 @@ function xminfoshow(){
 		//序列名称
 	var STATION_NO= "";
 		//职务层级
-		var DUTY_LEVEL="";
+		var DUTY_LEVEL_CODE="";
+		var belongnum = "";
 	//查询 筛选出所有的数据
 		 var lbname = "";
 		 var xlname= "";
@@ -712,9 +744,11 @@ function xminfoshow(){
 			 STATION_NO = result.STATION_NO;
 			 STATION_NO_CODE= result.STATION_NO_CODE;
 			 ADMIN_DUTY = result.ADMIN_DUTY;
+			 DUTY_LEVEL_CODE = result.DUTY_LV_CODE;
 			 $("#gwlb").html(STATION_TYPE);
 			 $("#gwxl").html(STATION_NO);
 			 $("#zwcj").html(ADMIN_DUTY);
+			 
 		}
 		var wherexl = "AND KSLB_CODE="+"'"+STATION_TYPE_CODE+"'"+" AND KSLB_XL_CODE="+"'"+STATION_NO_CODE+"'"+" AND XM_ID="+"'"+xm_id+"'";
 		var param={};
@@ -757,11 +791,11 @@ function xminfoshow(){
 				var param = {};
 				param["typecode"]=STATION_TYPE_CODE;
 				param["xlcode"]=STATION_NO_CODE;
-				param["zhiwu"]=DUTY_LEVEL;
 				param["MK"]=mkvalue;
 				param["lbname"]=lbname;
 				param["xlname"]=xlname;
 				param["xm_id"]=xm_id;
+				param["cengji"]=belongnum;
 				var ww= FireFly.doAct("TS_BMLB_BM", "getMkvalue", param,true,false);
 				hh= ww.list;
 				var tyArray = hh.split(",");

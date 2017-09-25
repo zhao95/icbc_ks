@@ -152,7 +152,7 @@
 								<th style="text-align: center; width: 14%;">审核状态</th>
 							 	<th style="width: 10%; text-align: center">状态</th>
 								<th id="BM_OPTIONS" class=""
-									style="width: 14%; text-align: center">操作</th>
+									style="width: 12%; text-align: center">操作</th>
 							</tr>
 						</thead>
 						<tbody>
