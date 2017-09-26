@@ -173,7 +173,7 @@
 			<section class="content">
 				<div class="row">
 					<div class="col-md-8" id="main_col8">
-						<!-- /.box -->
+																	<!-- /.box -->
 						<div class="panel panel-default box" style=" border-top: 1px solid #d2d6de;" >
 							<div class="box-header with-border"  style="background-color:#f9f9f9;height: 40px;">
 								<h3 class="panel-title">资格考试项目进展状态
@@ -181,7 +181,7 @@
 									<span style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></span>
 									</a>
 								</h3>
-<!-- 								<div style="width: 160px;height: 3px;position: relative;top: 11px;left: 0px;background-color: #ff0000;"></div> -->
+								<div style="width: 160px;height: 3px;position: relative;top: 11px;left: 0px;background-color: #ff0000;"></div>
 							</div>
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
@@ -195,36 +195,16 @@
 								</div>
 								<!-- 进度条 -->
 								<div id="jdtMain">
-									
-									<div id="jdtDivOut" class="progress">
-										<div id="jdtDivInner1" class="progress-bar"
-											style="background-color: #f0f0f0"></div>
-										<div id="jdtDivInner2" class="progress-bar"
-											style="background-color: #f0f0f0"></div>
-										<div id="jdtDivInner3" class="progress-bar divColor"
-											style="background-color: #f0f0f0"></div>
-										<div id="jdtDivInner4" class="progress-bar divColor"
-											style="background-color: #f0f0f0"></div>
-										<div id="jdtDivInner5" class="progress-bar divColor"
-											style="background-color: #f0f0f0"></div>
-										<div id="jdtDivInner6" class="progress-bar"
-											style="background-color: #f0f0f0"></div>
-										<div id="jdtDivInner7" class="progress-bar"
-											style="background-color: #f0f0f0"></div>
-										<div id="jdtDivInner8" class="progress-bar"
-											style="background-color: #f0f0f0"></div>
-									</div>
-									
 									<div id="upDiv">
 										<div style="left: -3%">
 											报名
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 6.5%">
+										<div style="left: 7%">
 											人工审核
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 18.5%">
+										<div style="left: 19%">
 											结果公示
 											<div class="upSX"></div>
 										</div>
@@ -253,7 +233,67 @@
 											<div class="upSX"></div>
 										</div>
 									</div>
-									
+									<br />
+									<div id="jdtDivOut" class="progress">
+										<div id="jdtDivInner1" class="progress-bar"
+											style="background-color: #f0f0f0"></div>
+										<div id="jdtDivInner2" class="progress-bar"
+											style="background-color: #f0f0f0"></div>
+										<div id="jdtDivInner3" class="progress-bar divColor"
+											style="background-color: #f0f0f0"></div>
+										<div id="jdtDivInner4" class="progress-bar divColor"
+											style="background-color: #f0f0f0"></div>
+										<div id="jdtDivInner5" class="progress-bar divColor"
+											style="background-color: #f0f0f0"></div>
+										<div id="jdtDivInner6" class="progress-bar"
+											style="background-color: #f0f0f0"></div>
+										<div id="jdtDivInner7" class="progress-bar"
+											style="background-color: #f0f0f0"></div>
+										<div id="jdtDivInner8" class="progress-bar"
+											style="background-color: #f0f0f0"></div>
+									</div>
+
+									<div id="downDiv">
+										<div style="left: 2%;">
+											<div class="downSX">|</div>
+											<span>提交报名</span><br /> <span>自动审核</span><br /> <span>异议</span>
+
+										</div>
+										<div style="left: 16%">
+											<div class="downSX">|</div>
+											异议
+										</div>
+										<div style="left: 28%">
+											<div class="downSX">|</div>
+											异议
+										</div>
+										<div style="left: 40%"  id ="jk_sp" >
+											<div class="downSX" >|</div>
+											借考
+										</div>
+										<div style="left: 50%">
+											<div class="downSX">|</div>
+											<span>考场调整</span><br><span id ="qj_sp">请假</span>
+										</div>
+										<div style="left: 61%">
+											<div class="downSX">|</div>
+											打印准考证
+										</div>
+									</div>
+									<br />
+								</div>
+								<!-- 分割线 -->
+								<div style="width:100%;height: 2px;margin: 0 auto;border-bottom: 2px dashed #efefef;"></div>
+								<div id="jdtComment">
+									<div class="jdtColor" style="background-color: #ff0000;"></div>
+									<div class="jdtTEXT">进行中</div>
+									<div class="jdtColor" style="background-color: #70c0b3;"></div>
+									<div class="jdtTEXT">已完成</div>
+									<div class="jdtColor" style="background-color: #27b9f8;"></div>
+									<div class="jdtTEXT">未完成</div>
+									<div class="jdtColor" style="background-color: #f0f0f0;"></div>
+									<div class="jdtTEXT">未启用</div>
+
 								</div>
 							</div>
 							<!-- /.box-body -->
@@ -261,98 +301,38 @@
 						<!-- /.box-div -->
 						<!-- /.box -->
 
-					<!-- 可参加的考试 -->
-					<div class="panel panel-default box" style=" border-top: 1px solid #d2d6de;">
-						<div class="panel-heading qt_ks_title" style="padding:5px 15px;">
-							<ul class="panel-title" id="ksTable">
-								<li class="active"><a href="#tab-zgks" data-toggle="tab" aria-expanded="true">资格考试(<span id=""  >6</span>) </a></li><li style="color:#e2e4e7"> |  </li>
-								<li ><a href="#tab-zsjs" data-toggle="tab" aria-expanded="true">知识竞赛(<span id="" >3</span>) </a> </li><li style="color:#e2e4e7">|  </li>
-								<li ><a href="#tab-qtks" data-toggle="tab" aria-expanded="true">其他考试(<span id="" >6</span>) </a></li>
-								
-								<li onclick="window.open('/#')" class="index-list-more-a" >
+					<%--待办/提醒--%>
+					<div class="panel panel-default box" id="todo-panel" style="border-top: 1px solid #d2d6de;">
+						<div class="panel-heading" style="background-color: #f9f9f9">
+							<h3 class="panel-title">
+								待办 / 提醒 (<span id="todoListSum" style="color:red">0</span>)
+								<a onclick="window.open('/qt/jsp/todo.jsp')" class="index-list-more-a">
 									更多
-									<a style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></a>
-								</li>
-							</ul>
+									<span style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></span>
+								</a>
+							</h3>
+							<div style="width: 109px;height: 3px;position: relative;top: 11px;left: -5px;background-color: #ff0000;">
+							</div>
 						</div>
 						<div class="panel-body">
-						
-							<div class="tab-pane fade active in" id="tab-zgks" style="position: absolute;">
-							<table>
-								<thead class="">
-								<tr style="backGround-color:WhiteSmoke; height: 30px">
-									<th class="" style="width: 40%;">试卷名称</th>
-									<th class="" style="width: 30%;">考场名称</th>
-									<th class="" style="width: 189px;">考试时间</th>
-								</tr>
-								</thead>
-								<tbody class="grid-tbody">
-								<tr>
-									<td >2017年（第8周）资格考试</td>
-									<td >中国工商银行总行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
-								</tr>
-								<tr>
-									<td >2017年（第8周）资格考试</td>
-									<td >北京分行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
-								</tr>
-								</tbody>
-							</table>
-							</div>
-							
-							<div class="tab-pane fade" id="tab-zsjs" style="position: absolute;">
-							<table  >
-								<thead class="">
-								<tr style="backGround-color:WhiteSmoke; height: 30px">
-									<th class="" style="width: 40%;">试卷名称</th>
-									<th class="" style="width: 30%;">考场名称</th>
-									<th class="" style="width: 189px;">考试时间</th>
-								</tr>
-								</thead>
-								<tbody class="grid-tbody">
-								<tr>
-									<td >信息技术知识竞赛</td>
-									<td >中国工商银行总行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
-								</tr>
-								<tr>
-									<td >2017综合知识竞赛</td>
-									<td >北京分行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
-								</tr>
-								</tbody>
-							</table>
-							</div>
-							
-							<div class="tab-pane fade" id="tab-qtks">
-							<table>
-								<thead class="">
-								<tr style="backGround-color:WhiteSmoke; height: 30px">
-									<th class="" style="width: 40%;">试卷名称</th>
-									<th class="" style="width: 30%;">考场名称</th>
-									<th class="" style="width: 189px;">考试时间</th>
-								</tr>
-								</thead>
-								<tbody class="grid-tbody">
-								<tr>
-									<td >岗位培训结业考试</td>
-									<td >中国工商银行总行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
-								</tr>
-								<tr>
-									<td >消防安全知识考试</td>
-									<td >北京分行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
-								</tr>
-								</tbody>
-							</table>
+
+							<div class="index-qt-todo-list">
+								<div style="" class="todo-item">
+									<div style="" class="">
+										<div ></div>
+									</div>
+									<div class="todo-content">
+										<div></div>
+										<div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 
-					<!-- 可申请的报名 -->
 					<div class="panel panel-default box" id="apply-panel" style="border-top: 1px solid #d2d6de;">
+
 						<div class="panel-heading" style="background-color: #f9f9f9">
 							<h3 class="panel-title">
 								可申请的报名 (<span id="keshenqingbaomingSum" style="color:red">0</span>)
@@ -388,38 +368,6 @@
 							</table>
 						</div>
 					</div>
-
-
-					<%--待办/提醒--%>
-					<div class="panel panel-default box" id="todo-panel" style="border-top: 1px solid #d2d6de;">
-						<div class="panel-heading" style="background-color: #f9f9f9">
-							<h3 class="panel-title">
-								待办 / 提醒 (<span id="todoListSum" style="color:red">0</span>)
-								<a onclick="window.open('/qt/jsp/todo.jsp')" class="index-list-more-a">
-									更多
-									<span style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></span>
-								</a>
-							</h3>
-							<div style="width: 109px;height: 3px;position: relative;top: 11px;left: -5px;background-color: #ff0000;">
-							</div>
-						</div>
-						<div class="panel-body">
-
-							<div class="index-qt-todo-list">
-								<div style="" class="todo-item">
-									<div style="" class="">
-										<div ></div>
-									</div>
-									<div class="todo-content">
-										<div></div>
-										<div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
 
 						<!-- /.box -->
 					</div>

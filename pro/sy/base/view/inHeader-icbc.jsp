@@ -104,7 +104,7 @@
 	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/base/frame/plugs/jquery-ui/jquery.ui.theme.css"/>
 	<!-- 平台UI核心样式 -->
 	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/theme/default/base.css"/>
-
+	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/theme/default/common.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/theme/default/page.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/theme/default/form.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/theme/default/icon.css"/>
@@ -170,7 +170,7 @@
 		
 	<!-- colResizable -->
 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/plugs/colResizable/colResizable-1.6.js"></script>
-	<link rel="stylesheet" type="text/css" href="<%=urlPath %>/sy/theme/default/common.css"/>	
+
 	<!-- 工商银行JS引用 -->
 	<link rel="stylesheet" type="text/css" href="<%=urlPath%>/sy/comm/page/icbc_style.css"/>
 	<script type="text/javascript" src="<%=urlPath%>/sy/comm/page/icbc_style.js"></script>

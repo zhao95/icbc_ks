@@ -6,7 +6,7 @@
 .skin-black .sidebar-menu>li>a>i{
     margin-right: 15px;
 }
-/* 更换图标 */
+/* 鼠标移入更换首页菜单的雪碧图图标 */
 .skin-black .sidebar-menu>li>a:hover .qj1{
 	background-position: -20px 0;
 }
@@ -39,6 +39,9 @@
 }
 .skin-black .sidebar-menu>li>a:hover .ht1{
 	background-position: -420px 0;
+}
+.skin-black .sidebar-menu>li>a:hover .ckbm1{
+	background-position: -460px 0;
 }
 
 #qt_footer_logo+strong {
@@ -109,9 +112,14 @@
 #jdtMain {
 	position: relative;
 	margin-left: 30px;
-	top: 10px;
-	height: 150px;
+	top: 0;
+/* 	height: 150px; */
+	height: 70px;
 	/* 	border-bottom: 2px dashed #efefef; */
+}
+
+#upDiv{
+	position:relative;	
 }
 
 #upDiv>div {
@@ -125,7 +133,7 @@
 #upDiv .upSX {
 	/* 	float:left; */
 	position: relative;
-	top: 14px;
+	top: -51px;
 	left: 50%;
 	width: 12px;
 	height: 12px;
@@ -433,7 +441,7 @@
 
 /*首页 待办/提醒 样式*/
 #todo-panel>.panel-body {
-	min-height: 230px;
+	min-height: 200px;
 }
 
 /*待办项样式*/
@@ -497,7 +505,7 @@
 
 /*首页 可申请报名列表*/
 #apply-panel>.panel-body {
-	min-height: 230px;
+	min-height: 190px;
 }
 
 #apply-table>tbody>tr:nth-of-type(even) {
@@ -521,6 +529,89 @@
     white-space: nowrap;
 }
 
+/* 首页可参加考试样式（ 三个标签样式）*/
+
+#ksTable>li>a>span{
+	color:red;
+}
+#ksTable>li{
+	padding:5px 5px;
+}
+#ksTable .active{
+	background-color:#e85d5f;
+}
+#ksTable .active>a{
+	background-color:#e85d5f;
+/* 	border:1px solid red; */
+	color:white;
+}
+#ksTable .active>a>span{
+	background-color:#e85d5f;
+	color:white;
+}
+
+#tab-zgks>table{
+	/* 只有定义表格的布局算法为fixed，下面的td才能起作用 */
+ 	table-layout:fixed;
+ 	width:98%;
+}
+#tab-zgks .grid-tbody{
+	width:90%;
+}
+#tab-zgks td{
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-right:10px;
+	width:100%;
+	text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+#tab-zgks>table>tbody>tr:nth-of-type(even) {
+	background-color: Azure;
+}
+
+#tab-zsjs>table{
+	/* 只有定义表格的布局算法为fixed，下面的td才能起作用 */
+ 	table-layout:fixed;
+ 	width:98%;
+}
+#tab-zsjs .grid-tbody{
+	width:90%;
+}
+#tab-zsjs td{
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-right:10px;
+	width:100%;
+	text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+#tab-zsjs>table>tbody>tr:nth-of-type(even) {
+	background-color: Azure;
+}
+
+#tab-qtks>table{
+	/* 只有定义表格的布局算法为fixed，下面的td才能起作用 */
+ 	table-layout:fixed;
+ 	width:100%;
+}
+#tab-qtks .grid-tbody{
+	width:90%;
+}
+#tab-qtks td{
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-right:10px;
+	width:100%;
+	text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+#tab-qtks>table>tbody>tr:nth-of-type(even) {
+	background-color: Azure;
+}
 
 /*首页通知公告样式*/
 /*超出省略号*/
@@ -607,8 +698,11 @@
 .info-left{
 	border-right:1px solid ;
 }
-
-/* #question_div{ */
-/* 	padding-bottom:10px; */
-/* } */
+/* 前台首页可参加考试的样式 */
+.qt_ks_title>ul>li{
+	display:inline-block;
+/* 	positon:relative; */
+	margin:0 auto;
+	padding-left:25px;
+}
 

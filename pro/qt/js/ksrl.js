@@ -85,9 +85,9 @@ jQuery(document).ready(function(){
 		        var cDate = date.getDate();
 		        var cYYYY = date.getFullYear();
 		        var currentDataformat = cYYYY+"-"+(cMM+1)+"-"+cDate;
-		        //inArray实现数组的匹配
+		        //匹配参数的日期和当前日期
 		        if(formatDate == currentDataformat){
-		            //此处要返回一个数组，specialdays是添加样式的类
+		            //此处要返回一个数组，currentDayShow是添加样式的类
 		            return [true,"currentDayShow",titleArr.join("<br>"),"select"];
 		        }
 				//如果存储考试信息的数组不为空，在每一行的考试后面添加换行标签
