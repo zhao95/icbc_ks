@@ -341,6 +341,9 @@ public class BmlbServ extends CommonServ {
 					shBean.set("SH_NODE", node_name);// 目前审核节点
 					shBean.set("SH_USER", allman);// 当前办理人
 					shBean.set("SH_OTHER", allman);// 其他办理人
+					shBean.set("S_ODEPT",bmbean.getStr("S_ODEPT"));
+					shBean.set("S_TDEPT",bmbean.getStr("S_TDEPT"));
+					shBean.set("S_DEPT",bmbean.getStr("S_DEPT"));
 					 if (count == 0) {
 					 ServDao.save("TS_BMSH_PASS", shBean);
 					 }

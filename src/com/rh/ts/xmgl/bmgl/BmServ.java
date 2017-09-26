@@ -87,6 +87,12 @@ public class BmServ extends CommonServ {
 	//项目bean
 	Bean xmbean = ServDao.find("TS_XMGL",xmid);
 	List<Bean> listbean = ServDao.finds("TS_XMGL_BMGL",where1);
+	List<Bean>   list = ServDao.finds("TS_XMGL_BMGL", where1);
+	String shtsy="";
+	if(list.size()!=0){
+		//审核通过提示语
+		 shtsy = list.get(0).getStr("SH_TSY");
+	}
 	if(xmbean.isEmpty()||listbean.size()==0){
 		return new OutBean().setError("空项目或项目没有报名设置");
 	}
@@ -105,6 +111,7 @@ public class BmServ extends CommonServ {
     outBean.set("list",w.toString());
 	//有的地方需要项目的名称展示  
     outBean.set("xmname",xmbean.getStr("XM_NAME"));
+    outBean.set("shtsy",shtsy);
     return outBean;
 	}
 	
