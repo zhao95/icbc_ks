@@ -13,23 +13,37 @@ if(_viewer.opts.act == "cardAdd"){
 }
 
 //根据选择是否人工审核
+var flowSerTmp = _viewer.getItem("SH_RGSH").getValue(); 
+
+if(flowSerTmp == 1){
+	_viewer.getItem("SH_FLOW").show();
+}else if (flowSerTmp == 2){
+	_viewer.getItem("SH_FLOW").hide();
+}
+
 _viewer.getItem("SH_RGSH").change(function(){
-	var flowSerTmp = _viewer.getItem("SH_RGSH").getValue(); 
+	flowSerTmp = _viewer.getItem("SH_RGSH").getValue(); 
 	if(flowSerTmp == 1){
 		_viewer.getItem("SH_FLOW").show();
-		_viewer.getItem("SH_LOOK").show();
-	}else{
+	}else if (flowSerTmp == 2){
 		_viewer.getItem("SH_FLOW").hide();
-		_viewer.getItem("SH_LOOK").hide();
 	}
 });	
 	
 //根据选择是否自动审核做改变
+var autoTmp=_viewer.getItem("SH_ZDSH").getValue();
+
+if(autoTmp==1){
+	_viewer.getItem("SH_TSY").show();
+}else if(autoTmp==2){
+	_viewer.getItem("SH_TSY").hide();
+}
+
 _viewer.getItem("SH_ZDSH").change(function(){
-	var  auto=_viewer.getItem("SH_ZDSH").getValue();
-	if(auto==1){
+	autoTmp=_viewer.getItem("SH_ZDSH").getValue();
+	if(autoTmp==1){
 		_viewer.getItem("SH_TSY").show();
-	}else  if(auto==2){
+	}else if(autoTmp==2){
 		_viewer.getItem("SH_TSY").hide();
 	}
 });
