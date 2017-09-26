@@ -7,8 +7,9 @@ $("#TS_WFS_APPLY .rhGrid").find("tr").each(function(index,item){
 		var  dataId=item.id;
 		$(item).find("td[icode='buttons']").append(
 				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_APPLY_edit" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_APPLY_delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
-				);
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_APPLY_delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'+
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_APPLY_copy" rowpk="'+dataId+'"><span class="rh-icon-inner">复制</span><span class="rh-icon-img btn-copy"></span></a>'
+		);
 		//为每个按钮绑定卡片
 		bindCard();
 	}
@@ -30,6 +31,16 @@ function bindCard(){
 	jQuery("td [id='TS_WFS_APPLY_delete']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
+	});
+	//复制
+	jQuery("td [id='TS_WFS_APPLY_copy']").unbind("click").bind("click",function(){
+		var pkCode = jQuery(this).attr("rowpk");
+		FireFly.doAct("TS_WFS_APPLY","copy",{"servId":_viewer.servId,"pkCode":pkCode,"primaryColCode":"WFS_ID"},true,false,function(data){
+			if(data._MSG_.indexOf("OK")!= -1){
+				window.location.reload();
+			}
+		});
+		
 	});
 }
 
