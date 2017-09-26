@@ -10,6 +10,7 @@ var xm_id  = $("#xmidval").val();
 var bm_start="";
 var bm_end = "";
 var xm_name = "";
+var successinfo = "";
 //项目信息进行展示
 function xminfoshow(){
 	param={};
@@ -25,9 +26,12 @@ function xminfoshow(){
 		 bm_start = bminfojson[0].BM_START;
 		 bm_end = bminfojson[0].BM_END;
 		var bm_name = bminfojson[0].BM_NAME;
+		successinfo = bminfojson[0].SUCCESSINFO;
+		failerinfo = bminfojson[0].FAILIERINFO;
 		//给jsp赋值
 		$("#xmnamecon").html(xm_name);
 		$("#ksxzcon").html(bm_ksxz);
+		successinfo= data.shtsy
 	});
 }
 //进行资格验证
@@ -106,7 +110,7 @@ function xminfoshow(){
        				if(FLAG){
        					$("#"+a).append('已报名此考试,请撤销再报名');
        					$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
-       					$("#"+yzjg).append('审核不通过');
+       					$("#"+yzjg).append("审核不通过");
        					continue;
        				}
        				for(var j=0;j<dataArray.length;j++){
@@ -130,7 +134,7 @@ function xminfoshow(){
        				}if(shArray==true){
        					$("#"+a).append('<div></div>');
        					$("#"+a).append('<div></div>');
-       					$("#"+yzjg).append('审核通过');
+       					$("#"+yzjg).append(successinfo);
        					$("#"+yzjg).append('<div></div>');
        					$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
        				}
