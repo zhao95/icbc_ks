@@ -214,7 +214,7 @@ position: absolute;
 				<div style="padding-top: 5px;">
 					<table border="1" style="bordercolor:lightgray;width: 90%" id="tablehang">
 						<tr style="background-color: #d9eeeb;">
-							<td width="3%"><input type="checkbox"></td>
+							<td width="3%"><input onclick="change2(this)" style="margin-right:12px" type="checkbox"></td>
 							<td width="10%">岗位类别</td>
 							<td width="15%">序列</td>
 							<td width="27%">模块</td>
