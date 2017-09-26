@@ -43,12 +43,13 @@
 <%
 String username = "";
 String loginname = "";
+String xianei = "";
 if(userBean != null) {
 				 username=userBean.getStr("USER_NAME");
 				 loginname=userBean.getStr("USER_LOGIN_NAME");
 			 }
 			 String xmid = request.getParameter("zgtz");
-			 String xianei = request.getParameter("xianei");
+			  xianei = request.getParameter("xianei");
 			 %>
 <style>
 
@@ -529,7 +530,7 @@ if(userBean != null) {
 			</form>
 		
 		<input type="hidden" id="xmid" value="<%=xmid %>"/>
-		<input type="hidden" id="xmid" value="<%=xianei %>"/>
+		<input type="hidden" id="xianei" value="<%=xianei %>"/>
 		<input type="hidden" id="dijige">
 	<script>
 	var jq = $.noConflict(true);

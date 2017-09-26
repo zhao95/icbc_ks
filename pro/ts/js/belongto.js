@@ -811,6 +811,7 @@ var listPage = function () {
 	 param["user_code"]=user_code;
 	 param["xmid"]=xmid;
 	 param["where"]=where5+where3;
+	 debugger;
 	 param["xianei"]=xianei;
      return FireFly.doAct(servid,"getBelongToList",param);
      
@@ -1132,6 +1133,7 @@ var listPage = function () {
     	 debugger;
     	 var xmparam={};
     	 xmparam["xmid"]=xmid;
+    	 xmparam["xianei"]=xianei;
     	 var resultnum = FireFly.doAct("TS_BMSH_STAY","tongjinum",xmparam);
     	 var staynum = resultnum.staynum;
     	 var passnum = resultnum.passnum;
