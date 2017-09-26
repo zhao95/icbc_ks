@@ -131,9 +131,10 @@ public class StayServ extends CommonServ {
 				//根据流程id获取 流程绑定的人和审核机构
 				String nodeid = bean.getStr("NODE_ID");
 			Bean finds3 = ServDao.find("TS_WFS_NODE_APPLY", nodeid);
-				
-				out.set("level", finds3.getStr("NODE_STEPS"));
-				out.set("node_id", finds3.getStr("NODE_NAME"));
+				if(finds3!=null){
+					out.set("level", finds3.getStr("NODE_STEPS"));
+					out.set("node_id", finds3.getStr("NODE_NAME"));
+				}
 			}
 		}
 		return out;
@@ -259,10 +260,10 @@ public class StayServ extends CommonServ {
 							String allman1 = "";
 							for (int l = 0; l < list1.size(); l++) {
 
-								if (l == list.size() - 1) {
-									allman1 += list.get(l).getStr("SHR_USERCODE");
+								if (l == list1.size() - 1) {
+									allman1 += list1.get(l).getStr("SHR_USERCODE");
 								} else {
-									allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+									allman1 += list1.get(l).getStr("SHR_USERCODE") + ",";
 								}
 
 							}
@@ -300,10 +301,10 @@ public class StayServ extends CommonServ {
 							String allman1 = "";
 							for (int l = 0; l < list1.size(); l++) {
 
-								if (l == list.size() - 1) {
-									allman1 += list.get(l).getStr("SHR_USERCODE");
+								if (l == list1.size() - 1) {
+									allman1 += list1.get(l).getStr("SHR_USERCODE");
 								} else {
-									allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+									allman1 += list1.get(l).getStr("SHR_USERCODE") + ",";
 								}
 
 							}
@@ -353,10 +354,10 @@ public class StayServ extends CommonServ {
 						String allman1 = "";
 						for (int l = 0; l < list1.size(); l++) {
 
-							if (l == list.size() - 1) {
-								allman1 += list.get(l).getStr("SHR_USERCODE");
+							if (l == list1.size() - 1) {
+								allman1 += list1.get(l).getStr("SHR_USERCODE");
 							} else {
-								allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+								allman1 += list1.get(l).getStr("SHR_USERCODE") + ",";
 							}
 
 						}

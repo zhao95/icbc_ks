@@ -265,10 +265,10 @@ public class PassServ extends CommonServ {
 					String allman1 = "";
 					for (int l = 0; l < list1.size(); l++) {
 
-						if (l == list.size() - 1) {
-							allman1 += list.get(l).getStr("SHR_USERCODE");
+						if (l == list1.size() - 1) {
+							allman1 += list1.get(l).getStr("SHR_USERCODE");
 						} else {
-							allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+							allman1 += list1.get(l).getStr("SHR_USERCODE") + ",";
 						}
 
 					}

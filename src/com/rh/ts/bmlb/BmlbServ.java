@@ -313,7 +313,7 @@ public class BmlbServ extends CommonServ {
 					if (blist.size() > 0) {
 						node_name = blist.get(0).getStr("NODE_NAME");
 						for (int l = 0; l < blist.size(); l++) {
-							if (l == 0) {
+							if (l == (blist.size()-1)) {
 								allman = blist.get(l).getStr("SHR_USERCODE");
 							} else {
 								allman += blist.get(l).getStr("SHR_USERCODE") + ",";
