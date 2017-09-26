@@ -3,14 +3,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.rh.core.serv.ServDao" %>
 <%@ page import="com.rh.core.base.Bean" %>
+<%@ page import="com.rh.core.org.DeptBean" %>
 <%@ page import="com.rh.core.serv.dict.DictMgr" %>
-<%@ include file= "../../sy/base/view/inHeader.jsp" %>
+<%@ include file= "../../sy/base/view/inHeader-icbc.jsp" %>
 <%
 	String id = request.getParameter("id");
 	Bean ks = ServDao.find("TS_GG",id);
 	String title = ks.getStr("GG_TITLE");
 	String content = ks.getStr("GG_CONTENTS");
-	String dept = DictMgr.getName("SY_ORG_DEPT",ks.getStr("S_DEPT"));
+// 	String dept = DictMgr.getName("SY_ORG_DEPT",ks.getStr("S_DEPT"));
+	DeptBean deptBean = OrgMgr.getDept("S_DEPT");
+	String dept=deptBean.getName();
     String sAtime = ks.getStr("S_ATIME").substring(0,19);
 %>
 

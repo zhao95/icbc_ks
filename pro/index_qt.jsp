@@ -263,25 +263,22 @@
 
 					<!-- 可参加的考试 -->
 					<div class="panel panel-default box" style=" border-top: 1px solid #d2d6de;">
-						<div class="panel-heading">
-							<h3 class="panel-title">
-								资格考试(<span id="" style="color:red">0</span>)  |  
-								知识竞赛(<span id="" style="color:red">0</span>)  |  
-								其他考试(<span id="" style="color:red">0</span>)
+						<div class="panel-heading qt_ks_title" style="padding:5px 15px;">
+							<ul class="panel-title" id="ksTable">
+								<li class="active"><a href="#tab-zgks" data-toggle="tab" aria-expanded="true">资格考试(<span id=""  >6</span>) </a></li><li style="color:#e2e4e7"> |  </li>
+								<li ><a href="#tab-zsjs" data-toggle="tab" aria-expanded="true">知识竞赛(<span id="" >3</span>) </a> </li><li style="color:#e2e4e7">|  </li>
+								<li ><a href="#tab-qtks" data-toggle="tab" aria-expanded="true">其他考试(<span id="" >6</span>) </a></li>
 								
-								<a onclick="window.open('/#')" class="index-list-more-a">
+								<li onclick="window.open('/#')" class="index-list-more-a" >
 									更多
-									<span style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></span>
-								</a>
-							</h3>
-<!-- 							<ul class="nav nav-tabs  pull-right ui-sortable-handles"> -->
-<!-- 								<li class="active">资格考试</li> -->
-<!-- 								<li class="">知识竞赛</li> -->
-<!-- 								<li class="">其他考试</li> -->
-<!-- 							</ul> -->
+									<a style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></a>
+								</li>
+							</ul>
 						</div>
 						<div class="panel-body">
-							<table class="rhGrid ss JColResizer" id="apply-table">
+						
+							<div class="tab-pane fade active in" id="tab-zgks" style="position: absolute;">
+							<table>
 								<thead class="">
 								<tr style="backGround-color:WhiteSmoke; height: 30px">
 									<th class="" style="width: 40%;">试卷名称</th>
@@ -296,12 +293,61 @@
 									<td>2017-05-07 00:00 － 05-16 00:00</td>
 								</tr>
 								<tr>
-									<td >2017年非资格考试</td>
+									<td >2017年（第8周）资格考试</td>
 									<td >北京分行</td>
 									<td>2017-05-07 00:00 － 05-16 00:00</td>
 								</tr>
 								</tbody>
 							</table>
+							</div>
+							
+							<div class="tab-pane fade" id="tab-zsjs" style="position: absolute;">
+							<table  >
+								<thead class="">
+								<tr style="backGround-color:WhiteSmoke; height: 30px">
+									<th class="" style="width: 40%;">试卷名称</th>
+									<th class="" style="width: 30%;">考场名称</th>
+									<th class="" style="width: 189px;">考试时间</th>
+								</tr>
+								</thead>
+								<tbody class="grid-tbody">
+								<tr>
+									<td >信息技术知识竞赛</td>
+									<td >中国工商银行总行</td>
+									<td>2017-05-07 00:00 － 05-16 00:00</td>
+								</tr>
+								<tr>
+									<td >2017综合知识竞赛</td>
+									<td >北京分行</td>
+									<td>2017-05-07 00:00 － 05-16 00:00</td>
+								</tr>
+								</tbody>
+							</table>
+							</div>
+							
+							<div class="tab-pane fade" id="tab-qtks">
+							<table>
+								<thead class="">
+								<tr style="backGround-color:WhiteSmoke; height: 30px">
+									<th class="" style="width: 40%;">试卷名称</th>
+									<th class="" style="width: 30%;">考场名称</th>
+									<th class="" style="width: 189px;">考试时间</th>
+								</tr>
+								</thead>
+								<tbody class="grid-tbody">
+								<tr>
+									<td >岗位培训结业考试</td>
+									<td >中国工商银行总行</td>
+									<td>2017-05-07 00:00 － 05-16 00:00</td>
+								</tr>
+								<tr>
+									<td >消防安全知识考试</td>
+									<td >北京分行</td>
+									<td>2017-05-07 00:00 － 05-16 00:00</td>
+								</tr>
+								</tbody>
+							</table>
+							</div>
 						</div>
 					</div>
 
