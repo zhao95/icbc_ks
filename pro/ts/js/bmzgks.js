@@ -53,21 +53,29 @@ function xminfoshow(){
 		        }
 		    }
 		}
-		var checkArray = document.getElementsByName("checkboxaa");
-		debugger;
+		var checkArray = $("input[name=checkboxaa]:checked");
+		if(checkArray.length==0){
+			alert("请点选考试");
+			
+			return;
+		}
+		var checkeddata = [];
 		for(var m=0;m<checkArray.length;m++){
 			for(var n=0;n<neAry.length;n++){
-				var length= $($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("div").length;
-				if(length>2){
-					if(neAry[n].ID==$($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("div").eq(0).attr("id")){
-						neAry.splice(neAry[n],1);
-					}
+			var length= $($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("div").length;
+			if(length<2){
+				if(neAry[n].ID==$($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("div").eq(0).attr("id")){
+					//只提交选中的考试
+					checkeddata.push(neAry[n]);
 				}
 			}
+			}
 		}
-		
+		if(checkeddata.length==0){
+			return;
+		}
 			param['BM_INFO'] = JSON.stringify(bminfo);
-			param['BM_LIST'] = JSON.stringify(neAry);
+			param['BM_LIST'] = JSON.stringify(checkeddata);
 			//已报名的考试
 			var parambm = {};
 			parambm["user_code"]=user_code;
@@ -75,12 +83,10 @@ function xminfoshow(){
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, false,true,function(data){
     		yzgz=data;
-    		console.log(data);
     		//获取后台传过来的key
-    		var zgArray = document.getElementsByName("zgksname");
-         	for(var i=0;i<zgArray.length;i++){
+         	for(var i=0;i<checkeddata.length;i++){
              	//获取验证规则div的id
-       			var a=zgArray[i].value;
+       			var a=checkeddata[i].ID;
        			//获取验证结果div的id
              	var yzjg=a+"yzjg";
        			var dataArray =data[a];
@@ -306,8 +312,9 @@ function xminfoshow(){
 			 $("#canheighnum").html(0);
 		 }
 		 //没有数据的父节点不显示
-		 
-        var extWhere="AND KSLBK_ID IN ((select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))))union(select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')))union(SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))union(select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')) AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)" +sqlstr;
+		/* +" AND KSLBK_ID not in (SELECT KSLBK_ID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_MK='无模块' AND KSLBK_TYPE is null)*/  
+		 var itemid = "";
+		 var extWhere="AND KSLBK_ID IN ((select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))))union(select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')))union(SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))union(select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')) AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)" +sqlstr;
 		 var setting={data
 	             :FireFly.getDict('TS_XMGL_BM_KSLBK','KSLBK_PID',extWhere),
 	         dictId:"TS_XMGL_BM_KSLBK",expandLevel:1,
@@ -368,18 +375,36 @@ function xminfoshow(){
 	        };
 		 var data1 = setting.data;
 		 console.log(data1);
+		 //如果没有叶子节点则不显示
 		 for(var j=0;j<data1[0].CHILD.length;j++){
 			 for(var m=0;m<data1[0].CHILD[j].CHILD.length;m++){
 				 for(var n=0;n<data1[0].CHILD[j].CHILD[m].CHILD.length;n++){
-					 if(data1[0].CHILD[j].CHILD[m].CHILD[n].length==0){
-						 data1[0].CHILD[j].CHILD[m].splice(data1[0].CHILD[j].CHILD[m].CHILD[n],1);
+					 if(!data1[0].CHILD[j].CHILD[m].CHILD[n].hasOwnProperty("CHILD")){
+						 var index = data1[0].CHILD[j].CHILD[m].CHILD.indexOf(data1[0].CHILD[j].CHILD[m].CHILD[n]);
+						 data1[0].CHILD[j].CHILD[m].CHILD.splice(index,1);
 					 }
 				 }
 			 }
 		 }
+		 //将无模块的数据上提
+		 for(var j=0;j<data1[0].CHILD.length;j++){
+			 for(var m=0;m<data1[0].CHILD[j].CHILD.length;m++){
+				 for(var n=0;n<data1[0].CHILD[j].CHILD[m].CHILD.length;n++){
+					 if(data1[0].CHILD[j].CHILD[m].CHILD[n].NAME=="无模块"){
+						 //将无模块下的 CHILD节点下的  pid改为无模块的  pid 
+					for(var q = 0;q<data1[0].CHILD[j].CHILD[m].CHILD[n].CHILD.length;q++){
+						data1[0].CHILD[j].CHILD[m].CHILD[n].CHILD[q].PID = data1[0].CHILD[j].CHILD[m].CHILD[n].PID;
+					}
+					data1[0].CHILD[j].CHILD[m].CHILD = data1[0].CHILD[j].CHILD[m].CHILD[n].CHILD;
+					 }
+				 }
+			 }
+		 }
+		 console.log(data1);
 		 setting.data=data1;
 	         var tree = new rh.ui.Tree(setting);
 	         $('.content-navTree').append(tree.obj);
+	         
 	 });
 	 
 	 function getFzgList(){
@@ -448,47 +473,16 @@ function xminfoshow(){
 	//删除
 	//跨序列复选框变动
 	function change2(obj){
-		var arrChk=$("input[name='checkboxaa']"); 
-		if($(obj).prop("checked")){ 
+		if($(obj).prop("checked")){
+			var arrChk=$("input[name='checkboxaa']").each(function(){
+				$(this).prop("checked",true);
+			})
 			}else{
-				var tab = document.getElementById("tablehang");
-				var hang = tab.rows.length;
-		 	    var kslxArray = document.getElementsByName("checkboxaa");
-		     	for(var i=0;i<kslxArray.length;i++){
-		     		if(kslxArray[i].checked){
-				       
-					}else{
-				var row =obj.parentNode.parentNode;
-				var tds=row.getElementsByTagName("td");
-				var j=obj.parentNode.parentNode.rowIndex;
-				var hanghao = tds[5].innerText;
-				//删除时清空数组中的元素
-				var ys = tds[9].innerText;
-				for(var i=0;i<xkArg.length;i++){
-					xkArg[i]
-					if(xkArg[i].ID===ys){
-						var index = xkArg.indexOf(xkArg[i]);
-						if (index > -1) {
-							xkArg.splice(index, 1);
-						}
-					}
-				}
-				//删除行
-				tab.deleteRow(j);
-				if(tds[4].innerText=="中级"){
-				middlenum--;
-					}else if(tds[4].innerText=="高级"){
-						highbmnum--;
-					}
-		     		
-					}
-		     	}
-	     		
-		}
+				var arrChk=$("input[name='checkboxaa']").each(function(){
+					$(this).prop("checked",false);
+				})
 	}
-	//页面已选中级考试数目
-	var middlenum=0;
-	var highbmnum=0;
+	}
 	//跨序列的考试
 	function fuzhi(){
 		var strchecked = checked.join(",");
@@ -515,22 +509,19 @@ function xminfoshow(){
 				var kslb_name=alldata[i].KSLBK_NAME;
 			       var kslb_xl=alldata[i].KSLBK_XL;
 			       var kslb_mk=alldata[i].KSLBK_MK;
+			       if(kslb_mk=="无模块"){
+			    	   kslb_mk="\\";
+			       }
 			       var kslb_type_name=alldata[i].KSLBK_TYPE_NAME;
 				   var kslbk_id = alldata[i].KSLBK_ID;
 				   var kslb_code=alldata[i].KSLBK_CODE;
 			       var kslb_xl_code=alldata[i].KSLBK_XL_CODE;
 			       var kslb_mk_code=alldata[i].KSLBK_MKCODE;
 			       var kslb_type = alldata[i].KSLBK_TYPE;
-			       if(kslb_type==2){
-			    	   middlenum++;
-			       }
-			       if(kslb_type==3){
-			    	   highbmnum++;
-			       }
 			       tbody=document.getElementById("goods");
 			       var ntr = tbody.insertRow();
 			       ntr.innerHTML=
-			       '<td ><input checked="checked" type="checkbox" onchange="change2(this)" name="checkboxaa"></td>'+
+			       '<td ><input type="checkbox" name="checkboxaa"></td>'+
 			       '<td >'+kslb_name+'</td>'+
 			       '<td >'+kslb_xl+'</td>'+
 			       '<td >'+kslb_mk+'</td>'+
@@ -624,20 +615,52 @@ function xminfoshow(){
 	
 	//获取应考试的值
 	function tijiao(){
-		var motaitable = document.getElementById("motaitable");
-		var rowlength = motaitable.rows.length-1;
-		var div = $("div[name=existedbm]");
-		if(div.length!=0){
-			alert("请先删除已有的报名");
+		if($("input[name=checkboxaa]:checked").length==0){
+			alert("请点选考试");
 			$("#tjbt").attr("data-target","");
-			//获取到table
-			for(var i=rowlength;i>1;i--){
-				motaitable.deleteRow(i);
-			}
 			return;
 		}
+		var motaitable = document.getElementById("motaitable");
+		var rowlength = motaitable.rows.length-1;
+		//选中了 重复的报名需要先删除再提交
+			$("div[name=existedbm]").each(function(){
+				if($(this).attr("checked")){
+					alert("请先删除已有的报名");
+					$("#tjbt").attr("data-target","");
+					//获取到table
+					for(var i=rowlength;i>1;i--){
+						motaitable.deleteRow(i);
+					}
+					return;
+				}
+			})
+		var highbmnum = 0;
+		var middlenum = 0;
 		var canhightnum = $("#canheighnum").text();
 		var canmiddlenum = $("#cannum").text();
+		//选中的考试  中级 高级不能超过上限判断
+		$("input[name=checkboxaa]:checked").each(function(){
+			var tds = $(this.parentNode.parentNode).find("td");
+			var JIBIE = "";
+			 if(tds.length==11){
+				 //本序列
+				 JIBIE = $("#lxid").find("option:selected").text();
+				 if(JIBIE=="中级"){
+					 middlenum++;
+				 }else if(JIBIE=="高级"){
+					 highbmnum++;
+				 }
+				 
+		      }else{
+		    	  JIBIE = tds[4].innerText;
+		    	  if(JIBIE=="中级"){
+						 middlenum++;
+					 }else if(JIBIE=="高级"){
+						 highbmnum++;
+					 }
+		      }
+		})
+		alert(middlenum);
 		if(highbmnum>canhightnum){
 			alert("选择的高级考试数目超过上限，请删除再提交");
 			$("#tjbt").attr("data-target","");
@@ -661,7 +684,7 @@ function xminfoshow(){
 		 	var ryl_mobile = document.getElementById("user_mobile2").value=document.getElementById("user_mobile1").value; 
 			//获取 当前页面中checkbox选中的数据
 		 	//判断是否已经 进行了资格验证
-			var arrChk=$("input[name='checkboxaa']"); 
+			var arrChk=$("input[name='checkboxaa']:checked"); 
 			tbody=document.getElementById("xinxi");
 			for(var i=0;i<arrChk.length;i++){
 			 //得到tr
@@ -765,7 +788,7 @@ function xminfoshow(){
 			  xlcode= pageEntity[0].KSLB_XL_CODE;
 			 //拼接 tr
 			 var tr = document.createElement('tr');
-			tr.innerHTML='<td><input class="rhGrid-td-hide" type="text" name="checkboxaa"></td>'+
+			tr.innerHTML='<td style="text-align:center"><input style="margin-right:12px;" type="checkbox" name="checkboxaa"></td>'+
 				'<td>'+lbname+'</td>'+
 				'<td>'+xlname+'</td>'+
 				'<td width="27%"><select id="mkid" onchange="typeId(this)"></select></td>'+
@@ -831,11 +854,19 @@ function mkfuzhi(){
 	var i=0;
 	var select = document.getElementById("mkid");
 	jQuery("#mkid").empty();
+	debugger;
 	for(var key in obj){
+		var keys = key;
 		if(i==0){
-			select.options[i]=new Option(key,obj[key],true,true);
+			if(key=="无模块"){
+				keys="\\";
+			}
+			select.options[i]=new Option(keys,obj[key],true,true);
 		}else{
-			select.options[i]=new Option(key,obj[key]);
+			if(key=="无模块"){
+				keys="\\";
+			}
+			select.options[i]=new Option(keys,obj[key]);
 		}
 		i++;
 	}
@@ -866,27 +897,20 @@ var highnum=0;
 }
 	//删除已报名的考试
 	function deleterow(obj){
-		var tr = obj.parentNode.parentNode.parentNode;
-		var tds = $(tr).find("td");
-		if(tds[4].innerText=="中级"){
-			middlenum--;
-		}else if(tds[4].innerText=="高级"){
-			highbmnum--;
-		}
 		var j=obj.parentNode.parentNode.parentNode.rowIndex;
 		var tab = document.getElementById("tablehang");
 		tab.deleteRow(j);
 		
 	}
 function yanzheng(){
-	var checkboxss = $('input[name=checkboxaa]');
+	var checkboxss = $('input[name=checkboxaa]:checked');
 	if(checkboxss.length==0){
 		alert("请先选择考试");
 		$("#zgyzbt").attr("data-target","");
 		return;
 	}
 	var yanzhengflag = false;
-	$('input[name=checkboxaa]').each(function(){
+	$('input[name=checkboxaa]:checked').each(function(){
 		
 		var divlength = $($(this.parentNode.parentNode).find("td").eq(6)).find("div").length;
 		
