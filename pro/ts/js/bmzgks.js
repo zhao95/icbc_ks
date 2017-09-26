@@ -667,7 +667,6 @@ function xminfoshow(){
 					 }
 		      }
 		})
-		alert(middlenum);
 		if(highbmnum>canhightnum){
 			alert("选择的高级考试数目超过上限，请删除再提交");
 			$("#tjbt").attr("data-target","");

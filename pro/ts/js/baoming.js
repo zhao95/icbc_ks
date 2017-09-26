@@ -346,6 +346,7 @@ function selectcreate(){
 	if(data==null){
 		return;
 	}
+	debugger;
 	var pageEntity = JSON.parse(data);
 	for(var i=0;i<pageEntity.length;i++){
 		var name = pageEntity[i].XM_NAME;
@@ -502,6 +503,7 @@ function selectcreate(){
 	  var pageEntity=JSON.parse(data);
 	  var first = listData.first;
 	  for(var i=0;i<pageEntity.length;i++){
+		  debugger;
 		  var firint = parseInt(first);
   		 var BM_TYPES = pageEntity[i].BM_TYPE;
   		 var BM_TYPE="";
@@ -545,8 +547,15 @@ function selectcreate(){
 			param1["xmid"]=pageEntity[i].XM_ID;
 			var result1 = FireFly.doAct("TS_XMGL_BMGL","getBMState",param1);
 			var data1 = result1.list;
-			var pageEntity1 = JSON.parse(data1);
-			var state1 = pageEntity1[0].STATE;
+			var pageEntity1 = "";
+			var state1="";
+			if(data1==""){
+				
+			}else{
+				 pageEntity1 = JSON.parse(data1);
+				 state1 = pageEntity1[0].STATE;
+				
+			}
 			var flagstate='报名审核';
 			if(state1=="已结束"){
 				flagstate="报名结束"

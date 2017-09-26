@@ -14,6 +14,7 @@ import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
@@ -824,14 +825,13 @@ public class StayServ extends CommonServ {
 	 */
 	public Bean getBelongToList(Bean paramBean) {
 		String xianei = paramBean.getStr("xianei");
-		
 		//当前审核人
 		UserBean user = Context.getUserBean();
 		String user_code = user.getStr("USER_CODE");
-		String dept_code = user.getStr("DEPT_CODE");
+		String dept_code = user.getStr("ODEPT_CODE");
 		String belongdeptcode = "";
 		String xmid = paramBean.getStr("xmid");
-		
+		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		if("belong".equals(xianei)){
 		//根据项目id找到流程下的所有节点    审核人审核的机构
@@ -844,18 +844,17 @@ public class StayServ extends CommonServ {
 			List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
 			//遍历审核节点  获取 当前人的审核机构
 			for (Bean bean : finds2) {
-						belongdeptcode = bean.getStr("DEPT_CODE");
-						
+			belongdeptcode = bean.getStr("DEPT_CODE");
 				}
 			
 		}
 		 deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
 		}else{
 			//管理员以下的所有机构
-			String wheredept = "SELECT * FROM SY_ORG_DEPT WHERE DEPT_CODE IN((SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE = '"+dept_code+"'))))UNION(SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE = '"+dept_code+"')))UNION(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE = '"+dept_code+"'))UNION(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE = '"+dept_code+"'))";
-			List<Bean> finds = ServDao.finds("SY_ORG_USER", wheredept);
+			String subOrgAndChildDepts = OrgMgr.getSubOrgDeptsSql(compycode,dept_code);
+			List<Bean> finds = ServDao.finds("SY_ORG_USER", subOrgAndChildDepts);
 			for (Bean bean : finds) {
-				dept_code+=bean.getStr("DEPT_CODE");
+				dept_code+=bean.getStr("DEPT_CODE")+",";
 			}
 			 deptwhere = "AND ODEPT_CODE like '%"+dept_code+"%'";
 		}
@@ -868,6 +867,10 @@ public class StayServ extends CommonServ {
 		String where1 = paramBean.getStr("where")+deptwhere;
 		List<Bean> list = ServDao.finds(servId, where1);
 
+	
+		
+		
+		
 		int ALLNUM = list.size();
 		// 计算页数
 		int meiye = Integer.parseInt(SHOWNUM);
@@ -931,11 +934,19 @@ public class StayServ extends CommonServ {
 	 * 获取各模块 数量
 	 */
 	public OutBean tongjinum(Bean paramBean){
-		//当前审核人
+		String xianei = paramBean.getStr("xianei");
+				//当前审核人
 				UserBean user = Context.getUserBean();
 				String user_code = user.getStr("USER_CODE");
 				String belongdeptcode = "";
 				String xmid = paramBean.getStr("xmid");
+				String dept_code = user.getStr("ODEPT_CODE");
+				List<Bean> list =  new ArrayList<Bean>();
+				List<Bean> list1 = new ArrayList<Bean>();
+				List<Bean> list2 = new ArrayList<Bean>();
+				String compycode = user.getCmpyCode();
+				if("belong".equals(xianei)){
+					
 				//根据项目id找到流程下的所有节点
 				String belongwhere = "AND XM_ID='"+xmid+"'";
 				List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
@@ -954,10 +965,23 @@ public class StayServ extends CommonServ {
 		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%' AND XM_ID='"+xmid+"'";
 		//根据审核  机构 匹配当前机构下的所有人
 		String where1 = deptwhere;
-		List<Bean> list = ServDao.finds("TS_BMSH_STAY", where1);
-		List<Bean> list1 = ServDao.finds("TS_BMSH_PASS", where1);
-		List<Bean> list2 = ServDao.finds("TS_BMSH_NOPASS", where1);
-		
+		 list = ServDao.finds("TS_BMSH_STAY", where1);
+		 list1 = ServDao.finds("TS_BMSH_PASS", where1);
+		 list2 = ServDao.finds("TS_BMSH_NOPASS", where1);
+		}else{
+			//自己所在机构以下的所有数据
+			//管理员以下的所有机构
+			String subOrgAndChildDepts = OrgMgr.getSubOrgDeptsSql(compycode,dept_code);
+			List<Bean> finds = ServDao.finds("SY_ORG_USER", subOrgAndChildDepts);
+			for (Bean bean : finds) {
+				dept_code+=bean.getStr("DEPT_CODE")+",";
+			}
+			String deptwhere1 = "AND ODEPT_CODE like '%"+dept_code+"%' AND XM_ID='"+xmid+"'";
+			String where2 = deptwhere1;
+			 list = ServDao.finds("TS_BMSH_STAY", where2);
+			 list1 = ServDao.finds("TS_BMSH_PASS", where2);
+			 list2 = ServDao.finds("TS_BMSH_NOPASS", where2);
+		}
 		OutBean out = new OutBean();
 		out.set("staynum", list.size());
 		out.set("passnum", list1.size());

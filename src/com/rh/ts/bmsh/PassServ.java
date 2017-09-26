@@ -14,6 +14,7 @@ import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
@@ -615,11 +616,16 @@ public class PassServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getBelongToList(Bean paramBean) {
+		String xianei = paramBean.getStr("xianei");
 		//当前审核人
 		UserBean user = Context.getUserBean();
 		String user_code = user.getStr("USER_CODE");
 		String belongdeptcode = "";
 		String xmid = paramBean.getStr("xmid");
+		String compycode = user.getCmpyCode();
+		String deptwhere = "";
+		String dept_code = user.getStr("ODEPT_CODE");
+		if("belong".equals(xianei)){
 		//根据项目id找到流程下的所有节点
 		String belongwhere = "AND XM_ID='"+xmid+"'";
 		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
@@ -635,7 +641,16 @@ public class PassServ extends CommonServ {
 				}
 			
 		}
-		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
+		 deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
+		}else{
+			//管理员以下的所有机构
+			String subOrgAndChildDepts = OrgMgr.getSubOrgDeptsSql(compycode,dept_code);
+			List<Bean> finds = ServDao.finds("SY_ORG_USER", subOrgAndChildDepts);
+			for (Bean bean : finds) {
+				dept_code+=bean.getStr("DEPT_CODE")+",";
+			}
+			 deptwhere = "AND ODEPT_CODE like '%"+dept_code+"%'";
+		}
 		//根据审核  机构 匹配当前机构下的所有人
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();

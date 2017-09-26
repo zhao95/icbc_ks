@@ -33,7 +33,7 @@ public class BmServ extends CommonServ {
 		String where1 = "AND XM_ID="+"'"+xmid+"'";
 		List<Bean> listbean = ServDao.finds("TS_XMGL_BMGL",where1);
 		if(listbean.size()==0){
-			return new OutBean().setOk("空项目");
+			return new OutBean().set("list","");
 		}
 		Bean bmbean = listbean.get(0);
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
