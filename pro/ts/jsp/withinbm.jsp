@@ -223,12 +223,12 @@
 			document.getElementById("form1").submit();
 	}
 	function chakanbelong(i){
-		 var hid = "XM_ID"+i;
-		 var xmtypeid = "XM_TYPE"+i;
-		 var xianei = "belong";
+		 	var hid = "XM_ID"+i;
+		 	var xmtypeid = "XM_TYPE"+i;
+		 	var within = "within";
 			var id = document.getElementById(hid).innerHTML;
 			document.getElementById("zgtzzz").value=id;
-			document.getElementById("xianei").value=xianei;
+			document.getElementById("xianei").value=within;
 			document.getElementById("form3").submit();
 	}
 	function chakan(obj){

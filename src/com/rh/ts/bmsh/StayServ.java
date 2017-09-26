@@ -224,7 +224,6 @@ public class StayServ extends CommonServ {
 					bean.remove("S_CMPY");
 					bean.remove("S_ATIME");
 					bean.remove("S_MTIME");
-					bean.remove("S_USER");
 					bean.remove("S_FLAG");
 					bean.remove("_PK_");
 					bean.remove("ROW_NUM_");
@@ -327,7 +326,6 @@ public class StayServ extends CommonServ {
 					bean.remove("S_CMPY");
 					bean.remove("S_ATIME");
 					bean.remove("S_MTIME");
-					bean.remove("S_USER");
 					bean.remove("S_FLAG");
 					bean.remove("_PK_");
 					bean.remove("ROW_NUM_");
@@ -825,12 +823,18 @@ public class StayServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getBelongToList(Bean paramBean) {
+		String xianei = paramBean.getStr("xianei");
+		
 		//当前审核人
 		UserBean user = Context.getUserBean();
 		String user_code = user.getStr("USER_CODE");
+		String dept_code = user.getStr("DEPT_CODE");
 		String belongdeptcode = "";
 		String xmid = paramBean.getStr("xmid");
-		//根据项目id找到流程下的所有节点
+		
+		String deptwhere = "";
+		if("belong".equals(xianei)){
+		//根据项目id找到流程下的所有节点    审核人审核的机构
 		String belongwhere = "AND XM_ID='"+xmid+"'";
 		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
 		if(finds.size()!=0){
@@ -845,7 +849,16 @@ public class StayServ extends CommonServ {
 				}
 			
 		}
-		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
+		 deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
+		}else{
+			//管理员以下的所有机构
+			String wheredept = "SELECT * FROM SY_ORG_DEPT WHERE DEPT_CODE IN((SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE = '"+dept_code+"'))))UNION(SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE = '"+dept_code+"')))UNION(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE IN(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE = '"+dept_code+"'))UNION(SELECT DEPT_CODE FROM TS_ORG_DEPT WHERE ODEPT_CODE = '"+dept_code+"'))";
+			List<Bean> finds = ServDao.finds("SY_ORG_USER", wheredept);
+			for (Bean bean : finds) {
+				dept_code+=bean.getStr("DEPT_CODE");
+			}
+			 deptwhere = "AND ODEPT_CODE like '%"+dept_code+"%'";
+		}
 		//根据审核  机构 匹配当前机构下的所有人
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();

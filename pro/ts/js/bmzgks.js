@@ -36,7 +36,6 @@ function xminfoshow(){
 }
 //进行资格验证
 	function checky(){
-		
 		//加载状态为complete时移除loading效果
 		var param = {};
 		var bminfo={};
@@ -60,7 +59,6 @@ function xminfoshow(){
 		var checkArray = $("input[name=checkboxaa]:checked");
 		if(checkArray.length==0){
 			alert("请点选考试");
-			
 			return;
 		}
 		var checkeddata = [];
@@ -211,7 +209,6 @@ function xminfoshow(){
 				}
 			}
 		}
-	//定义一个统计页面中级考试数目的变量
 	function showFzgList(showList){
 		jQuery('#ksxxId').html('');
 		var strchecked = checked.join(",");
@@ -286,28 +283,33 @@ function xminfoshow(){
 	var yk={};
 	var xkArg=[];//考试结果
 	var yzgz;//资格验证后端返回到前端的数据
+	var sqlstr = "";
 	 $(function(){ 
 		 xminfoshow();
 		 matchinfo();
 		 mkfuzhi();
 		 var param1 = {};
+		 debugger;
 		 param1["DUTY_LV_CODE"]=DUTY_LEVEL_CODE;
 		 param1["STATION_TYPE_CODE"]=STATION_TYPE_CODE;
 		 param1["STATION_NO_CODE"]=STATION_NO_CODE;
 		 var cengji =  FireFly.doAct("TS_BMLB_BM","getcengji",param1);
-		 var cengjinum = 1;
-		 var sqlstr = "";
+		 var cengjinum = cengji.num;
+		 var sqls = "";
 		 if(cengjinum==""){
 			 //防止抛异常
 			 cengjinum = 10;
+			 sqlstr = " AND (KSLBK_TYPE<="+cengjinum+" or KSLBK_TYPE is null)";
+			 sqls = " AND (KSLB_TYPE<="+cengjinum+" or KSLB_TYPE is null)";
 		 }else{
 			 cengjinum+=1;
 			 belongnum=cengjinum;
 			 sqlstr = " AND (KSLBK_TYPE<="+cengjinum+" or KSLBK_TYPE is null)";
+			 sqls = " AND (KSLB_TYPE<="+cengjinum+" or KSLB_TYPE is null)";
 		 }
 		 typeId(obj);
 		 tongji();
-		 var allList=getFzgList();
+		 var allList=getFzgList(sqls);
 		 showFzgList(allList);
 		 
 		 if(cengjinum==2){
@@ -411,11 +413,12 @@ function xminfoshow(){
 	         
 	 });
 	 
-	 function getFzgList(){
+	 function getFzgList(sqls){
 			var param = {};
 	 		param["STATION_TYPE"]=STATION_TYPE;
 	 		param["STATION_NO"]=STATION_NO;
 	 		param["xm_id"]=xm_id;
+	 		param["str"]=sqls;
 	 		var fzgList= FireFly.doAct("TS_BMLB_BM", "getFzgValue", param,true,false);
 	 		return fzgList['_DATA_'];
 		}

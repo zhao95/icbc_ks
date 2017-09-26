@@ -1,4 +1,5 @@
 var xmid = jq("#xmid").val();
+var xianei = jq("#xianei").val();
 var user_code = System.getVar("@USER_CODE@");
 //隔一行 进行 背景颜色 渲染
 function rowscolor(table){
@@ -810,6 +811,7 @@ var listPage = function () {
 	 param["user_code"]=user_code;
 	 param["xmid"]=xmid;
 	 param["where"]=where5+where3;
+	 param["xianei"]=xianei;
      return FireFly.doAct(servid,"getBelongToList",param);
      
 //     debugger;
@@ -849,6 +851,7 @@ var listPage = function () {
     	 param["xmid"]=xmid;
     	 param["nowpage"]=1;
     	 param["user_code"]=user_code;
+    	 param["xianei"]=xianei;
      	//页面的输入查询条件放入传递的参数中
      	//获取到查询后的数据
      	var searchResult = FireFly.doAct("TS_BMSH_STAY","getBelongToList",param);
@@ -893,6 +896,7 @@ var listPage = function () {
 	 param["nowpage"]=1;
 	 param["xmid"]=xmid;
 	 param["user_code"]=user_code;
+	 param["xianei"]=xianei;
  	//页面的输入查询条件放入传递的参数中
  	//获取到查询后的数据
  	var searchResult = FireFly.doAct("TS_BMSH_PASS","getBelongToList",param);
@@ -934,6 +938,7 @@ var listPage = function () {
 	 param["nowpage"]=1;
 	 param["xmid"]=xmid;
 	 param["user_code"]=user_code;
+	 param["xianei"]=xianei;
  	//页面的输入查询条件放入传递的参数中
  	//获取到查询后的数据
  	var searchResult = FireFly.doAct("TS_BMSH_NOPASS","getBelongToList",param);

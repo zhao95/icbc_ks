@@ -419,6 +419,7 @@ public class BmlbServ extends CommonServ {
 	}
 
 	public OutBean getFzgValue(Bean paramBean) {
+		String wherestr = paramBean.getStr("str");
 		String STATION_TYPE = paramBean.getStr("STATION_TYPE");
 		String STATION_NO = paramBean.getStr("STATION_NO");
 		String xm_id = paramBean.getStr("xm_id");
@@ -429,6 +430,7 @@ public class BmlbServ extends CommonServ {
 		if (STATION_TYPE.equals("") || STATION_NO.equals("")) {
 			where2 = " AND XM_ID=" + "'" + xm_id + "'";
 		}
+		where2+=wherestr;
 		List<Bean> zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
 		if (zgList != null && zgList.size() > 0) {
 			zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);

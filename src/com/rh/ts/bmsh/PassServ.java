@@ -233,7 +233,6 @@ public class PassServ extends CommonServ {
 				bean.remove("S_CMPY");
 				bean.remove("S_ATIME");
 				bean.remove("S_MTIME");
-				bean.remove("S_USER");
 				bean.remove("S_FLAG");
 				bean.remove("_PK_");
 				bean.remove("ROW_NUM_");
