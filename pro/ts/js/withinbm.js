@@ -31,11 +31,11 @@ var listPage = function () {
 	var param = {};
 	//页面的输入查询条件放入传递的参数中
 	var param={};
-	param["zhuangtai"]=zhuangtai;
+		param["zhuangtai"]=zhuangtai;
 		param["user_code"]=user_code;
 		param["nowpage"]=num;
 		param["shownum"]=myts;
-	param["where"] = sqlWhere;
+		param["where"] = sqlWhere;
 		
      	return FireFly.doAct("TS_XMGL","getUncheckList",param)
      /*return FireFly.getListData("TS_KS_CAL", data, false);*/
@@ -158,20 +158,11 @@ var listPage = function () {
 			}else{
 				$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" class="btn" type="button" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></td></tr>');	
 			}*/
-			if(state=="报名审核"){
 				if(showlook==1){
-					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input>&nbsp;&nbsp;<input onclick="chakanbelong('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:100px" value="辖内报名情况"></input></td></tr>');
+					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td style="text-align:center">&nbsp;&nbsp;&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" class="btn" style="margin-left:20px;border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input>&nbsp;&nbsp;<input onclick="chakanbelong('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:100px" value="辖内报名情况"></input></td></tr>');
 				}else{
-					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');
+					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td style="text-align:center>&nbsp;&nbsp;&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" class="btn" style="margin-left:20px;border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');
 				}
-			}else{
-				if(showlook==1){
-					
-					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" class="btn" type="button" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看">&nbsp;&nbsp;<input onclick="chakanbelong('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:100px" value="辖内报名情况"></input></td></tr>');	
-				}else{
-					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" class="btn" type="button" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');	
-				}
-			}
  	  
  	  }
 	var table= document.getElementById("table");

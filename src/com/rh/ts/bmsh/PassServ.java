@@ -645,11 +645,11 @@ public class PassServ extends CommonServ {
 		}else{
 			//管理员以下的所有机构
 			String subOrgAndChildDepts = OrgMgr.getSubOrgDeptsSql(compycode,dept_code);
-			List<Bean> finds = ServDao.finds("SY_ORG_USER", subOrgAndChildDepts);
+			List<Bean> finds = ServDao.finds("SY_ORG_DEPT", subOrgAndChildDepts);
 			for (Bean bean : finds) {
-				dept_code+=bean.getStr("DEPT_CODE")+",";
+				dept_code+=","+bean.getStr("DEPT_CODE");
 			}
-			 deptwhere = "AND ODEPT_CODE like '%"+dept_code+"%'";
+			 deptwhere = "AND ODEPT_CODE IN ("+dept_code+")";
 		}
 		//根据审核  机构 匹配当前机构下的所有人
 		Bean _PAGE_ = new Bean();
