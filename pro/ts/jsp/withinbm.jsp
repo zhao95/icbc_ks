@@ -110,7 +110,7 @@
 						style="width: 20%; text-align: left">组织单位</th>
 					<th id="S_ATIME" class="" style="width: 20%; text-align: left">创建时间</th>
 					<th id="BM_STATE__NAME" class="" style="width: 5%;">状态</th>
-					<th id="BM_OPTIONS" class="" style="width: 20%; text-align: center">操作</th>
+					<th id="BM_OPTIONS" class="" style="width: 15%; text-align: center">操作</th>
 				</tr>
 			</thead>
 			<tbody class="">
@@ -273,7 +273,7 @@
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
-	<script src="<%=CONTEXT_PATH%>/ts/js/fenye.js"></script>
+	<script src="<%=CONTEXT_PATH%>/ts/js/withinbm.js"></script>
 	<!-- FastClick -->
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
 	<!-- AdminLTE  -->
