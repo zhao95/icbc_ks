@@ -35,15 +35,40 @@ var autoTmp=_viewer.getItem("SH_ZDSH").getValue();
 
 if(autoTmp==1){
 	_viewer.getItem("SH_TSY").show();
+	
 }else if(autoTmp==2){
 	_viewer.getItem("SH_TSY").hide();
+	_viewer.getItem("SH_TGTSY").hide();
+	_viewer.getItem("SH_BTGTSY").hide();
 }
-
 _viewer.getItem("SH_ZDSH").change(function(){
 	autoTmp=_viewer.getItem("SH_ZDSH").getValue();
 	if(autoTmp==1){
 		_viewer.getItem("SH_TSY").show();
 	}else if(autoTmp==2){
 		_viewer.getItem("SH_TSY").hide();
+		_viewer.getItem("SH_TGTSY").hide();
+		_viewer.getItem("SH_BTGTSY").hide();
+	}
+});
+
+
+//根据选择是否立即显示审核结果
+var showResultTmp=_viewer.getItem("SH_TSY").getValue();
+if(showResultTmp==1){
+	_viewer.getItem("SH_TGTSY").hide();
+	_viewer.getItem("SH_BTGTSY").hide();
+}else if(showResultTmp==2){
+	_viewer.getItem("SH_TGTSY").show();
+	_viewer.getItem("SH_BTGTSY").show();
+}
+_viewer.getItem("SH_TSY").change(function(){
+	showResultTmp=_viewer.getItem("SH_TSY").getValue();
+	if(showResultTmp==1){
+		_viewer.getItem("SH_TGTSY").hide();
+		_viewer.getItem("SH_BTGTSY").hide();
+	}else if(showResultTmp==2){
+		_viewer.getItem("SH_TGTSY").show();
+		_viewer.getItem("SH_BTGTSY").show();
 	}
 });
