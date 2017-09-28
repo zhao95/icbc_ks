@@ -1081,8 +1081,12 @@
             return result;
         },
 
-        setInitData: function () {
-
+        setInitData: function (deptCode) {
+            this.setKsOrgContent(deptCode);
+            this.getKsArr(null, function () {
+                this.setDfpKsContent();
+//                this.setKsOrgContent();
+            });
         },
 
         getKsArr: function (params, callback) {
