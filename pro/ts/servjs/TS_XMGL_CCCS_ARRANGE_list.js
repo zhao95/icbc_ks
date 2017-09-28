@@ -28,3 +28,10 @@ _viewer.getBtn("publish").unbind("click").bind("click", function(event) {
 	alert("发布成功");
 	_viewer.refresh();
 });
+
+/*
+ * 删除前方法执行
+ */
+rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+	showVerify(pkArray,_viewer);
+};
