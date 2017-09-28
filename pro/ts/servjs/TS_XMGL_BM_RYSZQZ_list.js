@@ -45,6 +45,53 @@ _viewer.getBtn("impGroup").unbind("click").bind("click", function(event) {
 	var queryView = new rh.vi.rhSelectListView(options);
 	queryView.show(event);
 });
+
+_viewer.getBtn("impBmGroup").unbind("click").bind("click", function(event) {
+	debugger;
+	var configStr = "TS_BM_GROUP,{'TARGET':'G_ID~G_NAME~G_DEAD_BEGIN~G_DEAD_END~S_USER','SOURCE':'G_ID~G_NAME~G_DEAD_BEGIN~G_DEAD_END~S_USER'," +
+	"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
+	var options = {
+			"config" :configStr,
+			"params":{BUT:true},
+			"parHandler":_viewer,
+			"formHandler":_viewer.form,
+			"replaceCallBack":function(idArray) {//回调，idArray为选中记录的相应字段的数组集合
+				var codes = idArray.G_ID.split(",");
+				var names = idArray.G_NAME.split(",");
+				var gbegin = idArray.G_DEAD_BEGIN.split(",");
+				var gend = idArray.G_DEAD_END.split(",");
+				var suser = idArray.S_USER.split(",");
+				
+				var paramArray = [];
+				for(var i=0;i<codes.length;i++) {
+					var param = {};
+					//项目ID
+					param.XM_SZ_ID= _viewer.getParHandler().getItem("XM_SZ_ID").getValue();
+					//param.XM_SZ_ID= _viewer.getParHandler().grid.getSelectItemValues("XM_SZ_ID");
+					param.BM_ID = _viewer.getParHandler()._pkCode;
+					//群组编码
+					param.RYSZQZ_CODE = codes[i];
+					//群组名称名称
+					param.RYSZQZ_NAME = names[i];
+					param.RYSZQZ_STARTTIME = gbegin[i];
+					param.RYSZQZ_ENDTTIME = gend[i];
+					param.RYSZQZ_USER = suser[i];
+					
+					//$(".rhGrid").find("th[icode='set']").html("操作");
+					paramArray.push(param);
+				}
+				console.log(_viewer.servId,paramArray);
+				var batchData = {};
+				 batchData.BATCHDATAS = paramArray;
+				//批量保存
+				var rtn = FireFly.batchSave(_viewer.servId,batchData,null,2,false);
+				_viewer.refresh();
+			}
+	};
+//2.用系统的查询选择组件 rh.vi.rhSelectListView()
+	var queryView = new rh.vi.rhSelectListView(options);
+	queryView.show(event);
+});
 ////返回按钮
 //_viewer.getBtn("goback").unbind("click").bind("click", function() {
 //	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
@@ -88,3 +135,4 @@ function bindCard(){
 		Tab.open(options);
 	});
 }
+

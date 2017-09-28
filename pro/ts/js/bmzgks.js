@@ -26,12 +26,11 @@ function xminfoshow(){
 		 bm_start = bminfojson[0].BM_START;
 		 bm_end = bminfojson[0].BM_END;
 		var bm_name = bminfojson[0].BM_NAME;
-		successinfo = bminfojson[0].SUCCESSINFO;
-		failerinfo = bminfojson[0].FAILIERINFO;
+		successinfo = data.SH_TGTSY;
+		failerinfo = data.SH_BTGTSY;
 		//给jsp赋值
 		$("#xmnamecon").html(xm_name);
 		$("#ksxzcon").html(bm_ksxz);
-		successinfo= data.shtsy
 	});
 }
 //进行资格验证
@@ -79,11 +78,13 @@ function xminfoshow(){
 			param['BM_INFO'] = JSON.stringify(bminfo);
 			param['BM_LIST'] = JSON.stringify(checkeddata);
 			//已报名的考试
+			debugger;
 			var parambm = {};
 			parambm["user_code"]=user_code;
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, false,true,function(data){
+			debugger;
     		yzgz=data;
     		//获取后台传过来的key
          	for(var i=0;i<checkeddata.length;i++){
@@ -128,11 +129,20 @@ function xminfoshow(){
 						$("#"+a).append('<div style="height:5px;"></div>');
        				}
        				if(shArray==false){
-       					$("#"+yzjg).append('审核不通过');
+       					if(""==failerinfo){
+       						$("#"+yzjg).append('审核不通过');
+       					}else{
+       						$("#"+yzjg).append(failerinfo);
+       					}
        				}if(shArray==true){
+       					
        					$("#"+a).append('<div></div>');
        					$("#"+a).append('<div></div>');
-       					$("#"+yzjg).append(successinfo);
+       					if(""==successinfo){
+       						$("#"+yzjg).append(successinfo);
+       					}else{
+       						$("#"+yzjg).append("初步审核通过");
+       					}
        					$("#"+yzjg).append('<div></div>');
        					$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
        				}
@@ -221,6 +231,9 @@ function xminfoshow(){
 					var kslb_name=alldata[i].KSLBK_NAME;
 				       var kslb_xl=alldata[i].KSLBK_XL;
 				       var kslb_mk=alldata[i].KSLBK_MK;
+				       if(kslb_mk=="无模块"){
+				    	   kslb_mk="";
+				       }
 				       var kslb_type_name=alldata[i].KSLBK_TYPE_NAME;
 					   var kslbk_id = alldata[i].KSLBK_ID;
 					   var kslb_code=alldata[i].KSLBK_CODE;
@@ -253,6 +266,9 @@ function xminfoshow(){
 			var kslb_name = showItem.KSLB_NAME;
 			var kslb_xl = showItem.KSLB_XL;
 			var kslb_mk = showItem.KSLB_MK;
+			if(kslb_mk=="无模块"){
+		    	   kslb_mk="";
+		       }
 			var kslb_type_name = showItem.KSLB_TYPE_NAME;
 			var kslb_code = showItem.KSLB_CODE;
 			var kslb_xl_code = showItem.KSLB_XL_CODE;
@@ -517,7 +533,7 @@ function xminfoshow(){
 			       var kslb_xl=alldata[i].KSLBK_XL;
 			       var kslb_mk=alldata[i].KSLBK_MK;
 			       if(kslb_mk=="无模块"){
-			    	   kslb_mk="\\";
+			    	   kslb_mk="";
 			       }
 			       var kslb_type_name=alldata[i].KSLBK_TYPE_NAME;
 				   var kslbk_id = alldata[i].KSLBK_ID;
@@ -865,12 +881,12 @@ function mkfuzhi(){
 		var keys = key;
 		if(i==0){
 			if(key=="无模块"){
-				keys="\\";
+				keys="";
 			}
 			select.options[i]=new Option(keys,obj[key],true,true);
 		}else{
 			if(key=="无模块"){
-				keys="\\";
+				keys="";
 			}
 			select.options[i]=new Option(keys,obj[key]);
 		}
