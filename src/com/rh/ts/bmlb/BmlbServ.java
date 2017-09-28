@@ -368,6 +368,18 @@ public class BmlbServ extends CommonServ {
 					 ServDao.save("TS_BMSH_NOPASS", shBean);
 					 }
 					}
+					 //自动审核保存到 报名明细中
+					 Bean mindbean = new Bean();
+					 mindbean.set("SH_LEVEL", 0);
+					 mindbean.set("SH_MIND", "自动审核规则");
+					 mindbean.set("DATA_ID",bm_id);
+					 mindbean.set("SH_STATUS", ad_result);
+					 mindbean.set("SH_ULOGIN", "自动审核");
+					 mindbean.set("SH_UNAME", "自动审核");
+					 mindbean.set("SH_UCODE", "");
+					 mindbean.set("SH_TYPE", 1);
+					 mindbean.set("SH_NODE", 0);
+					 ServDao.save("TS_COMM_MIND", mindbean);
 				}
 			}
 		} catch (JSONException e) {
@@ -651,14 +663,35 @@ public class BmlbServ extends CommonServ {
 	 * @param paramBean
 	 */
 	public void deletesingle(Bean paramBean) {
+		//判断是否已经手动审核
 		String servId = "TS_BMLB_BM";
 		String id = paramBean.getStr("id");
 		String where = "AND BM_ID=" + "'" + id + "'";
+		String where1 = "AND DATA_ID = '"+id+"'";
+		List<Bean> list1 = ServDao.finds("TS_COMM_MIND", where1);
 		List<Bean> list = ServDao.finds(servId, where);
 		for (int i = 0; i < list.size(); i++) {
-			Bean dataBean = list.get(i);
-			dataBean.set("BM_STATE", 2);
-			ServDao.update(servId, dataBean);
+			boolean flag = false;
+			Bean queryUser = new Bean().set("DATA_ID", id).set("S_FLAG", 1);
+			for (Bean bean : list1) {
+				if(!"".equals(bean.getStr("SH_UCODE"))){
+					flag = true;
+				}
+			}
+			if(list1.size()==0){
+				flag = true;
+			}
+			if(flag){
+				//已经审核过 修改状态；
+				Bean dataBean = list.get(i);
+				dataBean.set("BM_STATE", 2);
+				ServDao.update(servId, dataBean);
+			}else{
+				Bean dataBean = list.get(i);
+				ServDao.delete(servId, dataBean);
+				//删除 审核明细中数据
+				ServDao.delete("TS_COMM_MIND",queryUser);
+			}
 		}
 		//删除  审核中 审核通过   审核未通过数据
 		String wherebm = "AND BM_ID='"+id+"'";
@@ -1128,4 +1161,5 @@ public class BmlbServ extends CommonServ {
 		ss+=id;
 		return out.set("idss", ss);
 	}
+	
 }
