@@ -45,3 +45,10 @@ _viewer.getBtn("add").unbind("click").bind("click", function(event) {
 	var queryView = new rh.vi.rhSelectListView(options);
 	queryView.show(event);
 });
+
+/*
+ * 删除前方法执行
+ */
+_viewer.beforeDelete = function(pkArray) {
+	showVerify(pkArray,_viewer);
+};
