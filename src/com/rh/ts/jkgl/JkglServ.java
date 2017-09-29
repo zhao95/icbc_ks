@@ -39,13 +39,16 @@ public class JkglServ extends CommonServ {
     	String where1 = "AND XM_ID='"+xmid+"'";
     	List<Bean> guizelist = ServDao.finds("TS_XMGL_BMSH_SHGZ", where1);
     	boolean flag = false;
+    	String gzid = "";
     	for (Bean bean : guizelist) {
 			if("N03".equals(bean.getStr("GZK_ID"))){
 				//启用禁考规则
 				flag = true;
+				gzid=bean.getStr("GZ_ID");
 			}
 		}
     	if(flag){
+    	
     	UserBean userBean = Context.getUserBean();
     	String str = userBean.getStr("USER_CODE");
     	Date date = new Date();
@@ -58,6 +61,13 @@ public class JkglServ extends CommonServ {
     		out.set("start", finds.get(0).getStr("JKGL_START_DATE"));
     		out.set("end", finds.get(0).getStr("JKGL_END_DATE"));
     		out.set("reason", finds.get(0).getStr("JKGL_REASON"));
+    		//提示语
+    		String where3 = "AND GZ_ID='"+gzid+"'";
+    		List<Bean> finds2 = ServDao.finds("TS_XMGL_BMSH_SHGZ_MX", where3);
+    			for (Bean bean : finds2) {
+					String str2 = bean.getStr("MX_VALUE2");
+					out.set("tsh", str2);
+				}
     	}else if(finds!=null && finds.size()==0){
     		out.set("num", finds.size());
     	}

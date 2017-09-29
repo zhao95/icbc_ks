@@ -52,8 +52,6 @@ function tiaozhuan(i){
 	
 	//验证此人是否被禁考
 	var param = {};
-	var gzmx1 = FireFly.getConfig("TS_BM_HIGH_MAXNUM").CONF_VALUE;
-	var gzmx2 = FireFly.getConfig("TS_BM_HIGH_MAXNUM").CONF_VALUE;
 	param["xmid"]=id;
 	var result = FireFly.doAct("TS_JKGL","getjkstate",param);
 	if(result.num==0){
@@ -61,8 +59,23 @@ function tiaozhuan(i){
 		var start = result.start;
 		var end = result.end;
 		var reason = result.reason;
+		var tsyjson = result.tsh;
+		tsyjson=eval(tsyjson);
+		var bianliang = "";
+		for(var i=0;i<tsyjson.length;i++){
+			bianliang+=tsyjson[i].val;
+			if(i==0){
+				bianliang+=reason;
+			}else if(i==1){
+				bianliang+=start;
+			}else if(i==2){
+				bianliang+=end;
+			}else{
+				bianliang+="!!!"
+			}
+		}
 		//获取禁考的配置信息  并显示给前台
-		$("#jkxxinfo").html("您被禁考了");
+		$("#jkxxinfo").html(bianliang);
 		$("#jkinfo").modal('show');
 		return;
 	}
