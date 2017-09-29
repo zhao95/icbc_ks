@@ -93,11 +93,11 @@ public class BmlbServ extends CommonServ {
 			String bm_id = bmbean.getStr("BM_ID");
 			// 根据报名id获取到非资格考试表单
 			// 添加公共表
-			Bean objBean = new Bean();
+		/*	Bean objBean = new Bean();
 			objBean.set("DATA_ID", xm_id);
 			objBean.set("STR1", user_code);
 			objBean.set("INT1", 0);
-			ServDao.save("TS_OBJECT", objBean);
+			ServDao.save("TS_OBJECT", objBean);*/
 
 			ParamBean param = new ParamBean();
 			param.set("examerUserCode", user_code);
@@ -283,7 +283,7 @@ public class BmlbServ extends CommonServ {
 					yzBean.set("AD_UNAME", user_name);
 					ServDao.save("TS_BMSH_AUDIT", yzBean);
 
-					// 添加公共表
+					/*// 添加公共表
 					String struc = "AND DATA_ID=" + "'" + user_code + "'";
 					List<Bean> ucList = ServDao.finds("TS_OBJECT", struc);
 					Bean objBean = new Bean();
@@ -297,7 +297,7 @@ public class BmlbServ extends CommonServ {
 						objBean.set("DATA_ID", user_code);
 						objBean.set("STR1", ryl_mobile);
 						ServDao.save("TS_OBJECT", objBean);
-					}
+					}*/
 
 					// 获取流程相关信息
 					ParamBean param = new ParamBean();
