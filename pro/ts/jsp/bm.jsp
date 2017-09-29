@@ -242,7 +242,7 @@
 						禁考信息！！！
 					</h4>
 				</div>
-				<span style="margin-left:40%;color:red" id = 'jkxxinfo'></span>
+				<span style="margin-left:20%;color:red" id = 'jkxxinfo'></span>
 				
 				<div class="modal-footer" style="text-align:center;height:60px">
 					<button type="button" onclick = "closemotai()" class="btn btn-default" style="background:lightseagreen;color:white;height:40px;width:80px;" data-dismiss="modal">确定</button>
