@@ -185,14 +185,16 @@
 							</div>
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
-								<div id="jdtTitle" style="height: 50px;">
+								<div id="jdtTitle" style="height: 50px;line-height:50px;">
 									<div id="jdtNameT">报考项:</div>
-									<div id="jdtName">暂未报名考试项目</div>
+									<div id="jdtName"></div>
 									<div class="jdtNumClass">
-										<span id="jdtNum">0.0</span> <span style="color:#666666;">%</span>
+										<span id="jdtNum"></span> <span style="color:#666666;">%</span>
 									</div>
 									<br />
 								</div>
+								<!-- 进度条提示信息框 -->
+								<div id="jdtMsg"></div>
 								<!-- 进度条 -->
 								<div id="jdtMain">
 									
@@ -209,10 +211,6 @@
 											style="background-color: #f0f0f0"></div>
 										<div id="jdtDivInner6" class="progress-bar"
 											style="background-color: #f0f0f0"></div>
-										<div id="jdtDivInner7" class="progress-bar"
-											style="background-color: #f0f0f0"></div>
-										<div id="jdtDivInner8" class="progress-bar"
-											style="background-color: #f0f0f0"></div>
 									</div>
 									
 									<div id="upDiv">
@@ -220,36 +218,28 @@
 											报名
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 6.5%">
-											人工审核
+										<div style="left: 12.5%">
+											审核
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 18.5%">
-											结果公示
-											<div class="upSX"></div>
-										</div>
-										<div style="left: 31%">
+										<div style="left: 26%">
 											考场安排
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 43%">
-											辖内公示
-											<div class="upSX"></div>
-										</div>
-										<div style="left: 54%">
-											总行公示
-											<div class="upSX"></div>
-										</div>
-										<div style="left: 70%">
+										<div style="left: 44%">
 											考试
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 79%">
-											成绩公示
+										<div style="left: 60%">
+											阅卷
 											<div class="upSX"></div>
 										</div>
-										<div style="left: 90%">
-											认证公示
+										<div style="left: 75.7%">
+											认证
+											<div class="upSX"></div>
+										</div>
+										<div style="left: 92%">
+											完成
 											<div class="upSX"></div>
 										</div>
 									</div>
@@ -290,12 +280,12 @@
 								<tr>
 									<td >2017年（第8周）资格考试</td>
 									<td >中国工商银行总行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
+									<td>2017-05-07  － 2017-05-16 </td>
 								</tr>
 								<tr>
 									<td >2017年（第8周）资格考试</td>
 									<td >北京分行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
+									<td>2017-05-07  － 2017-05-16 </td>
 								</tr>
 								</tbody>
 							</table>
@@ -314,12 +304,12 @@
 								<tr>
 									<td >信息技术知识竞赛</td>
 									<td >中国工商银行总行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
+									<td>2017-05-07 － 2017-05-16 </td>
 								</tr>
 								<tr>
 									<td >2017综合知识竞赛</td>
 									<td >北京分行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
+									<td>2017-05-07  － 2017-05-16 </td>
 								</tr>
 								</tbody>
 							</table>
@@ -338,12 +328,12 @@
 								<tr>
 									<td >岗位培训结业考试</td>
 									<td >中国工商银行总行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
+									<td>2017-05-07  － 2017-05-16 </td>
 								</tr>
 								<tr>
 									<td >消防安全知识考试</td>
 									<td >北京分行</td>
-									<td>2017-05-07 00:00 － 05-16 00:00</td>
+									<td>2017-05-07  － 2017-05-16 </td>
 								</tr>
 								</tbody>
 							</table>
