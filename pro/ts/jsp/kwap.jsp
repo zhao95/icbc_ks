@@ -613,12 +613,13 @@
      * 考场场次操作集合
      */
     var KcObject = {
-        rootData: '',
-        rootNodes: '',
-        kcTreeNodes: '',
-        kcArr: [],//待安排场次
-        ccArr: [],
-        kctree: {},
+        rootData: '',//后端树数据
+        rootNodes: '',//处理后的树数据
+        kcArr: [],//所有待安排考场
+        ccArr: [],//所有待安排场时间
+        kctree: {},//场次树jstree对象
+        currentCc: '',//当前显示的场次
+        currentParentKc: '',//当前显示的考场
         /*初始化界面数据*/
         initData: function () {
             this.getInitData(function () {
@@ -635,31 +636,8 @@
                 }, false, false, function (data) {
                     //处理数据
                     if (data !== "") {
-//                        var kcArr = [];
                         self.rootData = data.root;
-//                        debugger;
                         self.getCCTreeNodes();
-//                        while (rootData.CHILD) {
-//
-//                        }
-//
-//                        var kcArr = self.kcArr = data.list;
-//                        var ccArr = [];
-//                        for (var i = 0; i < kcArr.length; i++) {
-//                            //考场
-//                            var kc = kcArr[i];
-//                            for (var j = 0; j < kc.ccList.length; j++) {
-//                                //场次
-//                                var cc = kc.ccList[j];
-//                                var date = cc.SJ_START.substring(0, 10);
-//                                var start = cc.SJ_START.substring(11);
-//                                var end = cc.SJ_END.substring(11);
-//                                var dateStr = date + "(" + start + "-" + end + ")";
-//                                cc.ccTime = dateStr;
-//                            }
-//                        }
-//                        ccArr.push(cc);
-//                        self.ccArr = ccArr;
                     }
                     if (callback) {
                         callback.apply(self);
@@ -703,36 +681,8 @@
                 return this.rootNodes;
             }
             var rootData = this.rootData;
-//            debugger;
             this.recursiveTreeData(rootData);
             return this.rootNodes;
-//            var child = rootData.CHILD;
-//            if (child) {
-//                for (var i = 0; i < child.length; i++) {
-//                    var item = child[i];
-//
-//                }
-//            }
-//
-//            var self = this;//self指向KcObject
-//            var kcArr = self.kcArr;
-//            var kcTreeNodes = [];//jsTree构造jstree数据结构
-//            for (var i = 0; i < kcArr.length; i++) {
-//                //考场
-//                var kc = kcArr[i];
-//                var children = [];
-//                for (var j = 0; j < kc.ccList.length; j++) {
-//                    //场次
-//                    var cc = kc.ccList[j];
-//                    var childNode = {id: cc.CC_ID, text: cc.ccTime, data: cc, children: []};
-//                    children.push(childNode);
-//                }
-//                var node = {id: kc.KC_ID, text: kc.KC_NAME, data: kc, children: children};
-//                kcTreeNodes.push(node);
-//            }
-//
-//            this.kcTreeNodes = kcTreeNodes;
-//            return kcTreeNodes;
         },
 
         recursiveTreeData: function (data, parentNode) {
@@ -790,27 +740,52 @@
                 if (dataType === 'kc') {
                     //选中考场
                     self.setKcInfo(data.node.data);
+                    //显示考场关联机构人员
+                    KsObject.setKcId(data.node.data.KC_ID);
                 } else if (dataType === 'cc') {
                     var parentKcNode = $.jstree.reference(jstree).get_node(data.node.parent);
                     //选中场次
                     self.setCcInfo(data.node.data, parentKcNode.data);
+                    //显示考场关联机构人员
+                    KsObject.setKcId(parentKcNode.data.KC_ID);
                 } else if (dataType === 'dept') {
-
-                    var parent = data.node.parent;
-                    if (parent !== '#') {
-                        var deptCode = data.node.data.DEPT_CODE;
-                        KsObject.setInitData(deptCode);
-                    } else {
-                        KcObject.setAllKcInfo();
-                    }
+                    KcObject.setOrgKcInfo(data.node.data.DEPT_CODE);
+//                    var parent = data.node.parent;
+//                    if (parent !== '#') {
+//                        var deptCode = data.node.data.DEPT_CODE;
+//                        KsObject.setInitData(deptCode);
+//                    } else {
+//                        KcObject.setAllKcInfo();
+//                    }
                 }
             });
+        },
+
+        /**
+         * 机构下的考场信息
+         */
+        setOrgKcInfo: function (deptCode) {
+            var kcArrFilter = [];
+            for (var i = 0; i < this.kcArr.length; i++) {
+                var kc = this.kcArr[i];
+                if (kc.KC_ODEPTCODE === deptCode) {
+                    kcArrFilter.push(kc);
+                }
+            }
+            this.setKcArrInfo(kcArrFilter);
         },
 
         /**
          * 全考场信息
          */
         setAllKcInfo: function () {
+            this.setKcArrInfo(this.kcArr);
+        },
+
+        /**
+         * 根据kcArr渲染考场信息
+         */
+        setKcArrInfo: function (kcArr) {
             var $kcTip = $('#kcTip');
             $kcTip.html('');
             var $kcInfoThead = $('#kcInfo').find('thead');
@@ -830,8 +805,7 @@
                 '已安排：<span id="yapCount" class="tip-red">790</span>'
             ].join(''));
 
-            var ccTimes = [];//所有的场次时间
-            var kcArr = this.kcArr;
+            var ccTimes = [];//kcArrhz中对应的所有场次时间
             //获取所有的场次时间
             for (var i = 0; i < kcArr.length; i++) {
                 //考场
@@ -1055,7 +1029,8 @@
     }
 
     var KsObject = {
-        deptCode: '',//那个部门下的考生
+//        deptCode: '',//那个部门下的考生
+        kcId: '',//考场id
         ksArr: [],//考生信息
         ksOrgTree: '',
         initData: function () {
@@ -1079,6 +1054,13 @@
                 }
             }
             return result;
+        },
+
+        setKcId: function (kcId) {
+            if (this.kcId !== kcId) {
+                this.kcId = kcId;
+                this.setKsOrgContent(kcId);
+            }
         },
 
         setInitData: function (deptCode) {
@@ -1106,12 +1088,80 @@
             });
         },
 
+
         /**
          * 考生机构
          */
-        setKsOrgContent: function (pdeptCode) {
+        setKsOrgContent: function (kcId) {
+            var self = this;
+            kcId = kcId ? kcId : '';
+            var param = {kcId: kcId};
+            FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getKsOrgTree', param, false, false, function (data) {
+                console.log(data);
+                var root = {
+                    id: data.DEPT_CODE,
+                    text: data.DEPT_NAME,
+                    data: {id: data.DEPT_CODE, text: data.DEPT_NAME},
+                    children: []
+                };
+                var $ksOrgTreeContent = $('#ksOrgTree').find('.content-navTree');
+//                $ksOrgTreeContent.html('');
+//            var data = FireFly.getDict('SY_ORG_ODEPT_ALL', pdeptCode);
+//            var deptName = FireFly.getDictNames(FireFly.getDict('SY_ORG_ODEPT_ALL'), pdeptCode);
+//            var root = {id: pdeptCode, text: deptName, data: {id: pdeptCode, text: deptName}, children: []};
+
+                var putChildren = function (parent, childs) {
+                    childs = childs ? childs : [];
+                    for (var i = 0; i < childs.length; i++) {
+                        var child = childs[i];
+                        var item = {
+                            id: child.DEPT_CODE,
+                            text: child.DEPT_NAME,
+                            data: child,
+                            children: []
+                        };
+                        parent.children.push(item);
+                        putChildren(item, child.CHILD);
+                    }
+                };
+
+                var childs = data.CHILD;
+                putChildren(root, childs);
+
+                try {
+                    self.ksOrgTree.jstree('destroy');//已经初始化tree，先destroy
+                } catch (e) {
+                }
+                self.ksOrgTree = $ksOrgTreeContent.jstree({
+                    'core': {
+                        "multiple": false,
+                        'data': [root]
+                    }
+                });
+
+                $ksOrgTreeContent.on("changed.jstree", function (e, data) {
+//                    debugger;
+                    var id = data.node.data.id;
+
+//                if (data.node.data.KC_ID) {
+//                    //选中考场
+//                    self.setKcInfo(data.node.data);
+//                } else {
+//                    var parentKcNode = $.jstree.reference(jstree).get_node(data.node.parent);
+//                    //选中场次
+//                    self.setCcInfo(data.node.data, parentKcNode.data);
+//                }
+                });
+
+            });
+
+        },
+
+        /**
+         * 考生机构
+         */
+        setKsOrgContent2: function (pdeptCode) {
             pdeptCode = pdeptCode ? pdeptCode : '';
-            this.deptCode = pdeptCode;
             var $ksOrgTreeContent = $('#ksOrgTree').find('.content-navTree');
             $ksOrgTreeContent.html('');
             var data = FireFly.getDict('SY_ORG_ODEPT_ALL', pdeptCode);
@@ -1220,7 +1270,8 @@
             var searchBmJb = $('#search-bm-jb').val();
             var searchBmCount = $('#search-bm-count').val();
             return {
-                searchDeptCode: this.deptCode,
+                searchDeptCode: '',
+                searchKcId: this.kcId,
                 searchName: searchName,
                 searchLoginName: searchLoginName,
                 searchBmXl: searchBmXl,

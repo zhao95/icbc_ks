@@ -1,7 +1,5 @@
 package com.rh.ts.xmgl;
 
-import java.util.*;
-
 import com.rh.core.base.Bean;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.org.UserBean;
@@ -10,8 +8,9 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
-import javafx.util.Pair;
 import org.apache.commons.lang.StringUtils;
+
+import java.util.*;
 
 public class DapccServ extends CommonServ {
 
@@ -49,16 +48,18 @@ public class DapccServ extends CommonServ {
         configMap.put("searchBmJb", "BM_TYPE = ?");
         //configMap.put("searchBmCount", " and USER_LOGIN_NAME like '%?%'"); //todo
 
-        Pair<String, List<Object>> extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
+        List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
+        String whereSql = (String) extWhereSqlData.get(0);
+        List<Object> values = (List<Object>) extWhereSqlData.get(1);
+//        Pair<String, List<Object>> extWhereSqlData
         String sql = "select " +
                 "a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH " +
                 "from TS_BMSH_PASS a " +
                 "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE " +
                 "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
-                + extWhereSqlData.getKey();
-
+                + whereSql;
         //where 姓名/登录名/报考类型/报考数  bm_name /login_name?/
-        List<Bean> beanList = Transaction.getExecutor().query(sql, extWhereSqlData.getValue());
+        List<Bean> beanList = Transaction.getExecutor().query(sql, values);
 //        List<Bean> beanList = ServDao.finds("TS_XMGL_KCAP_DFPKS", paramBean);
         for (Bean bean : beanList) {
             String userCode = bean.getStr("BM_CODE");
@@ -75,7 +76,7 @@ public class DapccServ extends CommonServ {
      * @param configMap :{"XM_ID", "XM_ID = ?","searchName", "USER_NAME like ?"}
      * @return Pair<String, List<Object>>  whereSql,values
      */
-    private Pair<String, List<Object>> getExtWhereSqlData(ParamBean paramBean, Map<String, String> configMap) {
+    private List getExtWhereSqlData(ParamBean paramBean, Map<String, String> configMap) {
         StringBuilder whereSql = new StringBuilder("where ");
         List<Object> values = new ArrayList<>();
         for (String key : configMap.keySet()) {
@@ -92,7 +93,10 @@ public class DapccServ extends CommonServ {
                 values.add(value);
             }
         }
-        return new Pair<>(whereSql.toString(), values);
+        List result = new ArrayList();
+        result.add(whereSql.toString());
+        result.add(values);
+        return result;
     }
 
     /**
@@ -103,17 +107,18 @@ public class DapccServ extends CommonServ {
      */
     public OutBean getKcAndCc(ParamBean paramBean) {
         OutBean outBean = new OutBean();
+        String DEPT_CODE = "KC_ODEPTCODE";//KC_ODEPTCODE：根据考场所属机构挂靠考场；DEPT_CODE：根据关联机构挂靠考场
         String xmId = paramBean.getStr("xmId");
         List<Object> values = new ArrayList<>();
         values.add(xmId);
-        List<Bean> list = Transaction.getExecutor().query("select a.*,d.DEPT_CODE from TS_XMGL_KCAP_DAPCC a " +
-//				"--INNER JOIN TS_KCGL b on b.KC_ID =a.KC_ID " +
+        List<Bean> list = Transaction.getExecutor().query("select a.*,d.DEPT_CODE,b.KC_ODEPTCODE from TS_XMGL_KCAP_DAPCC a " +
+                "INNER JOIN TS_KCGL b on b.KC_ID =a.KC_ID " +
                 "INNER JOIN TS_KCGL_GLJG c on c.KC_ID=a.KC_ID " +
                 "LEFT JOIN SY_ORG_DEPT d on d.DEPT_CODE = c.JG_CODE " +
                 "where a.XM_ID=?", values);
         Set<String> hashSet = new HashSet<>();
         for (Bean bean : list) {
-            hashSet.add(bean.getStr("DEPT_CODE"));
+            hashSet.add(bean.getStr(DEPT_CODE));
         }
 
         Map<String, Bean> cache = new HashMap<>();
@@ -123,11 +128,32 @@ public class DapccServ extends CommonServ {
         for (Bean item : list) {
             String ccId = item.getId();
             List<Bean> list2 = ServDao.finds("TS_XMGL_KCAP_DAPCC_CCSJ", "and CC_ID = '" + ccId + "'");
-            item.set(CHILD/*"ccList"*/, list2);
-            this.putChild(cache.get(item.getStr("DEPT_CODE")), item, true);
+            item.set(CHILD, list2);
+            this.putChild(cache.get(item.getStr(DEPT_CODE)), item, true);
         }
         outBean.set("root", rootDeptBean);
 //        outBean.set(CHILD, list);
+        return outBean;
+    }
+
+    public OutBean getKsOrgTree(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String kcId = paramBean.getStr("kcId");
+        List<Object> values = new ArrayList<>();
+        values.add(kcId);
+        List<Bean> list = Transaction.getExecutor().query("select a.*, c.JG_CODE from TS_XMGL_KCAP_DAPCC a " +
+//                "INNER JOIN TS_KCGL b on b.KC_ID =a.KC_ID " +
+                "INNER JOIN TS_KCGL_GLJG c on c.KC_ID=a.KC_ID " +
+//                "LEFT JOIN SY_ORG_DEPT d on d.DEPT_CODE = c.JG_CODE " +
+                "where a.KC_ID=?", values);
+        Set<String> hashSet = new HashSet<>();
+        for (Bean bean : list) {
+            hashSet.add(bean.getStr("JG_CODE"));
+        }
+
+        Map<String, Bean> cache = new HashMap<>();
+        Bean rootDeptBean = this.getDeptList(hashSet, cache);
+        outBean.putAll(rootDeptBean);
         return outBean;
     }
 
