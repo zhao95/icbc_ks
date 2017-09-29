@@ -104,8 +104,8 @@ function setApplyContent() {
     var applyListEl = $('#apply-panel').find('.grid-tbody');
     applyListEl.html('');
     for (var i = 0; i < userXmList.length; i++) {
-        if (i === 4) {
-            //展示4条
+        if (i === 3) {
+            //展示3条
             return false;
         }
 

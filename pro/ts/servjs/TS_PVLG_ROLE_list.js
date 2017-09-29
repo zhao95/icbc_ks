@@ -35,9 +35,9 @@ function bindCard() {
 	//当行编辑事件
 	jQuery("td [id='TS_PVLG_ROLE-upd']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		var height = jQuery(window).height()-200;
-		var width = jQuery(window).width()-200;
-		rowEdit(pkCode,_viewer,[width,height],[100,100]);
+		var height = jQuery(window).height()-50;
+		var width = jQuery(window).width()-100;
+		rowEdit(pkCode,_viewer,[width,height],[50,50]);
 	});
 	
 }

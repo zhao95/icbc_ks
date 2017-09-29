@@ -93,11 +93,11 @@ public class BmlbServ extends CommonServ {
 			String bm_id = bmbean.getStr("BM_ID");
 			// 根据报名id获取到非资格考试表单
 			// 添加公共表
-			Bean objBean = new Bean();
+		/*	Bean objBean = new Bean();
 			objBean.set("DATA_ID", xm_id);
 			objBean.set("STR1", user_code);
 			objBean.set("INT1", 0);
-			ServDao.save("TS_OBJECT", objBean);
+			ServDao.save("TS_OBJECT", objBean);*/
 
 			ParamBean param = new ParamBean();
 			param.set("examerUserCode", user_code);
@@ -283,7 +283,7 @@ public class BmlbServ extends CommonServ {
 					yzBean.set("AD_UNAME", user_name);
 					ServDao.save("TS_BMSH_AUDIT", yzBean);
 
-					// 添加公共表
+					/*// 添加公共表
 					String struc = "AND DATA_ID=" + "'" + user_code + "'";
 					List<Bean> ucList = ServDao.finds("TS_OBJECT", struc);
 					Bean objBean = new Bean();
@@ -297,7 +297,7 @@ public class BmlbServ extends CommonServ {
 						objBean.set("DATA_ID", user_code);
 						objBean.set("STR1", ryl_mobile);
 						ServDao.save("TS_OBJECT", objBean);
-					}
+					}*/
 
 					// 获取流程相关信息
 					ParamBean param = new ParamBean();
@@ -313,7 +313,7 @@ public class BmlbServ extends CommonServ {
 					if (blist.size() > 0) {
 						node_name = blist.get(0).getStr("NODE_NAME");
 						for (int l = 0; l < blist.size(); l++) {
-							if (l == 0) {
+							if (l == (blist.size()-1)) {
 								allman = blist.get(l).getStr("SHR_USERCODE");
 							} else {
 								allman += blist.get(l).getStr("SHR_USERCODE") + ",";
@@ -341,6 +341,9 @@ public class BmlbServ extends CommonServ {
 					shBean.set("SH_NODE", node_name);// 目前审核节点
 					shBean.set("SH_USER", allman);// 当前办理人
 					shBean.set("SH_OTHER", allman);// 其他办理人
+					shBean.set("S_ODEPT",bmbean.getStr("S_ODEPT"));
+					shBean.set("S_TDEPT",bmbean.getStr("S_TDEPT"));
+					shBean.set("S_DEPT",bmbean.getStr("S_DEPT"));
 					 if (count == 0) {
 					 ServDao.save("TS_BMSH_PASS", shBean);
 					 }
@@ -365,6 +368,18 @@ public class BmlbServ extends CommonServ {
 					 ServDao.save("TS_BMSH_NOPASS", shBean);
 					 }
 					}
+					 //自动审核保存到 报名明细中
+					 Bean mindbean = new Bean();
+					 mindbean.set("SH_LEVEL", 0);
+					 mindbean.set("SH_MIND", "自动审核规则");
+					 mindbean.set("DATA_ID",bm_id);
+					 mindbean.set("SH_STATUS", ad_result);
+					 mindbean.set("SH_ULOGIN", "自动审核");
+					 mindbean.set("SH_UNAME", "自动审核");
+					 mindbean.set("SH_UCODE", "");
+					 mindbean.set("SH_TYPE", 1);
+					 mindbean.set("SH_NODE", 0);
+					 ServDao.save("TS_COMM_MIND", mindbean);
 				}
 			}
 		} catch (JSONException e) {
@@ -416,6 +431,7 @@ public class BmlbServ extends CommonServ {
 	}
 
 	public OutBean getFzgValue(Bean paramBean) {
+		String wherestr = paramBean.getStr("str");
 		String STATION_TYPE = paramBean.getStr("STATION_TYPE");
 		String STATION_NO = paramBean.getStr("STATION_NO");
 		String xm_id = paramBean.getStr("xm_id");
@@ -426,6 +442,7 @@ public class BmlbServ extends CommonServ {
 		if (STATION_TYPE.equals("") || STATION_NO.equals("")) {
 			where2 = " AND XM_ID=" + "'" + xm_id + "'";
 		}
+		where2+=wherestr;
 		List<Bean> zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
 		if (zgList != null && zgList.size() > 0) {
 			zgList = ServDao.finds("TS_XMGL_BM_KSLB", where2);
@@ -646,14 +663,35 @@ public class BmlbServ extends CommonServ {
 	 * @param paramBean
 	 */
 	public void deletesingle(Bean paramBean) {
+		//判断是否已经手动审核
 		String servId = "TS_BMLB_BM";
 		String id = paramBean.getStr("id");
 		String where = "AND BM_ID=" + "'" + id + "'";
+		String where1 = "AND DATA_ID = '"+id+"'";
+		List<Bean> list1 = ServDao.finds("TS_COMM_MIND", where1);
 		List<Bean> list = ServDao.finds(servId, where);
 		for (int i = 0; i < list.size(); i++) {
-			Bean dataBean = list.get(i);
-			dataBean.set("BM_STATE", 2);
-			ServDao.update(servId, dataBean);
+			boolean flag = false;
+			Bean queryUser = new Bean().set("DATA_ID", id).set("S_FLAG", 1);
+			for (Bean bean : list1) {
+				if(!"".equals(bean.getStr("SH_UCODE"))){
+					flag = true;
+				}
+			}
+			if(list1.size()==0){
+				flag = true;
+			}
+			if(flag){
+				//已经审核过 修改状态；
+				Bean dataBean = list.get(i);
+				dataBean.set("BM_STATE", 2);
+				ServDao.update(servId, dataBean);
+			}else{
+				Bean dataBean = list.get(i);
+				ServDao.delete(servId, dataBean);
+				//删除 审核明细中数据
+				ServDao.delete("TS_COMM_MIND",queryUser);
+			}
 		}
 		//删除  审核中 审核通过   审核未通过数据
 		String wherebm = "AND BM_ID='"+id+"'";
@@ -1123,4 +1161,5 @@ public class BmlbServ extends CommonServ {
 		ss+=id;
 		return out.set("idss", ss);
 	}
+	
 }

@@ -2,8 +2,11 @@ package com.rh.ts.xmgl;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.JsonProcessingException;
@@ -11,15 +14,21 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.icbc.ctp.utility.StringUtil;
 import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
 import com.rh.core.base.db.Transaction;
+import com.rh.core.org.DeptBean;
+import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.util.Constant;
+import com.rh.core.util.Strings;
 import com.rh.ts.pvlg.mgr.GroupMgr;
+import com.rh.ts.util.TsConstant;
 
 /**
  * 
@@ -208,11 +217,57 @@ public class XmglServ extends CommonServ {
 		return out;
 	}
 
-	public Bean getUserXm(Bean paramBean) {
+	public Bean getUserXm(Bean paramBean) throws ParseException {
 		Bean outBean = new Bean();
-		String user_code = paramBean.getStr("user_code");
+		UserBean userBean = Context.getUserBean();
+		String odeptcode = userBean.getDeptCode();
 		// 本人所在的群组编码
-		String qz = GroupMgr.getGroupCodes(user_code);
+		ParamBean param1 = new ParamBean();
+		OutBean act = ServMgr.act("TS_BM_GROUP_USER", "getBmGroupCodes", param1);
+		String qz = act.getStr("qzcodes");
+		
+		//如果查询本人所在机构 是否 在 某个群组下 
+		String whereqz = "AND G_TYPE=2";
+		List<Bean> finds = ServDao.finds("TS_BM_GROUP_DEPT", whereqz);
+		//所有机构
+		for (Bean bean : finds) {
+			String str = bean.getStr("USER_DEPT_CODE");//机构编码
+			//判断此人是否在此机构下
+			//管理员以下的所有机构
+			List<DeptBean> listdept = OrgMgr.getSubOrgAndChildDepts(bean.getStr("S_CMPY"),str);
+			for (DeptBean deptBean : listdept) {
+				if(deptBean.getStr("DEPT_CODE").equals(odeptcode)){
+					qz+=","+deptBean.getStr("G_ID");
+				}
+			}
+		}
+		if (!Strings.isBlank(qz)) {
+			// 去掉重复群组
+			qz = Strings.removeSame(qz);
+		}
+		String[] qzArray1 = qz.split(",");
+		for (String string : qzArray1) {
+			if(!"".equals(string)){
+				Bean find = ServDao.find("TS_BM_GROUP", string);
+				if(find!=null){
+					Date date = new Date();
+					long time = date.getTime();
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					if("".equals(find.getStr("G_DEAD_BEGIN"))||"".equals(find.getStr("G_DEAD_END"))){
+						continue;
+					}
+					long time2 = sdf.parse(find.getStr("G_DEAD_BEGIN")).getTime();
+					long time3 = sdf.parse(find.getStr("G_DEAD_END")).getTime();
+					if(time<time2||time>time3){
+						//删除此群组
+						int indexOf = Arrays.asList(qzArray1).indexOf(string);
+						qzArray1[indexOf]="";
+					}
+					
+				}
+			}
+		}
+		
 		List<Bean> list = ServDao.finds("TS_XMGL", "");
 		String s = "";
 		for (int i = 0; i < list.size(); i++) {
@@ -236,9 +291,8 @@ public class XmglServ extends CommonServ {
 			} else {
 				// 本人所在的群组编码
 				String[] codeArray = codes.split(",");
-				String[] qzArray = qz.split(",");
-				for (int b = 0; b < qzArray.length; b++) {
-					if (Arrays.asList(codeArray).contains(qzArray[b])) {
+				for (int b = 0; b < qzArray1.length; b++) {
+					if (Arrays.asList(codeArray).contains(qzArray1[b])) {
 						boo = true;
 					}
 				}
@@ -248,6 +302,9 @@ public class XmglServ extends CommonServ {
 				kjxm.add(xmarray[a]);
 			}
 		}
+		
+		
+		
 		// kjxm为可见项目idlist stringlist 为已报名的项目idlist
 		List<Bean> lastlist = new ArrayList<Bean>();
 		for (int i = 0; i < list.size(); i++) {

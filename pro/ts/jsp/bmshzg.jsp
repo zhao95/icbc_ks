@@ -152,9 +152,7 @@ if(userBean != null) {
 					</tr>
 				</tbody>
 			</table>
-			<div id="xixian"
-				style="margin-left: 10px; margin-top: 10px; background-color: lightgray; height:1px; width: 98%">
-			</div>
+		
 			<!--按钮  -->
 			<table style="margin-top:10px;width:50%">
 			<tr style="width:98%">
@@ -213,9 +211,7 @@ if(userBean != null) {
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">审核通过人员</span>
 			</div>
-			<div id="xixian"
-				style="margin-left: 10px; margin-top: 10px; background-color: lightgray; height:1px; width: 98%">
-			</div>
+			
 			<table style="margin-top:10px">
 			<tr>
 				<td style="width:10%;text-align:center"><button  class="btn btn-success"  data-toggle="modal"  style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheB()" id = "shenheB">审核</button></td>
@@ -282,9 +278,7 @@ if(userBean != null) {
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">审核不通过人员</span>
 			</div>
-			<div id="xixian"
-				style="margin-left: 10px; margin-top: 10px; background-color: lightgray; height:1px; width: 98%">
-			</div>
+			
 			<table style="margin-top:10px">
 			<tr>
 				<td style="width:10%;text-align:center"><button  class="btn btn-success"  data-toggle="modal"  style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheC()" id = "shenheC">审核</button></td>

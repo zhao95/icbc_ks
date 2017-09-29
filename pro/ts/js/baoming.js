@@ -11,6 +11,7 @@ function rowscolor(table){
 }
 //-----------------------撤销按钮
 function chexiao(i){
+	//手动审核过后 不能删除
 	var aid = "chexiao"+i;
 	var aa = document.getElementById(aid).innerHTML;
 	if(aa=="撤销"){
@@ -46,9 +47,39 @@ function fenyeselect(){
 
 //报名时根据类型跳转不同页面
 function tiaozhuan(i){
-		//计划名称
-	 var hid = "BM_ID"+i;
+	var hid = "BM_ID"+i;
 	var id = document.getElementById(hid).innerHTML;
+	
+	//验证此人是否被禁考
+	var param = {};
+	param["xmid"]=id;
+	var result = FireFly.doAct("TS_JKGL","getjkstate",param);
+	if(result.num==0){
+	}else{
+		var start = result.start;
+		var end = result.end;
+		var reason = result.reason;
+		var tsyjson = result.tsh;
+		tsyjson=eval(tsyjson);
+		var bianliang = "";
+		for(var i=0;i<tsyjson.length;i++){
+			bianliang+=tsyjson[i].val;
+			if(i==0){
+				bianliang+=reason;
+			}else if(i==1){
+				bianliang+=start;
+			}else if(i==2){
+				bianliang+=end;
+			}else{
+				bianliang+="!!!"
+			}
+		}
+		//获取禁考的配置信息  并显示给前台
+		$("#jkxxinfo").html(bianliang);
+		$("#jkinfo").modal('show');
+		return;
+	}
+		//计划名称
 	var a = "BM_NAME"+i;
 	var jhname = document.getElementById(a).innerHTML;
 	 // 项目类型  资格非资格
@@ -77,6 +108,8 @@ $('#ayishen').click(function(){
 	document.getElementById("keshenimage").src="/ts/image/u1131.png";
 	document.getElementById("yishen").style.color="LightSeaGreen";
 	/*selectdata(user_code,1);*/
+	  
+
 	var table = document.getElementById("ybmtable");  
    rowscolor(table);
 });
@@ -520,6 +553,7 @@ function selectcreate(){
 			var BM_STARTDATE = pageEntity[i].BM_STARTDATE;
 			var BM_ENDDATE = pageEntity[i].BM_ENDDATE;
 		    var BM_ID =  pageEntity[i].BM_ID;
+		    var XM_ID = pageEntity[i].XM_ID;
 		    firint = firint+i;
   		 //资格非资格
 		    var type = "";
@@ -533,20 +567,68 @@ function selectcreate(){
 		    }
 		    var yiyistate = pageEntity[i].BM_YIYI_STATE;
 		    var sh_state = pageEntity[i].BM_SH_STATE;
-		    var sh_state_str = "审核通过";
+		    var sh_state_str = "审核初步通过";
 		    if(sh_state==0){
 		    	//审核中
-		    	  sh_state_str = "审核中"
+		    	  sh_state_str = "审核初步通过"
 		    	}else if(sh_state==2||sh_state==3){
 		    		sh_state_str="审核未通过"
+		    	}
+		    //如果当前时间  审核还未结束将 审核状态都改为初步审核通过  或不通过
+		    var paramSH = {};
+		    paramSH["xmid"]=XM_ID;
+		    var successinfo = "";
+			var failerinfo = "";
+			var shstate = "";
+			FireFly.doAct("TS_XMGL_BMGL","getXmInfo",paramSH,true,false,function(data){
+    			 successinfo = data.SH_TGTSY;
+    			 failerinfo = data.SH_BTGTSY;
+    			 shstate = data.shstate;
+    		})
+		    	if(shstate=="审核结束"){
+		    if(sh_state==0){
+		    	//审核中
+		    	  sh_state_str = "审核未通过"
+		    	}else if(sh_state==2||sh_state==3){
+		    		sh_state_str="审核未通过"
+		    	}
+		    	}else if(shstate=="审核中"){
+		    		param={};
+		    		param["xmid"]=XM_ID;
+		    			if(sh_state==0){
+		    				//审核中
+		    				sh_state_str = "审核中"
+		    			}else if(sh_state==2||sh_state==3){
+		    				if(failerinfo==""){
+		    					sh_state_str="审核未通过"
+		    				}else{
+		    					sh_state_str=bminfojson[0].FAILIERINFO;
+		    					
+		    				}
+		    			}else if(sh_state==1){
+		    				if(successinfo==""){
+		    					sh_state_str = "审核初步通过"
+		    				}else{
+		    					sh_state_str=successinfo;
+		    				}
+		    			}
+		    	}else if(shstate=="未开始"){
+		    		sh_state_str="审核未开始";
 		    	}
 		    //此处查的是 报名时间应该查  审核时间
 		    var param1={};
 			param1["xmid"]=pageEntity[i].XM_ID;
 			var result1 = FireFly.doAct("TS_XMGL_BMGL","getBMState",param1);
 			var data1 = result1.list;
-			var pageEntity1 = JSON.parse(data1);
-			var state1 = pageEntity1[0].STATE;
+			var pageEntity1 = "";
+			var state1="";
+			if(data1==""){
+				
+			}else{
+				 pageEntity1 = JSON.parse(data1);
+				 state1 = pageEntity1[0].STATE;
+				
+			}
 			var flagstate='报名审核';
 			if(state1=="已结束"){
 				flagstate="报名结束"

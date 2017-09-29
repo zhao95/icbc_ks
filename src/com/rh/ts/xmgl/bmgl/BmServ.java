@@ -33,7 +33,7 @@ public class BmServ extends CommonServ {
 		String where1 = "AND XM_ID="+"'"+xmid+"'";
 		List<Bean> listbean = ServDao.finds("TS_XMGL_BMGL",where1);
 		if(listbean.size()==0){
-			return new OutBean().setOk("空项目");
+			return new OutBean().set("list","");
 		}
 		Bean bmbean = listbean.get(0);
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
@@ -86,14 +86,35 @@ public class BmServ extends CommonServ {
 	String where1 = "AND XM_ID="+"'"+xmid+"'";
 	//项目bean
 	Bean xmbean = ServDao.find("TS_XMGL",xmid);
-	List<Bean> listbean = ServDao.finds("TS_XMGL_BMGL",where1);
-	if(xmbean.isEmpty()||listbean.size()==0){
-		return new OutBean().setError("空项目或项目没有报名设置");
+	List<Bean> listbean = ServDao.finds("TS_XMGL_BMSH",where1);
+	List<Bean>   list = ServDao.finds("TS_XMGL_BMGL", where1);
+	String SH_TGTSY = "";
+	String SH_BTGTSY = "";
+	String shstate = "";
+	if(listbean.size()!=0){
+		//审核通过提示语
+		String shtsy = listbean.get(0).getStr("SH_TSY");
+		 if("1".equals(shtsy)){
+			 //立刻显示  提示语
+			 SH_TGTSY = listbean.get(0).getStr("SH_TGTSY");
+			 SH_BTGTSY = listbean.get(0).getStr("SH_BTGTSY");
+		 }
+		 shstate = listbean.get(0).getStr("SH_STATE");
+	}
+	if(xmbean==null){
+		 outBean.set("xmname","");
+	}
+	if(list.size()==0){
+		    outBean.set("list","");
+		    outBean.set("SH_TGTSY",SH_TGTSY);
+		    outBean.set("SH_BTGTSY",SH_BTGTSY);
+		    outBean.set("shstate", shstate);
+		return outBean;
 	}
 	ObjectMapper mapper = new ObjectMapper();    
     StringWriter w = new StringWriter();  
     try {
-		mapper.writeValue(w, listbean);
+		mapper.writeValue(w, list);
 	} catch (JsonProcessingException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -105,6 +126,9 @@ public class BmServ extends CommonServ {
     outBean.set("list",w.toString());
 	//有的地方需要项目的名称展示  
     outBean.set("xmname",xmbean.getStr("XM_NAME"));
+    outBean.set("SH_TGTSY",SH_TGTSY);
+    outBean.set("SH_BTGTSY",SH_BTGTSY);
+    outBean.set("shstate", shstate);
     return outBean;
 	}
 	
@@ -122,4 +146,6 @@ public class BmServ extends CommonServ {
 		}
 		return new OutBean().set("showlook", showlook);
 	}
+	
+	
 }

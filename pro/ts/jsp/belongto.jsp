@@ -43,11 +43,13 @@
 <%
 String username = "";
 String loginname = "";
+String xianei = "";
 if(userBean != null) {
 				 username=userBean.getStr("USER_NAME");
 				 loginname=userBean.getStr("USER_LOGIN_NAME");
 			 }
 			 String xmid = request.getParameter("zgtz");
+			  xianei = request.getParameter("xianei");
 			 %>
 <style>
 
@@ -155,9 +157,7 @@ if(userBean != null) {
 					</tr>
 				</tbody>
 			</table>
-			<div id="xixian"
-				style="margin-left: 10px; margin-top: 10px; background-color: lightgray; height:1px; width: 98%">
-			</div>
+		
 			<!--按钮  -->
 			<table style="margin-top:10px;width:50%">
 			<tr style="width:98%">
@@ -215,9 +215,7 @@ if(userBean != null) {
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">审核通过人员</span>
 			</div>
-			<div id="xixian"
-				style="margin-left: 10px; margin-top: 10px; background-color: lightgray; height:1px; width: 98%">
-			</div>
+			
 			<table style="margin-top:10px">
 			<tr>
 				<td style="width:10%;text-align:right"><button id="TS_BMSH_PASS" class="btn btn-success" data-toggle="modal" data-target="#excleupload" onclick="importdata(2)"  style="border:none;color:white;height:30px;width:80%;background:lightseagreen"  id = "import2">文件批量导入</button></td>
@@ -284,9 +282,7 @@ if(userBean != null) {
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">审核不通过人员</span>
 			</div>
-			<div id="xixian"
-				style="margin-left: 10px; margin-top: 10px; background-color: lightgray; height:1px; width: 98%">
-			</div>
+			
 			<table style="margin-top:10px">
 			<tr>
 				<td style="width:10%;text-align:right"><button id="TS_BMSH_NOPASS" class="btn btn-success" data-toggle="modal" data-target="#excleupload" onclick="importdata(3)"  style="border:none;color:white;height:30px;width:80%;background:lightseagreen" id = "import3">文件批量导入</button></td>
@@ -528,6 +524,7 @@ if(userBean != null) {
 			</form>
 		
 		<input type="hidden" id="xmid" value="<%=xmid %>"/>
+		<input type="hidden" id="xianei" value="<%=xianei %>"/>
 		<input type="hidden" id="dijige">
 	<script>
 	var jq = $.noConflict(true);

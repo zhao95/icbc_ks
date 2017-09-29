@@ -200,6 +200,7 @@
 	<form id="form3" style="display: none" method="post"
 		action="belongto.jsp">
 		<input id="zgtzzz" name="zgtz"></input>
+		<input id="xianei" name="xianei"></input>
 	</form>
 
 
@@ -224,8 +225,10 @@
 	function chakanbelong(i){
 		 var hid = "XM_ID"+i;
 		 var xmtypeid = "XM_TYPE"+i;
+		 var xianei = "belong";
 			var id = document.getElementById(hid).innerHTML;
 			document.getElementById("zgtzzz").value=id;
+			document.getElementById("xianei").value=xianei;
 			document.getElementById("form3").submit();
 	}
 	function chakan(obj){

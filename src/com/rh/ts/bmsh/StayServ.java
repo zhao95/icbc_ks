@@ -14,6 +14,7 @@ import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
@@ -130,9 +131,10 @@ public class StayServ extends CommonServ {
 				//根据流程id获取 流程绑定的人和审核机构
 				String nodeid = bean.getStr("NODE_ID");
 			Bean finds3 = ServDao.find("TS_WFS_NODE_APPLY", nodeid);
-				
-				out.set("level", finds3.getStr("NODE_STEPS"));
-				out.set("node_id", finds3.getStr("NODE_NAME"));
+				if(finds3!=null){
+					out.set("level", finds3.getStr("NODE_STEPS"));
+					out.set("node_id", finds3.getStr("NODE_NAME"));
+				}
 			}
 		}
 		return out;
@@ -222,12 +224,8 @@ public class StayServ extends CommonServ {
 					// 审核通过里面数据进行修改 同步
 					bean.remove("SH_ID");
 					bean.remove("S_CMPY");
-					bean.remove("S_ODEPT");
-					bean.remove("S_TDEPT");
-					bean.remove("S_DEPT");
 					bean.remove("S_ATIME");
 					bean.remove("S_MTIME");
-					bean.remove("S_USER");
 					bean.remove("S_FLAG");
 					bean.remove("_PK_");
 					bean.remove("ROW_NUM_");
@@ -262,10 +260,10 @@ public class StayServ extends CommonServ {
 							String allman1 = "";
 							for (int l = 0; l < list1.size(); l++) {
 
-								if (l == list.size() - 1) {
-									allman1 += list.get(l).getStr("SHR_USERCODE");
+								if (l == list1.size() - 1) {
+									allman1 += list1.get(l).getStr("SHR_USERCODE");
 								} else {
-									allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+									allman1 += list1.get(l).getStr("SHR_USERCODE") + ",";
 								}
 
 							}
@@ -303,10 +301,10 @@ public class StayServ extends CommonServ {
 							String allman1 = "";
 							for (int l = 0; l < list1.size(); l++) {
 
-								if (l == list.size() - 1) {
-									allman1 += list.get(l).getStr("SHR_USERCODE");
+								if (l == list1.size() - 1) {
+									allman1 += list1.get(l).getStr("SHR_USERCODE");
 								} else {
-									allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+									allman1 += list1.get(l).getStr("SHR_USERCODE") + ",";
 								}
 
 							}
@@ -328,12 +326,8 @@ public class StayServ extends CommonServ {
 					Bean newBean = new Bean();
 					bean.remove("SH_ID");
 					bean.remove("S_CMPY");
-					bean.remove("S_ODEPT");
-					bean.remove("S_TDEPT");
-					bean.remove("S_DEPT");
 					bean.remove("S_ATIME");
 					bean.remove("S_MTIME");
-					bean.remove("S_USER");
 					bean.remove("S_FLAG");
 					bean.remove("_PK_");
 					bean.remove("ROW_NUM_");
@@ -360,10 +354,10 @@ public class StayServ extends CommonServ {
 						String allman1 = "";
 						for (int l = 0; l < list1.size(); l++) {
 
-							if (l == list.size() - 1) {
-								allman1 += list.get(l).getStr("SHR_USERCODE");
+							if (l == list1.size() - 1) {
+								allman1 += list1.get(l).getStr("SHR_USERCODE");
 							} else {
-								allman1 += list.get(l).getStr("SHR_USERCODE") + ",";
+								allman1 += list1.get(l).getStr("SHR_USERCODE") + ",";
 							}
 
 						}
@@ -831,12 +825,17 @@ public class StayServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getBelongToList(Bean paramBean) {
+		String xianei = paramBean.getStr("xianei");
 		//当前审核人
 		UserBean user = Context.getUserBean();
 		String user_code = user.getStr("USER_CODE");
+		String dept_code = user.getStr("ODEPT_CODE");
 		String belongdeptcode = "";
 		String xmid = paramBean.getStr("xmid");
-		//根据项目id找到流程下的所有节点
+		String compycode = user.getCmpyCode();
+		String deptwhere = "";
+		if("belong".equals(xianei)){
+		//根据项目id找到流程下的所有节点    审核人审核的机构
 		String belongwhere = "AND XM_ID='"+xmid+"'";
 		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
 		if(finds.size()!=0){
@@ -846,12 +845,20 @@ public class StayServ extends CommonServ {
 			List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
 			//遍历审核节点  获取 当前人的审核机构
 			for (Bean bean : finds2) {
-						belongdeptcode = bean.getStr("DEPT_CODE");
-						
+			belongdeptcode = bean.getStr("DEPT_CODE");
 				}
 			
 		}
-		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
+		 deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
+		}else{
+			//管理员以下的所有机构
+			String subOrgAndChildDepts = OrgMgr.getSubOrgDeptsSql(compycode,dept_code);
+			List<Bean> finds = ServDao.finds("SY_ORG_DEPT", subOrgAndChildDepts);
+			for (Bean bean : finds) {
+				dept_code+=","+bean.getStr("DEPT_CODE");
+			}
+			 deptwhere = "AND ODEPT_CODE IN ("+dept_code+")";
+		}
 		//根据审核  机构 匹配当前机构下的所有人
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();
@@ -861,6 +868,10 @@ public class StayServ extends CommonServ {
 		String where1 = paramBean.getStr("where")+deptwhere;
 		List<Bean> list = ServDao.finds(servId, where1);
 
+	
+		
+		
+		
 		int ALLNUM = list.size();
 		// 计算页数
 		int meiye = Integer.parseInt(SHOWNUM);
@@ -924,11 +935,19 @@ public class StayServ extends CommonServ {
 	 * 获取各模块 数量
 	 */
 	public OutBean tongjinum(Bean paramBean){
-		//当前审核人
+		String xianei = paramBean.getStr("xianei");
+				//当前审核人
 				UserBean user = Context.getUserBean();
 				String user_code = user.getStr("USER_CODE");
 				String belongdeptcode = "";
 				String xmid = paramBean.getStr("xmid");
+				String dept_code = user.getStr("ODEPT_CODE");
+				List<Bean> list =  new ArrayList<Bean>();
+				List<Bean> list1 = new ArrayList<Bean>();
+				List<Bean> list2 = new ArrayList<Bean>();
+				String compycode = user.getCmpyCode();
+				if("belong".equals(xianei)){
+					
 				//根据项目id找到流程下的所有节点
 				String belongwhere = "AND XM_ID='"+xmid+"'";
 				List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
@@ -947,10 +966,23 @@ public class StayServ extends CommonServ {
 		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%' AND XM_ID='"+xmid+"'";
 		//根据审核  机构 匹配当前机构下的所有人
 		String where1 = deptwhere;
-		List<Bean> list = ServDao.finds("TS_BMSH_STAY", where1);
-		List<Bean> list1 = ServDao.finds("TS_BMSH_PASS", where1);
-		List<Bean> list2 = ServDao.finds("TS_BMSH_NOPASS", where1);
-		
+		 list = ServDao.finds("TS_BMSH_STAY", where1);
+		 list1 = ServDao.finds("TS_BMSH_PASS", where1);
+		 list2 = ServDao.finds("TS_BMSH_NOPASS", where1);
+		}else{
+			//自己所在机构以下的所有数据
+			//管理员以下的所有机构
+			String subOrgAndChildDepts = OrgMgr.getSubOrgDeptsSql(compycode,dept_code);
+			List<Bean> finds = ServDao.finds("SY_ORG_DEPT", subOrgAndChildDepts);
+			for (Bean bean : finds) {
+				dept_code+=","+bean.getStr("DEPT_CODE");
+			}
+			String deptwhere1 = "AND ODEPT_CODE IN ("+dept_code+") AND XM_ID='"+xmid+"'";
+			String where2 = deptwhere1;
+			 list = ServDao.finds("TS_BMSH_STAY", where2);
+			 list1 = ServDao.finds("TS_BMSH_PASS", where2);
+			 list2 = ServDao.finds("TS_BMSH_NOPASS", where2);
+		}
 		OutBean out = new OutBean();
 		out.set("staynum", list.size());
 		out.set("passnum", list1.size());

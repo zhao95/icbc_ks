@@ -53,6 +53,13 @@
     left: 0; 
     right: 0; 
 }
+#jkinfo .modal-dialog{
+	position: absolute; 
+    top: 10%; 
+    bottom: 200px; 
+    left: 0; 
+    right: 0; 
+}
 </style>
 <!--判断用户是否登录  -->
 <%
@@ -222,6 +229,23 @@
 				<div class="modal-footer" style="text-align:center;height:60px">
 					<button id="tjbutt" type="button" onclick="tijiaoyiyi()" class="btn btn-primary" style="height:40px;background:lightseagreen;width:80px">提交异议</button>
 					<button type="button" onclick = "closemotai()" class="btn btn-default" style="background:lightseagreen;color:white;height:40px;width:80px;margin-left:20%;" data-dismiss="modal">取消</button>
+				</div>
+				
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
+	<div class="modal fade" id="jkinfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div class="modal-dialog" style="width:40%">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: #00c2c2;color: white">
+					<h4 class="modal-title">
+						禁考信息！！！
+					</h4>
+				</div>
+				<span style="margin-left:20%;color:red" id = 'jkxxinfo'></span>
+				
+				<div class="modal-footer" style="text-align:center;height:60px">
+					<button type="button" onclick = "closemotai()" class="btn btn-default" style="background:lightseagreen;color:white;height:40px;width:80px;" data-dismiss="modal">确定</button>
 				</div>
 				
 			</div><!-- /.modal-content -->
