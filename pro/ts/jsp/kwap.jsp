@@ -1,138 +1,138 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-		 pageEncoding="UTF-8" %>
+         pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%
-	final String CONTEXT_PATH = request.getContextPath();
-	String xmId = request.getParameter("xmId") != null ? request.getParameter("xmId") : "";
+    final String CONTEXT_PATH = request.getContextPath();
+    String xmId = request.getParameter("xmId") != null ? request.getParameter("xmId") : "";
 
-	//todo  xmId值为空的处理
+    //todo  xmId值为空的处理
 %>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>考位安排</title>
-	<link rel="stylesheet" href="../js/dist/themes/default/style.min.css"/>
-	<%--<script
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>考位安排</title>
+    <link rel="stylesheet" href="../js/dist/themes/default/style.min.css"/>
+    <%--<script
             src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>--%>
 
-	<%@ include file="../../sy/base/view/inHeader.jsp" %>
-	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
-	<!-- AdminLTE Theme style -->
-	<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/dist/css/AdminLTE.min.css">
-	<!-- Bootstrap 3.3.6 -->
-	<link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
-	<!-- Bootstrap 3.3.6 -->
-	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
-	<!-- 外部jquerytree库js脚本 -->
-	<link rel="stylesheet" type="text/css" href="<%=CONTEXT_PATH %>/sy/base/frame/coms/tree/style.css"/>
-	<script type="text/javascript" src="<%=CONTEXT_PATH %>/sy/base/frame/coms/tree/jquery.tree.js"></script>
-	<!--jstree-->
-	<script src="../js/dist/jstree.min.js"></script>
+    <%@ include file="../../sy/base/view/inHeader.jsp" %>
+    <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <!-- AdminLTE Theme style -->
+    <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/dist/css/AdminLTE.min.css">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
+    <!-- Bootstrap 3.3.6 -->
+    <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
+    <!-- 外部jquerytree库js脚本 -->
+    <link rel="stylesheet" type="text/css" href="<%=CONTEXT_PATH %>/sy/base/frame/coms/tree/style.css"/>
+    <script type="text/javascript" src="<%=CONTEXT_PATH %>/sy/base/frame/coms/tree/jquery.tree.js"></script>
+    <!--jstree-->
+    <script src="../js/dist/jstree.min.js"></script>
 
-	<!-- Font Awesome -->
-	<link rel="stylesheet"
-		  href="<%=CONTEXT_PATH%>/qt/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="<%=CONTEXT_PATH%>/qt/font-awesome-4.7.0/css/font-awesome.min.css">
 
-	<style type="text/css">
-		/*自动分配场次 模态框样式*/
-		#kwap-body .modal {
-			background: transparent;
-		}
+    <style type="text/css">
+        /*自动分配场次 模态框样式*/
+        #kwap-body .modal {
+            background: transparent;
+        }
 
-		#kwap-body .modal-backdrop {
-			background: transparent;
-		}
+        #kwap-body .modal-backdrop {
+            background: transparent;
+        }
 
-		/**/
-		#allocation-rule .checkbox {
-			margin-top: 0;
-		}
+        /**/
+        #allocation-rule .checkbox {
+            margin-top: 0;
+        }
 
-		.tip-red {
-			color: red;
-		}
+        .tip-red {
+            color: red;
+        }
 
-		/*滚动条样式*/
-		._scrollbar::-webkit-scrollbar {
-			-webkit-appearance: none;
-		}
+        /*滚动条样式*/
+        ._scrollbar::-webkit-scrollbar {
+            -webkit-appearance: none;
+        }
 
-		._scrollbar::-webkit-scrollbar-thumb {
-			min-height: 2rem;
-			background: #ccc;
-			background-clip: padding-box;
-			border: 5px solid transparent;
-			border-radius: 10px;
-		}
+        ._scrollbar::-webkit-scrollbar-thumb {
+            min-height: 2rem;
+            background: #ccc;
+            background-clip: padding-box;
+            border: 5px solid transparent;
+            border-radius: 10px;
+        }
 
-		._scrollbar::-webkit-scrollbar-corner {
-			display: none
-		}
+        ._scrollbar::-webkit-scrollbar-corner {
+            display: none
+        }
 
-		#search-input > div {
-			padding-left: 5px;
-			padding-right: 5px;
-		}
+        #search-input > div {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
 
-		#search-input select {
-			border: 1px solid #a7aab0;
-			margin-left: 2px;
-		}
+        #search-input select {
+            border: 1px solid #a7aab0;
+            margin-left: 2px;
+        }
 
-		#search-input input {
-			margin-left: 5px;
-		}
+        #search-input input {
+            margin-left: 5px;
+        }
 
-		/*考生表 场次表*/
-		#ksTable > tbody > tr:nth-of-type(even), #kcInfo > tbody > tr:nth-of-type(even) {
-			background-color: #faffff;
-		}
+        /*考生表 场次表*/
+        #ksTable > tbody > tr:nth-of-type(even), #kcInfo > tbody > tr:nth-of-type(even) {
+            background-color: #faffff;
+        }
 
-	</style>
+    </style>
 </head>
 
 <body id="kwap-body">
 
 <div class="wrapper" style="height: auto;">
 
-	<header class="main-header">
-		<div class="rhGrid-btnBar" style="background-color: #d9eaf4;">
-			<a class="rh-icon rhGrid-btnBar-a" id="zdfpcc" actcode="zdfpcc" title="">
-				<span class="rh-icon-inner">自动分配场次</span>
-				<span class="rh-icon-img btn-option"></span>
-			</a>
-			<a class="rh-icon rhGrid-btnBar-a" id="updatecc" actcode="updatecc"
-			   title="">
-				<span class="rh-icon-inner">更改场次</span>
-				<span
-						class="rh-icon-img btn-edit"></span>
-			</a>
-			<a
-					class="rh-icon rhGrid-btnBar-a" id="lookJk" actcode="lookJk" title="">
+    <header class="main-header">
+        <div class="rhGrid-btnBar" style="background-color: #d9eaf4;">
+            <a class="rh-icon rhGrid-btnBar-a" id="zdfpcc" actcode="zdfpcc" title="">
+                <span class="rh-icon-inner">自动分配场次</span>
+                <span class="rh-icon-img btn-option"></span>
+            </a>
+            <a class="rh-icon rhGrid-btnBar-a" id="updatecc" actcode="updatecc"
+               title="">
+                <span class="rh-icon-inner">更改场次</span>
+                <span
+                        class="rh-icon-img btn-edit"></span>
+            </a>
+            <a
+                    class="rh-icon rhGrid-btnBar-a" id="lookJk" actcode="lookJk" title="">
             <span
-					class="rh-icon-inner">查看借考人员</span><span class="rh-icon-img btn-user"></span>
-			</a>
-			<a class="rh-icon rhGrid-btnBar-a" id="xngs" actcode="xngs" title="">
-				<span class="rh-icon-inner">辖内公示</span><span class="rh-icon-img btn-report"></span>
-			</a>
-			<a class="rh-icon rhGrid-btnBar-a" id="tjccap" actcode="tjccap" title="">
-				<span class="rh-icon-inner">提交场次安排</span><span class="rh-icon-img btn-ok"></span>
-			</a>
-		</div>
-	</header>
+                    class="rh-icon-inner">查看借考人员</span><span class="rh-icon-img btn-user"></span>
+            </a>
+            <a class="rh-icon rhGrid-btnBar-a" id="xngs" actcode="xngs" title="">
+                <span class="rh-icon-inner">辖内公示</span><span class="rh-icon-img btn-report"></span>
+            </a>
+            <a class="rh-icon rhGrid-btnBar-a" id="tjccap" actcode="tjccap" title="">
+                <span class="rh-icon-inner">提交场次安排</span><span class="rh-icon-img btn-ok"></span>
+            </a>
+        </div>
+    </header>
 
-	<aside class="main-sidebar"
-		   style="padding-top:30px; border-right: 1px solid #bfdfee;width: 250px;height:100%;">
-		<!-- sidebar: style can be found in sidebar.less -->
-		<section id="left-sidebar-content" class="sidebar" style="height:100%;">
-			<div class="row">
-				<div class="col-sm-12" style="border-top: 1px solid #bfdfee;"></div>
-			</div>
-			<div class="_scrollbar" style="height:100%;padding-top: 5px;padding-left: 5px;overflow: auto;">
-				<span onclick="KcObject.setAllKcInfo()">考场场次</span>
-				<div id="ccJstree">
-					<!-- in this example the tree is populated from inline HTML -->
-					<!-- <ul>
+    <aside class="main-sidebar"
+           style="padding-top:30px; border-right: 1px solid #bfdfee;width: 250px;height:100%;">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section id="left-sidebar-content" class="sidebar" style="height:100%;">
+            <div class="row">
+                <div class="col-sm-12" style="border-top: 1px solid #bfdfee;"></div>
+            </div>
+            <div class="_scrollbar" style="height:100%;padding-top: 5px;padding-left: 5px;overflow: auto;">
+                <%--<span onclick="KcObject.setAllKcInfo()" style="cursor:pointer;">考场场次</span>--%>
+                <div id="ccJstree">
+                    <!-- in this example the tree is populated from inline HTML -->
+                    <!-- <ul>
                         <li>Root node 1
                             <ul>
                                 <li id="child_node_1">Child node 1</li>
@@ -141,278 +141,278 @@
                         </li>
                         <li>Root node 2</li>
                     </ul> -->
-				</div>
-			</div>
+                </div>
+            </div>
 
-		</section>
-	</aside>
+        </section>
+    </aside>
 
-	<div class="content-wrapper"
-		 style="background-color:transparent;min-height: 642px;border-top: 1px solid #bfdfee;margin-left:250px;">
-		<!-- Content Header (Page header) -->
-		<section id="search-input" class="content-header"
-				 style="height:33px;padding:5px;background-color:#e5eeef;background: linear-gradient(180deg, rgba(223, 234, 234, 1) 0%, rgba(223, 234, 234, 1) 2%, rgba(255, 255, 255, 1) 100%, rgba(255, 255, 255, 1) 100%);">
-			<div class="col-sm-2" style="width: 12%;min-width: 93px;max-width: 100px">
-				姓名<input id="search-name" style="width:50px;" type="text" title="">
-			</div>
-			<div class="col-sm-2" style="width: 14%;min-width: 108px;max-width: 120px">
-				登录名<input id="search-login-name" style="width:50px;" type="text" title="">
-			</div>
-			<div class="col-sm-4" style="width: 54%;min-width: 421px;max-width:430px;">
-				报考类型
-				<select id="search-bm-xl" style=""></select>
-				<select id="search-bm-mk" style="width:176px;" type="text" title=""></select>
-				<select id="search-bm-jb" type="text" title=""></select>
-			</div>
-			<div class="col-sm-2" style="width: 10%;min-width: 82px;max-width:90px;">
-				报考数<input id="search-bm-count" type="text" title="" style="width: 24px;">
-			</div>
-			<div class="col-sm-2" style="width: 7%;float: right">
-				<button onclick="KsObject.search()" class="btn btn-default" value="查询"
-						style="background: linear-gradient(180deg, rgb(123, 202, 249) 0%, rgb(136, 218, 236) 2%, rgba(148, 221, 245, 1) 3%, rgb(75, 189, 239) 93%, rgb(91, 200, 218) 96%, rgb(155, 214, 243) 100%);
+    <div class="content-wrapper"
+         style="background-color:transparent;min-height: 642px;border-top: 1px solid #bfdfee;margin-left:250px;">
+        <!-- Content Header (Page header) -->
+        <section id="search-input" class="content-header"
+                 style="height:33px;padding:5px;background-color:#e5eeef;background: linear-gradient(180deg, rgba(223, 234, 234, 1) 0%, rgba(223, 234, 234, 1) 2%, rgba(255, 255, 255, 1) 100%, rgba(255, 255, 255, 1) 100%);">
+            <div class="col-sm-2" style="width: 12%;min-width: 93px;max-width: 100px">
+                姓名<input id="search-name" style="width:50px;" type="text" title="">
+            </div>
+            <div class="col-sm-2" style="width: 14%;min-width: 108px;max-width: 120px">
+                登录名<input id="search-login-name" style="width:50px;" type="text" title="">
+            </div>
+            <div class="col-sm-4" style="width: 54%;min-width: 421px;max-width:430px;">
+                报考类型
+                <select id="search-bm-xl" style=""></select>
+                <select id="search-bm-mk" style="width:176px;" type="text" title=""></select>
+                <select id="search-bm-jb" type="text" title=""></select>
+            </div>
+            <div class="col-sm-2" style="width: 10%;min-width: 82px;max-width:90px;">
+                报考数<input id="search-bm-count" type="text" title="" style="width: 24px;">
+            </div>
+            <div class="col-sm-2" style="width: 7%;float: right">
+                <button onclick="KsObject.search()" class="btn btn-default" value="查询"
+                        style="background: linear-gradient(180deg, rgb(123, 202, 249) 0%, rgb(136, 218, 236) 2%, rgba(148, 221, 245, 1) 3%, rgb(75, 189, 239) 93%, rgb(91, 200, 218) 96%, rgb(155, 214, 243) 100%);
                         background-color:#5bc8da;color: #fff;padding: 2px 11px;">
-					查询
-				</button>
-			</div>
-		</section>
+                    查询
+                </button>
+            </div>
+        </section>
 
-		<section class="content" style="padding:0;background-color: transparent;">
-			<div class="row-fluid1" style="border-top: 1px solid #bfdfee;">
+        <section class="content" style="padding:0;background-color: transparent;">
+            <div class="row-fluid1" style="border-top: 1px solid #bfdfee;">
 
-				<div class="col-sm-3"
-					 style="padding-left: 0;padding-right: 0;height: 100%;border-right: 1px solid #bfdfee;">
-					<div class="row">
-						<div class="col-sm-12">
-							<div style="padding: 5px;background-color: #e4e8ec;">
-								人员列表 [<span class="tip-red">10</span> (<span class="tip-red">1</span>,1) / 800]
-							</div>
-						</div>
-						<div id="ksOrgTree" class="col-sm-12">
-							<div class="_scrollbar content-navTree" style="height: 240px;border: none;margin:0"></div>
-						</div>
-					</div>
-				</div>
+                <div class="col-sm-3"
+                     style="padding-left: 0;padding-right: 0;height: 100%;border-right: 1px solid #bfdfee;">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div style="padding: 5px;background-color: #e4e8ec;">
+                                人员列表 [<span class="tip-red">10</span> (<span class="tip-red">1</span>,1) / 800]
+                            </div>
+                        </div>
+                        <div id="ksOrgTree" class="col-sm-12">
+                            <div class="_scrollbar content-navTree" style="height: 240px;border: none;margin:0"></div>
+                        </div>
+                    </div>
+                </div>
 
-				<div class="col-sm-9 _scrollbar"
-					 style="padding-left:3px;padding-right:0;height:270px;overflow: auto;">
-					<table id="ksTable" class="table table-hover table-bordered">
-						<thead>
-						<tr style="background-color: #e3e6ea">
-							<th><input type="checkbox"/></th>
-							<th>序号</th>
-							<th>一级机构</th>
-							<th>二级机构</th>
-							<th>三级机构</th>
-							<th>四级机构</th>
-							<th>姓名</th>
-							<th>考试名称</th>
-							<th>级别</th>
-							<th>报考数</th>
-							<th>状态</th>
-							<th>人力资源编码</th>
-						</tr>
-						</thead>
-						<tbody>
+                <div class="col-sm-9 _scrollbar"
+                     style="padding-left:3px;padding-right:0;height:270px;overflow: auto;">
+                    <table id="ksTable" class="table table-hover table-bordered">
+                        <thead>
+                        <tr style="background-color: #e3e6ea">
+                            <th><input type="checkbox"/></th>
+                            <th>序号</th>
+                            <th>一级机构</th>
+                            <th>二级机构</th>
+                            <th>三级机构</th>
+                            <th>四级机构</th>
+                            <th>姓名</th>
+                            <th>考试名称</th>
+                            <th>级别</th>
+                            <th>报考数</th>
+                            <th>状态</th>
+                            <th>人力资源编码</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="row">
-				<div id="kcTip" class="col-sm-12"
-					 style="background-color: #ecedef; padding: 5px 39px 5px 5px;border-top: 1px solid #bfdfee;border-bottom: 1px solid #bfdfee;margin: 0 15px;">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div id="kcTip" class="col-sm-12"
+                     style="background-color: #ecedef; padding: 5px 39px 5px 5px;border-top: 1px solid #bfdfee;border-bottom: 1px solid #bfdfee;margin: 0 15px;">
 
-				</div>
-				<div class="col-sm-12">
-					<div style="margin-top: 3px;">
-						<table id="kcInfo" class="table table-hover table-bordered">
-							<thead>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</section>
-	</div>
+                </div>
+                <div class="col-sm-12">
+                    <div style="margin-top: 3px;">
+                        <table id="kcInfo" class="table table-hover table-bordered">
+                            <thead>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 </div>
 
 <%--更改场次 updateccModal--%>
 <div class="modal" id="updateccModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h5 class="modal-title">
-					更改场次
-				</h5>
-			</div>
-			<div class="modal-body" style="padding: 24px;">
-				<div class="row">
-					<div class="col-sm-6 _scrollbar" style="height: 350px;overflow: auto;">
-						<div id="updateCCTree1"></div>
-					</div>
-					<div class="col-sm-6 _scrollbar" style="height: 350px;overflow: auto;">
-						<div id="updateCCTree2"></div>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer" style="text-align: center;">
-				<button type="button" class="btn btn-success" onclick="UpdateCCModal.ensure();"
-						style="width:100px;background-color: #00c2c2;">
-					确定
-				</button>
-				<button type="button" class="btn btn-default" onclick=""
-						data-dismiss="modal" style="width:100px;background-color: #fff;">
-					取消
-				</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    更改场次
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <div class="row">
+                    <div class="col-sm-6 _scrollbar" style="height: 350px;overflow: auto;">
+                        <div id="updateCCTree1"></div>
+                    </div>
+                    <div class="col-sm-6 _scrollbar" style="height: 350px;overflow: auto;">
+                        <div id="updateCCTree2"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-success" onclick="UpdateCCModal.ensure();"
+                        style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+                <button type="button" class="btn btn-default" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 
 <%--查看借考人员  lookJkModal--%>
 <div class="modal" id="lookJkModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h5 class="modal-title">
-					查看借考人员
-				</h5>
-			</div>
-			<div class="modal-body" style="padding: 24px;">
-				<div class="row">
-					<div class="col-sm-12">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    查看借考人员
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <div class="row">
+                    <div class="col-sm-12">
 
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer" style="text-align: center;">
-				<button type="button" class="btn btn-success" onclick=""
-						data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
-					确定
-				</button>
-				<%--<button type="button" class="btn btn-default" onclick=""
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-success" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+                <%--<button type="button" class="btn btn-default" onclick=""
                         data-dismiss="modal" style="width:100px;background-color: #fff;">
                     取消
                 </button>--%>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 
 <%--自动分配场次 模态框--%>
 <div class="modal" id="zdfpccModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h5 class="modal-title">
-					自动分配场次
-				</h5>
-			</div>
-			<div class="modal-body" style="padding: 24px;">
-				<div class="row text-center">
-					<div class="col-sm-12" style="font-size: 25px;color:red;margin-bottom: 12px;">
-						考生场次自动分配
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-3">
-						考生分布方式：
-					</div>
-					<div class="col-sm-8">
-						<label class="radio-inline">
-							<input name="distribution" type="radio" value="indistinct" checked> 模糊分布
-						</label>
-						<label class="radio-inline">
-							<input name="distribution" value="distinct" type="radio"> 精确分布
-						</label>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-12">
-						<hr style="color:#c9cbd0;"/>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-3">
-						分配规则：
-					</div>
-					<div class="col-sm-8" id="allocation-rule">
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer" style="text-align: center;">
-				<button type="button" class="btn btn-success" onclick="console.log(ZdfpccModal.getZdfpccModalValue())"
-						data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
-					确定
-				</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    自动分配场次
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <div class="row text-center">
+                    <div class="col-sm-12" style="font-size: 25px;color:red;margin-bottom: 12px;">
+                        考生场次自动分配
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        考生分布方式：
+                    </div>
+                    <div class="col-sm-8">
+                        <label class="radio-inline">
+                            <input name="distribution" type="radio" value="indistinct" checked> 模糊分布
+                        </label>
+                        <label class="radio-inline">
+                            <input name="distribution" value="distinct" type="radio"> 精确分布
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <hr style="color:#c9cbd0;"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        分配规则：
+                    </div>
+                    <div class="col-sm-8" id="allocation-rule">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-success" onclick="console.log(ZdfpccModal.getZdfpccModalValue())"
+                        data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 
 <%--辖内公示--%>
 <div class="modal" id="xngsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h5 class="modal-title">
-					辖内公示
-				</h5>
-			</div>
-			<div class="modal-body" style="padding: 24px;">
-				辖内公示
-			</div>
-			<div class="modal-footer" style="text-align: center;">
-				<button type="button" class="btn btn-success" onclick=""
-						data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
-					确定
-				</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    辖内公示
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                辖内公示
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-success" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 
 <%--提交场次安排--%>
 <div class="modal" id="tjccapModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h5 class="modal-title">
-					提交场次安排确认
-				</h5>
-			</div>
-			<div class="modal-body" style="padding: 24px;">
-				是否提交场次安排？
-			</div>
-			<div class="modal-footer" style="text-align: center;">
-				<button type="button" class="btn btn-success" onclick=""
-						data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
-					确定
-				</button>
-				<button type="button" class="btn btn-default" onclick=""
-						data-dismiss="modal" style="width:100px;background-color: #fff;">
-					取消
-				</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    提交场次安排确认
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                是否提交场次安排？
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-success" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+                <button type="button" class="btn btn-default" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 
 <script type="text/javascript">
@@ -523,7 +523,7 @@
             this.setUpdateCCTree2();
         },
 
-		/*确定按钮事件*/
+        /*确定按钮事件*/
         ensure: function () {
             var tree1Selected = UpdateCCModal.updateCCTree1.jstree().get_selected();
             var tree2Selected = UpdateCCModal.updateCCTree2.jstree().get_selected();
@@ -540,7 +540,7 @@
             }
         },
 
-		/*显示modal*/
+        /*显示modal*/
         show: function () {
             if (this.updateccModal === '') {
                 this.initData();
@@ -613,10 +613,13 @@
      * 考场场次操作集合
      */
     var KcObject = {
+        rootData: '',
+        rootNodes: '',
+        kcTreeNodes: '',
         kcArr: [],//待安排场次
         ccArr: [],
         kctree: {},
-		/*初始化界面数据*/
+        /*初始化界面数据*/
         initData: function () {
             this.getInitData(function () {
                 this.setCCTree();
@@ -624,7 +627,7 @@
             });//setCCTree setAllKcInfo方法在加载完数据后执行
 
         },
-		/*从后端获取初始化数据并处理*/
+        /*从后端获取初始化数据并处理*/
         getInitData: function (callback) {
             var self = this;//self指向KcObject
             FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getKcAndCc", {
@@ -632,29 +635,55 @@
                 }, false, false, function (data) {
                     //处理数据
                     if (data !== "") {
-                        var kcArr = self.kcArr = data.list;
-                        var ccArr = [];
-                        for (var i = 0; i < kcArr.length; i++) {
-                            //考场
-                            var kc = kcArr[i];
-                            for (var j = 0; j < kc.ccList.length; j++) {
-                                //场次
-                                var cc = kc.ccList[j];
-                                var date = cc.SJ_START.substring(0, 10);
-                                var start = cc.SJ_START.substring(11);
-                                var end = cc.SJ_END.substring(11);
-                                var dateStr = date + "(" + start + "-" + end + ")";
-                                cc.ccTime = dateStr;
-                            }
-                        }
-                        ccArr.push(cc);
-                        self.ccArr = ccArr;
+//                        var kcArr = [];
+                        self.rootData = data.root;
+//                        debugger;
+                        self.getCCTreeNodes();
+//                        while (rootData.CHILD) {
+//
+//                        }
+//
+//                        var kcArr = self.kcArr = data.list;
+//                        var ccArr = [];
+//                        for (var i = 0; i < kcArr.length; i++) {
+//                            //考场
+//                            var kc = kcArr[i];
+//                            for (var j = 0; j < kc.ccList.length; j++) {
+//                                //场次
+//                                var cc = kc.ccList[j];
+//                                var date = cc.SJ_START.substring(0, 10);
+//                                var start = cc.SJ_START.substring(11);
+//                                var end = cc.SJ_END.substring(11);
+//                                var dateStr = date + "(" + start + "-" + end + ")";
+//                                cc.ccTime = dateStr;
+//                            }
+//                        }
+//                        ccArr.push(cc);
+//                        self.ccArr = ccArr;
                     }
                     if (callback) {
                         callback.apply(self);
                     }
                 }
             );
+        },
+
+        /**
+         * 数据类型:dept kc cc
+         * 获取数据对应的类型
+         **/
+        getDataType: function (data) {
+            if (data.DEPT_ENNAME && data.DEPT_CODE) {
+                //有DEPT_ENNAME、DEPT_CODE属性为dept
+                return "dept";
+            } else if (data.KC_NAME && data.KC_ID) {
+                //有KC_NAME、KC_ID属性为kc
+                return "kc";
+            } else if (data.SJ_CC && data.SJ_ID) {
+                return "cc";
+            } else {
+                return '';
+            }
         },
 
         getCcById: function (id) {
@@ -670,23 +699,75 @@
 
 
         getCCTreeNodes: function () {
-            var self = this;//self指向KcObject
-            var kcArr = self.kcArr;
-            var kcTreeNodes = [];//jsTree构造jstree数据结构
-            for (var i = 0; i < kcArr.length; i++) {
-                //考场
-                var kc = kcArr[i];
-                var children = [];
-                for (var j = 0; j < kc.ccList.length; j++) {
-                    //场次
-                    var cc = kc.ccList[j];
-                    var childNode = {id: cc.CC_ID, text: cc.ccTime, data: cc, children: []};
-                    children.push(childNode);
-                }
-                var node = {id: kc.KC_ID, text: kc.KC_NAME, data: kc, children: children};
-                kcTreeNodes.push(node);
+            if (this.rootNodes) {
+                return this.rootNodes;
             }
-            return kcTreeNodes;
+            var rootData = this.rootData;
+//            debugger;
+            this.recursiveTreeData(rootData);
+            return this.rootNodes;
+//            var child = rootData.CHILD;
+//            if (child) {
+//                for (var i = 0; i < child.length; i++) {
+//                    var item = child[i];
+//
+//                }
+//            }
+//
+//            var self = this;//self指向KcObject
+//            var kcArr = self.kcArr;
+//            var kcTreeNodes = [];//jsTree构造jstree数据结构
+//            for (var i = 0; i < kcArr.length; i++) {
+//                //考场
+//                var kc = kcArr[i];
+//                var children = [];
+//                for (var j = 0; j < kc.ccList.length; j++) {
+//                    //场次
+//                    var cc = kc.ccList[j];
+//                    var childNode = {id: cc.CC_ID, text: cc.ccTime, data: cc, children: []};
+//                    children.push(childNode);
+//                }
+//                var node = {id: kc.KC_ID, text: kc.KC_NAME, data: kc, children: children};
+//                kcTreeNodes.push(node);
+//            }
+//
+//            this.kcTreeNodes = kcTreeNodes;
+//            return kcTreeNodes;
+        },
+
+        recursiveTreeData: function (data, parentNode) {
+            var node;
+            var dataType = this.getDataType(data);
+            switch (dataType) {
+                case 'dept':
+                    node = {id: data.DEPT_CODE, text: data.DEPT_NAME, data: data, children: []};
+                    break;
+                case 'kc':
+                    this.kcArr.push(data);
+                    node = {id: data.KC_ID, text: data.KC_NAME, data: data, children: []};
+                    break;
+                case 'cc':
+                    var cc = data;
+                    var date = cc.SJ_START.substring(0, 10);
+                    var start = cc.SJ_START.substring(11);
+                    var end = cc.SJ_END.substring(11);
+                    var dateStr = date + "(" + start + "-" + end + ")";
+                    cc.ccTime = dateStr;
+                    this.ccArr.push(data);
+                    node = {id: data.SJ_ID, text: data.ccTime, data: data, children: []};
+                    break;
+            }
+            if (parentNode) {
+                parentNode.children.push(node);
+            } else {
+                this.rootNodes = [node];
+            }
+            if (data.CHILD) {
+                for (var i = 0; i < data.CHILD.length; i++) {
+                    var item = data.CHILD[i];
+                    this.recursiveTreeData(item, node);
+                }
+            }
         },
 
         /**
@@ -705,13 +786,23 @@
             self.kctree = jstree;
 
             $ccJstree.on("changed.jstree", function (e, data) {
-                if (data.node.data.KC_ID) {
+                var dataType = self.getDataType(data.node.data);
+                if (dataType === 'kc') {
                     //选中考场
                     self.setKcInfo(data.node.data);
-                } else {
+                } else if (dataType === 'cc') {
                     var parentKcNode = $.jstree.reference(jstree).get_node(data.node.parent);
                     //选中场次
                     self.setCcInfo(data.node.data, parentKcNode.data);
+                } else if (dataType === 'dept') {
+
+                    var parent = data.node.parent;
+                    if (parent !== '#') {
+                        var deptCode = data.node.data.DEPT_CODE;
+                        KsObject.setInitData(deptCode);
+                    } else {
+                        KcObject.setAllKcInfo();
+                    }
                 }
             });
         },
@@ -745,7 +836,7 @@
             for (var i = 0; i < kcArr.length; i++) {
                 //考场
                 var kc = kcArr[i];
-                var ccList = kc.ccList;
+                var ccList = kc.CHILD;
 
                 for (var j = 0; j < ccList.length; j++) {
                     //场次
@@ -784,7 +875,7 @@
                         return result;
                     }
 
-                    if (hasCcTime(kc.ccList, ccTime)) {
+                    if (hasCcTime(kc.CHILD, ccTime)) {
                         $bodyTr.append('<td>' + '0 / 0' + '</td>');
                     } else {
                         $bodyTr.append('<td></td>');
@@ -813,8 +904,8 @@
             //thead
             var $headTr = jQuery('<tr style="background-color: #e3e6ea"></tr>');
             $headTr.append('<th>考场</th>');
-            for (var i = 0; i < kc.ccList.length; i++) {
-                var cc = kc.ccList[i];
+            for (var i = 0; i < kc.CHILD.length; i++) {
+                var cc = kc.CHILD[i];
                 $headTr.append('<th>' + cc.ccTime + '</th>');
             }
             $kcInfoThead.append($headTr);
@@ -822,8 +913,8 @@
             //tbody
             var $bodyTr = jQuery('<tr style=""></tr>');
             $bodyTr.append('<td>' + kc.KC_NAME + '</td>');
-            for (var i = 0; i < kc.ccList.length; i++) {
-                var cc = kc.ccList[i];
+            for (var i = 0; i < kc.CHILD.length; i++) {
+                var cc = kc.CHILD[i];
                 $bodyTr.append('<td>' + '0 / 0' + '</td>');
             }
             $kcInfoTbody.append($bodyTr);
@@ -964,12 +1055,14 @@
     }
 
     var KsObject = {
+        deptCode: '',//那个部门下的考生
         ksArr: [],//考生信息
+        ksOrgTree: '',
         initData: function () {
-            this.getKsArr(function () {
-                this.setDfpKsContent();
-                this.setKsOrgContent();
-            });
+//            this.getKsArr(null, function () {
+//                this.setDfpKsContent();
+////                this.setKsOrgContent();
+//            });
             this.initSearchValue();
         },
 
@@ -988,15 +1081,25 @@
             return result;
         },
 
-        getKsArr: function (callback) {
+        setInitData: function (deptCode) {
+            this.setKsOrgContent(deptCode);
+            this.getKsArr(null, function () {
+                this.setDfpKsContent();
+//                this.setKsOrgContent();
+            });
+        },
+
+        getKsArr: function (params, callback) {
             var self = this;
             var param = {
                 _linkWhere: " and XM_ID='" + xmId + "' ",
                 _linkServQuery: "2",
                 XM_ID: xmId
             };
-            FireFly.doAct("TS_XMGL_KCAP_DFPKS", 'query', param, false, false, function (data) {
+            jQuery.extend(param, params);
+            FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getKsContent', param, false, false, function (data) {
                 self.ksArr = data._DATA_;
+//                debugger;
                 if (callback) {
                     callback.apply(self);
                 }
@@ -1006,26 +1109,57 @@
         /**
          * 考生机构
          */
-        setKsOrgContent: function () {
+        setKsOrgContent: function (pdeptCode) {
+            pdeptCode = pdeptCode ? pdeptCode : '';
+            this.deptCode = pdeptCode;
             var $ksOrgTreeContent = $('#ksOrgTree').find('.content-navTree');
             $ksOrgTreeContent.html('');
-            var data = FireFly.getDict('SY_ORG_ODEPT_ALL');
-            var setting = {
-                data: data,
-                dictId: "SY_ORG_ODEPT_ALL",
-                expandLevel: 1,
-                extWhere: "",
-//            onnodeclick: ƒ(item, id),
-//            rhBeforeOnNodeClick: ƒ(item, id),
-                rhItemCode: "S_ODEPT",
-                rhLeafIcon: "",
-                showcheck: false,
-                rhexpand: false,
-                theme: "bbit-tree-no-lines",
-                url: "SY_COMM_INFO.dict.do"
+            var data = FireFly.getDict('SY_ORG_ODEPT_ALL', pdeptCode);
+            var deptName = FireFly.getDictNames(FireFly.getDict('SY_ORG_ODEPT_ALL'), pdeptCode);
+            var root = {id: pdeptCode, text: deptName, data: {id: pdeptCode, text: deptName}, children: []};
+
+            var putChildren = function (parent, childs) {
+                childs = childs ? childs : [];
+                for (var i = 0; i < childs.length; i++) {
+                    var child = childs[i];
+                    var item = {
+                        id: child.ID,
+                        text: child.NAME,
+                        data: child,
+                        children: []
+                    };
+                    parent.children.push(item);
+                    putChildren(item, child.CHILD);
+                }
             };
-            var tree = new rh.ui.Tree(setting);
-            $ksOrgTreeContent.append(tree.obj);
+
+            var childs = data[0].CHILD;
+            putChildren(root, childs);
+
+            try {
+                this.ksOrgTree.jstree('destroy');//已经初始化tree，先destroy
+            } catch (e) {
+            }
+            this.ksOrgTree = $ksOrgTreeContent.jstree({
+                'core': {
+                    "multiple": false,
+                    'data': [root]
+                }
+            });
+
+            $ksOrgTreeContent.on("changed.jstree", function (e, data) {
+                debugger;
+                var id = data.node.data.id;
+
+//                if (data.node.data.KC_ID) {
+//                    //选中考场
+//                    self.setKcInfo(data.node.data);
+//                } else {
+//                    var parentKcNode = $.jstree.reference(jstree).get_node(data.node.parent);
+//                    //选中场次
+//                    self.setCcInfo(data.node.data, parentKcNode.data);
+//                }
+            });
         },
 
         /**
@@ -1034,6 +1168,7 @@
         setDfpKsContent: function () {
             var ksArr = this.ksArr;
             var $ksTableTbody = $('#ksTable').find('tbody');
+            $ksTableTbody.html('');
             for (var i = 0; i < ksArr.length; i++) {
                 var ks = ksArr[i];
 //                var bmCode = ks.BM_CODE;
@@ -1050,13 +1185,13 @@
                     '<tr scope="row">',
                     '   <td><input type="checkbox"></td>',
                     '   <td>' + (i + 1) + '</td>',//序号
-                    '   <td>' + ks.S_ODEPT__NAME + '</td>',//一级机构
-                    '   <td>Mark</td>',//二级机构
-                    '   <td>Mark</td>',//三级机构
-                    '   <td>Mark</td>',//四级机构
+                    '   <td>' + ks.org1 + '</td>',//一级机构
+                    '   <td>' + ks.org2 + '</td>',//二级机构
+                    '   <td>' + ks.org3 + '</td>',//三级机构
+                    '   <td>' + ks.org4 + '</td>',//四级机构
                     '   <td>' + ks.BM_NAME + '</td>',//姓名
-                    '   <td>Mark</td>',//考试名称
-                    '   <td>' + ks.BM_TYPE__NAME + '</td>',//级别
+                    '   <td>' + ks.BM_XL + '-' + ks.BM_MK + '</td>',//考试名称
+                    '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), ks.BM_TYPE) + '</td>',//级别
                     '   <td>Mark</td>',//报考数
                     '   <td>Mark</td>',//状态
                     '   <td>' + ks.BM_CODE + '</td>',//人力资源编码
@@ -1068,10 +1203,15 @@
         },
 
         search: function () {
-            this.getExtWhere();
+            var self = this;
+            //条件  请求  渲染
+            var params = this.getExtWhere();
+            this.getKsArr(params, function () {
+                self.setDfpKsContent();
+            });
         },
 
-		/*获取搜索条件*/
+        /*获取搜索条件*/
         getExtWhere: function () {
             var searchName = $('#search-name').val();
             var searchLoginName = $('#search-login-name').val();
@@ -1079,13 +1219,22 @@
             var searchBmMk = $('#search-bm-mk').val();
             var searchBmJb = $('#search-bm-jb').val();
             var searchBmCount = $('#search-bm-count').val();
-            alert('searchName:' + searchName + '\n'
-                + 'searchLoginName:' + searchLoginName + '\n'
-                + 'searchBmXl:' + searchBmXl + '\n'
-                + 'searchBmMk:' + searchBmMk + '\n'
-                + 'searchBmJb:' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), searchBmJb) + '\n'
-                + 'searchBmCount:' + searchBmCount + '\n');
-
+            return {
+                searchDeptCode: this.deptCode,
+                searchName: searchName,
+                searchLoginName: searchLoginName,
+                searchBmXl: searchBmXl,
+                searchBmMk: searchBmMk,
+                searchBmJb: searchBmJb,
+                searchBmCount: searchBmCount
+            };
+//            return [];
+//            alert('searchName:' + searchName + '\n'
+//                + 'searchLoginName:' + searchLoginName + '\n'
+//                + 'searchBmXl:' + searchBmXl + '\n'
+//                + 'searchBmMk:' + searchBmMk + '\n'
+//                + 'searchBmJb:' + searchBmJb,//FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), searchBmJb) + '\n'
+//                +'searchBmCount:' + searchBmCount + '\n');
         },
 
         initSearchValue: function () {
@@ -1095,57 +1244,18 @@
 //            KSLBK_MK
 //            TS_XMGL_BM_KSLBK_LV
             //search-bm-xl search-bm-mk search-bm-jb
-            var xlDictData = this.getDictData("", 'KSLBK_XL');
+            var xlDictData = Utils.getDictData("", 'KSLBK_XL');
             var jbDictData = FireFly.getDict('TS_XMGL_BM_KSLBK_LV')[0].CHILD;
-            this.setSearchOptions('search-bm-xl', xlDictData);
+            Utils.setOptionData('search-bm-xl', xlDictData);
             var xlSelect = $('#search-bm-xl');
             xlSelect.on('change', function () {
                 var option = xlSelect.val();
-                var mkDictData = self.getDictData(" and KSLBK_XL='" + option + "'", 'KSLBK_MK');
-                self.setSearchOptions('search-bm-mk', mkDictData);
+                var mkDictData = Utils.getDictData(" and KSLBK_XL='" + option + "'", 'KSLBK_MK');
+                Utils.setOptionData('search-bm-mk', mkDictData);
             });
-            this.setSearchOptions('search-bm-jb', jbDictData);
-
-        },
-        setSearchOptions: function (id, dictData, selectValue) {
-            selectValue = selectValue ? selectValue : '';
-            var select = $('#' + id);
-            //移除原有的选项
-            select.find('option').remove();
-            var opt = [];
-            opt.push("<option value=''></option>");
-            jQuery.each(dictData, function (i, dictItem) {
-                opt.push("<option value='");
-                opt.push(dictItem.ID);
-                opt.push("'");
-                if (dictItem.ID === selectValue) {
-                    opt.push(" selected ");
-                }
-                opt.push(">");
-                opt.push(dictItem.NAME);
-                opt.push("</option>");
-            });
-            jQuery(opt.join("")).appendTo(select);
+            Utils.setOptionData('search-bm-jb', jbDictData);
         },
 
-        //获取级联下拉框数据
-        getDictData: function (linkWhere, codeName) {
-            var data = {
-                "_SELECT_": codeName,
-                "_ORDER_": codeName,
-                "_AFTER_SELECT_KEYWORDS": "distinct",
-                "_linkWhere": linkWhere + " and " + codeName + " is not null ",
-                "_NOPAGE_": "true"
-            };
-//            var result = FireFly.getListData("TS_XMGL_BM_KSLBK", data, false);
-            var result = FireFly.doAct("TS_XMGL_BM_KSLBK", 'query', data);
-            var dictData = [];
-            for (var i = 0; i < result._DATA_.length; i++) {
-                var dict = result._DATA_[i];
-                dictData.push({ID: dict[codeName], NAME: dict[codeName]});
-            }
-            return dictData;
-        }
     };
 
 
@@ -1183,7 +1293,48 @@
                     }
                 });
             }
+        },
+
+        setOptionData: function (selectId, dictData, selectValue) {
+            selectValue = selectValue ? selectValue : '';
+            var select = $('#' + selectId);
+            //移除原有的选项
+            select.find('option').remove();
+            var opt = [];
+            opt.push("<option value=''></option>");
+            jQuery.each(dictData, function (i, dictItem) {
+                opt.push("<option value='");
+                opt.push(dictItem.ID);
+                opt.push("'");
+                if (dictItem.ID === selectValue) {
+                    opt.push(" selected ");
+                }
+                opt.push(">");
+                opt.push(dictItem.NAME);
+                opt.push("</option>");
+            });
+            jQuery(opt.join("")).appendTo(select);
+        },
+
+        //获取级联下拉框数据 (考试类别库 TS_XMGL_BM_KSLBK)
+        getDictData: function (linkWhere, codeName) {
+            var data = {
+                "_SELECT_": codeName,
+                "_ORDER_": codeName,
+                "_AFTER_SELECT_KEYWORDS": "distinct",
+                "_linkWhere": linkWhere + " and " + codeName + " is not null ",
+                "_NOPAGE_": "true"
+            };
+//            var result = FireFly.getListData("TS_XMGL_BM_KSLBK", data, false);
+            var result = FireFly.doAct("TS_XMGL_BM_KSLBK", 'query', data);
+            var dictData = [];
+            for (var i = 0; i < result._DATA_.length; i++) {
+                var dict = result._DATA_[i];
+                dictData.push({ID: dict[codeName], NAME: dict[codeName]});
+            }
+            return dictData;
         }
+
     };
 </script>
 

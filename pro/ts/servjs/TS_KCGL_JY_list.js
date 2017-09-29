@@ -32,8 +32,7 @@ function bindCard(){
 		var param = {};
 		param["_PK_"] = pkCode;
 		param["KC_STATE"] = 6;
-		var r = confirm("确定禁用此考场？")
-		if (r == true) {
+		if (confirm("确定禁用此考场？") == true) {
 			FireFly.doAct(_viewer.servId, "save", param, true, false,function(data) {
 				if (true) {
 					_viewer.refreshGrid();
