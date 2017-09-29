@@ -56,7 +56,7 @@ $(function() {
 					var resultObj = FireFly
 							.doAct("TS_XMZT", "query", paramObj1);
 					if (resultObj._DATA_.length != 0) {
-						if (resultObj._DATA_[0].INT1 === "1") {
+						if (resultObj._DATA_[0].OBJ_INT1 === "1") {
 							var xm_opera = "首页显示中";
 						}
 					} else {
@@ -201,7 +201,7 @@ $(function() {
 					var saveParam = {};
 					saveParam["DATA_ID"] = xm_id;
 					saveParam["STR1"] = user_code;
-					saveParam["INT1"] = 1;
+					saveParam["OBJ_INT1"] = 1;
 					saveParam["SERV_ID"] = "TS_XMZT";
 					FireFly.doAct("TS_XMZT", "save", saveParam);
 					resultObj = FireFly.doAct("TS_OBJECT", "query", paramObj);
@@ -214,7 +214,7 @@ $(function() {
 				paramStrs["XM_ID"] = tr_xm_id;
 				FireFly.doAct("TS_XMZT", "modifyShowType", paramStrs, false,
 						false, function(data) {
-							if (data.INT1 === "1") {
+							if (data.OBJ_INT1 === "1") {
 								location.reload();
 							} else {
 								location.reload();
