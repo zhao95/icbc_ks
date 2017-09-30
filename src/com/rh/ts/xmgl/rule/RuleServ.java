@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rh.core.base.Bean;
 import com.rh.core.base.TipException;
 import com.rh.core.serv.CommonServ;
@@ -114,26 +115,29 @@ public class RuleServ extends CommonServ {
 					List<Bean> mxList = gzmxBean.getList(ksqzId); // 规则明细list
 
 					Bean gzmxGroup = convertGzmxToGroup(mxList); // 规则明细分组Bean,key:规则组
-
+					
 					for (Object gzId : gzmxGroup.keySet()) { // 遍历规则组
 
 						Bean shgz = gzBean.getBean(gzId); // 审核规则bean
-
+						if(shgz.size()==0||"N03".equals(shgz.getStr("GZK_ID"))){
+							continue;
+						}
 						int gzType = shgz.getInt("GZ_TYPE");
 
 						List<Bean> gzmxGroupList = gzmxGroup.getList(gzId); // 审核规则关联的规则明细list
-
+						
 						boolean pass = gzType == 1 ? true : false; // 审核不通过规则(与)默认ture，否则默认false
 
 						String msg = ""; // 验证信息
 
 						for (Bean bean : gzmxGroupList) {
+							
 
 							bean.putAll(bmBean); // 报名考试信息
 							bean.putAll(bmInfo); // 报名人信息
+							
 
 							String mxName = getMxName(bean);
-
 							String clazz = bean.getStr("MX_IMPL");
 
 							boolean result = this.vlidateOne(clazz, bean); // 执行验证
@@ -311,13 +315,16 @@ public class RuleServ extends CommonServ {
 
 		if (type.equals("1")) {
 			try {
-
-				JSONObject obj = new JSONObject(jsonStr);
-				String var = obj.getString("vari");
-				String val = obj.getString("val");
-				String repacle = "#" + var + "#";
-				name = name.replaceAll(repacle, val);
-
+				JSONArray jsonarray = new JSONArray(jsonStr); 
+				 // 过时方法
+				for(int i=0;i<jsonarray.length();i++){
+					JSONObject obj = jsonarray.getJSONObject(i);
+					String var = obj.getString("vari");
+					String val = obj.getString("val");
+					String repacle = "#" + var + "#";
+					name = name.replace(repacle, val);
+				}
+				
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

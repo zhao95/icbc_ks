@@ -3,6 +3,7 @@ package com.rh.ts.xmgl.rule.impl;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,18 +23,18 @@ public class BanTest implements IRule {
 
 	public boolean validate(Bean param) {
 
-		// 报名者人力资源编码
+		/*// 报名者人力资源编码
 		String user = param.getStr("BM_CODE");
 
 		String jsonStr = param.getStr("MX_VALUE2");
 
-		JSONObject obj;
+		JSONArray obj;
 
 		try {
 
-			obj = new JSONObject(jsonStr);
-
-			String endDate = obj.getString("val"); // 有效期时间
+			obj = new JSONArray(jsonStr);
+			JSONObject jsonObject = obj.getJSONObject(0);
+			String endDate = jsonObject.getString("val"); // 有效期时间
 			
 			SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
 			
@@ -58,8 +59,8 @@ public class BanTest implements IRule {
 
 			e.printStackTrace();
 		}
-
-		return false;
+*/
+		return true;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.rh.ts.xmgl.rule.impl;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,13 +28,13 @@ public class AfterMiddleCertDue implements IRule {
 
 		String jsonStr = param.getStr("MX_VALUE2");
 
-		JSONObject obj;
+		JSONArray obj;
 
 		try {
 
-			obj = new JSONObject(jsonStr);
-
-			String val = obj.getString("val"); // 变量值
+			obj = new JSONArray(jsonStr);
+			JSONObject jsonObject = obj.getJSONObject(0);
+			String val = jsonObject.getString("val"); // 变量值
 
 			SqlBean sql = new SqlBean();
 

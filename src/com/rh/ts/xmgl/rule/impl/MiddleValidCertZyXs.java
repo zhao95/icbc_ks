@@ -1,7 +1,9 @@
 package com.rh.ts.xmgl.rule.impl;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.rh.core.base.Bean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
@@ -23,13 +25,13 @@ public class MiddleValidCertZyXs implements IRule {
 
 		String jsonStr = param.getStr("MX_VALUE2");
 
-		JSONObject obj;
+		JSONArray obj;
 
 		try {
 			
-			obj = new JSONObject(jsonStr);
-
-			String endDate = obj.getString("val"); //有效期时间
+			obj = new JSONArray(jsonStr);
+			JSONObject jsonObject = obj.getJSONObject(0);
+			String endDate = jsonObject.getString("val"); //有效期时间
 
 			String zyCode = "023002"; // 专业类
 			String xsCode = "023003"; // 销售类

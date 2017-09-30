@@ -2,6 +2,7 @@ package com.rh.ts.xmgl.rule.impl;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,13 +27,13 @@ public class AdmitTest implements IRule {
 
 		String jsonStr = param.getStr("MX_VALUE2");
 
-		JSONObject obj;
+		JSONArray obj;
 
 		try {
 
-			obj = new JSONObject(jsonStr);
-
-			int grade = obj.getInt("val");// 通过成绩
+			obj = new JSONArray(jsonStr);
+			JSONObject jsonObject = obj.getJSONObject(0);
+			int grade = jsonObject.getInt("val");// 通过成绩
 
 			// 序列
 			String bmXl = param.getStr("BM_XL");

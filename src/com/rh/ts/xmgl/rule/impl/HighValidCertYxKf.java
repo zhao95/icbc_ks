@@ -1,5 +1,6 @@
 package com.rh.ts.xmgl.rule.impl;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,13 +25,13 @@ public class HighValidCertYxKf implements IRule {
 
 		String jsonStr = param.getStr("MX_VALUE2");
 
-		JSONObject obj;
+		JSONArray obj;
 		
 		try {
 			
-			obj = new JSONObject(jsonStr);
-			
-			String endDate = obj.getString("val"); //有效期时间
+			obj = new JSONArray(jsonStr);
+			JSONObject jsonObject = obj.getJSONObject(0);
+			String endDate = jsonObject.getString("val"); //有效期时间
 			
 			String yxCode = "023004"; // 运行类
 			String kfCode = "023005"; // 客服类

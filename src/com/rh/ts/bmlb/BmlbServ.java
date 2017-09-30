@@ -1161,5 +1161,12 @@ public class BmlbServ extends CommonServ {
 		ss+=id;
 		return out.set("idss", ss);
 	}
-	
+	/**
+	 * 获取 类别
+	 */
+	public OutBean getkslbk(Bean paramBean){
+		String where = "AND KSLBK_XL_CODE is null";
+		List<Bean> finds = ServDao.finds("TS_XMGL_BM_KSLBK", where);
+		return new OutBean().set("LBS", finds);
+	}
 }

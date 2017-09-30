@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
@@ -33,15 +34,15 @@ public class BaseCert2YearDgYxXd implements IRule {
 
 		String twoYearAgo = ""; // 2年前日期 yyyy-mm-dd
 
-		JSONObject obj;
+		JSONArray obj;
 
 		try {
 
-			obj = new JSONObject(jsonStr);
-
+			obj = new JSONArray(jsonStr);
+			JSONObject jsonObject = obj.getJSONObject(0);
 			Calendar c = Calendar.getInstance();
 
-			String val = obj.getString("val"); // 变量值
+			String val = jsonObject.getString("val"); // 变量值
 
 			if (Strings.isBlank(val)) {
 				val = "2";
