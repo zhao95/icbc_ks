@@ -81,15 +81,30 @@ public class RoleServ extends CommonServ {
 	 */
 	protected void beforeQuery(ParamBean paramBean) {
 		
-		String userCode = paramBean.getStr("USER_CODE");
+		Bean item = paramBean.getBean("PVLG_ITEM");
 		
-		String sqlStr = RoleUtil.getPvlgSql(paramBean.getServId(), userCode);
+		//机构tree path
+		String path = item.getStr("CODE_PATH");
 		
-		if(!Strings.isBlank(sqlStr)) {
-			
-//			paramBean.set(Constant.PARAM_WHERE, sqlStr);
-//			paramBean.setQueryExtWhere(sqlStr);
-		}
+		//目录tree path
+		String ctlgPath = item.getStr("CTLG_PATH");
+		
+		//tree的编码 机构编码
+		String dcode = paramBean.getStr("PVLG_FIELD");
+		
+		//用户权限 所有权限的机构编码
+		Bean userPvlg = paramBean.getBean("USER_PVLG");
+		
+		
+		//无权限
+		paramBean.set(Constant.PARAM_WHERE, " and 1=2");
+		
+		
+//		if(!Strings.isBlank(sqlStr)) {
+//			
+////			paramBean.set(Constant.PARAM_WHERE, sqlStr);
+////			paramBean.setQueryExtWhere(sqlStr);
+//		}
 		
 	}
 

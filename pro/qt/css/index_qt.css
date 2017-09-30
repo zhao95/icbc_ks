@@ -112,10 +112,11 @@
 #jdtMain {
 	position: relative;
 	margin-left: 30px;
-	top: 0;
-/* 	height: 150px; */
-	height: 70px;
-	/* 	border-bottom: 2px dashed #efefef; */
+	top: -5px;
+	height: 80px;
+}
+#jdtMsg{
+	min-height:40px;
 }
 
 #upDiv{
@@ -128,6 +129,7 @@
 	top: 0px;
 	left: 80px;
 	color: #666666;
+	text-align: center;
 }
 
 #upDiv .upSX {
@@ -144,12 +146,9 @@
 }
 
 #downDiv>div {
-	/* 	position:relative; */
-	/* 	float:left; */
 	position: absolute;
 	top: 40px;
 	left: 80px;
-	/*     height:80px; */
 	color: #999999;
 }
 
@@ -237,7 +236,7 @@
 #jdtMain .progress-bar {
 	position: clear;
 	/*     float:clear; */
-	width: 12.5%;
+	width: 16.6%;
 	z-index: 2;
 }
 

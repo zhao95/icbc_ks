@@ -744,7 +744,7 @@ rh.vi.cardView.prototype._act = function(aId,aObj) {
 	switch(aId) {
 		case UIConst.ACT_SAVE://保存
 		    taObj.bind("click",function() {
-//			    _self.cardBarTipLoad("提交中...");//Tip.showLoad("提交中...");
+			    _self.cardBarTipLoad("提交中...");//Tip.showLoad("提交中...");
 			    setTimeout(function() {
 			     	var result = _self._saveForm();
 			        if (result && (_self.saveReturn === true || _self.saveReturn === "true")) {//保存后自动返回到列表页面

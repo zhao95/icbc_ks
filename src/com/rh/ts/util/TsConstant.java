@@ -80,6 +80,9 @@ public class TsConstant {
 	/** 全部目录管理  */
 	public static final String SERV_CTLG_ALL = "TS_COMM_CATALOG";
 	
+	/** 报名审核通过 */
+	public static final String SERV_BMSH_PASS = "TS_BMSH_PASS";
+	
 	
 	/** 字典 角色模块定义*/
 	public static final String DICT_ROLE_MOD = "TS_PVLG_MOD";

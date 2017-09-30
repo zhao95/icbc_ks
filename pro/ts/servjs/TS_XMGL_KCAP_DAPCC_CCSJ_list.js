@@ -1,5 +1,9 @@
 var _viewer = this;
 
+$(".rhGrid-page").hide(); //隐藏分页区域
+
+$("ul[class='tabUL tabUL-bottom ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header']").hide(); //隐藏关联子表title
+
 var linkWhere = _viewer.opts.linkWhere;
 var ccId = linkWhere.split("'")[1];
 var xmId = _viewer.getParHandler().getParHandler().getParHandler()._pkCode;
