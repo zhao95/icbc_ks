@@ -78,7 +78,6 @@ function xminfoshow(){
 			param['BM_INFO'] = JSON.stringify(bminfo);
 			param['BM_LIST'] = JSON.stringify(checkeddata);
 			//已报名的考试
-			debugger;
 			var parambm = {};
 			parambm["user_code"]=user_code;
 			parambm["xmid"]=xm_id;
@@ -396,7 +395,6 @@ function xminfoshow(){
 	         url  :"SY_COMM_INFO.dict.do"
 	        };
 		 var data1 = setting.data;
-		 console.log(data1);
 		 //如果没有叶子节点则不显示
 		 for(var j=0;j<data1[0].CHILD.length;j++){
 			 for(var m=0;m<data1[0].CHILD[j].CHILD.length;m++){
@@ -944,7 +942,7 @@ function yanzheng(){
 			checky(); 
 		},1000);
 		var opts = {
-				  lines: 10, // The number of lines to draw
+				  lines: 12, // The number of lines to draw
 				  length: 10, // The length of each line
 				  width: 16, // The line thickness
 				  radius: 6, // The radius of the inner circle

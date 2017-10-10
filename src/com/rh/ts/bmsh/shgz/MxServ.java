@@ -1,5 +1,7 @@
 package com.rh.ts.bmsh.shgz;
 
+import java.util.List;
+
 import com.rh.core.base.Bean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
@@ -31,5 +33,16 @@ public class MxServ extends CommonServ {
 			ServDao.save("TS_XMGL_BMSH_SHGZ_MX", newbean);
 		}
 		return new OutBean().setOk("复制成功");
+	}
+	public OutBean getJkgz(Bean paramBean){
+		OutBean out = new OutBean();
+		String gzid = paramBean.getStr("GZ_ID");
+		String where = "AND GZ_ID='"+gzid+"'";
+		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH_SHGZK_MX", where);
+		if(finds.size()!=0){
+			Bean bean = finds.get(0);
+			out.set("gzbean", bean.getStr("MX_NAME"));
+		}
+		return out;
 	}
 }

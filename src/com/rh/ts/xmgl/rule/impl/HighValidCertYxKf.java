@@ -28,7 +28,6 @@ public class HighValidCertYxKf implements IRule {
 		JSONArray obj;
 		
 		try {
-			
 			obj = new JSONArray(jsonStr);
 			JSONObject jsonObject = obj.getJSONObject(obj.length()-1);
 			String endDate = jsonObject.getString("val"); //有效期时间
@@ -43,8 +42,8 @@ public class HighValidCertYxKf implements IRule {
 
 			sql.andGTE("END_DATE", endDate);// 终止有效期 >= endDate
 
-
-			sql.andIn("CERT_GRADE_CODE", "3");// 证书等级编号
+			String dengjicode = obj.getJSONObject(obj.length()-2).getString("code"); // 类别code
+			sql.andIn("CERT_GRADE_CODE", dengjicode);// 证书等级编号
 
 			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
 
