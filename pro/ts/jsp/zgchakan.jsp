@@ -42,6 +42,7 @@
 	<% 
 
 		 String bmid = request.getParameter("bmid4");
+		 String shstates = request.getParameter("shstate");
 		//获取用户编码
 		String user_code = userBean.getStr("USER_CODE");
 		//获取用户名称
@@ -155,6 +156,7 @@
        		</div>
        	</div>
        	<input type="hidden" id="prbmid" value="<%=bmid %>">
+       		<input type="hidden" id="shstatus" value="<%=shstates %>">
        	</div>
 	<script src="<%=CONTEXT_PATH%>/ts/js/zgchakan.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>

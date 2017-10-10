@@ -230,27 +230,13 @@ function bindCard() {
 			}
 			
 			if(obj2[0].type=='string'){
-			for(var i=0;i<nameArg.length;i++) {
-				var inputxx ="";
-				if(i<4){
-					inputxx= $('<input type="text" name="inputaa" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i].val);
-					
-					inputxx.addClass("ui-text-default");
-					inputxx.css("width","150px");
-				}
-				if(i==0) {
-					formConDiv7.append(inputxx);
-				} else if(i==1) {
-					formConDiv7.append(nameArg[1]);
-					formConDiv7.append(inputxx);
-				} else if(i==2){
-					formConDiv7.append(nameArg[i]);
-					formConDiv7.append(inputxx);
-				} else if(i==3){
-					formConDiv7.append(nameArg[i]);
-					formConDiv7.append(inputxx);
-				} 
-			}
+				var  BUTT= document.createElement("button");
+				BUTT.id="chongzhi";
+				BUTT.innerHTML="重置";
+				formConDiv7.append(BUTT);
+				input8.val(name);
+				input8.css("width","400px");
+				formConDiv7.append(input8);
 		}else if(obj2.length==1){
 			for(var i=0;i<nameArg.length;i++) {
 				if(i==0) {
@@ -284,6 +270,7 @@ function bindCard() {
 		bindselect();
 		bindelete();
 		$("#SETTING-saveRuleVar").bind("click",function() {
+			
 			if(obj2.length>1){
 				if(obj2[0].type=='string'){
 					var arr = [];
@@ -367,6 +354,15 @@ function bindCard() {
 	
 }
 function bindelete(){
+	$("#chongzhi").click(function(){
+		//从规则库中将数据查出 
+		var param = {};
+		param["GZ_ID"]="N03";
+		var result = FireFly.doAct("TS_XMGL_BMSH_SHGZ_MX","getJkgz",param);
+		var mx_name = result.gzbean;
+		$("#RULE-VAR-INPUT").html("");
+		$("#RULE-VAR-INPUT").html(mx_name);
+	})
 	$('#minus').click(function(){
 		//删除一个下拉框
 		var selectlen = $("select[name='lbselect']").length;
@@ -439,6 +435,22 @@ function bindselect(){
 }
 function saveRuleVar(dataId,val,obj2) {
 	obj2 = eval(obj2);
+	if(obj2[0].type=="string"){
+		var param = {};
+		
+		param['MX_ID'] = dataId;
+		param['_PK_'] = dataId;
+		param['MX_NAME']=val;
+		var result = FireFly.doAct(_viewer.servId, "save", param, tipFlag, false,function(data){
+			
+			if(data._MSG_.indexOf("OK")!= -1) {
+				_viewer.refresh();
+				var dialogId = "setting-dialog-"+dataId;
+				jQuery("#" + dialogId).remove();
+			}
+			
+		});
+	}else{
 	if(obj2[0].type == 'int') {
 		var ival = parseInt(val);
 	    if(isNaN(ival)){
@@ -489,7 +501,7 @@ function saveRuleVar(dataId,val,obj2) {
 		}
 		
 	});
-
+	}
 }
 
 

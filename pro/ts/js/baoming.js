@@ -413,8 +413,11 @@ function selectcreate(){
 	  doPost('bmshmx.jsp', {bmidmx: bmid});
  }
  function chakan(obj){
+	 var states = $($("#ybmtable tbody").find("tr").eq(obj).find("td").eq(3)).html()
+	 
 	 var bmid = document.getElementById("baomingid"+obj).innerHTML;
-	 doPost('zgchakan.jsp', {bmid4: bmid});
+	 doPost('zgchakan.jsp', {bmid4: bmid,shstate:states});
+	 
  }
  
  function doPost(to, data) {  // to:提交动作（action）,data:参数
@@ -591,7 +594,10 @@ function selectcreate(){
 		    	  sh_state_str = "审核未通过"
 		    	}else if(sh_state==2||sh_state==3){
 		    		sh_state_str="审核未通过"
-		    	}
+		    	}else if(sh_state==1){
+    					sh_state_str = "审核通过"
+    				
+    			}
 		    	}else if(shstate=="审核中"){
 		    		param={};
 		    		param["xmid"]=XM_ID;
@@ -616,7 +622,7 @@ function selectcreate(){
 		    		sh_state_str="审核未开始";
 		    	}
 		    //此处查的是 报名时间应该查  审核时间
-		    var param1={};
+		   /* var param1={};
 			param1["xmid"]=pageEntity[i].XM_ID;
 			var result1 = FireFly.doAct("TS_XMGL_BMGL","getBMState",param1);
 			var data1 = result1.list;
@@ -628,10 +634,10 @@ function selectcreate(){
 				 pageEntity1 = JSON.parse(data1);
 				 state1 = pageEntity1[0].STATE;
 				
-			}
+			}*/
 			var flagstate='报名审核';
-			if(state1=="已结束"){
-				flagstate="报名结束"
+			if(shstate=="审核结束"){
+				flagstate="审核结束"
 			}
 		    
 			if(flagstate=='报名审核'){

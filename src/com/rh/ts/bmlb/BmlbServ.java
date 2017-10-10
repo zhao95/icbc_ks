@@ -687,8 +687,7 @@ public class BmlbServ extends CommonServ {
 				dataBean.set("BM_STATE", 2);
 				ServDao.update(servId, dataBean);
 			}else{
-				Bean dataBean = list.get(i);
-				ServDao.delete(servId, dataBean);
+				ServDao.delete(servId, id);
 				//删除 审核明细中数据
 				ServDao.delete("TS_COMM_MIND",queryUser);
 			}
@@ -1018,13 +1017,14 @@ public class BmlbServ extends CommonServ {
 		}
 		String xm_id = bmbean.getStr("XM_ID");
 		Bean xmbean = ServDao.find("TS_XMGL", xm_id);
-		if (xmbean.isEmpty()) {
+		if (xmbean==null) {
 			return out.setError("项目消失");
 		}
 		// 获取项目id
 		String where1 = "AND XM_ID=" + "'" + xm_id + "'";
 		List<Bean> bmglList = ServDao.finds("TS_XMGL_BMGL", where1);
 		if (bmglList.size() == 0) {
+			out.set("bmglbean", "");
 			return out.setError("报名信息不存在");
 		}
 		Bean bmglbean = bmglList.get(0);
@@ -1086,18 +1086,55 @@ public class BmlbServ extends CommonServ {
 		//跨序列高级考试
 		String highwhere = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=3 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE='1'";
 		List<Bean> highlist = ServDao.finds("TS_BMLB_BM",highwhere);
+		//查询出  通过了但请假没考的 的数据  这些数据不算
+		for (Bean bean : highlist) {
+			String bmid = bean.getStr("BM_ID");
+			Bean find = ServDao.find("TS_QJLB_QJ", bmid);
+			if(find!=null){
+				if(find.getStr("QJ_STATUS").equals('3')){
+					highlist.remove(bean);
+				}
+			}
+		}
 		out.set("highnum", highlist.size());
 		//夸序列中级考试
 		String where = "AND BM_CODE="+"'"+user_code+"' AND  BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE='1'";
 		List<Bean> list = ServDao.finds("TS_BMLB_BM",where);
+		for (Bean bean : list) {
+			String bmid = bean.getStr("BM_ID");
+			Bean find = ServDao.find("TS_QJLB_QJ", bmid);
+			if(find!=null){
+				if(find.getStr("QJ_STATUS").equals('3')){
+					list.remove(bean);
+				}
+			}
+		}
 		out.set("allnum", list.size());
 		//本序列考试
 		String where1 = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE='"+lb_code+"' AND BM_XL_CODE='"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE='1'";
 		List<Bean>list1 = ServDao.finds("TS_BMLB_BM", where1);
+		for (Bean bean : list1) {
+			String bmid = bean.getStr("BM_ID");
+			Bean find = ServDao.find("TS_QJLB_QJ", bmid);
+			if(find!=null){
+				if(find.getStr("QJ_STATUS").equals('3')){
+					list1.remove(bean);
+				}
+			}
+		}
 		out.set("serianum", list1.size());
 		//夸序列  总数：
 		String where2 = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE='1'";
 		List<Bean> list3 = ServDao.finds("TS_BMLB_BM", where2);
+		for (Bean bean : list3) {
+			String bmid = bean.getStr("BM_ID");
+			Bean find = ServDao.find("TS_QJLB_QJ", bmid);
+			if(find!=null){
+				if(find.getStr("QJ_STATUS").equals('3')){
+					list3.remove(bean);
+				}
+			}
+		}
 		out.set("othernum",list3.size());
 		return out;
 	}
