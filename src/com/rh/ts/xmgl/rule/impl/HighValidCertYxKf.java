@@ -30,19 +30,19 @@ public class HighValidCertYxKf implements IRule {
 		try {
 			
 			obj = new JSONArray(jsonStr);
-			JSONObject jsonObject = obj.getJSONObject(0);
+			JSONObject jsonObject = obj.getJSONObject(obj.length()-1);
 			String endDate = jsonObject.getString("val"); //有效期时间
-			
-			String yxCode = "023004"; // 运行类
-			String kfCode = "023005"; // 客服类
-
 			SqlBean sql = new SqlBean();
-
+			for(int i=0;i<obj.length()-2;i++){
+				
+				String yxCode = obj.getJSONObject(i).getString("code"); // 类别code
+				
+				sql.andIn("STATION_TYPE", yxCode);// 类别编号
+			}
 			sql.and("STU_PERSON_ID", user);// 人员编码
 
 			sql.andGTE("END_DATE", endDate);// 终止有效期 >= endDate
 
-			sql.andIn("STATION_TYPE", yxCode, kfCode);// 类别编号
 
 			sql.andIn("CERT_GRADE_CODE", "3");// 证书等级编号
 

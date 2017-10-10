@@ -876,7 +876,6 @@ function mkfuzhi(){
 	var i=0;
 	var select = document.getElementById("mkid");
 	jQuery("#mkid").empty();
-	debugger;
 	for(var key in obj){
 		var keys = key;
 		if(i==0){
