@@ -97,7 +97,7 @@ public class RoleServ extends CommonServ {
 		
 		
 		//无权限
-		paramBean.set(Constant.PARAM_WHERE, " and 1=2");
+//		paramBean.set(Constant.PARAM_WHERE, " and 1=2");
 		
 		
 //		if(!Strings.isBlank(sqlStr)) {
