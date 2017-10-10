@@ -343,7 +343,7 @@ position: absolute;
 		<div  class="modal-dialog" style="width:700px;">
 			<div id="loadingdialog" class="modal-content" style="position:absoluate;background:#777;height:100px;width:50%">
 				<div style="color:lightseagreen;padding-left:30%;padding-top:20px;font-size:16px;">&nbsp;&nbsp;正在验证请稍候.....</div>
-				<div style="position:relative;top:-100px;left:-20px;font-size:16px;"><image src="/ts/image/loading.gif"></div>
+				<div id="loadiv" style="position:relative;top:-60%;left:15%;font-size:16px;"></div>
 			</div>
 			<!-- /.modal-content -->
 		</div>
@@ -535,5 +535,6 @@ position: absolute;
 			}
 		} --%>
 	<script src="<%=CONTEXT_PATH%>/ts/js/bmzgks.js"></script>
+	<script src="<%=CONTEXT_PATH%>/ts/js/spin.js"></script>
 </body>
 </html>
