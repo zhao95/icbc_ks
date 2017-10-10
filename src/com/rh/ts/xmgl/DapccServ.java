@@ -4,10 +4,7 @@ import com.rh.core.base.Bean;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
-import com.rh.core.serv.CommonServ;
-import com.rh.core.serv.OutBean;
-import com.rh.core.serv.ParamBean;
-import com.rh.core.serv.ServDao;
+import com.rh.core.serv.*;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -15,6 +12,17 @@ import java.util.*;
 public class DapccServ extends CommonServ {
 
     private final static String CHILD = "CHILD";
+
+//    public OutBean getZwByKcId(ParamBean paramBean) {
+//        OutBean outBean = new OutBean();
+//        String kcId = paramBean.getStr("kcId");
+//
+//        kcId
+//        outBean.set("", );
+//
+//        return outBean;
+//    }
+
 
 //    TS_XMGL_KCAP_DFPKS
 
@@ -30,7 +38,7 @@ public class DapccServ extends CommonServ {
         String searchDeptCode = paramBean.getStr("searchDeptCode");
         Bean dept = this.getDeptByCode(searchDeptCode, null);
         String deptLevel = dept.getStr("DEPT_LEVEL");
-        if ("3".equals(deptLevel)) {
+        if ("3".equals(deptLevel) || "2".equals(deptLevel)) {
             paramBean.set("containDeptCode", searchDeptCode);
         } else {
             paramBean.set("equalDeptCode", searchDeptCode);
@@ -40,6 +48,7 @@ public class DapccServ extends CommonServ {
         Map<String, String> configMap = new HashMap<>();
         configMap.put("XM_ID", "XM_ID = ?");
         configMap.put("containDeptCode", "CODE_PATH like ?");
+//        configMap.put("containDeptCode", "CODE_PATH like ?");
         configMap.put("equalDeptCode", "b.DEPT_CODE = ?");
         configMap.put("searchName", "USER_NAME like ?");
         configMap.put("searchLoginName", "USER_LOGIN_NAME like ?");
@@ -57,6 +66,7 @@ public class DapccServ extends CommonServ {
                 "from TS_BMSH_PASS a " +
                 "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE " +
                 "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
+                +"where not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID)"
                 + whereSql;
         //where 姓名/登录名/报考类型/报考数  bm_name /login_name?/
         List<Bean> beanList = Transaction.getExecutor().query(sql, values);
@@ -77,15 +87,16 @@ public class DapccServ extends CommonServ {
      * @return Pair<String, List<Object>>  whereSql,values
      */
     private List getExtWhereSqlData(ParamBean paramBean, Map<String, String> configMap) {
-        StringBuilder whereSql = new StringBuilder("where ");
+        StringBuilder whereSql = new StringBuilder(/*"where "*/);
         List<Object> values = new ArrayList<>();
-        for (String key : configMap.keySet()) {
+        for (Map.Entry<String, String> entry : configMap.entrySet()) {
+            String key = entry.getKey();
+            String sql = entry.getValue();
             String value = paramBean.getStr(key);
             if (StringUtils.isNotEmpty(value)) {
-                if (!"where ".equals(whereSql.toString())) {
+//                if (!"where ".equals(whereSql.toString())) {
                     whereSql.append(" and ");
-                }
-                String sql = configMap.get(key);
+//                }
                 if (sql.contains("like")) {
                     value = "%" + value + "%";
                 }
@@ -154,6 +165,17 @@ public class DapccServ extends CommonServ {
         Map<String, Bean> cache = new HashMap<>();
         Bean rootDeptBean = this.getDeptList(hashSet, cache);
         outBean.putAll(rootDeptBean);
+        for (String deptCode : hashSet) {
+            ParamBean queryBean = new ParamBean();
+            queryBean.set("DICT_ID", "SY_ORG_ODEPT_ALL");
+            queryBean.set("PID", deptCode);
+            OutBean bean = ServMgr.act("SY_COMM_INFO", "dict", queryBean);
+            List<Bean> child = bean.getList("CHILD");
+            for (Bean item : child) {
+                this.putChild(cache.get(deptCode), item, false);
+            }
+        }
+
         return outBean;
     }
 
@@ -178,27 +200,38 @@ public class DapccServ extends CommonServ {
     }
 
     /**
-     * putChild
+     * putChild考场安排
      *
-     * @param dept
-     * @param childDept
-     * @param first
+     * @param dept  父级机构
+     * @param child dept or kc（机构或考场）
+     * @param first 是否添加到第一个
      */
-    private void putChild(Bean dept, Bean childDept, boolean first) {
+    private void putChild(Bean dept, Bean child, boolean first) {
         List<Bean> list = dept.getList(CHILD);
         boolean isExist = false;
-        for (Bean bean : list) {
-            String deptCode = bean.getStr("DEPT_CODE");
-            if (deptCode.equals(childDept.get("DEPT_CODE"))) {
-                isExist = true;
+        if (StringUtils.isNotEmpty(child.getStr("KC_ID"))) {
+            //child为考场
+            for (Bean bean : list) {
+                String kcId = bean.getStr("KC_ID");
+                if (kcId.equals(child.get("KC_ID"))) {
+                    isExist = true;
+                }
+            }
+        } else if (StringUtils.isNotEmpty(child.getStr("DEPT_CODE"))) {
+            //child为dept
+            for (Bean bean : list) {
+                String deptCode = bean.getStr("DEPT_CODE");
+                if (deptCode.equals(child.get("DEPT_CODE"))) {
+                    isExist = true;
+                }
             }
         }
         if (!isExist) {
             //不存在，添加（避免重复添加）
             if (first) {
-                list.add(0, childDept);
+                list.add(0, child);
             } else {
-                list.add(childDept);
+                list.add(child);
             }
         }
         dept.set(CHILD, list);
