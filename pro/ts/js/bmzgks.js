@@ -83,7 +83,6 @@ function xminfoshow(){
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, false,true,function(data){
-			debugger;
     		yzgz=data;
     		//获取后台传过来的key
          	for(var i=0;i<checkeddata.length;i++){

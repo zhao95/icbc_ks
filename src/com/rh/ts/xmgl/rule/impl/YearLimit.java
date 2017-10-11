@@ -27,7 +27,6 @@ public class YearLimit implements IRule {
 		
 		long time2 = 0;
 		
-		Date date = new Date();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		
@@ -43,18 +42,9 @@ public class YearLimit implements IRule {
 			
 		}
 		
-		long time = date.getTime();
-		
-		long gztime  = 0;
-		
-		//入职时长毫秒数
-		
-		long l = time-time2;
-		
-		//查询规则 规则定的时长
 		
 		String jsonStr = param.getStr("MX_VALUE2");
-		
+		long gztime = 0;
 		JSONArray obj; 
 		
 		try {
@@ -66,21 +56,15 @@ public class YearLimit implements IRule {
 			for(int i=0;i<obj.length();i++){
 				
 				String dates = obj.getJSONObject(i).getString("val");// 类别code
-				if(i==0){
-				if(!"".equals(dates)){
-					Long parseInt = (long) Integer.parseInt(dates);
-					gztime+= parseInt*365*24*60*60*1000;
-				}
-				}else if(i==1){
-					if(!"".equals(dates)){
-						Long parseInt = (long) Integer.parseInt(dates);
-						gztime+= parseInt*30*24*60*60*1000;
+				
+				try {
+					if(dates.length()<=4){
+						dates+="0101";
 					}
-				}else{
-					if(!"".equals(dates)){
-						Long parseInt = (long) Integer.parseInt(dates);
-						gztime+= parseInt*24*60*60*1000;
-					}
+					gztime	=sdf.parse(dates).getTime();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 			
@@ -91,7 +75,7 @@ public class YearLimit implements IRule {
 			e.printStackTrace();
 		}
 
-		if(l>gztime){
+		if(time2<gztime){
 			return true;
 		}else{
 			return false;
