@@ -56,6 +56,7 @@ public class JkglServ extends CommonServ {
     	String format = sdf.format(date);
     	String where ="AND JKGL_USER_CODE='"+str+"' AND '"+format+"' BETWEEN JKGL_START_DATE AND JKGL_END_DATE";
     	List<Bean> finds = ServDao.finds("TS_JKGL",where);
+    	String str2 = "";
     	if(finds!=null && finds.size()!=0){
     		out.set("num", finds.size());
     		out.set("start", finds.get(0).getStr("JKGL_START_DATE"));
@@ -65,9 +66,12 @@ public class JkglServ extends CommonServ {
     		String where3 = "AND GZ_ID='"+gzid+"'";
     		List<Bean> finds2 = ServDao.finds("TS_XMGL_BMSH_SHGZ_MX", where3);
     			for (Bean bean : finds2) {
-					String str2 = bean.getStr("MX_VALUE2");
-					out.set("tsh", str2);
+					 str2 = bean.getStr("MX_NAME");
 				}
+    			 str2 = str2.replace("#stime#", finds.get(0).getStr("JKGL_START_DATE"));
+    			 str2=str2.replace("#endtime#", finds.get(0).getStr("JKGL_END_DATE"));
+    			 str2=str2.replace("#reason#", finds.get(0).getStr("JKGL_REASON"));
+    			out.set("tsh", str2);
     	}else if(finds!=null && finds.size()==0){
     		out.set("num", finds.size());
     	}

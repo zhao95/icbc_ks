@@ -221,6 +221,7 @@ public class XmglServ extends CommonServ {
 		Bean outBean = new Bean();
 		UserBean userBean = Context.getUserBean();
 		String odeptcode = userBean.getDeptCode();
+		DeptBean odeptbean = new DeptBean(ServDao.find("SY_ORG_DEPT", odeptcode));
 		// 本人所在的群组编码
 		ParamBean param1 = new ParamBean();
 		OutBean act = ServMgr.act("TS_BM_GROUP_USER", "getBmGroupCodes", param1);
@@ -235,9 +236,10 @@ public class XmglServ extends CommonServ {
 			//判断此人是否在此机构下
 			//管理员以下的所有机构
 			List<DeptBean> listdept = OrgMgr.getSubOrgAndChildDepts(bean.getStr("S_CMPY"),str);
+			
 			for (DeptBean deptBean : listdept) {
 				if(deptBean.getStr("DEPT_CODE").equals(odeptcode)){
-					qz+=","+deptBean.getStr("G_ID");
+					qz+=","+bean.getStr("G_ID");
 				}
 			}
 		}

@@ -47,7 +47,6 @@ _viewer.getBtn("impGroup").unbind("click").bind("click", function(event) {
 });
 
 _viewer.getBtn("impBmGroup").unbind("click").bind("click", function(event) {
-	debugger;
 	var configStr = "TS_BM_GROUP,{'TARGET':'G_ID~G_NAME~G_DEAD_BEGIN~G_DEAD_END~S_USER','SOURCE':'G_ID~G_NAME~G_DEAD_BEGIN~G_DEAD_END~S_USER'," +
 	"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
 	var options = {
@@ -126,11 +125,10 @@ function bindCard(){
 	//详情val
 	jQuery("td [id='TS_XMGL_BM_RYSZQZ_look']").unbind("click").bind("click", function(){
 		var ryszqzCode = jQuery(this).parent().parent().find('td[icode="RYSZQZ_CODE"]').html().trim();
-		debugger;
 		// 定义一个对象
 		var strwhere = "and G_ID ='" + ryszqzCode + "'";
 		var params = {"G_ID" : ryszqzCode,"_extWhere" : strwhere};
-		var url = "TS_PVLG_GROUP_USER.list.do?&_extWhere=" + strwhere;
+		var url = "TS_BM_GROUP.list.do?&_extWhere=" + strwhere;
 		var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
 		Tab.open(options);
 	});

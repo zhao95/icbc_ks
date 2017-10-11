@@ -49,7 +49,6 @@ function fenyeselect(){
 function tiaozhuan(i){
 	var hid = "BM_ID"+i;
 	var id = document.getElementById(hid).innerHTML;
-	
 	//验证此人是否被禁考
 	var param = {};
 	param["xmid"]=id;
@@ -60,22 +59,9 @@ function tiaozhuan(i){
 		var end = result.end;
 		var reason = result.reason;
 		var tsyjson = result.tsh;
-		tsyjson=eval(tsyjson);
-		var bianliang = "";
-		for(var i=0;i<tsyjson.length;i++){
-			bianliang+=tsyjson[i].val;
-			if(i==0){
-				bianliang+=reason;
-			}else if(i==1){
-				bianliang+=start;
-			}else if(i==2){
-				bianliang+=end;
-			}else{
-				bianliang+="!!!"
-			}
-		}
+	
 		//获取禁考的配置信息  并显示给前台
-		$("#jkxxinfo").html(bianliang);
+		$("#jkxxinfo").html(tsyjson);
 		$("#jkinfo").modal('show');
 		return;
 	}

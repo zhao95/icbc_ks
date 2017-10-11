@@ -360,8 +360,8 @@ function bindelete(){
 		param["GZ_ID"]="N03";
 		var result = FireFly.doAct("TS_XMGL_BMSH_SHGZ_MX","getJkgz",param);
 		var mx_name = result.gzbean;
-		$("#RULE-VAR-INPUT").html("");
-		$("#RULE-VAR-INPUT").html(mx_name);
+		$("#RULE-VAR-INPUT").val("");
+		$("#RULE-VAR-INPUT").val(mx_name);
 	})
 	$('#minus').click(function(){
 		//删除一个下拉框
