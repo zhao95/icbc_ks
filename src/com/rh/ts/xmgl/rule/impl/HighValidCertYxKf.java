@@ -29,9 +29,13 @@ public class HighValidCertYxKf implements IRule {
 		
 		try {
 			obj = new JSONArray(jsonStr);
+			
 			JSONObject jsonObject = obj.getJSONObject(obj.length()-1);
+			
 			String endDate = jsonObject.getString("val"); //有效期时间
+			
 			SqlBean sql = new SqlBean();
+			
 			for(int i=0;i<obj.length()-2;i++){
 				
 				String yxCode = obj.getJSONObject(i).getString("code"); // 类别code

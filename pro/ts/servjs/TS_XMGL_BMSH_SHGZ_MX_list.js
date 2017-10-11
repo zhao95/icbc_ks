@@ -2,12 +2,12 @@ var _viewer = this;
 $(".rhGrid").find("tr").unbind("dblclick");
 //每一行添加编辑和删除
 $("#TS_XMGL_BMSH_SHGZ_MX .rhGrid").find("tr").each(function(index, item) {
+	debugger;
 	if(index != 0) {
 		var value1 = $('td[icode="MX_VALUE1"]',item).text();
 		var val = $('td[icode="MX_VALUE2"]',item).text();
 		if(value1 == 1 && val.length >0) {
 				 obj2=eval(val);  
-			
 			var dataId = item.id;
 			var name = $('td[icode="MX_NAME"]',item).text();
 			var newName = "";
@@ -237,15 +237,18 @@ function bindCard() {
 				input8.val(name);
 				input8.css("width","400px");
 				formConDiv7.append(input8);
-		}else if(obj2.length==1){
+		}else{
 			for(var i=0;i<nameArg.length;i++) {
-				if(i==0) {
-					formConDiv7.append(nameArg[0]);
-				} else if(i==1) {
-					formConDiv7.append(input8);
-					formConDiv7.append(nameArg[1]);
+				if(i==nameArg.length-1) {
+					formConDiv7.append(nameArg[i]);
 				} else {
 					formConDiv7.append(nameArg[i]);
+					var inputaa = $('<input type="text" name="yearlimit" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i].val);
+					
+					inputaa.addClass("ui-text-default");
+					
+					inputaa.css("width","50px");
+					formConDiv7.append(inputaa);
 				}
 			}
 		}
@@ -335,11 +338,20 @@ function bindCard() {
 					mx_name+="#muty#";
 					mx_name+=nameArg[nameArg.length-1];
 					saveRuleVarCode(dataId,"","",jsons,mx_name);
+				}else{
+					var arr = [];
+					$("input[name='yearlimit']").each(function(index,item){
+						arr[index]=$(this).val();
+					})
+					saveRuleVar(dataId,arr,jsonStr);
 				}
 				
 			}else{
-				
-				saveRuleVar(dataId,input8.val(),jsonStr);
+				var text = "";
+				$("input[name='yearlimit']").each(function(index,item){
+					text = $(this).val();
+				})
+				saveRuleVar(dataId,text,jsonStr);
 			}
 		});
 
@@ -451,17 +463,22 @@ function saveRuleVar(dataId,val,obj2) {
 			
 		});
 	}else{
-	if(obj2[0].type == 'int') {
-		var ival = parseInt(val);
-	    if(isNaN(ival)){
-	    	alert("请输入数字!");
-			return;
-	    }
-	}
 	if(obj2.length==1){
+		if(obj2[0].type =='int') {
+			if(parseInt(val)!=val){
+				alert("请输入数字!");
+				return;
+			}
+		}
 		obj2[0].val=val;
 	}else{
 		for(var i=0;i<obj2.length;i++){
+			if(obj2[i].type =='int') {
+				if(parseInt(val[i])!=val[i]){
+					alert("请输入数字!");
+					return;
+				}
+			}
 			obj2[i].val = val[i];
 			}
 	}
