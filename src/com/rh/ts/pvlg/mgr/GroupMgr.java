@@ -77,11 +77,12 @@ public class GroupMgr {
 				updateGroupCache(groupId, TsConstant.SERV_GROUP, groupBean);
 			}
 
-			// 缓存获取群组绑定角色
-			groupBean.set("ROLE_CODES", getGroupRoleCodes(groupId));
-			// 缓存获取群组绑定人员
-			groupBean.set("USER_CODES", getGroupUserCodes(groupId));
 		}
+
+		// 缓存获取群组绑定角色
+		groupBean.set("ROLE_CODES", getGroupRoleCodes(groupId));
+		// 缓存获取群组绑定人员
+		groupBean.set("USER_CODES", getGroupUserCodes(groupId));
 		return groupBean;
 	}
 
