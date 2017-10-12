@@ -2,12 +2,12 @@ var _viewer = this;
 $(".rhGrid").find("tr").unbind("dblclick");
 //每一行添加编辑和删除
 $("#TS_XMGL_BMSH_SHGZ_MX .rhGrid").find("tr").each(function(index, item) {
+	debugger;
 	if(index != 0) {
 		var value1 = $('td[icode="MX_VALUE1"]',item).text();
 		var val = $('td[icode="MX_VALUE2"]',item).text();
 		if(value1 == 1 && val.length >0) {
 				 obj2=eval(val);  
-			
 			var dataId = item.id;
 			var name = $('td[icode="MX_NAME"]',item).text();
 			var newName = "";
@@ -87,6 +87,7 @@ function bindCard() {
 		var formConDiv7 = $('<div class="formContent style="width:100%;">');
 		var nameArg = name.split("#"+obj2[0].vari+"#");
 			if(obj2[0].type== 'select'){
+				
 				//类别下拉框
 				//获取级别和级别code
 				for(var i=0;i<nameArg.length;i++) {
@@ -159,9 +160,7 @@ function bindCard() {
 				span.id="minus";
 				span.innerHTML="删除";
 				formConDiv7.append(span);
-			}
-			
-			if(obj2[0].type== 'muty'){
+			}else if(obj2[0].type== 'muty'){
 				var codestr = [];
 				var namestr = [];
 				debugger;
@@ -173,13 +172,7 @@ function bindCard() {
 				}
 				xlcodes = codestr;
 				xlnames = namestr;
-				var butt = document.createElement("button");
-				formConDiv7.append(butt);
-				butt.style.width="60px";
-				butt.style.height="25px";
-				butt.style.fontSize="0.5px";
-				butt.innerHTML="请选择";
-				butt.id="xlbutton";
+			
 				for(var i=0;i<nameArg.length;i++) {
 					if(i<nameArg.length-3){
 						var span  = document.createElement("span");
@@ -224,12 +217,17 @@ function bindCard() {
 							formConDiv7.append(nameArg[i]);
 							formConDiv7.append(inputaa);
 							formConDiv7.append(nameArg[i+1]);
+							var butt = document.createElement("button");
+							formConDiv7.append(butt);
+							butt.style.width="60px";
+							butt.style.height="25px";
+							butt.style.fontSize="0.5px";
+							butt.innerHTML="请选择";
+							butt.id="xlbutton";
 					}
 						
 					}
-			}
-			
-			if(obj2[0].type=='string'){
+			}else if(obj2[0].type=='string'){
 				var  BUTT= document.createElement("button");
 				BUTT.id="chongzhi";
 				BUTT.innerHTML="重置";
@@ -237,15 +235,56 @@ function bindCard() {
 				input8.val(name);
 				input8.css("width","400px");
 				formConDiv7.append(input8);
-		}else if(obj2.length==1){
+		}else{
 			for(var i=0;i<nameArg.length;i++) {
-				if(i==0) {
-					formConDiv7.append(nameArg[0]);
-				} else if(i==1) {
-					formConDiv7.append(input8);
-					formConDiv7.append(nameArg[1]);
-				} else {
-					formConDiv7.append(nameArg[i]);
+				debugger;
+				if(obj2[0].type == 'dateyear') {
+					
+					if(i==nameArg.length-1) {
+						formConDiv7.append(nameArg[i]);
+						var  BUTT= document.createElement("button");
+						BUTT.id="jqlike";
+						BUTT.innerHTML="模糊到年";
+						formConDiv7.append(BUTT);
+					} else {
+						formConDiv7.append(nameArg[i]);
+						var inputaa = $('<input type="text" name="yearlimit" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i].val);
+						inputaa.addClass("Wdate ui-date-default").css("cursor","pointer");
+						inputaa.css("width","150px");
+						
+						inputaa.attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
+						
+						formConDiv7.append(inputaa);
+					}
+				}else{
+					if(obj2[0].type == 'date'){
+						if(i==nameArg.length-1) {
+							formConDiv7.append(nameArg[i]);
+						} else {
+							formConDiv7.append(nameArg[i]);
+							var inputaa = $('<input type="text" name="yearlimit" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i].val);
+							inputaa.addClass("Wdate ui-date-default").css("cursor","pointer");
+							inputaa.css("width","150px");
+							
+							inputaa.attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
+							
+							formConDiv7.append(inputaa);
+						}
+
+					}else{
+						if(i==nameArg.length-1) {
+							formConDiv7.append(nameArg[i]);
+						} else {
+							formConDiv7.append(nameArg[i]);
+							var inputaa = $('<input type="text" name="yearlimit" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i].val);
+							
+							inputaa.addClass("ui-text-default");
+							
+							inputaa.css("width","150px");
+							formConDiv7.append(inputaa);
+						}
+						
+					}
 				}
 			}
 		}
@@ -336,10 +375,17 @@ function bindCard() {
 					mx_name+=nameArg[nameArg.length-1];
 					saveRuleVarCode(dataId,"","",jsons,mx_name);
 				}
-				
 			}else{
-				
-				saveRuleVar(dataId,input8.val(),jsonStr);
+				var text = "";
+				$("input[name='yearlimit']").each(function(index,item){
+					text = $(this).val();
+				})
+				/*if(obj2[0].type == 'dateyear'){
+					if(text.length<=4){
+						text+="0101";
+					}
+				}*/
+				saveRuleVar(dataId,text,jsonStr);
 			}
 		});
 
@@ -354,15 +400,39 @@ function bindCard() {
 	
 }
 function bindelete(){
+	$("#jqlike").click(function(){
+		if($("#jqlike").html()=="精确到日"){
+			$("#jqlike").html('模糊到年');
+			$("input[name='yearlimit']").each(function(){
+				$(this).attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
+				$(this).removeClass("WdateFmtErr");
+				$(this).addClass("Wdate ui-date-default").css("cursor","pointer");
+				$(this).val('20170809');
+			});
+		}else{
+		//模糊
+		$("#jqlike").html('精确到日');
+		$("input[name='yearlimit']").each(function(){
+			var inputaa = $('<input type="text" name="yearlimit" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val('1');
+			inputaa.attr("onfocus","WdatePicker({startDate:\'%y\',dateFmt:\'yyyy\',alwaysUseStartDate:false})");
+			inputaa.css("width","150px");
+			inputaa.addClass("Wdate ui-date-default").css("cursor","pointer");
+			$(this).before(inputaa);
+			$(this).remove();
+			inputaa.val('2017');
+			/*$(this).addClass("ui-text-default");*/
+		});
+		}
+	});
 	$("#chongzhi").click(function(){
 		//从规则库中将数据查出 
 		var param = {};
 		param["GZ_ID"]="N03";
 		var result = FireFly.doAct("TS_XMGL_BMSH_SHGZ_MX","getJkgz",param);
 		var mx_name = result.gzbean;
-		$("#RULE-VAR-INPUT").html("");
-		$("#RULE-VAR-INPUT").html(mx_name);
-	})
+		$("#RULE-VAR-INPUT").val("");
+		$("#RULE-VAR-INPUT").val(mx_name);
+	});
 	$('#minus').click(function(){
 		//删除一个下拉框
 		var selectlen = $("select[name='lbselect']").length;
@@ -451,17 +521,22 @@ function saveRuleVar(dataId,val,obj2) {
 			
 		});
 	}else{
-	if(obj2[0].type == 'int') {
-		var ival = parseInt(val);
-	    if(isNaN(ival)){
-	    	alert("请输入数字!");
-			return;
-	    }
-	}
 	if(obj2.length==1){
+		if(obj2[0].type =='int') {
+			if(parseInt(val)!=val){
+				alert("请输入数字!");
+				return;
+			}
+		}
 		obj2[0].val=val;
 	}else{
 		for(var i=0;i<obj2.length;i++){
+			if(obj2[i].type =='int') {
+				if(parseInt(val[i])!=val[i]){
+					alert("请输入数字!");
+					return;
+				}
+			}
 			obj2[i].val = val[i];
 			}
 	}

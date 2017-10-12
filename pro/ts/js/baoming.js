@@ -49,7 +49,6 @@ function fenyeselect(){
 function tiaozhuan(i){
 	var hid = "BM_ID"+i;
 	var id = document.getElementById(hid).innerHTML;
-	
 	//验证此人是否被禁考
 	var param = {};
 	param["xmid"]=id;
@@ -60,22 +59,9 @@ function tiaozhuan(i){
 		var end = result.end;
 		var reason = result.reason;
 		var tsyjson = result.tsh;
-		tsyjson=eval(tsyjson);
-		var bianliang = "";
-		for(var i=0;i<tsyjson.length;i++){
-			bianliang+=tsyjson[i].val;
-			if(i==0){
-				bianliang+=reason;
-			}else if(i==1){
-				bianliang+=start;
-			}else if(i==2){
-				bianliang+=end;
-			}else{
-				bianliang+="!!!"
-			}
-		}
+	
 		//获取禁考的配置信息  并显示给前台
-		$("#jkxxinfo").html(bianliang);
+		$("#jkxxinfo").html(tsyjson);
 		$("#jkinfo").modal('show');
 		return;
 	}
@@ -446,7 +432,6 @@ function selectcreate(){
  };
   listPage.prototype.getListData = function (num) {
 	//每页条数
-	  debugger;
 	  var jb = document.getElementById("jb");
 	  var indexjb = jb.selectedIndex;
 	  var jbvalue = jb.options[indexjb].value;
@@ -522,7 +507,6 @@ function selectcreate(){
       var pages = parseInt(this._lPage.PAGES);
       var nowPage = "" + ((nextPage > pages) ? pages:nextPage);
       this.gotoPage(nowPage);
-//      debugger;
   };
  /* 首页*/
   listPage.prototype.firstPage = function() {
@@ -608,7 +592,7 @@ function selectcreate(){
 		    				if(failerinfo==""){
 		    					sh_state_str="审核未通过"
 		    				}else{
-		    					sh_state_str=bminfojson[0].FAILIERINFO;
+		    					sh_state_str=failerinfo;
 		    					
 		    				}
 		    			}else if(sh_state==1){

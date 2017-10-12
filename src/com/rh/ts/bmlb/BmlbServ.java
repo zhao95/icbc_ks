@@ -314,7 +314,7 @@ public class BmlbServ extends CommonServ {
 						node_name = blist.get(0).getStr("NODE_NAME");
 						for (int l = 0; l < blist.size(); l++) {
 							if (l == (blist.size()-1)) {
-								allman = blist.get(l).getStr("SHR_USERCODE");
+								allman += blist.get(l).getStr("SHR_USERCODE");
 							} else {
 								allman += blist.get(l).getStr("SHR_USERCODE") + ",";
 							}
@@ -948,11 +948,15 @@ public class BmlbServ extends CommonServ {
 					// 获取第一行单元格
 					Cell[] cells = sheet1.getRow(0);
 					for (Cell cell : cells) {
+						int zz = newlist.size();
 						for (Bean columnbean : listcolumn) {
 							String s = cell.getContents();
 							if (cell.getContents().equals(columnbean.getStr("ITEM_NAME"))) {
 								newlist.add(columnbean.getStr("ITEM_CODE"));
 							}
+						}
+						if(zz==newlist.size()){
+							newlist.add("");
 						}
 					}
 
@@ -963,9 +967,11 @@ public class BmlbServ extends CommonServ {
 					Cell[] cells = sheet1.getRow(i);
 					Bean bean = new Bean();
 					for (int j = 0; j < cells.length; j++) {
-
-						if (!StringUtils.isEmpty(cells[j].getContents())) {
-							bean.set(newlist.get(j), cells[j].getContents());
+						if(!"".equals(newlist.get(j))){
+							if (!StringUtils.isEmpty(cells[j].getContents())) {
+								//需要保存到数据库的字段
+								bean.set(newlist.get(j), cells[j].getContents());
+							}
 						}
 					}
 					result.add(bean);
