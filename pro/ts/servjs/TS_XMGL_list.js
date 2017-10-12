@@ -149,6 +149,65 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){
 });
 
 
+//传给后台的数据
+/*
+* 业务可覆盖此方法，在导航树的点击事件加载前
+*/
+rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
+	var params = {};
+	var user_pvlg=_viewer._userPvlg[_viewer.servId+"_PVLG"];
+	params["USER_PVLG"] = user_pvlg;
+	params["PVLG_FIELD"] = id;
+	this.whereData["extParams"] = params;
+	//点击树之前，判断是否在权限范围内，否则不能点击
+	//获取登录人用户编码权限
+//	var CurrentUser = System.getUser("USER_CODE");
+	var arr=[];
+	var i=0;
+	for(let key in user_pvlg){
+		arr[i]=user_pvlg[key].ROLE_DCODE;
+		i++;
+	}
+	var arrLast = unique(arr);//去重后的数组
+	var arrElement;
+	if(arrLast.length>1){
+		arrElement=arrLast[0];
+		for(var i=1;i<arrLast.length;i++){
+			if(arrLast[i]<arrElement){
+				arrElement=arrLast[i];
+			}
+		}
+	}else if(arrLast.length=1){
+		arrElement=arrLast[0];
+	}
+	if(arrElement.indexOf(',')){
+		arrElement=arrElement.replace(",","");
+	}
+	var ctlg_path= item.CTLG_PATH;
+	var ctlgPathArray=ctlg_path.split("^");
+	var index = ctlgPathArray.indexOf("");
+	ctlgPathArray.splice(index, 1);
+	var arrStr =arrElement.toString();
+	var pathIndex = ctlgPathArray.indexOf(arrStr);//比较结果
+	//alert(pathIndex);
+	if(pathIndex<0){
+		_viewer.listBarTipError("无权限查看所选机构数据");
+		return false;
+	}
+	
+};
 
+//去重
+function unique(arr){
+    var res=[];
+    for(var i=0,len=arr.length;i<len;i++){
+        var obj = arr[i];
+        for(var j=0,jlen = res.length;j<jlen;j++){
+            if(res[j]===obj) break;            
+        }
+        if(jlen===j)res.push(obj);
+    }
+    return res;
+}
 
 

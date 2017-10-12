@@ -674,6 +674,16 @@ var FireFly = {
     },
     getPageData: function(sId,datas) {
     	var url = sId + ".query.do";
+    	var userPvlg = {};
+    	var userCode = System.getVar("@USER_CODE@");
+		if (userCode) {
+			userPvlg = FireFly.getCache(userCode,FireFly.userPvlg);
+		}
+		
+    	var params = {};
+    	params["USER_PVLG"] = userPvlg[sId+"_PVLG"];
+    	datas = jQuery.extend(datas, {extParams:params});
+    	
     	var result = listQueryData(url,datas);
     	//FireFly.setCache(sId,this.servListData,result);
     	return result;

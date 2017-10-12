@@ -1616,6 +1616,10 @@ rh.vi.listView.prototype._bldNavTree = function() {
 				        	} else if (item.ID == dictId) {
 				        		delete _self.navTreeWhere[item.rhItemCode];//删除条件
 				        	} else {
+				        		var flag = _self.beforeTreeNodeClickLoad(item,id,dictId);
+				        		if(typeof(flag) != "undefined" && !flag){
+				        			return false;
+				        		}
 				        		_self.navTreeWhere[item.rhItemCode] = item.ID;//保存点击条件
 				        		_self.navTreeWhereExt[item.rhItemCode] = dictSubs;//扩展传递条件
 				        		//增加传递参数对象值
@@ -1626,7 +1630,7 @@ rh.vi.listView.prototype._bldNavTree = function() {
 				        		nodeObj.css("background","none");
 				        	}
 					    	_self.whereData[_self.TREE_WHERE] = _self.getNavTreeWhereStr();
-					    	_self.beforeTreeNodeClickLoad(item,id,dictId);
+					    	//_self.beforeTreeNodeClickLoad(item,id,dictId);
 					    	var opts = {};
 					    	opts._NOPAGEFLAG_ = "true";
 						    _self.refresh(opts);
