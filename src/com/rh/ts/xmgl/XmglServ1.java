@@ -7,10 +7,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.icbc.ctp.utility.StringUtil;
 import com.rh.core.base.Bean;
@@ -36,10 +41,9 @@ import com.rh.ts.util.TsConstant;
  * @version
  *
  */
-public class XmglServ extends CommonServ {
+public class XmglServ1 extends CommonServ {
 	/** 群组角色服务编码 */
 	private static final String TS_XMGL_BMGL = "TS_XMGL_BMGL";
-	
 
 	/**
 	 * 项目管理
@@ -49,7 +53,7 @@ public class XmglServ extends CommonServ {
 	 * 
 	 */
 	public void copy(Bean paramBean) {
-		//OutBean NBean = new OutBean();
+		// OutBean NBean = new OutBean();
 		// 获取服务ID
 		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
 		// 获取 主键id list
@@ -58,7 +62,7 @@ public class XmglServ extends CommonServ {
 		Bean bean = ServDao.find(servId, dataId);
 		Bean NBean = new Bean();
 		NBean.set("XM_TITLE", bean.getStr("XM_TITLE"));
-		NBean.set("XM_NAME", bean.getStr("XM_NAME")+"_复制");
+		NBean.set("XM_NAME", bean.getStr("XM_NAME") + "_复制");
 		NBean.set("XM_FQDW_NAME", bean.getStr("XM_FQDW_NAME"));
 		NBean.set("XM_TYPE", bean.getStr("XM_TYPE"));
 		NBean.set("XM_START", bean.getStr("XM_START"));
@@ -66,12 +70,12 @@ public class XmglServ extends CommonServ {
 		NBean.set("XM_GJ", bean.getStr("XM_GJ"));
 		NBean.set("XM_FQDW_CODE", bean.getStr("XM_FQDW_CODE"));
 		// 保存到数据库
-		Bean res=ServDao.save(servId, NBean);
+		Bean res = ServDao.save(servId, NBean);
 		// 从数据库得到xm_id和xm_gj；
-		//String XMID = res.getStr("XM_ID");
-		//NBean.setSaveIds(XMID);
-		//afterSaveToSz(NBean);
-		//return NBean;
+		// String XMID = res.getStr("XM_ID");
+		// NBean.setSaveIds(XMID);
+		// afterSaveToSz(NBean);
+		// return NBean;
 	}
 
 	// 下一步
@@ -162,15 +166,18 @@ public class XmglServ extends CommonServ {
 			String ryqz = "delete from ts_xmgl_bmgl where XM_SZ_ID in ('" + delIds.substring(1).replace(",", "','")
 					+ "')";
 			Transaction.getExecutor().execute(ryqz);
-			 //删除审核
-		    String bmsh ="delete from ts_xmgl_bmsh where XM_SZ_ID in ('"+delIds.substring(1).replace(",", "','")+"')";
-		    Transaction.getExecutor().execute(bmsh);
-		    //删除请假
-		    String qj ="delete from ts_xmgl_qjgl where XM_SZ_ID in ('"+delIds.substring(1).replace(",", "','")+"')";
-		    Transaction.getExecutor().execute(qj);
-		  //删除异地借考
-		    String ydjk ="delete from ts_xmgl_ydjk where XM_SZ_ID in ('"+delIds.substring(1).replace(",", "','")+"')";
-		    Transaction.getExecutor().execute(ydjk);
+			// 删除审核
+			String bmsh = "delete from ts_xmgl_bmsh where XM_SZ_ID in ('" + delIds.substring(1).replace(",", "','")
+					+ "')";
+			Transaction.getExecutor().execute(bmsh);
+			// 删除请假
+			String qj = "delete from ts_xmgl_qjgl where XM_SZ_ID in ('" + delIds.substring(1).replace(",", "','")
+					+ "')";
+			Transaction.getExecutor().execute(qj);
+			// 删除异地借考
+			String ydjk = "delete from ts_xmgl_ydjk where XM_SZ_ID in ('" + delIds.substring(1).replace(",", "','")
+					+ "')";
+			Transaction.getExecutor().execute(ydjk);
 		}
 
 		if (!StringUtil.isBlank(bmid)) {
@@ -191,14 +198,15 @@ public class XmglServ extends CommonServ {
 		Transaction.getExecutor().execute(sql);
 	}
 
-//	@Override
-//	protected void afterDelete(ParamBean paramBean, OutBean outBean) {
-//		String XM_IDs = outBean.getDeleteIds();
-//		if (!StringUtil.isBlank(XM_IDs)) {
-//			String sql = "delete from ts_xmgl_sz where XM_ID in ('" + XM_IDs.replace(",", "','") + "')";
-//			Transaction.getExecutor().execute(sql);
-//		}
-//	}
+	// @Override
+	// protected void afterDelete(ParamBean paramBean, OutBean outBean) {
+	// String XM_IDs = outBean.getDeleteIds();
+	// if (!StringUtil.isBlank(XM_IDs)) {
+	// String sql = "delete from ts_xmgl_sz where XM_ID in ('" +
+	// XM_IDs.replace(",", "','") + "')";
+	// Transaction.getExecutor().execute(sql);
+	// }
+	// }
 
 	public Bean getXmList(Bean paramBean) {
 		List<Bean> list = ServDao.finds("TS_XMGL", "");
@@ -221,25 +229,23 @@ public class XmglServ extends CommonServ {
 		Bean outBean = new Bean();
 		UserBean userBean = Context.getUserBean();
 		String odeptcode = userBean.getDeptCode();
-		DeptBean odeptbean = new DeptBean(ServDao.find("SY_ORG_DEPT", odeptcode));
 		// 本人所在的群组编码
 		ParamBean param1 = new ParamBean();
 		OutBean act = ServMgr.act("TS_BM_GROUP_USER", "getBmGroupCodes", param1);
 		String qz = act.getStr("qzcodes");
-		
-		//如果查询本人所在机构 是否 在 某个群组下 
+
+		// 如果查询本人所在机构 是否 在 某个群组下
 		String whereqz = "AND G_TYPE=2";
 		List<Bean> finds = ServDao.finds("TS_BM_GROUP_DEPT", whereqz);
-		//所有机构
+		// 所有机构
 		for (Bean bean : finds) {
-			String str = bean.getStr("USER_DEPT_CODE");//机构编码
-			//判断此人是否在此机构下
-			//管理员以下的所有机构
-			List<DeptBean> listdept = OrgMgr.getSubOrgAndChildDepts(bean.getStr("S_CMPY"),str);
-			
+			String str = bean.getStr("USER_DEPT_CODE");// 机构编码
+			// 判断此人是否在此机构下
+			// 管理员以下的所有机构
+			List<DeptBean> listdept = OrgMgr.getSubOrgAndChildDepts(bean.getStr("S_CMPY"), str);
 			for (DeptBean deptBean : listdept) {
-				if(deptBean.getStr("DEPT_CODE").equals(odeptcode)){
-					qz+=","+bean.getStr("G_ID");
+				if (deptBean.getStr("DEPT_CODE").equals(odeptcode)) {
+					qz += "," + deptBean.getStr("G_ID");
 				}
 			}
 		}
@@ -249,27 +255,27 @@ public class XmglServ extends CommonServ {
 		}
 		String[] qzArray1 = qz.split(",");
 		for (String string : qzArray1) {
-			if(!"".equals(string)){
+			if (!"".equals(string)) {
 				Bean find = ServDao.find("TS_BM_GROUP", string);
-				if(find!=null){
+				if (find != null) {
 					Date date = new Date();
 					long time = date.getTime();
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					if("".equals(find.getStr("G_DEAD_BEGIN"))||"".equals(find.getStr("G_DEAD_END"))){
+					if ("".equals(find.getStr("G_DEAD_BEGIN")) || "".equals(find.getStr("G_DEAD_END"))) {
 						continue;
 					}
 					long time2 = sdf.parse(find.getStr("G_DEAD_BEGIN")).getTime();
 					long time3 = sdf.parse(find.getStr("G_DEAD_END")).getTime();
-					if(time<time2||time>time3){
-						//删除此群组
+					if (time < time2 || time > time3) {
+						// 删除此群组
 						int indexOf = Arrays.asList(qzArray1).indexOf(string);
-						qzArray1[indexOf]="";
+						qzArray1[indexOf] = "";
 					}
-					
+
 				}
 			}
 		}
-		
+
 		List<Bean> list = ServDao.finds("TS_XMGL", "");
 		String s = "";
 		for (int i = 0; i < list.size(); i++) {
@@ -304,9 +310,7 @@ public class XmglServ extends CommonServ {
 				kjxm.add(xmarray[a]);
 			}
 		}
-		
-		
-		
+
 		// kjxm为可见项目idlist stringlist 为已报名的项目idlist
 		List<Bean> lastlist = new ArrayList<Bean>();
 		for (int i = 0; i < list.size(); i++) {
@@ -316,12 +320,12 @@ public class XmglServ extends CommonServ {
 			if (!kjxm.contains(id)) {
 				// 已报名这个考试之后 或者他不能报名这个考试 中断循环 继续开始
 				continue;
-			} 
-			if("1".equals(bean.getStr("XM_STATE"))){
+			}
+			if ("1".equals(bean.getStr("XM_STATE"))) {
 				lastlist.add(bean);
 			}
 		}
-		
+
 		// 将lastlist转换为 json字符串传给前台
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter w = new StringWriter();
@@ -337,7 +341,6 @@ public class XmglServ extends CommonServ {
 		outBean.set("list", w.toString());
 		return outBean;
 	}
-
 
 	/**
 	 * 获取此人所在节点下 可审核 的 机构 根据机构 筛选可审核的项目
@@ -384,11 +387,11 @@ public class XmglServ extends CommonServ {
 		for (Bean bean : list) {
 			String id = bean.getId();
 			// 查询待审核 表 里的other字段判断 是否包含user_code
-			String where = "AND XM_ID="+"'"+id+"'"+" AND SH_OTHER like"+"'%"+user_code+"%'";
+			String where = "AND XM_ID=" + "'" + id + "'" + " AND SH_OTHER like" + "'%" + user_code + "%'";
 			List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", where);
 			List<Bean> NOPASSlist = ServDao.finds("TS_BMSH_NOPASS", where);
 			List<Bean> PASSlist = ServDao.finds("TS_BMSH_PASS", where);
-			if(staylist.size()!=0||NOPASSlist.size()!=0||PASSlist.size()!=0){
+			if (staylist.size() != 0 || NOPASSlist.size() != 0 || PASSlist.size() != 0) {
 				SHlist.add(bean);
 			}
 		}
@@ -408,7 +411,6 @@ public class XmglServ extends CommonServ {
 		return outBean;
 	}
 
-
 	/**
 	 * 获取项目下所有 未审核的 报名 (某一页 每页多少条)
 	 *
@@ -424,53 +426,51 @@ public class XmglServ extends CommonServ {
 		String where1 = paramBean.getStr("where");
 		List<Bean> list = ServDao.finds(servId, where1);
 		List<Bean> SHlist = new ArrayList<Bean>();
-		
+
 		for (Bean bean : list) {
-			//根据报名id找到审核数据的状态
+			// 根据报名id找到审核数据的状态
 			String id = bean.getId();
 			ParamBean paramb = new ParamBean();
 			paramb.set("xmid", id);
 			OutBean out = ServMgr.act("TS_XMGL_BMGL", "getBMState", paramb);
 			String state = "";
-			 List<Bean> list2 = out.getList("nojson");
-			 if(list2.size()!=0){
-				  state = list2.get(0).getStr("STATE");
-			 }
-			//根据项目id找到流程下的所有节点
-				String belongwhere = "AND XM_ID='"+id+"'";
-				List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
-				if(finds.size()!=0){
-					String wfsid = finds.get(0).getStr("WFS_ID");
-					//根据流程id查找所有审核节点
-					String wfswhere = "AND WFS_ID='"+wfsid+"'";
-					List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
-					//遍历审核节点  获取 当前人的审核机构
-					for (Bean nodebean : finds2) {
-						//根据流程id获取 流程绑定的人和审核机构
-						String nodeid = nodebean.getStr("NODE_ID");
-						String nodewhere = "AND NODE_ID='"+nodeid+"'";
-						List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
-						for (Bean codebean : finds3) {
-							if(user_code.equals(codebean.getStr("SHR_USERCODE"))){
-								//此流程内包含此审核人
-								if("1".equals(zhuangtai)&&"待报名".equals(state)){
-									
-									SHlist.add(bean);
-								}else if("2".equals(zhuangtai)&&"已结束".equals(state)){
-									SHlist.add(bean);
-								}else if("全部".equals(zhuangtai)){
-									SHlist.add(bean);
-								}
-								
+			List<Bean> list2 = out.getList("nojson");
+			if (list2.size() != 0) {
+				state = list2.get(0).getStr("STATE");
+			}
+			// 根据项目id找到流程下的所有节点
+			String belongwhere = "AND XM_ID='" + id + "'";
+			List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
+			if (finds.size() != 0) {
+				String wfsid = finds.get(0).getStr("WFS_ID");
+				// 根据流程id查找所有审核节点
+				String wfswhere = "AND WFS_ID='" + wfsid + "'";
+				List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+				// 遍历审核节点 获取 当前人的审核机构
+				for (Bean nodebean : finds2) {
+					// 根据流程id获取 流程绑定的人和审核机构
+					String nodeid = nodebean.getStr("NODE_ID");
+					String nodewhere = "AND NODE_ID='" + nodeid + "'";
+					List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
+					for (Bean codebean : finds3) {
+						if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
+							// 此流程内包含此审核人
+							if ("1".equals(zhuangtai) && "待报名".equals(state)) {
+
+								SHlist.add(bean);
+							} else if ("2".equals(zhuangtai) && "已结束".equals(state)) {
+								SHlist.add(bean);
+							} else if ("全部".equals(zhuangtai)) {
+								SHlist.add(bean);
 							}
+
 						}
 					}
 				}
-			 
-		
-			
+			}
+
 		}
-		
+
 		int ALLNUM = SHlist.size();
 		// 计算页数
 		int meiye = Integer.parseInt(SHOWNUM);
@@ -517,7 +517,7 @@ public class XmglServ extends CommonServ {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		_PAGE_.set("ALLNUM", SHlist.size());
 		_PAGE_.set("NOWPAGE", NOWPAGE);
 		_PAGE_.set("PAGES", yeshu);
@@ -528,23 +528,20 @@ public class XmglServ extends CommonServ {
 		return outBean;
 	}
 
+	// 按钮发布的操作 传过来id
 
-
-
-//按钮发布的操作  传过来id
-
-public void UpdateStatusStart(ParamBean paramBean){
+	public void UpdateStatusStart(ParamBean paramBean) {
 		try {
-		    String dataId = paramBean.getStr("pkCodes");
+			String dataId = paramBean.getStr("pkCodes");
 			Bean xmBean = ServDao.find("TS_XMGL", dataId);
-			if(0==xmBean.getInt("XM_STATE")){
-				ServDao.save("TS_XMGL",xmBean.set("XM_STATE", 1) );
+			if (0 == xmBean.getInt("XM_STATE")) {
+				ServDao.save("TS_XMGL", xmBean.set("XM_STATE", 1));
 			}
-	} catch (Exception e) {
+		} catch (Exception e) {
 			throw new TipException("服务器异常，发布失败！");
+		}
 	}
-}
-//查询前添加查询条件
+	// 查询前添加查询条件
 
 	protected void beforeQuery(ParamBean paramBean) {
 		
@@ -595,3 +592,28 @@ public void UpdateStatusStart(ParamBean paramBean){
 		 **/
 	}
 }
+
+// Bean item = paramBean.getBean("PVLG_ITEM");
+// //机构tree path
+// String path = item.getStr("CODE_PATH");
+// //目录tree path
+// String ctlgPath = item.getStr("CTLG_PATH");
+// //tree的编码 机构编码i 
+// String dcode = paramBean.getStr("PVLG_FIELD");
+// //用户权限 所有权限的机构编码
+// Bean userPvlg = paramBean.getBean("USER_PVLG");
+//
+
+// if (paramBean.getServId().equals(VIEW_CCCS)) {
+//
+// String xmId = paramBean.getStr("XM_ID");
+//
+// paramBean.setQueryNoPageFlag(true);
+//
+// StringBuffer sb = new StringBuffer();
+//
+// sb.append(" AND DEPT_CODE in (SELECT JG_CODE FROM ").append(VIEW_GLJG);
+//
+// sb.append(" WHERE XM_ID = '").append(xmId).append("')");
+//
+// paramBean.setQueryExtWhere(sb.toString());
