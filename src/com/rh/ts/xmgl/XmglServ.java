@@ -544,5 +544,54 @@ public void UpdateStatusStart(ParamBean paramBean){
 			throw new TipException("服务器异常，发布失败！");
 	}
 }
+//查询前添加查询条件
 
+	protected void beforeQuery(ParamBean paramBean) {
+		
+		int treeWhereSize = paramBean.getList("_treeWhere").size();
+		if(treeWhereSize == 0){
+			StringBuilder strWhere = new StringBuilder(); 
+	        strWhere.append(" and 1 = 2");
+	        paramBean.setQueryExtWhere(strWhere.toString());
+		}
+		
+		/**
+		// tree的编码 机构编码
+		Bean extParams = paramBean.getBean("extParams");
+		// String dcode = extParams.getStr("PVLG_FIELD");
+		// 用户权限 所有权限的机构编码
+		Bean userPvlg = extParams.getBean("USER_PVLG");
+		JSONObject jsonObject = new JSONObject(userPvlg);
+		String result=null;
+		Iterator iterator = jsonObject.keys();
+		String key;
+		while (iterator.hasNext()) {
+			key = (String) iterator.next();
+			try {
+				JSONObject object = (JSONObject) jsonObject.get(key);
+				String object2 = (String)object.get("ROLE_DCODE");//object2已经得到010010000
+				if(result!=null){
+					if(result.compareTo(object2)>0){
+						result = object2;
+					}
+				}else{
+					result =object2;
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+		}
+		System.out.println("result:"+result);//result 已经是权限值或者是 null
+		 if(result !=null){
+			 
+			 //paramBean.set(Constant.PARAM_WHERE, "and =CTLG_PCODE'"+result+"'");
+			 
+		 }else{
+		 //无权限
+		 paramBean.set(Constant.PARAM_WHERE, " and 1=2");
+		 }
+		 **/
+	}
 }
