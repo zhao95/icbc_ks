@@ -435,10 +435,10 @@ function firall(){
 				//定义一个公共变量  当进行条件查询时  将 数据ID放入数组中
 				function exportdata(obj,name){
 					var checkboxchecked = $('input:checkbox[name='+name+']:checked');
+					var arrstring = "";
 					//没有选中
 					if(checkboxchecked.length!=0){
 						//定义变量 把id拼成 逗号分隔字符串
-					var arrstring = "";
 						//定义 变量 
 							  var i=0;
 					$('input:checkbox[name='+name+']:checked').each(function(){
@@ -447,11 +447,10 @@ function firall(){
 							  arrstring+=aa+",";
 				 });
 				} else{
-					var param={};
-					param["servId"]=obj;
-					var result = FireFly.doAct(obj,"reSids",param);
-					arrstring = result.string;
-					arrstring=arrstring.substring(1,arrstring.length - 1); 
+					$('input:checkbox[name='+name+']').each(function(){
+						  i++;
+						  var aa = $(this).val();
+						  arrstring+=aa+",";
 					} 
 				var whereData={};
 				var data = {"_PK_":arrstring};

@@ -16,18 +16,46 @@ _viewer.beforeDelete = function(pkArray) {
 };
 
 $("#TS_KCGL_GLJG .rhGrid").find("tr").each(function(index, item) {
+	debugger;
 	if(index != 0){
 		var dataId = item.id;
 		$(item).find("td[icode='BUTTONS']").prepend(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optEditBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
+				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optEditBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
+				'<span style="height:30px;display:block;padding-left:200px;margin-top:-21px"><select style="width:50px" rowpk="'+dataId+'" operCode="'+dataId+'" name="TS_KCGL_GLJG-JG_FAR" ></select></span>'
 		);
-		bindCard();
+		bindCard(dataId);
 	}
 });	
-function bindCard(){
+function bindCard(dataId){
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
-		var pkCode = jQuery(this).attr("rowpk");
-		openMyCard(pkCode);
+		openMyCard(dataId);
+	});
+	var params={};
+	params["dataId"]=dataId;
+	var result = FireFly.doAct("TS_KCGL_GLJG",'getData',params);
+	var dbfar = result.far;
+	if(dbfar==1){
+		jQuery("select[operCode="+dataId+"]").eq(0).append("<option selected='selected' value='1'>远</option>");//options.add(new Option('1','远')); 
+		jQuery("select[operCode="+dataId+"]").eq(0).append("<option  value='2'>近</option>");//options.add(new Option('2','近')); 
+		jQuery("select[operCode="+dataId+"]").eq(0).append("<option value='0'></option>");
+	}else if(dbfar==2){
+		jQuery("select[operCode="+dataId+"]").eq(0).append("<option  selected='selected' value='2'>近</option>");//options.add(new Option('2','近')); 
+		jQuery("select[operCode="+dataId+"]").eq(0).append("<option  value='1'>远</option>");//options.add(new Option('1','远')); 
+		jQuery("select[operCode="+dataId+"]").eq(0).append("<option value='0'></option>");
+	}else{
+		jQuery("select[operCode="+dataId+"]").eq(0).append("<option   value='2'>近</option>");//options.add(new Option('2','近')); 
+		jQuery("select[operCode="+dataId+"]").eq(0).append("<option  value='1'>远</option>");//options.add(new O
+		jQuery("select[operCode="+dataId+"]").eq(0).append("<option  selected='selected' value='0'></option>");
+	}
+	jQuery("select[operCode="+dataId+"]").eq(0).change(function(){
+		var far = $(this).val() ;
+		if(far==""){
+			far=0;
+		}
+		var param={};
+		param["far"]=far;
+		param["dataId"]=dataId;
+		FireFly.doAct("TS_KCGL_GLJG","editfar",param);
 	});
 }
 

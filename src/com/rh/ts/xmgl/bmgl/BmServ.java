@@ -94,7 +94,7 @@ public class BmServ extends CommonServ {
 	if(listbean.size()!=0){
 		//审核通过提示语
 		String shtsy = listbean.get(0).getStr("SH_TSY");
-		 if("1".equals(shtsy)){
+		 if("2".equals(shtsy)){
 			 //立刻显示  提示语
 			 SH_TGTSY = listbean.get(0).getStr("SH_TGTSY");
 			 SH_BTGTSY = listbean.get(0).getStr("SH_BTGTSY");

@@ -432,7 +432,6 @@ function selectcreate(){
  };
   listPage.prototype.getListData = function (num) {
 	//每页条数
-	  debugger;
 	  var jb = document.getElementById("jb");
 	  var indexjb = jb.selectedIndex;
 	  var jbvalue = jb.options[indexjb].value;
@@ -508,7 +507,6 @@ function selectcreate(){
       var pages = parseInt(this._lPage.PAGES);
       var nowPage = "" + ((nextPage > pages) ? pages:nextPage);
       this.gotoPage(nowPage);
-//      debugger;
   };
  /* 首页*/
   listPage.prototype.firstPage = function() {
@@ -594,7 +592,7 @@ function selectcreate(){
 		    				if(failerinfo==""){
 		    					sh_state_str="审核未通过"
 		    				}else{
-		    					sh_state_str=bminfojson[0].FAILIERINFO;
+		    					sh_state_str=failerinfo;
 		    					
 		    				}
 		    			}else if(sh_state==1){
