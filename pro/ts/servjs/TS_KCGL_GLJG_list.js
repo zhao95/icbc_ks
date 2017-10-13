@@ -16,17 +16,18 @@ _viewer.beforeDelete = function(pkArray) {
 };
 
 $("#TS_KCGL_GLJG .rhGrid").find("tr").each(function(index, item) {
+	debugger;
 	if(index != 0){
 		var dataId = item.id;
 		$(item).find("td[icode='BUTTONS']").prepend(
 				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optEditBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
 		);
-		bindCard();
+		bindCard(dataId);
 	}
 });	
-function bindCard(){
+function bindCard(dataId){
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
-		var pkCode = jQuery(this).attr("rowpk");
+		var pkCode = $(this).attr("rowpk");
 		openMyCard(pkCode);
 	});
 }

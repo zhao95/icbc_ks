@@ -658,6 +658,8 @@ public class StayServ extends CommonServ {
 			searchWhere = " and " + serv.getPKey() + " in ('"
 					+ paramBean.getId().replaceAll(",", "','") + "')";
 			paramBean.setQuerySearchWhere(searchWhere);
+		}else{ // 支持指定记录的导出（支持多选）
+			return new OutBean().setError("没有数据");
 		}
 		// 所有
 		List<Bean> dataList = ServDao.finds(servid, searchWhere);
