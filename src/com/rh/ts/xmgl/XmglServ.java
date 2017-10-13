@@ -548,12 +548,9 @@ public void UpdateStatusStart(ParamBean paramBean){
 	}
 }
 //查询前添加查询条件
-
 	protected void beforeQuery(ParamBean paramBean) {
 		int treeWhereSize = paramBean.getList("_treeWhere").size();
 		if(treeWhereSize == 0){
-			
-		
 		 // tree的编码 机构编码
 		Bean extParams = paramBean.getBean("extParams");
 		// String dcode = extParams.getStr("PVLG_FIELD");
@@ -567,7 +564,7 @@ public void UpdateStatusStart(ParamBean paramBean){
 			key = (String) iterator.next();
 			try {
 				JSONObject object = (JSONObject) jsonObject.get(key);
-				String object2 = (String)object.get("ROLE_DCODE");//object2已经得到010010000ROLE_ORG_LV
+				String object2 = (String)object.get("ROLE_DCODE");
 				String[] object3=object2.split(",");
 				if(result!=null){
 					for(int  i=0;i<object3.length;i++){
@@ -592,8 +589,6 @@ public void UpdateStatusStart(ParamBean paramBean){
 //	        strWhere.append(" and 1=2");
 //	        paramBean.setQueryExtWhere(strWhere.toString());
 //		}
-		
-//		System.out.println("result:"+result);//result 已经是权限值或者是 null
 		 if(result !=null){			
 			 //result 排序
 			 String[] roles = result.split(",");
@@ -606,16 +601,16 @@ public void UpdateStatusStart(ParamBean paramBean){
 			 System.out.println("lastResult:"+lastResult);*/
 			 StringBuilder param_where=new StringBuilder();
 			 param_where.append("AND CTLG_PCODE IN ( ");
-			 param_where.append("			SELECT CTLG_CODE_H FROM TS_COMM_CATALOG ");
-			 param_where.append("			WHERE  CTLG_MODULE='PROJECT'  ");
-			 param_where.append("			and ( ");
+			 param_where.append("SELECT CTLG_CODE_H FROM TS_COMM_CATALOG ");
+			 param_where.append("WHERE  CTLG_MODULE='PROJECT'  ");
+			 param_where.append("and ( ");
 			 StringBuilder subSQL= new StringBuilder();
 			 for(int i=0;i<roles.length;i++){
-				 subSQL.append("			 CTLG_PATH_H LIKE '%PROJECT-"+roles[i]+"^%'  or");
+				 subSQL.append("CTLG_PATH_H LIKE '%PROJECT-"+roles[i]+"^%'  or");
 			 }
 			 subSQL.delete(subSQL.length()-2, subSQL.length());
 			 param_where.append(subSQL);
-			 param_where.append("		) ) ");
+			 param_where.append(") ) ");
 			 paramBean.set(Constant.PARAM_WHERE, param_where.toString());
 			 System.out.println("param_where:"+param_where.toString());
 		 }else{

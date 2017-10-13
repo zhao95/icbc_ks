@@ -203,7 +203,7 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 			break;
 		}
 	}
-	alert(flag);
+	
 	if(!flag){
 		_viewer.listBarTipError("无权限查看所选机构数据");
 		return false;
