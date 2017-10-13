@@ -162,14 +162,22 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	//点击树之前，判断是否在权限范围内，否则不能点击
 	//获取登录人用户编码权限
 //	var CurrentUser = System.getUser("USER_CODE");
-	var arr=[];
+	var arr=null;
 	var i=0;
 	for(let key in user_pvlg){
-		arr[i]=user_pvlg[key].ROLE_DCODE;
-		i++;
+		if(arr==null){
+			arr = user_pvlg[key].ROLE_DCODE;
+		}else{
+			var d = user_pvlg[key].ROLE_DCODE.split(",");
+			for(var k=0;k<d.length;k++){
+				if(arr.indexOf(d[k])<0){
+					arr+=+","+d[k];
+				}
+			}
+		}
 	}
-	var arrLast = unique(arr);//去重后的数组
-	var arrElement;
+	console.log("arr",arr);
+	/*var arrElement;","+
 	if(arrLast.length>1){
 		arrElement=arrLast[0];
 		for(var i=1;i<arrLast.length;i++){
@@ -180,17 +188,23 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	}else if(arrLast.length=1){
 		arrElement=arrLast[0];
 	}
+	console.log(arrLast);
 	if(arrElement.indexOf(',')){
 		arrElement=arrElement.replace(",","");
-	}
+	}*/
 	var ctlg_path= item.CTLG_PATH;
-	var ctlgPathArray=ctlg_path.split("^");
-	var index = ctlgPathArray.indexOf("");
-	ctlgPathArray.splice(index, 1);
-	var arrStr =arrElement.toString();
-	var pathIndex = ctlgPathArray.indexOf(arrStr);//比较结果
-	//alert(pathIndex);
-	if(pathIndex<0){
+	console.log(ctlg_path);
+	var ctlgPathArray=ctlg_path.split("^");//最后一个元素为空
+	console.log("ctlgPathArray",ctlgPathArray);
+	var flag = false;
+	for(var j=0;j<ctlgPathArray.length-1;j++){
+		if(arr.indexOf(ctlgPathArray[j])>=0){
+			flag=true;
+			break;
+		}
+	}
+	alert(flag);
+	if(!flag){
 		_viewer.listBarTipError("无权限查看所选机构数据");
 		return false;
 	}
