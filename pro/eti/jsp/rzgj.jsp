@@ -168,7 +168,7 @@
                                             <img id="u5189_img" class="img "
                                                  src="<%=CONTEXT_PATH%>/eti/images/u5189.png">
                                             <span style="color: red;position: relative;top: 3px;left: -33px;">!</span>
-                                            您还没有获得过相关资格证书
+                                            您还没有获得该序列有效相关资格证书
                                         </div>
                                         <div class="col-sm-12"
                                              style="font-size: 20px;margin-left: 220px;padding: 19px;">

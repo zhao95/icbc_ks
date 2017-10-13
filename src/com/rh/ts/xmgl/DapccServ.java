@@ -5,6 +5,8 @@ import com.rh.core.base.db.Transaction;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
+import com.rh.core.serv.bean.PageBean;
+import com.rh.core.util.Constant;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -35,10 +37,35 @@ public class DapccServ extends CommonServ {
     public OutBean getKsContent(ParamBean paramBean) {
         OutBean outBean = new OutBean();
 
+        /*分页参数处理*/
+        PageBean page = paramBean.getQueryPage();
+        int rowCount = paramBean.getShowNum(); //通用分页参数优先级最高，然后是查询的分页参数
+        if (rowCount > 0) { //快捷参数指定的分页信息，与finds方法兼容
+            page.setShowNum(rowCount); //从参数中获取需要取多少条记录，如果没有则取所有记录
+            page.setNowPage(paramBean.getNowPage());  //从参数中获取第几页，缺省为第1页
+        } else {
+            if (!page.contains(Constant.PAGE_SHOWNUM)) { //初始化每页记录数设定
+                if (paramBean.getQueryNoPageFlag()) { //设定了不分页参数
+                    page.setShowNum(0);
+                } else { //没有设定不分页，取服务设定的每页记录数
+                    page.setShowNum(50);
+                }
+            }
+        }
+
+        /*拼sql并查询*/
         String searchDeptCode = paramBean.getStr("searchDeptCode");
+        String searchKcId = paramBean.getStr("searchKcId");
+        Set<String> hashSet = this.getKcRelateOrgCodeList(searchKcId);
+//        if (hashSet.contains(searchDeptCode)) {
+//            paramBean.set("containDeptCode", searchDeptCode);
+//        } else {
+//            paramBean.set("equalDeptCode", searchDeptCode);
+//        }
+//
         Bean dept = this.getDeptByCode(searchDeptCode, null);
         String deptLevel = dept.getStr("DEPT_LEVEL");
-        if ("3".equals(deptLevel) || "2".equals(deptLevel)) {
+        if ("3".equals(deptLevel) || "2".equals(deptLevel) || "1".equals(deptLevel)) {
             paramBean.set("containDeptCode", searchDeptCode);
         } else {
             paramBean.set("equalDeptCode", searchDeptCode);
@@ -55,27 +82,63 @@ public class DapccServ extends CommonServ {
         configMap.put("searchBmXl", "BM_XL like ?");
         configMap.put("searchBmMk", "BM_MK like ?");
         configMap.put("searchBmJb", "BM_TYPE = ?");
-        //configMap.put("searchBmCount", " and USER_LOGIN_NAME like '%?%'"); //todo
+        //configMap.put("searchBmCount", " and USER_LOGIN_NAME like '%?%'"); //todo 报考数
 
         List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
         String whereSql = (String) extWhereSqlData.get(0);
         List<Object> values = (List<Object>) extWhereSqlData.get(1);
 //        Pair<String, List<Object>> extWhereSqlData
-        String sql = "select " +
-                "a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH " +
-                "from TS_BMSH_PASS a " +
-                "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE " +
-                "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
-                +"where not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID)"
+
+        //获取的考生在考场关联机构本级及下级的机构
+        StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
+        for (String s : hashSet) {
+            values.add("%" + s + "%");
+            deptSql.append("CODE_PATH like ? or ");
+        }
+        whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
+
+        String sql = "select a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH "
+                + "from TS_BMSH_PASS a "
+                + "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE "
+                + "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
+                + "where not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID)"
                 + whereSql;
         //where 姓名/登录名/报考类型/报考数  bm_name /login_name?/
-        List<Bean> beanList = Transaction.getExecutor().query(sql, values);
+        List<Bean> dataList = Transaction.getExecutor().queryPage(
+                sql, page.getNowPage(), page.getShowNum(), new ArrayList<>(values), null);
 //        List<Bean> beanList = ServDao.finds("TS_XMGL_KCAP_DFPKS", paramBean);
-        for (Bean bean : beanList) {
+        for (Bean bean : dataList) {
             String userCode = bean.getStr("BM_CODE");
-            bean.putAll(getUserOrg(userCode));
+            ParamBean userCodeParamBean = new ParamBean();
+            userCodeParamBean.set("userCode", userCode);
+            bean.putAll(getUserOrg(userCodeParamBean));
         }
-        outBean.setData(beanList);
+
+        /*设置数据总数*/
+        int count = dataList.size();
+        int showCount = page.getShowNum();
+        boolean bCount; //是否计算分页
+        if ((showCount == 0) || paramBean.getQueryNoPageFlag()) {
+            bCount = false;
+        } else {
+            bCount = true;
+        }
+        if (bCount) { //进行分页处理
+            if (!page.contains(Constant.PAGE_ALLNUM)) { //如果有总记录数就不再计算
+                int allNum;
+                if ((page.getNowPage() == 1) && (count < showCount)) { //数据量少，无需计算分页
+                    allNum = count;
+                } else {
+                    allNum = Transaction.getExecutor().count(sql, values);
+                }
+                page.setAllNum(allNum);
+            }
+            outBean.setCount(page.getAllNum()); //设置为总记录数
+        } else {
+            outBean.setCount(dataList.size());
+        }
+        outBean.setData(dataList);
+        outBean.setPage(page);
         return outBean;
     }
 
@@ -84,7 +147,7 @@ public class DapccServ extends CommonServ {
      *
      * @param paramBean paramBean
      * @param configMap :{"XM_ID", "XM_ID = ?","searchName", "USER_NAME like ?"}
-     * @return Pair<String, List<Object>>  whereSql,values
+     * @return List  0;whereSql 1:values
      */
     private List getExtWhereSqlData(ParamBean paramBean, Map<String, String> configMap) {
         StringBuilder whereSql = new StringBuilder(/*"where "*/);
@@ -95,7 +158,7 @@ public class DapccServ extends CommonServ {
             String value = paramBean.getStr(key);
             if (StringUtils.isNotEmpty(value)) {
 //                if (!"where ".equals(whereSql.toString())) {
-                    whereSql.append(" and ");
+                whereSql.append(" and ");
 //                }
                 if (sql.contains("like")) {
                     value = "%" + value + "%";
@@ -150,18 +213,7 @@ public class DapccServ extends CommonServ {
     public OutBean getKsOrgTree(ParamBean paramBean) {
         OutBean outBean = new OutBean();
         String kcId = paramBean.getStr("kcId");
-        List<Object> values = new ArrayList<>();
-        values.add(kcId);
-        List<Bean> list = Transaction.getExecutor().query("select a.*, c.JG_CODE from TS_XMGL_KCAP_DAPCC a " +
-//                "INNER JOIN TS_KCGL b on b.KC_ID =a.KC_ID " +
-                "INNER JOIN TS_KCGL_GLJG c on c.KC_ID=a.KC_ID " +
-//                "LEFT JOIN SY_ORG_DEPT d on d.DEPT_CODE = c.JG_CODE " +
-                "where a.KC_ID=?", values);
-        Set<String> hashSet = new HashSet<>();
-        for (Bean bean : list) {
-            hashSet.add(bean.getStr("JG_CODE"));
-        }
-
+        Set<String> hashSet = this.getKcRelateOrgCodeList(kcId);
         Map<String, Bean> cache = new HashMap<>();
         Bean rootDeptBean = this.getDeptList(hashSet, cache);
         outBean.putAll(rootDeptBean);
@@ -177,6 +229,27 @@ public class DapccServ extends CommonServ {
         }
 
         return outBean;
+    }
+
+    /**
+     * 获取考场关联机构的编码
+     *
+     * @param kcId kcId
+     * @return
+     */
+    private Set<String> getKcRelateOrgCodeList(String kcId) {
+        List<Object> values = new ArrayList<>();
+        values.add(kcId);
+        List<Bean> list = Transaction.getExecutor().query("select a.*, c.JG_CODE from TS_XMGL_KCAP_DAPCC a " +
+//                "INNER JOIN TS_KCGL b on b.KC_ID =a.KC_ID " +
+                "INNER JOIN TS_KCGL_GLJG c on c.KC_ID=a.KC_ID " +
+//                "LEFT JOIN SY_ORG_DEPT d on d.DEPT_CODE = c.JG_CODE " +
+                "where a.KC_ID=?", values);
+        Set<String> hashSet = new HashSet<>();
+        for (Bean bean : list) {
+            hashSet.add(bean.getStr("JG_CODE"));
+        }
+        return hashSet;
     }
 
     private Bean getDeptList(Set<String> deptCodes, Map<String, Bean> cache) {
@@ -257,12 +330,13 @@ public class DapccServ extends CommonServ {
     /**
      * 获取用户的一级机构、二级机构、三级机构、四级机构
      *
-     * @param userCode userCode
+     * @param paramBean paramBean  userCode
      * @return Bean {org1:'',org2:'',org3:'',org4:''}
      */
-    private Bean getUserOrg(String userCode) {
+    public OutBean getUserOrg(ParamBean paramBean) {
         //一级机构  DEPT_LEVEL = '2'
-        Bean result = new Bean();
+        String userCode = paramBean.getStr("userCode");
+        OutBean result = new OutBean();
         result.set("org4", "");
         result.set("org3", "");
         result.set("org2", "");
