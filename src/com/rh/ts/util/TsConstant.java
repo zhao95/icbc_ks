@@ -87,6 +87,12 @@ public class TsConstant {
 	/** 字典 角色模块定义*/
 	public static final String DICT_ROLE_MOD = "TS_PVLG_MOD";
 	
+	/** 考场安排规则库*/
+	public static final String SERV_KCAP_GZK = "TS_XMGL_KCAP_GZK";
+	
+	/** 考场安排规则*/
+	public static final String SERV_KCAP_GZ = "TS_XMGL_KCAP_GZ";
+	
 	
 	
 	

@@ -7,10 +7,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.icbc.ctp.utility.StringUtil;
 import com.rh.core.base.Bean;
@@ -547,16 +550,8 @@ public void UpdateStatusStart(ParamBean paramBean){
 //查询前添加查询条件
 
 	protected void beforeQuery(ParamBean paramBean) {
-		
-		int treeWhereSize = paramBean.getList("_treeWhere").size();
-		if(treeWhereSize == 0){
-			StringBuilder strWhere = new StringBuilder(); 
-	        strWhere.append(" and 1 = 2");
-	        paramBean.setQueryExtWhere(strWhere.toString());
-		}
-		
 		/**
-		// tree的编码 机构编码
+		 * // tree的编码 机构编码
 		Bean extParams = paramBean.getBean("extParams");
 		// String dcode = extParams.getStr("PVLG_FIELD");
 		// 用户权限 所有权限的机构编码
@@ -584,14 +579,23 @@ public void UpdateStatusStart(ParamBean paramBean){
 	
 		}
 		System.out.println("result:"+result);//result 已经是权限值或者是 null
-		 if(result !=null){
-			 
-			 //paramBean.set(Constant.PARAM_WHERE, "and =CTLG_PCODE'"+result+"'");
-			 
-		 }else{
-		 //无权限
-		 paramBean.set(Constant.PARAM_WHERE, " and 1=2");
-		 }
-		 **/
+		**/
+        int treeWhereSize = paramBean.getList("_treeWhere").size();
+		if(treeWhereSize == 0){
+			StringBuilder strWhere = new StringBuilder(); 
+	        strWhere.append(" and 1=2");
+	        paramBean.setQueryExtWhere(strWhere.toString());
+		}
+		
+//		System.out.println("result:"+result);//result 已经是权限值或者是 null
+//		 if(result !=null){
+//			 
+//			 //paramBean.set(Constant.PARAM_WHERE, "and CTLG_PCODE'"+result+"'");
+//			 
+//		 }else{
+//		 //无权限
+//		 paramBean.set(Constant.PARAM_WHERE, " and 1=2");
+//		 }
+		 
 	}
 }
