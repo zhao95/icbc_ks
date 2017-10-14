@@ -93,6 +93,21 @@ public class TsConstant {
 	/** 考场安排规则*/
 	public static final String SERV_KCAP_GZ = "TS_XMGL_KCAP_GZ";
 	
+	/** 考场安排座位表*/
+	public static final String SERV_KCAP_YAPZW = "TS_XMGL_KCAP_YAPZW";
+	
+	/** 考场管理座位表*/
+	public static final String SERV_KCGL_ZWDYB = "TS_KCGL_ZWDYB";
+	
+	/** 考场管理 关联机构*/
+	public static final String SERV_KCGL_GLJG = "TS_KCGL_GLJG";
+	
+	/** 考场管理 关联机构*/
+	public static final String SERV_KCAP_CCSJ = "TS_XMGL_KCAP_DAPCC_CCSJ";
+	
+	
+	
+	
 	
 	
 	
