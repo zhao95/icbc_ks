@@ -66,6 +66,8 @@
 	<tbody>
 	 <%
 	 	
+		String asign = "";//标记自动审核
+		String reasonstr = "";
 	 	String bmid = "";
 		if(userBean != null) {
 	    bmid = request.getParameter("bmidmx"); 
@@ -79,17 +81,23 @@
 		String shlog = bean.getStr("SH_UCODE");
 		String jibie = bean.getStr("SH_LEVEL");
 		String state = bean.getStr("SH_STATUS");
-			String status = "";
+		String liyou = "";
+		String status = "";
 		if("1".equals(state)){
 			status = "审核通过";
 		}else if("2".equals(state)){
 			status="审核未通过";
 		}
-		String liyou = bean.getStr("SH_MIND");
+		if("自动审核".equals(shr)){
+			asign=String.valueOf(i);
+			reasonstr=bean.getStr("SH_MIND");
+		}else{
+		 liyou = bean.getStr("SH_MIND");
+		}
 		String address = bean.getStr("SH_ULOGIN");
 	%>
 		 <tr height="50px">
-		<td align="center"><%=j %></td><td><%=shdate %></td><td align="center"><%=shr %></td><td align="center"><%=shlog %></td><td align="center"><%=jibie %></td><td align="center"><%=status %></td><td align="center"><%=liyou %></td><td align="center"><%=address %></td>
+		<td align="center"><%=j %></td><td><%=shdate %></td><td align="center"><%=shr %></td><td align="center"><%=shlog %></td><td align="center"><%=jibie %></td><td align="center"><%=status %></td><td id="liyou<%=i %>" align="left"><%=liyou %></td><td align="center"><%=address %></td>
 		</tr> 
 		<%}}%>
 	</tbody>
@@ -101,6 +109,29 @@
 	            rows[i].style.backgroundColor = "Azure";  
 	       }  
 	    } 
+	    	 var bj = <%=asign%>;
+	 	 	if(bj!=""||bj==0){
+	 	 		var a = "liyou"+bj;
+	 	 		//自动审核规则
+	 	 		var dataArray =<%=reasonstr%>;
+	 	 		for(var j=0;j<dataArray.length;j++){
+	 					if(j==0){
+	 						$("#"+a).append('<div style="height:5px;"></div>');
+	 					}
+	 					if(dataArray[j].VLIDATE=="true"){
+	                     $("#"+a).append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'</div>');
+	    					
+	 				}if(dataArray[j].VLIDATE=="false"){
+	 					
+	 						$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');
+	 				}
+	 			
+	 				$("#"+a).append('<div style="height:5px;"></div>');
+	 				
+	 				}
+	 	 		
+	 	 	}
+	   
 	</script>
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>

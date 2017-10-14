@@ -60,6 +60,21 @@
     left: 0; 
     right: 0; 
 }
+ #loadingdialog{
+ font-family: Arial;
+ border: 2px solid #379082;
+ border-radius: 20px;
+ padding: 30px 30px;
+ width: 330px;
+}
+#loading .modal-dialog{
+position: absolute; 
+    top: 20%; 
+    bottom: 200px; 
+    left: 20%; 
+    right: 0; 
+}
+
 </style>
 <!--判断用户是否登录  -->
 <%
@@ -251,13 +266,44 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
+	
+	<div class="modal fade" id="yzxx" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div id="mask" class="mask"></div>
+				<div class="modal-header"
+					style="background-color: #00c2c2; color: white">
+					
+					<h6 class="modal-title">信息验证</h6>
+				</div>
+				<div style="padding-top:4%;padding-bottom:6%;margin-left:27%;font-size:16px;">请输入您已入职满&nbsp;<input style="width:20%" id="yzinput"/>&nbsp;年</div>
+				<div class="modal-footer" style="height:10%">
+					<button type="button" class="btn btn-primary" onclick="yztj()">提交</button>
+					
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		</div>
+		<div class="modal fade" id="loading" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div  class="modal-dialog" style="width:700px;">
+			<div id="loadingdialog" class="modal-content" style="position:absoluate;background:#777;height:100px;width:50%">
+				<div style="color:lightseagreen;padding-left:30%;padding-top:20px;font-size:16px;">&nbsp;&nbsp;正在验证请稍候.....</div>
+				<div id="loadiv" style="position:relative;top:-60%;left:15%;font-size:16px;"></div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
 		<input type="hidden" id="xmid"/>
 		<input type="hidden" id="dijige">
 		<input type="hidden" id="user_code" value="<%=user_code %>">
 	</div>
 
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
-	
+	<script src="<%=CONTEXT_PATH%>/ts/js/spin.js"></script>
 	<!-- FastClick -->
 	<script src="<%=CONTEXT_PATH%>/ts/js/baoming.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
