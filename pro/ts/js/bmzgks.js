@@ -72,6 +72,7 @@ function xminfoshow(){
 			}
 			}
 		}
+		debugger;
 		if(checkeddata.length==0){
 			return;
 		}
@@ -82,6 +83,7 @@ function xminfoshow(){
 			parambm["user_code"]=user_code;
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
+			debugger;
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, false,true,function(data){
     		yzgz=data;
     		//获取后台传过来的key
@@ -96,6 +98,7 @@ function xminfoshow(){
        			var divtext1 = $("#"+a).html();
        			if(divtext1==null||divtext1.length==0){
        				var shArray=true;
+       				var shs = true;
        				//判断此考试是否已报名  如果已报名审核通过 必须删除 才能提交
        					var resdata = results.list;
        					var FLAG = false;
@@ -110,21 +113,30 @@ function xminfoshow(){
        					$("#"+yzjg).append("审核不通过");
        					continue;
        				}
+       				var shti = "";
        				for(var j=0;j<dataArray.length;j++){
        					if(j==0){
        						$("#"+a).append('<div style="height:5px;"></div>');
        					}
        					if(dataArray[j].VLIDATE=="true"){
-	       					$("#"+a).append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'</div>');
+                            $("#"+a).append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'</div>');
 	       					
 						}if(dataArray[j].VLIDATE=="false"){
 							
-							$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');
+								$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');
 						}
+						shti=dataArray[j].TISHI;
 						if(dataArray[j].VLIDATE=="false"){
-							shArray=false;
+							if(shti!=true){
+								shArray=false;
+							}
 						}
 						$("#"+a).append('<div style="height:5px;"></div>');
+						
+       				}
+       				if(shArray==true&&shti=="true"){
+       					$("#"+a).append('<div">管理任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
+       					$("#yzxx").modal("show");
        				}
        				if(shArray==false){
        					if(""==failerinfo){
@@ -164,6 +176,7 @@ function xminfoshow(){
    				zglb +="," + zgArray[i].value;
    			}
    		}
+     	debugger;
      	var param = {};
 // 		xkArg.push(yk);
 		var neAry;
@@ -179,6 +192,20 @@ function xminfoshow(){
 		        }
 		    }
 		}
+		var checkArray = $("input[name=checkboxaa]:checked");
+		var checkeddata = [];
+		for(var m=0;m<checkArray.length;m++){
+			for(var n=0;n<neAry.length;n++){
+				if(neAry[n].ID==$($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("div").eq(0).attr("id")){
+					//只提交选中的考试
+					neAry[n].YEAR="";
+					$($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("input[name='yzspan']").each(function(){
+						neAry[n].YEAR = $(this).val();
+					})
+					checkeddata.push(neAry[n]);
+				}
+			}
+		}
 		param["USER_CODE"] = user_code;
 		param["USER_NAME"] = user_name;
 		param["USER_SEX"] = user_sex;
@@ -191,7 +218,7 @@ function xminfoshow(){
 		param["BM_END"] = bm_end;
 		param["XM_NAME"] = xm_name;
 		param["ODEPT_CODE"]=odept_code;
-			param['BM_LIST'] = JSON.stringify(neAry);
+			param['BM_LIST'] = JSON.stringify(checkeddata);
 			param["YZGZ_LIST"] = JSON.stringify(yzgz);
 			//本序列表格行数
 			var bxltabObj = document.getElementById("tableid");
@@ -963,5 +990,12 @@ function yanzheng(){
 	}else{
 		$("#zgyzbt").attr("data-target","");
 	}
+}
+
+function yztj(){
+	$("input[name='yzspan']").each(function(){
+		$(this).val($("#yzinput").val());
+	});
+	$("#yzxx").modal("hide");
 }
 

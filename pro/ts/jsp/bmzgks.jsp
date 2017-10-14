@@ -349,6 +349,25 @@ position: absolute;
 		</div>
 		<!-- /.modal -->
 	</div>
+	<div class="modal fade" id="yzxx" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div id="mask" class="mask"></div>
+				<div class="modal-header"
+					style="background-color: #00c2c2; color: white">
+					
+					<h6 class="modal-title">信息验证</h6>
+				</div>
+				<div style="padding-top:4%;padding-bottom:6%;margin-left:27%;font-size:16px;">请输入您已入职满&nbsp;<input style="width:20%" id="yzinput"/>&nbsp;年</div>
+				<div class="modal-footer" style="height:10%">
+					<button type="button" class="btn btn-primary" onclick="yztj()">提交</button>
+					
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		</div>
 	<div id = 'chufa'></div>
 	<input type="hidden" id='xmidval' value="<%=xm_id %>">
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>

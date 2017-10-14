@@ -633,13 +633,13 @@ function selectcreate(){
 		    		//判断审核状态
 		    		//审核未通过 没有手动审核
 		    		if(sh_state==2){
-		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td style="text-align: center">'+flagstate+'</td><td  style="text-align: left"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td style="text-align: center">'+flagstate+'</td><td  style="text-align: left"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="yanzheng('+i+')" style="color:red" id="yiyi'+i+'">验证</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td><td class="rhGrid-td-hide" id="XMID'+i+'">'+XM_ID+'</td></tr>');
 		    		}else if(sh_state==1){
 		    			//审核通过 没有异议  没有撤销
 		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td style="text-align: center">'+flagstate+'</td><td style="text-align:left "><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 		    		}else if(sh_state==3){
 		    			//审核未通过  手动审核
-		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="color:red;text-align: center">'+sh_state_str+'</td><td style="text-align: center">'+flagstate+'</td><td style="text-align:left "><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+		    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="color:red;text-align: center">'+sh_state_str+'</td><td style="text-align: center">'+flagstate+'</td><td style="text-align:left "><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:red" id="yiyi'+i+'">异议</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="yanzheng('+i+')" style="color:red">验证</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td><td class="rhGrid-td-hide" id="XMID'+i+'">'+XM_ID+'</td></tr>');
 		    		}
 		    		}else if(yiyistate==1){
 		    			//提交了异议且审核状态 
@@ -808,3 +808,159 @@ function selectcreate(){
   };
   //默认跳转到第一页
   /*new listPage().gotoPage(1);*/
+  function yanzheng(obj){
+	  
+	  window.setTimeout(function(){   
+		  yanzh(obj); 
+		},1000);
+		var opts = {
+				  lines: 12, // The number of lines to draw
+				  length: 10, // The length of each line
+				  width: 16, // The line thickness
+				  radius: 6, // The radius of the inner circle
+				  corners: 1, // Corner roundness (0..1)
+				  rotate: 0, // The rotation offset
+				  color: 'lightseagreen', // #rgb or #rrggbb
+				  speed: 1, // Rounds per second
+				  trail: 60, // Afterglow percentage
+				  shadow: false, // Whether to render a shadow
+				  hwaccel: false, // Whether to use hardware acceleration
+				  className: 'spinner', // The CSS class to assign to the spinner
+				  zIndex: 2e9, // The z-index (defaults to 2000000000)
+				  top: 'auto', // Top position relative to parent in px
+				  left: 'auto' // Left position relative to parent in px
+				};
+				var target = document.getElementById('loadiv');
+				var spinner = new Spinner(opts).spin(target);
+				$("#loading").modal("show");
+  }
+function yanzh(obj){
+  var xmeleid = "XMID"+obj;
+  var bmeleid = "baomingid"+obj;
+  var xmid =  document.getElementById(xmeleid).innerHTML;
+  var bmid =  document.getElementById(bmeleid).innerHTML;
+  	var paramxm={};
+	paramxm["xmid"]=xmid;
+	var  bm_start = "";
+	var bm_end = "";
+	//复用zgks.js代码
+	FireFly.doAct("TS_XMGL_BMGL","getXmInfo",paramxm,true,false,function(data){
+		var bminfo = data.list;
+		var bminfojson = JSON.parse(bminfo);
+		 bm_start = bminfojson[0].BM_START;
+		 bm_end = bminfojson[0].BM_END;
+	});
+	var bminfo={};
+		bminfo['XM_ID'] = xmid;
+		bminfo['BM_CODE'] = user_code;
+		bminfo['BM_STARTDATE'] = bm_start;
+		bminfo['BM_ENDDATE'] = bm_end;
+		
+		var result = FireFly.byId("TS_BMLB_BM",bmid);
+		var bmlist=[];
+		var param={};
+		var leibie = {};
+		if(result!=null){
+			param["BM_TYPE"]=result.BM_TYPE;
+			param["BM_MK_CODE"]=result.BM_MK_CODE;
+			param["BM_LB_CODE"]=result.BM_LB_CODE;
+			param["BM_XL_CODE"]=result.BM_XL_CODE;
+			leibie["BM_TYPE"]=result.BM_TYPE;
+			leibie["BM_MK"]=result.BM_MK_CODE;
+			leibie["BM_LB"]=result.BM_LB_CODE;
+			leibie["BM_XL"]=result.BM_XL_CODE;
+			var data = FireFly.doAct("TS_BMLB_BM","getOneKslbk",param);
+			leibie["ID"]=data.kslbk_id;
+			bmlist.push(leibie);
+		}
+		var params = {};
+		params['BM_INFO'] = JSON.stringify(bminfo);
+		params['BM_LIST'] = JSON.stringify(bmlist);
+		FireFly.doAct("TS_XMGL_BMSH", "vlidates", params, false,true,function(data){
+    		//获取后台传过来的key
+         	for(var i=0;i<bmlist.length;i++){
+         		
+             	//获取验证规则div的id
+         		
+       			var a=bmlist[i].ID;
+       			
+       			//获取验证结果div的id
+       			
+       			var dataArray =data[a];
+       			
+            	//获取div对应的数组
+       			
+       				var shArray=true;
+       				
+       				//判断此考试是否已报名  如果已报名审核通过 必须删除 才能提交
+       				
+       				var FLAG = false;
+       				
+       				var shti = "";
+       				
+       				var zsts = '';
+       				//保存 验证信息
+       				
+       				for(var j=0;j<dataArray.length;j++){
+       					
+       					shti=dataArray[j].TISHI;
+       					
+						if(dataArray[j].VLIDATE=="false"){
+							
+							if(shti!="true"){
+								zsts="true";
+								shArray=false;
+								
+							}
+						}
+						
+       				}
+       				$("#loading").modal("hide");
+       				if(shArray==true&&zsts=="true"){
+       					
+       					//提示输入满多少年
+       					$("#yzxx").modal("show");
+       					
+       					//去待审核中
+       					
+       					paramyzxx['bmid']=bmid;
+       					
+       					shArray=false;
+       					
+       					//改变验证结果
+       				}
+       				if(shArray==false){
+       					
+       					//不改变数据位置  只改变验证结果 
+       					
+       					paramyzxx['bmid']=bmid;
+       					
+       					paramyzxx['yzxx']=JSON.stringify(dataArray);
+       					
+       					FireFly.doAct("TS_BMLB_BM","updateYzxx",paramyzxx)
+       					
+       				}if(shArray==true){
+       					
+       					//改变状态  改为通过 删除 不通过数据  放到pass表
+       					
+       					paramyzxx['bmid']=bmid;
+       					
+       					paramyzxx['yzxx']=JSON.stringify(dataArray);
+       					
+       					FireFly.doAct("TS_BMLB_BM",'takepass',paramyzxx);
+       				}
+       			
+         	}
+        	
+    	});	
+		
+		new listPage().gotoPage(1);
+}
+var paramyzxx={}
+
+function yztj(){
+	paramyzxx['year']=$("#yzinput").val();
+	FireFly.doAct("TS_BMLB_BM",'takestay',paramyzxx);
+	$("#yzxx").modal("hide");
+}
+//等待提交的方法
