@@ -811,10 +811,10 @@ public class BmlbServ extends CommonServ {
 			String s = bean.getStr("KSLBK_XL");
 			String ss = bean.getStr("KSLBK_MK");
 			String sss = bean.getId();
-			if (s == "") {
+			if (s == ""&&!bean.getStr("KSLBK_CODE").equals("023001")) {
 				s1 += "{text: '" + bean.getStr("KSLBK_NAME") + "', value: '" + bean.getStr("KSLBK_CODE")
 						+ "', extendAttr: { id: " + bean.getId() + " } }, ";
-			} else if ("".equals(bean.getStr("KSLBK_MK"))) {
+			} else if ("".equals(bean.getStr("KSLBK_MK"))&&!"".equals(bean.getStr("KSLBK_XL_CODE"))) {
 				s2 += "{ " + '"' + "text" + '"' + ": " + '"' + bean.getStr("KSLBK_XL") + '"' + "," + '"' + "value" + '"'
 						+ ": " + '"' + bean.getStr("KSLBK_XL_CODE") + '"' + "," + '"' + "extendAttr" + '"' + ": {" + '"'
 						+ "id" + '"' + ": " + '"' + bean.getId() + '"' + "," + '"' + "parentId" + '"' + ":" + '"'
