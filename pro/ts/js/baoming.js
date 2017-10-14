@@ -226,11 +226,9 @@ function selectcreate(){
         var curKeyValue = $this.find('option:checked').attr(opt.primaryKey);
         var nextVal = $next.val();
         var $nextItems = $next.find('option');
-        alert($next.find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').length);
         $next.find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').each(function (){
         	$(this).wrap("<span style='display:none'></span>");
         });
-        alert($("#" + opt.targets[nextIndex+1]).find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').length);
         $("#" + opt.targets[nextIndex+1]).find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').each(function (){
         	$(this).wrap("<span style='display:none'></span>");
         });
