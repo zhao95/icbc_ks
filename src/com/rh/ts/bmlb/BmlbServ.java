@@ -36,6 +36,7 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
+import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
 import com.rh.ts.xmgl.XmglMgr;
 
@@ -176,6 +177,7 @@ public class BmlbServ extends CommonServ {
 					String kslb_mk_code = (String) job.get("BM_MK");
 					String kslb_type = (String) job.get("BM_TYPE");
 					String kslb_id = (String) job.get("ID");
+					String rz_year = (String) job.get("YEAR");
 					String wherelbk = "";
 					if (!kslb_mk_code.equals("")) {
 						wherelbk = "AND KSLBK_CODE=" + "'" + kslb_code + "'" + " AND KSLBK_XL_CODE=" + "'"
@@ -226,7 +228,11 @@ public class BmlbServ extends CommonServ {
 					}
 					// 0无审核,1自动审核, 2人工审核, 3自动+人工审核
 					int count = XmglMgr.existSh(xm_id);
+					if(!"".equals(rz_year)){
+						count=2;
+					}
 					Bean beans = new Bean();
+					beans.set("RZ_YEAR", rz_year);
 					beans.set("BM_CODE", user_code);
 					beans.set("BM_NAME", user_name);
 					beans.set("BM_SEX", user_sex);
@@ -324,6 +330,7 @@ public class BmlbServ extends CommonServ {
 
 					// 添加到审核表中
 					Bean shBean = new Bean();
+					shBean.set("RZ_YEAR", rz_year);
 					shBean.set("XM_ID", xm_id);
 					shBean.set("ODEPT_CODE", odept_code);
 					shBean.set("BM_ID", bm_id);
@@ -371,7 +378,7 @@ public class BmlbServ extends CommonServ {
 					 //自动审核保存到 报名明细中
 					 Bean mindbean = new Bean();
 					 mindbean.set("SH_LEVEL", 0);
-					 mindbean.set("SH_MIND", "自动审核规则");
+					 mindbean.set("SH_MIND", yzgzArg.toString());
 					 mindbean.set("DATA_ID",bm_id);
 					 mindbean.set("SH_STATUS", ad_result);
 					 mindbean.set("SH_ULOGIN", "自动审核");
@@ -667,7 +674,7 @@ public class BmlbServ extends CommonServ {
 		String servId = "TS_BMLB_BM";
 		String id = paramBean.getStr("id");
 		String where = "AND BM_ID=" + "'" + id + "'";
-		String where1 = "AND DATA_ID = '"+id+"'";
+		String where1 = "AND DATA_ID = '"+id+"' AND SH_TYPE='1'";
 		List<Bean> list1 = ServDao.finds("TS_COMM_MIND", where1);
 		List<Bean> list = ServDao.finds(servId, where);
 		for (int i = 0; i < list.size(); i++) {
@@ -678,9 +685,7 @@ public class BmlbServ extends CommonServ {
 					flag = true;
 				}
 			}
-			if(list1.size()==0){
-				flag = true;
-			}
+			
 			if(flag){
 				//已经审核过 修改状态；
 				Bean dataBean = list.get(i);
@@ -1179,7 +1184,7 @@ public class BmlbServ extends CommonServ {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String strdate = sdf.format(date);
-		String highwhere = " AND XM_ID='"+xmid+"' AND BM_CODE="+"'"+user_code+"' AND "+"'"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND(BM_SH_STATE=0 or BM_SH_STATE=2) AND BM_STATE='1'";
+		String highwhere = " AND XM_ID='"+xmid+"' AND BM_CODE="+"'"+user_code+"' AND "+"'"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND BM_STATE='1'";
 		List<Bean> finds = ServDao.finds("TS_BMLB_BM",highwhere);
 		return new OutBean().set("list", finds);
 	}
@@ -1209,9 +1214,161 @@ public class BmlbServ extends CommonServ {
 	 */
 	public OutBean getkslbk(Bean paramBean){
 		List<Bean> finds = null;
-	
 			String where = "AND KSLBK_XL_CODE is null";
 			finds = ServDao.finds("TS_XMGL_BM_KSLBK", where);
 		return new OutBean().set("LBS", finds);
 	}
-}
+	/**
+	 * 获取考试类别库id
+	 * @param paramBean
+	 * @return
+	 */
+	public OutBean getOneKslbk(Bean paramBean){
+		SqlBean sql = new SqlBean();
+		sql.and("KSLBK_CODE",paramBean.getStr("BM_LB_CODE"));
+		sql.and("KSLBK_XL_CODE",paramBean.getStr("BM_XL_CODE"));
+		sql.and("KSLBK_MKCODE",paramBean.getStr("BM_MK_CODE"));
+		sql.and("KSLBK_TYPE",paramBean.getStr("BM_TYPE"));
+		Bean find = ServDao.find("TS_XMGL_BM_KSLBK", sql);
+		if(find!=null){
+			return new OutBean().set("kslbk_id", find.getId());
+		}
+		return new OutBean();
+	}
+	
+	/**
+	 * 更新验证信息
+	 */
+	public OutBean updateYzxx(Bean paramBean){
+		String BMID = paramBean.getStr("bmid");
+		String yzxx = paramBean.getStr("yzxx");
+		SqlBean sql = new SqlBean();
+		sql.and("DATA_ID", BMID);
+		sql.and("SH_TYPE", 1);
+		List<Bean> finds = ServDao.finds("TS_COMM_MIND", sql);
+		if(finds!=null&&finds.size()!=0){
+			for (Bean bean : finds) {
+				if(!"".equals(bean.getStr("SH_UCODE"))){
+					return new OutBean().setError("已手动审核验证失败");
+				}
+			}
+			for (Bean bean : finds) {
+				if("".equals(bean.getStr("SH_UCODE"))){
+					bean.set("SH_MIND", yzxx);
+					ServDao.save("TS_COMM_MIND", bean);
+				}
+			}
+			return new OutBean();
+		}
+		return new OutBean();
+	}
+	
+	/**
+	 * 从新验证通过
+	 */
+	public OutBean takepass(Bean paramBean){
+		String BMID = paramBean.getStr("bmid");
+		String yzxx = paramBean.getStr("yzxx");
+		
+		SqlBean sql1 = new SqlBean();
+		sql1.and("DATA_ID", BMID);
+		sql1.and("SH_TYPE", 1);
+		List<Bean> finds = ServDao.finds("TS_COMM_MIND", sql1);
+		if(finds!=null&&finds.size()!=0){
+			for (Bean bean : finds) {
+				if(!"".equals(bean.getStr("SH_UCODE"))){
+					return new OutBean().setError("已手动审核验证失败");
+				}
+			}
+			for (Bean bean : finds) {
+				if("".equals(bean.getStr("SH_UCODE"))){
+					bean.set("SH_MIND", yzxx);
+					ServDao.save("TS_COMM_MIND", bean);
+				}
+			}
+			
+			
+		}
+		
+		SqlBean sql = new SqlBean();
+		sql.and("BM_ID", BMID);
+		List<Bean> BMBeanList = ServDao.finds("TS_BMSH_NOPASS", sql);
+		if(BMBeanList!=null&&BMBeanList.size()!=0){
+			Bean bean = BMBeanList.get(0);
+			bean.remove("SH_ID");
+			bean.remove("S_CMPY");
+			bean.remove("S_ATIME");
+			bean.remove("S_MTIME");
+			bean.remove("S_FLAG");
+			bean.remove("_PK_");
+			bean.remove("ROW_NUM_");
+			Bean newBean = new Bean();
+			newBean.copyFrom(bean);
+			ServDao.save("TS_BMSH_PASS", newBean);
+			Bean find = ServDao.find("TS_BMLB_BM", BMID);
+			if(find!=null){
+				find.set("bm_sh_state", 1);
+			}
+			return new OutBean();
+		}
+		return new OutBean().setError("验证失败");
+	}
+	
+	
+	public OutBean takestay(Bean paramBean){
+		String BMID = paramBean.getStr("bmid");
+		String year = paramBean.getStr("year");
+		SqlBean sql1 = new SqlBean();
+		sql1.and("DATA_ID", BMID);
+		sql1.and("SH_TYPE", 1);
+		List<Bean> finds = ServDao.finds("TS_COMM_MIND", sql1);
+		for (Bean bean : finds) {
+			if(!"".equals(bean.getStr("SH_UCODE"))){
+				return new OutBean().setError("已手动审核验证失败");
+			}
+		}
+	
+		SqlBean sql = new SqlBean();
+		sql.and("BM_ID", BMID);
+		List<Bean> BMBeanList = ServDao.finds("TS_BMSH_NOPASS", sql);
+		if(BMBeanList!=null&&BMBeanList.size()!=0){
+			Bean bean = BMBeanList.get(0);
+			bean.remove("SH_ID");
+			bean.remove("S_CMPY");
+			bean.remove("S_ATIME");
+			bean.remove("S_MTIME");
+			bean.remove("S_FLAG");
+			bean.remove("_PK_");
+			bean.remove("ROW_NUM_");
+			Bean newBean = new Bean();
+			newBean.copyFrom(bean);
+			bean.set("RZ_YEAR", year);
+			ServDao.save("TS_BMSH_STAY", newBean);
+			Bean find = ServDao.find("TS_BMLB_BM", BMID);
+			if(find!=null){
+				find.set("bm_sh_state", 0);
+			}
+			return new OutBean();
+		}
+		return new OutBean().setError("验证失败");
+	}
+	/**
+	 * 获取自动验证信息  进行展示
+	 */
+	public OutBean getZdYzxx(Bean paramBean){
+		String bmid = paramBean.getStr("bmids");
+		SqlBean sql1 = new SqlBean();
+		sql1.and("DATA_ID", bmid);
+		sql1.and("SH_TYPE", 1);
+		sql1.and("SH_UCODE","");
+		List<Bean> finds = ServDao.finds("TS_COMM_MIND", sql1);
+		if(finds!=null&&finds.size()!=0){
+			for (Bean bean : finds) {
+				if("".equals(bean.getStr("SH_UCODE"))){
+					return new OutBean().set("yzxx", bean.getStr("SH_MIND"));
+				}
+			}
+		}
+		return new OutBean().setError("获取验证信息失败");
+	}
+	}
