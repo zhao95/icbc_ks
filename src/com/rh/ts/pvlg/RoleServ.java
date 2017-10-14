@@ -1,5 +1,10 @@
 package com.rh.ts.pvlg;
 
+import java.util.Iterator;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.org.UserBean;
@@ -80,31 +85,85 @@ public class RoleServ extends CommonServ {
 	 *            参数信息
 	 */
 	protected void beforeQuery(ParamBean paramBean) {
-		
+		/**
 		Bean item = paramBean.getBean("PVLG_ITEM");
-		
 		//机构tree path
 		String path = item.getStr("CODE_PATH");
-		
 		//目录tree path
 		String ctlgPath = item.getStr("CTLG_PATH");
-		
 		//tree的编码 机构编码
 		String dcode = paramBean.getStr("PVLG_FIELD");
-		
 		//用户权限 所有权限的机构编码
-		Bean userPvlg = paramBean.getBean("USER_PVLG");
+		Bean userPvlg = paramBean.getBean("USER_PVLG");**/
+		int treeWhereSize = paramBean.getList("_treeWhere").size();
+		if(treeWhereSize == 0){
+		 // tree的编码 机构编码
+		Bean extParams = paramBean.getBean("extParams");
+		// String dcode = extParams.getStr("PVLG_FIELD");
+		// 用户权限 所有权限的机构编码
+		Bean userPvlg = extParams.getBean("USER_PVLG");
+		JSONObject jsonObject = new JSONObject(userPvlg);
+		String result=null;
+		Iterator iterator = jsonObject.keys();
+	  	String key;
+		while (iterator.hasNext()) {
+			key = (String) iterator.next();
+			try {
+				JSONObject object = (JSONObject) jsonObject.get(key);
+				String object2 = (String)object.get("ROLE_DCODE");
+				String[] object3=object2.split(",");
+				if(result!=null){
+					for(int  i=0;i<object3.length;i++){
+						if(result.indexOf(object3[i])<0){
+							result+=","+object3[i];
+						}
+					}
+				}else{
+					result =object2;
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+		}
+		System.out.println("result:"+result);//result 已经是权限值或者是 null
 		
-		
-		//无权限
-//		paramBean.set(Constant.PARAM_WHERE, " and 1=2");
-		
-		
-//		if(!Strings.isBlank(sqlStr)) {
-//			
-////			paramBean.set(Constant.PARAM_WHERE, sqlStr);
-////			paramBean.setQueryExtWhere(sqlStr);
+//        int treeWhereSize = paramBean.getList("_treeWhere").size();
+//		if(treeWhereSize == 0){
+//			StringBuilder strWhere = new StringBuilder(); 
+//	        strWhere.append(" and 1=2");
+//	        paramBean.setQueryExtWhere(strWhere.toString());
 //		}
+		 if(result !=null){			
+			 //result 排序
+			 String[] roles = result.split(",");
+		/*	 Arrays.sort(roles);
+			 String lastResult="";
+			 for(int i=0;i<roles.length;i++){
+				 lastResult+="^PROJECT-"+roles[i];
+			 }
+			 lastResult = lastResult.substring(1)+"^";
+			 System.out.println("lastResult:"+lastResult);*/
+			 StringBuilder param_where=new StringBuilder();
+			 param_where.append("AND CTLG_PCODE IN ( ");
+			 param_where.append("SELECT CTLG_CODE_H FROM TS_COMM_CATALOG ");
+			 param_where.append("WHERE  CTLG_MODULE='ROLE'  ");
+			 param_where.append("and ( ");
+			 StringBuilder subSQL= new StringBuilder();
+			 for(int i=0;i<roles.length;i++){
+				 subSQL.append("CTLG_PATH_H LIKE '%ROLE-"+roles[i]+"^%'  or");
+			 }
+			 subSQL.delete(subSQL.length()-2, subSQL.length());
+			 param_where.append(subSQL);
+			 param_where.append(") ) ");
+			 paramBean.set(Constant.PARAM_WHERE, param_where.toString());
+			 System.out.println("param_where:"+param_where.toString());
+		 }else{
+		 //无权限
+		 paramBean.set(Constant.PARAM_WHERE, " and 1=2");
+		 }
+		} 
 		
 	}
 

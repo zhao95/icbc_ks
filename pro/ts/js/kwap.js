@@ -1,3 +1,222 @@
+/*
+ * 文件结构
+ *
+ * bindHeaderAction 绑定按钮事件
+ *
+ * ZdfpccModal 自动分配场次modal
+ *
+ * LookJkModal 查看借考人员modal
+ *
+ * UpdateCCModal 更改场次modal
+ *
+ * KcObject 考场场次相关方法
+ *
+ * KsObject 考生相关方法
+ *
+ * Utils
+ * */
+
+
+var ListPage = function () {
+    // 构建页码所需参数
+    this.showPageNum = 5; // 最多显示的页码
+    this.startNum = 1; // 中间页码的第一个页码
+    this.endNum = this.startNum; // 中间页码的最后一个页码
+};
+/*根据条件获取数据*/
+ListPage.prototype.getListData = function (num) {
+    var showNum = 2;//parseInt(jQuery('#showNumSelect').find("option:selected").val());
+    var data = {};
+    data._PAGE_ = {};
+    data._PAGE_.NOWPAGE = num;
+    data._PAGE_.SHOWNUM = showNum;
+    return null;
+};
+/*根据listdata构建表格*/
+ListPage.prototype.bldTable = function (listData) {
+};
+/*构建主体内容（表格和分页）*/
+ListPage.prototype._bldBody = function (num) {
+
+    var listData = this.getListData(num);
+    this._lPage = listData._PAGE_;
+    this._lData = listData._DATA_;
+    this.bldTable(listData);
+    this.bldPage(/*listData._PAGE_*/);
+};
+/*查询更新*/
+ListPage.prototype.search = function () {
+    this.gotoPage(1);
+};
+/*跳转到指定页*/
+ListPage.prototype.gotoPage = function (num) {
+    this._bldBody(num);
+};
+/*上一页*/
+ListPage.prototype.prePage = function () {
+    var prePage = parseInt(this._lPage.NOWPAGE) - 1;
+    var nowPage = "" + ((prePage > 0) ? prePage : 1);
+    this.gotoPage(nowPage);
+};
+/*下一页*/
+ListPage.prototype.nextPage = function () {
+    var nextPage = parseInt(this._lPage.NOWPAGE) + 1;
+    var pages = parseInt(this._lPage.PAGES);
+    var nowPage = "" + ((nextPage > pages) ? pages : nextPage);
+    this.gotoPage(nowPage);
+};
+/*首页*/
+ListPage.prototype.firstPage = function () {
+    this.gotoPage(1);
+};
+/*末页*/
+ListPage.prototype.lastPage = function () {
+    this.gotoPage(this._lPage.PAGES);
+};
+/*构建分页*/
+ListPage.prototype.bldPage = function () {
+    this._buildPageFlag = true;
+    var _self = this;
+//            this._page = jQuery("<div class='rhGrid-page'></div>");
+    this._page = jQuery(".rhGrid-page");
+    this._page.html('');
+    //判断是否构建分页
+    if (this._buildPageFlag === "false" || this._buildPageFlag === false) {
+        this._page.addClass("rhGrid-page-none");
+    } else if (this._lPage.PAGES === null) {//没有总条数的情况
+        if (this._lPage.NOWPAGE > 1) {//上一页 {"ALLNUM":"1","SHOWNUM":"1000","NOWPAGE":"1","PAGES":"1"}
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
+            this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
+                _self.prePage();
+            }));
+        } else {
+//			this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
+            this._page.append("<span class='disabled ui-corner-4'><</span>");
+        }
+        this._page.append("<span class='current ui-corner-4'>" + this._lPage.NOWPAGE + "</span>");	//当前页
+        if (this._lData.length === this._lPage.SHOWNUM) {//下一页
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
+            this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+                _self.nextPage();
+            }));
+        } else {
+//			this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
+            this._page.append("<span class='disabled ui-corner-4'>></span>");
+        }
+    } else if (!jQuery.isEmptyObject(this._lPage)) {
+        // 当前页码
+        var currentPageNum = parseInt(this._lPage.NOWPAGE);
+        // 总页数
+        var sumPage = parseInt(this._lPage.PAGES);
+
+        if (this.startNum + this.showPageNum < sumPage) {
+            this.endNum = this.startNum + this.showPageNum
+        } else {
+            this.endNum = sumPage;
+        }
+
+        // 总条数
+        var allNum = parseInt(this._lPage.ALLNUM);
+        // 显示上一页
+        if (currentPageNum !== 1) {
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
+            this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
+                _self.prePage();
+            }));
+        } else {
+//			this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
+            this._page.append("<span class='disabled ui-corner-4'><</span>");
+        }
+        // 移动页码
+        if (currentPageNum > this.startNum + Math.floor((this.endNum - this.startNum) / 2)) {// 如果点击了后面的页码，则后移
+            if (currentPageNum === sumPage) {// 点击了最后一页
+                this.endNum = sumPage;
+
+                if (this.endNum - this.showPageNum > 0) {
+                    this.startNum = this.endNum - this.showPageNum;
+                } else {
+                    this.startNum = 1;
+                }
+            } else {
+                if (currentPageNum > this.showPageNum) {
+                    this.endNum = currentPageNum + 1;
+                    this.startNum = currentPageNum - this.showPageNum + 1;
+                }
+            }
+        } else {// 否则前移
+            if (currentPageNum === 1) {// 点击了第一页
+                this.startNum = 1;
+            } else {
+                this.startNum = currentPageNum - 1;
+            }
+            if (this.startNum + this.showPageNum < sumPage) {
+                this.endNum = this.startNum + this.showPageNum;
+            } else {
+                this.endNum = sumPage;
+            }
+        }
+        // 显示首页
+        if (this.startNum !== 1) {
+            this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>1</a>").click(function () {
+                _self.gotoPage(parseInt(jQuery(this).html()));
+            })).append("...");
+        }
+        // 如果总页数小于本页显示的最大页码
+        if (sumPage < this.endNum) {
+            this.endNum = sumPage;
+        }
+        // 显示中间页码
+        for (var i = this.startNum; i <= this.endNum; i++) {
+            if (i === currentPageNum) {// 构建当前页
+                this._page.append("<span class='current ui-corner-4'>" + i + "</span>");
+            } else {
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + i + "</a>").click(function () {
+                    _self.gotoPage(parseInt(jQuery(this).html()));
+                }));
+            }
+        }
+        // 显示尾页
+        if (sumPage > this.endNum) {
+            this._page.append("...").append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + sumPage + "</a>").click(function () {
+                _self.lastPage();
+            }));
+        }
+        // 显示下一页
+        if (currentPageNum !== sumPage) {
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
+            this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+                _self.nextPage();
+            }));
+        } else {
+//			this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
+            this._page.append("<span class='disabled ui-corner-4'>></span>");
+        }
+        // 显示跳转到指定页码
+        if (sumPage > 6) {
+            this._page.append("<input class='toPageNum ui-corner-4' type='text' value=''/>").append(jQuery("<input class='toPageBtn' type='button' value='GO' />").click(function () {
+                try {
+                    var val = parseInt(jQuery(this).prev().val());
+                    if (val >= 1 && val <= sumPage) {
+                        _self.gotoPage(val);
+                    }
+                } catch (e) {
+                    // 页码转换异常，忽略
+                }
+            }));
+        }
+        //总条数显示
+//		jQuery("<span class='allNum'></span>").text("共" + allNum + "条").appendTo(this._page);
+//                jQuery("<span class='allNum'></span>").text(Language.transArr("rh_ui_grid_L1", [allNum])).appendTo(this._page);
+    }
+    // _PAGE_ :{ALLNUM: "2", NOWPAGE: "1", PAGES: "1", SHOWNUM: "50"}
+    //上一页
+//            if () {
+//            }
+//            pageBean.NOWPAGE;
+//            pageBean.PAGES;
+    return this._page;
+};
+
 /**
  * 绑定页首按钮事件
  */
@@ -16,6 +235,26 @@ function bindHeaderAction() {
     });
     $("#tjccap").click(function () {
         $('#tjccapModal').modal('show');
+    });
+    //伸缩按钮
+    $("#toggle-sidebar").click(function () {
+        var speed = 200;
+        var $mainSidebar = $('.main-sidebar');
+        var $i = $(this).find('i');
+        if ($mainSidebar.width() === 15) {
+            //收缩状态
+            $('.content-wrapper').animate({marginLeft: "250px"}, speed);
+            $mainSidebar.animate({width: "250px"}, speed, function () {
+                $i.removeClass("fa-angle-right");
+                $i.addClass("fa-angle-left");
+            });
+        } else {
+            $('.content-wrapper').animate({marginLeft: "16px"}, speed);
+            $mainSidebar.animate({width: "16px"}, speed, function () {
+                $i.removeClass("fa-angle-left");
+                $i.addClass("fa-angle-right");
+            });
+        }
     });
 }
 
@@ -186,7 +425,7 @@ var UpdateCCModal = {
  * 考场场次操作集合
  */
 var KcObject = {
-    xmId: '',
+    xmId: '',//项目id
     rootData: '',//后端树数据
     rootNodes: '',//处理后的树数据
     kcArr: [],//所有待安排考场
@@ -250,7 +489,6 @@ var KcObject = {
         return result;
     },
 
-
     getCCTreeNodes: function () {
         if (this.rootNodes) {
             return this.rootNodes;
@@ -260,6 +498,11 @@ var KcObject = {
         return this.rootNodes;
     },
 
+    /**
+     * 递归遍历数据，生成jstree数据
+     * @param data
+     * @param parentNode
+     */
     recursiveTreeData: function (data, parentNode) {
         var node;
         var dataType = this.getDataType(data);
@@ -297,6 +540,13 @@ var KcObject = {
 
     /**
      * 加载考场场次数据
+     * _________________                             _________________
+     * ---kc
+     * -----------------      mergeCells(grid,[0])   -----------------
+     * ---cc   |  张三 |              =>             |       |  张三 |
+     * -----------------                             -  18   ---------
+     * ---dept   |  王五 |                             |       |  王五 |
+     * -----------------                             -----------------
      **/
     setCCTree: function () {
         var self = this;
@@ -316,13 +566,13 @@ var KcObject = {
                 //选中考场
                 self.setKcInfo(data.node.data);
                 //显示考场关联机构人员
-                KsObject.setKcId(data.node.data.KC_ID);
+                KsObject.setKcRelateOrg(data.node.data.KC_ID);
             } else if (dataType === 'cc') {
                 var parentKcNode = $.jstree.reference(jstree).get_node(data.node.parent);
                 //选中场次
                 self.setCcInfo(data.node.data, parentKcNode.data);
                 //显示考场关联机构人员
-                KsObject.setKcId(parentKcNode.data.KC_ID);
+                KsObject.setKcRelateOrg(parentKcNode.data.KC_ID);
             } else if (dataType === 'dept') {
                 KcObject.setOrgKcInfo(data.node.data.DEPT_CODE);
 //                    var parent = data.node.parent;
@@ -363,9 +613,10 @@ var KcObject = {
     setKcArrInfo: function (kcArr) {
         var $kcTip = $('#kcTip');
         $kcTip.html('');
-        var $kcInfoThead = $('#kcInfo').find('thead');
+        var $kcInfo = $('#kcInfo');
+        var $kcInfoThead = $kcInfo.find('thead');
         $kcInfoThead.html('');
-        var $kcInfoTbody = $('#kcInfo').find('tbody');
+        var $kcInfoTbody = $kcInfo.find('tbody');
         $kcInfoTbody.html('');
 
         //kcTip
@@ -477,8 +728,11 @@ var KcObject = {
      * 具体场次信息
      */
     setCcInfo: function (cc, parentKc, type) {
+        var self = this;
         this.currentCc = cc;
         this.currentParentKc = parentKc;
+        var sjId = cc.SJ_ID;
+        var kcId = this.currentParentKc.KC_ID;
         if (type !== 'view' && type !== 'list') {
             type = 'view';
         }
@@ -504,12 +758,11 @@ var KcObject = {
 
         if (type === 'view') {
             //tbody
-            var ccId = cc.CC_ID;
-            var sjId = cc.SJ_ID;
+            // var ccId = cc.CC_ID;
 //                var kcData = FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'byid', {
 //                    _PK_: ccId
 //                }, false, false);
-            var kcId = this.currentParentKc.KC_ID;
+            //获取考场座位信息
             var zwListBean = FireFly.doAct("TS_KCGL_ZWDYB", 'query', {
                 _WHERE_: " and KC_ID = '" + kcId + "'",
                 _ORDER_: " ZW_ZWH_XT asc"
@@ -548,15 +801,36 @@ var KcObject = {
             /**/
             this.addDroppableEvent($("#kcInfo").find("td"));
 
-            this.setZw(sjId);
+            this.setZwForView(sjId);
 
         } else if (type === 'list') {
-            $kcTip.append([
-                '<div style="margin:0 10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>',
-                '<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-up" style="color:green;"></i><span>移出</span></div>',
-                '<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-down" style="color:green;" aria-hidden="true"></i><span>添加</span></div>',
-                '<div style="margin-right:10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>',
-            ].join(''));
+
+            $kcTip.append('<div style="margin:0 10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>');
+            var $remove = jQuery('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-up" style="color:green;"></i><span>移出</span></div>');
+            $remove.bind('click', function () {
+                var $trs = Utils.getTableTbodyCheckedTrs("kcInfo");
+                var idStr = '';
+                for (var i = 0; i < $trs.length; i++) {
+                    var $tr = $trs[i];
+                    var id = $tr.attr('id');
+                    idStr += ',' + id;
+                }
+                idStr.substring(1, idStr.length);
+                FireFly.doAct("TS_XMGL_KCAP_YAPZW", "delete", {_PK_: idStr}, false, false, function () {
+                    self.setZwListContent(sjId, $kcInfoTbody);
+                    KsObject.search();
+                });
+            });
+            $kcTip.append($remove);
+            $kcTip.append('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-down" style="color:green;" aria-hidden="true"></i><span>添加</span></div>');
+            $kcTip.append('<div style="margin-right:10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>');
+
+            // $kcTip.append([
+            //     '<div style="margin:0 10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>',
+            //     '<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-up" style="color:green;"></i><span>移出</span></div>',
+            //     '<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-down" style="color:green;" aria-hidden="true"></i><span>添加</span></div>',
+            //     '<div style="margin-right:10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>',
+            // ].join(''));
 
             $kcInfoThead.append([
                 '<tr style="background-color: #e3e6ea">',
@@ -575,45 +849,74 @@ var KcObject = {
                 '</tr>'
             ].join(''));
 
-            $kcInfoThead.append([
-                '<tr>',
-                '   <td><input type="checkbox"></td>',
-                '   <td>1</td>',
-                '   <td>安徽省分行</td>',
-                '   <td>合肥市分行</td>',
-                '   <td>包河区支行</td>',
-                '   <td>宁国路网点</td>',
-                '   <td>黄虹</td>',
-                '   <td>初级营销 (公司业务)</td>',
-                '   <td>初级</td>',
-                '   <td>2</td>',
-                '   <td>10.108.11.1</td>',
-                '   <td>备注</td>',
-                '</tr>'
-            ].join(''));
+            this.setZwListContent(sjId, $kcInfoTbody);
+
+            // $kcInfoTbody.append([
+            //     '<tr>',
+            //     '   <td><input type="checkbox"></td>',
+            //     '   <td>1</td>',
+            //     '   <td>安徽省分行</td>',
+            //     '   <td>合肥市分行</td>',
+            //     '   <td>包河区支行</td>',
+            //     '   <td>宁国路网点</td>',
+            //     '   <td>黄虹</td>',
+            //     '   <td>初级营销 (公司业务)</td>',
+            //     '   <td>初级</td>',
+            //     '   <td>2</td>',
+            //     '   <td>10.108.11.1</td>',
+            //     '   <td>备注</td>',
+            //     '</tr>'
+            // ].join(''));
             //添加表头复选框变更事件
             Utils.addTableCheckboxChangeEvent('kcInfo');
         }
     },
 
-    setZw: function (sjId) {
+    setZwForView: function (sjId) {
         var zwListBean = FireFly.doAct("TS_XMGL_KCAP_YAPZW", "getYapZw", {SJ_ID: sjId});
         var zwList = zwListBean._DATA_;
         for (var i = 0; i < zwList.length; i++) {
             var zw = zwList[i];
-            $('#' + zw.ZW_ID).attr('shid', zw.SH_ID);
-            $('#' + zw.ZW_ID).find('.userName').html(zw.BM_NAME);
-            this.setZwContent(zw.ZW_ID, zw.YAPZW_ID, zw.BM_NAME);
+            var $zw = $('#' + zw.ZW_ID);
+            $zw.attr('shid', zw.SH_ID);
+            $zw.find('.userName').html(zw.BM_NAME);
+            this.setZwItemForView(zw.ZW_ID, zw.YAPZW_ID, zw.BM_NAME);
         }
     },
 
-    setZwContent: function (zwId, yapzwId, userName) {
+    setZwListContent: function (sjId, $kcInfoTbody) {
+        $kcInfoTbody.html('');
+        var zwListBean = FireFly.doAct("TS_XMGL_KCAP_YAPZW", "getYapzwContent", {SJ_ID: sjId});
+        var zwList = zwListBean._DATA_;
+        for (var i = 0; i < zwList.length; i++) {
+            var zw = zwList[i];
+            $kcInfoTbody.append([
+                '<tr id="' + zw.YAPZW_ID + '">',
+                '   <td><input type="checkbox"></td>',
+                '   <td>' + (i + 1) + '</td>',
+                '   <td>' + zw.org1 + '</td>',//一级机构
+                '   <td>' + zw.org2 + '</td>',//二级机构
+                '   <td>' + zw.org3 + '</td>',//三级机构
+                '   <td>' + zw.org4 + '</td>',//四级机构
+                '   <td>' + zw.BM_NAME + '</td>',//姓名
+                '   <td>' + zw.BM_XL + '-' + zw.BM_MK + '</td>',//考试名称
+                '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), zw.BM_TYPE) + '</td>',//级别
+                '   <td>Mark</td>',//报考数
+                '   <td>' + zw.IPZ_IP + '</td>',//ip
+                '   <td>Mark</td>',//备注
+                '</tr>'
+            ].join(''));
+        }
+    },
+
+    setZwItemForView: function (zwId, yapzwId, userName) {
         var self = this;
         var $zw = $('#' + zwId);
         $zw.attr('yapzwId', yapzwId);
         $zw.find('.userName').html(userName);
 //            $zw.droppable("destroy");
         $zw.droppable("disable");
+        $zw.css('background', '#c4ffb3');
         var $span = jQuery('<span class="close">x</span>');
         $span.unbind('click').bind('click', function () {
             FireFly.doAct("TS_XMGL_KCAP_YAPZW", "delete", {_PK_: yapzwId}, false, false, function () {
@@ -622,11 +925,13 @@ var KcObject = {
 //                    self.addDroppableEvent($zw);
                 $zw.find('.userName').html('');
                 $zw.find('.close').remove();
+                $zw.css('background', '');
                 KsObject.search();
             });
         });
         $zw.append($span);
     },
+
 
     /**
      * 添加拖拉放置事件
@@ -658,7 +963,7 @@ var KcObject = {
                     KC_ID: kcid,
                     SH_ID: shId
                 }, false, false, function (data) {
-                    self.setZwContent(zwId, data.YAPZW_ID, ui.draggable[0].cells[6].innerText);
+                    self.setZwItemForView(zwId, data.YAPZW_ID, ui.draggable[0].cells[6].innerText);
 //                        $(_this).find(".userName").html(ui.draggable[0].cells[6].innerText);
                 });
                 KsObject.search();
@@ -671,45 +976,48 @@ var KcObject = {
     }
 };
 
-// function setCCContent1() {
-//     var $leftSidebarContent = $('#left-sidebar-content');
-// //        $leftSidebarContent.html('');
-// //        var param = {
-// //            "_linkWhere": " and XM_ID='" + xmId + "' ",
-// //            "_linkServQuery": "2",
-// //            "XM_ID": xmId
-// //        };
-// //        var data = FireFly.doAct('TS_XMGL_KCAP_DAPCC', 'query', param);
-//
-//     var setting = {
-//         showcheck: true,
-//         rhexpand: false,
-//         expandLevel: 1,
-//         url: "SY_COMM_INFO.dict.do",
-//         theme: "bbit-tree-no-lines",
-//         rhItemCode: "CTLG_PCODE",
-//         rhLeafIcon: "",
-//         data: []
-//     };
-//     var tree = new rh.ui.Tree(setting);
-//     tree.obj.appendTo($leftSidebarContent);
-// }
-
 var KsObject = {
     xmId: '',
 //        deptCode: '',//那个部门下的考生
     kcId: '',//考场id
     ksArr: [],//考生信息
     ksOrgTree: '',
+    listPage: new ListPage(),
+    /**
+     * 初始化考生列表界面
+     * @param xmId
+     */
     initData: function (xmId) {
+        var self = this;
         this.xmId = xmId;
 //            this.getKsArr(null, function () {
 //                this.setDfpKsContent();
 ////                this.setKsOrgContent();
 //            });
         this._initSearchValue();
+
+        self.listPage.getListData = function (num) {
+            var showNum = parseInt(jQuery('#showNumSelect').find("option:selected").val());
+            var data = {};
+            data._PAGE_ = {};
+            data._PAGE_.NOWPAGE = num;
+            data._PAGE_.SHOWNUM = showNum;
+            return self.getKsArr(data);
+        };
+        self.listPage.bldTable = function (/*listData*/) {
+            self.setDfpKsContent();
+        };
+        //变更每页显示条数时，重新获取数据
+        jQuery('#showNumSelect').on('change', function () {
+            self.listPage.search();
+        });
     },
 
+    /**
+     * 通过id数组获取对应的考生数据
+     * @param ids
+     * @returns {Array}
+     */
     getKsArrByIds: function (ids) {
         //ids this.ksArr
         var result = [];
@@ -725,22 +1033,33 @@ var KsObject = {
         return result;
     },
 
-    setKcId: function (kcId) {
+    /**
+     * 根据考场id展示考场关联的机构
+     * @param kcId
+     */
+    setKcRelateOrg: function (kcId) {
         if (this.kcId !== kcId) {
             this.kcId = kcId;
             this.setKsOrgContent(kcId);
         }
     },
 
-    setInitData: function (deptCode) {
-        this.setKsOrgContent(deptCode);
-        this.getKsArr(null, function () {
-            this.setDfpKsContent();
-//                this.setKsOrgContent();
-        });
-    },
+//     setInitData: function (deptCode) {
+//         this.setKsOrgContent(deptCode);
+//         this.getKsArr(null, function () {
+//             this.setDfpKsContent();
+// //                this.setKsOrgContent();
+//         });
+//     },
 
-    getKsArr: function (params, callback) {
+    /**
+     * 根据条件参数params获取考生信息 -> this.ksArr
+     * 并执行回调函数
+     * @param params1
+     * @param callback
+     */
+    getKsArr: function (params1, callback) {
+        var params = this._getExtWhere();
         var self = this;
         var param = {
             _linkWhere: " and XM_ID='" + self.xmId + "' ",
@@ -748,7 +1067,8 @@ var KsObject = {
             XM_ID: self.xmId
         };
         jQuery.extend(param, params);
-        FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getKsContent', param, false, false, function (data) {
+        jQuery.extend(param, params1);
+        return FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getKsContent', {data: JSON.stringify(param)}, false, false, function (data) {
             self.ksArr = data._DATA_;
             if (callback) {
                 callback.apply(self);
@@ -888,7 +1208,8 @@ var KsObject = {
      **/
     setDfpKsContent: function () {
         var ksArr = this.ksArr;
-        var $ksTableTbody = $('#ksTable').find('tbody');
+        var $ksTable = $('#ksTable');
+        var $ksTableTbody = $ksTable.find('tbody');
         $ksTableTbody.html('');
         for (var i = 0; i < ksArr.length; i++) {
             var ks = ksArr[i];
@@ -918,13 +1239,13 @@ var KsObject = {
                 '   <td>' + ks.BM_CODE + '</td>',//人力资源编码
                 '</tr>'
             ].join(''));
-            //添加表头复选框变更事件
+
         }
-
+        //添加表头复选框变更事件
         Utils.addTableCheckboxChangeEvent('ksTable');
+        $('#ksTablePage').css('display', 'block');
 
-
-        $("#ksTable tbody tr").draggable({
+        $ksTable.find("tbody tr").draggable({
             // cursor: 'move',
             cursorAt: {left: 33, top: 55},
             containment: 'body',
@@ -947,11 +1268,11 @@ var KsObject = {
 
     search: function () {
         var self = this;
+        this.listPage.search();
         //条件  请求  渲染
-        var params = this._getExtWhere();
-        this.getKsArr(params, function () {
-            self.setDfpKsContent();
-        });
+        // this.getKsArr(null, function () {
+        //     self.setDfpKsContent();
+        // });
     },
 
     /*获取搜索条件*/
@@ -1002,7 +1323,6 @@ var KsObject = {
 
 };
 
-
 var Utils = {
     /**
      * 表格添加全选/全不选功能（复选框）
@@ -1010,21 +1330,21 @@ var Utils = {
      */
     addTableCheckboxChangeEvent: function (tableId) {
         var $table = $('#' + tableId);
-        var thCheckbox = $table.find('th input[type="checkbox"]');
-        if (thCheckbox.length >= 0) {
+        var $thCheckbox = $table.find('th input[type="checkbox"]');
+        if ($thCheckbox.length >= 0) {
             //th checkbox 全选/全不选 事件
-            $(thCheckbox[0]).unbind('change').bind('change', function () {
-                var tdCheckboxs = $table.find('td input[type="checkbox"]');
-                for (var i = 0; i < tdCheckboxs.length; i++) {
-                    var tdCheckbox = tdCheckboxs[i];
+            $($thCheckbox[0]).unbind('change').bind('change', function () {
+                var $tdCheckboxs = $table.find('td input[type="checkbox"]');
+                for (var i = 0; i < $tdCheckboxs.length; i++) {
+                    var tdCheckbox = $tdCheckboxs[i];
                     tdCheckbox.checked = this.checked;
                 }
             });
             //td checkbox td中checkbox变更，改变th checkbox
             var tdCheckboxs = $table.find('td input[type="checkbox"]');
             tdCheckboxs.unbind('change').bind('change', function () {
-                if (thCheckbox[0].checked && !this.checked) {
-                    thCheckbox[0].checked = false;
+                if ($thCheckbox[0].checked && !this.checked) {
+                    $thCheckbox[0].checked = false;
                 } else {
                     var allChecked = true;
                     for (var i = 0; i < tdCheckboxs.length; i++) {
@@ -1033,10 +1353,25 @@ var Utils = {
                             allChecked = false;
                         }
                     }
-                    thCheckbox[0].checked = allChecked;
+                    $thCheckbox[0].checked = allChecked;
                 }
             });
         }
+    },
+
+    getTableTbodyCheckedTrs: function (tableId) {
+        var result = [];
+        var $table = $('#' + tableId);
+        var $trs = $table.find('tbody tr');
+
+        for (var i = 0; i < $trs.length; i++) {
+            var $tr = jQuery($trs[i]);
+            var $checkBox = $tr.find('td input[type="checkbox"]');
+            if ($checkBox[0].checked) {
+                result.push($tr);
+            }
+        }
+        return result;
     },
 
     setOptionData: function (selectId, dictData, selectValue) {

@@ -28,6 +28,7 @@ public class JklbServ extends CommonServ {
     private final static String TSJK_SERVID = "TS_JKLB_JK";
     private final static String TODO_SERVID = "TS_COMM_TODO";
     private final static String DONE_SERVID = "TS_COMM_TODO_DONE";
+    private final static String TS_BMSH_PASS_SERVID = "TS_BMSH_PASS";
     private final static String COMM_MIND_SERVID = "TS_COMM_MIND";
 
     private final static String dateFormatString = "yyyy-MM-dd HH:mm:ss";
@@ -161,6 +162,24 @@ public class JklbServ extends CommonServ {
         }
         jkbean.set("JK_STATUS", jk_status);
         ServDao.update(servId, jkbean);
+
+        String jkKsname = jkbean.getStr("JK_KSNAME");
+        String[] bmIds = jkKsname.split(",");
+        for (String bmId : bmIds) {
+            ParamBean queryParamBean = new ParamBean();
+            queryParamBean.set("BM_ID", bmId);
+            Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
+            if (bean == null) {
+                continue;
+            }
+            if ("1".equals(bean.getStr("BM_STATUS"))) {
+                bean.set("BM_STATUS", "3");
+            } else {
+                bean.set("BM_STATUS", "2");
+            }
+            bean.set("JK_ODEPT", jkbean.getStr("JK_YJFH"));
+            ServDao.update(TS_BMSH_PASS_SERVID, bean);
+        }
 
         if ("1".equals(jk_status)) {
             int nodeSteps1 = Integer.parseInt(todoBean.getStr("NODE_STEPS"));

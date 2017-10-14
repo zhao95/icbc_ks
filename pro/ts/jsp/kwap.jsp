@@ -150,18 +150,13 @@
                 <div class="col-sm-12" style="border-top: 1px solid #bfdfee;"></div>
             </div>
             <div class="_scrollbar" style="height:100%;padding-top: 5px;padding-left: 5px;overflow: auto;">
+                <button id="toggle-sidebar"
+                        style="position: absolute;right: 0;top: 30px;padding:3px">
+                    <i class="fa fa-angle-left"></i>
+                </button>
                 <%--<span onclick="KcObject.setAllKcInfo()" style="cursor:pointer;">考场场次</span>--%>
                 <div id="ccJstree">
-                    <!-- in this example the tree is populated from inline HTML -->
-                    <!-- <ul>
-                        <li>Root node 1
-                            <ul>
-                                <li id="child_node_1">Child node 1</li>
-                                <li>Child node 2</li>
-                            </ul>
-                        </li>
-                        <li>Root node 2</li>
-                    </ul> -->
+
                 </div>
             </div>
 
@@ -214,29 +209,52 @@
                     </div>
                 </div>
 
-                <div class="col-sm-9 _scrollbar"
-                     style="padding-left:3px;padding-right:0;height:270px;overflow: auto;">
-                    <table id="ksTable" class="table table-hover table-bordered">
-                        <thead>
-                        <tr style="background-color: #e3e6ea">
-                            <th><input type="checkbox"/></th>
-                            <th>序号</th>
-                            <th>一级机构</th>
-                            <th>二级机构</th>
-                            <th>三级机构</th>
-                            <th>四级机构</th>
-                            <th>姓名</th>
-                            <th>考试名称</th>
-                            <th>级别</th>
-                            <th>报考数</th>
-                            <th>状态</th>
-                            <th>人力资源编码</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                <div class="col-sm-9 "
+                     style="padding-left:3px;padding-right:0;height:270px;">
+                    <div class="_scrollbar" style="overflow: auto;height:215px;">
+                        <table id="ksTable" class="table table-hover table-bordered"
+                               border="1"><%-- dshtablea JPadding--%>
+                            <thead id="tem" class="">
+                            <tr style="background-color: #e3e6ea">
+                                <th><input type="checkbox"/></th>
+                                <th>序号</th>
+                                <th>一级机构</th>
+                                <th>二级机构</th>
+                                <th>三级机构</th>
+                                <th>四级机构</th>
+                                <th>姓名</th>
+                                <th>考试名称</th>
+                                <th>级别</th>
+                                <th>报考数</th>
+                                <th>状态</th>
+                                <th>人力资源编码</th>
+                            </tr>
+                            </thead>
+                            <tbody id="rhGrid-tbody">
+                            </tbody>
+                        </table>
+                    </div>
 
-                        </tbody>
-                    </table>
+                    <div id="ksTablePage" style="display: none;">
+                        <%--每页显示条数--%>
+                        <select id="showNumSelect"
+                                style="padding:3px;height: 29px;border:#8db5d7 1px solid;border-radius: 3px;margin: 20px 10px 20px 0;float: right;"
+                                title="">
+                            <option value="10">10 条/页</option>
+                            <option value="20">20 条/页</option>
+                            <option value="30">30 条/页</option>
+                            <option value="40">40 条/页</option>
+                            <option value="50">50 条/页</option>
+                        </select>
+
+                        <%--page--%>
+                        <div class="rhGrid-page">
+                            <span class="disabled ui-corner-4">上一页</span>
+                            <span class="current ui-corner-4">1</span>
+                            <span class="disabled ui-corner-4">下一页</span>
+                            <span class="allNum">共15条</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">

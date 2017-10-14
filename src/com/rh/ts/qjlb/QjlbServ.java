@@ -22,7 +22,8 @@ public class QjlbServ extends CommonServ {
     private final static String TODO_SERVID = "TS_COMM_TODO";
     private final static String DONE_SERVID = "TS_COMM_TODO_DONE";
     private final static String COMM_MIND_SERVID = "TS_COMM_MIND";
-    private final static String TSQJ_BM_SERVID="TS_QJLB_BM";
+    private final static String TSQJ_BM_SERVID = "TS_QJLB_BM";
+    private final static String TS_BMSH_PASS_SERVID = "TS_BMSH_PASS";
     private final static String dateFormatString = "yyyy-MM-dd HH:mm:ss";
 
     /**
@@ -165,6 +166,23 @@ public class QjlbServ extends CommonServ {
         }
         qjbean.set("QJ_STATUS", qj_status);
         ServDao.update(servId, qjbean);
+
+        String qjKsname = qjbean.getStr("QJ_KSNAME");
+        String[] bmIds = qjKsname.split(",");
+        for (String bmId : bmIds) {
+            ParamBean queryParamBean = new ParamBean();
+            queryParamBean.set("BM_ID", bmId);
+            Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
+            if (bean == null) {
+                continue;
+            }
+            if ("2".equals(bean.getStr("BM_STATUS"))) {
+                bean.set("BM_STATUS", "3");
+            } else {
+                bean.set("BM_STATUS", "1");
+            }
+            ServDao.update(TS_BMSH_PASS_SERVID, bean);
+        }
 
         if ("1".equals(qj_status)) {
             int nodeSteps1 = Integer.parseInt((String) todoBean.get("NODE_STEPS"));
@@ -382,44 +400,45 @@ public class QjlbServ extends CommonServ {
      */
     public int getLeaveCount(String userCode) {
         //今年审批过的请假
-       // String where = "and USER_CODE = '" + userCode + "' and QJ_STATUS = '2'" +
-              //  " and to_date(QJ_DATE,'yyyy-MM-dd hh24:mi:ss') between to_date(to_char(sysdate, 'yyyy' )||'-01-01','yyyy-mm-dd') and to_date((to_char(sysdate, 'yyyy' )+1)||'-01-01','yyyy-mm-dd')";
-    	String  where="and  QJ_STATUS='2' and  USER_CODE='"+userCode+"'";
-    	List<Bean> queryQjList = ServDao.finds(TSQJ_SERVID, where);//获得当前已经请假的数据TS_QJLB_QJ
+        // String where = "and USER_CODE = '" + userCode + "' and QJ_STATUS = '2'" +
+        //  " and to_date(QJ_DATE,'yyyy-MM-dd hh24:mi:ss') between to_date(to_char(sysdate, 'yyyy' )||'-01-01','yyyy-mm-dd') and to_date((to_char(sysdate, 'yyyy' )+1)||'-01-01','yyyy-mm-dd')";
+        String where = "and  QJ_STATUS='2' and  USER_CODE='" + userCode + "'";
+        List<Bean> queryQjList = ServDao.finds(TSQJ_SERVID, where);//获得当前已经请假的数据TS_QJLB_QJ
         //2个考试周   请假场次6   6个考试   考前、考后多个考试请假算一次
-       //1遍历是否超过请假已经达到6次
-        int   count=0;
-        if(queryQjList!=null && !queryQjList.isEmpty()){
-        	//不为空的情况
-        	 for (Bean queryQj : queryQjList) {
-                 String qjDates = queryQj.getStr("QJ_KSNAME");
-                 //判断字符串的长
-                 if(qjDates.length()>20){
-                	 String[]  qjDate=qjDates.split(","); 
-                	  count=qjDate.length;
-                 }else if(qjDates.length()>0 && qjDates.length()<20){
-                	 count++;
-                 }
-             }
-        	}else {
-        		count=0;
-        	}
-          return count;
+        //1遍历是否超过请假已经达到6次
+        int count = 0;
+        if (queryQjList != null && !queryQjList.isEmpty()) {
+            //不为空的情况
+            for (Bean queryQj : queryQjList) {
+                String qjDates = queryQj.getStr("QJ_KSNAME");
+                //判断字符串的长
+                if (qjDates.length() > 20) {
+                    String[] qjDate = qjDates.split(",");
+                    count = qjDate.length;
+                } else if (qjDates.length() > 0 && qjDates.length() < 20) {
+                    count++;
+                }
+            }
+        } else {
+            count = 0;
+        }
+        return count;
     }
 //    
+
     /**
-     *通过QJ_ID获取考试名称日期
+     * 通过QJ_ID获取考试名称日期
      */
-    public  boolean getBooleanWeek(String qjid){
-    	String  whereTsqjBm="and QJ_ID='"+qjid+"'";
-    	List<Bean> ksList=ServDao.finds(TSQJ_BM_SERVID,whereTsqjBm);
-    	List<String>   dateList=new ArrayList();
-    	for(Bean ks: ksList ){
-    		String lbDate=ks.getStr("LB_DATE");
-    		dateList.add(lbDate);
-    	}
-    	return  true;
+    public boolean getBooleanWeek(String qjid) {
+        String whereTsqjBm = "and QJ_ID='" + qjid + "'";
+        List<Bean> ksList = ServDao.finds(TSQJ_BM_SERVID, whereTsqjBm);
+        List<String> dateList = new ArrayList();
+        for (Bean ks : ksList) {
+            String lbDate = ks.getStr("LB_DATE");
+            dateList.add(lbDate);
+        }
+        return true;
     }
-    
-    
+
+
 }

@@ -150,3 +150,82 @@ function openMyCard(dataId,readOnly,showTab){
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
 };
+
+
+//传给后台的数据
+/*
+* 业务可覆盖此方法，在导航树的点击事件加载前
+*/
+rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
+	var params = {};
+	var user_pvlg=_viewer._userPvlg[_viewer.servId+"_PVLG"];
+	params["USER_PVLG"] = user_pvlg;
+	params["PVLG_FIELD"] = id;
+	this.whereData["extParams"] = params;
+	//点击树之前，判断是否在权限范围内，否则不能点击
+	//获取登录人用户编码权限
+//	var CurrentUser = System.getUser("USER_CODE");
+	var arr=null;
+	var i=0;
+	for(let key in user_pvlg){
+		if(arr==null){
+			arr = user_pvlg[key].ROLE_DCODE;
+		}else{
+			var d = user_pvlg[key].ROLE_DCODE.split(",");
+			for(var k=0;k<d.length;k++){
+				if(arr.indexOf(d[k])<0){
+					arr+=+","+d[k];
+				}
+			}
+		}
+	}
+	console.log("arr",arr);
+	/*var arrElement;","+
+	if(arrLast.length>1){
+		arrElement=arrLast[0];
+		for(var i=1;i<arrLast.length;i++){
+			if(arrLast[i]<arrElement){
+				arrElement=arrLast[i];
+			}
+		}
+	}else if(arrLast.length=1){
+		arrElement=arrLast[0];
+	}
+	console.log(arrLast);
+	if(arrElement.indexOf(',')){
+		arrElement=arrElement.replace(",","");
+	}*/
+	var ctlg_path= item.CTLG_PATH;
+	console.log(ctlg_path);
+	var ctlgPathArray=ctlg_path.split("^");//最后一个元素为空
+	console.log("ctlgPathArray",ctlgPathArray);
+	var flag = false;
+	for(var j=0;j<ctlgPathArray.length-1;j++){
+		if(arr.indexOf(ctlgPathArray[j])>=0){
+			flag=true;
+			break;
+		}
+	}
+	
+	if(!flag){
+		_viewer.listBarTipError("无权限查看所选机构数据");
+		return false;
+	}
+	
+};
+
+//去重
+function unique(arr){
+    var res=[];
+    for(var i=0,len=arr.length;i<len;i++){
+        var obj = arr[i];
+        for(var j=0,jlen = res.length;j<jlen;j++){
+            if(res[j]===obj) break;            
+        }
+        if(jlen===j)res.push(obj);
+    }
+    return res;
+}
+
+
+

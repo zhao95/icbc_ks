@@ -548,10 +548,10 @@ public void UpdateStatusStart(ParamBean paramBean){
 	}
 }
 //查询前添加查询条件
-
 	protected void beforeQuery(ParamBean paramBean) {
-		/**
-		 * // tree的编码 机构编码
+		int treeWhereSize = paramBean.getList("_treeWhere").size();
+		if(treeWhereSize == 0){
+		 // tree的编码 机构编码
 		Bean extParams = paramBean.getBean("extParams");
 		// String dcode = extParams.getStr("PVLG_FIELD");
 		// 用户权限 所有权限的机构编码
@@ -559,15 +559,18 @@ public void UpdateStatusStart(ParamBean paramBean){
 		JSONObject jsonObject = new JSONObject(userPvlg);
 		String result=null;
 		Iterator iterator = jsonObject.keys();
-		String key;
+	  	String key;
 		while (iterator.hasNext()) {
 			key = (String) iterator.next();
 			try {
 				JSONObject object = (JSONObject) jsonObject.get(key);
-				String object2 = (String)object.get("ROLE_DCODE");//object2已经得到010010000
+				String object2 = (String)object.get("ROLE_DCODE");
+				String[] object3=object2.split(",");
 				if(result!=null){
-					if(result.compareTo(object2)>0){
-						result = object2;
+					for(int  i=0;i<object3.length;i++){
+						if(result.indexOf(object3[i])<0){
+							result+=","+object3[i];
+						}
 					}
 				}else{
 					result =object2;
@@ -579,23 +582,41 @@ public void UpdateStatusStart(ParamBean paramBean){
 	
 		}
 		System.out.println("result:"+result);//result 已经是权限值或者是 null
-		**/
-        int treeWhereSize = paramBean.getList("_treeWhere").size();
-		if(treeWhereSize == 0){
-			StringBuilder strWhere = new StringBuilder(); 
-	        strWhere.append(" and 1=2");
-	        paramBean.setQueryExtWhere(strWhere.toString());
-		}
 		
-//		System.out.println("result:"+result);//result 已经是权限值或者是 null
-//		 if(result !=null){
-//			 
-//			 //paramBean.set(Constant.PARAM_WHERE, "and CTLG_PCODE'"+result+"'");
-//			 
-//		 }else{
-//		 //无权限
-//		 paramBean.set(Constant.PARAM_WHERE, " and 1=2");
-//		 }
-		 
+//        int treeWhereSize = paramBean.getList("_treeWhere").size();
+//		if(treeWhereSize == 0){
+//			StringBuilder strWhere = new StringBuilder(); 
+//	        strWhere.append(" and 1=2");
+//	        paramBean.setQueryExtWhere(strWhere.toString());
+//		}
+		 if(result !=null){			
+			 //result 排序
+			 String[] roles = result.split(",");
+		/*	 Arrays.sort(roles);
+			 String lastResult="";
+			 for(int i=0;i<roles.length;i++){
+				 lastResult+="^PROJECT-"+roles[i];
+			 }
+			 lastResult = lastResult.substring(1)+"^";
+			 System.out.println("lastResult:"+lastResult);*/
+			 StringBuilder param_where=new StringBuilder();
+			 param_where.append("AND CTLG_PCODE IN ( ");
+			 param_where.append("SELECT CTLG_CODE_H FROM TS_COMM_CATALOG ");
+			 param_where.append("WHERE  CTLG_MODULE='PROJECT'  ");
+			 param_where.append("and ( ");
+			 StringBuilder subSQL= new StringBuilder();
+			 for(int i=0;i<roles.length;i++){
+				 subSQL.append("CTLG_PATH_H LIKE '%PROJECT-"+roles[i]+"^%'  or");
+			 }
+			 subSQL.delete(subSQL.length()-2, subSQL.length());
+			 param_where.append(subSQL);
+			 param_where.append(") ) ");
+			 paramBean.set(Constant.PARAM_WHERE, param_where.toString());
+			 System.out.println("param_where:"+param_where.toString());
+		 }else{
+		 //无权限
+		 paramBean.set(Constant.PARAM_WHERE, " and 1=2");
+		 }
+		} 
 	}
 }
