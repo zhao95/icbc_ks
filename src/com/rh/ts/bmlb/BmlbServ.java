@@ -812,17 +812,17 @@ public class BmlbServ extends CommonServ {
 			String ss = bean.getStr("KSLBK_MK");
 			String sss = bean.getId();
 			if (s == "") {
-				s1 += "{text: '" + bean.getStr("KSLBK_IDVALUE") + "', value: '" + bean.getStr("KSLBK_IDVALUE")
+				s1 += "{text: '" + bean.getStr("KSLBK_NAME") + "', value: '" + bean.getStr("KSLBK_CODE")
 						+ "', extendAttr: { id: " + bean.getId() + " } }, ";
 			} else if ("".equals(bean.getStr("KSLBK_MK"))) {
 				s2 += "{ " + '"' + "text" + '"' + ": " + '"' + bean.getStr("KSLBK_XL") + '"' + "," + '"' + "value" + '"'
-						+ ": " + '"' + bean.getStr("KSLBK_XL") + '"' + "," + '"' + "extendAttr" + '"' + ": {" + '"'
+						+ ": " + '"' + bean.getStr("KSLBK_XL_CODE") + '"' + "," + '"' + "extendAttr" + '"' + ": {" + '"'
 						+ "id" + '"' + ": " + '"' + bean.getId() + '"' + "," + '"' + "parentId" + '"' + ":" + '"'
 						+ bean.getStr("KSLBK_PID") + '"' + "} }, ";
 			} else if (!"".equals(bean.getStr("KSLBK_XL")) && "".equals(bean.getStr("KSLBK_TYPE"))
 					&& !"".equals(bean.getStr("KSLBK_MK"))) {
 				s3 += "{ " + '"' + "text" + '"' + ": " + '"' + bean.getStr("KSLBK_MK") + '"' + "," + '"' + "value" + '"'
-						+ ": " + '"' + bean.getStr("KSLBK_MK") + '"' + "," + '"' + "extendAttr" + '"' + ": {" + '"'
+						+ ": " + '"' + bean.getStr("KSLBK_MKCODE") + '"' + "," + '"' + "extendAttr" + '"' + ": {" + '"'
 						+ "id" + '"' + ": " + '"' + bean.getId() + '"' + "," + '"' + "parentId" + '"' + ":" + '"'
 						+ bean.getStr("KSLBK_PID") + '"' + "} }, ";
 			}

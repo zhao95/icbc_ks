@@ -964,9 +964,7 @@ function yanzheng(){
 		}
 	})
 	if(yanzhengflag){
-		window.setTimeout(function(){   
 			checky(); 
-		},1000);
 		var opts = {
 				  lines: 12, // The number of lines to draw
 				  length: 10, // The length of each line
