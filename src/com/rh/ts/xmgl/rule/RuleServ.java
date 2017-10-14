@@ -130,6 +130,7 @@ public class RuleServ extends CommonServ {
 
 						String msg = ""; // 验证信息
 
+						boolean flag = false;
 						for (Bean bean : gzmxGroupList) {
 							
 
@@ -139,8 +140,19 @@ public class RuleServ extends CommonServ {
 
 							String mxName = getMxName(bean);
 							String clazz = bean.getStr("MX_IMPL");
-
-							boolean result = this.vlidateOne(clazz, bean); // 执行验证
+							String mx_name = bean.getStr("MX_NAME");
+							boolean result=false;
+							if(mx_name.indexOf("XL")!=-1){
+								//启用管理类规则
+								result = this.vlidateOne(clazz, bean);
+								if(result==true){
+									flag=true;
+									result=false;
+								}
+							}else{
+								
+								result = this.vlidateOne(clazz, bean); // 执行验证
+							}
 
 							if (gzType == 1) { // 审核不通过规则(与)
 
@@ -168,8 +180,13 @@ public class RuleServ extends CommonServ {
 
 						data.set("VLIDATE", pass);
 
-						data.set("MSG", msg);
-
+ 						data.set("MSG", msg);
+						if(flag==true&&pass==false){
+							data.set("TISHI","TRUE");
+						}else{
+							data.set("TISHI","");
+						}
+						
 						passList.add(data);
 
 					}

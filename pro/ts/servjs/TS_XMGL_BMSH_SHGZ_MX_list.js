@@ -2,7 +2,6 @@ var _viewer = this;
 $(".rhGrid").find("tr").unbind("dblclick");
 //每一行添加编辑和删除
 $("#TS_XMGL_BMSH_SHGZ_MX .rhGrid").find("tr").each(function(index, item) {
-	debugger;
 	if(index != 0) {
 		var value1 = $('td[icode="MX_VALUE1"]',item).text();
 		var val = $('td[icode="MX_VALUE2"]',item).text();
@@ -41,7 +40,8 @@ $("#TS_XMGL_BMSH_SHGZ_MX .rhGrid").find("tr").each(function(index, item) {
 //选中的name  code 放入缓存中
 var xlnames = "";
 var xlcodes  = "";
-
+var glxlcodes = "";
+var glnames = "";
 //绑定的事件     
 function bindCard() {
 	//当行编辑事件
@@ -235,9 +235,46 @@ function bindCard() {
 				input8.val(name);
 				input8.css("width","400px");
 				formConDiv7.append(input8);
+		}else if(obj2[0].type=='XL'){
+			//管理类序列
+			var codestr = [];
+			var namestr = [];
+			for(var a=0;a<obj2.length;a++){
+					namestr[a]=obj2[a].val;
+					codestr[a]=obj2[a].code;
+			}
+			glxlcodes=codestr;
+			glnames = namestr;
+			for(var i=0;i<nameArg.length;i++) {
+				if(i<nameArg.length-1){
+					var span  = document.createElement("span");
+					if(i==0){
+						span.innerHTML=obj2[i].val;
+						formConDiv7.append(nameArg[i]);
+						formConDiv7.append(span);
+					}else{
+						span.innerHTML=nameArg[i]+obj2[i].val;
+						formConDiv7.append(span);
+					}
+				}else if (i==nameArg.length-1){
+					//int值
+					var span = document.createElement("span");
+					span.innerHTML=nameArg[i];
+					span.id='glastspan';
+						formConDiv7.append(span);
+						
+				}
+					
+				}
+			var butt = document.createElement("button");
+			formConDiv7.append(butt);
+			butt.style.width="60px";
+			butt.style.height="25px";
+			butt.style.fontSize="0.5px";
+			butt.innerHTML="请选择";
+			butt.id="GLxlbutton";
 		}else{
 			for(var i=0;i<nameArg.length;i++) {
-				debugger;
 				if(obj2[0].type == 'dateyear') {
 					
 					if(i==nameArg.length-1) {
@@ -309,8 +346,6 @@ function bindCard() {
 		bindselect();
 		bindelete();
 		$("#SETTING-saveRuleVar").bind("click",function() {
-			
-			if(obj2.length>1){
 				if(obj2[0].type=='string'){
 					var arr = [];
 					$("input[name='inputaa']").each(function(index,item){
@@ -373,18 +408,33 @@ function bindCard() {
 					mx_name+=nameArg[nameArg.length-2];
 					mx_name+="#muty#";
 					mx_name+=nameArg[nameArg.length-1];
+				
 					saveRuleVarCode(dataId,"","",jsons,mx_name);
-				}
-			}else{
+			}else if(obj2[0].type=='XL'){
+					debugger;
+					//保存 序列
+					var mx_name = nameArg[0];
+					var jsons = "[";
+					for(var j=0;j<glxlcodes.length;j++){
+						if(j==glxlcodes.length-1){
+							jsons+='{"vari":"XL","val":"'+glnames[j]+'","type":"XL","code":"'+glxlcodes[j]+'"}';
+							mx_name+="#XL#"
+						}else{
+							
+							jsons+='{"vari":"XL","val":"'+glnames[j]+'","type":"XL","code":"'+glxlcodes[j]+'"},';
+							mx_name+="#XL#、"
+						}
+						
+					}
+					jsons+="]"
+					mx_name+=nameArg[nameArg.length-1];
+					saveRuleVarCode(dataId,"","",jsons,mx_name);
+				}else{
 				var text = "";
 				$("input[name='yearlimit']").each(function(index,item){
 					text = $(this).val();
 				})
-				/*if(obj2[0].type == 'dateyear'){
-					if(text.length<=4){
-						text+="0101";
-					}
-				}*/
+				
 				saveRuleVar(dataId,text,jsonStr);
 			}
 		});
@@ -471,6 +521,44 @@ function bindselect(){
 						}
 						span.innerHTML=s;
 						$("#jibieselect").before(span);
+						//批量保存
+						_viewer.refresh();
+					}
+			};
+			//2.用系统的查询选择组件 rh.vi.rhSelectListView()
+			var queryView = new rh.vi.rhSelectListView(options);
+			queryView.show(event);
+	})
+	$("#GLxlbutton").click(function(){
+			var configStr = "TS_XMGL_BM_KSLBK_XL,{'TARGET':'KSLBK_XL~KSLBK_XL_CODE','SOURCE':'KSLBK_XL~KSLBK_XL_CODE'," +
+			"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
+			var options = {
+					"config" :configStr,
+//					"params" : {"_TABLE_":"SY_ORG_USER"},
+					"parHandler":_viewer,
+					"formHandler":_viewer.form,
+					"replaceCallBack":function(idArray) {//回调，idArray为选中记录的相应字段的数组集合
+						var codes = idArray.KSLBK_XL_CODE.split(",");
+						var names = idArray.KSLBK_XL.split(",");
+						glnames=names;
+						glxlcodes = codes;
+						var paramArray = [];
+						$(".formContent").find("span[id!='glastspan']").each(function(index,item){
+								
+								$(this).remove();
+						});
+						var span = document.createElement("span");
+						var s = "";
+						for(var i=0;i<names.length;i++){
+							//将选中的code和name保存
+							if(i==(names.length-1)){
+								s+=names[i];
+							}else{
+								s+=names[i]+"、";
+							}
+						}
+						span.innerHTML=s;
+						$("#glastspan").before(span);
 						//批量保存
 						_viewer.refresh();
 					}

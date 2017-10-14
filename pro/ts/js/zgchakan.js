@@ -5,6 +5,12 @@ function init(){
 	var param={};
 	param["bmids"]=bmid;
 	var result = FireFly.doAct("TS_BMLB_BM","getShowData",param);
+	var result1 = FireFly.doAct("TS_BMLB_BM","getZdYzxx",param);
+	var dataArray = result1.yzxx;
+	if(dataArray!=""){
+		dataArray=JSON.parse(dataArray);
+	}
+	
 	//项目名称
 	var xmname = result.xmname;
 	//开始结束时间
@@ -29,17 +35,33 @@ function init(){
 		 }else if("3"==jibietype){
 			 jb="高级";
 		 }
-		
-		 $("#tableid tbody").html("");
-		 var trs = ['<tr>',
-		             '<td width="10%">' + lbname + '</td>',
-		             '<td width="15%">' + xlname + '</td>',
-		             '<td width="15%">' + mkname + '</td>',
-		             '<td width="15%">' + jb + '</td>',
-		             '<td>' + shstate + '</td>',
-		             '</tr>'].join("");
-		 $("#tableid tbody").append(trs);
-			if(lbname==""){
+		if(lbname!=""){
+			
+			$("#tableid tbody").html("");
+			var trs = ['<tr>',
+			           '<td width="10%">' + lbname + '</td>',
+			           '<td width="15%">' + xlname + '</td>',
+			           '<td width="15%">' + mkname + '</td>',
+			           '<td width="15%">' + jb + '</td>',
+			           '<td id="yzxx"></td>',
+			           '</tr>'].join("");
+			$("#tableid tbody").append(trs);
+			
+ 	 		for(var j=0;j<dataArray.length;j++){
+ 					if(j==0){
+ 						$("#yzxx").append('<div style="height:5px;"></div>');
+ 					}
+ 					if(dataArray[j].VLIDATE=="true"){
+                     $("#yzxx").append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'</div>');
+    					
+ 				}if(dataArray[j].VLIDATE=="false"){
+ 					
+ 						$("#yzxx").append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');
+ 				}
+ 			
+ 				}
+			
+		}else{
 				//非资格
 				$("#tableid").html("");
 				$("#tableid").append("<thead><tr><th>考试名称</th><th>考试时间</th><th>审核结果</th></tr></thead>");
