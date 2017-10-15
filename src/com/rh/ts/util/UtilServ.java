@@ -178,6 +178,7 @@ public class UtilServ extends CommonServ {
     public  void userPvlg(ParamBean param){
     	ParamBean paramBean = (ParamBean) param.getBean("paramBean");
     	String ctlgModuleName = param.getStr("ctlgModuleName");
+    	String serviceName=param.getStr("serviceName");
     	int treeWhereSize = paramBean.getList("_treeWhere").size();
 		if(treeWhereSize == 0){
 		 // tree的编码 机构编码
@@ -211,7 +212,7 @@ public class UtilServ extends CommonServ {
 		 if(result !=null){			
 			 //result 排序
 			 String[] roles = result.split(",");
-		/*	 Arrays.sort(roles);
+		     /*Arrays.sort(roles);
 			 String lastResult="";
 			 for(int i=0;i<roles.length;i++){
 				 lastResult+="^PROJECT-"+roles[i];
@@ -221,9 +222,18 @@ public class UtilServ extends CommonServ {
 			 StringBuilder param_where=new StringBuilder();
 			 param_where.append("AND  EXISTS ( ");
 			 param_where.append("SELECT CTLG_CODE FROM TS_COMM_CATALOG  ");
-			 param_where.append("WHERE  CTLG_MODULE='"+ctlgModuleName+"' AND TS_XMGL.CTLG_PCODE = CTLG_CODE_H ");
+			 param_where.append("WHERE  CTLG_MODULE='"+ctlgModuleName+"' AND "+serviceName+".CTLG_PCODE = CTLG_CODE_H ");
 			 param_where.append("and INSTR (CTLG_PATH,"+"'"+roles[0]+"') ");
-			 //StringBuilder subSQL= new StringBuilder();
+			 /*展示权限内的所有数据
+			 StringBuilder subSQL= new StringBuilder();
+			 param_where.append("and ( ");
+			 StringBuilder subSQL= new StringBuilder();
+			 for(int i=0;i<roles.length;i++){
+				 subSQL.append(" CTLG_PATH_H LIKE '%PLAN-"+roles[i]+"^%'  or");
+			 }
+			 subSQL.delete(subSQL.length()-2, subSQL.length());
+			 param_where.append(subSQL);
+			 param_where.append("		) ) ");*/
 			 param_where.append(") ");
 			 paramBean.set(Constant.PARAM_WHERE, param_where.toString());
 			 System.out.println("param_where:"+param_where.toString());
@@ -232,6 +242,5 @@ public class UtilServ extends CommonServ {
 		 paramBean.set(Constant.PARAM_WHERE, " and 1=2");
 		 }
 		} 
-    	
     }
 }

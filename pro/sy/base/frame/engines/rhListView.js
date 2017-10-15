@@ -1618,9 +1618,7 @@ rh.vi.listView.prototype._bldNavTree = function() {
 				        	} else {
 				        		var flag = _self.beforeTreeNodeClickLoad(item,id,dictId);
 				        		if(typeof(flag) != "undefined" && !flag){
-				        			console.log(nodeObj);
 				        			if (nodeObj.hasClass("bbit-tree-selected")) {//节点取消选中
-				        				alert(1);
 						        		nodeObj.removeClass("bbit-tree-selected");
 						        		nodeObj.removeClass("rh-bbit-tree-selected");
 						        		delete _self.navTreeWhere[item.rhItemCode];//删除条件

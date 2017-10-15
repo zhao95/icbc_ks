@@ -1,4 +1,5 @@
 var _viewer = this;
+var  module = 'EXAM_GROUP';
 $(".rhGrid").find("tr").unbind("dblclick");
 $("#TS_KCZGL .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
@@ -155,10 +156,50 @@ $(".hoverDiv").find("a").hover(function(){
  * 目录管理
  */
 _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
-	
-	module = 'EXAM_GROUP';
 	var params = {"isHide":"true", "CTLG_MODULE":module};
 	var options = {"tTitle":"考场组目录管理","url":"TS_COMM_CATALOG_EXAM_GROUP.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3};
 	options["top"] = true;
 	Tab.open(options);
 });
+
+//传给后台的数据
+/*
+* 业务可覆盖此方法，在导航树的点击事件加载前
+*/
+rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
+	var params = {};
+	var user_pvlg=_viewer._userPvlg[_viewer.servId+"_PVLG"];
+	params["USER_PVLG"] = user_pvlg;
+	_viewer.whereData["extParams"] = params;
+	 var flag = getListPvlg(item,user_pvlg);
+	_viewer.listClearTipLoad();
+	return flag;
+};
+//重写add方法
+_viewer.getBtn("add").unbind("click").bind("click",function() {
+	var pcodeh = _viewer._transferData["CTLG_PCODE"];
+	if(pcodeh == "" || typeof(pcodeh) == "undefined") {
+		alert("请选择添加目录的层级 !");
+		return false;
+	}
+	
+	var width = jQuery(window).width()-200;
+	var height = jQuery(window).height()-200;
+	
+	var temp = {"act":UIConst.ACT_CARD_ADD,
+			"sId":_viewer.servId,
+			"params":  {
+				"CTLG_MODULE" : module,
+			},
+			"transferData": _viewer._transferData,
+			"links":_viewer.links,
+			"parHandler":_viewer,
+			"widHeiArray":[width,height],
+			"xyArray":[100,100]
+	};
+	console.log(temp);
+	var cardView = new rh.vi.cardView(temp);
+	cardView.show();
+});
+
+

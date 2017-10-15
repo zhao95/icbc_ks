@@ -1,4 +1,5 @@
 var _viewer = this;
+var module = 'PLAN';
 $(".rhGrid").find("tr").unbind("dblclick");
 // 每一行添加编辑和删除
 _viewer.grid._table.find("tr").each(function(index, item) {
@@ -164,8 +165,33 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	var flag = getListPvlg(item,user_pvlg);
 	_viewer.listClearTipLoad();
 	return flag;
-	
 };
+//重写add方法
+_viewer.getBtn("add").unbind("click").bind("click",function() {
+	var pcodeh = _viewer._transferData["CTLG_PCODE"];
+	if(pcodeh == "" || typeof(pcodeh) == "undefined") {
+		alert("请选择添加目录的层级 !");
+		return false;
+	}
+	
+	var width = jQuery(window).width()-200;
+	var height = jQuery(window).height()-200;
+	
+	var temp = {"act":UIConst.ACT_CARD_ADD,
+			"sId":_viewer.servId,
+			"params":  {
+				"CTLG_MODULE" : module,
+			},
+			"transferData": _viewer._transferData,
+			"links":_viewer.links,
+			"parHandler":_viewer,
+			"widHeiArray":[width,height],
+			"xyArray":[100,100]
+	};
+	console.log(temp);
+	var cardView = new rh.vi.cardView(temp);
+	cardView.show();
+});
 
 
 

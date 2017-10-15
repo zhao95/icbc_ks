@@ -4239,7 +4239,6 @@ function getListPvlg(item,user_pvlg) {
 		}
 	}
 	if(!flag){
-		
 		//_viewer.listBarTipError("无权限查看所选机构数据");
 		return false;
 	}
