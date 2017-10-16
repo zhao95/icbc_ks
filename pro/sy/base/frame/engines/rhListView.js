@@ -1618,6 +1618,14 @@ rh.vi.listView.prototype._bldNavTree = function() {
 				        	} else {
 				        		var flag = _self.beforeTreeNodeClickLoad(item,id,dictId);
 				        		if(typeof(flag) != "undefined" && !flag){
+				        			if (nodeObj.hasClass("bbit-tree-selected")) {//节点取消选中
+						        		nodeObj.removeClass("bbit-tree-selected");
+						        		nodeObj.removeClass("rh-bbit-tree-selected");
+						        		delete _self.navTreeWhere[item.rhItemCode];//删除条件
+						        		//重置传递参数对象的值
+						        		_self._transferData[item.rhItemCode] = "";
+								    	_self._transferData[item.rhItemCode + "__NAME"] = "";
+						        	}
 				        			return false;
 				        		}
 				        		_self.navTreeWhere[item.rhItemCode] = item.ID;//保存点击条件

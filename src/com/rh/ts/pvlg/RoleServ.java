@@ -12,6 +12,7 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
 import com.rh.core.util.Strings;
@@ -85,6 +86,15 @@ public class RoleServ extends CommonServ {
 	 *            参数信息
 	 */
 	protected void beforeQuery(ParamBean paramBean) {
+		ParamBean param = new ParamBean();
+		String  ctlgModuleName="ROLE";
+		String  serviceName="TS_PVLG_ROLE";
+		param.set("paramBean", paramBean);
+		param.set("ctlgModuleName", ctlgModuleName);
+		param.set("serviceName",serviceName);
+		ServMgr.act("TS_UTIL", "userPvlg", param);	
+		
+		
 		/**
 		Bean item = paramBean.getBean("PVLG_ITEM");
 		//机构tree path
@@ -95,7 +105,7 @@ public class RoleServ extends CommonServ {
 		String dcode = paramBean.getStr("PVLG_FIELD");
 		//用户权限 所有权限的机构编码
 		Bean userPvlg = paramBean.getBean("USER_PVLG");**/
-		int treeWhereSize = paramBean.getList("_treeWhere").size();
+		/*int treeWhereSize = paramBean.getList("_treeWhere").size();
 		if(treeWhereSize == 0){
 		 // tree的编码 机构编码
 		Bean extParams = paramBean.getBean("extParams");
@@ -145,7 +155,7 @@ public class RoleServ extends CommonServ {
 			 }
 			 lastResult = lastResult.substring(1)+"^";
 			 System.out.println("lastResult:"+lastResult);*/
-			 StringBuilder param_where=new StringBuilder();
+			/* StringBuilder param_where=new StringBuilder();
 			 param_where.append("AND CTLG_PCODE IN ( ");
 			 param_where.append("SELECT CTLG_CODE_H FROM TS_COMM_CATALOG ");
 			 param_where.append("WHERE  CTLG_MODULE='ROLE'  ");
@@ -163,7 +173,7 @@ public class RoleServ extends CommonServ {
 		 //无权限
 		 paramBean.set(Constant.PARAM_WHERE, " and 1=2");
 		 }
-		} 
+		}*/ 
 		
 	}
 
