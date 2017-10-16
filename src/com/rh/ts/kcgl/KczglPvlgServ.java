@@ -14,10 +14,8 @@ public class KczglPvlgServ  extends CommonServ{
 	protected void beforeQuery(ParamBean paramBean) {
 			ParamBean param = new ParamBean();
 			String  ctlgModuleName="EXAM_GROUP";
-			String  serviceName="TS_KCZGL";
 			param.set("paramBean", paramBean);
 			param.set("ctlgModuleName", ctlgModuleName);
-			param.set("serviceName",serviceName);
 			ServMgr.act("TS_UTIL", "userPvlg", param);		
 		}
 }

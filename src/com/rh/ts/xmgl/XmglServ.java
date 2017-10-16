@@ -551,7 +551,7 @@ public void UpdateStatusStart(ParamBean paramBean){
 	protected void beforeQuery(ParamBean paramBean) {
 		ParamBean param = new ParamBean();
 		String  ctlgModuleName="PROJECT";
-		String  serviceName="TS_XMGL";
+		String  serviceName=paramBean.getServId();
 		param.set("paramBean", paramBean);
 		param.set("ctlgModuleName", ctlgModuleName);
 		param.set("serviceName",serviceName);
