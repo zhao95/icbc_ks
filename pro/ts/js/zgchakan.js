@@ -58,7 +58,11 @@ function init(){
  					
  						$("#yzxx").append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');
  				}
- 			
+ 				
+ 				if(dataArray[j].VLIDATE=="STAY"){
+ 					
+						$("#yzxx").append('<div">'+dataArray[j].NAME+'</div>');
+				}
  				}
 			
 		}else{
