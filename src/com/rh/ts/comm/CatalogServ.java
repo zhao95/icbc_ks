@@ -457,5 +457,16 @@ public class CatalogServ extends CommonServ {
 		}
 		return codePathH;
 	}
+	
+	//查询前添加查询条件
+		protected void beforeQuery(ParamBean paramBean) {
+			ParamBean param = new ParamBean();
+			String  serviceName=paramBean.getServId();
+			String  ctlgModuleName=serviceName.substring( 16);   
+			param.set("paramBean", paramBean);
+			param.set("ctlgModuleName", ctlgModuleName);
+			param.set("serviceName",serviceName);
+			ServMgr.act("TS_UTIL", "userCommPvlg", param);		
+		}
 
 }

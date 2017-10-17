@@ -12,8 +12,11 @@
 	String title = ks.getStr("GG_TITLE");
 	String content = ks.getStr("GG_CONTENTS");
 // 	String dept = DictMgr.getName("SY_ORG_DEPT",ks.getStr("S_DEPT"));
-	DeptBean deptBean = OrgMgr.getDept("S_DEPT");
-	String dept=deptBean.getName();
+	DeptBean deptBean = OrgMgr.getDept(ks.getStr("S_DEPT"));
+	String dept="";
+	if(deptBean!=null){
+		dept=deptBean.getName();
+	}
     String sAtime = ks.getStr("S_ATIME").substring(0,19);
 %>
 

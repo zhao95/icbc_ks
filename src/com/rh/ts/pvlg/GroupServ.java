@@ -78,7 +78,7 @@ public class GroupServ extends CommonServ {
 		protected void beforeQuery(ParamBean paramBean) {
 			ParamBean param = new ParamBean();
 			String  ctlgModuleName="GROUP";
-			String  serviceName="TS_PVLG_GROUP";
+			String  serviceName=paramBean.getServId();
 			param.set("paramBean", paramBean);
 			param.set("ctlgModuleName", ctlgModuleName);
 			param.set("serviceName",serviceName);

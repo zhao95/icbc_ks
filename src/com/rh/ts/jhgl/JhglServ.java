@@ -138,7 +138,7 @@ public class JhglServ extends CommonServ {
 		protected void beforeQuery(ParamBean paramBean) {
 			ParamBean param = new ParamBean();
 			String  ctlgModuleName="PLAN";
-			String  serviceName="TS_JHGL";
+			String  serviceName=paramBean.getServId();
 			param.set("paramBean", paramBean);
 			param.set("ctlgModuleName", ctlgModuleName);
 			param.set("serviceName",serviceName);
