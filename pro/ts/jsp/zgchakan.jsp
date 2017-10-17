@@ -50,7 +50,11 @@
 		//获取用户性别
 		String user_sex = userBean.getStr("USER_SEX");
 		//获取用户机构
-		String odept_name = userBean.getODeptName();
+		Bean bmbean = ServDao.find("TS_BMLB_BM", bmid);
+		
+		DeptBean deptbean= OrgMgr.getDept(bmbean.getStr("S_ODEPT"));
+		String odept_name = deptbean.getName();
+		/* String odept_name = userBean.getODeptName(); */
 		//获取用户办公电话
 		String user_office_phone = userBean.getStr("USER_OFFICE_PHONE");
 		//获取用户手机号码

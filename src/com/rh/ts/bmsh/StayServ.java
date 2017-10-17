@@ -55,7 +55,7 @@ public class StayServ extends CommonServ {
 		int yeshu = ALLNUM / meiye;
 		int yushu = ALLNUM % meiye;
 		// 获取总页数
-		if (yeshu == 0 && yushu != 0) {
+		if (yushu != 0) {
 			yeshu += 1;
 		}
 
@@ -880,7 +880,7 @@ public class StayServ extends CommonServ {
 		int yeshu = ALLNUM / meiye;
 		int yushu = ALLNUM % meiye;
 		// 获取总页数
-		if (yeshu == 0 && yushu != 0) {
+		if (yushu != 0) {
 			yeshu += 1;
 		}
 

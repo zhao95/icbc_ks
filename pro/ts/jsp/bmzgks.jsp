@@ -128,7 +128,7 @@ position: absolute;
 				<table align="center" style="border-radius:5px;width: 90%; background-color: #fed1d1;">
 					<tr>
 						<td><span style="color: #ff0000;">！</span> 温馨提示：</td>
-						<td height="50px" align="left">1.您当前在 <span
+						<td height="50px" align="left">1.您当前在 <span id="odptnspan"
 							style="color: #ff0000;"><%=odept_name%></span>
 							，将视您办公所在地统一安排考场。如果您发现下面的信息不符，请于借考申请开放期间提交借考申请！
 						</td>
@@ -140,7 +140,7 @@ position: absolute;
 					</tr>
 				</table>
 				<div style="padding-top: 10px;">
-					<table border="1" align="center"
+					<table border="1" align="center" id="baseinfo"
 						style="width: 90%; padding-top: 10px;">
 						<tr style="background-color: #f2f2f2;">
 							<td colspan="6">个人基本信息</td>
@@ -157,7 +157,9 @@ position: absolute;
 						</tr>
 						<tr style="background-color: #f7fdff;">
 							<td>所属机构</td>
-							<td colspan="5"><%=odept_name %></td>
+							<td colspan="5"><span id="deptspan"><%=odept_name %></span><span id="selectdeptspan" style="display:none"><input id="radio1" style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1">主机构身份报名(<%=odept_name %>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													<input id="radio2" name="state" style="vertical-align:text-bottom; margin-bottom:-4;" type="radio" value="2">次机构身份报名&nbsp;&nbsp;&nbsp;&nbsp;<select style="margin-left:35%;margin-top:-2.2%;display:none" id="slaveselect"></select><span id="tsspan" style="fontWeight:bold;color:red">请选择您的所属机构</span></span></td>
+							
 						</tr>
 						<tr>
 							<td width="16.5%">岗位类别</td>
@@ -205,7 +207,7 @@ position: absolute;
 					<span style="color: #0782cb;">★ 跨序列应报名的考试</span> <span
 						style="color: #fdb64f;">(提示：只允许选择两个跨序列的考试)</span>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<button class="btn btn-success"
+					<button class="btn btn-success" id='selectks' 
 						style="width: 100px; background-color: #00c2c2;"
 						data-toggle="modal" data-target="#myModal">选择考试</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

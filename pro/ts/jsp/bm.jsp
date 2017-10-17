@@ -217,7 +217,7 @@ position: absolute;
 			</form>
 		</div>
 		<!--异议模态窗口  -->
-		<div class="modal fade" id="appeal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+	<div class="modal fade" id="appeal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div class="modal-dialog" style="width:40%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
@@ -285,8 +285,8 @@ position: absolute;
 			</div>
 			<!-- /.modal-content -->
 		</div>
-		</div>
-		<div class="modal fade" id="loading" tabindex="-1" role="dialog"
+	</div>
+	<div class="modal fade" id="loading" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div  class="modal-dialog" style="width:700px;">
 			<div id="loadingdialog" class="modal-content" style="position:absoluate;background:#777;height:100px;width:50%">

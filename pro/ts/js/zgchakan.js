@@ -8,6 +8,7 @@ function init(){
 	var result1 = FireFly.doAct("TS_BMLB_BM","getZdYzxx",param);
 	var dataArray = result1.yzxx;
 	if(dataArray!=""){
+		dataArray=dataArray.replace(/'/g, '"');  
 		dataArray=JSON.parse(dataArray);
 	}
 	

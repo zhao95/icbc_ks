@@ -242,18 +242,27 @@ function firall(){
 		function shenheA(){
 			//是否有checkbox被选中
 			 var checkboxchecked = $('input:checkbox[name=checkboxa]:checked');
+			 var flag = false;
 			if(checkboxchecked.length==0){
 				alert("您未选中任何记录,请选择");
 				$("#shenheA").removeAttr("data-target");
 			}else{
 				 $('input:checkbox[name=checkboxa]:checked').each(function(){
-					 if(nodeid>$(this).attr("SHLV")){
+					 if($(this).attr("SHLV")!=0){
+					 if(nowlevel>$(this).attr("SHLV")){
 						 alert("您的上级已审核您没有审核此数据的权利");
+						 falg = true;
 						 return;
+						 
 					 }
-				 })
-				$("#shenheA").attr("data-target",'#tiJiao');
-			    document.getElementById("mokuai").value="A";
+					 }
+				 });
+				 if(flag){
+					 $("#shenheA").attr("data-target",'');
+				 }else{
+					 $("#shenheA").attr("data-target",'#tiJiao');
+					 document.getElementById("mokuai").value="A";
+				 }
 			}
 		}
 		function change(obj){
@@ -364,18 +373,26 @@ function firall(){
 		function shenheB(){
 			//是否有checkbox被选中
 			 var checkboxchecked = $('input:checkbox[name=checkboxb]:checked');
+			 var flag = false;
 			if(checkboxchecked.length==0){
 				alert("您未选中任何记录,请选择");
 				$("#shenheB").removeAttr("data-target");
 			}else{
 				 $('input:checkbox[name=checkboxb]:checked').each(function(){
-					 if(nodeid>$(this).attr("SHLV")){
+					 if($(this).attr("SHLV")!=0){
+					 if(nowlevel>$(this).attr("SHLV")){
 						 alert("您的上级已审核您没有审核此数据的权利");
+						 flag=true;
 						 return;
 					 }
-				 })
-				$("#shenheB").attr("data-target",'#tiJiao');
-			document.getElementById("mokuai").value="B";
+					 }
+				 });
+				 if(flag){
+					 $("#shenheB").attr("data-target",'');
+				 }else{
+					 $("#shenheB").attr("data-target",'#tiJiao');
+					 document.getElementById("mokuai").value="B";
+				 }
 			}
 		}
 		function changeb(obj){
@@ -395,18 +412,26 @@ function firall(){
 		function shenheC(){
 			//是否有checkbox被选中
 			 var checkboxchecked = $('input:checkbox[name=checkboxc]:checked');
+			 var flag = false;
 			if(checkboxchecked.length==0){
 				alert("您未选中任何记录,请选择");
 				$("#shenheC").removeAttr("data-target");
 			}else{
 				 $('input:checkbox[name=checkboxb]:checked').each(function(){
-					 if(nodeid>$(this).attr("SHLV")){
+					 if($(this).attr("SHLV")!=0){
+					 if(nowlevel>$(this).attr("SHLV")){
 						 alert("您的上级已审核您没有审核此数据的权利");
+						 flag = true;
 						 return;
 					 }
+					 }
 				 })
-				$("#shenheC").attr("data-target",'#tiJiao');
-			    document.getElementById("mokuai").value="C";
+				 if(flag){
+					 $("#shenheC").attr("data-target",'');
+				 }else{
+					 $("#shenheC").attr("data-target",'#tiJiao');
+					 document.getElementById("mokuai").value="C";
+				 }
 			}
 		}
 		function changec(obj){

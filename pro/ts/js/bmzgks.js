@@ -2,7 +2,7 @@ var user_code = System.getVar("@USER_CODE@");
 var user_name = System.getVar("@USER_NAME@");
 var user_sex = System.getVar("@USER_SEX@");
 var odept_name = System.getVar("@ODEPT_NAME@");
-var odept_code = System.getVar("@ODEPT_CODE@");
+var dept_code = System.getVar("@DEPT_CODE@");
 var user_office_phone = System.getVar("@USER_OFFICE_PHONE@");
 var user_cmpy_date = System.getVar("@USER_CMPY_DATE@");
 var xm_id  = $("#xmidval").val();
@@ -179,7 +179,6 @@ function xminfoshow(){
    				zglb +="," + zgArray[i].value;
    			}
    		}
-     	debugger;
      	var param = {};
 // 		xkArg.push(yk);
 		var neAry;
@@ -220,7 +219,7 @@ function xminfoshow(){
 		param["BM_START"] = bm_start;
 		param["BM_END"] = bm_end;
 		param["XM_NAME"] = xm_name;
-		param["ODEPT_CODE"]=odept_code;
+		param["DEPT_CODE"]=dept_code;
 			param['BM_LIST'] = JSON.stringify(checkeddata);
 			param["YZGZ_LIST"] = JSON.stringify(yzgz);
 			//本序列表格行数
@@ -332,8 +331,8 @@ function xminfoshow(){
 		 xminfoshow();
 		 matchinfo();
 		 mkfuzhi();
+		 initmsCodes();
 		 var param1 = {};
-		 debugger;
 		 param1["DUTY_LV_CODE"]=DUTY_LEVEL_CODE;
 		 param1["STATION_TYPE_CODE"]=STATION_TYPE_CODE;
 		 param1["STATION_NO_CODE"]=STATION_NO_CODE;
@@ -999,4 +998,175 @@ function yztj(){
 	});
 	$("#yzxx").modal("hide");
 }
+
+//次机构下拉框
+function initmsCodes(){
+	var param = {};
+	param["user_code"]=user_code;
+	var result = FireFly.doAct("TS_BMLB_BM","getMSCodes",param);
+	var slavecodes = result.slaver;
+	var mastercode = result.master;
+	var slavenames = result.slavenames;
+	var mastername = result.mastername;
+	if(slavecodes!=""){
+		document.getElementById("deptspan").style.display="none";
+		document.getElementById("selectdeptspan").style.display="block";
+		var slavearr = slavecodes.split(",");
+		var slavename = slavenames.split(",");
+		for(var i=0;i<slavearr.length;i++){
+			if(slavearr[i]!=""){
+				document.getElementById("slaveselect").options.add(new Option(slavename[i], slavearr[i]));
+
+			}
+		}
+		$("#selectks").hide();
+		
+		
+		}
+}
+
+$("#radio1").click(function(){
+	
+	document.getElementById("tsspan").style.display="none";
+	document.getElementById("slaveselect").style.display="none";
+	//主机构身份登陆
+	$("#odptnspan").html("");
+	$("#odptnspan").html(System.getVar("@ODEPT_NAME@"));
+	var param={};
+	 param["user_code"]=user_code;
+	 param["odept_code"]=System.getVar("@DEPT_CODE@");
+	 var result = FireFly.doAct("TS_XMGL","getUserXm1",param);
+	 var data = result.list;
+	if(data==null){
+		$("#selectks").hide();
+		//不能提交报名 隐藏table
+		$("#goods").hide();
+		$("input[name='checkboxaa']").each(function(index,item){
+			$(this).prop("checked",false);
+		})
+			alert("您选择的机构不能报名此项目");
+		return;
+	}
+	var pageEntity = JSON.parse(data);
+	var falg = false;
+	for(var i=0;i<pageEntity.length;i++){
+		var name = pageEntity[i].XM_NAME;
+		 //项目中已存在array的  title  数据  将展示在  已报名信息中
+		var id = pageEntity[i].XM_ID;
+		if(id==xm_id){
+			flag=true;
+		}
+	}
+	if(flag){
+		dept_code=System.getVar("@DEPT_CODE@");
+		$("#selectks").show();
+		$("#goods").show();
+	}else{
+		$("#selectks").hide();
+		//不能提交报名 隐藏table
+		$("#goods").hide();
+		$("input[name='checkboxaa']").each(function(index,item){
+			$(this).prop("checked",false);
+		})
+			alert("您选择的机构不能报名此项目");
+	}
+	
+});
+
+$("#radio2").click(function(){
+	document.getElementById("tsspan").style.display="none";
+	//次机构身份登陆
+	//判断所选机构是否有考 这个项目的权限 没有的话隐藏  考试 不能报名
+	var slavecode = $("#slaveselect").val();
+	var slavename = $("#slaveselect").text();
+	$("#odptnspan").html("");
+	$("#odptnspan").html(slavename);
+	if(slavecode==null){
+		alert("没有次机构");
+		$("#selectks").hide();
+		$("#goods").hide();
+		$("input[name='checkboxaa']").each(function(index,item){
+			$(this).prop("checked",false);
+		})
+		return;
+	}
+	document.getElementById("slaveselect").style.display="block";
+	 //报名项目列表调用(初始化后展示)
+		 var param={};
+		 param["user_code"]=user_code;
+		 param["odept_code"]=slavecode;
+		 var result = FireFly.doAct("TS_XMGL","getUserXm1",param);
+		 var data = result.list;
+		if(data==null){
+			return;
+		}
+		var pageEntity = JSON.parse(data);
+		var falg = false;
+		for(var i=0;i<pageEntity.length;i++){
+			var name = pageEntity[i].XM_NAME;
+			 //项目中已存在array的  title  数据  将展示在  已报名信息中
+			var id = pageEntity[i].XM_ID;
+			if(id==xm_id){
+				flag=true;
+			}
+		}
+		if(flag){
+			$("#selectks").show();
+			$("#goods").show();
+			dept_code=slavecode;
+		}else{
+			$("#selectks").hide();
+			$("#goods").hide();
+			$("input[name='checkboxaa']").each(function(index,item){
+				$(this).prop("checked",false);
+			})
+				alert("您选择的机构不能报名此项目");
+		}
+});
+$("#slaveselect").change(function(){
+	var slavecode = $("#slaveselect").val();
+	var slavename = $("#slaveselect").text();
+	$("#odptnspan").html("");
+	$("#odptnspan").html(slavename);
+	 //报名项目列表调用(初始化后展示)
+		 var param={};
+		 param["user_code"]=user_code;
+		 param["odept_code"]=slavecode;
+		 var result = FireFly.doAct("TS_XMGL","getUserXm1",param);
+		 var data = result.list;
+		if(data==null){
+			$("#selectks").hide();
+			//不能提交报名 隐藏table
+			$("#goods").hide();
+			$("input[name='checkboxaa']").each(function(index,item){
+				$(this).prop("checked",false);
+			})
+				alert("您选择的机构不能报名此项目");
+			return;
+		}
+		var pageEntity = JSON.parse(data);
+		var falg = false;
+		for(var i=0;i<pageEntity.length;i++){
+			var name = pageEntity[i].XM_NAME;
+			 //项目中已存在array的  title  数据  将展示在  已报名信息中
+			var id = pageEntity[i].XM_ID;
+			if(id==xm_id){
+				flag=true;
+			}
+		}
+		if(flag){
+			dept_code=slavecode;
+			$("#selectks").show();
+			$("#goods").show();
+		}else{
+			$("#selectks").hide();
+			//不能提交报名 隐藏table
+			$("#goods").hide();
+			$("input[name='checkboxaa']").each(function(index,item){
+				$(this).prop("checked",false);
+			})
+				alert("您选择的机构不能报名此项目");
+		}
+	
+})
 

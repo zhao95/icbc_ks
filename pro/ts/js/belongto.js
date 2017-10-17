@@ -451,7 +451,8 @@ function firall(){
 						  i++;
 						  var aa = $(this).val();
 						  arrstring+=aa+",";
-					} 
+					}); 
+				}
 				var whereData={};
 				var data = {"_PK_":arrstring};
 				data = jQuery.extend(data,whereData);
@@ -459,8 +460,7 @@ function firall(){
 				window.open(FireFly.getContextPath() + '/' + obj + '.exp.do?data=' + 
 				encodeURIComponent(jq.toJSON(data)));
 				
-				}
-
+				};
 //--------------------------------------------------------------------------异议图标
 function yiyi(obj){
 		var a = obj.parentNode.id;
@@ -759,11 +759,6 @@ jq("#zhuangtai2").change(function(){
 
 
 
-
-/**
- * 考试日历查看详情js
- */
-
 //分页+查询
 var listPage = function () {
     // 构建页码所需参数
@@ -810,7 +805,6 @@ var listPage = function () {
 	 param["user_code"]=user_code;
 	 param["xmid"]=xmid;
 	 param["where"]=where5+where3;
-	 debugger;
 	 param["xianei"]=xianei;
      return FireFly.doAct(servid,"getBelongToList",param);
      
@@ -1019,7 +1013,6 @@ var listPage = function () {
 	 var data = listData.list;
 	 var pageEntity=JSON.parse(data);
 		$("#"+table+" tbody").html("");
-		
 	    for(var i=0;i<pageEntity.length;i++){
 	    	var strfirst = listData.first;
 	    	var first = parseInt(strfirst);

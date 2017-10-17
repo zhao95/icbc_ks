@@ -30,7 +30,9 @@ import com.rh.core.base.BeanUtils;
 import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
 import com.rh.core.comm.FileMgr;
+import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -150,7 +152,6 @@ public class BmlbServ extends CommonServ {
 		String user_code = paramBean.getStr("USER_CODE");
 		String user_name = paramBean.getStr("USER_NAME");
 		String user_sex = paramBean.getStr("USER_SEX");
-		String odept_name = paramBean.getStr("ODEPT_NAME");
 		String user_office_phone = paramBean.getStr("USER_OFFICE_PHONE");
 		String ryl_mobile = paramBean.getStr("USER_MOBILE");
 		String user_cmpy_date = paramBean.getStr("USER_CMPY_DATE");
@@ -160,7 +161,12 @@ public class BmlbServ extends CommonServ {
 		String xm_name = paramBean.getStr("XM_NAME");
 		String liststr = paramBean.getStr("BM_LIST");
 		String yzgzstr = paramBean.getStr("YZGZ_LIST");
-		String odept_code = paramBean.getStr("ODEPT_CODE");
+		String dept_code = paramBean.getStr("DEPT_CODE");
+		DeptBean deptbean = OrgMgr.getDept(dept_code);
+		String odept_code = deptbean.getODeptCode();
+		String t_dept_code = deptbean.getTDeptCode();
+		String odept_name = deptbean.getODeptBean().getName();
+		String dept_name = deptbean.getName();
 		OutBean outBean = new OutBean();
 		JSONArray json;
 		JSONObject yzgzstrjson;
@@ -227,8 +233,14 @@ public class BmlbServ extends CommonServ {
 						ad_result = "1";
 					}
 					// 0无审核,1自动审核, 2人工审核, 3自动+人工审核
+					String mind = "";
+					mind = yzgzArg.toString();
 					int count = XmglMgr.existSh(xm_id);
 					if(!"".equals(rz_year)){
+						if(yzgzArg.length()>0){
+								 mind = mind.substring(0,mind.length()-1)+",{'VLIDATE':'STAY','TISHI':'','NAME':'管理任职已满"+rz_year+"年'}]";	
+								 mind=mind.replaceAll("\'", "\"");
+						}
 						count=2;
 					}
 					Bean beans = new Bean();
@@ -253,7 +265,9 @@ public class BmlbServ extends CommonServ {
 					beans.set("BM_STARTDATE", bm_start);
 					beans.set("BM_ENDDATE", bm_end);
 					beans.set("KSLBK_ID", kslbk_id);
-					beans.set("ODEPT_CODE",odept_code);
+					beans.set("S_ODEPT",odept_code);
+					beans.set("S_DEPT", dept_code);
+					beans.set("S_TDEPT", t_dept_code);
 					if (count == 0) {
 						beans.set("BM_SH_STATE", 1);
 					}
@@ -277,6 +291,7 @@ public class BmlbServ extends CommonServ {
 						}
 					}
 					Bean bmbean = ServDao.create(servId, beans);
+					
 					// 获取到报名主键id
 					String bm_id = bmbean.getStr("BM_ID");
 					// 验证信息添加
@@ -378,7 +393,7 @@ public class BmlbServ extends CommonServ {
 					 //自动审核保存到 报名明细中
 					 Bean mindbean = new Bean();
 					 mindbean.set("SH_LEVEL", 0);
-					 mindbean.set("SH_MIND", yzgzArg.toString());
+					 mindbean.set("SH_MIND", mind);
 					 mindbean.set("DATA_ID",bm_id);
 					 mindbean.set("SH_STATUS", ad_result);
 					 mindbean.set("SH_ULOGIN", "自动审核");
@@ -386,6 +401,9 @@ public class BmlbServ extends CommonServ {
 					 mindbean.set("SH_UCODE", "");
 					 mindbean.set("SH_TYPE", 1);
 					 mindbean.set("SH_NODE", 0);
+					 mindbean.set("S_ODEPT",bmbean.getStr("S_ODEPT"));
+					 mindbean.set("S_DNAME",dept_name);
+					 mindbean.set("S_DEPT",bmbean.getStr("S_DEPT"));
 					 ServDao.save("TS_COMM_MIND", mindbean);
 				}
 			}
@@ -1382,4 +1400,53 @@ public class BmlbServ extends CommonServ {
 		}
 		return new OutBean().setError("获取验证信息失败");
 	}
+	
+	/**
+	 * 获取主次机构 
+	 */
+	public OutBean getMSCodes(Bean paramBean){
+		OutBean out = new OutBean();
+		String user_code = paramBean.getStr("user_code");
+		//住机构数据
+		String where = "AND PERSON_ID='"+user_code+"' AND STRU_FLAG='0'";
+		List<Bean> masterlist = ServDao.finds("SY_HRM_ZDSTAFFSTRU", where);
+		if(masterlist!=null&&masterlist.size()!=0){
+			 String masterid = masterlist.get(0).getStr("STRU_ID");
+			 out.set("master", masterid);
+			 out.set("mastername", masterlist.get(0).getStr("STRU_NAME"));
+		}else{
+			out.set("mastername","");
+			out.set("master", "");
+		}
+		
+		//次机构数据
+		String where1 = "AND PERSON_ID='"+user_code+"' AND STRU_FLAG='1'";
+		List<Bean> slavelist = ServDao.finds("SY_HRM_ZDSTAFFSTRU", where1);
+		
+		String slaveids = "";
+		String slavenames = "";
+		if(slavelist!=null&&slavelist.size()!=0){
+			for (Bean bean : slavelist) {
+				String deptcode = bean.getStr("STRU_ID");
+				DeptBean dept = OrgMgr.getDept(bean.getStr("STRU_ID"));
+				String oDeptCode = dept.getODeptCode();
+				if(deptcode.equals(oDeptCode)){
+					//机构
+				}else{
+					//部门
+					slaveids+=bean.getStr("STRU_ID")+",";
+					String fullname = dept.getODeptBean().getName()+"-"+bean.getStr("STRU_NAME")+",";
+					slavenames+=fullname;
+				}
+			}
+			 out.set("slaver", slaveids);
+			 out.set("slavenames", slavenames);
+		}else{
+			 out.set("slavenames", slavenames);
+			 out.set("slaver", slaveids);
+		}
+		
+		return out;
+	}
+	
 	}
