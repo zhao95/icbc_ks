@@ -7,13 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.icbc.ctp.utility.StringUtil;
 import com.rh.core.base.Bean;
@@ -30,8 +27,6 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.util.Constant;
 import com.rh.core.util.Strings;
-import com.rh.ts.pvlg.mgr.GroupMgr;
-import com.rh.ts.util.TsConstant;
 
 /**
  * 

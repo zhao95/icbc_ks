@@ -235,15 +235,14 @@ public class StayServ extends CommonServ {
 							+ "'";
 					List<Bean> newlist = ServDao.finds("TS_BMSH_PASS", where);
 					if (newlist.size() != 0) {
-						Bean newBean = newlist.get(0);
+						Bean newBean = new Bean();
 						newBean.copyFrom(bean);
-						newBean.set("SH_USER", shenuser);
-						newBean.set("SH_LEVEL", level);
 						if(flag.equals("1")){
 							//    逐级  
 							newBean.set("SH_USER", shenuser);
 							newBean.set("SH_LEVEL", level);
-							String newother = newBean.getStr("SH_OTHER")+","+shenuser;
+							String newother = newlist.get(0).getStr("SH_OTHER")+","+shenuser;
+							
 							newBean.set("SH_OTHER", newother);
 						}else{
 							//越级  所有人可见
@@ -284,8 +283,8 @@ public class StayServ extends CommonServ {
 							//    逐级  
 							newBean.set("SH_USER", shenuser);
 							newBean.set("SH_LEVEL", level);
-							String newother = newBean.getStr("SH_OTHER")+","+shenuser;
-							newBean.set("SH_OTHER", newother);
+							
+							newBean.set("SH_OTHER", shenuser);
 						}else{
 							//越级  所有人可见
 							ParamBean parambean1 = new ParamBean();
@@ -324,6 +323,9 @@ public class StayServ extends CommonServ {
 				} else {
 					// 审核未通过的数据不再往上提交 将审核权限 只放在当前人手中、
 					Bean newBean = new Bean();
+					// 进行查询修改数据
+					String where1 = "AND BM_ID=" + "'" + bean.getStr("BM_ID")
+							+ "'";
 					bean.remove("SH_ID");
 					bean.remove("S_CMPY");
 					bean.remove("S_ATIME");
@@ -332,14 +334,25 @@ public class StayServ extends CommonServ {
 					bean.remove("_PK_");
 					bean.remove("ROW_NUM_");
 					newBean.copyFrom(bean);
-					
 					if(flag.equals("1")){
+						List<Bean> newlist = ServDao.finds("TS_BMSH_PASS", where1);
+						String shothers ="";
+						String strarr = "";
+						if(newlist!=null&&newlist.size()!=0){
+						 shothers = newlist.get(0).getStr("SH_OTHER")+","+shenuser;
+						}
+						if(!"".equals(shothers)){
+							
+							newBean.set("SH_OTHER", shothers);
+						}else{
+							newBean.set("SH_OTHER", shenuser);
+						}
+						
 						// 只有 当前人能让审核再次进行下去   逐级  
 						newBean.set("SH_USER", shenuser);
 						newBean.set("SH_LEVEL", level);
-						String newother = newBean.getStr("SH_OTHER")+","+shenuser;
-						newBean.set("SH_OTHER", newother);
 					}else{
+					
 						//越级  所有人可见
 						ParamBean parambean1 = new ParamBean();
 						parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
@@ -851,7 +864,7 @@ public class StayServ extends CommonServ {
 				}
 			
 		}
-		 deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
+		 deptwhere = "AND ODEPT_CODE IN ("+belongdeptcode+")";
 		}else{
 			//管理员以下的所有机构
 			String subOrgAndChildDepts = OrgMgr.getSubOrgDeptsSql(compycode,dept_code);
@@ -965,7 +978,7 @@ public class StayServ extends CommonServ {
 						}
 					
 				}
-		String deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%' AND XM_ID='"+xmid+"'";
+		String deptwhere = "AND ODEPT_CODE IN ("+belongdeptcode+") AND XM_ID='"+xmid+"'";
 		//根据审核  机构 匹配当前机构下的所有人
 		String where1 = deptwhere;
 		 list = ServDao.finds("TS_BMSH_STAY", where1);

@@ -643,7 +643,7 @@ public class PassServ extends CommonServ {
 				}
 			
 		}
-		 deptwhere = "AND ODEPT_CODE like '%"+belongdeptcode+"%'";
+		 deptwhere = "AND ODEPT_CODE IN ("+belongdeptcode+")";
 		}else{
 			//管理员以下的所有机构
 			String subOrgAndChildDepts = OrgMgr.getSubOrgDeptsSql(compycode,dept_code);
