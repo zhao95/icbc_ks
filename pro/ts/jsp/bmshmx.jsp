@@ -125,6 +125,11 @@
 	 					
 	 						$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');
 	 				}
+	 				
+	 				if(dataArray[j].VLIDATE=="STAY"){
+	 					
+	 					$("#"+a).append('<div">'+dataArray[j].NAME+'</div>');
+				}
 	 			
 	 				$("#"+a).append('<div style="height:5px;"></div>');
 	 				

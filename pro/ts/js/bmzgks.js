@@ -114,6 +114,7 @@ function xminfoshow(){
        					continue;
        				}
        				var shti = "";
+       				var truetisi = "";
        				for(var j=0;j<dataArray.length;j++){
        					if(j==0){
        						$("#"+a).append('<div style="height:5px;"></div>');
@@ -127,14 +128,16 @@ function xminfoshow(){
 						}
 						shti=dataArray[j].TISHI;
 						if(dataArray[j].VLIDATE=="false"){
-							if(shti!=true){
+							if(shti!="true"){
 								shArray=false;
+							}else{
+								truetisi=="true"
 							}
 						}
 						$("#"+a).append('<div style="height:5px;"></div>');
 						
        				}
-       				if(shArray==true&&shti=="true"){
+       				if(shArray==true&&truetisi=="true"){
        					$("#"+a).append('<div">管理任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
        					$("#yzxx").modal("show");
        				}

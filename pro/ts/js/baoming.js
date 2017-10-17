@@ -836,6 +836,7 @@ function selectcreate(){
 				$("#loading").modal("show");
   }
 function yanzh(obj){
+	debugger;
   var xmeleid = "XMID"+obj;
   var bmeleid = "baomingid"+obj;
   var xmid =  document.getElementById(xmeleid).innerHTML;
@@ -909,10 +910,12 @@ function yanzh(obj){
 						if(dataArray[j].VLIDATE=="false"){
 							
 							if(shti!="true"){
-								zsts="true";
 								shArray=false;
 								
+							}else{
+								zsts="true";
 							}
+							
 						}
 						
        				}
@@ -931,16 +934,18 @@ function yanzh(obj){
        					//改变验证结果
        				}
        				if(shArray==false){
-       					
        					//不改变数据位置  只改变验证结果 
-       					
        					paramyzxx['bmid']=bmid;
+       					
+       					var datastay=JSON.stringify(dataArray);
        					
        					paramyzxx['yzxx']=JSON.stringify(dataArray);
        					
        					FireFly.doAct("TS_BMLB_BM","updateYzxx",paramyzxx)
        					
-       				}if(shArray==true){
+       				}
+       				
+       				if(shArray==true){
        					
        					//改变状态  改为通过 删除 不通过数据  放到pass表
        					
@@ -960,8 +965,17 @@ function yanzh(obj){
 var paramyzxx={}
 
 function yztj(){
-	paramyzxx['year']=$("#yzinput").val();
+	var rzyear = $("#yzinput").val()
+	
+	paramyzxx['year']=rzyear;
+	
+	var datastay=JSON.stringify(dataArray);
+	
+	paramyzxx['yzxx'] =datastay.substring(0,datastay.length-1)+',{"VLIDATE":"STAY","TISHI":"","NAME":"管理任职已满'+rzyear+'年"}]';
+	
 	FireFly.doAct("TS_BMLB_BM",'takestay',paramyzxx);
+	
 	$("#yzxx").modal("hide");
+	var page = $("span[class='current ui-corner-4']").text();
+	new listPage().gotoPage(page);
 }
-//等待提交的方法

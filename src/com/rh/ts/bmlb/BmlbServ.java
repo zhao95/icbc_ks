@@ -1318,14 +1318,25 @@ public class BmlbServ extends CommonServ {
 	public OutBean takestay(Bean paramBean){
 		String BMID = paramBean.getStr("bmid");
 		String year = paramBean.getStr("year");
+		String yzxx = paramBean.getStr("yzxx");
 		SqlBean sql1 = new SqlBean();
 		sql1.and("DATA_ID", BMID);
 		sql1.and("SH_TYPE", 1);
 		List<Bean> finds = ServDao.finds("TS_COMM_MIND", sql1);
-		for (Bean bean : finds) {
-			if(!"".equals(bean.getStr("SH_UCODE"))){
-				return new OutBean().setError("已手动审核验证失败");
+		if(finds!=null&&finds.size()!=0){
+			for (Bean bean : finds) {
+				if(!"".equals(bean.getStr("SH_UCODE"))){
+					return new OutBean().setError("已手动审核验证失败");
+				}
 			}
+			for (Bean bean : finds) {
+				if("".equals(bean.getStr("SH_UCODE"))){
+					bean.set("SH_MIND", yzxx);
+					ServDao.save("TS_COMM_MIND", bean);
+				}
+			}
+			
+			
 		}
 	
 		SqlBean sql = new SqlBean();
