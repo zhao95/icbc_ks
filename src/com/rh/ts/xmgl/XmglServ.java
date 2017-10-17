@@ -219,12 +219,184 @@ public class XmglServ extends CommonServ {
 		out.set("xid", s);
 		return out;
 	}
-
+	
+	/**
+	 * 显示所有机构能考试的项目
+	 * @param paramBean
+	 * @return
+	 * @throws ParseException
+	 */
 	public Bean getUserXm(Bean paramBean) throws ParseException {
 		Bean outBean = new Bean();
 		UserBean userBean = Context.getUserBean();
-		String odeptcode = userBean.getDeptCode();
-		DeptBean odeptbean = new DeptBean(ServDao.find("SY_ORG_DEPT", odeptcode));
+		String odeptcode="";
+		List<String> deptcodelist = new ArrayList<String>();
+			//默认主机构报名
+			 odeptcode = userBean.getDeptCode();
+			 deptcodelist.add(odeptcode);
+		
+		//次机构数据
+		String where1 = "AND PERSON_ID='"+userBean.getStr("USER_CODE")+"' AND STRU_FLAG='1'";
+		List<Bean> slavelist = ServDao.finds("SY_HRM_ZDSTAFFSTRU", where1);
+		
+		if(slavelist!=null&&slavelist.size()!=0){
+			for (Bean bean : slavelist) {
+				String deptcode = bean.getStr("STRU_ID");
+				DeptBean dept = OrgMgr.getDept(bean.getStr("STRU_ID"));
+				String oDeptCode = dept.getODeptCode();
+				if(deptcode.equals(oDeptCode)){
+					//机构
+				}else{
+					//部门
+					deptcodelist.add(bean.getStr("STRU_ID"));
+					
+				}
+		
+			}
+		}
+		
+		
+						
+		// 本人所在的群组编码
+		ParamBean param1 = new ParamBean();
+		OutBean act = ServMgr.act("TS_BM_GROUP_USER", "getBmGroupCodes", param1);
+		String qz = act.getStr("qzcodes");
+		
+		//如果查询本人所在机构 是否 在 某个群组下 
+		String whereqz = "AND G_TYPE=2";
+		List<Bean> finds = ServDao.finds("TS_BM_GROUP_DEPT", whereqz);
+		//所有机构
+		for (Bean bean : finds) {
+			String str = bean.getStr("USER_DEPT_CODE");//机构编码
+			//判断此人是否在此机构下
+			//管理员以下的所有机构
+			List<DeptBean> listdept = OrgMgr.getSubOrgAndChildDepts(bean.getStr("S_CMPY"),str);
+			
+			for (DeptBean deptBean : listdept) {
+				if(deptcodelist.contains(deptBean.getStr("DEPT_CODE"))){
+					qz+=","+bean.getStr("G_ID");
+				}
+			}
+		}
+		if (!Strings.isBlank(qz)) {
+			// 去掉重复群组
+			qz = Strings.removeSame(qz);
+		}
+		String[] qzArray1 = qz.split(",");
+		for (String string : qzArray1) {
+			if(!"".equals(string)){
+				Bean find = ServDao.find("TS_BM_GROUP", string);
+				if(find!=null){
+					Date date = new Date();
+					long time = date.getTime();
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					if("".equals(find.getStr("G_DEAD_BEGIN"))||"".equals(find.getStr("G_DEAD_END"))){
+						continue;
+					}
+					long time2 = sdf.parse(find.getStr("G_DEAD_BEGIN")).getTime();
+					long time3 = sdf.parse(find.getStr("G_DEAD_END")).getTime();
+					if(time<time2||time>time3){
+						//删除此群组
+						int indexOf = Arrays.asList(qzArray1).indexOf(string);
+						qzArray1[indexOf]="";
+					}
+					
+				}
+			}
+		}
+		
+		List<Bean> list = ServDao.finds("TS_XMGL", "");
+		String s = "";
+		for (int i = 0; i < list.size(); i++) {
+			if (i == (list.size() - 1)) {
+				s += list.get(i).getId();
+			} else {
+				s += list.get(i).getId() + ",";
+			}
+		}
+		String[] xmarray = s.split(",");
+		// 将可见的 项目 ID 放到新的数组中
+		List<String> kjxm = new ArrayList<String>();
+		// 遍历项目ID 匹配项目和本人的 群组权限
+		for (int a = 0; a < xmarray.length; a++) {
+			ParamBean param = new ParamBean();
+			param.set("xmid", xmarray[a]);
+			Bean outBeanCode = ServMgr.act("TS_XMGL_RYGL_V", "getCodes", param);
+			String codes = outBeanCode.getStr("rycodes");
+			Boolean boo = false;
+			if ("".equals(codes)) {
+			} else {
+				// 本人所在的群组编码
+				String[] codeArray = codes.split(",");
+				for (int b = 0; b < qzArray1.length; b++) {
+					if (Arrays.asList(codeArray).contains(qzArray1[b])) {
+						boo = true;
+					}
+				}
+			}
+			// 可见的项目id
+			if (boo == true) {
+				kjxm.add(xmarray[a]);
+			}
+		}
+		
+		
+		
+		// kjxm为可见项目idlist stringlist 为已报名的项目idlist
+		List<Bean> lastlist = new ArrayList<Bean>();
+		for (int i = 0; i < list.size(); i++) {
+			Bean bean = list.get(i);
+			// 项目中已存在array的 title 数据 将展示在 已报名信息中
+			String id = bean.getStr("XM_ID");
+			if (!kjxm.contains(id)) {
+				// 已报名这个考试之后 或者他不能报名这个考试 中断循环 继续开始
+				continue;
+			} 
+			if("1".equals(bean.getStr("XM_STATE"))){
+				lastlist.add(bean);
+			}
+		}
+		
+		// 将lastlist转换为 json字符串传给前台
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter w = new StringWriter();
+		try {
+			mapper.writeValue(w, lastlist);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		outBean.set("list", w.toString());
+		return outBean;
+	}
+
+
+	
+	
+	
+	
+	/**
+	 * 以某机构报名 
+	 * @param paramBean
+	 * @return
+	 * @throws ParseException
+	 */
+	public Bean getUserXm1(Bean paramBean) throws ParseException {
+		Bean outBean = new Bean();
+		UserBean userBean = Context.getUserBean();
+		String slavecode = paramBean.getStr("odept_code");
+		String odeptcode="";
+		if(!"".equals(slavecode)){
+			 odeptcode = slavecode;
+		}else{
+			//默认主机构报名
+			 odeptcode = userBean.getDeptCode();
+		}
+		
+						
 		// 本人所在的群组编码
 		ParamBean param1 = new ParamBean();
 		OutBean act = ServMgr.act("TS_BM_GROUP_USER", "getBmGroupCodes", param1);
@@ -340,8 +512,7 @@ public class XmglServ extends CommonServ {
 		outBean.set("list", w.toString());
 		return outBean;
 	}
-
-
+	
 	/**
 	 * 获取此人所在节点下 可审核 的 机构 根据机构 筛选可审核的项目
 	 */
@@ -551,7 +722,7 @@ public void UpdateStatusStart(ParamBean paramBean){
 	protected void beforeQuery(ParamBean paramBean) {
 		ParamBean param = new ParamBean();
 		String  ctlgModuleName="PROJECT";
-		String  serviceName=paramBean.getServId();
+        String  serviceName=paramBean.getServId();
 		param.set("paramBean", paramBean);
 		param.set("ctlgModuleName", ctlgModuleName);
 		param.set("serviceName",serviceName);
