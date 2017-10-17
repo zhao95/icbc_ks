@@ -1,17 +1,12 @@
 package com.rh.ts.pvlg;
 
-import java.util.Iterator;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServMgr;
-import com.rh.core.util.Constant;
 import com.rh.ts.pvlg.mgr.GroupMgr;
 import com.rh.ts.util.TsConstant;
 
@@ -82,6 +77,6 @@ public class GroupServ extends CommonServ {
 			param.set("paramBean", paramBean);
 			param.set("ctlgModuleName", ctlgModuleName);
 			param.set("serviceName",serviceName);
-			ServMgr.act("TS_UTIL", "userPvlg", param);
+			PvlgUtils.setCtlgPvlgWhere(param);
 		}	
 }
