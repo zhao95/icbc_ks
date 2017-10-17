@@ -1,10 +1,5 @@
 package com.rh.ts.pvlg;
 
-import java.util.Iterator;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.org.UserBean;
@@ -12,9 +7,6 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
-import com.rh.core.serv.ServMgr;
-import com.rh.core.serv.bean.SqlBean;
-import com.rh.core.util.Constant;
 import com.rh.core.util.Strings;
 import com.rh.ts.pvlg.mgr.RoleMgr;
 import com.rh.ts.util.RoleUtil;
@@ -92,6 +84,6 @@ public class RoleServ extends CommonServ {
 		param.set("paramBean", paramBean);
 		param.set("ctlgModuleName", ctlgModuleName);
 		param.set("serviceName",serviceName);
-		ServMgr.act("TS_UTIL", "userPvlg", param);	
+		PvlgUtils.setCtlgPvlgWhere(param);
 	}
 }

@@ -15,6 +15,7 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.dict.DictMgr;
+import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.TsConstant;
 
 public class CatalogServ extends CommonServ {
@@ -109,21 +110,21 @@ public class CatalogServ extends CommonServ {
 
 		sql.and("ODEPT_CODE", odept.getStr("DEPT_CODE"));
 
-//		sql.and("DEPT_TYPE", OrgConstant.DEPT_TYPE_DEPT);
+		// sql.and("DEPT_TYPE", OrgConstant.DEPT_TYPE_DEPT);
 
 		sql.and("S_FLAG", 1);
-		
+
 		StringBuffer sb = new StringBuffer();
-		
+
 		sb.append(" AND NOT EXISTS (SELECT CTLG_CODE FROM ").append(TsConstant.SERV_CTLG_ALL);
-		
+
 		sb.append(" WHERE CTLG_MODULE = ? AND S_ODEPT = ?");
-		
+
 		sb.append(" AND CTLG_CODE = ").append(ServMgr.SY_ORG_DEPT).append(".DEPT_CODE");
-		
+
 		sb.append(" AND S_FLAG = ?)");
-		
-		sql.appendWhere( sb.toString(), mod,odept.getStr("DEPT_CODE"),1);
+
+		sql.appendWhere(sb.toString(), mod, odept.getStr("DEPT_CODE"), 1);
 
 		List<Bean> list = ServDao.finds(ServMgr.SY_ORG_DEPT, sql);
 
@@ -131,9 +132,9 @@ public class CatalogServ extends CommonServ {
 			list = new ArrayList<Bean>();
 		}
 
-//		list.add(odept);
+		// list.add(odept);
 
-//		Bean catlogBean = getCatalogBean(mod, list);
+		// Bean catlogBean = getCatalogBean(mod, list);
 
 		for (Bean dept : list) {
 
@@ -141,50 +142,50 @@ public class CatalogServ extends CommonServ {
 
 			addCatalog.set("CTLG_MODULE", mod);
 
-//			if (!catlogBean.containsKey(dept.getStr("DEPT_CODE"))) {
+			// if (!catlogBean.containsKey(dept.getStr("DEPT_CODE"))) {
 
-				String ctlgCodeH = mod + "-" + dept.getStr("DEPT_CODE");
+			String ctlgCodeH = mod + "-" + dept.getStr("DEPT_CODE");
 
-				String ctlgPCodeH = mod + "-" + dept.getStr("DEPT_PCODE");
+			String ctlgPCodeH = mod + "-" + dept.getStr("DEPT_PCODE");
 
-				addCatalog.set("CTLG_CODE", dept.getStr("DEPT_CODE")); // 机构编码
+			addCatalog.set("CTLG_CODE", dept.getStr("DEPT_CODE")); // 机构编码
 
-				addCatalog.set("CTLG_CODE_H", ctlgCodeH); // 模块+机构编码
+			addCatalog.set("CTLG_CODE_H", ctlgCodeH); // 模块+机构编码
 
-				addCatalog.set("CTLG_NAME", dept.getStr("DEPT_NAME"));// 目录名称(部门名称)
+			addCatalog.set("CTLG_NAME", dept.getStr("DEPT_NAME"));// 目录名称(部门名称)
 
-				if (StringUtils.isNotBlank(dept.getStr("DEPT_PCODE"))) {
+			if (StringUtils.isNotBlank(dept.getStr("DEPT_PCODE"))) {
 
-					addCatalog.set("CTLG_PCODE", dept.getStr("DEPT_PCODE")); // 上级机构编码
+				addCatalog.set("CTLG_PCODE", dept.getStr("DEPT_PCODE")); // 上级机构编码
 
-					addCatalog.set("CTLG_PCODE_H", ctlgPCodeH); // 模块 + 上级机构编码
+				addCatalog.set("CTLG_PCODE_H", ctlgPCodeH); // 模块 + 上级机构编码
+			}
+			addCatalog.set("CTLG_SORT", dept.getStr("DEPT_SORT")); // 机构排序
+
+			String codePathH = "";
+			String codePath = dept.getStr("CODE_PATH"); // 机构path
+
+			String[] pathArg = codePath.split("\\^");
+
+			for (String path : pathArg) {
+				if (StringUtils.isNotBlank(path)) {
+					codePathH += mod + "-" + path + "^";
 				}
-				addCatalog.set("CTLG_SORT", dept.getStr("DEPT_SORT")); // 机构排序
+			}
+			addCatalog.set("CTLG_PATH_H", codePathH); // 模块+机构path
+			addCatalog.set("CTLG_PATH", codePath); // 机构path
+			addCatalog.set("CTLG_SHARE", ctlgModules); // 共享模块
 
-				String codePathH = "";
-				String codePath = dept.getStr("CODE_PATH"); // 机构path
+			addCatalog.set("CTLG_LEVEL", dept.getStr("DEPT_LEVEL"));// 目录层级
 
-				String[] pathArg = codePath.split("\\^");
+			addCatalog.set("CTLG_TYPE", dept.getStr("DEPT_TYPE")); // 目录类型
 
-				for (String path : pathArg) {
-					if (StringUtils.isNotBlank(path)) {
-						codePathH += mod + "-" + path + "^";
-					}
-				}
-				addCatalog.set("CTLG_PATH_H", codePathH); // 模块+机构path
-				addCatalog.set("CTLG_PATH", codePath); // 机构path
-				addCatalog.set("CTLG_SHARE", ctlgModules); // 共享模块
+			addCatalog.set("S_ODEPT", dept.getStr("ODEPT_CODE")); // 所属机构
 
-				addCatalog.set("CTLG_LEVEL", dept.getStr("DEPT_LEVEL"));// 目录层级
+			addCatalog.set("READ_FLAG", 1); // 只读
 
-				addCatalog.set("CTLG_TYPE", dept.getStr("DEPT_TYPE")); // 目录类型
-				
-				addCatalog.set("S_ODEPT", dept.getStr("ODEPT_CODE")); // 所属机构
-
-				addCatalog.set("READ_FLAG", 1); // 只读
-
-				addCatalogList.add(addCatalog);
-//			}
+			addCatalogList.add(addCatalog);
+			// }
 
 		}
 
@@ -202,7 +203,7 @@ public class CatalogServ extends CommonServ {
 	 *            机构id
 	 * @return
 	 */
-	private Bean getCatalogBean(String ctlgModule, List<Bean> list) {
+	public Bean getCatalogBean(String ctlgModule, List<Bean> list) {
 		Bean result = new Bean();
 
 		List<String> dlist = new ArrayList<String>();
@@ -278,7 +279,7 @@ public class CatalogServ extends CommonServ {
 				if (StringUtils.isBlank(addShare)) {
 					paramBean.set("CTLG_SHARE", addModule);
 				}
-				
+
 				paramBean.set("CTLG_LEVEL", parentCtlg.getInt("CTLG_LEVEL") + 1);
 				paramBean.set("CTLG_TYPE", 3);
 
@@ -352,10 +353,10 @@ public class CatalogServ extends CommonServ {
 				dataBean.set("CTLG_PCODE_H", modCode + "-" + paramBean.getStr("CTLG_PCODE"));
 				dataBean.set("CTLG_PATH", paramBean.getStr("CTLG_PATH"));
 				dataBean.set("CTLG_PATH_H", getCtlgPathH(modCode, paramBean.getStr("CTLG_PATH")));
-				
+
 				dataBean.set("CTLG_LEVEL", paramBean.getStr("CTLG_LEVEL"));
 				dataBean.set("CTLG_TYPE", paramBean.getStr("CTLG_TYPE"));
-				
+
 				dataBean.set("S_FLAG", 1);
 				dataBean.set("READ_FLAG", 2);
 
@@ -431,11 +432,11 @@ public class CatalogServ extends CommonServ {
 			if (StringUtils.isNotBlank(paramBean.getStr("S_USER"))) {
 				data.set("S_USER", paramBean.getStr("S_USER"));
 			}
-			
+
 			if (StringUtils.isNotBlank(paramBean.getStr("CTLG_LEVEL"))) {
 				data.set("CTLG_LEVEL", paramBean.getStr("CTLG_LEVEL"));
 			}
-			
+
 			if (StringUtils.isNotBlank(paramBean.getStr("CTLG_TYPE"))) {
 				data.set("CTLG_TYPE", paramBean.getStr("CTLG_TYPE"));
 			}
@@ -457,16 +458,16 @@ public class CatalogServ extends CommonServ {
 		}
 		return codePathH;
 	}
-	
-	//查询前添加查询条件
-		protected void beforeQuery(ParamBean paramBean) {
-			ParamBean param = new ParamBean();
-			String  serviceName=paramBean.getServId();
-			String  ctlgModuleName=serviceName.substring( 16);   
-			param.set("paramBean", paramBean);
-			param.set("ctlgModuleName", ctlgModuleName);
-			param.set("serviceName",serviceName);
-			ServMgr.act("TS_UTIL", "userCommPvlg", param);		
-		}
+
+	// 查询前添加查询条件
+	protected void beforeQuery(ParamBean paramBean) {
+		ParamBean param = new ParamBean();
+		String serviceName = paramBean.getServId();
+		String ctlgModuleName = serviceName.substring(16);
+		param.set("paramBean", paramBean);
+		param.set("ctlgModuleName", ctlgModuleName);
+		param.set("serviceName", serviceName.substring(0, 15));
+		PvlgUtils.setCtlgPvlgWhere(param);
+	}
 
 }

@@ -9,10 +9,13 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 	var paramDelete = {};
 	paramDelete["_extWhere"] = "and JH_ID ='"+projectId+"'";
 	var resultDe = FireFly.doAct("TS_JHGL","query",paramDelete);
-	if(resultDe._DATA_[0].JH_STATUS =="2"){
-		Tip.show("请取消发布后再进行添加！");
-		return false;
+	if(resultDe._DATA_[0]!=null){
+		if(resultDe._DATA_[0].JH_STATUS =="2"){
+			Tip.show("请取消发布后再进行添加！");
+			return false;
+		}
 	}
+
 	//打开添加页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
     var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100],"JH_ID":projectId,"JH_TITLE":projectTitle};
     var cardView = new rh.vi.cardView(temp);
