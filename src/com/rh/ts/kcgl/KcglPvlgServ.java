@@ -11,6 +11,7 @@ public class KcglPvlgServ  extends CommonServ{
 			String  ctlgModuleName="EXAM_ROOM";
 			param.set("paramBean", paramBean);
 			param.set("ctlgModuleName", ctlgModuleName);
-			PvlgUtils.setCtlgPvlgWhere(param);	
+			param.set("serviceName", paramBean.getServId());
+			PvlgUtils.setOrgPvlgWhere(param);	
 		}
 }

@@ -171,7 +171,7 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	var user_pvlg=_viewer._userPvlg[_viewer.servId+"_PVLG"];
 	params["USER_PVLG"] = user_pvlg;
 	_viewer.whereData["extParams"] = params;
-	 var flag = getListPvlg(item,user_pvlg);
+	 var flag = getListPvlg(item,user_pvlg,"CODE_PATH");
 	_viewer.listClearTipLoad();
 	return flag;
 };
