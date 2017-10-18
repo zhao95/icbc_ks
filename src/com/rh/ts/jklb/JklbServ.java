@@ -220,6 +220,8 @@ public class JklbServ extends CommonServ {
         flowParamBean.set("examerUserCode", examerUserCode);
         flowParamBean.set("shrUserCode", shUserCode);//起草节点examerWorkNum传shrWorkNum
         flowParamBean.set("level", level);
+        flowParamBean.set("deptCode", jkbean.getStr("S_DEPT"));
+        flowParamBean.set("odeptCode", jkbean.getStr("S_ODEPT"));
         flowParamBean.set("xmId", xmId);
         flowParamBean.set("flowName", 2); //1:报名审核流程 2:异地借考流程 3:请假审核流程
         OutBean shBean = ServMgr.act("TS_WFS_APPLY", "backFlow", flowParamBean);

@@ -220,7 +220,8 @@ public class QjlbServ extends CommonServ {
         flowParamBean.set("examerUserCode", examerUserCode);
         flowParamBean.set("shrUserCode", shrUserCode);//起草节点 shrWorekNum 传 examerWorekNum
         flowParamBean.set("level", level);//不懂  默认给0吧
-
+        flowParamBean.set("deptCode", qjbean.getStr("S_DEPT"));
+        flowParamBean.set("odeptCode", qjbean.getStr("S_ODEPT"));
         flowParamBean.set("xmId", xmId);
         flowParamBean.set("flowName", 3); //1:报名审核流程 2:异地借考流程 3:请假审核流程
         OutBean shBean = ServMgr.act("TS_WFS_APPLY", "backFlow", flowParamBean);

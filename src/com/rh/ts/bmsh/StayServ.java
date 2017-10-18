@@ -189,6 +189,8 @@ public class StayServ extends CommonServ {
 				ParamBean parambean = new ParamBean();
 				parambean.set("examerUserCode", bean.getStr("BM_CODE"));
 				parambean.set("level", level);
+				parambean.set("deptCode", bean.getStr("S_DEPT"));
+				parambean.set("odeptCode", bean.getStr("S_ODEPT"));
 				parambean.set("shrUserCode", shenuser);
 				parambean.set("flowName", flowname);
 				parambean.set("xmId", xmid);
@@ -249,6 +251,8 @@ public class StayServ extends CommonServ {
 							ParamBean parambean1 = new ParamBean();
 							parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
 							parambean1.set("level", 0);
+							parambean.set("deptCode", bean.getStr("S_DEPT"));
+							parambean.set("odeptCode", bean.getStr("S_ODEPT"));
 							parambean1.set("shrUserCode", shenuser);
 							parambean1.set("flowName", flowname);
 							parambean1.set("xmId", xmid);
@@ -290,6 +294,8 @@ public class StayServ extends CommonServ {
 							ParamBean parambean1 = new ParamBean();
 							parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
 							parambean1.set("level", 0);
+							parambean.set("deptCode", bean.getStr("S_DEPT"));
+							parambean.set("odeptCode", bean.getStr("S_ODEPT"));
 							parambean1.set("shrUserCode", shenuser);
 							parambean1.set("flowName", flowname);
 							parambean1.set("xmId", xmid);
@@ -357,6 +363,8 @@ public class StayServ extends CommonServ {
 						ParamBean parambean1 = new ParamBean();
 						parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
 						parambean1.set("level", 0);
+						parambean.set("deptCode", bean.getStr("S_DEPT"));
+						parambean.set("odeptCode", bean.getStr("S_ODEPT"));
 						parambean1.set("shrUserCode", shenuser);
 						parambean1.set("flowName", flowname);
 						parambean1.set("xmId", xmid);

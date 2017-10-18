@@ -150,6 +150,8 @@ public class NoPassServ extends CommonServ {
 		String levels = "";
 		ParamBean parambean = new ParamBean();
 		parambean.set("examerUserCode", list.get(0).getStr("BM_CODE"));
+		parambean.set("deptCode", list.get(0).getStr("S_DEPT"));
+		parambean.set("odeptCode", list.get(0).getStr("S_ODEPT"));
 		parambean.set("level", 0);
 		parambean.set("shrUserCode", shenuser);
 		parambean.set("flowName", 1);
@@ -219,6 +221,8 @@ public class NoPassServ extends CommonServ {
 
 					ParamBean parambean = new ParamBean();
 					parambean.set("examerUserCode", bean.getStr("BM_CODE"));
+					parambean.set("deptCode", bean.getStr("S_DEPT"));
+					parambean.set("odeptCode", bean.getStr("S_ODEPT"));
 					parambean.set("level", level);
 					parambean.set("shrUserCode", shenuser);
 					parambean.set("flowName", 1);
@@ -369,7 +373,8 @@ public class NoPassServ extends CommonServ {
 			parambean.set("shrUserCode", shenuser);
 			parambean.set("flowName", 1);
 			parambean.set("xmId", xmid);
-
+			parambean.set("deptCode", bean.getStr("S_DEPT"));
+			parambean.set("odeptCode", bean.getStr("S_ODEPT"));
 			OutBean outbean = ServMgr
 					.act("TS_WFS_APPLY", "backFlow", parambean);
 			List<Bean> list1 = outbean.getList("result");

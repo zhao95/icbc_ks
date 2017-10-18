@@ -4068,9 +4068,9 @@ function showVerify(pkArray,viewer){
 	var imgDate = new Date();
 	var content = '<div><table>'
 			+ '<tr id="errMsg" style="visibility: hidden;"><td><font color="red" size="5">验证码错误！</font></td></tr>'
-			+ '<tr><td>请输入验证码:</td></tr>'
-			+ '<tr><td>验证码：<input name="vcode" style="height: 30px; width: 130px; font-size: 22px;" type="text" id="vcode"></td></tr>'
-			+ '<tr><td><img id="codevalidate" src="/VerifyCodeServlet/'+imgDate.getMilliseconds()+'" style="height: 25px;" onclick="changeImg()"> '
+			+ '<tr><td>请输入验证码:<input name="vcode" style="height: 30px; width: 130px; font-size: 22px;" type="text" id="vcode"></td></tr>'
+			+ '<tr style="height:20px"><td></td></tr>'
+			+ '<tr><td>验证码：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id="codevalidate" src="/VerifyCodeServlet/'+imgDate.getMilliseconds()+'" style="height: 25px;" onclick="changeImg()"> '
 			+ '<a href="javascript:;" onclick="changeImg()"><font size="2">看不清，换一张</font></a></td></tr>'
 			+ '</table></div>'
 			+ '<script>function changeImg() {var myDate = new Date();var url = $("#codevalidate").prop("src");url = url + "/" + myDate.getMilliseconds();$("#codevalidate").prop("src", url);}</script>';
@@ -4116,6 +4116,7 @@ function showVerify(pkArray,viewer){
 				}
 			},
 			"关闭" : function() {
+				viewer.refresh();
 				dialog.remove();
 			}
 		}

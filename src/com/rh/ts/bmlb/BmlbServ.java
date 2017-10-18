@@ -324,6 +324,8 @@ public class BmlbServ extends CommonServ {
 					ParamBean param = new ParamBean();
 					param.set("examerUserCode", user_code);
 					param.set("level", 0);
+					param.set("deptCode",dept_code);
+					param.set("odeptCode", odept_code);
 					param.set("xmId", xm_id);
 					param.set("flowName", 1);
 					param.set("shrUserCode", user_code);

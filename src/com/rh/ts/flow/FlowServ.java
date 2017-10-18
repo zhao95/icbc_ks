@@ -196,10 +196,12 @@ public class FlowServ extends CommonServ {
 	//1:报名审核流程 2:异地借考流程 3:请假审核流程
 	int flowName = paramBean.getInt("flowName");
 	String shrUserCode = paramBean.getStr("shrUserCode");
+	String deptCode = paramBean.getStr("deptCode");
+	String odeptCode = paramBean.getStr("odeptCode");
 	//起草人
 	UserBean userBean = UserMgr.getUser(examerUserCode);
-	String deptCode = userBean.getDeptCode();
-	String odeptCode = userBean.getODeptCode();
+	/*String deptCode = userBean.getDeptCode();
+	String odeptCode = userBean.getODeptCode();*/
 	//推送人
 	UserBean shrUserBean = UserMgr.getUser(shrUserCode);
 	String shrDeptCode = shrUserBean.getDeptCode();
