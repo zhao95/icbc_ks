@@ -4210,7 +4210,12 @@ function getDialog(dialogId,title,wid,hei) {
 	dialogObj.focus();
 };
 
-function getListPvlg(item,user_pvlg) {
+function getListPvlg(item,user_pvlg,filed) {
+	var flag = false;
+	
+	if(filed == undefined) {
+		filed = "CTLG_PATH"
+	}
 	//点击树之前，判断是否在权限范围内，否则不能点击
 	//获取登录人用户编码权限
 	//var CurrentUser = System.getUser("USER_CODE");
@@ -4228,14 +4233,17 @@ function getListPvlg(item,user_pvlg) {
 			}
 		}
 	}
-	var ctlg_path= item.CTLG_PATH;
-	console.log(ctlg_path);
-	var ctlgPathArray=ctlg_path.split("^");//最后一个元素为空
-	var flag = false;
-	for(var j=0;j<ctlgPathArray.length-1;j++){
-		if(arr.indexOf(ctlgPathArray[j])>=0){
-			flag=true;
-			break;
+	
+	var ctlg_path= item[filed];
+	
+	if(ctlg_path) {
+		var ctlgPathArray=ctlg_path.split("^");//最后一个元素为空
+	
+		for(var j=0;j<ctlgPathArray.length-1;j++){
+			if(arr.indexOf(ctlgPathArray[j])>=0){
+				flag=true;
+				break;
+			}
 		}
 	}
 	if(!flag){

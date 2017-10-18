@@ -102,7 +102,7 @@ public class TsConstant {
 	/** 考场管理 关联机构*/
 	public static final String SERV_KCGL_GLJG = "TS_KCGL_GLJG";
 	
-	/** 考场管理 关联机构*/
+	/** 考场管理 大时间段 场次安排*/
 	public static final String SERV_KCAP_CCSJ = "TS_XMGL_KCAP_DAPCC_CCSJ";
 	
 	

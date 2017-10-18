@@ -466,7 +466,7 @@ public class CatalogServ extends CommonServ {
 		String ctlgModuleName = serviceName.substring(16);
 		param.set("paramBean", paramBean);
 		param.set("ctlgModuleName", ctlgModuleName);
-		param.set("serviceName", serviceName.substring(0, 15));
+		param.set("serviceName", serviceName);
 		PvlgUtils.setCtlgPvlgWhere(param);
 	}
 
