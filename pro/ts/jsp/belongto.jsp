@@ -381,14 +381,14 @@ if(userBean != null) {
 	
 	<div class="modal fade" id="paixu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
 		<div class="modal-dialog" style="width:50%;">
-			<div class="modal-content" style="height:650px">
+			<div class="modal-content" style="height:650px;width:100%">
 				<div class="modal-header" style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
 						
 					自定义显示列
 					
 				</div>
-				<div >
-				<table style="width:360px;">
+				<div style="width:45%">
+				<table style="width:100%">
 				    <thead style="background-color:lightgray;border-bottom:solid 1px lightgray">
 				      <tr style="height:35px;">
 				        <th style="padding-left:20px;width:40%;text-align:left"><input type="checkbox" style="font-size:13px;width:16px;height:16px" id="daixuan" onclick="checkall(this)">待选</th>
@@ -396,35 +396,35 @@ if(userBean != null) {
 				      </thead>
 				      </table>
 				</div>
-				<div id ="pxtablediv" style="height:500px;overflow-y:auto;width:360px">
-				<table id="pxtable" style="width:340px;">
+				<div id ="pxtablediv" style="height:500px;overflow-y:auto;width:45%;">
+				<table id="pxtable" style="width:100%;">
 				      <tbody>
 				      </tbody>
 				    </table>
-				    </div>
-				    <div style="position:relative;left:370px;top:-400px">
+				</div>
+				    <div style="position:relative;left:48.5%;top:-400px">
 				   <a onclick="removeleft()" href="#"><image id="imageleft" src="/ts/image/1124.png"></image></a>
 				    </div>
-				    <div style="position:relative;left:370px;top:-370px">
+				    <div style="position:relative;left:48.5%;top:-370px">
 				    <a onclick="removeright()" href="#"><image id="imageright" src="/ts/image/1348.png"></image> </a>
 				    </div>
-				     <div style="position:relative;left:370px;top:-350px">
+				     <div style="position:relative;left:48.5%;top:-350px">
 				   <a id="leftalla" onclick="leftall()" href="#"><image id="leftall" src="/ts/image/1440.png"></image></a>
 				    </div>
-				     <div style="position:relative;left:370px;top:-330px">
+				     <div style="position:relative;left:48.5%;top:-330px">
 				   <a id="rightalla" onclick="rightall()" href="#"><image id="rightall" src="/ts/image/1552.png"></image></a>
 				    </div>
-				    <div style="width:330px;position:relative;left:420px;top:-666px">
-				     <table style="width:339px;">
-				     <thead style="background-color:lightgray;width:200px;border-bottom:solid 1px lightgray">
+				    <div style="position:relative;left:55.4%;top:-102.4%;width:44.6%;">
+				     <table style="width:100%;">
+				     <thead style="background-color:lightgray;border-bottom:solid 1px lightgray">
 				      <tr style="height:35px;">
 				        <th style="padding-left:20px;text-align:left"><input type="checkbox" style="width:16px;height:16px" id="daixuanrt" onclick="checkallright(this)">已选&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 				      </tr>
 				      </thead>
 				      </table>
 				    </div>
-				      <div id="pxtable2div" style="height:500px;overflow-y:auto;width:338px;position:relative;left:420px;top:-664px">
-				   <table id="pxtable2" style="width:310px;">
+				      <div id="pxtable2div" style="width:44.6%;height:500px;overflow-y:auto;position:relative;left:55.4%;top:-664px">
+				   <table id="pxtable2" style="width:100%;">
 				      <tbody>
 				    
 				      </tbody>
@@ -438,6 +438,7 @@ if(userBean != null) {
 			</div>
 		</div>
 	</div>
+	
 	
 	<div class="modal fade" id="yiyi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
 		<div class="modal-dialog" style="width:50%">
