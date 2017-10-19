@@ -1087,9 +1087,149 @@ rh.vi.listView.prototype._act = function(aId,aObj) {
                   //_self.grid.addNewTrs();
 		    }); 
 		    break;
+	    case "SELFDEFINED"://自定义显示列
+		    taObj.bind("click",function() {
+		    	var user_code = System.getVar("@USER_CODE@");
+		    	var servId = _self.opts.sId;
+		    	var param = {};
+		    	param["servid"]=servId;
+		    	param["user_code"]=user_code;
+		    	var result = FireFly.doAct("TS_SELF_DEFINED_EXP","getServColumn",param);
+		    	var data = result.list;
+		    	var data1 = result.list1;
+		    	var content = '<div style="width:40%;padding-left:5%"><table id="selftable"><tr><th>所有字段</th></tr>';
+		    	for(var i=0;i<data.length;i++){
+		    		content+='<tr><td position="absolute"><input type="checkbox" style="position:relative;top:5px" name="checkboxaa"><span>'+data[i].ITEM_NAME+'</span></td><td class="_PK_ rhGrid-td-hide">'+data[i].ITEM_CODE;+'</td></tr>';
+		    	}
+		    	 content += '</table></div>';
+		    	 content+='<div style="position:absolute;left:45%;top:150px;"><a id="removeleft" href="#"><img id="imageleft" src="/ts/image/1124.png"></a></div><div style="position:absolute;left:45%;top:250px"><a id="removeright" href="#"><img id="imageright" src="/ts/image/1348.png"></a></div>'
+		    	 content+='<div style="position:absolute;left:65%;top:0px;"><table id="selftable2"><tr><th>已选字段</th></tr>';
+		    	 for(var a=0;a<data1.length;a++){
+		    		 content+='<tr><td position="absolute"><input type="checkbox" style="position:relative;top:5px" name="checkboxbb"><span>'+data1[a].COLUMN_NAME+'</span></td><td class="_PK_ rhGrid-td-hide">'+data1[a].COLUMN_CODE;+'</td></tr>';
+		    	 }
+		    	 content += '</table></div>';
+		    	 
+		    	var dialog = jQuery("<div></div>").addClass("dictDialog").attr("title",
+		    	"自定义导出列");
+		    	var container = jQuery(content).appendTo(dialog);
+		    	dialog.appendTo(jQuery("body"));
+		    	_self._bindfunc();
+		    	
+		    	var hei = 430;
+		    	var wid = 480;
+
+		    	var scroll = RHWindow.getScroll(parent.window);
+		    	var viewport = RHWindow.getViewPort(parent.window);
+		    	var top = scroll.top + viewport.height / 2 - hei / 2 - 88;
+		    	var posArray = [ "", top ];
+		    	dialog.dialog({
+		    		autoOpen : true,
+		    		height : hei,
+		    		width : wid,
+		    		show : "bounce",
+		    		hide : "puff",
+		    		modal : true,
+		    		resizable : false,
+		    		position : posArray,
+		    		buttons : {
+		    			"确定" : function() {
+		    				var codes = "";
+		    				var names = "";
+		    				$("input[name='checkboxbb']").each(function(index,item){
+		    					var tr = this.parentNode.parentNode
+		    					var tds = $(tr).find("td");
+		    					var code = tds[1].innerHTML;
+		    					var name = $(tds[0]).find("span").html();
+		    					codes+=code+",";
+		    					names+=name+",";
+		    				});
+		    				var paramstr = {};
+		    				param["codes"]=codes;
+		    				param["names"]=names;
+		    				param["ServID"]=servId;
+		    				param["user_code"]=user_code;
+		    				FireFly.doAct("TS_SELF_DEFINED_EXP","saveself",param)
+		    				dialog.remove();
+		    				
+		    			},
+		    			"关闭" : function() {
+		    				dialog.remove();
+		    				
+		    			}
+		    		}
+		    	});
+		    }); 
+		    break;
 	}
 };
 
+rh.vi.listView.prototype._bindfunc=function(){
+	jQuery("#removeleft").unbind("click").bind("click",function(){
+		$('input:checkbox[name=checkboxaa]:checked').each(function(){
+			  $(this).attr("name","checkboxbb");
+			 var s =  this.parentNode.parentNode.innerHTML;
+			 this.parentNode.parentNode.remove();
+			 $("#selftable2 tbody").append('<tr>'+s+'</tr>')
+		  });
+		_mouse();
+	});
+	jQuery("#removeright").unbind("click").bind("click",function(){
+		$('input:checkbox[name=checkboxbb]:checked').each(function(){
+			  $(this).attr("name","checkboxaa");
+			 var s =  this.parentNode.parentNode.innerHTML;
+			 this.parentNode.parentNode.remove();
+			 $("#selftable tbody").append('<tr>'+s+'</tr>')
+		  });
+		 _mouse_();
+	});
+	document.getElementById("imageleft").onmouseover = function(){
+		 this.src = "/ts/image/2020.png";
+		 
+	}
+	document.getElementById("imageleft").onmouseout = function() {
+	      this.src = '/ts/image/1124.png';
+	  }
+	document.getElementById("imageright").onmouseover = function(){
+		 this.src = "/ts/image/2024.png";
+	}
+	document.getElementById("imageright").onmouseout = function() {
+	     this.src = '/ts/image/1348.png';
+	 }
+	//拖动效果
+	 var fixHelperModified = function(e, tr) {
+         var $originals = tr.children();
+         var $helper = tr.clone();
+         $helper.children().each(function(index) {
+             $(this).width($originals.eq(index).width())
+         });
+         return $helper;
+     },
+     updateIndex = function(e, ui) {
+         /*$('td.index', ui.item.parent()).each(function (i) {
+             $(this).html(i + 1);
+         });*/
+     };
+     $("#selftable2 tbody").sortable({
+ helper: fixHelperModified,
+ stop: updateIndex
+}).disableSelection();
+     _mouse();
+}
+
+function _mouse(){
+	//背景色
+	 var btns = document.getElementsByName('checkboxbb');
+	 for(var z=0;z<btns.length;z++){
+		 var td = btns[z].parentNode;
+		 td.onmouseover = function() {
+			 this.style.backgroundColor = '#e9e9e9';
+		 }
+		 td.onmouseout = function() {
+			 this.style.background = 'white';
+		 }
+		 
+	 }
+}
 /**
  * 删除页信息的总条数，用于在添加或删除的时候
  */

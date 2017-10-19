@@ -235,7 +235,7 @@ public class XmglServ extends CommonServ {
 		odeptcode = userBean.getDeptCode();
 		deptcodelist.add(odeptcode);
 
-		// 次机构数据
+		/*// 次机构数据
 		String where1 = "AND PERSON_ID='" + userBean.getStr("USER_CODE") + "' AND STRU_FLAG='1'";
 		List<Bean> slavelist = ServDao.finds("SY_HRM_ZDSTAFFSTRU", where1);
 
@@ -253,7 +253,7 @@ public class XmglServ extends CommonServ {
 				}
 
 			}
-		}
+		}*/
 
 		// 本人所在的群组编码
 		ParamBean param1 = new ParamBean();

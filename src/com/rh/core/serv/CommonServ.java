@@ -44,9 +44,11 @@ import com.rh.core.comm.entity.EntityMgr;
 import com.rh.core.comm.file.TempFile;
 import com.rh.core.comm.file.TempFile.Storage;
 import com.rh.core.comm.mind.MindLabelContentProvider;
+import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.base.AbstractServ;
 import com.rh.core.serv.bean.PageBean;
+import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.serv.relate.RelateMgr;
 import com.rh.core.serv.util.ExportExcel;
@@ -114,6 +116,7 @@ public class CommonServ extends AbstractServ {
             boolean bKey = true;
             for (String key : items.keySet()) {
                 Bean item = items.get(key);
+               
                 int listFlag = item.getInt("ITEM_LIST_FLAG");
                 if (bKey && item.getStr("ITEM_CODE").equals(serv.getPKey())) { //主键无论是否列表显示都输出
                     if (listFlag == ServConstant.ITEM_LIST_FLAG_HIDDEN) { //如果定义为隐藏有数据，则提供给前端时设为不显示
@@ -241,6 +244,192 @@ public class CommonServ extends AbstractServ {
         afterQuery(paramBean, outBean);
         return outBean;
     }
+    
+    public OutBean query1(ParamBean paramBean) {
+        beforeQuery(paramBean);
+        final ServDefBean serv = ServUtils.getServDef(paramBean.getServId());
+        PageBean page = paramBean.getQueryPage();
+        int rowCount = paramBean.getShowNum(); //通用分页参数优先级最高，然后是查询的分页参数
+        if (rowCount > 0) { //快捷参数指定的分页信息，与finds方法兼容
+            page.setShowNum(rowCount); //从参数中获取需要取多少条记录，如果没有则取所有记录
+            page.setNowPage(paramBean.getNowPage());  //从参数中获取第几页，缺省为第1页
+        } else {
+            if (!page.contains(Constant.PAGE_SHOWNUM)) { //初始化每页记录数设定
+                if (paramBean.getQueryNoPageFlag()) { //设定了不分页参数
+                    page.setShowNum(0);
+                } else { //没有设定不分页，取服务设定的每页记录数
+                    page.setShowNum(serv.getPageCount(50));
+                }
+            }
+        }
+        
+        OutBean outBean = new OutBean();
+        final LinkedHashMap<String, Bean> cols = new LinkedHashMap<String, Bean>();
+        StringBuilder sql = new StringBuilder("select ");
+        
+        //在查询语句Select之后加入指定关键字，如：Distinct
+        if (paramBean.isNotEmpty(Constant.SELECT_KEYWORDS)) {
+            sql.append(" ").append(paramBean.getStr(Constant.SELECT_KEYWORDS)).append(" ");
+        }
+        
+        String qSelect = paramBean.getSelect();
+        final String[] hideItems;
+        if (qSelect.length() == 0 || qSelect.equals("*")) {
+            boolean bListFlag = (qSelect.equals("*")) ? true : false;
+            LinkedHashMap<String, Bean> items = serv.getAllItems();
+            StringBuilder select = new StringBuilder(serv.getPKey());
+            boolean bKey = true;
+            
+            
+            //判断是否启用自定义字段导出
+            UserBean userBean = Context.getUserBean();
+            SqlBean sqlparam = new SqlBean();
+            sqlparam.and("USER_CODE", userBean.getStr("USER_CODE"));
+            String serv_name = paramBean.getServId();
+            sqlparam.and("SERV_NAME",serv_name);
+            sqlparam.asc("COLUMN_XUHAO");
+            List<Bean>   definedlist = ServDao.finds("ts_self_defined_exp", sqlparam);
+            if(definedlist!=null&&definedlist.size()!=0){
+            	//启用自定义的数据
+            	for (Bean bean : definedlist) {
+            		Bean item = items.get(bean.getStr("COLUMN_CODE"));
+            		addCols(cols, item, 1);
+            		select.append(",").append(item.get("ITEM_CODE"));
+            	}
+            	
+            }else{
+            for (String key : items.keySet()) {
+                	Bean item = items.get(key);
+                int listFlag = item.getInt("ITEM_LIST_FLAG");
+                if (bKey && item.getStr("ITEM_CODE").equals(serv.getPKey())) { //主键无论是否列表显示都输出
+                    if (listFlag == ServConstant.ITEM_LIST_FLAG_HIDDEN) { //如果定义为隐藏有数据，则提供给前端时设为不显示
+                        listFlag = ServConstant.ITEM_LIST_FLAG_NO;
+                    }
+                    addCols(cols, item, listFlag);
+                    bKey = false;
+                } else if (listFlag != ServConstant.ITEM_LIST_FLAG_NO || bListFlag) {
+                    if (item.getInt("ITEM_TYPE") == ServConstant.ITEM_TYPE_TABLE 
+                            || item.getInt("ITEM_TYPE") == ServConstant.ITEM_TYPE_VIEW) {
+                        select.append(",").append(item.get("ITEM_CODE"));
+                    }
+                    if (listFlag == ServConstant.ITEM_LIST_FLAG_HIDDEN) { //如果定义为隐藏有数据，则提供给前端时设为不显示
+                        listFlag = ServConstant.ITEM_LIST_FLAG_NO;
+                    }
+                    addCols(cols, item, listFlag);
+                }
+                }
+            } //end for
+            sql.append(select);
+            hideItems = new String[] {};
+        } else { //自定义select的列查询后再处理
+            sql.append(qSelect);
+            hideItems = paramBean.getQueryHide().split(Constant.SEPARATOR);
+        }
+
+        //处理Order排序
+        StringBuilder order = new StringBuilder(" order by ");
+        String servOrder = serv.getSqlOrder();
+        String pageOrder = paramBean.getQueryPageOrder();
+        if (pageOrder.length() > 0) { //排序设定的优先级：分页排序 > 参数排序 > 服务排序 > 更新时间倒叙 
+            order.append(pageOrder);
+        } else {
+            if (paramBean.contains(Constant.PARAM_ORDER)) {
+                order.append(paramBean.getOrder());
+            } else if (servOrder.length() > 0) { //存在缺省排序设定
+                order.append(servOrder);
+            } else { //没有任何排序设定
+                order.setLength(0); //清除排序
+            }
+        }
+        String tableName = paramBean.containsKey(Constant.PARAM_TABLE) ? paramBean.getTable() : serv.getTableView();
+        sql.append(" from ").append(tableName).append(" where 1=1 ")
+            .append(getFullWhere(paramBean));
+        if (StringUtils.isNotEmpty(paramBean.getGroupBy())) {
+            sql.append(" GROUP BY ").append(paramBean.getGroupBy());
+        }
+        sql.append(order);
+        List<Bean> dataList = Transaction.getExecutor().queryPage(
+            sql.toString(), page.getNowPage(), page.getShowNum(),
+            new QueryCallback() { //处理数据字典的名称替换
+                public void call(List<Bean> columns, Bean bean) {
+                    String cmpy = null;
+                    String cmpyItem = serv.getCmpy();
+                    if (cmpyItem.length() > 0 && bean.isNotEmpty(cmpyItem)) { //指定当前数据的公司编码
+                        cmpy = Context.changeCmpy(bean.getStr(cmpyItem));
+                    }
+                    for (Bean column : columns) {
+                        Bean item = serv.getItem(column.get("NAME"));
+                        if (item != null) {
+                            if (item.getInt("ITEM_USER_FLAG") == Constant.YES_INT) { //处理用户的各种信息
+                                String itemCode = item.getStr("ITEM_CODE");
+                                UserMgr.appendUserItemInfo(itemCode, bean);
+                            } else  if (item.isNotEmpty("DICT_ID")) { //数据字典项
+                            		String dictId = item.getStr("DICT_ID");
+		            	           	String data = bean.getStr(column.getStr("NAME"));
+		            	           	bean.set(column.getStr("NAME") + "__NAME", DictMgr.getFullNames(dictId, data));
+		            	           	bean.set("EN_JSON", item.getStr("EN_JSON"));
+		            	           	if (item.getInt("ITEM_MOBILE_TYPE") == ServConstant.ITEM_MOBILE_TYPE_IMG) { //图片项
+		            	           		String img = DictMgr.getImg(dictId, data);
+		            	           		bean.set(column.getStr("NAME") + "__IMG", img);
+		            	           	}
+                            }
+                        }
+                    }
+                    if (cmpy != null) {
+                        Context.changeCmpy(cmpy);
+                    }
+                }
+                
+                public void end(int count, List<Bean> columns) { //自定义select需要根据查询结果生成列信息
+                    if (cols.size() == 0) {
+                        for (Bean col : columns) {
+                            String name = col.getStr("NAME");
+                            Bean item = serv.getItem(name);
+                            if (item == null) {
+                                continue;
+                            }
+                            //前端指定了隐藏字段的不显示, 服务定义指定了隐藏有数据字段不显示
+                            if (Strings.isin(hideItems, name)
+                                    || (item.getInt("ITEM_LIST_FLAG") == ServConstant.ITEM_LIST_FLAG_HIDDEN)) {
+                                addCols(cols, item, Constant.NO_INT);
+                            } else {
+                                addCols(cols, item, Constant.YES_INT);
+                            }
+                        }
+                    } //end if
+                }
+            });
+        int count = dataList.size();
+        int showCount = page.getShowNum();
+        boolean bCount; //是否计算分页
+        if ((showCount == 0) || serv.noCount() || paramBean.getQueryNoPageFlag()) {
+            bCount = false;
+        } else {
+            bCount = true;
+        }
+        if (bCount) { //进行分页处理
+            if (!page.contains(Constant.PAGE_ALLNUM)) { //如果有总记录数就不再计算
+            	int allNum;
+                if ((page.getNowPage() == 1) && (count < showCount)) { //数据量少，无需计算分页
+                	allNum = count;
+                } else {
+                    allNum = Transaction.getExecutor().count(sql.toString());
+                }
+                page.setAllNum(allNum);
+            }
+            outBean.setCount(page.getAllNum()); //设置为总记录数
+        } else {
+            outBean.setCount(dataList.size());
+        }
+        
+        outBean.setData(dataList);
+        outBean.setPage(page);
+        outBean.setCols(cols);
+        afterQuery(paramBean, outBean);
+        return outBean;
+    }
+    
+    
     
     /**
      * 提供基于设定条件的查询，不处理分页、字典名称替换等,主要供非分页的服务间调用。
@@ -1040,12 +1229,12 @@ public class CommonServ extends AbstractServ {
         }
         ExportExcel expExcel = new ExportExcel(serv);
         try {
-        OutBean outBean = query(paramBean);
+        OutBean outBean = query1(paramBean);
             count = outBean.getCount();
             //总数大于excel可写最大值
-            if (count > EXCEL_MAX_NUM) {
+          /*  if (count > EXCEL_MAX_NUM) {
                 return new OutBean().setError("导出数据总条数大于Excel最大行数：" + EXCEL_MAX_NUM);
-            }
+            }*/
             //导出第一次查询数据
             paramBean.setQueryPageNowPage(1); //导出当前第几页
         afterExp(paramBean, outBean);   //执行导出查询后扩展方法
