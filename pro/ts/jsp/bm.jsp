@@ -228,12 +228,12 @@ position: absolute;
 					
 				</div>
 				<div style="padding-top:20px;width:90%;font-size:16px;text-align:left;color:lightseagreen">
-				<span style="padding-left:16%">如确需报考，请说明并提交相关证明材料</span>
+				<span style="padding-left:10%">如确需报考，请说明并提交相关证明材料</span>
 				</div>
 				<div style="padding-top:20px">
 				<table style="width:100%">
 				<tr>
-				<td style="width:15%"></td><td style="color:lightseagreen;font-size:13px;height:150px;vertical-align:top"><textarea id="liyou11" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:10%"></td><td style="color:lightseagreen;font-size:13px;height:150px;vertical-align:top"><textarea id="liyou11" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
 				<table id="filehis">

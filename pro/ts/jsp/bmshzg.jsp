@@ -56,7 +56,7 @@ if(userBean != null) {
 	position: absolute; 
     top: 20%; 
     bottom: 200px; 
-    left: 20%; 
+    left: 10%; 
     right: 0; 
 	}
 	#excleupload .modal-dialog{
@@ -436,22 +436,22 @@ if(userBean != null) {
 	</div>
 	
 	<div class="modal fade" id="yiyi" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
-		<div class="modal-dialog" style="width:50%">
+		<div class="modal-dialog" style="width:40%">
 			<div class="modal-content">
 				<div class="modal-header" style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
 						
 						异议
 				</div>
-				<div style="padding-top:20px;width:300px;font-size:20px;text-align:center;color:lightseagreen">
+				<div style="padding-left:50px;padding-top:10px;width:300px;font-size:16px;text-align:left;color:lightseagreen">
 				申诉理由：
 				</div>
-				<div style="padding-top:20px">
-				<table style="width:700px">
+				<div style="padding-top:10px">
+				<table style="width:100%">
 				<tr>
-				<td style="width:15%"></td><td style="height:150px;vertical-align:top"><textarea id="backliyou" style="border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:10%"></td><td style="height:105px;vertical-align:top"><textarea id="backliyou" style="border:solid 1px white;height:100%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
-				<div style="padding-top:20px;width:300px;font-size:20px;text-align:center;color:lightseagreen">
+				<div style="padding-left:50px;padding-top:10px;width:300px;font-size:16px;text-align:left;color:lightseagreen">
 				申诉详细材料：
 				</div>
 				<table id="filehistory">
@@ -459,8 +459,8 @@ if(userBean != null) {
 				</table>
 				
 				</div>
-				<div class="modal-footer" style="text-align:center;height:100px">
-					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;font-size:16px;height:50px;width:100px" data-dismiss="modal">取消</button>
+				<div class="modal-footer" style="text-align:center;height:60px">
+					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;font-size:16px;height:40px;width:80px" data-dismiss="modal">取消</button>
 				</div>
 				
 			</div><!-- /.modal-content -->
@@ -493,7 +493,8 @@ if(userBean != null) {
 				<table style="width:650px;font-size:15px;color:black">
 				<thead>
 				<tr>
-				<td style="text-align:right;font-size:20px;vertical-align:bottom">考试标题：&nbsp;</td><td style="font-size:18px;color:gray;width:40%" id="ks_title"></td>
+				<td style="width:20%;text-align:right;font-size:20px;vertical-align:bottom">考试标题：&nbsp;</td><td style="font-size:18px;color:gray;width:30%" id="ks_title"></td>
+				<td style="width:20%"></td><td style="width:30%"></td>
 				</tr>
 				</thead>
 				<tr height="40px">
