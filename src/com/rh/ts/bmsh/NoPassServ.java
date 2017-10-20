@@ -261,6 +261,7 @@ public class NoPassServ extends CommonServ {
 					newBean1.copyFrom(bean);
 					newBean1.set("SH_OTHER", allman);
 					newBean1.set("SH_LEVEL", level);
+					newBean1.set("BM_STATUS",0);
 					ServDao.save("TS_BMSH_STAY", newBean1);
 				}
 				// 修改报名状态

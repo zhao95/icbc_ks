@@ -417,7 +417,7 @@ function firall(){
 				alert("您未选中任何记录,请选择");
 				$("#shenheC").removeAttr("data-target");
 			}else{
-				 $('input:checkbox[name=checkboxb]:checked').each(function(){
+				 $('input:checkbox[name=checkboxc]:checked').each(function(){
 					 if($(this).attr("SHLV")!=0){
 					 if(nowlevel>$(this).attr("SHLV")){
 						 alert("您的上级已审核您没有审核此数据的权利");
