@@ -134,7 +134,9 @@ public class KcapMatch {
 
 			String ccId = freeZw.getStr("CC_ID"); // 场次id
 
-			String zwhKey = kcId + "^" + ccId + "^";
+			String ccDate = freeZw.getStr("SJ_DATE"); // 考试日期
+
+			String zwhKey = ccDate + "^" + kcId + "^" + ccId + "^";
 
 			String zwh = freeZw.getStr("ZW_ZWH_XT"); // 座位号 (行-列)
 
@@ -306,11 +308,13 @@ public class KcapMatch {
 
 		Bean farKsBean = res.getFarKsBean().getBean(kcId);
 
+		// Bean cloneBean = (Bean) filtBean.clone();
+
 		for (Object key : farKsBean.keySet()) {
-			
+
 			if (filtBean.containsKey(key)) {
-				
-				filtBean.remove(key); //移除距离远的考生
+
+				filtBean.remove(key); // 移除距离远的考生
 			}
 		}
 
@@ -319,6 +323,14 @@ public class KcapMatch {
 		}
 	}
 
+	/**
+	 * 筛选 同一网点级机构考生均分安排
+	 * 
+	 * @param freeZw
+	 * @param res
+	 * @param filtBean
+	 *            {考生ID:考生bean}
+	 */
 	private static void filtR004(Bean freeZw, KcapResource res, Bean filtBean) {
 
 		if (filtBean == null || filtBean.isEmpty()) {
@@ -326,6 +338,14 @@ public class KcapMatch {
 		}
 	}
 
+	/**
+	 * 筛选 相邻座位 来自同一机构考生不连排
+	 * 
+	 * @param freeZw
+	 * @param res
+	 * @param filtBean
+	 *            {考生ID:考生bean}
+	 */
 	private static void filtR005(Bean freeZw, KcapResource res, Bean filtBean) {
 
 		if (filtBean == null || filtBean.isEmpty()) {

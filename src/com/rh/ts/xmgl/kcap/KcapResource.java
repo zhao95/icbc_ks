@@ -201,16 +201,15 @@ public class KcapResource {
 
 		loadBusyZw(xmId, odepts);
 
-		if (ksPriority == 1) { // 场次优先 zwhBean{场次id : zwhBeanVal{考场id:座位}}
+		if (ksPriority == 1) { // 场次优先
 
 			fitCcZwBean();
 
-		} else { // 考场优先 zwhBean{ 考场id : zwhBeanVal{场次id: 座位}}
+		} else { // 考场优先
 
 			fitKcZwBean();
 
 		}
-
 	}
 
 	/**
@@ -218,7 +217,7 @@ public class KcapResource {
 	 * 
 	 * @param xmId
 	 */
-	@SuppressWarnings("unchecked")
+
 	private void loadRule(String xmId) {
 
 		ruleBean = new Bean();
@@ -249,7 +248,7 @@ public class KcapResource {
 
 					if (obj instanceof List) {
 
-						List<Bean> kslist = (List<Bean>) obj;
+						List<Bean> kslist = ksBean.getList(key);
 
 						for (Bean bean : kslist) {
 
@@ -277,7 +276,7 @@ public class KcapResource {
 
 					} else if (obj instanceof Bean) {
 
-						Bean ks = (Bean) obj;
+						Bean ks = ksBean.getBean(key);
 
 						if ("023001".equals(ks.getStr("STATION_TYPE_CODE"))) {// 管理类视为领导职务
 
@@ -393,7 +392,9 @@ public class KcapResource {
 
 					String sjCc = cc.getStr("SJ_CC"); // 场次号
 
-					Bean zwBean = getZwBean(zwhList, kcId, sjCc);
+					String date = cc.getStr("SJ_START").substring(0, 9); // 考试日期
+
+					Bean zwBean = getZwBean(zwhList, kcId, sjCc, date);
 
 					zwhBeanVal.set(sjCc, zwBean);
 				}
@@ -417,8 +418,6 @@ public class KcapResource {
 
 			List<Bean> kcinfoList = kcBean.getList(key); // 某所属机构下的考场list
 
-			Bean zwhBeanVal = new Bean();
-
 			for (Bean kcInfo : kcinfoList) {
 
 				String kcId = kcInfo.getBean("INFO").getStr("KC_ID"); // 考场id
@@ -433,18 +432,18 @@ public class KcapResource {
 
 					String sjCc = cc.getStr("SJ_CC"); // 场次号
 
-					if (!zwhBeanVal.containsKey(kcId)) {
+					String date = cc.getStr("SJ_START").substring(0, 9);// 考试日期
 
-						Bean zwBean = getZwBean(zwhList, kcId, sjCc);
+					Bean zwBean = getZwBean(zwhList, kcId, sjCc, date); // 当前场次未使用座位
 
-						zwBean.set("GLJG", jgList);
+					zwBean.set("GLJG", jgList);
 
-						zwhBeanVal.set(kcId, zwBean);
-					}
+					Bean zwhBeanVal = new Bean();
+
+					zwhBeanVal.set(kcId, zwBean);
 
 					freeCcZwBean.set(sjCc, zwhBeanVal);
 				}
-
 			}
 		}
 	}
@@ -579,13 +578,14 @@ public class KcapResource {
 	 * 
 	 * @param zwhList
 	 *            座位list
+	 * @param cc
+	 *            场次bean
 	 * @param kcId
 	 *            考场id
-	 * @param sjCc
-	 *            场次号
-	 * @return
+	 * 
+	 * @return Bean{座位号:座位bean}
 	 */
-	private Bean getZwBean(List<Bean> zwhList, String kcId, String sjCc) {
+	private Bean getZwBean(List<Bean> zwhList, String kcId, String sjCc, String date) {
 
 		Bean zwBean = new Bean(); // 考场座位bean {系统座位号：zwbean}
 
@@ -593,7 +593,7 @@ public class KcapResource {
 
 			String zwh = zw.getStr("ZW_ZWH_XT"); // 座位号
 
-			if (!busyZwBean.containsKey(kcId + "^" + sjCc + "^" + zwh)) { // 判断座位是否已安排,只取未安排座位
+			if (!busyZwBean.containsKey(kcId + "^" + sjCc + "^" + date + "^" + zwh)) { // 判断座位是否已安排,只取未安排座位
 
 				zwBean.set(zwh, zw);// ZW_ID,ZW_ZWH_XT,ZW_ZWH_SJ,ZW_KY
 			}
@@ -607,6 +607,7 @@ public class KcapResource {
 	 * 
 	 * @param xmId
 	 * @param odepts
+	 * 
 	 */
 	private void loadBusyZw(String xmId, String... odepts) {
 
@@ -626,8 +627,9 @@ public class KcapResource {
 			String kcId = zw.getStr("KC_ID"); // 考场
 			String sjCc = zw.getStr("SJ_CC"); // 场次
 			String zwh = zw.getStr("ZW_XT"); // 座位id
+			String date = zw.getStr("SJ_START").substring(0, 9);// 考试日期
 
-			busyZwBean.set(kcId + "^" + sjCc + "^" + zwh, zw);
+			busyZwBean.set(kcId + "^" + sjCc + "^" + date + "^" + zwh, zw);
 		}
 	}
 
@@ -651,34 +653,20 @@ public class KcapResource {
 
 				for (Bean jg : jgList) {
 
+					String dCode = jg.getStr("JG_CODE");
+
 					List<Bean> jgksList = null;
 
 					if (jg.getInt("JG_FAR") == 1) { // 关联考场距离远的机构
 
-						jgksList = ksBean.getList(jg.getStr("JG_CODE"));// 关联机构下的考生
+						jgksList = ksBean.getList(dCode);// 机构下考生list
 
-						for (Bean jgks : jgksList) {
+						farksBeanVal = commList2Bean(jgksList, "BM_CODE");
 
-							String shId = jgks.getStr("SH_ID");
-
-							String userCode = jgks.getStr("BM_CODE");
-
-							if (farksBeanVal.containsKey(userCode)) { // 考生已存在
-
-								String shIds = farksBeanVal.getStr(userCode);
-
-								shIds += "," + shId;
-
-								farksBeanVal.set(userCode, shIds);
-
-							} else {
-
-								farksBeanVal.set(userCode, shId);
-							}
-						}
+						farKsBean.set(kcId, farksBeanVal);
 					}
 				}
-				farKsBean.set(kcId, farksBeanVal);
+				// farKsBean.set(kcId, farksBeanVal);
 			}
 		}
 	}
@@ -686,8 +674,10 @@ public class KcapResource {
 	/**
 	 * list 转 Bean
 	 * 
-	 * @param list 待转换list
-	 * @param keyName 字段名称
+	 * @param list
+	 *            待转换list
+	 * @param keyName
+	 *            字段名称
 	 * @return {keyName值:单个bean/多个list}
 	 */
 	private Bean commList2Bean(List<Bean> list, String keyName) {
@@ -775,7 +765,7 @@ public class KcapResource {
 	/**
 	 * 未安排座位 考场优先
 	 * 
-	 * @return Bean{考场id : Bean{场次id : Bean座位} }
+	 * @return Bean{考场id:场次Bean{场次id:日期Bean{日期:座位Bean}}} 考场 ->场次 ->日期 ->座位
 	 */
 	public Bean getFreeKcZwBean() {
 		return freeKcZwBean;
@@ -784,7 +774,7 @@ public class KcapResource {
 	/**
 	 * 未安排座位 场次优先
 	 * 
-	 * @return Bean{场次id : Bean{考场id : Bean座位} }
+	 * @return {场次id:日期Bean{日期:考场Bean{考场id:Bean座位}}} 场次 ->日期 ->考场 ->座位
 	 */
 	public Bean getFreeCcZwBean() {
 		return freeCcZwBean;
@@ -802,7 +792,7 @@ public class KcapResource {
 	/**
 	 * 已安排座位
 	 * 
-	 * @return Bean{考场ID ^ 场次ID ^ 座位号: 座位安排 Bean}
+	 * @return Bean{考场ID^场次^日期^座位号: 座位安排 Bean}
 	 */
 	public Bean getBusyZwBean() {
 		return busyZwBean;
