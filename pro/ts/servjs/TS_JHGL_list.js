@@ -116,12 +116,32 @@ _viewer.getBtn("qxfb").unbind("click").bind("click", function() {
 	if (pkAarry.length == 0) {
 		_viewer.listBarTipError("请选择相应记录！");
 	} else {
-		var param = {};
-		param["pkCodes"] = pkAarry.join(",");
-		FireFly.doAct(_viewer.servId, "UpdateStatusStop", param);
-		Tip.show("计划已取消发布！");
-		_viewer.refresh();
+		//遍历所选的所有大计划，依次进行判断执行。
+		for (var i = 0; i < pkAarry.length; i++) {
+			var paramfb = {};
+			paramfb["_extWhere"] = "and JH_ID ='"+pkAarry[i]+"'";
+			var beanFb = FireFly.doAct(_viewer.servId, "query", paramfb);
+			//判断是否已发布，否则提示已经发布 
+			if(beanFb._DATA_ != 0){
+				if(beanFb._DATA_[0].JH_STATUS=="1"){
+					_viewer.listBarTipError("所选计划已取消发布！");
+				}else if(beanFb._DATA_[0].JH_STATUS=="2"){
+					var param = {};
+					param["pkCodes"] = pkAarry[i];
+					FireFly.doAct(_viewer.servId, "UpdateStatusStop", param);
+					Tip.show("计划已取消发布！");
+					_viewer.refresh();
+				}
+			}else if(beanFb._DATA_  == 0){
+				Tip.show("当前用户无权限取消发布！");
+			}
+		}
 	}
+//		var param = {};
+//		param["pkCodes"] = pkAarry.join(",");
+//		FireFly.doAct(_viewer.servId, "UpdateStatusStop", param);
+//		Tip.show("计划已取消发布！");
+//		_viewer.refresh();
 })
 
 /**
