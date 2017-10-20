@@ -82,16 +82,22 @@ _viewer.getBtn("fabu").unbind("click").bind("click", function() {
 			paramfb["_extWhere"] = "and JH_ID ='"+pkAarry[i]+"'";
 			var beanFb = FireFly.doAct(_viewer.servId, "query", paramfb);
 			//判断是否已发布，否则提示已经发布 
-			if(beanFb._DATA_[0].JH_STATUS=="2"){
-				_viewer.listBarTipError("所选计划已发布！");
-			}else if(beanFb._DATA_[0].JH_STATUS=="1"){
-				var param = {};
-				param["pkCodes"] = pkAarry[i];
-				FireFly.doAct(_viewer.servId, "UpdateStatusStart", param,false,false,function(){
-					Tip.show("计划发布成功！");
-				});
-				_viewer.refresh();
-			}	
+			if(beanFb._DATA_ != 0){
+				if(beanFb._DATA_[0].JH_STATUS=="2"){
+					_viewer.listBarTipError("所选计划已发布！");
+				}else if(beanFb._DATA_[0].JH_STATUS=="1"){
+					var param = {};
+					param["pkCodes"] = pkAarry[i];
+					FireFly.doAct(_viewer.servId, "UpdateStatusStart", param,false,false,function(){
+						Tip.show("计划发布成功！");
+					});
+					_viewer.refresh();
+				}
+			}
+			if(beanFb._DATA_  == 0){
+				Tip.show("当前用户无权限发布！");
+			}
+				
 		}
 	}
 })
