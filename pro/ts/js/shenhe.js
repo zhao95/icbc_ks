@@ -250,9 +250,16 @@ function firall(){
 				 $('input:checkbox[name=checkboxa]:checked').each(function(){
 					 if($(this).attr("SHLV")!=0){
 					 if(nowlevel>$(this).attr("SHLV")){
-						 alert("您的上级已审核您没有审核此数据的权利");
-						 falg = true;
-						 return;
+						 var color=$(this.parentNode.parentNode).css("background-color");
+							$(this.parentNode.parentNode).css("background-color", "#99FFFF");
+							$(this).click(function(){
+								if(!$(this).is(":checked")){
+									$(this.parentNode.parentNode).css("background-color", color);
+								}
+							});
+							 alert("请查看审核级数您的上级已审核您没有审核此数据的权利");
+							 flag=true;
+							 return;
 						 
 					 }
 					 }
@@ -381,7 +388,14 @@ function firall(){
 				 $('input:checkbox[name=checkboxb]:checked').each(function(){
 					 if($(this).attr("SHLV")!=0){
 					 if(nowlevel>$(this).attr("SHLV")){
-						 alert("您的上级已审核您没有审核此数据的权利");
+						var color=$(this.parentNode.parentNode).css("background-color");
+						$(this.parentNode.parentNode).css("background-color", "#99FFFF");
+						$(this).click(function(){
+							if(!$(this).is(":checked")){
+								$(this.parentNode.parentNode).css("background-color", color);
+							}
+						});
+						 alert("请查看审核级数您的上级已审核您没有审核此数据的权利");
 						 flag=true;
 						 return;
 					 }
@@ -420,9 +434,16 @@ function firall(){
 				 $('input:checkbox[name=checkboxc]:checked').each(function(){
 					 if($(this).attr("SHLV")!=0){
 					 if(nowlevel>$(this).attr("SHLV")){
-						 alert("您的上级已审核您没有审核此数据的权利");
-						 flag = true;
-						 return;
+						 var color=$(this.parentNode.parentNode).css("background-color");
+							$(this.parentNode.parentNode).css("background-color", "#99FFFF");
+							$(this).click(function(){
+								if(!$(this).is(":checked")){
+									$(this.parentNode.parentNode).css("background-color", color);
+								}
+							});
+							 alert("请查看审核级数您的上级已审核您没有审核此数据的权利");
+							 flag=true;
+							 return;
 					 }
 					 }
 				 })
@@ -495,14 +516,15 @@ function firall(){
 							  arrstring+=aa+",";
 				 });
 				} else{
-					//没有选中导出当前页的数据
-					//定义 变量 
-						  var i=0;
-				$('input:checkbox[name='+name+']').each(function(){
-						  i++;
-						  var aa = $(this).val();
-						  arrstring+=aa+",";
-			 });
+					//导出所有数据
+					var where5 = " AND XM_ID="+"'"+xmid+"'";
+					var where6 = "AND SH_OTHER like '%"+user_code+"%'";
+					var param={};
+					param["where"]=where5+where6;
+					param["servId"]=obj;
+					param["xianei"]="belong";
+					var result =FireFly.doAct("TS_BMLB_BM","getexportdata",param);
+					arrstring=result.dataids;
 					} 
 				var whereData={};
 				var data = {"_PK_":arrstring};
@@ -1089,15 +1111,15 @@ var listPage = function () {
 	     	if(tabnum==3||tabnum==2){
 	     	//审核level 审核层级大于当前审核层级的人没有审核权限  （TS_BMSH_PASS,TS_BMSH_NOPSS中的数据）
 	     	if(yiyi==""){
-	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center" ><input type="checkbox" SHLV='+shlevel+' name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: center"><a onclick = "formsubmit(this)" href="#"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center" ><input type="checkbox" SHLV='+shlevel+' name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: right"><a onclick = "formsubmit(this)" href="#"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 	     	}else{
-	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center" ><input style="text-align:center" type="checkbox"  SHLV='+shlevel+'  name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)" href="#"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center" ><input style="text-align:center" type="checkbox"  SHLV='+shlevel+'  name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: right"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)" href="#"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 	     	}
 	     	}else{
 	     		if(yiyi==""){
-		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center" ><input style="text-align:center" type="checkbox"  SHLV='+shlevel+' name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: center"><a onclick = "formsubmit(this)" href="#"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center" ><input style="text-align:center" type="checkbox"  SHLV='+shlevel+' name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: right"><a onclick = "formsubmit(this)" href="#"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 		     	}else{
-		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center" ><input style="text-align:center" type="checkbox"  SHLV='+shlevel+' name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)" href="#"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center" ><input style="text-align:center" type="checkbox"  SHLV='+shlevel+' name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: right"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)" href="#"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 		     		
 		     	}
 	     	}

@@ -459,8 +459,8 @@ if(userBean != null) {
 				</table>
 				
 				</div>
-				<div class="modal-footer" style="text-align:center;height:60px">
-					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;font-size:16px;height:40px;width:80px" data-dismiss="modal">取消</button>
+				<div class="modal-footer" style="text-align:center;height:50px">
+					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;margin-top:-10px;font-size:16px;height:35px;width:80px" data-dismiss="modal">取消</button>
 				</div>
 				
 			</div><!-- /.modal-content -->
@@ -508,8 +508,8 @@ if(userBean != null) {
 				</tr>
 				</table>
 				</div>
-				<div class="modal-footer" style="text-align:center;height:70px">
-					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;height:35px;width:80px;font-size:16px;"data-dismiss="modal">关闭</button>
+				<div class="modal-footer" style="text-align:center;height:50px">
+					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;height:35px;margin-top:-10px;width:80px;font-size:16px;"data-dismiss="modal">关闭</button>
 				</div>
 				
 			</div><!-- /.modal-content -->

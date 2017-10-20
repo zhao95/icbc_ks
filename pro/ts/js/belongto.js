@@ -26,7 +26,6 @@ var nodeid = "";
 
 //------------------------------------------------拖动效果
 function Drag(div,table){
-	  
     var ochek=document.getElementById(div),
         otable=document.getElementById(table),
         otody=otable.tBodies[0],
@@ -34,21 +33,31 @@ function Drag(div,table){
         otd=otody.getElementsByTagName("td"),
         box=document.getElementById("box"),
         arrn=[];
+    	var hanghaoarr=[];
         var a =0 ;
+        hanghaoarr.push(a);
         var b =1;
+        hanghaoarr.push(b);
         var c= 2;
+        hanghaoarr.push(c);
+        var length = oth.length-1;
         for (var i = 0; i < otd.length; i++) {
-        	var length = oth.length-1;
-        	if(i!=0&&i%length==0){
-        		a+=oth.length;
-        		b+=oth.length;
-        		c+=oth.length;
-        	}
         	
-        	if(i!=a&&i!=b&&i!=c){
-          otd[i].onmousedown=function(e){
-              var e=e||window.event,
-                  target = e.target||e.srcElement,
+        	if(i!=0&&i%length==0){
+        		hanghaoarr.push(a+=oth.length);
+        		hanghaoarr.push(b+=oth.length);
+        		hanghaoarr.push(c+=oth.length);
+        	}
+        	var flag = false;
+        	for(var j=0;j<hanghaoarr.length;j++){
+        		if(i==hanghaoarr[j]){
+        			flag=true;
+        		}
+        	}
+        	if(!flag){
+        		otd[i].onmousedown=function(e){
+                var e=e||window.event,
+                target = e.target||e.srcElement,
 									
                   thW = target.offsetWidth,
                   maxl=ochek.offsetWidth-thW,
@@ -430,6 +439,7 @@ function firall(){
 				function formsubmit(obj){
 					var bmids = obj.parentNode.id;
 					 doPost('bmshmx.jsp', {bmidmx: bmids});
+					 
 				}
 				//导出
 				//定义一个公共变量  当进行条件查询时  将 数据ID放入数组中
@@ -447,11 +457,13 @@ function firall(){
 							  arrstring+=aa+",";
 				 });
 				} else{
-					$('input:checkbox[name='+name+']').each(function(){
-						  i++;
-						  var aa = $(this).val();
-						  arrstring+=aa+",";
-					}); 
+					//导出所有数据
+					var param={};
+					param["xmid"]=xmid;
+					param["servId"]=obj;
+					param["xianei"]=xianei;
+					var result =FireFly.doAct("TS_BMLB_BM","getAllBelongData",param);
+					arrstring=result.ids;
 				}
 				var whereData={};
 				var data = {"_PK_":arrstring};
@@ -738,7 +750,7 @@ function doPost(to, data) {
     var myForm = document.createElement("form");
     myForm.method = "post";
     myForm.action = to;
-    myForm.target = "_blank";
+    myForm.target="_blank";
     for (var i in data) {
         var myInput = document.createElement("input");
         myInput.setAttribute("name", i);  // 为input对象设置name
@@ -797,7 +809,7 @@ var listPage = function () {
 	 	}
 	}
 	
-	//param
+	//param`
 	var where5 = " AND XM_ID="+"'"+xmid+"'";
 	 var param = {};
 	 param["shownum"]=myts;
@@ -1035,24 +1047,24 @@ var listPage = function () {
 	     	if(shlevel>nodeid){
 	     	//审核level 审核层级大于当前审核层级的人没有审核权限  （TS_BMSH_PASS,TS_BMSH_NOPSS中的数据）
 	     	if(yiyi==""){
-	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: center"><a onclick = "formsubmit(this)" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: right"><a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 	     	}else{
-	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: right"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 	     		
 	     	}
 	     	}else{
 	     		if(yiyi==""){
-		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" style="disabled:true" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: center"><a onclick = "formsubmit(this)" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input type="checkbox" style="disabled:true" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: right"><a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 		     	}else{
-		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" style="disabled:true" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input type="checkbox" style="disabled:true" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: right"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 		     		
 		     	}
 	     	}
 	     	}else{
 	     		if(yiyi==""){
-		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: center"><a onclick = "formsubmit(this)" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: right"><a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 		     	}else{
-		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: center"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)" href="bmshmx.jsp"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: right"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 		     		
 		     	}
 	     	}
@@ -1113,7 +1125,7 @@ var listPage = function () {
 	    		if(fir==null){
 	    			fir="";
 	    		}
-	    		$("#"+table+" tbody").find('tr:eq('+i+')').append('<td>'+fir+'</td>');
+	    		$("#"+table+" tbody").find('tr:eq('+i+')').append('<td style="text-align:center">'+fir+'</td>');
 	    	}
 	    }
 	    
@@ -1122,7 +1134,6 @@ var listPage = function () {
     	 if(tabnum==1){
     		 Drag("dshtable",table);
     	 }
-    	 debugger;
     	 var xmparam={};
     	 xmparam["xmid"]=xmid;
     	 xmparam["xianei"]=xianei;

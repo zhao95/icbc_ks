@@ -440,6 +440,9 @@ public class ExportExcel {
                 formatTitle.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
                 formatTitle.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
                 formatTitle.setBackground(Colour.GREY_25_PERCENT);
+                if(item==null){
+                	continue;
+                }
                 WritableCellFormat sumNumFormat = formatNumber(item.getStr("ITEM_FIELD_LENGTH"));
                 sumNumFormat.setBackground(Colour.GREY_25_PERCENT);
                 // 如果启用了合计标志

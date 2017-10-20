@@ -891,10 +891,6 @@ public class StayServ extends CommonServ {
 		String where1 = paramBean.getStr("where")+deptwhere;
 		List<Bean> list = ServDao.finds(servId, where1);
 
-	
-		
-		
-		
 		int ALLNUM = list.size();
 		// 计算页数
 		int meiye = Integer.parseInt(SHOWNUM);
