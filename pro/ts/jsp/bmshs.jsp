@@ -44,7 +44,7 @@
 <body class="hold-transition skin-black sidebar-mini">
 <style>
 	 .trcss{
-		width:30%;
+		width:16%;
 		text-align:right;
 		vertical-align:bottom;
 		font-size:14px;
@@ -53,7 +53,7 @@
 	.secss{
 	font-size:14px;
 	color:gray;
-	width:20%;
+	width:34%;
 	border-bottom:solid 1px lightgray;
 	vertical-align:bottom;
 	}
@@ -151,9 +151,9 @@
 					
 				</div>
 				<div style="padding-left:10px;">
-				<table id="xminfotable" style="width:650px;font-size:20px;color:lightseagreen">
+				<table id="xminfotable" style="width:95%;font-size:20px;color:lightseagreen">
 				<tr height="50px">
-				<td class="trcss">报名编号：&nbsp;</td><td class="secss" id="bmcode"></td><td class="trcss">报名名称：&nbsp;</td><td class="secss" id="bmname" ></td>
+				<td class="trcss" >报名编号：&nbsp;</td><td class="secss" id="bmcode"></td><td class="trcss">报名名称：&nbsp;</td><td class="secss" id="bmname" ></td>
 				</tr>
 				<tr height="50px">
 				<td class="trcss">创建人：&nbsp;</td><td  class="secss" id="creator"></td><td class="trcss">组织单位：&nbsp;</td><td class="secss" id="oragnize"></td>
@@ -166,24 +166,24 @@
 				</tr>
 				</table>
 				</div>
-				<div style="padding-top:10px;width:200px;font-size:16px;text-align:center;color:lightseagreen">
+				<div style="padding-top:25px;width:23%;font-size:16px;text-align:center;color:lightseagreen">
 				描述：
 				</div>
-				<table style="width:700px">
+				<table style="width:95%">
 				<tr>
 				<td style="width:15%"></td><td style="disabled:disabled;height:100px;vertical-align:top"><textarea id="describe" style="border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table >
-				<div style="padding-top:10px;width:200px;font-size:16px;text-align:center;color:lightseagreen">
+				<div style="padding-top:10px;width:23%;font-size:16px;text-align:center;color:lightseagreen">
 				考试须知：
 				</div>
-				<table style="width:700px">
+				<table style="width:95%">
 				<tr>
 				<td style="width:15%"></td><td style="height:100px;vertical-align:top"><textarea id="mustknow" style="border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
-				<div class="modal-footer" style="text-align:center;height:80px">
-					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;height:50px;width:100px" data-dismiss="modal">关闭</button>
+				<div class="modal-footer" style="text-align:center;height:50px">
+					<button type="button" class="btn btn-default" style="margin-top:-10px;color:white;background:lightseagreen;height:35px;width:80px" data-dismiss="modal">关闭</button>
 				</div>
 				
 			</div><!-- /.modal-content -->

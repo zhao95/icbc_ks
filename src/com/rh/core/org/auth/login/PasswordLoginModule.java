@@ -2,14 +2,17 @@ package com.rh.core.org.auth.login;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
+import java.util.List;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
+import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.mgr.UserMgr;
+import com.rh.core.serv.ServDao;
 import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.util.Constant;
 import com.rh.core.util.EncryptUtils;
@@ -86,6 +89,33 @@ public class PasswordLoginModule extends AbstractLoginModule {
         	if (!password.equals(userBean.getPassword())) {
         		throw new RuntimeException("输入的密码错误。");
         	}
+        }
+        String user_code = userBean.getStr("USER_CODE");
+        String where = "AND PERSON_ID='"+user_code+"' AND STRU_FLAG='1' ORDER BY S_MTIME DESC";
+        List<Bean> slavelist  = ServDao.finds("sy_hrm_zdstaffstru",where);
+        if(slavelist!=null&&slavelist.size()!=0){
+        	for (Bean bean : slavelist) {
+        		String dept_code = bean.getStr("STRU_ID");
+        		DeptBean dept = OrgMgr.getDept(dept_code);
+        		if(dept.getStr("DEPT_CODE").equals(dept.getStr("ODEPT_CODE"))){
+        			//机构
+        		}else{
+        			//部门
+        			userBean.set("DEPT_CODE", dept.getStr("DEPT_CODE"));
+        			userBean.set("ODEPT_CODE", dept.getStr("ODEPT_CODE"));
+        			userBean.set("TDEPT_CODE", dept.getStr("TDEPT_CODE"));
+        			userBean.set("DEPT_NAME", dept.getName());
+        			userBean.set("ODEPT_NAME", dept.getODeptBean().getName());
+        			userBean.set("TDEPT_NAME", dept.getTDeptBean().getName());
+        			userBean.set("CODE_PATH", dept.getCodePath());
+        			userBean.set("STRU_FLAG", 1);
+        			userBean.set("DEPT_LEVEL", dept.getStr("DEPT_LEVEL"));
+        			userBean.set("DEPT_SORT", dept.getStr("DEPT_SORT"));
+        			userBean.set("DEPT_CODE_M", dept.getStr("DEPT_CODE"));
+        			Context.setOnlineUser(userBean);
+        		}
+			}
+        	
         }
         return userBean;
     }

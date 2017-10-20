@@ -2,7 +2,7 @@ var _viewer = this;
 var  height=jQuery(window).height()-200;
 var  width=jQuery(window).width()-200;
 //列表需要建一个code为buttons的自定义字段。
-$("#TS_WFS_BMSHLC  .rhGrid").find("tr").each(function(index,item){
+$("#TS_WFS_BMSHLC .rhGrid").find("tr").each(function(index,item){
 	if(index !=0){
 		var  dataId=item.id;
 		$(item).find("td[icode='BUTTONS']").append(
@@ -46,5 +46,19 @@ function openMyCard(dataId,readOnly,showTab){
     }
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
-   
 }
+
+var height = jQuery(window).height()-50;
+var width = jQuery(window).width()-100;
+_viewer.getBtn("add").unbind("click").bind("click",function(){
+	var wfsId = _viewer.getParHandler().getItem("WFS_ID").getValue();
+	var nodeId = _viewer.getParHandler().getItem("NODE_ID").getValue();
+	//打开添加页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
+    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[50,50]};
+    temp["WFS_ID"] = wfsId;
+    temp["NODE_ID"] = nodeId;
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+});
+
+

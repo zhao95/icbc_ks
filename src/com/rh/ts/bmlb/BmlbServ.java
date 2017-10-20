@@ -1450,5 +1450,78 @@ public class BmlbServ extends CommonServ {
 		
 		return out;
 	}
+/**
+ * 导出所有数据时的id
+ */
+	public OutBean getexportdata(Bean paramBean){
+		String where = paramBean.getStr("where");
+		String dataid ="";
+		String servid = paramBean.getStr("servId");
+		 List<Bean> finds = ServDao.finds(servid,where);
+		 if(finds!=null&&finds.size()!=0){
+			 for (Bean bean : finds) {
+				 dataid+=bean.getId()+",";
+			}
+			 return new OutBean().set("dataids", dataid);
+		 }
+		 return new OutBean().set("dataids","");
+	}
+	
+
+/**
+ * 导出所有数据	
+ */
+	public OutBean getAllBelongData(Bean paramBean){
+		/**
+		 * 获取辖内机构某一页的数据
+		 * 
+		 * @param paramBean
+		 * @return
+		 */
+			String xianei = paramBean.getStr("xianei");
+			//当前审核人
+			String servid = paramBean.getStr("servId");
+			UserBean user = Context.getUserBean();
+			String user_code = user.getStr("USER_CODE");
+			String dept_code = user.getStr("ODEPT_CODE");
+			String belongdeptcode = "";
+			String xmid = paramBean.getStr("xmid");
+			String compycode = user.getCmpyCode();
+			String deptwhere = "";
+			if("belong".equals(xianei)){
+			//根据项目id找到流程下的所有节点    审核人审核的机构
+			String belongwhere = "AND XM_ID='"+xmid+"'";
+			List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
+			if(finds.size()!=0){
+				String wfsid = finds.get(0).getStr("WFS_ID");
+				//根据流程id查找所有审核节点
+				String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
+				List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
+				//遍历审核节点  获取 当前人的审核机构
+				for (Bean bean : finds2) {
+				belongdeptcode = bean.getStr("DEPT_CODE");
+					}
+				
+			}
+			 deptwhere = "AND ODEPT_CODE IN ("+belongdeptcode+")";
+			}else{
+				//管理员以下的所有机构
+				String subOrgAndChildDepts = OrgMgr.getSubOrgDeptsSql(compycode,dept_code);
+				List<Bean> finds = ServDao.finds("SY_ORG_DEPT", subOrgAndChildDepts);
+				for (Bean bean : finds) {
+					dept_code+=","+bean.getStr("DEPT_CODE");
+				}
+				 deptwhere = "AND ODEPT_CODE IN ("+dept_code+")";
+			}
+			//根据审核  机构 匹配当前机构下的所有人
+			deptwhere+="AND XM_ID='"+xmid+"'";
+			List<Bean> list = ServDao.finds(servid, deptwhere);
+			String ids = "";
+			for (Bean bean : list) {
+				ids+=bean.getId()+",";
+			}
+			return new OutBean().set("ids",ids);
+		
+	}
 	
 	}

@@ -157,9 +157,9 @@ position: absolute;
 						</tr>
 						<tr style="background-color: #f7fdff;">
 							<td>所属机构</td>
-							<td colspan="5"><span id="deptspan"><%=odept_name %></span><span id="selectdeptspan" style="display:none"><input id="radio1" style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1">主机构身份报名(<%=odept_name %>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-													<input id="radio2" name="state" style="vertical-align:text-bottom; margin-bottom:-4;" type="radio" value="2">次机构身份报名&nbsp;&nbsp;&nbsp;&nbsp;<select style="margin-left:35%;margin-top:-2.2%;display:none" id="slaveselect"></select><span id="tsspan" style="fontWeight:bold;color:red">请选择您的所属机构</span></span></td>
-							
+							<td colspan="5"><span id="deptspan"><%=odept_name %></span></td>
+							<%-- <span id="selectdeptspan" style="display:none"><input id="radio1" style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1">主机构身份报名(<%=odept_name %>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													<input id="radio2" name="state" style="vertical-align:text-bottom; margin-bottom:-4;" type="radio" value="2">次机构身份报名&nbsp;&nbsp;&nbsp;&nbsp;<select style="margin-left:35%;margin-top:-2.2%;display:none" id="slaveselect"></select><span id="tsspan" style="fontWeight:bold;color:red">请选择您的所属机构</span></span> --%>
 						</tr>
 						<tr>
 							<td width="16.5%">岗位类别</td>

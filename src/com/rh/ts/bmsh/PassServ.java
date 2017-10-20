@@ -250,7 +250,26 @@ public class PassServ extends CommonServ {
 						newBean.set("SH_OTHER", newother);
 					}else{
 						String newother = newBean.getStr("SH_OTHER")+","+shenuser;
-						newBean.set("SH_OTHER", newother);
+						String[] split = newother.split(",");
+						List<String> newlist = new ArrayList<String>();
+						for (String string : split) {
+							if(!"".equals(string)){
+								
+								if(!newlist.contains(string)){
+									newlist.add(string);
+								}
+							}
+						}
+						String newothers = "";
+						for (int z=0;z<newlist.size();z++) {
+							if(z==(newlist.size()-1)){
+								newothers+=newlist.get(z);
+							}else{
+								newothers+=newlist.get(z)+",";
+							}
+							
+						}
+						newBean.set("SH_OTHER", newothers);
 					}
 				}else{
 					//越级  所有人可见

@@ -16,7 +16,6 @@ _viewer.beforeDelete = function(pkArray) {
 };
 
 $("#TS_KCGL_GLJG .rhGrid").find("tr").each(function(index, item) {
-	debugger;
 	if(index != 0){
 		var dataId = item.id;
 		$(item).find("td[icode='BUTTONS']").prepend(

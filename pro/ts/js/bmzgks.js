@@ -331,7 +331,6 @@ function xminfoshow(){
 		 xminfoshow();
 		 matchinfo();
 		 mkfuzhi();
-		 initmsCodes();
 		 var param1 = {};
 		 param1["DUTY_LV_CODE"]=DUTY_LEVEL_CODE;
 		 param1["STATION_TYPE_CODE"]=STATION_TYPE_CODE;
@@ -998,7 +997,7 @@ function yztj(){
 	});
 	$("#yzxx").modal("hide");
 }
-
+/*
 //次机构下拉框
 function initmsCodes(){
 	var param = {};
@@ -1169,4 +1168,4 @@ $("#slaveselect").change(function(){
 		}
 	
 })
-
+*/
