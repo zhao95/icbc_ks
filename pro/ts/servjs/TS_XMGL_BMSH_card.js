@@ -50,7 +50,7 @@ var showResultTmp=_viewer.getItem("SH_TSY").getValue();
 if(autoTmp==1){
 	_viewer.getItem("SH_TSY").show();
 	showResultTmp=_viewer.getItem("SH_TSY").getValue();
-	if(showResultTmp==2){
+	if(showResultTmp==1){
 		_viewer.getItem("SH_TGTSY").show();
 		_viewer.getItem("SH_BTGTSY").show();
 	}
@@ -65,7 +65,7 @@ _viewer.getItem("SH_ZDSH").change(function(){
 	if(autoTmp==1){
 		_viewer.getItem("SH_TSY").show();
 		showResultTmp=_viewer.getItem("SH_TSY").getValue();
-		if(showResultTmp==2){
+		if(showResultTmp==1){
 			_viewer.getItem("SH_TGTSY").show();
 			_viewer.getItem("SH_BTGTSY").show();
 		}
@@ -87,10 +87,10 @@ _viewer.getItem("SH_ZDSH").change(function(){
 //}
 _viewer.getItem("SH_TSY").change(function(){
 	showResultTmp=_viewer.getItem("SH_TSY").getValue();
-	if(showResultTmp==1){
+	if(showResultTmp==2){
 		_viewer.getItem("SH_TGTSY").hide();
 		_viewer.getItem("SH_BTGTSY").hide();
-	}else if(showResultTmp==2){
+	}else if(showResultTmp==1){
 		_viewer.getItem("SH_TGTSY").show();
 		_viewer.getItem("SH_BTGTSY").show();
 	}
