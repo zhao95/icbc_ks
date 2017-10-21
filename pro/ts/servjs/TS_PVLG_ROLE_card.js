@@ -288,3 +288,8 @@ if (StringUtils.startWith(rtnMsg, "OK,") || StringUtils.startWith(rtnMsg, "ERROR
 }
 //调用主方法
 render();
+
+var checked = "";
+$("input[type='checkbox'][name='ROLE_PID']").change(function(){
+	alert(0);
+});
