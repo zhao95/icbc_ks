@@ -408,6 +408,7 @@ public class NoPassServ extends CommonServ {
 				newBean1.set("SH_OTHER", allman);
 				newBean1.set("SH_LEVEL", nowlevel);
 				newBean1.set("BM_YIYI", bmid);
+				newBean1.set("BM_STATUS", 0);
 				ServDao.save("TS_BMSH_STAY", newBean1);
 			
 			// 添加一个字段用来标识异议 显示图标按钮
