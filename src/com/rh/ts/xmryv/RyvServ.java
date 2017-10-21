@@ -22,19 +22,17 @@ public class RyvServ extends CommonServ {
 		OutBean out = new OutBean();
 		String xmid = paramBean.getStr("xmid");
 		String where = "AND XM_ID="+"'"+xmid+"'";
-		List<Bean> list = ServDao.finds("TS_XMGL_RYGL_V", where);
+		List<Bean> list = ServDao.finds("TS_BM_GROUP", where);
 		String s = "";
 		for (int i=0;i<list.size();i++) {
 			if(list.size()==1 || i==list.size()-1){
 				
-				s+=list.get(i).getStr("RYSZQZ_CODE");
+				s+=list.get(i).getId();
 			}else{
-				s+=list.get(i).getStr("RYSZQZ_CODE")+",";
+				s+=list.get(i).getId()+",";
 			}
 		}
 		out.set("rycodes", s);
 		return out;
-		
 	}
-
 }

@@ -139,6 +139,25 @@ public class OrgMgr {
      * 
      * @param cmpyCode 公司CODE
      * @param parentOrgCode 父机构ID
+     * @return 指定机构的所有下级机构，以及下级机构的所有部门
+     */
+    public static List<DeptBean> getSubChildDepts(String cmpyCode, String WHERE) {
+        
+        List<DeptBean> deptBeanList = new ArrayList<DeptBean>();
+        List<Bean> beanList = ServDao.finds(ServMgr.SY_ORG_DEPT, WHERE);
+        if (beanList != null) {
+            for (Bean bean : beanList) {
+                deptBeanList.add(new DeptBean(bean));
+            }
+        }
+
+        return deptBeanList;        
+    }
+    
+    /**
+     * 
+     * @param cmpyCode 公司CODE
+     * @param parentOrgCode 父机构ID
      * @return 指定机构的所有下级机构，以及下级机构的所有部门 的查询语句
      */
     public static String getSubOrgAndChildDeptsSql(String cmpyCode, String parentOrgCode) {
