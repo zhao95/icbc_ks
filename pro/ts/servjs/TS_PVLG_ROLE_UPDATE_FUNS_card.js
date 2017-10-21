@@ -166,18 +166,19 @@ optRender = function(code, rightDiv) {
 };
 
 render();
-
-var checkName = "";
-var checkFun = "";
+var selCode = "";
+var selName = "";
+var selFun = "";
 
 _viewer.getBtn("saveSel").unbind("click").bind("click", function() {
-	if(checkName ==""||checkFun == ""){
+	if(selCode ==""||selFun == ""){
 		alert("未勾选功能");
 	}else{
-		var funName = $("#"+checkName+"_label").find("span.name").text();
-		var methName =$("input[name='"+checkName+"'][value='"+checkFun+"']").next().text();
-		Cookie.set("checkName",checkName, 1);
-		Cookie.set("checkFun",checkFun, 1);
+		var funName = $("#"+selCode+"_label").find("span.name").text();
+		var methName =$("input[name='"+selCode+"'][value='"+selFun+"']").next().text();
+		Cookie.set("selCode",selCode, 1);
+		Cookie.set("selName",funName, 1);
+		Cookie.set("selFun",selFun, 1);
 		$("#rh-advanceSearch-TS_PVLG_ROLE_UPDATEROLE_ID__NAME").val(funName+"["+methName+"]");
 		_viewer.backA.mousedown();
 	}
@@ -186,13 +187,13 @@ _viewer.getBtn("saveSel").unbind("click").bind("click", function() {
 $("#TS_PVLG_ROLE_UPDATE_FUNS-mainTab").find("input[type='checkbox']").change(function(even) {
 	var tmpName = $(this).attr("name");
 	var tmpFun = $(this).val();
-	if(tmpName != checkName || tmpFun != checkFun){
-		if(checkName != ""&&checkFun != "")clearChecked(checkName,checkFun);
-		checkFun = tmpFun;
-		checkName = tmpName;
+	if(tmpName != selCode || tmpFun != selFun){
+		if(selCode != ""&&selFun != "")clearChecked(selCode,selFun);
+		selFun = tmpFun;
+		selCode = tmpName;
 	}else{
-		checkName = "";
-		checkFun = "";
+		selCode = "";
+		selFun = "";
 	}
 });
 

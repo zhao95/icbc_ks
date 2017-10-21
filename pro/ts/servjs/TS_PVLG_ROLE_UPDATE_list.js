@@ -17,7 +17,8 @@ _viewer.getBtn("addFun").unbind("click").bind("click", function(event) {
 	}
 	var value1_1 = Cookie.get("checkName");
 	var value1_2 = Cookie.get("checkFun");
-	updateRolesFun(pkCodes,value1_1,value1_2,"add");
+	var value1_3 = Cookie.get("selName");
+	updateRolesFun(pkCodes,value1_1,value1_2,value1_3,"add");
 });
 
 _viewer.getBtn("delFun").unbind("click").bind("click", function(event) {
@@ -30,13 +31,57 @@ _viewer.getBtn("delFun").unbind("click").bind("click", function(event) {
 		alert("未选择要修改的角色");
 		return;
 	}
-	var value1_1 = Cookie.get("checkName");
-	var value1_2 = Cookie.get("checkFun");
-	updateRolesFun(pkCodes,value1_1,value1_2,"del");
+	var value1_1 = Cookie.get("selCode");
+	var value1_2 = Cookie.get("selFun");
+	var value1_3 = Cookie.get("selName");
+	updateRolesFun(pkCodes,value1_1,value1_2,value1_3,"del");
 });
 
-function updateRolesFun(pkCodes,value1,value2,action){
-	alert(pkCodes+value1+value2+action);
+function updateRolesFun(pkCodes,value1,value2,value3,action){
+	for(var i=0;i<pkCodes.length;i++){
+		var roleId = pkCodes[i];
+		var mdCode = value1.replace("TS_PVLG_ROLE_UPDATE_FUNS-","");
+		var param = {"_WHERE_":"and ROLE_ID = '"+roleId+"' and MD_CODE = '"+mdCode+"'"};
+		FireFly.doAct("TS_PVLG_ROLE_MOD","finds",param,true,false,function(data){
+			if(data._DATA_.length > 0){
+				var dataId = data._DATA_[0].MD_ID;
+				var mdVal = data._DATA_[0].MD_VAL;
+				//数据库存在相关的数据
+				if(action == "add"){
+					//添加功能  
+					if(mdVal.indexOf("add") == -1){
+						var paramBean = {};
+						paramBean["MD_VAL"] = "add," + mdVal;
+						paramBean["_WHERE_"] = " and MD_ID = '"+dataId+"'";
+						FireFly.doAct("TS_PVLG_ROLE_MOD","save",paramBean,true,false);
+					}
+				}else{
+					//删除功能	
+					if(mdVal.indexOf("del") != -1){
+						mdVal = mdVal.replace("del","");
+						mdVal = mdval.replace(",,",",");
+						var paramBean = {};
+						paramBean["MD_VAL"] = mdVal;
+						paramBean["_WHERE_"] = " and MD_ID = '"+dataId+"'";
+						FireFly.doAct("TS_PVLG_ROLE_MOD","save",paramBean,true,false);
+					}
+				}
+			}else{
+				if (action == "add") {
+					// 添加功能
+					var paramBean = {};
+					paramBean["ROLE_ID"] = roleId;
+					paramBean["MD_CODE"] = mdCode;
+					paramBean["MD_NAME"] = value3;
+					paramBean["MD_VAL"] = value2;
+					// 数据库添加新数据
+					FireFly.doAct("TS_PVLG_ROLE_MOD", "add", param,true, false);
+				} else {
+					//删除功能 因数据库中无相关数据，所以不需要做任何处理
+				}
+			}
+		});
+	}
 }
 
 $(".rh-advSearch-table").find("label[value='ROLE_ID']").text("角色功能");
