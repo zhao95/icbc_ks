@@ -1,4 +1,4 @@
-var _viewer = this;
+/*var _viewer = this;
 
 _viewer.getBtn("impGroup").unbind("click").bind("click", function(event) {
 	var configStr = "TS_PVLG_GROUP,{'TARGET':'G_ID~G_NAME~G_DEAD_BEGIN~G_DEAD_END~S_USER','SOURCE':'G_ID~G_NAME~G_DEAD_BEGIN~G_DEAD_END~S_USER'," +
@@ -47,6 +47,24 @@ _viewer.getBtn("impGroup").unbind("click").bind("click", function(event) {
 });
 
 _viewer.getBtn("impBmGroup").unbind("click").bind("click", function(event) {
+	var width = jQuery(window).width()-200;
+	var height = jQuery(window).height()-200;
+	
+	var ctlgPcode = _viewer._transferData["CTLG_PCODE"];
+	
+	if(ctlgPcode == "" || typeof(ctlgPcode) == "undefined") {
+		alert("请选择目录 !");
+		return false;
+	}
+	var temp = {"act":UIConst.ACT_CARD_ADD,
+			"sId":"TS_BM_GROUP",
+			"parHandler":_viewer,
+			"widHeiArray":[width,height],
+			"xyArray":[100,100]
+	};
+	
+	var cardView = new rh.vi.cardView(temp);
+	cardView.show();
 	var configStr = "TS_BM_GROUP,{'TARGET':'G_ID~G_NAME~G_DEAD_BEGIN~G_DEAD_END~S_USER','SOURCE':'G_ID~G_NAME~G_DEAD_BEGIN~G_DEAD_END~S_USER'," +
 	"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
 	var options = {
@@ -108,9 +126,9 @@ $("#TS_XMGL_BM_RYSZQZ .rhGrid").find("tr").each(function(index, item) {
 	}
 });
 
-/*
+
 * 删除前方法执行
-*/
+
 _viewer.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 }
@@ -134,3 +152,4 @@ function bindCard(){
 	});
 }
 
+*/
