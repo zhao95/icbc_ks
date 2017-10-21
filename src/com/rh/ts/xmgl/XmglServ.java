@@ -266,12 +266,7 @@ public class XmglServ extends CommonServ {
 		// 所有机构
 		for (Bean bean : finds) {
 			String str = bean.getStr("USER_DEPT_CODE");// 机构编码
-			if(str.equals("0010100000")){
-				qz += "," + bean.getStr("G_ID");
-			}else{
-				
-				String where = "AND DEPT_CODE IN(SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_PCODE='"+str+"' union all SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_PCODE IN(SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_PCODE='"+str+"') union all SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_PCODE IN (SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_PCODE IN(SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_PCODE='"+str+"')) union all SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_PCODE IN (SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_PCODE IN (SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_PCODE IN(SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_PCODE='"+str+"')))) or DEPT_CODE='"+str+"'";
-				List<DeptBean> listdept = OrgMgr.getSubChildDepts(bean.getStr("CMPY_CODE"),where);
+				List<DeptBean> listdept = OrgMgr.getChildDepts(bean.getStr("S_CMPY"),str);
 				// 判断此人是否在此机构下
 				// 管理员以下的所有机构
 				
@@ -279,10 +274,8 @@ public class XmglServ extends CommonServ {
 					if (deptcodelist.contains(deptBean.getStr("DEPT_CODE"))) {
 						qz += "," + bean.getStr("G_ID");
 					}
-				}
 			}
 		}
-		
 		if (!Strings.isBlank(qz)) {
 			// 去掉重复群组
 			qz = Strings.removeSame(qz);
@@ -309,7 +302,6 @@ public class XmglServ extends CommonServ {
 				}
 			}
 		}
-
 		List<Bean> list = ServDao.finds("TS_XMGL", "");
 		String s = "";
 		for (int i = 0; i < list.size(); i++) {
