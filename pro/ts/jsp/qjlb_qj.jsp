@@ -145,7 +145,7 @@
             </div>
             <div class="col-sm-9" style="padding: 0;">
                 <div style="background-color: #fed1d1;border:1px solid red;border-radius: 5px;padding: 5px;color: #570000;">
-                    ！ 温馨提示：本年度可请假<span style="color: red"> 2 </span>个考试周(限<span style="color: red"> 6 </span>个考试),您已请假<span style="color: red"> 1 </span>个考试周( <span style="color: red"> 2 </span> 个考试),
+                    ！ 温馨提示：本年度可请假<span style="color: red"> 2 </span>个考试周 (限<span style="color: red"> 6 </span>个考试), 您已请假<span style="color: red"> 1 </span>个考试周 ( <span style="color: red"> 2 </span> 个考试),
                   请合理使用请假次数,超出将不允许请假！
                 </div>
             </div>
