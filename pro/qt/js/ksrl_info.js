@@ -118,9 +118,10 @@ var listPage = function () {
      var rhGridTBody = jQuery("#tbody_data");
      rhGridTBody.html('');
      for (var i = 0; i < listData._DATA_.length; i++) {
+    	 var j=i+1;
          var item = listData._DATA_[i];
          var trs = ['<tr>',
-             '<td style="text-align: center;">' + item.ROWNUM_ + '</td>',
+             '<td style="text-align: center;">' + j + '</td>',
              '<td>' + item.CAL_NAME + '</td>',
              '<td>' + ks_type_obj[item.CAL_TYPE] + '</td>',
              '<td>' + item.KS_LEVEL + '</td>',
