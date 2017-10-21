@@ -569,7 +569,7 @@ function xminfoshow(){
 			       tbody=document.getElementById("goods");
 			       var ntr = tbody.insertRow();
 			       ntr.innerHTML=
-			       '<td ><input type="checkbox" name="checkboxaa"></td>'+
+			       '<td ><input type="checkbox" name="checkboxaa" checked></td>'+
 			       '<td >'+kslb_name+'</td>'+
 			       '<td >'+kslb_xl+'</td>'+
 			       '<td >'+kslb_mk+'</td>'+
