@@ -111,7 +111,7 @@
 					<table class="rhGrid JPadding JColResizer" id="kstable" border="1">
 						<thead id="tem" class="">
 							<tr style="backGround-color:WhiteSmoke; height: 30px; font-size:14px;">
-								<th style="width: 6%; text-align: center">序号</th>
+								<th style="width: 3%; text-align: center">序号</th>
 								<th style="width: 30%;	text-align: center">考试名称</th>
 								<th style="width: 8%;	text-align: center">考试类别</th>
 								<th style="width: 8%;	text-align: center">考试级别</th>

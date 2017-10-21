@@ -122,7 +122,7 @@ var listPage = function () {
          var item = listData._DATA_[i];
          var trs = ['<tr>',
              '<td style="text-align: center;">' + j + '</td>',
-             '<td>' + item.CAL_NAME + '</td>',
+             '<td style="text-align: left;">' + item.CAL_NAME + '</td>',
              '<td>' + ks_type_obj[item.CAL_TYPE] + '</td>',
              '<td>' + item.KS_LEVEL + '</td>',
              '<td>' + item.BM_START_DATE + '</td>',
