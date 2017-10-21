@@ -68,7 +68,6 @@ function js(date,time,inter,num,info){
 
 function getCc(){
 	var resData = FireFly.doAct("TS_XMGL_CCCS_ARRANGE", "finds", {"_SELECT_":"max(ARR_CC) ARR_CC","_WHERE_":"and xm_id='"+xmId+"'"}, false);	
-	debugger;
 	if(resData._DATA_.length != 0){
 		var max = resData._DATA_[0].ARR_CC - 0 + 1;
 		return max;
