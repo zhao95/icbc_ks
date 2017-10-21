@@ -67,6 +67,9 @@ public class QjlbServ extends CommonServ {
         qjbean.set("QJ_STATUS", "1");   //  1"审核中"; 2  "已通过";3 "未通过";
         qjbean.set("QJ_DATE", new SimpleDateFormat(dateFormatString).format(new Date()));
         qjbean.set("QJ_KSTIME", lbDate);//考试开始时间   todo  TS_BMSH_PASS  BM_ID  TS_BMLB_BM
+        qjbean.set("S_DEPT",bmBean.get("S_DEPT"));
+        qjbean.set("S_ODEPT",bmBean.get("S_ODEPT"));
+        qjbean.set("S_TDEPT",bmBean.get("S_TDEPT"));
         Bean qjbd = ServDao.create(servId, qjbean);
         //获取到请假id
         //获取请假表单对象

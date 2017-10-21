@@ -76,6 +76,9 @@ public class JklbServ extends CommonServ {
         jkbean.set("JK_STATUS", "1");   //  1"审核中"; 2  "已通过";3 "未通过";
         jkbean.set("JK_DATE", new SimpleDateFormat(dateFormatString).format(new Date()));
         jkbean.set("JK_KSTIME", lbDate);//考试开始时间   todo  TS_BMSH_PASS  BM_ID  TS_BMLB_BM
+        jkbean.set("S_DEPT", bmBean.get("S_DEPT"));
+        jkbean.set("S_ODEPT", bmBean.get("S_ODEPT"));
+        jkbean.set("S_TDEPT", bmBean.get("S_TDEPT"));
         //保存到ts_JKLB_JK库里
         Bean qjbd = ServDao.create(servId, jkbean);
         //起草人
