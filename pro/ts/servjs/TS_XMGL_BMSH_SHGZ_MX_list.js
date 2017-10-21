@@ -581,7 +581,6 @@ function bindselect(){
 		for(var k=0;k<pageEntity.length;k++){
 		select.add(new Option(pageEntity[k].KSLBK_NAME,pageEntity[k].KSLBK_CODE)); 
 		}
-		select.add(new Option("","",true,true)); 
 		select.name="lbselect";
 		$("#jibieselect").before(select);
 		var span = document.createElement("span");
