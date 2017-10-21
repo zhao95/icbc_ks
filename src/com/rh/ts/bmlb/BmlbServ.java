@@ -369,22 +369,29 @@ public class BmlbServ extends CommonServ {
 					shBean.set("S_TDEPT",bmbean.getStr("S_TDEPT"));
 					shBean.set("S_DEPT",bmbean.getStr("S_DEPT"));
 					 if (count == 0) {
+					 shBean.set("SH_OTHER", user_code);
 					 ServDao.save("TS_BMSH_PASS", shBean);
 					 }
 					 //自动审核 无手动
 					 if (count == 1) {
 					 if (ad_result.equals("1")) {
+						 shBean.set("SH_OTHER", "");// 其他办理人
 					 ServDao.save("TS_BMSH_PASS", shBean);
 					 }else if(ad_result.equals("2")){
+						 shBean.set("SH_OTHER", "");// 其他办理人
 						 ServDao.save("TS_BMSH_NOPASS", shBean);
 						 }
 					 }
 					//只有手动审核
 					 if (count == 2) {
+						 if("".equals(allman)){
+							 return new OutBean().setError("报名失败没有审核人");
+						 }
 					 ServDao.save("TS_BMSH_STAY", shBean);
 					 }
 					 //自动加手动
 					 if (count == 3) {
+						 shBean.set("SH_OTHER", "");// 其他办理人
 					 if (ad_result.equals("1")) {
 					 ServDao.save("TS_BMSH_PASS", shBean);
 					 }

@@ -768,6 +768,13 @@ jq("#zhuangtai1").change(function(){
 jq("#zhuangtai2").change(function(){
 	 new listPage().gotoPage(1);
 });
+jq("#zdornot2").change(function(){
+	 new listPage().gotoPage(1);
+});
+jq("#zdornot3").change(function(){
+	 new listPage().gotoPage(1);
+});
+
 
 
 
@@ -782,6 +789,7 @@ var listPage = function () {
 	 var servid = "";
 	 var myts="";
 	 var where3 = "";
+	 var where4 = "";
 	if(tabnum==1){
 	 servid = "TS_BMSH_STAY";
 	 myts = jq("#select1").children('option:selected').val();
@@ -796,6 +804,15 @@ var listPage = function () {
 		 			where3 = " AND SH_LEVEL='1' ";
 		 		}
 		 	}
+		 	
+		 var zdornot = $("#zdornot2").children('option:selected').val();
+		 if(zdornot!="全部"){
+		 		if(zdornot=="1"){
+		 			where4 = " AND SH_OTHER IS null ";
+		 		}else{
+		 			where4 = " AND SH_OTHER IS NOT null ";
+		 		}
+		 	}
 	}else{
 		servid = "TS_BMSH_NOPASS";
 		myts = jq("#select3").children('option:selected').val();
@@ -807,6 +824,14 @@ var listPage = function () {
 	 			where3 = " AND SH_LEVEL='1' ";
 	 		}
 	 	}
+	 	 var zdornot = $("#zdornot3").children('option:selected').val();
+		 if(zdornot!="全部"){
+		 		if(zdornot=="1"){
+		 			where4 = " AND SH_OTHER IS null ";
+		 		}else{
+		 			where4 = " AND SH_OTHER IS NOT null ";
+		 		}
+		 	}
 	}
 	
 	//param`
@@ -816,7 +841,7 @@ var listPage = function () {
 	 param["nowpage"]=num;
 	 param["user_code"]=user_code;
 	 param["xmid"]=xmid;
-	 param["where"]=where5+where3;
+	 param["where"]=where5+where3+where4;
 	 param["xianei"]=xianei;
      return FireFly.doAct(servid,"getBelongToList",param);
      
@@ -841,7 +866,7 @@ var listPage = function () {
 	    var where3 = "";
 	    var where4="";
 	    var where5 = " AND XM_ID="+"'"+xmid+"'";
-	   
+	 
 	    if(jQuery.trim(shjshu)!=""){
 	    	where3 = " AND SH_NODE like "+"'%"+shjshu+"%'";
 	    }
@@ -880,6 +905,7 @@ var listPage = function () {
     var where2 = "";
     var where3 = "";
     var where5 = " AND XM_ID="+"'"+xmid+"'";
+    var where7 = "";
  	if(jQuery.trim(name)!==""){
  		where1 = "AND BM_NAME like "+"'%"+name+"%'";
  	}
@@ -896,8 +922,18 @@ var listPage = function () {
  		}
  	}
  	
+ 	 var zdornot = $("#zdornot2").children('option:selected').val();
+ 	 alert(zdornot);
+	 if(zdornot!="全部"){
+	 		if(zdornot=="1"){
+	 			where7 = " AND SH_OTHER IS null ";
+	 		}else{
+	 			where7 = " AND SH_OTHER IS NOT null ";
+	 		}
+	 	}
+ 	
  	var param={};
- 	param["where"]=where1 + where2+where3+where5;
+ 	param["where"]=where1 + where2+where3+where5+where7;
 	 param["shownum"]=myts;
 	 param["nowpage"]=1;
 	 param["xmid"]=xmid;
@@ -938,8 +974,16 @@ var listPage = function () {
  		}
  	}
  	
+ 	 var zdornot = $("#zdornot3").children('option:selected').val();
+	 if(zdornot!="全部"){
+	 		if(zdornot=="1"){
+	 			where7 = " AND SH_OTHER IS null ";
+	 		}else{
+	 			where7 = " AND SH_OTHER IS NOT null ";
+	 		}
+	 	}
  	var param={};
- 	param["where"]=where1 + where2+where3+where5;
+ 	param["where"]=where1 + where2+where3+where5+where7;
 	 param["shownum"]=myts;
 	 param["nowpage"]=1;
 	 param["xmid"]=xmid;
