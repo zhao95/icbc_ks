@@ -49,7 +49,11 @@ function updateRolesFun(pkCodes,value1,value2,value3,action){
 						var paramBean = {};
 						paramBean["MD_VAL"] = value2 + "," + mdVal;
 						paramBean["_PK_"] = dataId;
-						FireFly.doAct("TS_PVLG_ROLE_MOD","save",paramBean,true,false);
+						FireFly.doAct("TS_PVLG_ROLE_MOD","save",paramBean,true,false,function(data){
+							if(data._MSG_.indexOf("OK") != -1){
+								FireFly.doAct("TS_PVLG_ROLE_UPDATE","removeRoleCache",{"roleId":roleId,"module":mdCode});
+							}
+						});
 					}
 				}else{
 					//删除功能	
@@ -59,7 +63,11 @@ function updateRolesFun(pkCodes,value1,value2,value3,action){
 						var paramBean = {};
 						paramBean["MD_VAL"] = mdVal;
 						paramBean["_PK_"] = dataId;
-						FireFly.doAct("TS_PVLG_ROLE_MOD","save",paramBean,true,false);
+						FireFly.doAct("TS_PVLG_ROLE_MOD","save",paramBean,true,false,function(data){
+							if(data._MSG_.indexOf("OK") != -1){
+								FireFly.doAct("TS_PVLG_ROLE_UPDATE","removeRoleCache",{"roleId":roleId,"module":mdCode});
+							}
+						});
 					}
 				}
 			}else{
@@ -71,7 +79,11 @@ function updateRolesFun(pkCodes,value1,value2,value3,action){
 					paramBean["MD_NAME"] = value3;
 					paramBean["MD_VAL"] = value2;
 					// 数据库添加新数据
-					FireFly.doAct("TS_PVLG_ROLE_MOD", "add", param,true, false);
+					FireFly.doAct("TS_PVLG_ROLE_MOD", "add", param,true, false,function(data){
+						if(data._MSG_.indexOf("OK") != -1){
+							FireFly.doAct("TS_PVLG_ROLE_UPDATE","removeRoleCache",{"roleId":roleId,"module":mdCode});
+						}
+					});
 				} else {
 					//删除功能 因数据库中无相关数据，所以不需要做任何处理
 				}

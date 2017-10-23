@@ -7,6 +7,7 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.ts.pvlg.mgr.RoleMgr;
 
 public class RoleUpdateServ extends CommonServ{
     @Override
@@ -72,4 +73,12 @@ public class RoleUpdateServ extends CommonServ{
 	outBean.set("roleIds", roleIds);
 	return outBean;
     }
+    
+    public OutBean removeRoleCache(ParamBean paramBean) {
+	String roleId = paramBean.getStr("roleId");
+	String module = paramBean.getStr("module");
+	OutBean outBean = new OutBean();
+	RoleMgr.removeRoleCache(roleId, module);
+	return outBean;
+    } 
 }
