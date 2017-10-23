@@ -901,9 +901,9 @@ var listPage = function () {
    //查询条件按钮（设置查询考试名称和年份的条件）
   jQuery("#check1").unbind("click").click(function(){
 		  myts = $("#select1").children('option:selected').val();
-	  var name = $("xm1").val();
-	    var renlicode =  $("rlzybm1").val();
-	    var shjshu =  $("shjs").val();
+	  var name = $("#xm1").val();
+	    var renlicode =  $("#rlzybm1").val();
+	    var shjshu =  $("#shjs").val();
 	    var where1 = "";
 	    var where2 = "";
 	    var where3 = "";

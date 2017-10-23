@@ -149,7 +149,7 @@ if(userBean != null) {
 						<td style="width:18%;text-align:right">审核级数&nbsp;&nbsp;<input style="height:30px;width:50%" id="shjs" type="text"></input></td>
 						<td style="width:30%;text-align:center">人力资源编码&nbsp;&nbsp;<input  style="height:30px;width:50%" id="rlzybm1" type="text"></input></td>
 				        
-				        <td style="width:12%;text-align:left;"><button id="check1" class ="btn" style="color:white;height:30px;width:35%;background:DarkTurquoise" onclick="xzcu(1)"id = "chaxun">查询</button></td>
+				        <td style="width:12%;text-align:left;"><button id="check1" class ="btn" style="color:white;height:30px;width:35%;background:DarkTurquoise">查询</button></td>
 					</tr>
 				</tbody>
 			</table>
@@ -228,7 +228,7 @@ if(userBean != null) {
 				            <option value="已结束">已结束</option>
 				            </select>
 				        </td>
-				        <td style="width:8%;text-align:left"><button id="check2" class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(2)"id = "chaxun">查询</button></td>
+				        <td style="width:8%;text-align:left"><button id="check2" class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
@@ -295,7 +295,7 @@ if(userBean != null) {
 				            <option value="已结束">已结束</option>
 				            </select>
 				        </td>
-				        <td style="width:8%;text-align:left"><button id="check3" class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(3)"id = "chaxun">查询</button></td>
+				        <td style="width:8%;text-align:left"><button id="check3" class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
