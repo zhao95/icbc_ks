@@ -351,13 +351,7 @@
             </div>
         </div>
 
-        <div class="row" style="padding-top:20px;display: none" id="fanhuiId">
-            <div class="col-sm-12 text-center">
-                <button onclick="fanhui()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">
-                    返回
-                </button>
-            </div>
-        </div>
+     
 
         <%--审批意见--%>
         <div class="row" id="shxxid" style="margin-top:60px">
@@ -414,6 +408,13 @@
                     </ul>
                 </div>
 
+            </div>
+        </div>
+           <div class="row" style="padding-top:20px;display: none" id="fanhuiId">
+            <div class="col-sm-12 text-center">
+                <button onclick="fanhui()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">
+                    返回
+                </button>
             </div>
         </div>
 
