@@ -504,7 +504,7 @@ public class StayServ extends CommonServ {
 			if (oneodeptcode1 != null) {
 				// 获取所有逗号分隔的字符串
 				codes = getusercodes(oneodeptcode1, s);
-				if("".equals("")){
+				if("".equals(codes)){
 					codes=s;
 				}
 			}
@@ -635,8 +635,8 @@ public class StayServ extends CommonServ {
 	public String getusercodes(DeptBean oneodeptcode1, String codes) {
 		DeptBean newBean = oneodeptcode1.getParentDeptBean();
 		if (newBean != null) {
-			String s = newBean.getName() + ",";
-			return codes += getusercodes(newBean, s);
+			codes += newBean.getName() + ",";
+			return codes += getusercodes(newBean, codes);
 		} else {
 
 			return "";
