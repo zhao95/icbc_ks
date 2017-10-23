@@ -54,6 +54,48 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function(event) {
 					//用户名称
 					param.USER_DEPT_NAME = names[i];
 					//选取类型 1人员
+					param.G_TYPE = 2;
+					
+					paramArray.push(param);
+				}
+				 var batchData = {};
+				 batchData.BATCHDATAS = paramArray;
+				//批量保存
+				var rtn = FireFly.batchSave(_viewer.servId,batchData,null,2,false);
+				
+				_viewer.refresh();
+			}
+	};
+	//2.用系统的查询选择组件 rh.vi.rhSelectListView()
+	var queryView = new rh.vi.rhSelectListView(options);
+	queryView.show(event);
+});
+
+
+_viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
+	debugger;
+	var configStr = "SY_ORG_DEPT,{'TARGET':'DEPT_CODE~DEPT_NAME','SOURCE':'DEPT_CODE~DEPT_NAME'," +
+	"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
+	var options = {
+			"config" :configStr,
+//			"params" : {"_TABLE_":"SY_ORG_USER"},
+			"parHandler":_viewer,
+			"formHandler":_viewer.form,
+			"replaceCallBack":function(idArray) {//回调，idArray为选中记录的相应字段的数组集合
+				var codes = idArray.DEPT_CODE.split(",");
+				var names = idArray.DEPT_NAME.split(",");
+				
+				var paramArray = [];
+
+				for(var i=0;i<codes.length;i++){
+					var param = {};
+					//群组ID
+					param.G_ID = _viewer.getParHandler()._pkCode;
+					//用户编码
+					param.USER_DEPT_CODE = codes[i];
+					//用户名称
+					param.USER_DEPT_NAME = names[i];
+					//选取类型 1人员
 					param.G_TYPE = 1;
 					
 					paramArray.push(param);
