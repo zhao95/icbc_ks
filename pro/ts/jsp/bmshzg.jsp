@@ -353,8 +353,8 @@ if(userBean != null) {
 				<td style="text-align:right">审核人登录名</td><td style="width:5%"></td><td><input style="height:30px" type="text" value="<%=loginname %>" name="shdlming"/></td>
 				</tr>
 				<tr style="height:25%">
-				<td style="text-align:right">审核状态</td><td style="width:5%"></td><td><label><input style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1" checked>审核通过</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-													<label><input name="state" style="vertical-align:text-bottom; margin-bottom:-4;" type="radio" value="2">审核不通过</label>
+				<td style="text-align:right">审核状态</td><td style="width:5%"></td><td><span id="radiospan1"><input style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1" checked>审核通过</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													<span id="radiospan2"><input name="state" style="vertical-align:text-bottom; margin-bottom:-4;" type="radio" value="2">审核不通过</span>
 				</td>
 				</tr>
 				</table>

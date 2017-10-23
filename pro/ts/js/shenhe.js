@@ -240,6 +240,8 @@ function firall(){
 //-----------------------------------------------------------------------------------------------------审核按钮
 		//checkbox全选   第一个table
 		function shenheA(){
+			var radio = $("#radiospan2").show();
+			var radio = $("#radiospan1").show();
 			//是否有checkbox被选中
 			 var checkboxchecked = $('input:checkbox[name=checkboxa]:checked');
 			 var flag = false;
@@ -379,6 +381,8 @@ function firall(){
 		//第二个tab 
 		function shenheB(){
 			//是否有checkbox被选中
+			var radio = $("#radiospan1").show();
+			var radio = $("#radiospan2").hide();
 			 var checkboxchecked = $('input:checkbox[name=checkboxb]:checked');
 			 var flag = false;
 			if(checkboxchecked.length==0){
@@ -424,6 +428,8 @@ function firall(){
 		}
 		//第三个tab 
 		function shenheC(){
+			var radio = $("#radiospan2").show();
+			var radio = $("#radiospan1").hide();
 			//是否有checkbox被选中
 			 var checkboxchecked = $('input:checkbox[name=checkboxc]:checked');
 			 var flag = false;
