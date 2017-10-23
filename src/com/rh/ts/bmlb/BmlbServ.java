@@ -893,19 +893,9 @@ public class BmlbServ extends CommonServ {
 		Bean bmbean = ServDao.find("TS_BMLB_BM", bmid);
 		String where = "AND DATA_ID=" + "'" + bmid + "'";
 		List<Bean> filelist = ServDao.finds("SY_COMM_FILE", where);
-		// 转换成json格式字符串
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter w = new StringWriter();
-		try {
-			mapper.writeValue(w, filelist);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		outBean.set("list", w.toString());
+		
+		
+		outBean.set("list", filelist);
 		outBean.set("liyou", bmbean.getStr("BM_SS_REASON"));
 		return outBean;
 
@@ -936,18 +926,8 @@ public class BmlbServ extends CommonServ {
 			return new OutBean().setOk("信息为空");
 		}
 		Bean outBean = new Bean();
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter w = new StringWriter();
-		try {
-			mapper.writeValue(w, list);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		outBean.set("list", w.toString());
+		
+		outBean.set("list", list);
 		return outBean;
 	}
 

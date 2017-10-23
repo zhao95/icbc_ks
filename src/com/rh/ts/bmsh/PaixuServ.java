@@ -61,20 +61,8 @@ public class PaixuServ extends CommonServ {
 		String where1 = "AND USER_CODE is null order by cast(PX_XUHAO as SIGNED)";
 		// 默认没有保存过 的排序
 		List<Bean> listall = ServDao.finds("TS_BMSH_PX", where1);
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter w = new StringWriter();
 
-		try {
-			mapper.writeValue(w, listall);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		outBean.set("list", w.toString());
+		outBean.set("list", listall);
 		return outBean;
 	}
 
@@ -91,19 +79,7 @@ public class PaixuServ extends CommonServ {
 		List<Bean> list = ServDao.finds("TS_BMSH_PX", where);
 		Bean outBean = new Bean();
 
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter w = new StringWriter();
-
-		try {
-			mapper.writeValue(w, list);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		outBean.set("list", w.toString());
+		outBean.set("list", list);
 
 		return outBean;
 	}
@@ -124,27 +100,11 @@ public class PaixuServ extends CommonServ {
 			// 默认没有保存过 的排序
 			List<Bean> listall = ServDao.finds("TS_BMSH_PX", where1);
 
-			try {
-				mapper.writeValue(w, listall);
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			outBean.set("list", w.toString());
+			
+			outBean.set("list", listall);
 		} else {
-			try {
-				mapper.writeValue(w, list);
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			outBean.set("list", w.toString());
+			
+			outBean.set("list", list);
 		}
 		return outBean;
 
