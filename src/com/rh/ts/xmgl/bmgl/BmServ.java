@@ -71,6 +71,7 @@ public class BmServ extends CommonServ {
 		}
 	       outBean.set("list",w.toString());
 	       outBean.set("nojson", list);
+	       outBean.set("state", state);
 	       return outBean;
 		
 	}
@@ -133,18 +134,23 @@ public class BmServ extends CommonServ {
 	}
 	
 	/**
-	 * 获取是否查看辖内所有  报名数据
+	 * 是否允许查看 辖内报名信息  带 审核状态 字段
 	 */
 	public OutBean getShowLook(Bean paramBean){
+		OutBean out = new OutBean();
 		String showlook="2";
+		String sh_state = "";
 		String xmid = paramBean.getStr("xmid");
 		String where = "AND XM_ID='"+xmid+"'";
 		//获取到项目报名名的数据
 		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH",where);
 		for (Bean bean : finds) {
 			 showlook = bean.getStr("SH_LOOK");
+			 sh_state = bean.getStr("SH_STATE");
+			 out.set("showlook", showlook);
+			 out.set("state", sh_state);
 		}
-		return new OutBean().set("showlook", showlook);
+		return out;
 	}
 	
 	

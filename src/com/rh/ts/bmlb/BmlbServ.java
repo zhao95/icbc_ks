@@ -1490,36 +1490,54 @@ public class BmlbServ extends CommonServ {
 			String servid = paramBean.getStr("servId");
 			UserBean user = Context.getUserBean();
 			String user_code = user.getStr("USER_CODE");
-			String dept_code = user.getStr("ODEPT_CODE");
+			String dept_code = user.getStr("DEPT_CODE");
 			String belongdeptcode = "";
 			String xmid = paramBean.getStr("xmid");
 			String compycode = user.getCmpyCode();
 			String deptwhere = "";
 			if("belong".equals(xianei)){
-			//根据项目id找到流程下的所有节点    审核人审核的机构
-			String belongwhere = "AND XM_ID='"+xmid+"'";
-			List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
-			if(finds.size()!=0){
-				String wfsid = finds.get(0).getStr("WFS_ID");
-				//根据流程id查找所有审核节点
-				String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
-				List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
-				//遍历审核节点  获取 当前人的审核机构
-				for (Bean bean : finds2) {
-				belongdeptcode = bean.getStr("DEPT_CODE");
-					}
-				
-			}
-			 deptwhere = "AND ODEPT_CODE IN ("+belongdeptcode+")";
-			}else{
-				//管理员以下的所有机构
-				String subOrgAndChildDepts = OrgMgr.getSubOrgDeptsSql(compycode,dept_code);
-				List<Bean> finds = ServDao.finds("SY_ORG_DEPT", subOrgAndChildDepts);
-				for (Bean bean : finds) {
-					dept_code+=","+bean.getStr("DEPT_CODE");
+				//根据项目id找到流程下的所有节点
+				String belongwhere = "AND XM_ID='"+xmid+"'";
+				List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
+				String deptcodes = "";
+				if(finds.size()!=0){
+					String wfsid = finds.get(0).getStr("WFS_ID");
+					//根据流程id查找所有审核节点
+					String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
+					List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
+					//遍历审核节点  获取 当前人的审核机构
+					for (Bean bean : finds2) {
+						belongdeptcode = bean.getStr("DEPT_CODE");
+						String[] split = belongdeptcode.split(",");
+						if(split.length>0){
+							for (String string : split) {
+								if(!"".equals(string)){
+									deptcodes+=string+",";
+									List<DeptBean> deptlist = OrgMgr.getChildDepts(compycode, string);
+									for (Bean deptbean : deptlist) {
+										String id = deptbean.getId();
+										deptcodes+=id+",";
+									}
+								}
+							}
+						}
+						
 				}
-				 deptwhere = "AND ODEPT_CODE IN ("+dept_code+")";
-			}
+				}
+				if(!"".equals(deptcodes)){
+					deptcodes=deptcodes.substring(0, deptcodes.length()-1)+"";
+				}
+				 deptwhere = "AND S_DEPT IN ("+deptcodes+")";
+				}else{
+					//管理员以下的所有机构部门
+					
+					List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
+					for (Bean bean : finds) {
+						dept_code+=","+bean.getStr("DEPT_CODE");
+					}
+					 deptwhere = "AND S_DEPT IN ("+dept_code+")";
+				}
+				
 			//根据审核  机构 匹配当前机构下的所有人
 			deptwhere+="AND XM_ID='"+xmid+"'";
 			List<Bean> list = ServDao.finds(servid, deptwhere);

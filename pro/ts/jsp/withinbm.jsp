@@ -10,7 +10,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>报名管理</title>
+<title>辖内报名情况</title>
 <meta
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
@@ -69,11 +69,11 @@
 
 	<div class="" style="padding: 10px">
 		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;" src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
-		 <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;报名审核</span>
+		 <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;辖内报名情况</span>
 	</div>
 	<div id="cuxian1"
 		style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
-		<span style="margin-left: 50px; padding-top: 10px">报名审核</span>
+		<span style="margin-left: 50px; padding-top: 10px">辖内报名</span>
 	</div>
 	<table id="cxkuang" style="margin-top: 20px">
 		<tbody>

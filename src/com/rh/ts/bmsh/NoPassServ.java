@@ -457,7 +457,7 @@ public class NoPassServ extends CommonServ {
 
 		// 判断user_code 是否为空 若为空则 导出所有
 
-		searchWhere = " AND USER_CODE=" + "'" + user_code1 + "'";
+		searchWhere = " AND USER_CODE=" + "'" + user_code1 + "' order by cast(PX_XUHAO as SIGNED)";
 
 		// 排序用的 parr存读取th
 		parr.setQuerySearchWhere(searchWhere);

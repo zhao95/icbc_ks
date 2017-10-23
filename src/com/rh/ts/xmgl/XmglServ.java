@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.text.StyledEditorKit.ForegroundAction;
+
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -571,7 +573,7 @@ public class XmglServ extends CommonServ {
 	}
 
 	/**
-	 * 获取项目下所有 未审核的 报名 (某一页 每页多少条)
+	 * 获取项目下所有 未审核的 报名 (某一页 每页多少条)  审核数据
 	 *
 	 */
 	public Bean getUncheckList(Bean paramBean) {
@@ -686,6 +688,90 @@ public class XmglServ extends CommonServ {
 		outBean.set("first", chushi);
 		return outBean;
 	}
+	
+	/**
+	 * 管理员查看辖内报名情况  分页数据
+	 * @param paramBean
+	 */
+	public OutBean getWithInBm(Bean paramBean){
+		OutBean outBean = new OutBean();
+		Bean _PAGE_ = new Bean();
+		String zhuangtai = paramBean.getStr("zhuangtai");
+		
+		String where1 = paramBean.getStr("where");
+		String NOWPAGE = paramBean.getStr("nowpage");
+		String SHOWNUM = paramBean.getStr("shownum");
+		List<Bean> list = new ArrayList<Bean>();
+		List<Bean> finds = ServDao.finds("TS_XMGL", where1);
+		for (Bean bean : finds) {
+			ParamBean param = new ParamBean();
+			param.set("xmid", bean.getId());
+			OutBean act = ServMgr.act("TS_XMGL_BMGL","getShowLook", param);
+			int showlook = act.getInt("showlook");
+			
+			if("1".equals(zhuangtai)&&"审核中".equals(act.getStr("state"))){
+				if(showlook==1){
+					bean.set("SH_STATE_STR", act.getStr("state"));
+					list.add(bean);
+				}
+
+			}else if("2".equals(zhuangtai)&&"审核结束".equals(act.getStr("state"))){
+				if(showlook==1){
+					bean.set("SH_STATE_STR", act.getStr("state"));
+					list.add(bean);
+				}
+			}else if("全部".equals(zhuangtai)){
+				if(showlook==1){
+					bean.set("SH_STATE_STR", act.getStr("state"));
+					list.add(bean);
+				}
+			}
+		}
+		
+		int ALLNUM = list.size();
+		// 计算页数
+		int meiye = Integer.parseInt(SHOWNUM);
+		int yeshu = ALLNUM / meiye;
+		int yushu = ALLNUM % meiye;
+		// 获取总页数
+		if (yushu != 0) {
+			yeshu += 1;
+		}
+
+		int nowpage = Integer.parseInt(NOWPAGE);
+		int showpage = Integer.parseInt(SHOWNUM);
+		// 计算第一项 开始
+		int chushi = (nowpage - 1) * showpage + 1;
+		// 计算结束项
+		int jieshu = (nowpage - 1) * showpage + showpage;
+		// 放到Array中
+		List<Bean> list2 = new ArrayList<Bean>();
+		if (ALLNUM == 0) {
+			// 没有数据
+		} else {
+
+			if (jieshu <= ALLNUM) {
+				// 循环将数据放入list2中返回给前台
+				for (int i = chushi; i <= jieshu; i++) {
+					list2.add(list.get(i - 1));
+				}
+
+			} else {
+				for (int j = chushi; j < ALLNUM + 1; j++) {
+					list2.add(list.get(j - 1));
+				}
+			}
+		}
+		_PAGE_.set("ALLNUM", ALLNUM);
+		_PAGE_.set("NOWPAGE", NOWPAGE);
+		_PAGE_.set("PAGES", yeshu);
+		_PAGE_.set("SHOWNUM", SHOWNUM);
+		outBean.set("list", list2);
+		outBean.set("_PAGE_", _PAGE_);
+		outBean.set("first", chushi);
+		return outBean;
+	}
+	
 
 	// 按钮发布的操作 传过来id
 
