@@ -536,10 +536,10 @@ if(userBean != null) {
 		<input type="hidden" id="xmid" value="<%=xmid %>"/>
 		<input type="hidden" id="xianei" value="<%=xianei %>"/>
 		<input type="hidden" id="dijige">
+	 <script src="<%=CONTEXT_PATH%>/ts/js/belongto.js"></script>
 	<script>
 	var jq = $.noConflict(true);
 	</script>
-	 <script src="<%=CONTEXT_PATH%>/ts/js/belongto.js"></script>
 	 <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>	 

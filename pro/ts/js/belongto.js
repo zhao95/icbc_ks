@@ -1,5 +1,5 @@
-var xmid = jq("#xmid").val();
-var xianei = jq("#xianei").val();
+var xmid = $("#xmid").val();
+var xianei = $("#xianei").val();
 var user_code = System.getVar("@USER_CODE@");
 //隔一行 进行 背景颜色 渲染
 function rowscolor(table){
@@ -424,7 +424,7 @@ function firall(){
 	
 //---------------------------------------------------------------------------------------------------------
 			//加载完后自动调用
-			jq(function(){
+			$(function(){
 				appendTh(user_code);
 				firall();
 				
@@ -567,7 +567,7 @@ function removeright(){
 	  tuodongtr();
 }
 //全部移动左边
-jq("#leftalla").click(function(){
+$("#leftalla").click(function(){
 	$('input:checkbox[name=pxcheckbox]').each(function(){
 		  $(this).attr("name","rtcheckbox");
 		 var s =  this.parentNode.parentNode.innerHTML;
@@ -576,7 +576,7 @@ jq("#leftalla").click(function(){
 	  });
 	 tuodongtr();
 });
-jq("#rightalla").click(function(){
+$("#rightalla").click(function(){
 	 $('input:checkbox[name=rtcheckbox]').each(function(){
 		  $(this).attr("name","pxcheckbox");
 		 var s =  this.parentNode.parentNode.innerHTML;
@@ -612,7 +612,7 @@ document.getElementById("rightall").onmouseout = function() {
       this.src = '/ts/image/1552.png';
   }
 //表格行拖动
-jq(document).ready(function(){
+$(document).ready(function(){
     var fixHelperModified = function(e, tr) {
                 var $originals = tr.children();
                 var $helper = tr.clone();
@@ -687,7 +687,7 @@ function deletefile(obj){
 	 $("#uploadefile").attr("disabled","false");
  }
 //导入数据库
-jq("#excelimp").click(function(){
+$("#excelimp").click(function(){
 	 var linum =  $("#excleupload").find('li').length;
 	 //不为0 时可以删除
 	 if(linum==0){
@@ -757,16 +757,16 @@ function doPost(to, data) {
     document.body.removeChild(myForm);  // 提交后移除创建的form
 }
 //进行中  已结束 状态  onchange 事件
-jq("#zhuangtai1").change(function(){
+$("#zhuangtai1").change(function(){
 	 new listPage().gotoPage(1);
 });
-jq("#zhuangtai2").change(function(){
+$("#zhuangtai2").change(function(){
 	 new listPage().gotoPage(1);
 });
-jq("#zdornot2").change(function(){
+$("#zdornot2").change(function(){
 	 new listPage().gotoPage(1);
 });
-jq("#zdornot3").change(function(){
+$("#zdornot3").change(function(){
 	 new listPage().gotoPage(1);
 });
 
@@ -787,10 +787,10 @@ var listPage = function () {
 	 var where4 = "";
 	if(tabnum==1){
 	 servid = "TS_BMSH_STAY";
-	 myts = jq("#select1").children('option:selected').val();
+	 myts = $("#select1").children('option:selected').val();
 	}else if(tabnum==2){
 		 servid = "TS_BMSH_PASS";
-		 myts = jq("#select2").children('option:selected').val();
+		 myts = $("#select2").children('option:selected').val();
 		 var  zhuangtai = $("#zhuangtai1").children('option:selected').val();
 		 	if(zhuangtai!="全部"){
 		 		if(zhuangtai=="进行中"){
@@ -810,7 +810,7 @@ var listPage = function () {
 		 	}
 	}else{
 		servid = "TS_BMSH_NOPASS";
-		myts = jq("#select3").children('option:selected').val();
+		myts = $("#select3").children('option:selected').val();
 		var  zhuangtai = $("#zhuangtai2").children('option:selected').val();
 	 	if(zhuangtai!="全部"){
 	 		if(zhuangtai=="进行中"){
@@ -852,7 +852,7 @@ var listPage = function () {
      var listPage=this;
    //查询条件按钮（设置查询考试名称和年份的条件）
   jQuery("#check1").unbind("click").click(function(){
-		  myts = jq("#select1").children('option:selected').val();
+		  myts = $("#select1").children('option:selected').val();
 	  var name = $("xm1").val();
 	    var renlicode =  $("rlzybm1").val();
 	    var shjshu =  $("shjs").val();
@@ -893,7 +893,7 @@ var listPage = function () {
      	 function trimAll(str) {return str.replace(/\s+/g, "");}
      });
   jQuery("#check2").unbind("click").click(function(){
-	  myts = jq("#select2").children('option:selected').val();
+	  myts = $("#select2").children('option:selected').val();
 	  var name = $("#xm2").val();
 	    var renlicode =  $("#rlzybm2").val();
     var where1 = "";
@@ -946,7 +946,7 @@ var listPage = function () {
  	 function trimAll(str) {return str.replace(/\s+/g, "");}
  });
   jQuery("#check3").unbind("click").click(function(){
-	  myts = jq("#select3").children('option:selected').val();
+	  myts = $("#select3").children('option:selected').val();
 	  var name = $("#xm3").val();
 	    var renlicode =  $("#rlzybm3").val();
     var where1 = "";

@@ -15,10 +15,11 @@
 <meta
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
+	
 <!-- 获取后台数据 -->
 <%@ include file="/qt/jsp/header-logo.jsp"%> 
 <%@ include file="/sy/base/view/inHeader-icbc.jsp"%>
-	
+
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
@@ -522,13 +523,10 @@ if(userBean != null) {
 		
 		<input type="hidden" id="xmid" value="<%=xmid %>"/>
 		<input type="hidden" id="dijige">
-	
-	
-	
-	<script>
+	 <script src="<%=CONTEXT_PATH%>/ts/js/shenhe.js"></script>
+	 <script>
 	var jq = $.noConflict(true);
 	</script>
-	 <script src="<%=CONTEXT_PATH%>/ts/js/shenhe.js"></script>
 	 <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>	 
@@ -545,6 +543,5 @@ if(userBean != null) {
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>
 	<!-- AdminLTE for demo purposes -->
 	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
-
 </body>
 </html>

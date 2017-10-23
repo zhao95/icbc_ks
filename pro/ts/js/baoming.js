@@ -255,9 +255,8 @@ function selectcreate(){
 	  var param={};
 	  param["bmid"]=bmid;
 	  var result = FireFly.doAct("TS_BMLB_BM","filehist",param);
-	  var data = result.list;
+	  var pageEntity = result.list;
 	  var reason = result.liyou;
-	  var pageEntity = JSON.parse(data);
 	  $("#filehis").html("");
 	  $("#formContainer2").html("");
 	  if(pageEntity.length==0&&reason==""){
