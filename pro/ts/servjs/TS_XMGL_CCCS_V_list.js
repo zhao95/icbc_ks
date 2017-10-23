@@ -252,8 +252,6 @@ _viewer.getBtn("expExcel").unbind("click").bind("click",function(event) {
     		encodeURIComponent(jQuery.toJSON({"xmId":xmId,"scVal":scVal,"sjVal":sjVal,"cjVal":cjVal})));
 });
 
-//调整样式
-$("#TS_XMGL_CCCS_V").prepend("<div>条件1:<input type='text'></div>");
 
 
 
