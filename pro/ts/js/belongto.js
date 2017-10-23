@@ -133,8 +133,7 @@ function appendTh(user_code){
 	var param ={};
 	param["user_code"]=user_code;
 	var result = FireFly.doAct("TS_BMSH_PX","getShenheJson",param);
-	var data = result.list;
-	var pageEntity=JSON.parse(data);
+	var pageEntity = result.list;
 	for(var i=0;i<pageEntity.length;i++){
 		
 		var px_name=pageEntity[i].PX_NAME;
@@ -184,8 +183,7 @@ var tabnum=1;
 		var param={};
 		param["user_code"]=user_code;
 		var result = FireFly.doAct("TS_BMSH_PX","getUserList",param);
-		var data = result.list;
-		var pageEntity = JSON.parse(data);
+		var pageEntity = result.list;
 		
 			for(var i=0;i<pageEntity.length;i++){
 				var px_column = pageEntity[i].PX_COLUMN;
@@ -237,8 +235,7 @@ var tabnum=1;
 function firall(){
 	var param1={};
     var result1 = FireFly.doAct("TS_BMSH_PX","getShenhelist",param1);
-	var data1= result1.list;
-	var pageEntity1 = JSON.parse(data1);
+	var pageEntity1= result1.list;
     for(var i=0;i<pageEntity1.length;i++){
     	var name = pageEntity1[i].PX_NAME;
     	var px_column= pageEntity1[i].PX_COLUMN;
@@ -480,8 +477,7 @@ function yiyi(obj){
 			var param = {};
 			param["bmid"]=a;
 			var fileresult = FireFly.doAct("TS_BMLB_BM","filehist",param);
-			var filedata = fileresult.list;
-			var fileEntity = JSON.parse(filedata);
+			var fileEntity = fileresult.list;
 			//审核理由
 			var param1 = {};
 			param1["bmid"]=a;
@@ -502,10 +498,9 @@ function form2submit(obj){
 		var param = {};
 		param["bmid"]=bmid;
 	var result = FireFly.doAct("TS_BMLB_BM","getSingle",param);
-	var data = result.list;
-	if(data.length!=2){
+	var pageEntity = result.list;
+	if(pageEntity.length!=2){
 	$(obj).attr("data-target","#userbminfo");
-	var pageEntity = JSON.parse(data);
 	 $("#ks_title").text(pageEntity[0].BM_TITLE);
 	 $("#bm_name").text(pageEntity[0].BM_NAME);
 	 $("#work_num").text(pageEntity[0].BM_CODE);
@@ -1065,7 +1060,6 @@ var listPage = function () {
 	 var result2 = FireFly.doAct("TS_BMSH_STAY","getAllData",param);
   	 nowlevel=result2.level;
   	 nodeid=result2.node_id;
-  	 debugger;
 	 var pageEntity = listData.list;
 	 
 	/* var pageEntity=JSON.parse(data);*/
@@ -1116,8 +1110,7 @@ var listPage = function () {
 	     	var param1 = {};
 	     	param1["user_code"]=user_code;
 	     	var result3 = FireFly.doAct("TS_BMSH_PX","getShenheJson",param1);
-	     	var data3 = result3.list;
-	     	var pageEntity3 = JSON.parse(data3);
+	     	var pageEntity3 = result3.list;
 	    	for(var j=0;j<pageEntity3.length;j++){
 	    		var column = pageEntity3[j].PX_COLUMN;
 	    		var fir = pageEntity[i][column];

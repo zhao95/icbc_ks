@@ -846,6 +846,7 @@ var listPage = function () {
     this.endNum = this.startNum; // 中间页码的最后一个页码
 };
  listPage.prototype.getListData = function (num) {
+	 
 	 var servid = "";
 	 var myts="";
 	 var where3 = "";
@@ -1064,6 +1065,7 @@ var listPage = function () {
      this.gotoPage(this._lPage.PAGES);
  };
  listPage.prototype.bldTable = function (listData) {
+	 debugger;
 	 var table = "";
 	 var checkbox = "";
 	 if(tabnum==1){
@@ -1127,8 +1129,7 @@ var listPage = function () {
 	     	var param1 = {};
 	     	param1["user_code"]=user_code;
 	     	var result3 = FireFly.doAct("TS_BMSH_PX","getShenheJson",param1);
-	     	var data3 = result3.list;
-	     	var pageEntity3 = JSON.parse(data3);
+	     	var pageEntity3 = result3.list;
 	    	for(var j=0;j<pageEntity3.length;j++){
 	    		var column = pageEntity3[j].PX_COLUMN;
 	    		var fir = pageEntity[i][column];
