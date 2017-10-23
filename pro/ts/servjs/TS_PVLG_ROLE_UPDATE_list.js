@@ -1,10 +1,6 @@
 var _viewer = this;
 $(".rhGrid").find("tr").unbind("dblclick");
 
-// _viewer._advancedSearchBtn.unbind("click").bind("click", function(event) {
-// alert(1);
-// });
-
 _viewer.getBtn("addFun").unbind("click").bind("click", function(event) {
 	var pkCodes = _viewer.grid.getSelectPKCodes();//获取主键值
 	if($("#rh-advanceSearch-TS_PVLG_ROLE_UPDATEROLE_ID__NAME").val() == ""){
@@ -15,8 +11,8 @@ _viewer.getBtn("addFun").unbind("click").bind("click", function(event) {
 		alert("未选择要修改的角色");
 		return;
 	}
-	var value1_1 = Cookie.get("checkName");
-	var value1_2 = Cookie.get("checkFun");
+	var value1_1 = Cookie.get("selCode");
+	var value1_2 = Cookie.get("selFun");
 	var value1_3 = Cookie.get("selName");
 	updateRolesFun(pkCodes,value1_1,value1_2,value1_3,"add");
 });
@@ -49,20 +45,20 @@ function updateRolesFun(pkCodes,value1,value2,value3,action){
 				//数据库存在相关的数据
 				if(action == "add"){
 					//添加功能  
-					if(mdVal.indexOf("add") == -1){
+					if(mdVal.indexOf(value2) == -1){
 						var paramBean = {};
-						paramBean["MD_VAL"] = "add," + mdVal;
-						paramBean["_WHERE_"] = " and MD_ID = '"+dataId+"'";
+						paramBean["MD_VAL"] = value2 + "," + mdVal;
+						paramBean["_PK_"] = dataId;
 						FireFly.doAct("TS_PVLG_ROLE_MOD","save",paramBean,true,false);
 					}
 				}else{
 					//删除功能	
-					if(mdVal.indexOf("del") != -1){
-						mdVal = mdVal.replace("del","");
-						mdVal = mdval.replace(",,",",");
+					if(mdVal.indexOf(value2) != -1){
+						mdVal = mdVal.replace(value2,"");
+						mdVal = mdVal.replace(",,",",");
 						var paramBean = {};
 						paramBean["MD_VAL"] = mdVal;
-						paramBean["_WHERE_"] = " and MD_ID = '"+dataId+"'";
+						paramBean["_PK_"] = dataId;
 						FireFly.doAct("TS_PVLG_ROLE_MOD","save",paramBean,true,false);
 					}
 				}
@@ -84,8 +80,8 @@ function updateRolesFun(pkCodes,value1,value2,value3,action){
 	}
 }
 
-$(".rh-advSearch-table").find("label[value='ROLE_ID']").text("角色功能");
-$(".rh-advSearch-table").find("label[value='ROLE_PID']").text("已有功能");
+$(".rh-advSearch-table").find("label[value='ROLE_ID']").text("角色功能").prepend("<span style='color:#F00'>*</span>");
+$(".rh-advSearch-table").find("label[value='ROLE_PID']").text("已有功能").prepend("<span style='color:#F00'>*</span>");;
 $(".rh-advSearch-table").find("label[value='ROLE_DCODE']").text("机构");
 
 $("#TS_PVLG_ROLE_UPDATE .rh-advSearch-btn").unbind("click").bind("click",function(event) {
@@ -101,15 +97,32 @@ $("#TS_PVLG_ROLE_UPDATE .rh-advSearch-btn").unbind("click").bind("click",functio
 	var roleName = $("#rh-advanceSearch-TS_PVLG_ROLE_UPDATEROLE_NAME").val();
 	var roleFunName = $("#rh-advanceSearch-TS_PVLG_ROLE_UPDATEROLE_ID__NAME").val();
 	if(roleFunName != ""){
-		value1_1 = Cookie.get("checkName");
-		value1_2 = Cookie.get("checkFun");
+		value1_1 = Cookie.get("selCode");
+		value1_1 = value1_1.replace("TS_PVLG_ROLE_UPDATE_FUNS-","")
+		value1_2 = Cookie.get("selFun");
 	}
 	
 	if($("input[type='checkbox'][name='ROLE_PID']:checkbox:checked").length > 0){
 		value2 = $("input[type='checkbox'][name='ROLE_PID']:checkbox:checked")[0].defaultValue;
 	}
 	
-	alert(value2 + "," + value3 + "," + value4);
+	if(value1_1==""||value2 == ""){
+		alert("请填写必要的查询条件");
+		return;
+	}
+	var param = {};
+	param["value1_1"] = value1_1;
+	param["value1_2"] = value1_2;
+	param["value2"] = value2;
+	param["value3"] = value3;
+	param["value4"] = value4;
+	FireFly.doAct(_viewer.servId,"myFind",param,true,false,function(data){
+		var where = "";
+		if(data.roleIds != ""){
+			var where = " and ROLE_ID in ('"+data.roleIds.replace(/,/g,"','")+"')";
+		}
+		_viewer.setSearchWhereAndRefresh(where);
+	});
 });
 
 var height = jQuery(window).height()-50;

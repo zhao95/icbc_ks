@@ -209,10 +209,3 @@ function clearChecked(name, func) {
 		obj.attr("checked", false);
 	}
 }
-
-/*
- * Cookie.get(cookName);//读cookie操作,参数：cookie名称 返回值：字符串 
- * Cookie.set(sName,sValue, oExpires, sPath, sDomain, bSecure);
- * //写cookie操作sName：cookie名称.sValue：cookie值,oExpires：过期时间
- * Cookie.del(sName);//删除cookie操作sName ：cookie名称
- */
