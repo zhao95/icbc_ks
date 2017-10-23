@@ -162,7 +162,6 @@ if(userBean != null) {
 			<table style="margin-top:10px;width:50%">
 			<tr style="width:98%">
 				<td style="width:20%;text-align:right"><button  class="btn btn-success"  data-toggle="modal" data-target="#paixu" style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="zdyl()" id = "zdyl" >自定义显示列</button></td>
-				<td style="width:20%;text-align:right"><button class="btn btn-success" data-toggle="modal" data-target="#excleupload" onclick="importdata(1)"  style="border:none;color:white;height:30px;width:80%;background:lightseagreen"  id = "import">文件批量导入</button></td>
 				<td style="width:20%;text-align:right"><button class="btn btn-success" style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="exportdata('TS_BMSH_STAY','checkboxa')" id = "export">文件批量导出</button></td>
 				<td style="width:20%;text-align:center"><button class="btn btn-success" style="border:none;color:white;height:30px;width:40%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
 			</tr>

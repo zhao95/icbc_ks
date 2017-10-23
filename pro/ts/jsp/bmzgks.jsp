@@ -106,6 +106,16 @@ position: absolute;
 		//获取用户入行时间
 		String user_cmpy_date =userBean.getStr("USER_CMPY_DATE");
 		%>
+		<!-- <div class="center-block" style="width: 313px;padding-top:50px;padding-bottom: 50px;">
+                    <ul id="nav-ul-id" class="btn-group nav nav-tabs" data-toggle="buttons">
+                        <li class="btn btn-default active" style="padding:8px 49px;" href="#view" aria-controls="profile" role="tab" data-toggle="tab">
+                            图形显示
+                        </li>
+                        <li class="btn btn-default" style="padding:8px 49px;" href="#list" aria-controls="profile" role="tab" data-toggle="tab">
+                            表格显示
+                        </li>
+                    </ul>
+                </div> -->
 	<div style="background: #dfdfdf; padding-top: 10px" align="center">
 		<div id="" style="padding-bottom:50px;background: white; width: 90%;">
 			<div style="background: white; width: 90%; text-align: center">

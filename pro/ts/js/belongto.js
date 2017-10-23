@@ -1065,9 +1065,10 @@ var listPage = function () {
 	 var result2 = FireFly.doAct("TS_BMSH_STAY","getAllData",param);
   	 nowlevel=result2.level;
   	 nodeid=result2.node_id;
-  	 
-	 var data = listData.list;
-	 var pageEntity=JSON.parse(data);
+  	 debugger;
+	 var pageEntity = listData.list;
+	 
+	/* var pageEntity=JSON.parse(data);*/
 		$("#"+table+" tbody").html("");
 	    for(var i=0;i<pageEntity.length;i++){
 	    	var strfirst = listData.first;
