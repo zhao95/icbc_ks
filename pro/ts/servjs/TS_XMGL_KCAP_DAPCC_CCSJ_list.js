@@ -7,7 +7,10 @@ $("ul[class='tabUL tabUL-bottom ui-tabs-nav ui-helper-reset ui-helper-clearfix u
 var linkWhere = _viewer.opts.linkWhere;
 var ccId = linkWhere.split("'")[1];
 var xmId = _viewer.getParHandler().getParHandler().getParHandler()._pkCode;
-_viewer.getBtn("add").unbind("click").bind("click", function(event) {
+
+var width = jQuery(window).width()-100;
+var height = jQuery(window).height()-50;
+_viewer.getBtn("myAdd").unbind("click").bind("click", function(event) {
 	var param = {};
 	param["SOURCE"] = "ARR_CC~ARR_START~ARR_END";
 	param["TYPE"] = "multi";
@@ -35,7 +38,6 @@ _viewer.getBtn("add").unbind("click").bind("click", function(event) {
 	//2.用系统的查询选择组件 rh.vi.rhSelectListView()
 	var queryView = new rh.vi.rhSelectListView(options);
 	queryView.show(event);
-	
 });
 
 /*
