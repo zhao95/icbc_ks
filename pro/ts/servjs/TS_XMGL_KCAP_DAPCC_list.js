@@ -52,3 +52,33 @@ _viewer.getBtn("add").unbind("click").bind("click", function(event) {
 _viewer.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 };
+
+_viewer.getBtn("addOther").unbind("click").bind("click",function(event){
+	
+	var param = {};
+	param["SOURCE"] = "KC_ID~KC_NAME~KC_ADDRESS~KC_ODEPTCODE";
+	param["TYPE"] = "multi";
+	param["HIDE"] = "KC_ID,KC_ODEPTCODE";
+//	param["EXTWHERE"] = "and KC_ODEPTCODE = '"+odeptCode+"'";
+	var configStr = "TS_KCGL,"+JsonToStr(param);
+	var options = {
+		"config" :configStr,
+		"parHandler":_viewer,
+		"formHandler":_viewer.form,
+	    "replaceCallBack":function(idArray) {
+	    	var ids = idArray.KC_ID.split(",");
+	    	var kcNames = idArray.KC_NAME.split(",");
+	    	for(var i=0;i<ids.length;i++){
+	    		var data = {}
+	    		data["XM_ID"] = xmId;
+	    		data["KC_ID"] = ids[i];
+	    		data["KC_NAME"] = kcNames[i];
+	    		FireFly.doAct("TS_XMGL_KCAP_DAPCC", "save", data);
+	    	}
+	    	_viewer.refresh();
+	    }
+	};
+	//2.用系统的查询选择组件 rh.vi.rhSelectListView()
+	var queryView = new rh.vi.rhSelectListView(options);
+	queryView.show(event);
+});
