@@ -77,6 +77,7 @@ public class BmlbServ extends CommonServ {
 			String fzgks_date2 = bean.getStr("FZGKS_ENDDATE");
 			String fzgks_name = bean.getStr("FZGKS_NAME");
 			Bean beans = new Bean();
+			beans.set("KSLBK_ID", string);
 			beans.set("ODEPT_CODE", odept_code);
 			beans.set("BM_CODE", user_code);
 			beans.set("BM_NAME", user_name);

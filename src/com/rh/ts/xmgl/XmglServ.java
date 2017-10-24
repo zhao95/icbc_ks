@@ -320,7 +320,9 @@ public class XmglServ extends CommonServ {
 		for (int a = 0; a < xmarray.length; a++) {
 			ParamBean param = new ParamBean();
 			param.set("xmid", xmarray[a]);
+			String xmid = xmarray[a];
 			Bean outBeanCode = ServMgr.act("TS_XMGL_RYGL_V", "getCodes", param);
+			
 			String codes = outBeanCode.getStr("rycodes");
 			Boolean boo = false;
 			if ("".equals(codes)) {
@@ -345,12 +347,11 @@ public class XmglServ extends CommonServ {
 			Bean bean = list.get(i);
 			// 项目中已存在array的 title 数据 将展示在 已报名信息中
 			String id = bean.getStr("XM_ID");
-			if (!kjxm.contains(id)) {
+			if (kjxm.contains(id)) {
 				// 已报名这个考试之后 或者他不能报名这个考试 中断循环 继续开始
-				continue;
-			}
-			if ("1".equals(bean.getStr("XM_STATE"))) {
-				lastlist.add(bean);
+				if ("1".equals(bean.getStr("XM_STATE"))) {
+					lastlist.add(bean);
+				}
 			}
 		}
 

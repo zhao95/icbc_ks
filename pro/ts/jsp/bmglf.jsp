@@ -105,32 +105,40 @@
        	<div class="a">
        		<table border="1" align="center" style="width: 90%;">
        			<tr style="background-color: #dfdfdf;">
-       				<td colspan="4">个人基本信息</td>
+       				<td colspan="6">个人基本信息</td>
        			</tr>
        			<tr>
-       				<td width="25%">人力资源编码</td>
-       				<td width="25%"><%=user_code %></td>
-       				<td width="25%">姓名</td>
-       				<td width="25%"><%=user_name%></td>
+       				<td width="16.5%">人力资源编码</td>
+							<td width="16.5%"><%=user_code %></td>
+							<td width="16.5%">姓名</td>
+							<td width="16.5%"><%=user_name%></td>
+							<td width="16.5%">性别</td>
+							<td width="17.5%">
+								<% if (user_sex == "1") { %>女<% } else { %>男<% } %>
+							</td>
        			</tr>
        			<tr style="background-color: #f7fdff;">
-       				<td >所属机构</td>
-       				<td colspan="3"><%=odept_name %></td>
+       				<td>所属机构</td>
+							<td colspan="5"><span id="deptspan"><%=odept_name %></span></td>
        			</tr>
        			<tr>
-       				<td>性别</td>
-       				<td>
-       				<% if (user_sex == "1") { %>女<% } else { %>男<% } %>
-       				</td>
-       				<td>入行时间</td>
-       				<td><%=user_cmpy_date %></td>
-       			</tr>
+							<td width="16.5%">岗位类别</td>
+							<td width="16.5%" id='gwlb'></td>
+							<td width="16.5%">岗位序列</td>
+							<td width="16.5%" id='gwxl'></td>
+							<td width="16.5%">职务层级</td>
+							<td width="17.5%" id='zwcj'></td>
+						</tr>
        			<tr style="background-color: #f7fdff;">
-       				<td >办公电话</td>
-       				<td><%=user_office_phone %></td>
-       				<td>手机号码</td>
-       				<td><input type="text" value="<%=user_mobile %>" id="u_mobile"></td>
-       			</tr>
+							<td width="16.5%">入行时间</td>
+							<td width="16.5%"><%=user_cmpy_date%></td>
+							<td width="16.5%">办公电话</td>
+							<td width="16.5%"><%=user_office_phone %></td>
+							<td width="16.5%">手机号码(<span style="color: red;">融e联绑定的手机号</span>)
+							</td>
+							<td width="17.5%"><input type="text" id="user_mobile1"
+								value=""></td>
+						</tr>
        		</table>
        		<table border="1" align="center" style="width: 90%;">
        			<tr style="background-color: #dfdfdf;">
@@ -170,7 +178,7 @@
 				%>
        		</table>
        		<div style="height: 100px;padding: 20px;">
-       			<button onclick="tijiao()" class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#tiJiao">提交</button>
+       			<button onclick="tijiaofzg()" class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#tiJiao">提交</button>
        			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
        			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
        			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -198,6 +206,19 @@
 		}
 	</script>
 	<script>
+	var result =  FireFly.byId("SY_HRM_ZDSTAFFPOSITION", "<%=user_code%>");
+	if(result!=null){
+		 STATION_TYPE_CODE=result.STATION_TYPE_CODE;
+		 STATION_TYPE = result.STATION_TYPE;
+		 STATION_NO = result.STATION_NO;
+		 STATION_NO_CODE= result.STATION_NO_CODE;
+		 ADMIN_DUTY = result.ADMIN_DUTY;
+		 DUTY_LEVEL_CODE = result.DUTY_LV_CODE;
+		 $("#gwlb").html(STATION_TYPE);
+		 $("#gwxl").html(STATION_NO);
+		 $("#zwcj").html(ADMIN_DUTY);
+		 
+	}
 		//全选，全不选
 		$("#checkall").click( 
 			  function(){ 
@@ -209,9 +230,10 @@
 			  } 
 		);
 		//非资格考试的提交数据
-		function tijiao(){
+		function tijiaofzg(){
 			var bmArray = document.getElementsByName("checkname");
 			var bmlb="";
+			
 		     	for(var i=0;i<bmArray.length;i++){
 		     		if(bmArray[i].checked){
 		     			if(i==0){
@@ -221,11 +243,18 @@
 		     			}
 		     		}
 		     	}
+		     	var param={};
+		     	param["ids"]=bmlb;
+		     	var result = FireFly.doAct("TS_BMLB_BM","pdfzg",param);
+		     	if(result.flag==true){
+		     		alert("您已重复报名")
+		     		return
+		     	}
 		    if(bmlb=="" || bmlb==null){
 		    	window.history.go(0);
 		    	alert("至少选择一项");
 		    }else{
-		    var user_mobile = document.getElementById("u_mobile").value;
+		    var user_mobile = document.getElementById("user_mobile1").value;
 			var param={};
 			param["bmCodes"] = bmlb;
 			param["USER_CODE"]="<%=user_code%>";

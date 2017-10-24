@@ -74,7 +74,7 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function(event) {
 
 _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
 	debugger;
-	var configStr = "SY_ORG_DEPT,{'TARGET':'DEPT_CODE~DEPT_NAME','SOURCE':'DEPT_CODE~DEPT_NAME'," +
+	var configStr = "SY_ORG_DEPT_SUB,{'TARGET':'DEPT_CODE~DEPT_NAME','SOURCE':'DEPT_CODE~DEPT_NAME'," +
 	"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
 	var options = {
 			"config" :configStr,
