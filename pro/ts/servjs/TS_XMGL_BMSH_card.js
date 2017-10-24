@@ -12,6 +12,9 @@ if(_viewer.opts.act == "cardAdd"){
 	}
 }
 
+
+$("#TS_XMGL_BMSH-SH_LOOK_label").css("width","300px");
+$("#TS_XMGL_BMSH-SH_LOOK_div").css("padding-left","100px");
 //针对开始和结束时间的校验
 _viewer.getItem("SH_START").obj.unbind("click").bind("click", function() {
 	    WdatePicker({
