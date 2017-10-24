@@ -37,9 +37,21 @@ function userInfo() {
  */
 function showMenu() {
 	var data = FireFly.doAct("TS_UTIL", "getMenu", {"S_FLAG":1});
+	 var param = {};
+     param["user_code"]=System.getVar("@USER_CODE@");
+     param["zhuangtai"]="全部";
+     param["shownum"] =10;
+     param["where"]= "";
+     param["nowpage"]= 1;
+     var act = FireFly.doAct("TS_XMGL", "getUncheckList", param);
+     var list = act.alllist;
 	if (data.menuList.length > 0) {
 		for (var i = 0; i < data.menuList.length; i++) {
 //			debugger;
+			  if(list.length==0&&data.menuList[i].MENU_NAME=="报名审核"){
+			    	 //不显示
+				  continue;
+			     }
 			$(".sidebar-menu")
 					.append(
 							'<li><a href="'+data.menuList[i].MENU_URL+'" target="blank"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'

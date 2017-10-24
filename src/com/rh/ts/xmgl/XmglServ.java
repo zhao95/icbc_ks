@@ -271,8 +271,11 @@ public class XmglServ extends CommonServ {
 				List<DeptBean> listdept = OrgMgr.getChildDepts(bean.getStr("S_CMPY"),str);
 				// 判断此人是否在此机构下
 				// 管理员以下的所有机构
-				
 				for (Bean deptBean : listdept) {
+					if("0010100000".equals(deptBean.getStr("DEPT_CODE"))){
+						qz += "," + bean.getStr("G_ID");
+						continue;
+					}
 					if (deptcodelist.contains(deptBean.getStr("DEPT_CODE"))) {
 						qz += "," + bean.getStr("G_ID");
 					}
@@ -685,6 +688,7 @@ public class XmglServ extends CommonServ {
 		_PAGE_.set("PAGES", yeshu);
 		_PAGE_.set("SHOWNUM", SHOWNUM);
 		outBean.set("list", w.toString());
+		outBean.set("alllist", SHlist);
 		outBean.set("_PAGE_", _PAGE_);
 		outBean.set("first", chushi);
 		return outBean;

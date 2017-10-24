@@ -178,7 +178,7 @@
 				%>
        		</table>
        		<div style="height: 100px;padding: 20px;">
-       			<button onclick="tijiaofzg()" class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#tiJiao">提交</button>
+       			<button onclick="tijiaofzg()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">提交</button>
        			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
        			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
        			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -188,8 +188,55 @@
        		
        	</div>
        	</div>
+  <div class="modal fade" id="tiJiao" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div id="mask" class="mask"></div>
+				<div class="modal-header"
+					style="background-color: #00c2c2; color: white">
+					
+					<h6 class="modal-title">报名信息</h6>
+				</div>
+				<div class="b">
+					<table id="motaitable" style="width: 100%; height: 50%">
+						<tbody id="xinxi" style="height: 10px">
+							<tr style="font-size: 15px">
+								<td style="width: 30%; color: lightseagreen;" align="right">姓名</td>
+								<td colspan="4" style="width: 70%; text-align: center"><%=user_name%></td>
+							<tr id="tr2" style="height: 10px; font-size: 15px">
+								<td style="width: 30%; color: lightseagreen; text-align: right;">人力资源编码</td>
+								<td colspan="4" style="width: 70%; text-align: center;"><%=user_code %></td>
+							</tr>
+
+						</tbody>
+					</table>
+					<table>
+						<tr style="height: 100px; font-size: 15px">
+							<td style="width: 35%; color: red;" align="right">融e联绑定的手机号</td>
+							<td style="width: 3%"></td>
+							<td style="width: 20%; text-align: center"><input
+								type="text" id="user_mobile2" style="width: 100px; height: 30px"
+								id="user_mobile2"></td>
+							<td style="width: 3%"></td>
+							<td style="color: lightseagreen;">验证码：<input type="text"
+								style="width: 50px; height: 30px"> <input
+								style="height: 30px" type="button" value="获取验证码">
+							</td>
+						</tr>
+
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="mttijiao()">提交</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						onclick="quxiao()">取消</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		</div>
     </div>	
-  
 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
@@ -230,9 +277,9 @@
 			  } 
 		);
 		//非资格考试的提交数据
+			var bmlb="";
 		function tijiaofzg(){
 			var bmArray = document.getElementsByName("checkname");
-			var bmlb="";
 			
 		     	for(var i=0;i<bmArray.length;i++){
 		     		if(bmArray[i].checked){
@@ -243,32 +290,73 @@
 		     			}
 		     		}
 		     	}
+		     	 if(bmlb=="" || bmlb==null){
+				    	window.history.go(0);
+				    	alert("至少选择一项");
+		     	 }
 		     	var param={};
 		     	param["ids"]=bmlb;
 		     	var result = FireFly.doAct("TS_BMLB_BM","pdfzg",param);
-		     	if(result.flag==true){
+		     	if(result.flag=="false"){
 		     		alert("您已重复报名")
 		     		return
+		     		
+		     	}else{
+		     		var arrChk=$("input[name='checkname']:checked"); 
+					tbody=document.getElementById("xinxi");
+					for(var i=0;i<arrChk.length;i++){
+					 //得到tr
+					  var tr=arrChk[i].parentNode.parentNode;
+				      var tds=tr.getElementsByTagName("td");
+				      
+				      var ntr = tbody.insertRow();
+				      
+				      if(i==0){
+					      ntr.innerHTML=
+					      '<td style="text-align:right;color:lightseagreen">报考名称</td>'+
+					      '<td style="text-align:center">'+tds[1].innerHTML+'</td>';
+					    
+				     	}else{
+				    	   ntr.innerHTML=
+						       '<td style="text-align:center;color:blue"></td>'+
+						       '<td style="text-align:center">'+tds[1].innerHTML+'</td>';
+				       }
+					}
+		     		$("#tiJiao").modal().show;
 		     	}
-		    if(bmlb=="" || bmlb==null){
-		    	window.history.go(0);
-		    	alert("至少选择一项");
-		    }else{
-		    var user_mobile = document.getElementById("user_mobile1").value;
-			var param={};
-			param["bmCodes"] = bmlb;
-			param["USER_CODE"]="<%=user_code%>";
-			param["USER_NAME"] = "<%=user_name%>";
-			param["USER_SEX"] = "<%=user_sex%>";
-			param["ODEPT_NAME"] = "<%=odept_name%>";
-			param["USER_OFFICE_PHONE"] = "<%=user_office_phone%>";
-			param["USER_MOBILE"] = user_mobile;
-			param["USER_CMPY_DATE"] = "<%=user_cmpy_date%>";
-			param["XM_ID"] = "<%=xm_id%>";
-			FireFly.doAct("TS_BMLB_BM", "addData", param,true,false);
-			window.location.href="bm.jsp";
-		    }
 		}
+		function quxiao(){
+			//获取到table
+			var motaitable = document.getElementById("motaitable");
+			var rowlength = motaitable.rows.length-1;
+			for(var i=rowlength;i>1;i--){
+				motaitable.deleteRow(i);
+			}
+		}
+		
+		//提交所有数据
+		function mttijiao(){
+			//获取手机号码
+			var ryl_mobile = document.getElementById("user_mobile2").value
+			
+					if (ryl_mobile == "") {
+						alert("手机号码不能为空");
+					}
+			  var user_mobile = document.getElementById("user_mobile1").value;
+				var param={};
+				param["bmCodes"] = bmlb;
+				param["USER_CODE"]="<%=user_code%>";
+				param["USER_NAME"] = "<%=user_name%>";
+				param["USER_SEX"] = "<%=user_sex%>";
+				param["ODEPT_NAME"] = "<%=odept_name%>";
+				param["USER_OFFICE_PHONE"] = "<%=user_office_phone%>";
+				param["USER_MOBILE"] = ryl_mobile;
+				param["USER_CMPY_DATE"] = "<%=user_cmpy_date%>";
+				param["XM_ID"] = "<%=xm_id%>";
+				FireFly.doAct("TS_BMLB_BM", "addData", param,true,false);
+				window.location.href = "bm.jsp";
+			}
+		  
 	</script>
 </body>
 </html>

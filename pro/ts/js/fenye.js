@@ -138,8 +138,8 @@ var listPage = function () {
 				state = "未开始";
 			}
 			//是否展示审核人所在的 审核机构下的所有人
-			var resultlook = FireFly.doAct("TS_XMGL_BMGL","getShowLook",param1);
-			var showlook = resultlook.showlook;
+		/*	var resultlook = FireFly.doAct("TS_XMGL_BMGL","getShowLook",param1);
+			var showlook = resultlook.showlook;*/
 			/*
 			//进行中 已结束 下拉框 进行筛选
 			var zhuangtai = $("#zhuangtai").children('option:selected').val();

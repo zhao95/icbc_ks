@@ -1530,5 +1530,23 @@ public class BmlbServ extends CommonServ {
 			return new OutBean().set("ids",ids);
 		
 	}
-	
+	/**
+	 * 非资格不重复报名
+	 */
+	public OutBean pdfzg(Bean paramBean){
+		String str = paramBean.getStr("ids");
+		String[] split = str.split(",");
+		for (String string : split) {
+			if(!"".equals(string)){
+				List<Bean> finds = ServDao.finds("TS_BMLB_BM", "and KSLBK_ID ='"+string+"'");
+				if(finds!=null){
+					if(finds.size()==0){
+					}else{
+						return new OutBean().set("flag", "true");
+					}
+				}
+			}
+			}
+		return new OutBean().set("flag", "false");
+	}
 	}
