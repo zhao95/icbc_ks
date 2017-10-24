@@ -19,10 +19,11 @@ _viewer.getBtn("add").unbind("click").bind("click", function(event) {
 //	}
 	
 	var param = {};
-	param["SOURCE"] = "KC_ID~KC_NAME~KC_ADDRESS~KC_ODEPTCODE";
+	param["SOURCE"] = "KC_ID~KC_NAME~KC_ADDRESS~CTLG_PCODE";
 	param["TYPE"] = "multi";
-	param["HIDE"] = "KC_ID,KC_ODEPTCODE";
+	param["HIDE"] = "KC_ID,CTLG_PCODE";
 //	param["EXTWHERE"] = "and KC_ODEPTCODE = '"+odeptCode+"'";
+	param["EXTWHERE"] = " and GROUP_ID in (select group_id from TS_KCZGL_GROUP b where serv_id = 'ts_kczgl_group' and b.kcz_id in (select kcz_id from TS_KCZGL a where serv_id = 'ts_xmgl_cccs_kczgl' and XM_ID = '"+xmId+"'))";
 	var configStr = "TS_XMGL_KCAP_DAPCC_UTIL_V,"+JsonToStr(param);
 	var options = {
 		"config" :configStr,
