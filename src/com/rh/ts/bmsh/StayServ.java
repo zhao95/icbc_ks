@@ -857,7 +857,7 @@ public class StayServ extends CommonServ {
 		String xmid = paramBean.getStr("xmid");
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
-		if("belong".equals(xianei)){
+		/*if("belong".equals(xianei)){
 		//根据项目id找到流程下的所有节点    审核人审核的机构
 		String belongwhere = "AND XM_ID='"+xmid+"'";
 		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
@@ -889,14 +889,13 @@ public class StayServ extends CommonServ {
 			deptcodes=deptcodes.substring(0, deptcodes.length()-1)+"";
 		}
 		 deptwhere = "AND S_DEPT IN ("+deptcodes+")";
-		}else{
+		}else{*/
 			//管理员以下的所有机构
 			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
 			for (Bean bean : finds) {
 				dept_code+=","+bean.getStr("DEPT_CODE");
 			}
 			 deptwhere = "AND S_DEPT IN ("+dept_code+")";
-		}
 		//根据审核  机构 匹配当前机构下的所有人
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();

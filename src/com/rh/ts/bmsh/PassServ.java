@@ -641,7 +641,7 @@ public class PassServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getBelongToList(Bean paramBean) {
-		String xianei = paramBean.getStr("xianei");
+	/*	String xianei = paramBean.getStr("xianei");*/
 		//当前审核人
 		UserBean user = Context.getUserBean();
 		String user_code = user.getStr("USER_CODE");
@@ -649,14 +649,14 @@ public class PassServ extends CommonServ {
 		String xmid = paramBean.getStr("xmid");
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
-		String dept_code = user.getStr("OEPT_CODE");
+		String dept_code = user.getStr("DEPT_CODE");
 		
-		if("belong".equals(xianei)){
+		/*if("belong".equals(xianei)){*/
 		//根据项目id找到流程下的所有节点
 		String belongwhere = "AND XM_ID='"+xmid+"'";
-		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
-		String deptcodes = "";
-		if(finds.size()!=0){
+		/*List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
+		String deptcodes = "";*/
+		/*if(finds.size()!=0){
 			String wfsid = finds.get(0).getStr("WFS_ID");
 			//根据流程id查找所有审核节点
 			String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
@@ -683,14 +683,13 @@ public class PassServ extends CommonServ {
 			deptcodes=deptcodes.substring(0, deptcodes.length()-1)+"";
 		}
 		 deptwhere = "AND S_DEPT IN ("+deptcodes+")";
-		}else{
+		}else{*/
 			//管理员以下的所有机构
 			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
 			for (Bean bean : finds) {
 				dept_code+=","+bean.getStr("DEPT_CODE");
 			}
 			 deptwhere = "AND S_DEPT IN ("+dept_code+")";
-		}
 		//根据审核  机构 匹配当前机构下的所有人
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();

@@ -141,29 +141,29 @@
 	<script type="text/javascript" src="<%=urlPath%>/sy/base/frame/i18n/config.js"></script>
 	<script type="text/javascript" src="<%=urlPath%>/sy/base/frame/i18n/language.js"></script>
 	<!-- 平台UI核心组件js库 -->
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.grid.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.menu.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.loadbar.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.search.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.ccexSearch.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.tree.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.Delegate.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.openTab.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.pop.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.popPrompt.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.card.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.mind.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.next.js"></script> --%>
+ 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.grid.js"></script> 
+ 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.menu.js"></script> 
+ 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.loadbar.js"></script> 
+	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.search.js"></script> 
+ 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.ccexSearch.js"></script> 
+ 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.tree.js"></script> 
+	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.Delegate.js"></script> 
+ 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.openTab.js"></script> 
+ 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.pop.js"></script> 
+ 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.popPrompt.js"></script> 
+	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.card.js"></script> 
+ 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.mind.js"></script> 
+ 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/rh.ui.next.js"></script> 
 	<!-- 平台UI核心view部分js库 -->
 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhListView.js"></script>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhListBatchView.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhCardView.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhDictTreeView.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhSelectListView.js"></script> --%>
+	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhListBatchView.js"></script> 
+	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhCardView.js"></script>
+	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhDictTreeView.js"></script>
+	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhSelectListView.js"></script>
 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhWfCardView.js"></script>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhUserInfoView.js"></script>	 --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhListExpanderView.js"></script> --%>
-<%-- 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhCommentView.js"></script> --%>
+	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhUserInfoView.js"></script>	
+	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhListExpanderView.js"></script>
+	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/engines/rhCommentView.js"></script> 
 	<!-- UEditor -->
 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/ueditor/editor_config.js"></script>
 	<script type="text/javascript" src="<%=urlPath %>/sy/base/frame/coms/ueditor/editor_all.js"></script>

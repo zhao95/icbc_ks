@@ -155,7 +155,6 @@
        					</table>
        					</div>
        					<div style="padding-top:20px;padding-bottom:20px">
-       			<button  onclick="goBack()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">返回</button>	
        			</div>
        		</div>
        	</div>

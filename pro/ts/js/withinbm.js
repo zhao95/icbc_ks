@@ -9,7 +9,6 @@ var listPage = function () {
     this.endNum = this.startNum; // 中间页码的最后一个页码
 };
  listPage.prototype.getListData = function (num) {
-	 debugger;
 	//每页条数
 		var select = document.getElementById("yema");
 		 var index = document.getElementById("yema").selectedIndex;

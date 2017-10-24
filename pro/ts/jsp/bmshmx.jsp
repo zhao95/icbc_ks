@@ -65,9 +65,8 @@
 	</thead>
 	<tbody>
 	 <%
-	 	
-		String asign = "";//标记自动审核
-		String reasonstr = "";
+		String asign = "null";//标记自动审核
+		String reasonstr = "null";
 	 	String bmid = "";
 		if(userBean != null) {
 	    bmid = request.getParameter("bmidmx"); 
@@ -103,14 +102,14 @@
 	</tbody>
 	</table>
 	<script type="text/javascript">
-	 var rows = $("#table").find("tr");  
+	 var rows = $("#table").find("tr"); 
 	    for(i = 1; i < rows.length; i++){  
 	        if(i % 2 == 0){  
 	            rows[i].style.backgroundColor = "Azure";  
 	       }  
 	    } 
 	    	 var bj = <%=asign%>;
-	 	 	if(bj!=""||bj==0){
+	 	 	if(bj!="null"){
 	 	 		var a = "liyou"+bj;
 	 	 		//自动审核规则
 	 	 		var dataArray =<%=reasonstr%>;

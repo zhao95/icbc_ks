@@ -72,7 +72,6 @@ function xminfoshow(){
 			}
 			}
 		}
-		debugger;
 		if(checkeddata.length==0){
 			return;
 		}
@@ -83,7 +82,6 @@ function xminfoshow(){
 			parambm["user_code"]=user_code;
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
-			debugger;
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, false,true,function(data){
     		yzgz=data;
     		//获取后台传过来的key

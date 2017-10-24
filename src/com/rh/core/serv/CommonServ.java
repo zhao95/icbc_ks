@@ -244,8 +244,12 @@ public class CommonServ extends AbstractServ {
         afterQuery(paramBean, outBean);
         return outBean;
     }
-    
-    public OutBean query1(ParamBean paramBean) {
+    /**
+     * 到出自定义列 专用查询方法
+     * @param paramBean
+     * @return
+     */
+    public OutBean queryExp(ParamBean paramBean) {
         beforeQuery(paramBean);
         final ServDefBean serv = ServUtils.getServDef(paramBean.getServId());
         PageBean page = paramBean.getQueryPage();
@@ -1209,7 +1213,6 @@ public class CommonServ extends AbstractServ {
     protected String getExcelRowDataError(Bean data) {
 		return null;
 	}
-    
     /**
      * 提供导出Excel
      * @param paramBean 参数信息
@@ -1229,7 +1232,7 @@ public class CommonServ extends AbstractServ {
         }
         ExportExcel expExcel = new ExportExcel(serv);
         try {
-        OutBean outBean = query1(paramBean);
+        OutBean outBean = queryExp(paramBean);
             count = outBean.getCount();
             //总数大于excel可写最大值
           /*  if (count > EXCEL_MAX_NUM) {

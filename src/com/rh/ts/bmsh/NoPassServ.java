@@ -675,7 +675,7 @@ public class NoPassServ extends CommonServ {
 		String dept_code = user.getStr("DEPT_CODE");
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
-		if("belong".equals(xianei)){
+		/*if("belong".equals(xianei)){
 		String belongdeptcode = "";
 		String xmid = paramBean.getStr("xmid");
 		//根据项目id找到流程下的所有节点
@@ -710,7 +710,7 @@ public class NoPassServ extends CommonServ {
 			deptcodes=deptcodes.substring(0, deptcodes.length()-1)+"";
 		}
 		 deptwhere = "AND S_DEPT IN ("+deptcodes+")";
-		}else{
+		}else{*/
 			//管理员以下的所有机构部门
 			
 			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
@@ -718,7 +718,6 @@ public class NoPassServ extends CommonServ {
 				dept_code+=","+bean.getStr("DEPT_CODE");
 			}
 			 deptwhere = "AND S_DEPT IN ("+dept_code+")";
-		}
 		
 		
 		//根据审核  机构 匹配当前机构下的所有人
