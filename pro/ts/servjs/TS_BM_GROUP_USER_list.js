@@ -54,7 +54,7 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function(event) {
 					//用户名称
 					param.USER_DEPT_NAME = names[i];
 					//选取类型 1人员
-					param.G_TYPE = 2;
+					param.G_TYPE = 1;
 					
 					paramArray.push(param);
 				}
@@ -96,7 +96,7 @@ _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
 					//用户名称
 					param.USER_DEPT_NAME = names[i];
 					//选取类型 1人员
-					param.G_TYPE = 1;
+					param.G_TYPE = 2;
 					
 					paramArray.push(param);
 				}
