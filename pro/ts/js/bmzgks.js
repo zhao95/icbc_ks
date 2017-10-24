@@ -445,7 +445,6 @@ function xminfoshow(){
 				 }
 			 }
 		 }
-		 console.log(data1);
 		 setting.data=data1;
 	         var tree = new rh.ui.Tree(setting);
 	         $('.content-navTree').append(tree.obj);
@@ -558,6 +557,7 @@ function xminfoshow(){
 			       if(kslb_mk=="无模块"){
 			    	   kslb_mk="";
 			       }
+			       var ks_time = alldata[i].KSLBK_TIME;
 			       var kslb_type_name=alldata[i].KSLBK_TYPE_NAME;
 				   var kslbk_id = alldata[i].KSLBK_ID;
 				   var kslb_code=alldata[i].KSLBK_CODE;
@@ -587,6 +587,7 @@ function xminfoshow(){
 			       xk['BM_XL'] = kslb_xl_code;
 			       xk['BM_MK'] = kslb_mk_code;
 			       xk['BM_TYPE'] =kslb_type;
+			       xk['BM_KS_TIME']=ks_time;
 			       xkArg.push(xk);
 			}
 		}

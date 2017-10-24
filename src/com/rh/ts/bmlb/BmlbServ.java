@@ -177,7 +177,7 @@ public class BmlbServ extends CommonServ {
 				for (int i = 0; i < json.length(); i++) {
 					JSONObject job = json.getJSONObject(i); // 遍历 jsonarray
 															// 数组，把每一个对象转成 json
-															// 对象
+					String ks_time = (String) job.get("BM_KS_TIME");								// 对象
 					String kslb_code = (String) job.get("BM_LB");
 					String kslb_xl_code = (String) job.get("BM_XL");
 					String kslb_mk_code = (String) job.get("BM_MK");
@@ -368,6 +368,7 @@ public class BmlbServ extends CommonServ {
 					shBean.set("S_ODEPT",bmbean.getStr("S_ODEPT"));
 					shBean.set("S_TDEPT",bmbean.getStr("S_TDEPT"));
 					shBean.set("S_DEPT",bmbean.getStr("S_DEPT"));
+					shBean.set("BM_KS_TIME", ks_time);
 					 if (count == 0) {
 					 shBean.set("SH_OTHER", user_code);
 					 ServDao.save("TS_BMSH_PASS", shBean);

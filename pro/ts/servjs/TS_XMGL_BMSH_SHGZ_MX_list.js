@@ -273,6 +273,8 @@ function bindCard() {
 			butt.style.fontSize="0.5px";
 			butt.innerHTML="请选择";
 			butt.id="GLxlbutton";
+			
+			formConDiv7.append($("<div style='padding-top:10px;color:red;font-size:8px'>说明：管理类报名时验证不通过时提示管理任职年限进入手动审核</div>"));
 		}else{
 			for(var i=0;i<nameArg.length;i++) {
 				if(obj2[0].type == 'dateyear') {
