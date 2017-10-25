@@ -16,18 +16,32 @@ if(_viewer.opts.act == "cardAdd"){
 $("#TS_XMGL_BMSH-SH_LOOK_label").css("width","300px");
 $("#TS_XMGL_BMSH-SH_LOOK_div").css("padding-left","100px");
 //针对开始和结束时间的校验
-_viewer.getItem("SH_START").obj.unbind("click").bind("click", function() {
-	    WdatePicker({
-		    dateFmt: 'yyyy-MM-dd HH:mm:ss',
-	        maxDate : "#F{$dp.$D('" + _viewer.servId + "-SH_END')}"
-	    });
-	});
-_viewer.getItem("SH_END").obj.unbind("click").bind("click", function() {
-	    WdatePicker({
-		    dateFmt: 'yyyy-MM-dd HH:mm:ss',
-	        minDate : "#F{$dp.$D('" + _viewer.servId + "-SH_START')}"
-	    });
-	});
+_viewer.beforeSave = function() {
+	var beginTime=_viewer.getItem("SH_START").getValue();
+	var endTime=_viewer.getItem("SH_END").getValue();
+    var beginTimes = beginTime.substring(0, 10).split('-');
+    var endTimes = endTime.substring(0, 10).split('-');
+     beginTime = beginTimes[1] + '-' + beginTimes[2] + '-' + beginTimes[0] + ' ' + beginTime.substring(10, 19);
+     endTime = endTimes[1] + '-' + endTimes[2] + '-' + endTimes[0] + ' ' + endTime.substring(10, 19);
+    var a = (Date.parse(endTime) - Date.parse(beginTime)) / 3600 / 1000;
+    if(a < 0||a == 0||isNaN(a)){
+ 		$("#TS_XMGL_BMSH-SH_START").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL_BMSH-SH_END").addClass("blankError").addClass("errorbox");
+		return false;
+ 	}
+};
+//_viewer.getItem("SH_START").obj.unbind("click").bind("click", function() {
+//	    WdatePicker({
+//		    dateFmt: 'yyyy-MM-dd HH:mm:ss',
+//	        maxDate : "#F{$dp.$D('" + _viewer.servId + "-SH_END')}"
+//	    });
+//	});
+//_viewer.getItem("SH_END").obj.unbind("click").bind("click", function() {
+//	    WdatePicker({
+//		    dateFmt: 'yyyy-MM-dd HH:mm:ss',
+//	        minDate : "#F{$dp.$D('" + _viewer.servId + "-SH_START')}"
+//	    });
+//	});
 
 
 //根据选择是否人工审核

@@ -1,7 +1,7 @@
 var _viewer = this;
 var module = 'PROJECT';
-var height = jQuery(window).height()-200;
-var width = jQuery(window).width()-200;
+var height = jQuery(window).height()-50;
+var width = jQuery(window).width()-100;
 //取消行点击事件
 $(".rhGrid").find("tr").unbind("dblclick");
  //创建自定义字段，增加按钮
@@ -90,7 +90,7 @@ function bindCard() {
 	
 //列表操作按钮 弹dialog
 function openMyCard(dataId,readOnly,showTab){
-	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[50,50]};
     temp[UIConst.PK_KEY] = dataId;
     if(readOnly != ""){
     	temp["readOnly"] = readOnly;
@@ -170,9 +170,6 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 		return false;
 	}
 	
-	var width = jQuery(window).width()-200;
-	var height = jQuery(window).height()-200;
-	
 	var temp = {"act":UIConst.ACT_CARD_ADD,
 			"sId":_viewer.servId,
 			"params":  {
@@ -182,7 +179,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 			"links":_viewer.links,
 			"parHandler":_viewer,
 			"widHeiArray":[width,height],
-			"xyArray":[100,100]
+			"xyArray":[50,50]
 	};
 	console.log(temp);
 	var cardView = new rh.vi.cardView(temp);
