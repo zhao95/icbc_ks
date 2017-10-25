@@ -1,5 +1,7 @@
 var _viewer = this;
 var module = 'PLAN';
+var height = jQuery(window).height()-200;
+var width = jQuery(window).width()-200;
 $(".rhGrid").find("tr").unbind("dblclick");
 // 每一行添加编辑和删除
 _viewer.grid._table.find("tr").each(function(index, item) {
@@ -159,8 +161,7 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click", function(event) {
 	Tab.open(options);
 });
 
-var height = jQuery(window).height()-200;
-var width = jQuery(window).width()-200;
+
 //_viewer.getBtn("add").unbind("click").bind("click", function() {
 //	var temp = {
 //		"act" : UIConst.ACT_CARD_ADD,
@@ -209,8 +210,8 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 		return false;
 	}
 	
-	var width = jQuery(window).width()-200;
-	var height = jQuery(window).height()-200;
+	//var width = jQuery(window).width()-200;
+	//var height = jQuery(window).height()-200;
 	
 	var temp = {"act":UIConst.ACT_CARD_ADD,
 			"sId":_viewer.servId,
