@@ -211,20 +211,25 @@ public class BmlbServ extends CommonServ {
 					}
 					// 获取到考试名称
 					String back_All = kslb_name + "-" + kslb_xl + "-" + kslb_mk + "-" + kslb_type;
-					JSONArray yzgzArg = (JSONArray) yzgzstrjson.get(kslb_id);
 					int flag = 0;
+					String mind = "";
+					int count = XmglMgr.existSh(xm_id);
 					String ad_rule = "";
-					// 获取资格验证信息以及验证结果
-					for (int j = 0; j < yzgzArg.length(); j++) {
-						JSONObject object = (JSONObject) yzgzArg.get(j);
-						String sname = (String) object.get("NAME");
-						String svlidate = (String) object.get("VLIDATE");
-						ad_rule += sname + ":" + svlidate + ",";
-						if (svlidate.equals("false")) {
-							flag += 1;
-						}
-					}
 					String ad_result = "";
+					if("true".equals(yzgzstrjson.get("none"))){
+						
+					}else{
+						JSONArray yzgzArg = (JSONArray) yzgzstrjson.get(kslb_id);
+						// 获取资格验证信息以及验证结果
+						for (int j = 0; j < yzgzArg.length(); j++) {
+							JSONObject object = (JSONObject) yzgzArg.get(j);
+							String sname = (String) object.get("NAME");
+							String svlidate = (String) object.get("VLIDATE");
+							ad_rule += sname + ":" + svlidate + ",";
+							if (svlidate.equals("false")) {
+								flag += 1;
+							}
+					}
 					if (flag != 0) {
 						// 验证不通过
 						ad_result = "2";
@@ -234,16 +239,16 @@ public class BmlbServ extends CommonServ {
 						ad_result = "1";
 					}
 					// 0无审核,1自动审核, 2人工审核, 3自动+人工审核
-					String mind = "";
 					mind = yzgzArg.toString();
-					int count = XmglMgr.existSh(xm_id);
 					if(!"".equals(rz_year)){
 						if(yzgzArg.length()>0){
 								 mind = mind.substring(0,mind.length()-1)+",{'VLIDATE':'STAY','TISHI':'','NAME':'管理任职已满"+rz_year+"年'}]";	
 								 mind=mind.replaceAll("\'", "\"");
 						}
-						count=2;
 					}
+				}
+					
+					
 					Bean beans = new Bean();
 					beans.set("RZ_YEAR", rz_year);
 					beans.set("BM_CODE", user_code);

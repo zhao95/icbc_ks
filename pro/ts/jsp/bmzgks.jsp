@@ -60,8 +60,8 @@
 }
  #loadingdialog{
  font-family: Arial;
- border: 2px solid #379082;
- border-radius: 20px;
+ border: 2px solid black;
+ border-radius: 10px;
  padding: 30px 30px;
  width: 330px;
 }
@@ -352,9 +352,9 @@ position: absolute;
 	<div class="modal fade" id="loading" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div  class="modal-dialog" style="width:700px;">
-			<div id="loadingdialog" class="modal-content" style="position:absoluate;background:#777;height:100px;width:50%">
-				<div style="color:lightseagreen;padding-left:30%;padding-top:20px;font-size:16px;">&nbsp;&nbsp;正在验证请稍候.....</div>
-				<div id="loadiv" style="position:relative;top:-60%;left:15%;font-size:16px;"></div>
+			<div id="loadingdialog" class="modal-content" style="position:absoluate;background:white;height:100px;width:50%">
+				<div style="color:lightseagreen;padding-left:30%;padding-top:10px;font-size:16px;">&nbsp;&nbsp;<B>正在验证请稍候.....</B></div>
+				<div id="loadiv" style="position:relative;top:-80%;left:15%;font-size:16px;"><img src="<%=CONTEXT_PATH%>/ts/image/loading.gif"></img></div>
 			</div>
 			<!-- /.modal-content -->
 		</div>
