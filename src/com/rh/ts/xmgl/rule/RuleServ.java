@@ -209,7 +209,7 @@ public class RuleServ extends CommonServ {
 			e.printStackTrace();
 			outBean.setError(e.getMessage());
 		}
-
+		outBean.set("none", "none");
 		return outBean;
 	}
 
