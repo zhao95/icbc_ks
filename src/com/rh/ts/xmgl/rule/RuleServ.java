@@ -74,8 +74,7 @@ public class RuleServ extends CommonServ {
 			Bean gzBean = getGz(xmId); // 规则bean key:规则id
 
 			if (gzmxBean.isEmpty() || gzBean.isEmpty()) {
-
-				throw new TipException("未绑定审核规则!");
+				return new OutBean().set("none", "true");				
 			}
 
 			JSONArray objList = new JSONArray(liststr);

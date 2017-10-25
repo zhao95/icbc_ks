@@ -86,8 +86,15 @@ function xminfoshow(){
     		yzgz=data;
     		//获取后台传过来的key
          	for(var i=0;i<checkeddata.length;i++){
+         		var a=checkeddata[i].ID;
+         		if(data.none=="true"){
+         			$("#"+a).append('<div style="height:5px;"></div>');
+         			$("#"+a).append('<div style="height:5px;"></div>');
+         			$("#"+a).append('<div style="height:5px;"></div>');
+         			var yzjg=a+"yzjg";
+         			$("#"+yzjg).append("审核通过");
+         		}else{
              	//获取验证规则div的id
-       			var a=checkeddata[i].ID;
        			//获取验证结果div的id
              	var yzjg=a+"yzjg";
        			var dataArray =data[a];
@@ -158,7 +165,7 @@ function xminfoshow(){
        					$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
        				}
 	       		}
-       			
+         		}
          	}
          	$("#loading").modal("hide");
     	});	
@@ -965,7 +972,7 @@ function yanzheng(){
 	})
 	if(yanzhengflag){
 			checky(); 
-		var opts = {
+		/*var opts = {
 				  lines: 12, // The number of lines to draw
 				  length: 10, // The length of each line
 				  width: 16, // The line thickness
@@ -983,7 +990,7 @@ function yanzheng(){
 				  left: 'auto' // Left position relative to parent in px
 				};
 				var target = document.getElementById('loadiv');
-				var spinner = new Spinner(opts).spin(target);
+				var spinner = new Spinner(opts).spin(target);*/
 		$("#zgyzbt").attr("data-target","#loading");
 	}else{
 		$("#zgyzbt").attr("data-target","");
