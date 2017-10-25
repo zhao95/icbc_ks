@@ -1,5 +1,6 @@
 var _viewer = this;
-
+var width = jQuery(window).width()-200;
+var height = jQuery(window).height()-200;
 //查询选择时呈现的操作.
 if(_viewer.params.BUT){
 	//取消行点击事件
@@ -86,8 +87,7 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
  * 添加按钮
  */
 _viewer.getBtn("add").unbind("click").bind("click",function() {
-	var width = jQuery(window).width()-200;
-	var height = jQuery(window).height()-200;
+	
 	
 	var ctlgPcode = _viewer._transferData["CTLG_PCODE"];
 	
