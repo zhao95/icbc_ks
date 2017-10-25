@@ -13,7 +13,21 @@ _viewer.beforeSave = function() {
     xmStart = xmStarts[1] + '-' + xmStarts[2] + '-' + xmStarts[0] + ' ' + xmStart.substring(10, 19);
     xmEnd = xmEnds[1] + '-' + xmEnds[2] + '-' + xmEnds[0] + ' ' + xmEnd.substring(10, 19);
     xmKsStartData=xmKsStartDatas[1] + '-' + xmKsStartDatas[2] + '-' + xmKsStartDatas[0] + ' ' + xmKsStartData.substring(10, 19);
-    xmKsEndDatas= xmKsEndDatas[1] + '-' + xmKsEndDatas[2] + '-' + xmKsEndDatas[0] + ' ' + xmKsEndData.substring(10, 19);
+    xmKsEndData= xmKsEndDatas[1] + '-' + xmKsEndDatas[2] + '-' + xmKsEndDatas[0] + ' ' + xmKsEndData.substring(10, 19);
+  //项目开始时间和项目结束时间互斥
+    var xmEndXmStart = (Date.parse(xmEnd) - Date.parse(xmStart)) / 3600 / 1000;
+    if(xmEndXmStart< 0||xmEndXmStart== 0||isNaN(xmEndXmStart)){
+ 		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
+		return false;
+ 	}
+    //考试开始时间和考试结束时间互斥
+    var ksEndKsStart = (Date.parse(xmKsEndData) - Date.parse(xmKsStartData)) / 3600 / 1000;
+    if(ksEndKsStart< 0||ksEndKsStart== 0||isNaN(ksEndKsStart)){
+ 		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
+		return false;
+ 	}
     //项目开始时间和考试考试时间互斥
     var ksStartXmStart = (Date.parse(xmKsStartData) - Date.parse(xmStart)) / 3600 / 1000;
     if(ksStartXmStart< 0||ksStartXmStart== 0||isNaN(ksStartXmStart)){
@@ -21,15 +35,8 @@ _viewer.beforeSave = function() {
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
 		return false;
  	}
-    //考试开始时间和考试结束时间互斥
-    var ksEndKsStart = (Date.parse(xmKsEndDatas) - Date.parse(xmKsStartData)) / 3600 / 1000;
-    if(ksEndKsStart< 0||ksEndKsStart== 0||isNaN(ksEndKsStart)){
- 		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
-		return false;
- 	}
     //考试结束时间与项目结束时间互斥
-    var xmEndKsEnd = (Date.parse(xmEnd) - Date.parse(xmKsEndDatas)) / 3600 / 1000;
+    var xmEndKsEnd = (Date.parse(xmEnd) - Date.parse(xmKsEndData)) / 3600 / 1000;
      if(xmEndKsEnd < 0||xmEndKsEnd == 0||isNaN(xmEndKsEnd)){
  		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
