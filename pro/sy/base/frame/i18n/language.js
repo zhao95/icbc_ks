@@ -67,6 +67,10 @@ var Language = {
 		en : 'Welcome to use',
 		zh : '欢迎使用'
 	},
+	config_string2 : {
+		en : 'The item must be entered!',
+		zh : '该项必须输入！'
+	},
 	
 	rh_ui_card_string1 : {
 		en : 'grouping',

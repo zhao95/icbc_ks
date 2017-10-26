@@ -1,5 +1,6 @@
 var _viewer = this;
-
+var width = jQuery(window).width()-200;
+var height = jQuery(window).height()-50;
 
 //每一行添加编辑和删除
 $("#TS_PVLG_ROLE .rhGrid").find("tr").each(function(index, item) {
@@ -35,9 +36,9 @@ function bindCard() {
 	//当行编辑事件
 	jQuery("td [id='TS_PVLG_ROLE-upd']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		var height = jQuery(window).height()-50;
-		var width = jQuery(window).width()-100;
-		rowEdit(pkCode,_viewer,[width,height],[50,50]);
+		//var height = jQuery(window).height()-50;
+		//var width = jQuery(window).width()-100;
+		rowEdit(pkCode,_viewer,[width,height],[100,50]);
 	});
 	
 }
@@ -60,8 +61,7 @@ _viewer.afterDelete = function() {
  * 添加按钮
  */
 _viewer.getBtn("add").unbind("click").bind("click",function() {
-	var width = jQuery(window).width()-200;
-	var height = jQuery(window).height()-200;
+	
 	
 	var ctlgPcode = _viewer._transferData["CTLG_PCODE"];
 	
@@ -75,7 +75,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 			"links":_viewer.links,
 			"parHandler":_viewer,
 			"widHeiArray":[width,height],
-			"xyArray":[100,100]
+			"xyArray":[100,50]
 	};
 	
 	var cardView = new rh.vi.cardView(temp);

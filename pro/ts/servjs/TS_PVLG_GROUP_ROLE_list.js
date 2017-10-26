@@ -6,8 +6,8 @@ $("#TS_PVLG_GROUP_ROLE .rhGrid").find("tr").each(function(index, item) {
 		var dataId = item.id;
 		
 		$(item).find("td[icode='BUTTONS']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP_ROLE-upd" actcode="upd" rowpk="'+dataId+'"><span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-edit"></span></a>'+
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP_ROLE-delete" actcode="delete" rowpk="'+dataId+'"><span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-delete"></span></a>'
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP_ROLE-upd" actcode="upd" rowpk="'+dataId+'"><span class="rh-icon-inner-notext">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP_ROLE-delete" actcode="delete" rowpk="'+dataId+'"><span class="rh-icon-inner-notext">删除</span><span class="rh-icon-img btn-delete"></span></a>'
 				);
 		// 为每个按钮绑定卡片
 		bindCard();
@@ -25,9 +25,9 @@ function bindCard() {
 	//当行编辑事件
 	jQuery("td [id='TS_PVLG_GROUP_ROLE-upd']").unbind("click").bind("click", function() {
 		var pkCode = jQuery(this).attr("rowpk");
-		var height = jQuery(window).height()-200;
+		var height = jQuery(window).height()-100;
 		var width = jQuery(window).width()-200;
-		rowEdit(pkCode,_viewer,[width,height],[100,100]);
+		rowEdit(pkCode,_viewer,[width,height],[100,50]);
 	});
 }
 

@@ -6737,7 +6737,7 @@ rh.ui.Image.prototype.onchange = function() {
  * 字段级文件
  */
 rh.ui.ItemFile = function(options) {
-	alert("itemfile");
+	//alert("itemfile");
 	var _self = this;
 	this.type = "ItemFile";
 
@@ -6862,7 +6862,7 @@ rh.ui.ItemFile.prototype.validate = function() {
  * 渲染之后
  */
 rh.ui.ItemFile.prototype.afterRender = function() {
-	alert("itemrender");
+	//alert("itemrender");
 	this._file.initUpload();
 };
 /**
@@ -6923,7 +6923,7 @@ rh.ui.ItemFile.prototype.setValue = function(val){
  * 填充数据
  */
 rh.ui.ItemFile.prototype.fillData = function(val) {
-	alert("filedata");
+	//alert("filedata");
 	if (val && val.length > 0) {
 		this.setValue(val);
 	}
@@ -6932,7 +6932,7 @@ rh.ui.ItemFile.prototype.fillData = function(val) {
  * 获取值
  */
 rh.ui.ItemFile.prototype.getValue = function(){
-	alert("getvalue");
+	//alert("getvalue");
 	return this._input.val();
 };
 /**

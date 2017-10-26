@@ -1,36 +1,43 @@
 /** 服务卡片使用的js方法定义：开始fromTable */
 var _viewer = this;
 //针对项目开始时间的校验与互斥
-_viewer.beforeSave = function() {
+_viewer.beforeSave = function() {debugger;
 	var xmStart=_viewer.getItem("XM_START").getValue();//项目开始时间
 	var xmEnd=_viewer.getItem("XM_END").getValue();//项目截至时间
 	var xmKsStartData=_viewer.getItem("XM_KSSTARTDATA").getValue();//考试开始时间
 	var xmKsEndData=_viewer.getItem("XM_KSENDDATA").getValue();//考试截至时间
-	var xmStarts = xmStart.substring(0, 10).split('-');
-    var xmEnds = xmEnd.substring(0, 10).split('-');
-    var xmKsStartDatas = xmKsStartData.substring(0, 10).split('-');
-    var xmKsEndDatas = xmKsEndData.substring(0, 10).split('-');
-    xmStart = xmStarts[1] + '-' + xmStarts[2] + '-' + xmStarts[0] + ' ' + xmStart.substring(10, 19);
-    xmEnd = xmEnds[1] + '-' + xmEnds[2] + '-' + xmEnds[0] + ' ' + xmEnd.substring(10, 19);
-    xmKsStartData=xmKsStartDatas[1] + '-' + xmKsStartDatas[2] + '-' + xmKsStartDatas[0] + ' ' + xmKsStartData.substring(10, 19);
-    xmKsEndDatas= xmKsEndDatas[1] + '-' + xmKsEndDatas[2] + '-' + xmKsEndDatas[0] + ' ' + xmKsEndData.substring(10, 19);
-    //项目开始时间和考试考试时间互斥
-    var ksStartXmStart = (Date.parse(xmKsStartData) - Date.parse(xmStart)) / 3600 / 1000;
-    if(ksStartXmStart< 0||ksStartXmStart== 0||isNaN(ksStartXmStart)){
+	var xmStarts = xmStart.split('-');
+    var xmEnds = xmEnd.split('-');
+    var xmKsStartDatas = xmKsStartData.split('-');
+    var xmKsEndDatas = xmKsEndData.split('-');
+    var xmStartStr = xmStarts[1] + '-' + xmStarts[2] + '-' + xmStarts[0] ;
+    var xmEndStr = xmEnds[1] + '-' + xmEnds[2] + '-' + xmEnds[0] ;
+    var xmKsStartDataStr=xmKsStartDatas[1] + '-' + xmKsStartDatas[2] + '-' + xmKsStartDatas[0] ;
+    var xmKsEndDataStr= xmKsEndDatas[1] + '-' + xmKsEndDatas[2] + '-' + xmKsEndDatas[0];
+  //项目开始时间和项目结束时间互斥
+    var xmEndXmStart = (Date.parse(xmEndStr) - Date.parse(xmStartStr)) / 3600 / 1000;
+    if(xmEndXmStart< 0||xmEndXmStart== 0){
  		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
 		return false;
  	}
     //考试开始时间和考试结束时间互斥
-    var ksEndKsStart = (Date.parse(xmKsEndDatas) - Date.parse(xmKsStartData)) / 3600 / 1000;
-    if(ksEndKsStart< 0||ksEndKsStart== 0||isNaN(ksEndKsStart)){
+    var ksEndKsStart = (Date.parse(xmKsEndDataStr) - Date.parse(xmKsStartDataStr)) / 3600 / 1000;
+    if(ksEndKsStart< 0||ksEndKsStart== 0){
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
 		return false;
  	}
+    //项目开始时间和考试考试时间互斥
+    var ksStartXmStart = (Date.parse(xmKsStartDataStr) - Date.parse(xmStartStr)) / 3600 / 1000;
+    if(ksStartXmStart< 0||ksStartXmStart== 0){
+ 		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
+		return false;
+ 	}
     //考试结束时间与项目结束时间互斥
-    var xmEndKsEnd = (Date.parse(xmEnd) - Date.parse(xmKsEndDatas)) / 3600 / 1000;
-     if(xmEndKsEnd < 0||xmEndKsEnd == 0||isNaN(xmEndKsEnd)){
+    var xmEndKsEnd = (Date.parse(xmEndStr) - Date.parse(xmKsEndDataStr)) / 3600 / 1000;
+     if(xmEndKsEnd < 0||xmEndKsEnd == 0){
  		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
 		return false;
@@ -48,7 +55,19 @@ $('#'+xmKsEndData._opts.id+"_div").css('min-height','32px');
 
 // 下一步按钮
 // 1把数据保存到数据库
-_viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
+/**_viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
+	var xmStart=_viewer.getItem("XM_START").getValue();//项目开始时间
+	var xmEnd=_viewer.getItem("XM_END").getValue();//项目截至时间
+	var xmKsStartData=_viewer.getItem("XM_KSSTARTDATA").getValue();//考试开始时间
+	var xmKsEndData=_viewer.getItem("XM_KSENDDATA").getValue();//考试截至时间
+	var  xmName=_viewer.getItem("XM_NAME").getValue();
+	if(xmName==""){
+		$("#TS_XMGL-XM_NAME").addClass("blankError").addClass("errorbox");
+	}
+	var a=setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData);
+	alert(a);
+	if(xmName!="" && (a !=false||typeof(a)!="undefined"){
+		alert(23);
 	_viewer.doActReload('saveAndToSZ');// 这里不用传参数，这个方法默认是获取所有值
 	var XM_ID = _viewer.getItem("XM_ID").getValue();// 执行完保存后，自动把ID回填了
 	var XM_TYPE = _viewer.getItem("XM_TYPE").getValue();// 得到类型值
@@ -58,6 +77,9 @@ _viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
 	var url = "TS_XMGL_SZ.list.do?&_extWhere=" + extWhere;
 	var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
 	Tab.open(options);
+	}else{
+		return  false;
+	}
 });
 
 // 保存后的操作
@@ -99,4 +121,43 @@ _viewer.getItem("XM_TYPE").change(function(){
 		 _viewer.getItem("XM_KHDKZ").setValue(2);
 	}
 });	
+
+function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){
+	var xmStarts = xmStart.split('-');
+    var xmEnds = xmEnd.split('-');
+    var xmKsStartDatas = xmKsStartData.split('-');
+    var xmKsEndDatas = xmKsEndData.split('-');
+    var xmStartStr = xmStarts[1] + '-' + xmStarts[2] + '-' + xmStarts[0] ;
+    var xmEndStr = xmEnds[1] + '-' + xmEnds[2] + '-' + xmEnds[0] ;
+    var xmKsStartDataStr=xmKsStartDatas[1] + '-' + xmKsStartDatas[2] + '-' + xmKsStartDatas[0] ;
+    var xmKsEndDataStr= xmKsEndDatas[1] + '-' + xmKsEndDatas[2] + '-' + xmKsEndDatas[0];
+  //项目开始时间和项目结束时间互斥
+    var xmEndXmStart = (Date.parse(xmEndStr) - Date.parse(xmStartStr)) / 3600 / 1000;
+    if(xmEndXmStart< 0||xmEndXmStart== 0){
+ 		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
+		return false;
+ 	}
+    //考试开始时间和考试结束时间互斥
+    var ksEndKsStart = (Date.parse(xmKsEndDataStr) - Date.parse(xmKsStartDataStr)) / 3600 / 1000;
+    if(ksEndKsStart< 0||ksEndKsStart== 0){
+ 		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
+		return false;
+ 	}
+    //项目开始时间和考试考试时间互斥
+    var ksStartXmStart = (Date.parse(xmKsStartDataStr) - Date.parse(xmStartStr)) / 3600 / 1000;
+    if(ksStartXmStart< 0||ksStartXmStart== 0){
+ 		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
+		return false;
+ 	}
+    //考试结束时间与项目结束时间互斥
+    var xmEndKsEnd = (Date.parse(xmEndStr) - Date.parse(xmKsEndDataStr)) / 3600 / 1000;
+     if(xmEndKsEnd < 0||xmEndKsEnd == 0){
+ 		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
+		return false;
+ 	}
 	
+}*/
