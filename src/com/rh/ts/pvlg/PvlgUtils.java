@@ -10,6 +10,7 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.Constant;
+import com.rh.core.util.Strings;
 
 public class PvlgUtils {
 
@@ -68,7 +69,7 @@ public class PvlgUtils {
 							e.printStackTrace();
 						}
 					}
-					if (result != null) {
+					if (!Strings.isBlank(result)) {
 						// result 排序
 						String[] roles = result.split(",");
 
@@ -138,7 +139,7 @@ public class PvlgUtils {
 						e.printStackTrace();
 					}
 				}
-				if (result != null) {
+				if (!Strings.isBlank(result)) {
 					// result 排序
 					String[] roles = result.split(",");
 
