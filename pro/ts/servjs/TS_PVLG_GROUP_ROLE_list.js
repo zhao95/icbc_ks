@@ -1,13 +1,13 @@
 var _viewer = this;
-
+$(".rhGrid").find("tr").unbind("dblclick");
 //每一行添加编辑和删除
 $("#TS_PVLG_GROUP_ROLE .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
 		
 		$(item).find("td[icode='BUTTONS']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP_ROLE-upd" actcode="upd" rowpk="'+dataId+'"><span class="rh-icon-inner-notext">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP_ROLE-delete" actcode="delete" rowpk="'+dataId+'"><span class="rh-icon-inner-notext">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+				//'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP_ROLE-upd" actcode="upd" rowpk="'+dataId+'"><span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-edit"></span></a>'+
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP_ROLE-delete" actcode="delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
 				);
 		// 为每个按钮绑定卡片
 		bindCard();
@@ -23,12 +23,13 @@ function bindCard() {
 	});
 	
 	//当行编辑事件
-	jQuery("td [id='TS_PVLG_GROUP_ROLE-upd']").unbind("click").bind("click", function() {
+	/*jQuery("td [id='TS_PVLG_GROUP_ROLE-upd']").unbind("click").bind("click", function() {
 		var pkCode = jQuery(this).attr("rowpk");
-		var height = jQuery(window).height()-100;
+		var height = jQuery(window).height()-200;
 		var width = jQuery(window).width()-200;
-		rowEdit(pkCode,_viewer,[width,height],[100,50]);
+		rowEdit(pkCode,_viewer,[width,height],[100,100]);
 	});
+	*/
 }
 
 _viewer.getBtn("impRole").unbind("click").bind("click", function(event) {

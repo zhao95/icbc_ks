@@ -1,5 +1,30 @@
 var _viewer = this;
 
+$(".rhGrid").find("tr").unbind("dblclick");
+//每一行添加编辑和删除
+$("#TS_COMM_CATALOG_PROJECT .rhGrid").find("tr").each(function(index, item) {
+	if(index != 0){
+		var dataId = item.id;
+		
+		$(item).find("td[icode='BUTTONS']").append(
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_COMM_CATALOG_PROJECT-upd" actcode="upd" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
+				);
+		// 为每个按钮绑定卡片
+		bindCard();
+	}
+});
+
+//绑定的事件     
+function bindCard() {	
+	//当行编辑事件
+	jQuery("td [id='TS_COMM_CATALOG_PROJECT-upd']").unbind("click").bind("click", function() {
+		var pkCode = jQuery(this).attr("rowpk");
+		var height = jQuery(window).height()-200;
+		var width = jQuery(window).width()-200;
+		rowEdit(pkCode,_viewer,[width,height],[100,100]);
+	});
+}
+
 var module = "PROJECT";
 
 var params = _viewer.getParams();
