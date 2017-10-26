@@ -429,7 +429,9 @@ function xminfoshow(){
 		 var data1 = setting.data;
 		 //如果没有叶子节点则不显示
 		 for(var j=0;j<data1[0].CHILD.length;j++){
+			 if(data1[0].CHILD[j].hasOwnProperty("CHILD")){
 			 for(var m=0;m<data1[0].CHILD[j].CHILD.length;m++){
+				 if(data1[0].CHILD[j].CHILD[m].hasOwnProperty("CHILD")){
 				 for(var n=0;n<data1[0].CHILD[j].CHILD[m].CHILD.length;n++){
 					 if(!data1[0].CHILD[j].CHILD[m].CHILD[n].hasOwnProperty("CHILD")){
 						 var index = data1[0].CHILD[j].CHILD[m].CHILD.indexOf(data1[0].CHILD[j].CHILD[m].CHILD[n]);
@@ -437,10 +439,14 @@ function xminfoshow(){
 					 }
 				 }
 			 }
+			 }
+			 }
 		 }
 		 //将无模块的数据上提
 		 for(var j=0;j<data1[0].CHILD.length;j++){
+			 if(data1[0].CHILD[j].hasOwnProperty("CHILD")){
 			 for(var m=0;m<data1[0].CHILD[j].CHILD.length;m++){
+				 if(data1[0].CHILD[j].CHILD[m].hasOwnProperty("CHILD")){
 				 for(var n=0;n<data1[0].CHILD[j].CHILD[m].CHILD.length;n++){
 					 if(data1[0].CHILD[j].CHILD[m].CHILD[n].NAME=="无模块"){
 						 //将无模块下的 CHILD节点下的  pid改为无模块的  pid 
@@ -449,6 +455,8 @@ function xminfoshow(){
 					}
 					data1[0].CHILD[j].CHILD[m].CHILD = data1[0].CHILD[j].CHILD[m].CHILD[n].CHILD;
 					 }
+				 }
+				 }
 				 }
 			 }
 		 }
