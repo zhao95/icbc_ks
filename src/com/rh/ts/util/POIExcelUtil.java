@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 
@@ -103,33 +104,35 @@ public class POIExcelUtil {
                 HSSFCellStyle toStyle = toWorkbook.createCellStyle();
                 copyCellStyle(fromWorkbook, toWorkbook, fromCell.getCellStyle(), toStyle);
                 toCell.setCellStyle(toStyle);
-                int cType = fromCell.getCellType();
-                toCell.setCellType(cType);
-                switch (cType) {
-                    case HSSFCell.CELL_TYPE_BOOLEAN:
+                CellType cellTypeEnum = fromCell.getCellTypeEnum();
+                toCell.setCellType(cellTypeEnum);
+                switch (cellTypeEnum) {
+                    case BOOLEAN://HSSFCell.CELL_TYPE_BOOLEAN
                         toCell.setCellValue(fromCell.getBooleanCellValue());
                         // System.out.println("--------TYPE_BOOLEAN:" +
                         // targetCell.getBooleanCellValue());
                         break;
-                    case HSSFCell.CELL_TYPE_ERROR:
-                        toCell.setCellErrorValue(fromCell.getErrorCellValue());
+                    case ERROR://HSSFCell.CELL_TYPE_ERRORF
+                        toCell.setCellErrorValue(FormulaError._NO_ERROR);//fromCell.getErrorCellValue()
                         // System.out.println("--------TYPE_ERROR:" +
                         // targetCell.getErrorCellValue());
                         break;
-                    case HSSFCell.CELL_TYPE_FORMULA:
+                    case FORMULA://HSSFCell.CELL_TYPE_FORMULA
                         toCell.setCellFormula(parseFormula(fromCell.getCellFormula()));
                         // System.out.println("--------TYPE_FORMULA:" +
                         // targetCell.getCellFormula());
                         break;
-                    case HSSFCell.CELL_TYPE_NUMERIC:
+                    case NUMERIC://HSSFCell.CELL_TYPE_NUMERIC
                         toCell.setCellValue(fromCell.getNumericCellValue());
                         // System.out.println("--------TYPE_NUMERIC:" +
                         // targetCell.getNumericCellValue());
                         break;
-                    case HSSFCell.CELL_TYPE_STRING:
+                    case STRING://HSSFCell.CELL_TYPE_STRING
                         toCell.setCellValue(fromCell.getRichStringCellValue());
                         // System.out.println("--------TYPE_STRING:" + i +
                         // targetCell.getRichStringCellValue());
+                        break;
+                    default:
                         break;
                 }
             }
@@ -206,7 +209,7 @@ public class POIExcelUtil {
                         // targetCell.getBooleanCellValue());
                         break;
                     case ERROR://HSSFCell.CELL_TYPE_ERRORF
-                        toCell.setCellErrorValue(fromCell.getErrorCellValue());
+                        toCell.setCellErrorValue(FormulaError._NO_ERROR);//fromCell.getErrorCellValue()
                         // System.out.println("--------TYPE_ERROR:" +
                         // targetCell.getErrorCellValue());
                         break;
@@ -224,6 +227,8 @@ public class POIExcelUtil {
                         toCell.setCellValue(fromCell.getRichStringCellValue());
                         // System.out.println("--------TYPE_STRING:" + i +
                         // targetCell.getRichStringCellValue());
+                        break;
+                    default:
                         break;
                 }
             }
@@ -292,33 +297,35 @@ public class POIExcelUtil {
                 }
                 HSSFCell toCell = toRow.createCell(j);
                 toCell.setCellStyle(fromCell.getCellStyle());
-                int cType = fromCell.getCellType();
-                toCell.setCellType(cType);
-                switch (cType) {
-                    case HSSFCell.CELL_TYPE_BOOLEAN:
+                CellType cellTypeEnum = fromCell.getCellTypeEnum();
+                toCell.setCellType(cellTypeEnum);
+                switch (cellTypeEnum) {
+                    case BOOLEAN://HSSFCell.CELL_TYPE_BOOLEAN
                         toCell.setCellValue(fromCell.getBooleanCellValue());
                         // System.out.println("--------TYPE_BOOLEAN:" +
                         // targetCell.getBooleanCellValue());
                         break;
-                    case HSSFCell.CELL_TYPE_ERROR:
-                        toCell.setCellErrorValue(fromCell.getErrorCellValue());
+                    case ERROR://HSSFCell.CELL_TYPE_ERRORF
+                        toCell.setCellErrorValue(FormulaError._NO_ERROR);//fromCell.getErrorCellValue()
                         // System.out.println("--------TYPE_ERROR:" +
                         // targetCell.getErrorCellValue());
                         break;
-                    case HSSFCell.CELL_TYPE_FORMULA:
+                    case FORMULA://HSSFCell.CELL_TYPE_FORMULA
                         toCell.setCellFormula(parseFormula(fromCell.getCellFormula()));
                         // System.out.println("--------TYPE_FORMULA:" +
                         // targetCell.getCellFormula());
                         break;
-                    case HSSFCell.CELL_TYPE_NUMERIC:
+                    case NUMERIC://HSSFCell.CELL_TYPE_NUMERIC
                         toCell.setCellValue(fromCell.getNumericCellValue());
                         // System.out.println("--------TYPE_NUMERIC:" +
                         // targetCell.getNumericCellValue());
                         break;
-                    case HSSFCell.CELL_TYPE_STRING:
+                    case STRING://HSSFCell.CELL_TYPE_STRING
                         toCell.setCellValue(fromCell.getRichStringCellValue());
                         // System.out.println("--------TYPE_STRING:" + i +
                         // targetCell.getRichStringCellValue());
+                        break;
+                    default:
                         break;
                 }
             }
@@ -410,7 +417,7 @@ public class POIExcelUtil {
             BufferedImage bufferImg = ImageIO.read(inputStream);
             ImageIO.write(bufferImg, "png", byteArrayOut);
 
-            if (cell != null && (cell.getCellType() == HSSFCell.CELL_TYPE_STRING || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK)) {
+            if (cell != null && (cell.getCellTypeEnum() == CellType.STRING || cell.getCellTypeEnum() == CellType.BLANK)) {
                 HSSFSheet sheet = cell.getSheet();
                 HSSFRow row = cell.getRow();
                 HSSFPatriarch patriarch = sheet.createDrawingPatriarch();
