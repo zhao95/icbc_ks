@@ -254,13 +254,13 @@ position: absolute;
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
 					<h4 class="modal-title">
-						禁考信息！！！
+					禁考信息	<span style="margin-left:5%;color:black" id = 'jkxxinfo'></span>
 					</h4>
 				</div>
-				<span style="margin-left:20%;color:red" id = 'jkxxinfo'></span>
 				
-				<div class="modal-footer" style="text-align:center;height:60px">
-					<button type="button" onclick = "closemotai()" class="btn btn-default" style="background:lightseagreen;color:white;height:40px;width:80px;" data-dismiss="modal">确定</button>
+				
+				<div class="modal-footer" style="text-align:center;height:50px">
+					<button type="button" onclick = "closemotai()" class="btn btn-default" style=";background:lightseagreen;color:white;height:30px;width:70px;" data-dismiss="modal">确定</button>
 				</div>
 				
 			</div><!-- /.modal-content -->

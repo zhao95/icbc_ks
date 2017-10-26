@@ -1,7 +1,7 @@
 var _viewer = this;
 $(".rhGrid").find("tr").unbind("dblclick");
 //每一行添加编辑和删除
-$("#TS_XMGL_BMSH_SHGZ_MX .rhGrid").find("tr").each(function(index, item) {
+$("#TS_XMGL_BM_JKGLGZ_MX .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0) {
 		var value1 = $('td[icode="MX_VALUE1"]',item).text();
 		var val = $('td[icode="MX_VALUE2"]',item).text();
@@ -20,14 +20,14 @@ $("#TS_XMGL_BMSH_SHGZ_MX .rhGrid").find("tr").each(function(index, item) {
 			$('td[icode="MX_NAME"]',item).text(newName);
 			if(obj2[0].type=="select"){
 				$(item).find("td[icode='BUTTONS']").append(
-						'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BMSH_SHGZ_MX-setting" actcode="setting" rowpk="'+dataId+'" rowjson="'+val+'" rowname="'+name+'" >'+
+						'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BM_JKGLGZ_MX-setting" actcode="setting" rowpk="'+dataId+'" rowjson="'+val+'" rowname="'+name+'" >'+
 						'<span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-change"></span></a>'+
-						'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BMSH_SHGZ_MX-copy" actcode="copy" rowpk="'+dataId+'" rowjson="'+val+'" rowname="'+name+'" >'+
+						'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BM_JKGLGZ_MX-copy" actcode="copy" rowpk="'+dataId+'" rowjson="'+val+'" rowname="'+name+'" >'+
 						'<span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-copy"></span></a>'
 				);
 			}else{
 				$(item).find("td[icode='BUTTONS']").append(
-						'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BMSH_SHGZ_MX-setting" actcode="setting" rowpk="'+dataId+'" rowjson="'+val+'" rowname="'+name+'" >'+
+						'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BM_JKGLGZ_MX-setting" actcode="setting" rowpk="'+dataId+'" rowjson="'+val+'" rowname="'+name+'" >'+
 						'<span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-change"></span></a>'
 				);
 			}
@@ -45,7 +45,7 @@ var glnames = "";
 //绑定的事件     
 function bindCard() {
 	//当行编辑事件
-	jQuery("td [id='TS_XMGL_BMSH_SHGZ_MX-setting']").unbind("click").bind("click", function() {
+	jQuery("td [id='TS_XMGL_BM_JKGLGZ_MX-setting']").unbind("click").bind("click", function() {
 		var dataId = jQuery(this).attr("rowpk");
 		var name = jQuery(this).attr("rowname");
 		var jsonStr = jQuery(this).attr("rowjson");
@@ -439,11 +439,11 @@ function bindCard() {
 		});
 
 	});
-	jQuery("td [id='TS_XMGL_BMSH_SHGZ_MX-copy']").unbind("click").bind("click", function() {
+	jQuery("td [id='TS_XMGL_BM_JKGLGZ_MX-copy']").unbind("click").bind("click", function() {
 		var dataId = jQuery(this).attr("rowpk");
 		var param = {};
 		param["dataId"]=dataId;
-		FireFly.doAct("TS_XMGL_BMSH_SHGZ_MX","CopyMx",param);
+		FireFly.doAct("TS_XMGL_BM_JKGLGZ_MX","CopyMx",param);
 		_viewer.refresh();
 	});
 	
@@ -477,7 +477,7 @@ function bindelete(){
 		//从规则库中将数据查出 
 		var param = {};
 		param["GZ_ID"]="N03";
-		var result = FireFly.doAct("TS_XMGL_BMSH_SHGZ_MX","getJkgz",param);
+		var result = FireFly.doAct("TS_XMGL_BM_JKGLGZ_MX","getJkgz",param);
 		var mx_name = result.gzbean;
 		$("#RULE-VAR-INPUT").val("");
 		$("#RULE-VAR-INPUT").val(mx_name);
