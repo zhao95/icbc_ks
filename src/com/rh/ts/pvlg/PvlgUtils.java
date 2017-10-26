@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.util.ServUtils;
@@ -22,6 +23,12 @@ public class PvlgUtils {
 	 */
 	@SuppressWarnings("rawtypes")
 	public static void setCtlgPvlgWhere(ParamBean param) {
+
+		boolean ismgr = com.rh.core.org.mgr.UserMgr.existInRoles(Context.getUserBean().getCode(), "RADMIN");
+
+		if (ismgr) {
+			return;
+		}
 
 		ParamBean paramBean = (ParamBean) param.getBean("paramBean");
 
@@ -97,6 +104,12 @@ public class PvlgUtils {
 
 	@SuppressWarnings("rawtypes")
 	public static void setOrgPvlgWhere(ParamBean param) {
+		
+		boolean ismgr = com.rh.core.org.mgr.UserMgr.existInRoles(Context.getUserBean().getCode(), "RADMIN");
+
+		if (ismgr) {
+			return;
+		}
 
 		ParamBean paramBean = (ParamBean) param.getBean("paramBean");
 
