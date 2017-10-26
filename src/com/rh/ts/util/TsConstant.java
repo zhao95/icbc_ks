@@ -105,6 +105,9 @@ public class TsConstant {
 	/** 考场管理 大时间段 场次安排*/
 	public static final String SERV_KCAP_CCSJ = "TS_XMGL_KCAP_DAPCC_CCSJ";
 	
+	/** 机构接口信息 */
+	public static final String SERV_BOM_ZDPSTRUINFO = "SY_BOM_ZDPSTRUINFO";
+	
 	
 	
 	
