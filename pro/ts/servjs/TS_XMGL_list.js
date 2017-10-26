@@ -169,7 +169,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 		alert("请选择添加目录的层级 !");
 		return false;
 	}
-	debugger;
+	
 	var temp = {"act":UIConst.ACT_CARD_ADD,
 			"sId":_viewer.servId,
 			"params":  {
@@ -183,5 +183,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 	};
 	console.log(temp);
 	var cardView = new rh.vi.cardView(temp);
+	
 	cardView.show();
+	
 });
