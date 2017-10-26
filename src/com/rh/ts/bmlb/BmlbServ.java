@@ -449,11 +449,11 @@ public class BmlbServ extends CommonServ {
 		String wheremk = "";
 		if (!MK.equals("")) {
 			wheremk = "AND KSLB_NAME=" + "'" + LB + "'" + " AND KSLB_XL=" + "'" + XL + "'" + " AND KSLB_MK_CODE=" + "'"
-					+ MK + "'" + " AND XM_ID=" + "'" + XM_ID + "' AND KSLB_TYPE<="+dengji+"order by to_number(KSLB_TYPE) desc";
+					+ MK + "'" + " AND XM_ID=" + "'" + XM_ID + "' AND KSLB_TYPE<="+dengji+" order by cast(KSLB_TYPE as SIGNED) desc";
 		}
 		if (MK.equals("")) {
 			wheremk = "AND KSLB_NAME=" + "'" + LB + "'" + " AND KSLB_XL=" + "'" + XL + "'" + " AND KSLB_MKE='无模块' AND KSLB_TYPE<="+dengji
-					+ " AND XM_ID=" + "'" + XM_ID + "' order by to_number(KSLB_TYPE) desc";
+					+ " AND XM_ID=" + "'" + XM_ID + "' order by cast(KSLB_TYPE as SIGNED) desc";
 		}
 		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", wheremk);
 		String KSLB_TYPE = "";
