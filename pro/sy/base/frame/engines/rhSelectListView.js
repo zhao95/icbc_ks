@@ -23,6 +23,7 @@ rh.vi.rhSelectListView = function(options) {
  * 渲染页面主方法
  */
 rh.vi.rhSelectListView.prototype.show = function(event,positionArray, dialogSizeArray) {
+	debugger;
 	var _self = this;
 	//工作流特殊处理frame
 	this._workflowControl();
@@ -144,7 +145,6 @@ rh.vi.rhSelectListView.prototype._layout = function(event,positionArray,dialogSi
 	//构造dialog
 	this.winDialog = jQuery("<div></div>").addClass("selectDialog").attr("id",this.dialogId).attr("title",this.opts.title);
 	this.winDialog.appendTo(jQuery("body"));
-	
 	// 获取dialog的位置
 	var bodyWid = jQuery("body").width();
 	var wid = bodyWid/2 + 100;
