@@ -6923,7 +6923,7 @@ rh.ui.ItemFile.prototype.setValue = function(val){
  * 填充数据
  */
 rh.ui.ItemFile.prototype.fillData = function(val) {
-	alert("filedata");
+	//alert("filedata");
 	if (val && val.length > 0) {
 		this.setValue(val);
 	}
@@ -6932,7 +6932,7 @@ rh.ui.ItemFile.prototype.fillData = function(val) {
  * 获取值
  */
 rh.ui.ItemFile.prototype.getValue = function(){
-	alert("getvalue");
+	//alert("getvalue");
 	return this._input.val();
 };
 /**
