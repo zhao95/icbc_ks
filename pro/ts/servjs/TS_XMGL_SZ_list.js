@@ -41,13 +41,13 @@ function bm(pk,xmglId){
 			dataId = data._DATA_[0].BM_ID;
 		}
 	});
-	var height = jQuery(window).height()-200;
+	var height = jQuery(window).height()-95;
 	var width = jQuery(window).width()-200;
 	var temp = {};
 	if(dataId == ""){
-		var temp = {"act":UIConst.ACT_CARD_ADD,"sId":"TS_XMGL_BMGL","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+		var temp = {"act":UIConst.ACT_CARD_ADD,"sId":"TS_XMGL_BMGL","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,40]};
 	}else{
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_BMGL","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_BMGL","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,40]};
 	    temp[UIConst.PK_KEY] = dataId;//修改时，必填
 	}
 	temp["XM_SZ_ID"] = pk;
@@ -63,9 +63,8 @@ function sh(pk,xmglId){
 			dataId = data._DATA_[0].SH_ID;
 		}
 	});
-	var height = jQuery(window).height()-200;
+	var height = jQuery(window).height()-80;
 	var width = jQuery(window).width()-200;
-
 	var temp = {};
 	if(dataId == ""){
 		var temp = {"act":UIConst.ACT_CARD_ADD,"sId":"TS_XMGL_BMSH","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
@@ -87,7 +86,6 @@ function  qj(pk,xmglId){
 			dataId = data._DATA_[0].QJ_ID;
 		}
 	}); 
-	
 	var height = jQuery(window).height()-200;
 	var width = jQuery(window).width()-200;
 	var temp = {};
@@ -127,8 +125,8 @@ function  jk(pk,xmglId){
 
 //试卷
 function sj(pk,xmglId){
-    var height = jQuery(window).height()-200;
-    var width = jQuery(window).width()-200;
+    var height = jQuery(window).height()-80;
+   var width = jQuery(window).width()-200;
     //创建弹出框
     var popPrompt = new rh.ui.popPrompt({title:'项目设置试卷'});
     popPrompt._layout(event, [100,100], [width,height]);
@@ -158,7 +156,7 @@ function sj(pk,xmglId){
 //}
 //场次测算
 function cs(pk){
-	var height = jQuery(window).height()-200;
+	var height = jQuery(window).height()-80;
 	var width = jQuery(window).width()-200;
 	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_CCCS","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
 	temp[UIConst.PK_KEY] = pk;//修改时，必填
@@ -167,7 +165,7 @@ function cs(pk){
 }
 //考场安排
 function ap(pk){
-	var height = jQuery(window).height()-200;
+	var height = jQuery(window).height()-80;
 	var width = jQuery(window).width()-200;
 	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_KCAP","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
 	temp[UIConst.PK_KEY] = pk;//修改时，必填

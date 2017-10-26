@@ -87,7 +87,7 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	
 	//2.用系统的查询选择组件 rh.vi.rhSelectListView()
 	var queryView = new rh.vi.rhSelectListView(options);
-	queryView.show(event);
+	queryView.show(event,[],[0,495]);
 	
 });
 
