@@ -83,6 +83,7 @@ function xminfoshow(){
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, false,true,function(data){
+			debugger;
     		yzgz=data;
     		//获取后台传过来的key
          	for(var i=0;i<checkeddata.length;i++){
@@ -133,10 +134,10 @@ function xminfoshow(){
 						}
 						shti=dataArray[j].TISHI;
 						if(dataArray[j].VLIDATE=="false"){
-							if(shti!="true"){
+							if(shti!="TRUE"){
 								shArray=false;
 							}else{
-								truetisi=="true"
+								truetisi="true"
 							}
 						}
 						$("#"+a).append('<div style="height:5px;"></div>');
