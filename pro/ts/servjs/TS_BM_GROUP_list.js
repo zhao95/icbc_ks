@@ -55,9 +55,9 @@ function bindCard() {
 	//当行编辑事件
 	jQuery("td [id='TS_BM_GROUP-upd']").unbind("click").bind("click", function() {
 		var pkCode = jQuery(this).attr("rowpk");
-		var height = jQuery(window).height()-200;
+		var height = jQuery(window).height()-115;
 		var width = jQuery(window).width()-200;
-		rowEdit(pkCode,_viewer,[width,height],[100,100]);
+		rowEdit(pkCode,_viewer,[width,height],[100,60]);
 	});
 }
 

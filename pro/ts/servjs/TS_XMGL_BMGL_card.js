@@ -10,6 +10,7 @@ if(_viewer.opts.act == "cardAdd"){
 		_viewer.getItem("XM_ID").setValue(XM_ID);
 	}
 }
+//时间校验
 _viewer.beforeSave = function() {
 	var bmTzStart=_viewer.getItem("BM_TZ_START").getValue();//通知开始时间
 	var bmTzEnd=_viewer.getItem("BM_TZ_END").getValue();//通知截至时间
