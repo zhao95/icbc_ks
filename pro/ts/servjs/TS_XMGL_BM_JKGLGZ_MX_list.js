@@ -28,7 +28,7 @@ $("#TS_XMGL_BM_JKGLGZ_MX .rhGrid").find("tr").each(function(index, item) {
 			}else{
 				$(item).find("td[icode='BUTTONS']").append(
 						'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BM_JKGLGZ_MX-setting" actcode="setting" rowpk="'+dataId+'" rowjson="'+val+'" rowname="'+name+'" >'+
-						'<span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-change"></span></a>'
+						'<span class="rh-icon-inner-notext">设置</span><span class="rh-icon-img btn-change"></span></a>'
 				);
 			}
 			// 为每个按钮绑定卡片

@@ -24,13 +24,13 @@ $("#TS_XMGL_BM_JKGZ .rhGrid").find("tr").each(function(index, item) {
 });
 
 function bindCard(){
-	var height = jQuery(window).height()-200;
+	var height = jQuery(window).height()-115;
 	var width = jQuery(window).width()-200;
 	//设置
 	jQuery("td [operCode='optSetBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		/*_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"ts_xmgl_bm_jkgz",false);*/
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"ts_xmgl_bm_jkgz","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"ts_xmgl_bm_jkgz","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,60]};
 		temp[UIConst.PK_KEY]=pkCode;//修改时，必填	    
 		 var cardView = new rh.vi.cardView(temp);
 		cardView.show(true);	
@@ -59,5 +59,5 @@ _viewer.getBtn("add").unbind("click").bind("click", function(event) {
 	};
 	//2.用系统的查询选择组件 rh.vi.rhSelectListView()
 	var queryView = new rh.vi.rhSelectListView(options);
-	queryView.show(event);
+	queryView.show(event,[],[0,495]);
 });
