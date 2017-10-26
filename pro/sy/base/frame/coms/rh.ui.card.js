@@ -6737,7 +6737,7 @@ rh.ui.Image.prototype.onchange = function() {
  * 字段级文件
  */
 rh.ui.ItemFile = function(options) {
-	alert("itemfile");
+	//alert("itemfile");
 	var _self = this;
 	this.type = "ItemFile";
 
@@ -6862,7 +6862,7 @@ rh.ui.ItemFile.prototype.validate = function() {
  * 渲染之后
  */
 rh.ui.ItemFile.prototype.afterRender = function() {
-	alert("itemrender");
+	//alert("itemrender");
 	this._file.initUpload();
 };
 /**

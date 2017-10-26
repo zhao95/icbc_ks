@@ -22,7 +22,7 @@ _viewer.beforeSave = function() {
      beginTime = beginTimes[1] + '-' + beginTimes[2] + '-' + beginTimes[0] + ' ' + beginTime.substring(10, 19);
      endTime = endTimes[1] + '-' + endTimes[2] + '-' + endTimes[0] + ' ' + endTime.substring(10, 19);
     var a = (Date.parse(endTime) - Date.parse(beginTime)) / 3600 / 1000;
-    if(a < 0||a == 0||isNaN(a)){
+    if(a < 0||a == 0){
  		$("#TS_JHGL-JH_CREATEDATE").addClass("blankError").addClass("errorbox");
  		$("#TS_JHGL-JH_ENDDATE").addClass("blankError").addClass("errorbox");
 		return false;
