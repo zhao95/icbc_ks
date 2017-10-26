@@ -8,6 +8,8 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.util.Constant;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -71,16 +73,18 @@ public class RzgjServ extends CommonServ {
             //证书管理
 //            List<Bean> infos = ServDao.finds("TS_ETI_CERT_INFO", "and CERT_ID='" + CERT_ID + "'");
             String state = "";
-            Integer VALID_TERM = data.getInt("VALID_TERM");
-            if (VALID_TERM == 1) {
-                if (QUALFY_STAT == 1) {
-                    state = "正常";
-                } else if (QUALFY_STAT == 2) {
-                    state = "获取中";
+            try {
+                Date now = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+                dateFormat.parse(BGN_DATE);
+                Date beginDate = dateFormat.parse(BGN_DATE);
+                Date endDate = dateFormat.parse(END_DATE);
+                if (now.after(beginDate) && now.before(endDate)) {
+                    state = "有效";
                 } else {
-                    state = "过期";
+                    state = "无效";
                 }
-            } else {
+            } catch (ParseException e) {
                 state = "无效";
             }
 
