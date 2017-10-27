@@ -44,8 +44,7 @@ function bindCard(){
  */
 _viewer.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
-};
-
+}
 if(_viewer.getParHandler()) {
 	var ksqzId = _viewer.getParHandler().getPKCode();
 	_viewer.getBtn("add").unbind("click").bind("click", function(event) {

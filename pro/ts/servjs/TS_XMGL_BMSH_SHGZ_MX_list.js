@@ -532,7 +532,7 @@ function bindselect(){
 			var configStr = "TS_XMGL_BM_KSLBK_XL,{'TARGET':'KSLBK_XL~KSLBK_XL_CODE','SOURCE':'KSLBK_XL~KSLBK_XL_CODE'," +
 			"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
 			var options = {
-					"config" :configStr,
+					"config" :configStr,   
 //					"params" : {"_TABLE_":"SY_ORG_USER"},
 					"parHandler":_viewer,
 					"formHandler":_viewer.form,
