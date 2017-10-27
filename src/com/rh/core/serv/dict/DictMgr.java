@@ -1628,15 +1628,21 @@ public class DictMgr {
 	 */
 	public static List<Bean> getTreeListByPvlg(Bean dict, List<Bean> treeList, String servId) {
 
+		if (Context.getUserBean() == null) {
+			throw new RuntimeException("获取用户信息失败");
+		}
+
+		boolean ismgr = com.rh.core.org.mgr.UserMgr.existInRoles(Context.getUserBean().getCode(), "RADMIN");
+		
+		if (ismgr) {
+			return treeList;
+		}
+
 		List<Bean> outList = new ArrayList<Bean>();
 
 		String pvlgField = dict.getStr("DICT_PVLG");
 
-		if (!Strings.isBlank(servId) && Context.getUserBean() != null && treeList != null) {
-
-			if (Context.getUserBean() == null) {
-				throw new RuntimeException("获取用户信息失败");
-			}
+		if (!Strings.isBlank(servId) && treeList != null) {
 
 			String userCode = Context.getUserBean().getCode();
 
@@ -1717,11 +1723,11 @@ public class DictMgr {
 					if (userCodePath.indexOf(treePath) >= 0) { // 用户当前机构及 上级机构
 
 						return true;
-					} else if(treePath.startsWith(userCodePath)){ // 用户下级机构
-						
+					} else if (treePath.startsWith(userCodePath)) { // 用户下级机构
+
 						return true;
 					} else {
-						
+
 					}
 				}
 			} catch (Exception e) {

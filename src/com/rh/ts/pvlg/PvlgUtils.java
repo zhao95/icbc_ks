@@ -6,10 +6,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.Constant;
+import com.rh.core.util.Strings;
 
 public class PvlgUtils {
 
@@ -21,6 +23,12 @@ public class PvlgUtils {
 	 */
 	@SuppressWarnings("rawtypes")
 	public static void setCtlgPvlgWhere(ParamBean param) {
+
+		boolean ismgr = com.rh.core.org.mgr.UserMgr.existInRoles(Context.getUserBean().getCode(), "RADMIN");
+
+		if (ismgr) {
+			return;
+		}
 
 		ParamBean paramBean = (ParamBean) param.getBean("paramBean");
 
@@ -68,7 +76,7 @@ public class PvlgUtils {
 							e.printStackTrace();
 						}
 					}
-					if (result != null) {
+					if (!Strings.isBlank(result)) {
 						// result 排序
 						String[] roles = result.split(",");
 
@@ -96,6 +104,12 @@ public class PvlgUtils {
 
 	@SuppressWarnings("rawtypes")
 	public static void setOrgPvlgWhere(ParamBean param) {
+		
+		boolean ismgr = com.rh.core.org.mgr.UserMgr.existInRoles(Context.getUserBean().getCode(), "RADMIN");
+
+		if (ismgr) {
+			return;
+		}
 
 		ParamBean paramBean = (ParamBean) param.getBean("paramBean");
 
@@ -138,7 +152,7 @@ public class PvlgUtils {
 						e.printStackTrace();
 					}
 				}
-				if (result != null) {
+				if (!Strings.isBlank(result)) {
 					// result 排序
 					String[] roles = result.split(",");
 

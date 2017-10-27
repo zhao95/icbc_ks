@@ -10,6 +10,7 @@ if(_viewer.opts.act == "cardAdd"){
 		_viewer.getItem("XM_ID").setValue(XM_ID);
 	}
 }
+//时间校验
 _viewer.beforeSave = function() {
 	var bmTzStart=_viewer.getItem("BM_TZ_START").getValue();//通知开始时间
 	var bmTzEnd=_viewer.getItem("BM_TZ_END").getValue();//通知截至时间
@@ -62,93 +63,6 @@ $('#'+tzEnd._opts.id+"_div").css('min-height','32px');
 $('#'+bmStart._opts.id+"_div").css('min-height','32px');
 $('#'+bmEnd._opts.id+"_div").css('min-height','32px');
 
-//针对通知开始时间的校验与互斥
-/**_viewer.getItem("BM_TZ_START").obj.unbind("click").bind("click", function() {
-	//获取四个时间段的是
-	var bmTzStart=_viewer.getItem("BM_TZ_START").getValue();
-	var bmTzEnd=_viewer.getItem("BM_TZ_END").getValue();
-	var bmStart=_viewer.getItem("BM_START").getValue();
-	var bmEnd=_viewer.getItem("BM_END").getValue();
-	var tzStartTime="";
-	if(bmStart !=""){
-		tzStartTime="BM_START";
-	}else if(bmEnd !=""){
-		tzStartTime="BM_END";
-	}else if(bmTzEnd !=""){
-		tzStartTime="BM_TZ_END";
-	}
-    WdatePicker({
-	  dateFmt: 'yyyy-MM-dd HH:mm:ss',
-	  maxDate : "#F{$dp.$D('" + _viewer.servId +"-"+tzStartTime+"')}"
-	});
-});
-//针对通知结束时间的校验与互斥
-_viewer.getItem("BM_TZ_END").obj.unbind("click").bind("click", function() {
-	//获取四个时间段的是
-	var bmTzStart=_viewer.getItem("BM_TZ_START").getValue();
-	var bmTzEnd=_viewer.getItem("BM_TZ_END").getValue();
-	var bmStart=_viewer.getItem("BM_START").getValue();
-	var bmEnd=_viewer.getItem("BM_END").getValue();
-	var tzEndTime="";
-	if(bmEnd !=""){
-		tzEndTime="BM_END";
-	}else if(bmStart  !=""){
-		tzEndTime="BM_START";
-	}else if(bmTzStart !=""){
-		tzEndTime="BM_TZ_START";
-	}
-	 WdatePicker({
-		dateFmt: 'yyyy-MM-dd HH:mm:ss',
-	    minDate : "#F{$dp.$D('" + _viewer.servId + "-"+tzEndTime+"')}"
-	 });
-});
-
-//针对报名开始时间的校验与互斥
-_viewer.getItem("BM_START").obj.unbind("click").bind("click",function(){
-	//获取四个时间段的是
-	var bmTzStart=_viewer.getItem("BM_TZ_START").getValue();
-	var bmTzEnd=_viewer.getItem("BM_TZ_END").getValue();
-	var bmStart=_viewer.getItem("BM_START").getValue();
-	var bmEnd=_viewer.getItem("BM_END").getValue();
-	var bmMixTime="";
-	var bmMaxTime="";
-	if(bmTzStart !=""){
-		bmMixTime="BM_TZ_START";
-	}
-	if(bmEnd !=""){
-		bmMaxTime="BM_END";
-	}else if(bmTzEnd !=""){
-		bmMaxTime="BM_TZ_END";
-	}
-	 WdatePicker({
-	    dateFmt: 'yyyy-MM-dd HH:mm:ss',
-        minDate : "#F{$dp.$D('" + _viewer.servId + "-"+bmMixTime+"')}",
-        maxDate : "#F{$dp.$D('" + _viewer.servId + "-"+bmMaxTime+"')}"
-    });
-});
-//针对报名结束时间的校验与互斥
-_viewer.getItem("BM_END").obj.unbind("click").bind("click",function(){
-	//获取四个时间段的是
-	var bmTzStart=_viewer.getItem("BM_TZ_START").getValue();
-	var bmTzEnd=_viewer.getItem("BM_TZ_END").getValue();
-	var bmStart=_viewer.getItem("BM_START").getValue();
-	var bmEnd=_viewer.getItem("BM_END").getValue();
-	var bmMixTime="";
-	var bmMaxTime="";
-	if(bmStart !=""){
-		bmMixTime="BM_START";
-	}else if(bmTzStart !=""){
-		bmMixTime="BM_TZ_START";
-	}
-	if(bmTzEnd !=""){
-		bmMaxTime="BM_TZ_END";
-	}
-	 WdatePicker({
-	    dateFmt: 'yyyy-MM-dd HH:mm:ss',
-        minDate : "#F{$dp.$D('" + _viewer.servId + "-"+bmMixTime+"')}",
-        maxDate : "#F{$dp.$D('" + _viewer.servId + "-"+bmMaxTime+"')}"
-    });
-});*/
 //返回按钮
 //_viewer.getBtn("goback").unbind("click").bind("click", function() {
 //	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
