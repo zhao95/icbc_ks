@@ -269,17 +269,18 @@ function getTrIcodeValues(pk) {
 }
 
 //表头th修改
-const dybm = $('th[icode="' + icodes[0] + '__NAME"]');
+const dybm = $('th[icode="' + icodes[0] + '"]');//__NAME
 dybm.html('对应报名');
 dybm.unbind('click');//去除对应报名(th)点击排序
 var deleteThNum = 0;//删除的th数量
 for (var i = 0; i < icodes.length; i++) {
     if (i !== 0) {
         var obj = icodes[i];
-        _viewer.grid._tHead.find('th[icode="' + obj + '__NAME"]').remove();
+        _viewer.grid._tHead.find('th[icode="' + obj + '"]').remove();//__NAME
         deleteThNum++;
     }
 }
+debugger;
 //修改无记录tr的colspan值
 var rhGridTBody = _viewer.grid._table.find('.rhGrid-tbody');
 var rhGridShowNO = rhGridTBody.find('.rhGrid-showNO');

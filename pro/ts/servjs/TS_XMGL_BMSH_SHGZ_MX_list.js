@@ -1,5 +1,6 @@
 var _viewer = this;
 $(".rhGrid").find("tr").unbind("dblclick");
+$("th[icode='BUTTONS']").css('width','15%');
 //每一行添加编辑和删除
 $("#TS_XMGL_BMSH_SHGZ_MX .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0) {
@@ -21,14 +22,14 @@ $("#TS_XMGL_BMSH_SHGZ_MX .rhGrid").find("tr").each(function(index, item) {
 			if(obj2[0].type=="select"){
 				$(item).find("td[icode='BUTTONS']").append(
 						'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BMSH_SHGZ_MX-setting" actcode="setting" rowpk="'+dataId+'" rowjson="'+val+'" rowname="'+name+'" >'+
-						'<span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-change"></span></a>'+
+						'<span class="rh-icon-inner-notext">设置</span><span class="rh-icon-img btn-change"></span></a>'+
 						'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BMSH_SHGZ_MX-copy" actcode="copy" rowpk="'+dataId+'" rowjson="'+val+'" rowname="'+name+'" >'+
-						'<span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-copy"></span></a>'
+						'<span class="rh-icon-inner-notext">复制</span><span class="rh-icon-img btn-copy"></span></a>'
 				);
 			}else{
 				$(item).find("td[icode='BUTTONS']").append(
 						'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BMSH_SHGZ_MX-setting" actcode="setting" rowpk="'+dataId+'" rowjson="'+val+'" rowname="'+name+'" >'+
-						'<span class="rh-icon-inner-notext"></span><span class="rh-icon-img btn-change"></span></a>'
+						'<span class="rh-icon-inner-notext">设置</span><span class="rh-icon-img btn-change"></span></a>'
 				);
 			}
 			// 为每个按钮绑定卡片
