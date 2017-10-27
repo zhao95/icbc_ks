@@ -64,6 +64,6 @@ if(_viewer.getParHandler()) {
 		};
 		//2.用系统的查询选择组件 rh.vi.rhSelectListView()
 		var queryView = new rh.vi.rhSelectListView(options);
-		queryView.show(event);
+		queryView.show(event,[],[0,495]);
 	});
 }
