@@ -63,13 +63,13 @@ function sh(pk,xmglId){
 			dataId = data._DATA_[0].SH_ID;
 		}
 	});
-	var height = jQuery(window).height()-80;
+	var height = jQuery(window).height()-95;
 	var width = jQuery(window).width()-200;
 	var temp = {};
 	if(dataId == ""){
-		var temp = {"act":UIConst.ACT_CARD_ADD,"sId":"TS_XMGL_BMSH","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+		var temp = {"act":UIConst.ACT_CARD_ADD,"sId":"TS_XMGL_BMSH","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,40]};
 	}else{
-		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_BMSH","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_BMSH","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,40]};
 	    temp[UIConst.PK_KEY] = dataId;//修改时，必填
 	}
 	temp["XM_SZ_ID"] = pk;
@@ -86,7 +86,7 @@ function  qj(pk,xmglId){
 			dataId = data._DATA_[0].QJ_ID;
 		}
 	}); 
-	var height = jQuery(window).height()-200;
+	var height = jQuery(window).height()-100;
 	var width = jQuery(window).width()-200;
 	var temp = {};
 	if(dataId == ""){

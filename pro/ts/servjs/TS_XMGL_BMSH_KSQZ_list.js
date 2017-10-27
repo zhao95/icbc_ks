@@ -12,7 +12,7 @@ $("#TS_XMGL_BMSH_KSQZ .rhGrid").find("tr").each(function(index,item) {
 	}
 });
 function bindCard() {
-	var height = jQuery(window).height()-200;
+	var height = jQuery(window).height()-120;
 	var width = jQuery(window).width()-200;
 	//设置
 	jQuery("#TS_XMGL_BMSH_KSQZ td [operCode='optOption']").unbind("click").bind("click", function(){
