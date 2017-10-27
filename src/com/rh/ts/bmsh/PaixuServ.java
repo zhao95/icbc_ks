@@ -1,11 +1,7 @@
 package com.rh.ts.bmsh;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.List;
 
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.CommonServ;
@@ -93,8 +89,6 @@ public class PaixuServ extends CommonServ {
 				+ "' order by cast(PX_XUHAO as SIGNED)";
 		List<Bean> list = ServDao.finds("TS_BMSH_PX", where);
 		Bean outBean = new Bean();
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter w = new StringWriter();
 		if (list.size() == 0) {
 			String where1 = "AND USER_CODE is null order by cast(PX_XUHAO as SIGNED)";
 			// 默认没有保存过 的排序

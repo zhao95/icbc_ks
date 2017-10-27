@@ -145,6 +145,7 @@ public class StayServ extends CommonServ {
 	 * 
 	 * @param paramBean
 	 */
+	@SuppressWarnings("static-access")
 	public Bean update(Bean paramBean) {
 		String nodeid = paramBean.getStr("nodeid");
 
@@ -343,7 +344,6 @@ public class StayServ extends CommonServ {
 					if(flag.equals("1")){
 						List<Bean> newlist = ServDao.finds("TS_BMSH_PASS", where1);
 						String shothers ="";
-						String strarr = "";
 						if(newlist!=null&&newlist.size()!=0){
 						 shothers = newlist.get(0).getStr("SH_OTHER")+","+shenuser;
 						}
@@ -694,7 +694,6 @@ public class StayServ extends CommonServ {
 		// 排序用的 parr存读取th
 		parr.setQuerySearchWhere(searchWhere);
 		LinkedHashMap<String, Bean> cols = new LinkedHashMap<String, Bean>();
-		String s = "";
 		List<Bean> pxdatalist1 = ServDao.finds("TS_BMSH_PX", searchWhere);
 		if (pxdatalist1.size() == 0) {
 			String where1 = "AND USER_CODE is null ";
@@ -702,7 +701,6 @@ public class StayServ extends CommonServ {
 		}
 		// 查询出所有的 待审核记录
 		OutBean outBean = query(paramBean);
-		LinkedHashMap<String, Bean> cols1 = outBean.getCols();
 		for (Bean bean : dataList) {
 			String work_num = bean.getStr("BM_CODE");
 			Bean userBean = getUserInfo1(work_num);
@@ -848,13 +846,9 @@ public class StayServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getBelongToList(Bean paramBean) {
-		String xianei = paramBean.getStr("xianei");
 		//当前审核人
 		UserBean user = Context.getUserBean();
-		String user_code = user.getStr("USER_CODE");
 		String dept_code = user.getStr("DEPT_CODE");
-		String belongdeptcode = "";
-		String xmid = paramBean.getStr("xmid");
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		/*if("belong".equals(xianei)){

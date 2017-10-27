@@ -183,6 +183,7 @@ public class PassServ extends CommonServ {
 	 * 
 	 * @param paramBean
 	 */
+	@SuppressWarnings("static-access")
 	public Bean update(Bean paramBean) {
 		int level = 0;
 		String nodeid = paramBean.getStr("nodeid");
@@ -437,7 +438,6 @@ public class PassServ extends CommonServ {
 		// 排序用的 parr存读取th
 		parr.setQuerySearchWhere(searchWhere);
 		LinkedHashMap<String, Bean> cols = new LinkedHashMap<String, Bean>();
-		String s = "";
 		List<Bean> pxdatalist1 = ServDao.finds("TS_BMSH_PX", searchWhere);
 		if (pxdatalist1.size() == 0) {
 			String where1 = "AND USER_CODE is null ";
@@ -644,16 +644,12 @@ public class PassServ extends CommonServ {
 	/*	String xianei = paramBean.getStr("xianei");*/
 		//当前审核人
 		UserBean user = Context.getUserBean();
-		String user_code = user.getStr("USER_CODE");
-		String belongdeptcode = "";
-		String xmid = paramBean.getStr("xmid");
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		String dept_code = user.getStr("DEPT_CODE");
 		
 		/*if("belong".equals(xianei)){*/
 		//根据项目id找到流程下的所有节点
-		String belongwhere = "AND XM_ID='"+xmid+"'";
 		/*List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
 		String deptcodes = "";*/
 		/*if(finds.size()!=0){

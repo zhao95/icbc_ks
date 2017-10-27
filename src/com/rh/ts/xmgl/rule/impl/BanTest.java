@@ -1,16 +1,8 @@
 package com.rh.ts.xmgl.rule.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
-import com.rh.core.serv.ServDao;
-import com.rh.core.serv.bean.SqlBean;
-import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.rule.IRule;
 
 /**

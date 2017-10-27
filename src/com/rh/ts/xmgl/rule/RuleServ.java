@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rh.core.base.Bean;
 import com.rh.core.base.TipException;
 import com.rh.core.serv.CommonServ;

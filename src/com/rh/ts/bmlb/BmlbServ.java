@@ -6,12 +6,8 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 import jxl.Cell;
 import jxl.Sheet;
@@ -26,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
-import com.rh.core.base.BeanUtils;
 import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
 import com.rh.core.comm.FileMgr;
@@ -848,14 +843,9 @@ public class BmlbServ extends CommonServ {
 		String s1 = "";
 		String s2 = "";
 		String s3 = "";
-		List<Bean> list1 = new ArrayList<Bean>();
-		List<Bean> list2 = new ArrayList<Bean>();
-		List<Bean> list3 = new ArrayList<Bean>();
 		for (Bean bean : list) {
 			// 序列为空 为第一层级
 			String s = bean.getStr("KSLBK_XL");
-			String ss = bean.getStr("KSLBK_MK");
-			String sss = bean.getId();
 			if (s == ""&&!bean.getStr("KSLBK_CODE").equals("023001")) {
 				s1 += "{text: '" + bean.getStr("KSLBK_NAME") + "', value: '" + bean.getStr("KSLBK_CODE")
 						+ "', extendAttr: { id: " + bean.getId() + " } }, ";
@@ -980,7 +970,6 @@ public class BmlbServ extends CommonServ {
 					for (Cell cell : cells) {
 						int zz = newlist.size();
 						for (Bean columnbean : listcolumn) {
-							String s = cell.getContents();
 							if (cell.getContents().equals(columnbean.getStr("ITEM_NAME"))) {
 								newlist.add(columnbean.getStr("ITEM_CODE"));
 							}
@@ -1086,12 +1075,12 @@ public class BmlbServ extends CommonServ {
 						String mk = bean.getStr("KSLB_MK");
 						String mkcode = bean.getStr("KSLB_MK_CODE");
 						if (mkBean.containsKey(mk)) {
-							List list = mkBean.getList(mk);
+							List<String> list = mkBean.getList(mk);
 							list.add(type);
 							mkBean.set(mk,list);
 							mkcodeBean.set(mk,mkcode);
 						} else {
-							List list = new ArrayList();
+							List<String> list = new ArrayList<String>();
 							list.add(type);
 							mkBean.set(mk,list);
 							mkcodeBean.set(mk,mkcode);

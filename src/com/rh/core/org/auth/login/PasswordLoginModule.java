@@ -67,7 +67,6 @@ public class PasswordLoginModule extends AbstractLoginModule {
         if(!"".equals(s)){
         	    try {
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Date ss = sdf.parse(s);
 					long timeInMillis = sdf.parse(s).getTime();
 					Date datenow= new Date();
 					long between = datenow.getTime()-timeInMillis;

@@ -188,6 +188,7 @@ public class NoPassServ extends CommonServ {
 	 * 
 	 * @param paramBean
 	 */
+	@SuppressWarnings("static-access")
 	public OutBean update(Bean paramBean) {
 		String nodeid = paramBean.getStr("nodeid");
 		String levels = paramBean.getStr("level");
@@ -668,10 +669,8 @@ public class NoPassServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getBelongToList(Bean paramBean) {
-		String xianei = paramBean.getStr("xianei");
 		//当前审核人
 		UserBean user = Context.getUserBean();
-		String user_code = user.getStr("USER_CODE");
 		String dept_code = user.getStr("DEPT_CODE");
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
