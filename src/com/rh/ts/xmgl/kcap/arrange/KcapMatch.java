@@ -27,7 +27,7 @@ public class KcapMatch {
 	 *            资源
 	 * @return Bean 报名考生信息
 	 */
-	public static Bean matchUser(Bean freeZw, Bean ksBean, KcapResource res) {
+	public static Bean matchUser(Bean freeZw, Bean ksBean, KcapResource res, boolean isConstrain) {
 
 		Bean filtBean = new Bean(ksBean);
 
@@ -36,6 +36,13 @@ public class KcapMatch {
 		rtnLoop:
 
 		for (Object key : rule.keySet()) {
+			
+			Bean constrainFiltBean = new Bean();
+
+			if (isConstrain) {
+
+				constrainFiltBean = (Bean) filtBean.clone();
+			}
 
 			switch (key.toString()) {
 
@@ -73,12 +80,6 @@ public class KcapMatch {
 				filtR005(freeZw, res.getBusyZwBean(), filtBean);
 
 				break;
-			case "R006":
-
-				// 考生人数少于机器数一半时，考生左右间隔不低于1个座位，前后不低于1个
-				filtR006(freeZw, res.getBusyZwBean(), filtBean);
-
-				break;
 			case "R007":
 
 				// 领导职务考生座位靠前安排
@@ -99,6 +100,11 @@ public class KcapMatch {
 				break;
 			default:
 				break;
+			}
+
+			if (isConstrain && (filtBean.isEmpty() || filtBean == null)) {
+
+				filtBean = constrainFiltBean;
 			}
 		}
 
@@ -134,7 +140,7 @@ public class KcapMatch {
 			return list.get(index);
 		}
 
-		return null;
+		return new Bean();
 	}
 
 	/**
@@ -490,11 +496,11 @@ public class KcapMatch {
 
 			int jkFlag = busyZwBean.getInt("U_TYPE"); // 1 借考
 
-			Bean temp = (Bean) filtBean.clone();
+			Bean cloneFiltBean = (Bean) filtBean.clone();
 
-			for (Object time : temp.keySet()) { // 遍历考试时长
+			for (Object time : cloneFiltBean.keySet()) { // 遍历考试时长
 
-				Bean timeBean = temp.getBean(time);
+				Bean timeBean = cloneFiltBean.getBean(time);
 
 				for (Object user : timeBean.keySet()) { // 遍历时长下考生bean
 
@@ -539,16 +545,16 @@ public class KcapMatch {
 	}
 
 	/**
-	 * 考生人数少于机器数一半时，考生左右间隔不低于1个座位，前后不低于1个
+	 * 考生人数少于机器数一半时，考生左右间隔不低于2个座位，前后不低于1个
 	 * 
 	 * @param freeZw
 	 * @param res
 	 * @param filtBean
 	 */
-	private static void filtR006(Bean freeZw, Bean busyZwBean, Bean filtBean) {
+	public static Bean filtR006(Bean freeZw, Bean busyZwBean, Bean filtBean) {
 
 		if (filtBean == null || filtBean.isEmpty()) {
-			return;
+			return filtBean;
 		}
 
 		try {
@@ -586,6 +592,8 @@ public class KcapMatch {
 
 			filtBean = null;
 		}
+		
+		return filtBean;
 	}
 
 	/**
@@ -656,7 +664,7 @@ public class KcapMatch {
 			return;
 		}
 
-		String kcLv = freeZw.getStr("KC_LV");
+		String kcLv = freeZw.getStr("KC_LV"); //考场层级 一级考场 二级考场
 
 		String jsonStr = rule.getStr("MX_VALUE2");
 

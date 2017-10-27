@@ -7,22 +7,117 @@ import com.rh.core.base.Bean;
 import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.util.OrgConstant;
 import com.rh.ts.xmgl.kcap.KcapResource;
+import com.rh.ts.xmgl.kcap.KcapRuleEnum;
 
 public class ArrangeSeat {
 
 	public void doArrange(Bean param, KcapResource res) {
 
-		int priority = res.getKsPriority(); // 0 考场优先 1 场次优先
+		int priority = res.getKsPriority(); // 0 最少考场 1 最少场次
 
-		if (priority == 1) { // 场次优先
+		int ksConstrain = res.getKsConstrain(); // 不符合规则考试 是否强制安排
 
-			Bean freeBean = new Bean();
+		if (priority == 1) { // 最少场次
 
-			freeBean.putAll(res.getFreeCcZwBean());
+			arrangeCc(res, false);
 
-			for (Object cc : freeBean.keySet()) { // 遍历场次号
+		} else { // 最少考场
 
-				Bean freeCc = freeBean.getBean(cc);
+			arrangeKc(res, false);
+		}
+
+		if (ksConstrain == 1) { // 强制安排
+
+			if (priority == 1) { // 最少场次
+
+				arrangeCc(res, true);
+
+			} else { // 最少考场
+
+				arrangeKc(res, true);
+			}
+
+		}
+
+		// 考生人数少于机器数一半时，考生左右间隔不低于1个座位，前后不低于1个
+		if (res.getRuleBean().containsKey(KcapRuleEnum.R006)) {
+
+			arrangeR006(res);
+		}
+	}
+
+	/**
+	 * 安排座位 最少场次-场次优先
+	 * 
+	 * @param res
+	 */
+	private void arrangeCc(KcapResource res, boolean isConstrain) {
+
+		Bean freeBean = new Bean();
+
+		freeBean.putAll(res.getFreeCcZwBean());
+
+		for (Object cc : freeBean.keySet()) { // 遍历场次号
+
+			Bean freeCc = freeBean.getBean(cc);
+
+			for (Object day : freeCc.keySet()) { // 遍历场次日期
+
+				Bean freeDayCc = freeCc.getBean(day);
+
+				String date = day.toString();
+
+				int sjCC = freeDayCc.getInt("SJ_CC"); // 场次号
+
+				for (Object kc : freeDayCc.keySet()) { // 遍历考场
+
+					Bean freeKc = freeDayCc.getBean(kc);
+
+					Bean ks = getGljgKs(kc.toString(), res);
+
+					for (Object zwKey : freeKc.keySet()) { // 遍历座位
+
+						Bean freeZw = freeKc.getBean(zwKey); // 座位信息
+
+						freeZw.set("KC_ID", kc.toString());
+
+						freeZw.set("CC_ID", cc.toString());
+
+						freeZw.set("SJ_CC", sjCC); // 场次 1,2,3...
+
+						freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
+
+						freeZw.set("GLJG", getGljg(kc.toString(), res));// 关联机构
+
+						Bean filtKs = KcapMatch.matchUser(freeZw, ks, res, isConstrain);// 符合座位安排规则的考生
+
+						resetRes(freeZw, filtKs, res);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 安排座位 最少考场-考场优先
+	 * 
+	 * @param res
+	 */
+	private void arrangeKc(KcapResource res, boolean isConstrain) {
+
+		Bean freeBean = new Bean();
+
+		freeBean.putAll(res.getFreeKcZwBean());
+
+		for (Object kc : freeBean.keySet()) { // 遍历考场
+
+			Bean freeKc = freeBean.getBean(kc);
+
+			Bean ks = getGljgKs(kc.toString(), res);
+
+			for (Object cc : freeKc.keySet()) { // 遍历场次号
+
+				Bean freeCc = freeKc.getBean(cc);
 
 				for (Object day : freeCc.keySet()) { // 遍历场次日期
 
@@ -32,80 +127,131 @@ public class ArrangeSeat {
 
 					int sjCC = freeDayCc.getInt("SJ_CC"); // 场次号
 
-					for (Object kc : freeDayCc.keySet()) { // 遍历考场
+					for (Object zw : freeDayCc.keySet()) { // 遍历座位
 
-						Bean freeKc = freeDayCc.getBean(kc);
-						
-						Bean ks = getGljgKs(kc.toString(), res);
+						Bean freeZw = freeDayCc.getBean(zw); // 座位信息
 
-						for (Object zwKey : freeKc.keySet()) { // 遍历座位
+						freeZw.set("KC_ID", kc.toString());
 
-							Bean freeZw = freeKc.getBean(zwKey); // 座位信息
+						freeZw.set("CC_ID", cc.toString());
 
-							freeZw.set("KC_ID", kc.toString());
+						freeZw.set("SJ_CC", sjCC); // 场次 1,2,3...
 
-							freeZw.set("CC_ID", cc.toString());
+						freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
-							freeZw.set("SJ_CC", sjCC); // 场次 1,2,3...
+						freeZw.set("GLJG", getGljg(kc.toString(), res));// 关联机构
 
-							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
+						Bean filtKs = KcapMatch.matchUser(freeZw, ks, res, isConstrain);// 符合座位规则的考生
 
-							freeZw.set("GLJG", getGljg(kc.toString(), res));// 关联机构
-
-							Bean filtKs = KcapMatch.matchUser(freeZw,ks, res);// 符合座位安排规则的考生
-
-							resetRes(freeZw, filtKs, res);
-						}
-					}
-				}
-			}
-
-		} else { // 考场优先
-
-			Bean freeBean = new Bean();
-
-			freeBean.putAll(res.getFreeKcZwBean());
-
-			for (Object kc : freeBean.keySet()) { // 遍历考场
-
-				Bean freeKc = freeBean.getBean(kc);
-				
-				Bean ks = getGljgKs(kc.toString(), res);
-
-				for (Object cc : freeKc.keySet()) { // 遍历场次号
-
-					Bean freeCc = freeKc.getBean(cc);
-
-					for (Object day : freeCc.keySet()) { // 遍历场次日期
-
-						Bean freeDayCc = freeCc.getBean(day);
-
-						String date = day.toString();
-
-						int sjCC = freeDayCc.getInt("SJ_CC"); // 场次号
-
-						for (Object zw : freeDayCc.keySet()) { // 遍历座位
-
-							Bean freeZw = freeDayCc.getBean(zw); // 座位信息
-
-							freeZw.set("KC_ID", kc.toString());
-
-							freeZw.set("CC_ID", cc.toString());
-
-							freeZw.set("SJ_CC", sjCC); // 场次 1,2,3...
-
-							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
-
-							freeZw.set("GLJG", getGljg(kc.toString(), res));// 关联机构
-
-							Bean filtKs = KcapMatch.matchUser(freeZw, ks, res);// 符合座位规则的考生
-
-							resetRes(freeZw, filtKs, res);
-						}
+						resetRes(freeZw, filtKs, res);
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * 考生人数少于机器数一半时重新安排座位
+	 * @param res
+	 */
+	private void arrangeR006(KcapResource res) {
+
+		int priority = res.getKsPriority();
+
+		Bean resetKc = new Bean(); // 待重新安排的考场
+
+		Bean resetKs = new Bean(); // 待重新安排的考生
+
+		Bean resetBusyZw = new Bean();
+
+		int busyZwSize = res.getBusyZwBean().size();
+
+		Bean busyZwClone = (Bean) res.getBusyZwBean().clone();
+
+		for (Object key : busyZwClone.keySet()) {
+
+			Bean busyZw = busyZwClone.getBean(key);
+
+			// key 考场Id^场次^日期^座位号
+			String[] keyArray = key.toString().split("^");
+
+			String kcId = keyArray[0];
+
+			String cc = keyArray[1];
+
+			String date = keyArray[2];
+
+			String zwh = keyArray[3];
+
+			int freeZwSize = 0;
+
+			if (priority == 1) { // 最少场次
+
+				freeZwSize = res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId).size();
+
+				if (busyZwSize < freeZwSize) { // 安排考生人数少于机器数一半
+
+					resetBusyZw.set(key, busyZw);
+
+					// 将当前座位从 已安排资源移除
+					res.getBusyZwBean().remove(key);
+
+					// 将当前座位添加 至 空闲座位资源
+					res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId).set(zwh, busyZw);
+
+					resetKc.set(kcId, res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId));
+
+					Bean temp = new Bean();
+					temp.set(busyZw.getStr("U_CODE"), busyZw);
+
+					if (resetKs.containsKey(date)) {
+
+						resetKs.set(date, mergeBean(temp, resetKs.getBean(date)));
+
+					} else {
+						resetKs.set(date, temp);
+					}
+				}
+
+			} else { // 最少考场
+
+				freeZwSize = res.getFreeCcZwBean().getBean(kcId).getBean(cc).getBean(date).size();
+
+				if (busyZwSize < freeZwSize) { // 安排考生人数少于机器数一半
+
+					resetBusyZw.set(key, busyZw);
+
+					// 将当前座位从 已安排资源移除
+					res.getBusyZwBean().remove(key);
+
+					// 将当前座位添加 至 空闲座位资源
+					res.getFreeCcZwBean().getBean(kcId).getBean(cc).getBean(date).set(zwh, busyZw);
+
+					resetKc.set(kcId, res.getFreeCcZwBean().getBean(kcId).getBean(cc).getBean(date));
+
+					Bean temp = new Bean();
+					temp.set(busyZw.getStr("U_CODE"), busyZw);
+
+					if (resetKs.containsKey(date)) {
+
+						resetKs.set(date, mergeBean(temp, resetKs.getBean(date)));
+
+					} else {
+						resetKs.set(date, temp);
+					}
+				}
+			}
+		}
+
+		for (Object key : resetKc.keySet()) {
+
+			Bean resetZw = resetKc.getBean(key);
+
+			KcapMatch.filtR006(resetZw, resetBusyZw, resetKs);
+
+			resetRes(resetZw, resetKs, res);
+		}
+
 	}
 
 	/**
@@ -119,7 +265,7 @@ public class ArrangeSeat {
 
 		if (filtKs != null && !filtKs.isEmpty()) {
 
-			int priority = res.getKsPriority(); // 0 考场优先 1 场次优先
+			int priority = res.getKsPriority(); // 0 最少考场优先 1 最少场次优先
 
 			String shId = filtKs.getStr("SH_ID"); // 审核id
 
@@ -134,17 +280,17 @@ public class ArrangeSeat {
 			String date = freeZw.getStr("SJ_DATE"); // 考试日期
 
 			String zwh = freeZw.getStr("ZW_ZWH_XT"); // 座位号
-			
+
 			Bean freeOdeptKcBean = res.getFreeKsBean().getBean(ksOdept);
 
 			// 移除考场资源
 			if (priority == 1) {
-				// 考场优先资源
+				// 最少场次资源
 				res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId).remove(zwh);
 
 			} else {
-				// 场次优先资源
-				res.getFreeCcZwBean().getBean(kcId).getBean(cc).getBean(date).remove(zwh);
+				// 最少考场资源
+				res.getFreeKcZwBean().getBean(kcId).getBean(cc).getBean(date).remove(zwh);
 			}
 
 			// 移除考生资源
@@ -242,13 +388,18 @@ public class ArrangeSeat {
 		}
 	}
 
-	private static List<Bean> getGljg(String kcId, KcapResource res) {
+	/**
+	 * 获取考场下关联机构
+	 * 
+	 * @param kcId
+	 * @param res
+	 * @return
+	 */
+	private static Bean getGljg(String kcId, KcapResource res) {
 
-		List<Bean> jglist = new ArrayList<>();
+		Bean gljg = new Bean();
 
 		Bean allKcBean = res.getKcBean();
-
-		outloop:
 
 		for (Object key : allKcBean.keySet()) {
 
@@ -258,14 +409,12 @@ public class ArrangeSeat {
 
 				if (kcId.equals(kc.getBean("INFO").getStr("KC_ID"))) {
 
-					jglist = kc.getList("GLJG");
-
-					break outloop;
+					return kc.getBean("GLJG");
 				}
 			}
 		}
 
-		return jglist;
+		return gljg;
 	}
 
 	/**
@@ -273,17 +422,19 @@ public class ArrangeSeat {
 	 * 
 	 * @param kcId
 	 * @param res
-	 * @return
+	 * @return Bean{考试时长：考生Bean{考生编码：考生bean/list}}
 	 */
 	private static Bean getGljgKs(String kcId, KcapResource res) {
 
 		Bean filtBean = new Bean();
 
-		List<Bean> jglist = getGljg(kcId, res);
+		Bean gljg = getGljg(kcId, res);
 
 		Bean ksBean = res.getFreeKsBean();
 
-		for (Bean jg : jglist) {
+		for (Object key : gljg.keySet()) {
+
+			Bean jg = gljg.getBean(key);
 
 			String dCode = jg.getStr("JG_CODE");
 
@@ -314,7 +465,7 @@ public class ArrangeSeat {
 	}
 
 	/**
-	 * 合并bean。key重复，value合并
+	 * 合并bean。key重复，value合并List
 	 * 
 	 * @param srcBean
 	 * @param dstBean
