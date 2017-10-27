@@ -1,12 +1,18 @@
 package com.rh.core.icbc.imp.target;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.db.Transaction;
+import com.rh.core.icbc.imp.log.OrgLogMgr;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
@@ -18,9 +24,9 @@ import com.rh.core.util.Constant;
  * @author anan
  *
  */
-public class ImpUser {
+public class KSNImpUser {
 
-	private static Log log = LogFactory.getLog(ImpUser.class);
+	private static Log log = LogFactory.getLog(KSNImpUser.class);
 	
 	public static final int QUERY_NUM = 5000;
 	
@@ -53,9 +59,13 @@ public class ImpUser {
 		
 //		Transaction.commit();
 		
+		// 已经执行过的数据
+		Map<String, Boolean> executedData = new HashMap<String, Boolean>();
+		
 		Bean queryCount = new Bean();
 //		String where = " AND S_FLAG = '1' AND PERSON_TYPE = '在岗员工' AND WORK_STATE = '正常'";
-		String where = " AND S_FLAG = '1' AND WORK_STATE != '离职' AND WORK_STATE != '死亡'";
+//		String where = " AND S_FLAG = '1' AND WORK_STATE != '离职' AND WORK_STATE != '死亡'";
+		String where = " AND S_FLAG = '1' AND WORK_STATE != '离职' AND WORK_STATE != '退休'";
 		queryCount.set(Constant.PARAM_WHERE, where);
 
 		int count = ServDao.count(HRM_ZDSTAFF_V, queryCount);
@@ -77,10 +87,18 @@ public class ImpUser {
 			for (Bean userBean : resultList) {
 				Bean newUser = addUser(userBean, null);
 
-				newUser.set("USER_PASSWORD", "e10adc3949ba59abbe56e057f20f883e"); // 用户统一初始密码,123456
-				newUser.set("CMPY_CODE", ImpUser.CMPY_CODE);
+				// 用户统一初始密码,123456
+				newUser.set("USER_PASSWORD", "e10adc3949ba59abbe56e057f20f883e");
 				
-				userList.add(newUser);
+				if (executedData.containsKey(newUser.getStr("USER_CODE"))) {
+					// 存在多条重复主键数据，跳过
+					log.error("import SY_ORG_USER error ! " + "跳过重复主键数据：" + newUser);
+					OrgLogMgr.orgLogSave("", "CC_DATA_IMPORT", "import SY_ORG_USER error ! 跳过重复主键数据：" + newUser,
+							"跳过重复主键数据：" + newUser);
+				} else {
+					executedData.put(newUser.getStr("USER_CODE"), true);
+					userList.add(newUser);
+				}
 			}
 			
 			ServDao.creates(ServMgr.SY_ORG_USER, userList);
@@ -95,14 +113,14 @@ public class ImpUser {
 	/**
 	 * 增量导入用户数据
 	 */
-	public void addUserDatas(String smtime) {
+	public void addUserDatas(String smtime) throws Exception {
 		Bean queryCount = new Bean(); // 统计总数
 		String where = " AND 1 = 1 AND S_MTIME = '" + smtime + "'";
 		// 统计本次增量的数据量
 		queryCount.set(Constant.PARAM_WHERE, where);
 		int count = ServDao.count(HRM_ZDSTAFF_V, queryCount);
-		
-//		Transaction.begin();
+		//修改为此时的短事务处理，降低PC机压力。
+		Transaction.begin();
 		
 		for (int i = 1; i <= count / QUERY_NUM + 1; i++) {
 			log.debug("开始第 " + i + "页");
@@ -123,9 +141,15 @@ public class ImpUser {
 				Bean newUser = null; // 构造的新用户Bean
 				
 				if (oldUser == null) { // 没有当前用户，添加状态
-					newUser = addUser(userBean, null);
+					//判断查询到接口表中的SSIC_ID字段是否为空，不为空才执行更新或插入
+					if(StringUtils.isNotBlank(userBean.getStr("SSIC_ID"))){
+						newUser = addUser(userBean, null);
+					}else{
+						continue;
+					}
 				} else { // 有当前用户，修改状态
 					newUser = addUser(userBean, oldUser);
+				
 				}
 				// 添加到更新集合中
 				userList.add(newUser);
@@ -133,12 +157,14 @@ public class ImpUser {
 			
 			ParamBean batchSave = new ParamBean();
 			batchSave.setBatchSaveDatas(userList);
+			StopWatch sw = new StopWatch();
+			sw.start();
 			ServMgr.act(ServMgr.SY_ORG_USER, ServMgr.ACT_BATCHSAVE, batchSave);
-			
-//			Transaction.commit();
+			sw.stop();
+			Transaction.commit();
 		}
 		
-//		Transaction.end();
+		Transaction.end();
 	}
 	
 	/**
@@ -146,7 +172,7 @@ public class ImpUser {
 	 * @param userBean - 中间表人员数据
 	 * @return - 本系统人员数据Bean
 	 */
-	private Bean addUser(Bean userBean, Bean oldUserBean){
+	private Bean addUser(Bean userBean, Bean oldUserBean) throws Exception {
 		// 用户数据Bean
 		ParamBean user = new ParamBean();
 		
@@ -154,13 +180,14 @@ public class ImpUser {
 		user
 			.set("USER_CODE", userBean.getStr("PERSON_ID"))
 //			.set("USER_CODE", userBean.getStr("SSIC_ID"))
+			.set("USER_HEIGHT", 0)
+			.set("USER_LOGIN_TYPE", 1)
 			.set("USER_NAME", userBean.getStr("NAME"))
 			.set("USER_LOGIN_NAME", userBean.getStr("SSIC_ID"))
 			.set("DEPT_CODE", userBean.getStr("STRU_ID"))
 			.set("USER_SORT", userBean.getStr("SORT"))
 			.set("USER_HOME_PHONE", userBean.getStr("HOME_PHONE1"))
 			.set("USER_MOBILE", userBean.getStr("MOBILE_PHONE1"))
-			.set("USER_EMAIL", userBean.getStr("EMAIL"))
 			.set("USER_POST", userBean.getStr("DUTY_LV"))
 			.set("USER_ROOM", userBean.getStr("OFFICE_ROOMNO"))
 			.set("USER_WORK_NUM", userBean.getStr("SSIC_ID"))
@@ -177,8 +204,23 @@ public class ImpUser {
 			.set("USER_EN_NAME", userBean.getStr("ENAME"))
 			.set("USER_SHORT_NAME", userBean.getStr("SNAME"))
 //			.set("USER_FROM", "ICBC-" + userBean.getStr("PERSON_ID"));
-			.set("USER_FROM", "ICBC");
+			.set("USER_FROM", "ICBC")
+			.set("CMPY_CODE", KSNImpUser.CMPY_CODE);
 		
+		// 邮箱去掉最后的逗号
+		String userEmail = userBean.getStr("EMAIL").trim();
+		if (userEmail.length() > 1 && userEmail.endsWith(",")) { // 以逗号结尾
+			userEmail = userEmail.substring(0, userEmail.length() - 1);
+		}
+		// 不为空时更新邮箱，为空时保留老邮箱
+		if (StringUtils.isNotEmpty(userEmail)) {
+			user.set("USER_EMAIL", userEmail);
+			user.set("USER_EDU_SCHOOL", userEmail.toUpperCase()); // 先将邮箱大写信息放到这个字段中，这个字段没有用
+		}
+		//如果兼岗为空，则赋值null给该字段
+		if (StringUtils.isBlank((userBean.getStr("JIANGANG_FLAG")))) {
+			user.set("JIANGANG_FLAG", null);
+		}
 		// 性别字段
 		if (userBean.getStr("SEX").equals("女")) {
 			user.set("USER_SEX", 1);
@@ -211,9 +253,9 @@ public class ImpUser {
 	/**
 	 * 清除SY_ORG_USER表中ICBC的数据
 	 */
-	public void cleanUserData() {
+	public void cleanUserData() throws Exception {
 		ParamBean whereBean = new ParamBean();
-		 whereBean.setWhere(" AND CMPY_CODE = '" + ImpUser.CMPY_CODE + "' AND USER_LOGIN_NAME != 'admin'");
+		 whereBean.setWhere(" AND CMPY_CODE = '" + KSNImpUser.CMPY_CODE + "' AND USER_LOGIN_NAME != 'admin'");
 		 ServDao.destroys(ServMgr.SY_ORG_USER, whereBean);
 		 log.info("table SY_ORG_USER is clean !");
 	}
@@ -232,7 +274,7 @@ public class ImpUser {
 			queryUser.selects("USER_CODE");
 			queryUser.andIn("USER_LOGIN_NAME", userSSICIDs.split(","));
 			queryUser.and("S_FLAG", 1);
-			queryUser.and("CMPY_CODE", ImpUser.CMPY_CODE);
+			queryUser.and("CMPY_CODE", KSNImpUser.CMPY_CODE);
 			List<Bean> userList = ServDao.finds(ServMgr.SY_ORG_USER, queryUser);
 			List<String> delUserCodeList = new ArrayList<String>();
 			for (Bean userBean : userList) {
@@ -241,7 +283,7 @@ public class ImpUser {
 			
 			// 删除已有的关系数据
 			SqlBean delParam = new SqlBean();
-			delParam.and("CMPY_CODE", ImpUser.CMPY_CODE);
+			delParam.and("CMPY_CODE", KSNImpUser.CMPY_CODE);
 			delParam.and("ROLE_CODE", "RADMIN");
 			delParam.andIn("USER_CODE", delUserCodeList.toArray());
 			ServDao.destroys(ServMgr.SY_ORG_ROLE_USER, delParam);
@@ -256,8 +298,8 @@ public class ImpUser {
 				Bean addBean = new Bean();
 				addBean.set("USER_CODE", bean.getStr("USER_CODE"));
 				addBean.set("ROLE_CODE", "RADMIN");
-				addBean.set("CMPY_CODE", ImpUser.CMPY_CODE);
-				addBean.set("S_USER", ImpUser.S_USER);
+				addBean.set("CMPY_CODE", KSNImpUser.CMPY_CODE);
+				addBean.set("S_USER", KSNImpUser.S_USER);
 				addBean.set("S_FLAG", 1);
 				addBeanList.add(addBean);
 			}
