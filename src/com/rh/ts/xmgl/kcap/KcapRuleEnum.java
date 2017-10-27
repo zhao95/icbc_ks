@@ -45,7 +45,17 @@ public enum KcapRuleEnum {
 	/**
 	 * 特定考试仅限于省分行安排
 	 */
-	R009(9, "R009"),;
+	R009(9, "R009"),
+	
+	/**
+	 * 最少考场，最少场次
+	 */
+	S001(100,"S001"),
+	
+	/**
+	 * 无符合规则考生 是否强制安排
+	 */
+	S002(110,"S002");
 
 	private int code;
 	private String name;
