@@ -11,7 +11,7 @@ var bm_start="";//报名开始时间
 var bm_end = "";//报名结束时间
 var xm_name = "";//项目名称
 var successinfo = "";//报名成功提示
-var yiyistate = "";
+var yiyistate = "0";
 //项目信息进行展示
 function xminfoshow(){
 	param={};
@@ -108,6 +108,7 @@ function xminfoshow(){
        				//判断此考试是否已报名  如果已报名审核通过 必须删除 才能提交
        					var resdata = results.list;
        					var FLAG = false;
+       					debugger;
        				for(var z=0;z<resdata.length;z++){
        					if(resdata[z].KSLBK_ID==a){
        						FLAG = true;
@@ -155,10 +156,7 @@ function xminfoshow(){
 						$("#"+a).append('<div style="height:5px;"></div>');
 						
        				}
-       				if(othergz=="false"){
-       					//审核不通过 不能异议
-       					yiyistate="0"
-       				}else if(othergz!="false"&&zsgz!=""){
+       				if(othergz!="false"&&zsgz!=""){
        					//启用证书规则
        					if(zsgz=="true"){
        						//审核通过
@@ -168,6 +166,7 @@ function xminfoshow(){
        						yiyistate="2";
        					}
        				}
+       				
        				if(shArray==true&&truetisi=="true"){
        					$("#"+a).append('<div">管理任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
        					$("#tishiyu").html(tishiyu);
@@ -180,13 +179,12 @@ function xminfoshow(){
        						$("#"+yzjg).append(failerinfo);
        					}
        				}if(shArray==true){
-       					
        					$("#"+a).append('<div></div>');
        					$("#"+a).append('<div></div>');
        					if(""==successinfo){
-       						$("#"+yzjg).append(successinfo);
-       					}else{
        						$("#"+yzjg).append("初步审核通过");
+       					}else{
+       						$("#"+yzjg).append(successinfo);
        					}
        					$("#"+yzjg).append('<div></div>');
        					$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
@@ -399,7 +397,7 @@ function xminfoshow(){
 		 //没有数据的父节点不显示
 		/* +" AND KSLBK_ID not in (SELECT KSLBK_ID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_MK='无模块' AND KSLBK_TYPE is null)*/  
 		 var itemid = "";
-		 var extWhere="AND KSLBK_ID IN (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')union select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"') AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)" +sqlstr;
+		 var extWhere="AND KSLBK_ID IN (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')union select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"') AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)" +sqlstr +"AND KSLBK_CODE !='023001'";
 		 var setting={data
 	             :FireFly.getDict('TS_XMGL_BM_KSLBK','KSLBK_PID',extWhere),
 	         dictId:"TS_XMGL_BM_KSLBK",expandLevel:1,
@@ -717,17 +715,20 @@ function xminfoshow(){
 		var motaitable = document.getElementById("motaitable");
 		var rowlength = motaitable.rows.length-1;
 		//选中了 重复的报名需要先删除再提交
+		var exist = false;
 			$("div[name=existedbm]").each(function(){
-				if($(this).attr("checked")){
-					alert("请先删除已有的报名");
-					$("#tjbt").attr("data-target","");
-					//获取到table
-					for(var i=rowlength;i>1;i--){
-						motaitable.deleteRow(i);
+				$(this.parentNode.parentNode.parentNode).find("input[name=checkboxaa]").each(function(){
+					if($(this).attr("checked")){
+						alert("请先删除已有的报名");
+						$("#tjbt").attr("data-target","");
+						//获取到table
+						exist=true;
 					}
-					return;
-				}
+				});
 			})
+			if(exist){
+				return;
+			}
 		var highbmnum = 0;
 		var middlenum = 0;
 		var canhightnum = $("#canheighnum").text();
