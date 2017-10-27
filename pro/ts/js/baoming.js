@@ -565,12 +565,15 @@ function selectcreate(){
 		    paramSH["xmid"]=XM_ID;
 		    var successinfo = "";
 			var failerinfo = "";
-			var shstate = "";
+			var shstate = "审核中";
 			FireFly.doAct("TS_XMGL_BMGL","getXmInfo",paramSH,true,false,function(data){
     			 successinfo = data.SH_TGTSY;
     			 failerinfo = data.SH_BTGTSY;
     			 shstate = data.shstate;
     		})
+    		if(shstate==""){
+    			 shstate = "审核中";
+    		}
 		    	if(shstate=="审核结束"){
 		    if(sh_state==0){
 		    	//审核中
@@ -660,7 +663,19 @@ function selectcreate(){
 			    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">审核中</td><td style="text-align: center">'+flagstate+'</td><td style="text-align:left "><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi('+i+')" style="color:black" id="yiyi'+i+'">异议详情</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
 			    		}
 		    			
-		    			
+		    		}else if(yiyistate==0){
+		    			if(sh_state==2){
+			    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td style="text-align: center">'+flagstate+'</td><td  style="text-align: left"><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="yanzheng('+i+')" style="color:lightseagreen" id="yiyi'+i+'">验证</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td><td class="rhGrid-td-hide" id="XMID'+i+'">'+XM_ID+'</td></tr>');
+			    		}else if(sh_state==1){
+			    			//审核通过 没有异议  没有撤销
+			    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td style="text-align: center">'+flagstate+'</td><td style="text-align:left "><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+			    		}else if(sh_state==3){
+			    			//审核未通过  手动审核
+			    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="color:red;text-align: center">'+sh_state_str+'</td><td style="text-align: center">'+flagstate+'</td><td style="text-align:left "><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="yanzheng('+i+')" style="color:lightseagreen">验证</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td><td class="rhGrid-td-hide" id="XMID'+i+'">'+XM_ID+'</td></tr>');
+			    		} else if(sh_state==0){
+			    			//审核中  只有手动审核
+			    			$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+sh_state_str+'</td><td style="text-align: center">'+flagstate+'</td><td style="text-align:left "><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao('+i+')" style="color:red" id="chexiao'+i+'">撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');
+			    		}
 		    		}
 		    	}else {
 		    		$("#ybmtable tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+firint+'</td><td class="indexTD" style="text-align: center">'+leixng+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">'+type+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="color:gray;text-align: center">'+sh_state_str+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+flagstate+'</td><td style="text-align:left "><a onclick="chakan('+i+')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a style="color:red" id="chexiao">已撤销</a>&nbsp&nbsp<a onclick="formsubmit('+i+')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a></td><td class="rhGrid-td-hide" id="baomingid'+i+'">'+BM_ID+'</td></tr>');	

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 
+
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -172,8 +173,7 @@ public class BmlbServ extends CommonServ {
 			if (json.length() > 0) {
 				for (int i = 0; i < json.length(); i++) {
 					JSONObject job = json.getJSONObject(i); // 遍历 jsonarray
-															// 数组，把每一个对象转成 json
-					String ks_time = (String) job.get("BM_KS_TIME");								// 对象
+						String ks_time = (String) job.get("BM_KS_TIME");								// 对象
 					String kslb_code = (String) job.get("BM_LB");
 					String kslb_xl_code = (String) job.get("BM_XL");
 					String kslb_mk_code = (String) job.get("BM_MK");
@@ -466,17 +466,23 @@ public class BmlbServ extends CommonServ {
 		}
 		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", wheremk);
 		String KSLB_TYPE = "";
+		String ks_time = "";
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
+				Bean find = ServDao.find("TS_XMGL_BM_KSLBK",list.get(i).getStr("KSLBK_ID"));
 				if (i == 0) {
 					KSLB_TYPE = list.get(i).getStr("KSLB_TYPE");
+					
+					ks_time= find.getStr("KSLBK_TIME");
 				} else {
 					KSLB_TYPE += "," + list.get(i).getStr("KSLB_TYPE");
+					ks_time += ","+find.getStr("KSLBK_TIME");
 				}
 			}
 		}
 		Bean outBean = new Bean();
 		outBean.set("list", KSLB_TYPE);
+		outBean.set("KS_TIME", ks_time);
 		return outBean;
 	}
 

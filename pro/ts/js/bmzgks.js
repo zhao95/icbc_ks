@@ -632,6 +632,9 @@ function xminfoshow(){
 			       xk['BM_XL'] = kslb_xl_code;
 			       xk['BM_MK'] = kslb_mk_code;
 			       xk['BM_TYPE'] =kslb_type;
+			       if(ks_time==""){
+			    	   ks_time=0;
+			       }
 			       xk['BM_KS_TIME']=ks_time;
 			       xkArg.push(xk);
 			}
@@ -700,6 +703,7 @@ function xminfoshow(){
 		var sel = document.getElementById("lxid");
 		var selected_val = sel.options[sel.selectedIndex].value;
 		yk["BM_TYPE"]=selected_val;
+		yk['BM_KS_TIME']=$(sel.options[sel.selectedIndex]).attr("name");
 		 var tds = $("#tableid tbody").find("tr").find("td");
 		    $($(tds[7]).find("div").eq(0)).html("")
 		   $($(tds[6]).find("div").eq(0)).html("");
@@ -865,7 +869,6 @@ function xminfoshow(){
 			 $("#gwlb").html(STATION_TYPE);
 			 $("#gwxl").html(STATION_NO);
 			 $("#zwcj").html(ADMIN_DUTY);
-			 
 		}
 		var wherexl = "AND KSLB_CODE="+"'"+STATION_TYPE_CODE+"'"+" AND KSLB_XL_CODE="+"'"+STATION_NO_CODE+"'"+" AND XM_ID="+"'"+xm_id+"'";
 		var param={};
@@ -916,11 +919,13 @@ function xminfoshow(){
 				var ww= FireFly.doAct("TS_BMLB_BM", "getMkvalue", param,true,false);
 				hh= ww.list;
 				var tyArray = hh.split(",");
+				var kstimes = ww.KS_TIME.split(",");
 				var select = document.getElementById("lxid");
 				jQuery("#lxid").empty();          //把select对象的所有option清除掉
 				
 				for(var i=0;i<tyArray.length;i++){
 					select.options[i]=new Option((tyArray[i]=="1")?"初级":(tyArray[i]=="2")?"中级":(tyArray[i]=="3")?"高级":"无",tyArray[i]);
+					$(select.options[i]).attr("name",kstimes[i]);
 				}
 				var tab = document.getElementById("tableid");
 			    //表格行数
@@ -932,6 +937,7 @@ function xminfoshow(){
 					yk["BM_MK"]=mkvalue;
 					var sel = document.getElementById("lxid");
 					var selected_val = sel.options[sel.selectedIndex].value;
+					yk['BM_KS_TIME']=$(sel.options[sel.selectedIndex]).attr("name");
 					yk["BM_TYPE"]=selected_val;
 			       }
 				}
