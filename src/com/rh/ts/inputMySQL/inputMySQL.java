@@ -38,7 +38,8 @@ public class inputMySQL {
 		try {
 		 long startTime = System.currentTimeMillis(); // 起始时间
 		 long endTime = 0;
-		 long sqlTime = 0;
+		 @SuppressWarnings("unused")
+		long sqlTime = 0;
 			while (it.hasNext()) {
 				String lineTxt = it.nextLine();
 				lineTxt = new String(lineTxt.getBytes("GBK"), "ISO8859-1");

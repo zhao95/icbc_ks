@@ -7,10 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mchange.v2.c3p0.impl.C3P0ImplUtils;
 import com.rh.core.base.db.Transaction;
-import com.rh.core.base.start.impl.DsC3p0;
-import com.rh.mysql.BeyondbConnection;
 /**
  * 操作数据库，插入解析后的数据
  * @author leader

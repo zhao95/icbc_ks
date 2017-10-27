@@ -9,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
-import com.rh.core.base.db.Transaction;
 import com.rh.core.icbc.imp.log.OrgLogMgr;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;

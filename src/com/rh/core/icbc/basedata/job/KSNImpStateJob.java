@@ -1,9 +1,8 @@
 package com.rh.core.icbc.basedata.job;
 
-import com.rh.core.base.Bean;
+import com.rh.core.base.Bean; 
 import com.rh.core.base.Context;
 import com.rh.core.icbc.basedata.serv.KSNImpDataServ;
-import com.rh.core.icbc.basedata.serv.NImpDataServ;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
