@@ -10,6 +10,8 @@ import java.util.List;
 
 
 
+
+
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -212,6 +214,7 @@ public class BmlbServ extends CommonServ {
 					int count = XmglMgr.existSh(xm_id);
 					String ad_rule = "";
 					String ad_result = "";
+					
 					if("true".equals(yzgzstrjson.get("none"))){
 						
 					}else{
@@ -339,22 +342,20 @@ public class BmlbServ extends CommonServ {
 					param.set("flowName", 1);
 					param.set("shrUserCode", user_code);
 					OutBean out = ServMgr.act("TS_WFS_APPLY", "backFlow", param);
-					List<Bean> blist = out.getList("result");
+					String blist = out.getStr("result");
 					String allman = "";
 					String node_name = "";
-					if (blist.size() > 0) {
-						node_name = blist.get(0).getStr("NODE_NAME");
-						for (int l = 0; l < blist.size(); l++) {
-							if (l == (blist.size()-1)) {
-								allman += blist.get(l).getStr("SHR_USERCODE");
-							} else {
-								allman += blist.get(l).getStr("SHR_USERCODE") + ",";
-							}
-
-						}
+					int SH_LEVEL = 0;
+					if(!"".equals(blist)){
+						allman= blist.substring(0,blist.length()-1);
+						node_name = out.getStr("NODE_NAME");
+						SH_LEVEL = out.getInt("SH_LEVEL");	
+					}else{
+						return new OutBean().setError("没有审核人");
 					}
 
 					// 添加到审核表中
+					beans.set("SH_LEVEL", SH_LEVEL);
 					Bean shBean = new Bean();
 					shBean.set("RZ_YEAR", rz_year);
 					shBean.set("XM_ID", xm_id);
@@ -404,7 +405,7 @@ public class BmlbServ extends CommonServ {
 					 }
 					 //自动加手动
 					 if (count == 3) {
-						 shBean.set("SH_OTHER", "");// 其他办理人
+						 shBean.set("SH_OTHER", allman);// 其他办理人
 					 if (ad_result.equals("1")) {
 					 ServDao.save("TS_BMSH_PASS", shBean);
 					 }
@@ -467,6 +468,7 @@ public class BmlbServ extends CommonServ {
 		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", wheremk);
 		String KSLB_TYPE = "";
 		String ks_time = "";
+		String ids = "";
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 				Bean find = ServDao.find("TS_XMGL_BM_KSLBK",list.get(i).getStr("KSLBK_ID"));
@@ -474,15 +476,19 @@ public class BmlbServ extends CommonServ {
 					KSLB_TYPE = list.get(i).getStr("KSLB_TYPE");
 					
 					ks_time= find.getStr("KSLBK_TIME");
+					
+					ids = list.get(i).getStr("KSLBK_ID");
 				} else {
 					KSLB_TYPE += "," + list.get(i).getStr("KSLB_TYPE");
 					ks_time += ","+find.getStr("KSLBK_TIME");
+					ids += ","+list.get(i).getStr("KSLBK_ID");
 				}
 			}
 		}
 		Bean outBean = new Bean();
 		outBean.set("list", KSLB_TYPE);
 		outBean.set("KS_TIME", ks_time);
+		outBean.set("ids", ids);
 		return outBean;
 	}
 

@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
+import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
@@ -187,8 +190,8 @@ public class FlowServ extends CommonServ {
      * @return
      */
     public OutBean backFlow(ParamBean paramBean){
+    	UserBean userBean = Context.getUserBean();
 	OutBean outBean = new OutBean();
-	String examerUserCode = paramBean.getStr("examerUserCode");
 	int level = paramBean.getInt("level");
 	String xmId = paramBean.getStr("xmId");
 	//表单Bean
@@ -199,7 +202,6 @@ public class FlowServ extends CommonServ {
 	String deptCode = paramBean.getStr("deptCode");
 	String odeptCode = paramBean.getStr("odeptCode");
 	//起草人
-	UserBean userBean = UserMgr.getUser(examerUserCode);
 	/*String deptCode = userBean.getDeptCode();
 	String odeptCode = userBean.getODeptCode();*/
 	//推送人
@@ -224,6 +226,8 @@ public class FlowServ extends CommonServ {
 	if (flowName == 1) {
 	    //报名审核
 	    if(wfsType == 1){
+	    	String s = "";
+	    	String node_name = "";
 		//逐级审核
 		int getStep = 0;
 		if(level == 0){
@@ -231,9 +235,28 @@ public class FlowServ extends CommonServ {
 		}else{
 		    getStep = level - 1;
 		}
-		List<Bean> bmshList = ServDao.finds("TS_WFS_BMSHLC", "and WFS_ID = '"+wfsId+"' and NODE_STEPS = "+getStep+" and DEPT_CODE like '%"+odeptCode+"%'");
-		outBean.set("result", bmshList);
+			//节点
+			List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", "AND WFS_ID='"+wfsId+"' and NODE_STEPS = "+getStep);
+			for (Bean bean2 : finds2) {
+				String str = bean2.getStr("NODE_ID");
+				List<Bean> finds = ServDao.finds("TS_WFS_BMSHLC", "and NODE_ID='"+str+"'");
+				for (Bean bean : finds) {
+					List<DeptBean> childDepts = OrgMgr.getChildDepts(bean2.getStr("CMPY_CODE"), bean.getStr("DEPT_CODE"));
+					for (DeptBean deptBean : childDepts) {
+						if(deptBean.getCode().equals( userBean.getDeptCode())){
+							s+=bean.getStr("SHR_USERCODE")+",";
+							node_name = bean2.getStr("NODE_NAME");
+						}
+					}
+				}
+			
+		}
+			outBean.set("SH_LEVEL",getStep);
+			outBean.set("NODE_NAME", node_name);
+		outBean.set("result", s);
 	    }else{
+	    	String s ="";
+	    	String node_name = "";
 		//越级审核
 		int getStep = 0;
 		if(level == 0){
@@ -241,8 +264,24 @@ public class FlowServ extends CommonServ {
 		}else{
 		    getStep = level;
 		}
-		List<Bean> bmshList = ServDao.finds("TS_WFS_BMSHLC", "AND WFS_ID = '"+wfsId+"' and NODE_STEPS < "+getStep+" and DEPT_CODE like '%"+odeptCode+"%'");
-		outBean.set("result", bmshList);
+			//节点
+			List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", "AND WFS_ID='"+wfsId+"' and NODE_STEPS < "+getStep);
+			for (Bean bean2 : finds2) {
+				String str = bean2.getStr("NODE_ID");
+				List<Bean> finds = ServDao.finds("TS_WFS_BMSHLC", "and NODE_ID='"+str+"'");
+				for (Bean bean : finds) {
+					List<DeptBean> childDepts = OrgMgr.getChildDepts(bean2.getStr("S_CMPY"), bean.getStr("DEPT_CODE"));
+					for (DeptBean deptBean : childDepts) {
+						if(deptBean.getCode().equals( userBean.getDeptCode())){
+							s+=bean.getStr("SHR_USERCODE")+",";
+							node_name = bean2.getStr("NODE_NAME");
+						}
+					}
+				}
+		}
+			outBean.set("SH_LEVEL",getStep-1);
+			outBean.set("NODE_NAME", node_name);
+		outBean.set("result", s);
 	    }
 	}else{
 	    //异地借考，请假审核

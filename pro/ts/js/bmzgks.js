@@ -108,16 +108,22 @@ function xminfoshow(){
        				//判断此考试是否已报名  如果已报名审核通过 必须删除 才能提交
        					var resdata = results.list;
        					var FLAG = false;
-       					debugger;
+       					var xlcode = "";
        				for(var z=0;z<resdata.length;z++){
        					if(resdata[z].KSLBK_ID==a){
+       						xlcode=resdata[z].BM_XL_CODE;
        						FLAG = true;
        					}
        				}
        				if(FLAG){
-       					$("#"+a).append('已报名此考试,请撤销再报名');
-       					$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
-       					$("#"+yzjg).append("审核不通过");
+       					if(xlcode==STATION_NO_CODE){
+       						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此考试,请撤销再提交或请选择其它考试</div>');
+       						$("#"+yzjg).append("审核不通过");
+       					}else{
+       						$("#"+a).append('已报名此考试,请撤销再报名');
+       						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
+       						$("#"+yzjg).append("审核不通过");
+       					}
        					continue;
        				}
        				var shti = "";
@@ -704,6 +710,9 @@ function xminfoshow(){
 		var selected_val = sel.options[sel.selectedIndex].value;
 		yk["BM_TYPE"]=selected_val;
 		yk['BM_KS_TIME']=$(sel.options[sel.selectedIndex]).attr("name");
+		yk["ID"]=$(sel.options[sel.selectedIndex]).attr("icode");
+		$($(obj.parentNode.parentNode).find("td").eq(6)).find("div").eq(0).attr("id",yk["ID"]);
+		$("#yzjg_info").find("div").eq(0).attr("id",yk["ID"]+"yzjg");
 		 var tds = $("#tableid tbody").find("tr").find("td");
 		    $($(tds[7]).find("div").eq(0)).html("")
 		   $($(tds[6]).find("div").eq(0)).html("");
@@ -720,10 +729,11 @@ function xminfoshow(){
 		var rowlength = motaitable.rows.length-1;
 		//选中了 重复的报名需要先删除再提交
 		var exist = false;
+		debugger;
 			$("div[name=existedbm]").each(function(){
 				$(this.parentNode.parentNode.parentNode).find("input[name=checkboxaa]").each(function(){
-					if($(this).attr("checked")){
-						alert("请先删除已有的报名");
+					if($(this).prop("checked")){
+						alert("请先删除或撤销已有的报名");
 						$("#tjbt").attr("data-target","");
 						//获取到table
 						exist=true;
@@ -878,21 +888,22 @@ function xminfoshow(){
 					return;
 				}
 			var pageEntity = result1.list;
-			 var kslb_id = pageEntity[0].KSLB_ID;
+			
+			 var kslb_id = pageEntity[0].KSLBK_ID;
 			  lbname = pageEntity[0].KSLB_NAME;
 			  xlname= pageEntity[0].KSLB_XL;
 			  lbcode= pageEntity[0].KSLB_CODE;
 			  xlcode= pageEntity[0].KSLB_XL_CODE;
 			 //拼接 tr
 			 var tr = document.createElement('tr');
-			tr.innerHTML='<td style="text-align:center"><input style="margin-right:12px;" type="checkbox" name="checkboxaa"></td>'+
+			tr.innerHTML='<td style="text-align:center"><input style="margin-right:12px;" type="checkbox" name="checkboxaa" checked></td>'+
 				'<td>'+lbname+'</td>'+
 				'<td>'+xlname+'</td>'+
 				'<td width="27%"><select id="mkid" onchange="typeId(this)"></select></td>'+
 				'<td width="10%"><select id="lxid" onchange="changeyk(this)"><option></option></select></td>'+
 				'<td class="rhGrid-td-hide"><input type="text" id="zglbid" name="zgksname" value='+kslb_id+'></td>'+
-				'<td width="20%"><div id='+kslb_id+'></div></td>'+
-				'<td width="15%"><div id="'+kslb_id+'yzjg"></div></td>'+
+				'<td width="20%" id="yz_info"><div id='+kslb_id+'></div></td>'+
+				'<td width="15%" id="yzjg_info"><div id="'+kslb_id+'yzjg"></div></td>'+
 				'<td class="rhGrid-td-hide"><div>cannot</div></td>'+
 				'<td class="rhGrid-td-hide"><div>biaoshi</div></td>'+
 				'<td class="rhGrid-td-hide"><div>biaoshi</div></td>';
@@ -918,6 +929,7 @@ function xminfoshow(){
 				param["cengji"]=belongnum;
 				var ww= FireFly.doAct("TS_BMLB_BM", "getMkvalue", param,true,false);
 				hh= ww.list;
+				var ids = ww.ids.split(",");
 				var tyArray = hh.split(",");
 				var kstimes = ww.KS_TIME.split(",");
 				var select = document.getElementById("lxid");
@@ -926,18 +938,22 @@ function xminfoshow(){
 				for(var i=0;i<tyArray.length;i++){
 					select.options[i]=new Option((tyArray[i]=="1")?"初级":(tyArray[i]=="2")?"中级":(tyArray[i]=="3")?"高级":"无",tyArray[i]);
 					$(select.options[i]).attr("name",kstimes[i]);
+					$(select.options[i]).attr("icode",ids[i]);
 				}
 				var tab = document.getElementById("tableid");
 			    //表格行数
 			    var rows = tab.rows.length;
 			    if(rows>1){
+			    	debugger;
 					yk["BM_LB"]=lbcode;
 					yk["BM_XL"]=xlcode;
-					yk["ID"]=document.getElementById("zglbid").value;
 					yk["BM_MK"]=mkvalue;
 					var sel = document.getElementById("lxid");
 					var selected_val = sel.options[sel.selectedIndex].value;
 					yk['BM_KS_TIME']=$(sel.options[sel.selectedIndex]).attr("name");
+					yk["ID"]=$(sel.options[sel.selectedIndex]).attr("icode");
+					$("#yz_info").find("div").eq(0).attr("id",yk["ID"]);
+					$("#yzjg_info").find("div").eq(0).attr("id",yk["ID"]+"yzjg");
 					yk["BM_TYPE"]=selected_val;
 			       }
 				}
@@ -996,10 +1012,7 @@ var highnum=0;
 }
 	//删除已报名的考试
 	function deleterow(obj){
-		var j=obj.parentNode.parentNode.parentNode.rowIndex;
-		var tab = document.getElementById("tablehang");
-		tab.deleteRow(j);
-		
+		$(obj.parentNode.parentNode.parentNode).remove();
 	}
 function yanzheng(){
 	var checkboxss = $('input[name=checkboxaa]:checked');
