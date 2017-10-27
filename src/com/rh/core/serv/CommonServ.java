@@ -4,11 +4,13 @@
 package com.rh.core.serv;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +27,16 @@ import jxl.Workbook;
 import jxl.format.Alignment;
 import jxl.format.Colour;
 import jxl.write.Label;
+import jxl.write.NumberFormat;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.BeanUtils;
@@ -71,9 +76,9 @@ import com.rh.core.wfe.serv.ProcServ;
  */
 public class CommonServ extends AbstractServ {
     /**每次获取数据条数*/
-    private static final int ONETIME_EXP_NUM = 5000;
-    /**excel最大行数*/
-    private static final int EXCEL_MAX_NUM = 65536;
+    private static final int ONETIME_EXP_NUM = 20000;
+   /* *//**excel最大行数*//*
+    private static final int EXCEL_MAX_NUM = 65536;*/
     
     /**
      * 提供基于列表的查询服务
@@ -1240,7 +1245,7 @@ public class CommonServ extends AbstractServ {
             }*/
             //导出第一次查询数据
             paramBean.setQueryPageNowPage(1); //导出当前第几页
-        afterExp(paramBean, outBean);   //执行导出查询后扩展方法
+            afterExp(paramBean, outBean);   //执行导出查询后扩展方法
             expExcel.createHeader(outBean.getCols());
             expExcel.appendData(outBean.getDataList(), paramBean);
         
@@ -1273,6 +1278,7 @@ public class CommonServ extends AbstractServ {
      * @return 执行结果
      */
     public OutBean expZip(ParamBean paramBean) {
+    	String type = paramBean.getStr("_TYPEDC_");
         ServDefBean servDef = ServUtils.getServDef(paramBean.getServId());
         beforeExpZip(paramBean); //执行监听方法
         String ids = paramBean.getId();   //要导出的数据ID
@@ -1293,21 +1299,51 @@ public class CommonServ extends AbstractServ {
         
         ZipOutputStream zipOut = null; //输出流
         InputStream is = null;  //输入流
+        File createfile =null;
+        FileInputStream in=null;
+       /* FileOutputStream out = null;  
+        File file = File.createTempFile(servDef.getId(), ".xlsx");  
+        out = FileUtils.openOutputStream(file);  
+        wb.write(out);//将数据写到指定文件  
+        fileList.add(file);  */
         try {
-            zipOut = new ZipOutputStream(response.getOutputStream());
-            is = IOUtils.toInputStream(JsonUtils.toJson(dataList, false), Constant.ENCODING); //将菜单定义转为输入流
-            zipOut.putNextEntry(new ZipEntry(servDef.getId() + ".json"));  //指定输出文件名称
-            IOUtils.copyLarge(is, zipOut);
+        	zipOut = new ZipOutputStream(response.getOutputStream());
+        	if("JSON".equals(type)){
+        		//导jsonzip 
+        		is = IOUtils.toInputStream(JsonUtils.toJson(dataList, false), Constant.ENCODING); //将菜单定义转为输入流
+        		zipOut.putNextEntry(new ZipEntry(servDef.getId() + ".json"));  //指定输出文件名称
+        		IOUtils.copyLarge(is, zipOut);
+        	}else{
+        		//导 xls zip
+        		createfile = createfile(paramBean);
+        		in = new FileInputStream(createfile);  
+        		zipOut.putNextEntry(new ZipEntry(createfile.getName()));  //指定输出文件名称
+        		byte[] buf = new byte[1024];  
+        		int len;  
+        		while((len = in.read(buf)) > 0){  
+        			zipOut.write(buf, 0, len);  
+        		}  
+        		
+        	}
+
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         } finally {
+        	
             if (is != null) {
                 IOUtils.closeQuietly(is);  //关闭输入流
             }
             if (zipOut != null) {
+            	 
                 IOUtils.closeQuietly(zipOut); //关闭输出流
             }
             try {
+            	if(in!=null){
+            		in.close();
+            	}
+            	if(createfile!=null){
+            		createfile.delete();//清除临时文档  
+            	}
                 response.flushBuffer();
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
@@ -1315,7 +1351,368 @@ public class CommonServ extends AbstractServ {
         }
         return new OutBean();
     }
-    
+    /**
+     * 生成excel文件放入file中将file读入zip中
+     * @param paramBean
+     * @return
+     * @throws IOException
+     */
+  public File createfile(ParamBean paramBean) throws IOException{
+	  int rowNum=0;
+	   HashMap<Integer, Integer> columnWidthMap = new HashMap<Integer, Integer>();
+	  String servId = paramBean.getServId();
+	  File file = new File(servId+".xls");  
+	    WritableWorkbook workbook;
+	    workbook = Workbook.createWorkbook(file);
+	    WritableSheet sheet = workbook.createSheet(servId, 0);
+	    WritableCellFormat strFormat = null;
+      ServDefBean serv = ServUtils.getServDef(servId);
+      long count = 0;
+      long times = 0;
+      paramBean.setQueryPageShowNum(ONETIME_EXP_NUM); // 设置每页最大导出数据量
+      beforeExp(paramBean); //执行监听方法
+      if (paramBean.getId().length() > 0) { //支持指定记录的导出（支持多选）
+          String searchWhere = " and " + serv.getPKey() + " in ('" 
+                  + paramBean.getId().replaceAll(",", "','") + "')";
+          paramBean.setQuerySearchWhere(searchWhere);
+      }
+      try {
+          OutBean outBean = queryExp(paramBean);
+              count = outBean.getCount();
+              //总数大于excel可写最大值
+            /*  if (count > EXCEL_MAX_NUM) {
+                  return new OutBean().setError("导出数据总条数大于Excel最大行数：" + EXCEL_MAX_NUM);
+              }*/
+              //导出第一次查询数据
+              paramBean.setQueryPageNowPage(1); //导出当前第几页
+              afterExp(paramBean, outBean);   //执行导出查询后扩展方法
+              LinkedHashMap<String, Bean> cols = outBean.getCols();
+              try {
+                  WritableFont titleWf = new WritableFont(WritableFont.createFont("微软简仿宋"), 12,
+                          WritableFont.BOLD);
+                  WritableCellFormat formatTitle = new WritableCellFormat(titleWf);
+                  formatTitle.setWrap(true);
+                  formatTitle.setAlignment(jxl.format.Alignment.CENTRE);
+                  formatTitle.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                  formatTitle.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+                  formatTitle.setBackground(Colour.GRAY_25);
+                  int x = 0;
+                  int y = 0;
+                  for (String key : cols.keySet()) {
+                      Bean col = cols.get(key);
+                      if (col.getInt("ITEM_LIST_FLAG") == Constant.YES_INT) { // 进行展示
+                          Label tmpLabel = new Label(y++, x, col.getStr("ITEM_NAME"), formatTitle);
+                          sheet.addCell(tmpLabel);
+                      }
+                  }
+                  sheet.setRowView(0, 500);
+              } catch (WriteException e) {
+                  throw new RuntimeException(e.getMessage(), e);
+              }
+              
+              
+            
+              
+              try {
+            	  strFormat = new WritableCellFormat(
+                          new WritableFont(WritableFont.createFont("微软简仿宋"), 12)); // 设置字体
+                  strFormat.setWrap(true); // 自动换行
+                  strFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+                  strFormat = new WritableCellFormat(
+                          new WritableFont(WritableFont.createFont("微软简仿宋"), 12)); // 设置字体
+                  strFormat.setWrap(true); // 自动换行
+                  strFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+
+                  // 添加数据体
+                  for (Bean data : outBean.getDataList()) {
+                      rowNum++;
+                     
+                      int y = 0;
+                      for (String key : cols.keySet()) {
+                          Bean col = cols.get(key);
+                          if (col.getInt("ITEM_LIST_FLAG") != Constant.YES_INT) {
+                              continue;
+                          }
+
+                          if (key.endsWith("__NAME")) { // 默认为字符串
+                              String cellData = data.getStr(key);
+
+                              Label tmpLabel = new Label(y, rowNum, cellData, strFormat);
+                              sheet.addCell(tmpLabel);
+                              if (columnWidthMap.containsKey(y)) {
+                                  if (columnWidthMap.get(y) < cellData.length()) {
+                                      columnWidthMap.put(y, cellData.length());
+                                  }
+                              } else {
+                                  columnWidthMap.put(y, cellData.length());
+                              }
+
+                              int colWidth = columnWidthMap.get(y);
+
+                              if (colWidth >= 40) {
+                                  sheet.setColumnView(y, 80);
+                              } else if (colWidth >= 30) {
+                                  sheet.setColumnView(y, 60);
+                              } else if (colWidth >= 20) {
+                                  sheet.setColumnView(y, 45);
+                              } else {
+                                  sheet.setColumnView(y, 25);
+                              }
+                              y++;
+                              continue;
+                          }
+
+                          Bean itemBean = serv.getItem(key);
+                          if (itemBean.getStr("ITEM_FIELD_TYPE").equals(Constant.ITEM_FIELD_TYPE_NUM)) {
+
+                              Double cellData = data.getDouble(col.getStr("ITEM_CODE"));
+                              WritableCellFormat format = formatNumber(itemBean.getStr("ITEM_FIELD_LENGTH"));
+                              jxl.write.Number number = new jxl.write.Number(y, rowNum, cellData, format);
+                              sheet.setColumnView(y, 25);
+                              sheet.addCell(number);
+                          } else {
+                          	String cellData = data.getStr(col.getStr("ITEM_CODE"));
+                          	 Label tmpLabel = new Label(y, rowNum, cellData, strFormat);
+                             sheet.addCell(tmpLabel);
+                             if (columnWidthMap.containsKey(y)) {
+                                 if (columnWidthMap.get(y) < cellData.length()) {
+                                     columnWidthMap.put(y, cellData.length());
+                                 }
+                             } else {
+                                 columnWidthMap.put(y, cellData.length());
+                             }
+
+                             int colWidth = columnWidthMap.get(y);
+
+                             if (colWidth >= 40) {
+                                 sheet.setColumnView(y, 80);
+                             } else if (colWidth >= 30) {
+                                 sheet.setColumnView(y, 60);
+                             } else if (colWidth >= 20) {
+                                 sheet.setColumnView(y, 45);
+                             } else {
+                                 sheet.setColumnView(y, 25);
+                             }
+                          }
+                          y++;
+                      }
+                  }
+              } catch (Exception e) {
+                  throw new RuntimeException(e.getMessage(), e);
+              }
+              
+              // 存在多页数据
+              if (ONETIME_EXP_NUM < count) {
+                  times = count / ONETIME_EXP_NUM;
+                  // 如果获取的是整页数据
+                  if (ONETIME_EXP_NUM * times == count && count != 0) {
+                      times = times - 1;
+                          }
+                  for (int i = 1; i <= times; i++) {
+                	  int j=i+1;
+                	  WritableSheet sheets = workbook.createSheet("第"+j+"页", i);
+                	  try {
+                          WritableFont titleWf = new WritableFont(WritableFont.createFont("微软简仿宋"), 12,
+                                  WritableFont.BOLD);
+                          WritableCellFormat formatTitle = new WritableCellFormat(titleWf);
+                          formatTitle.setWrap(true);
+                          formatTitle.setAlignment(jxl.format.Alignment.CENTRE);
+                          formatTitle.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                          formatTitle.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+                          formatTitle.setBackground(Colour.GRAY_25);
+                          int x = 0;
+                          int y = 0;
+                          for (String key : cols.keySet()) {
+                              Bean col = cols.get(key);
+                              if (col.getInt("ITEM_LIST_FLAG") == Constant.YES_INT) { // 进行展示
+                                  Label tmpLabel = new Label(y++, x, col.getStr("ITEM_NAME"), formatTitle);
+                                  sheets.addCell(tmpLabel);
+                              }
+                          }
+                          sheets.setRowView(0, 500);
+                      } catch (WriteException e) {
+                          throw new RuntimeException(e.getMessage(), e);
+                      }
+                      
+                      paramBean.setQueryPageNowPage(i + 1); // 导出当前第几页
+                      OutBean out = queryExp(paramBean);
+                      afterExp(paramBean, out); // 执行导出查询后扩展方法
+                      try {
+                    	  strFormat = new WritableCellFormat(
+                                  new WritableFont(WritableFont.createFont("微软简仿宋"), 12)); // 设置字体
+                          strFormat.setWrap(true); // 自动换行
+                          strFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+                          strFormat = new WritableCellFormat(
+                                  new WritableFont(WritableFont.createFont("微软简仿宋"), 12)); // 设置字体
+                          strFormat.setWrap(true); // 自动换行
+                          strFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+
+                          // 添加数据体
+                         int rowNum1 = 0;
+                          for (Bean data : out.getDataList()) {
+                              rowNum1++;
+                              int y = 0;
+                              for (String key : cols.keySet()) {
+                                  Bean col = cols.get(key);
+                                  if (col.getInt("ITEM_LIST_FLAG") != Constant.YES_INT) {
+                                      continue;
+                                  }
+
+                                  if (key.endsWith("__NAME")) { // 默认为字符串
+                                      String cellData = data.getStr(key);
+
+                                      Label tmpLabel = new Label(y, rowNum1, cellData, strFormat);
+                                      sheets.addCell(tmpLabel);
+                                      if (columnWidthMap.containsKey(y)) {
+                                          if (columnWidthMap.get(y) < cellData.length()) {
+                                              columnWidthMap.put(y, cellData.length());
+                                          }
+                                      } else {
+                                          columnWidthMap.put(y, cellData.length());
+                                      }
+
+                                      int colWidth = columnWidthMap.get(y);
+
+                                      if (colWidth >= 40) {
+                                    	  sheets.setColumnView(y, 80);
+                                      } else if (colWidth >= 30) {
+                                    	  sheets.setColumnView(y, 60);
+                                      } else if (colWidth >= 20) {
+                                    	  sheets.setColumnView(y, 45);
+                                      } else {
+                                    	  sheets.setColumnView(y, 25);
+                                      }
+                                      y++;
+                                      continue;
+                                  }
+
+                                  Bean itemBean = serv.getItem(key);
+                                  if (itemBean.getStr("ITEM_FIELD_TYPE").equals(Constant.ITEM_FIELD_TYPE_NUM)) {
+
+                                      Double cellData = data.getDouble(col.getStr("ITEM_CODE"));
+                                      WritableCellFormat format = formatNumber(itemBean.getStr("ITEM_FIELD_LENGTH"));
+                                      jxl.write.Number number = new jxl.write.Number(y, rowNum1, cellData, format);
+                                      sheets.setColumnView(y, 25);
+                                      sheets.addCell(number);
+                                  } else {
+                                  	String cellData = data.getStr(col.getStr("ITEM_CODE"));
+                                  	 Label tmpLabel = new Label(y, rowNum1, cellData, strFormat);
+                                  	sheets.addCell(tmpLabel);
+                                     if (columnWidthMap.containsKey(y)) {
+                                         if (columnWidthMap.get(y) < cellData.length()) {
+                                             columnWidthMap.put(y, cellData.length());
+                                         }
+                                     } else {
+                                         columnWidthMap.put(y, cellData.length());
+                                     }
+
+                                     int colWidth = columnWidthMap.get(y);
+
+                                     if (colWidth >= 40) {
+                                    	 sheets.setColumnView(y, 80);
+                                     } else if (colWidth >= 30) {
+                                    	 sheets.setColumnView(y, 60);
+                                     } else if (colWidth >= 20) {
+                                    	 sheets.setColumnView(y, 45);
+                                     } else {
+                                    	 sheets.setColumnView(y, 25);
+                                     }
+                                  }
+                                  y++;
+                              }
+                          }
+                      } catch (Exception e) {
+                          throw new RuntimeException(e.getMessage(), e);
+                      }
+                  }
+            /*  int z = -1;
+              char asciiOfA = 'A';
+              int firstCell = asciiOfA;
+              boolean hasSumItem = false;
+              List<WritableCell> sumRow = new ArrayList<WritableCell>();
+              rowNum += 1;
+              for (String key : cols.keySet()) {
+                  Bean col = cols.get(key);
+                  if (col.getInt("ITEM_LIST_FLAG") == Constant.YES_INT) {
+                      if (key.endsWith("__NAME")) {
+                          key = key.replace("__NAME", "");
+                      }
+                      Bean item = serv.getItem(key);
+                      WritableCell tmpLabel = null;
+                      z += 1;
+                      WritableFont titleWf = new WritableFont(WritableFont.createFont("微软简仿宋"), 12,
+                              WritableFont.BOLD);
+                      WritableCellFormat formatTitle = new WritableCellFormat(titleWf);
+                      formatTitle.setWrap(true);
+                      formatTitle.setAlignment(jxl.format.Alignment.CENTRE);
+                      formatTitle.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                      formatTitle.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+                      formatTitle.setBackground(Colour.GREY_25_PERCENT);
+                      if(item==null){
+                      	continue;
+                      }
+                      WritableCellFormat sumNumFormat = formatNumber(item.getStr("ITEM_FIELD_LENGTH"));
+                      sumNumFormat.setBackground(Colour.GREY_25_PERCENT);
+                      // 如果启用了合计标志
+                      if (item.getInt("ITEM_SUM_FLAG") == Constant.YES_INT) {
+                          hasSumItem = true;
+                          String sumStart = (char) (firstCell + z) + "1";
+                          String sumEnd = ((char) (firstCell + z)) + "" + rowNum;
+                          tmpLabel = new Formula(z, rowNum, "SUM(" + sumStart + ":" + sumEnd + ")", sumNumFormat);
+                      } else {
+                          if (z == 0) {
+                              tmpLabel = new Label(z, rowNum, "合计", formatTitle);
+                          } else {
+                              tmpLabel = new Label(z, rowNum, "--", formatTitle);
+                          }
+                      }
+                      sumRow.add(tmpLabel);
+                  }
+              }
+              if (hasSumItem) {
+                  for (WritableCell cell : sumRow) {
+                      sheet.addCell(cell);
+                  }
+              } else {
+                  sumRow = null;
+              }
+               */   
+              }
+              workbook.write();
+          } catch (Exception e) {
+              log.error("导出Excel文件异常" + e.getMessage(), e);
+          } finally {
+        	  try {
+				workbook.close();
+			} catch (WriteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+              }
+			
+	  return file;
+
+  }
+  private WritableCellFormat formatNumber(String formatStr) throws WriteException {
+      String[] formatDef = formatStr.split(",");
+      int decimal = 0;
+      if (formatDef.length > 1) {
+          decimal = NumberUtils.createInteger(formatDef[1]);
+      }
+      String decimalFormat = "";
+      if (decimal > 0) {
+          decimalFormat = ".";
+          for (int i = 0; i < decimal; i++) {
+              decimalFormat += "0";
+          }
+      }
+      decimalFormat = "#,##0" + decimalFormat;
+      WritableCellFormat format = new WritableCellFormat(new NumberFormat(decimalFormat));
+      format.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
+      format.setAlignment(jxl.format.Alignment.CENTRE);
+      format.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+      return format;
+  }
     /**
      * 导入压缩数据，支持多条数据批量导入
      * @param paramBean 参数信息

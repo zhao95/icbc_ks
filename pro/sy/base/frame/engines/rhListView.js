@@ -1014,12 +1014,45 @@ rh.vi.listView.prototype._act = function(aId,aObj) {
 		    break;
 	    case UIConst.ACT_EXPORT_ZIP://批量导出zip
 		    taObj.bind("click",function() {
-		    	var select = _self.grid.getSelectPKCodes();
-		    	var data = {"_PK_":select.join(",")};
-		    	data = jQuery.extend(data,_self.whereData);
-		    	window.open(FireFly.getContextPath() + '/' + _self.opts.sId + '.expZip.do?data=' + 
-		    		encodeURIComponent(jQuery.toJSON(data)));
-		    }); 
+		    	var content = '<div class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-draggable ui-dialog-buttons rh-small-dialog rh-bottom-right-radius" tabindex="-1" role="dialog" aria-labelledby="ui-id-1" style="outline: 0px; z-index: 1002; height: auto; width: 290px; top: 100px; left: 501px; display: block;"><div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix" style="display: block; padding-right: 0px;"><span id="ui-id-1" class="ui-dialog-title">导出zip数据类型</span><a href="#" class="ui-dialog-titlebar-close ui-corner-all" role="button"><span class="ui-icon ui-icon-closethick"></span></a></div><div class="dictDialog ui-dialog-content ui-widget-content" id="EXPZIP_TYPE-dictDialog" scrolltop="0" scrollleft="0" style="width: auto; min-height: 0px; height: 207px;"><div class="dictTree-left"><div id="bbtree1509001394418" class="bbit-tree"><div class="bbit-tree-bwrap"><div class="bbit-tree-body bbit-tree-single"><ul class="bbit-tree-root bbit-tree-no-lines"><li class="bbit-tree-node"><div id="bbtree1509001394418_1" tpath="0" unselectable="on" title="EXCEL" itemid="1" class="bbit-tree-node-el bbit-tree-node-collapsed"><span class="bbit-tree-node-indent"></span><img class="bbit-tree-ec-icon bbit-tree-elbow" src="/sy/base/frame/coms/tree/images/s.gif"><img class="bbit-tree-node-icon" src="/sy/base/frame/coms/tree/images/s.gif"><a hidefocus="" class="bbit-tree-node-anchor" tabindex="1" href="javascript:void(0);"><span unselectable="on">EXCEL</span></a></div></li><li class="bbit-tree-node"><div id="bbtree1509001394418_2" tpath="1" unselectable="on" title="JSON" itemid="2" class="bbit-tree-node-el bbit-tree-node-collapsed"><span class="bbit-tree-node-indent"></span><img class="bbit-tree-ec-icon bbit-tree-elbow-end" src="/sy/base/frame/coms/tree/images/s.gif"><img class="bbit-tree-node-icon" src="/sy/base/frame/coms/tree/images/s.gif"><a hidefocus="" class="bbit-tree-node-anchor" tabindex="1" href="javascript:void(0);"><span unselectable="on">JSON</span></a></div></li></ul></div></div></div></div></div><div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" style="padding-left: 0px; width: 100%;"><div class="ui-dialog-buttonset"><span class="buttonCon">&nbsp;<button type="button">确认</button>&nbsp;</span><span class="buttonCon">&nbsp;<button type="button">关闭</button>&nbsp;</span></div></div></div>';	    	
+		    	 var content1 = '<div class="ui-widget-overlay" style="width: 1280px; height: 1518px; z-index: 1001;"></div>'
+		    	jQuery(content).appendTo(jQuery("body"));
+		    	jQuery(content1).appendTo(jQuery("body"));
+		    	$("span[class='buttonCon']:first").unbind("click").bind("click",function(){
+		    		if($("div[class='bbit-tree-node-el bbit-tree-node-collapsed bbit-tree-selected']").length==0){
+		    			alert("请选择导出ZIP类型");
+		    		}else{
+		    			debugger;
+		    			var str = $("div[class='bbit-tree-node-el bbit-tree-node-collapsed bbit-tree-selected']").find("span[unselectable='on']").html();
+		    			var select = _self.grid.getSelectPKCodes();
+		    			var data = {"_PK_":select.join(","),"_TYPEDC_":str};
+		    			data = jQuery.extend(data,_self.whereData);
+		    			window.open(FireFly.getContextPath() + '/' + _self.opts.sId + '.expZip.do?data=' + 
+		    					encodeURIComponent(jQuery.toJSON(data)));
+		    			$("div[class='ui-dialog ui-widget ui-widget-content ui-corner-all ui-draggable ui-dialog-buttons rh-small-dialog rh-bottom-right-radius']").remove();
+		    			$("div[class='ui-widget-overlay']").remove();
+		    		}
+		    	});
+		    	$("span[class='buttonCon']:last").unbind("click").bind("click",function(){
+		    		
+		    			$("div[class='ui-dialog ui-widget ui-widget-content ui-corner-all ui-draggable ui-dialog-buttons rh-small-dialog rh-bottom-right-radius']").remove();
+		    			$("div[class='ui-widget-overlay']").remove();
+		    	});
+		    	$("a[class='ui-dialog-titlebar-close ui-corner-all']").unbind("click").bind("click",function(){
+		    		
+	    			$("div[class='ui-dialog ui-widget ui-widget-content ui-corner-all ui-draggable ui-dialog-buttons rh-small-dialog rh-bottom-right-radius']").remove();
+	    			$("div[class='ui-widget-overlay']").remove();
+	    	});
+		    	
+		    	$("#bbtree1509001394418_2").unbind("click").bind("click",function(){
+		    	$(this).attr("class","bbit-tree-node-el bbit-tree-node-collapsed bbit-tree-selected");
+		    		$("#bbtree1509001394418_1").attr("class","bbit-tree-node-el bbit-tree-node-collapsed");
+		    	});
+		    	$("#bbtree1509001394418_1").unbind("click").bind("click",function(){
+		    		$(this).attr("class","bbit-tree-node-el bbit-tree-node-collapsed bbit-tree-selected");
+		    		$("#bbtree1509001394418_2").attr("class","bbit-tree-node-el bbit-tree-node-collapsed");
+		    	});
+		    });
 		    break;
 	    case UIConst.ACT_IMPORT_ZIP://批量导导入zip
 		    taObj.bind("click",function(event) {
