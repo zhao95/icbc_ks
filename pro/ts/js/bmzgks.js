@@ -7,10 +7,11 @@ var user_office_phone = System.getVar("@USER_OFFICE_PHONE@");
 var user_cmpy_date = System.getVar("@USER_CMPY_DATE@");
 var xm_id  = $("#xmidval").val();
 
-var bm_start="";
-var bm_end = "";
-var xm_name = "";
-var successinfo = "";
+var bm_start="";//报名开始时间
+var bm_end = "";//报名结束时间
+var xm_name = "";//项目名称
+var successinfo = "";//报名成功提示
+var yiyistate = "";
 //项目信息进行展示
 function xminfoshow(){
 	param={};
@@ -121,6 +122,8 @@ function xminfoshow(){
        				var shti = "";
        				var truetisi = "";
        				var tishiyu = "";
+       				var othergz = "";
+       				var zsgz = "";
        				for(var j=0;j<dataArray.length;j++){
        					if(j==0){
        						$("#"+a).append('<div style="height:5px;"></div>');
@@ -141,8 +144,29 @@ function xminfoshow(){
 								tishiyu=dataArray[j].tishiyu;
 							}
 						}
+						if(dataArray[j].othergz=="false"){
+							//除了证书 规则  其他规则不通过
+							othergz="false";
+						}
+						if(dataArray[j].zsgz!=""){
+							//证书规则 通过或不通过
+							 zsgz = dataArray[j].zsgz
+						}
 						$("#"+a).append('<div style="height:5px;"></div>');
 						
+       				}
+       				if(othergz=="false"){
+       					//审核不通过 不能异议
+       					yiyistate="0"
+       				}else if(othergz!="false"&&zsgz!=""){
+       					//启用证书规则
+       					if(zsgz=="true"){
+       						//审核通过
+       						yiyistate="0";
+       					}else{
+       						//审核不通过  可进行异议
+       						yiyistate="2";
+       					}
        				}
        				if(shArray==true&&truetisi=="true"){
        					$("#"+a).append('<div">管理任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
@@ -208,6 +232,7 @@ function xminfoshow(){
 			for(var n=0;n<neAry.length;n++){
 				if(neAry[n].ID==$($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("div").eq(0).attr("id")){
 					//只提交选中的考试
+					neAry[n].YIYIST=yiyistate;
 					neAry[n].YEAR="";
 					$($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("input[name='yzspan']").each(function(){
 						if($(this).val()==""){

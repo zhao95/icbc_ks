@@ -205,6 +205,18 @@ public class RuleServ extends CommonServ {
 							data.set("tishiyu", str);
 						}
 						
+						if("Y01".equals(shgz.getStr("GZK_ID"))){
+							//启用了证书规则
+							data.set("zsgz", pass);
+						}else{
+							//其它证书 有false 则 一定不通过 
+							if(!pass){
+								data.set("othergz", pass);
+							}else{
+								data.set("othergz", "");
+							}
+						}
+						
 						passList.add(data);
 
 					}

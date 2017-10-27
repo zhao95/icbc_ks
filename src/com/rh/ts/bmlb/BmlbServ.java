@@ -180,6 +180,7 @@ public class BmlbServ extends CommonServ {
 					String kslb_type = (String) job.get("BM_TYPE");
 					String kslb_id = (String) job.get("ID");
 					String rz_year = (String) job.get("YEAR");
+					String BM_YIYI_STATE = (String) job.get("YIYIST");
 					String wherelbk = "";
 					if (!kslb_mk_code.equals("")) {
 						wherelbk = "AND KSLBK_CODE=" + "'" + kslb_code + "'" + " AND KSLBK_XL_CODE=" + "'"
@@ -244,6 +245,8 @@ public class BmlbServ extends CommonServ {
 					}
 				}
 					Bean beans = new Bean();
+					
+					beans.set("BM_YIYI_STATE", BM_YIYI_STATE);
 					beans.set("RZ_YEAR", rz_year);
 					beans.set("BM_CODE", user_code);
 					beans.set("BM_NAME", user_name);
