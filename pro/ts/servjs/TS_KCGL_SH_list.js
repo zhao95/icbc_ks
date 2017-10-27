@@ -17,12 +17,14 @@ $("#TS_KCGL_SH .rhGrid").find("tr").each(function(index, item) {
 				$(item).css("color","red");
 			} 
 		}
-		
-		FireFly.doAct("TS_KCGL_UPDATE","count",{"_WHERE_":"and kc_id='"+dataId+"' and kc_commit = 1 and UPDATE_AGREE = 0"},true,false,function(data){
-			if(data._DATA_ > 0){
-				$(item).css("color","blue");
-			}
-		});
+		var odeptLevel = System.getVar("@ODEPT_LEVEL@");
+		if(odeptLevel == 1){
+			FireFly.doAct("TS_KCGL_UPDATE","count",{"_WHERE_":"and kc_id='"+dataId+"' and kc_commit = 1 and UPDATE_AGREE = 0"},true,false,function(data){
+				if(data._DATA_ > 0){
+					$(item).css("color","blue");
+				}
+			});
+		}
 		
 		$(item).find("td[icode='BUTTONS']").append(
 				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optLookBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">审核</span><span class="rh-icon-img btn-edit"></span></a>'
