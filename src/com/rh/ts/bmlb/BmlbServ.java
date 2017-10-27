@@ -244,11 +244,10 @@ public class BmlbServ extends CommonServ {
 						if(yzgzArg.length()>0){
 								 mind = mind.substring(0,mind.length()-1)+",{'VLIDATE':'STAY','TISHI':'','NAME':'管理任职已满"+rz_year+"年'}]";	
 								 mind=mind.replaceAll("\'", "\"");
+								 ad_result="0";
 						}
 					}
 				}
-					
-					
 					Bean beans = new Bean();
 					beans.set("RZ_YEAR", rz_year);
 					beans.set("BM_CODE", user_code);
@@ -284,6 +283,9 @@ public class BmlbServ extends CommonServ {
 						if (ad_result.equals("2")) {
 							beans.set("BM_SH_STATE", 2);
 						}
+						if (ad_result.equals("0")) {
+							beans.set("BM_SH_STATE", 2);
+						}
 					}
 					if (count == 2) {
 						beans.set("BM_SH_STATE", 0);
@@ -294,6 +296,9 @@ public class BmlbServ extends CommonServ {
 						}
 						if (ad_result.equals("2")) {
 							beans.set("BM_SH_STATE", 3);
+						}
+						if (ad_result.equals("0")) {
+							beans.set("BM_SH_STATE", 0);
 						}
 					}
 					Bean bmbean = ServDao.create(servId, beans);
@@ -375,6 +380,7 @@ public class BmlbServ extends CommonServ {
 					shBean.set("S_TDEPT",bmbean.getStr("S_TDEPT"));
 					shBean.set("S_DEPT",bmbean.getStr("S_DEPT"));
 					shBean.set("BM_KS_TIME", ks_time);
+					shBean.set("BM_STATUS", 0);
 					 if (count == 0) {
 					 shBean.set("SH_OTHER", user_code);
 					 ServDao.save("TS_BMSH_PASS", shBean);
@@ -387,6 +393,8 @@ public class BmlbServ extends CommonServ {
 					 }else if(ad_result.equals("2")){
 						 shBean.set("SH_OTHER", "");// 其他办理人
 						 ServDao.save("TS_BMSH_NOPASS", shBean);
+						 }else if(ad_result.equals("0")){
+							 ServDao.save("TS_BMSH_PASS", shBean);
 						 }
 					 }
 					//只有手动审核
@@ -394,7 +402,7 @@ public class BmlbServ extends CommonServ {
 						 if("".equals(allman)){
 							 return new OutBean().setError("报名失败没有审核人");
 						 }
-					 ServDao.save("TS_BMSH_STAY", shBean);
+						 ServDao.save("TS_BMSH_STAY", shBean);
 					 }
 					 //自动加手动
 					 if (count == 3) {
@@ -404,6 +412,9 @@ public class BmlbServ extends CommonServ {
 					 }
 					 if (ad_result.equals("2")) {
 					 ServDao.save("TS_BMSH_NOPASS", shBean);
+					 }
+					 if(ad_result.equals("0")){
+						 ServDao.save("TS_BMSH_STAY", shBean);
 					 }
 					}
 					 //自动审核保存到 报名明细中

@@ -370,7 +370,8 @@ position: absolute;
 					
 					<h6 class="modal-title">信息验证</h6>
 				</div>
-				<div style="padding-top:4%;padding-bottom:6%;margin-left:27%;font-size:16px;">请输入您已入职满&nbsp;<input style="width:20%" id="yzinput"/>&nbsp;年</div>
+				<div style="padding-left:5%;padding-right:5%;font-size:16px;color:red" id="tishiyu"></div>
+				<div style="padding-top:2%;padding-bottom:6%;margin-left:27%;font-size:16px;">请输入您已入职满&nbsp;<input style="width:20%" id="yzinput"/>&nbsp;年</div>
 				<div class="modal-footer" style="height:10%">
 					<button type="button" class="btn btn-primary" onclick="yztj()">提交</button>
 					

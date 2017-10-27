@@ -116,7 +116,7 @@ public class RuleServ extends CommonServ {
 					Bean gzmxGroup = convertGzmxToGroup(mxList); // 规则明细分组Bean,key:规则组
 					
 					for (Object gzId : gzmxGroup.keySet()) { // 遍历规则组
-
+						String str = "";
 						Bean shgz = gzBean.getBean(gzId); // 审核规则bean
 						if(shgz.size()==0||"N03".equals(shgz.getStr("GZK_ID"))){
 							continue;
@@ -131,8 +131,6 @@ public class RuleServ extends CommonServ {
 
 						boolean flag = false;
 						for (Bean bean : gzmxGroupList) {
-							
-
 							bean.putAll(bmBean); // 报名考试信息
 							bean.putAll(bmInfo); // 报名人信息
 							
@@ -148,11 +146,30 @@ public class RuleServ extends CommonServ {
 									flag=true;
 									result=false;
 								}
-							}else{
+							}else if(mx_name.indexOf("rzyear")!=-1){
+								//管理员任职年限提示
 								
+								str = bean.getStr("MX_VALUE2");
+								
+								JSONArray jsarray;
+								
+								try {
+									jsarray = new JSONArray(str);
+									
+									JSONObject jsonObject = jsarray.getJSONObject(jsarray.length()-1);
+									String string = jsonObject.getString("val");
+									str = mx_name.replace("#rzyear#", string);
+									
+								} catch (JSONException e) {
+									
+									e.printStackTrace();
+								}
+								result=false;
+							}else{
 								result = this.vlidateOne(clazz, bean); // 执行验证
+								
 							}
-
+							
 							if (gzType == 1) { // 审核不通过规则(与)
 
 								if (!result) {
@@ -181,9 +198,12 @@ public class RuleServ extends CommonServ {
 
  						data.set("MSG", msg);
 						if(flag==true&&pass==false){
+							//显示提示语
 							data.set("TISHI","TRUE");
+							data.set("tishiyu", str);
 						}else{
 							data.set("TISHI","");
+							data.set("tishiyu", str);
 						}
 						
 						passList.add(data);

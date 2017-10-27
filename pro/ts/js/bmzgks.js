@@ -83,7 +83,6 @@ function xminfoshow(){
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, false,true,function(data){
-			debugger;
     		yzgz=data;
     		//获取后台传过来的key
          	for(var i=0;i<checkeddata.length;i++){
@@ -121,6 +120,7 @@ function xminfoshow(){
        				}
        				var shti = "";
        				var truetisi = "";
+       				var tishiyu = "";
        				for(var j=0;j<dataArray.length;j++){
        					if(j==0){
        						$("#"+a).append('<div style="height:5px;"></div>');
@@ -138,6 +138,7 @@ function xminfoshow(){
 								shArray=false;
 							}else{
 								truetisi="true"
+								tishiyu=dataArray[j].tishiyu;
 							}
 						}
 						$("#"+a).append('<div style="height:5px;"></div>');
@@ -145,6 +146,7 @@ function xminfoshow(){
        				}
        				if(shArray==true&&truetisi=="true"){
        					$("#"+a).append('<div">管理任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
+       					$("#tishiyu").html(tishiyu);
        					$("#yzxx").modal("show");
        				}
        				if(shArray==false){
@@ -208,7 +210,11 @@ function xminfoshow(){
 					//只提交选中的考试
 					neAry[n].YEAR="";
 					$($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("input[name='yzspan']").each(function(){
-						neAry[n].YEAR = $(this).val();
+						if($(this).val()==""){
+							neAry[n].YEAR=0;
+						}else{
+							neAry[n].YEAR = $(this).val();
+						}
 					})
 					checkeddata.push(neAry[n]);
 				}
