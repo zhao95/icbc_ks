@@ -25,21 +25,34 @@ public class KcapMatch {
 	 *            待安排考生 {时长：bean{考生编码：单个bean/多个list}}
 	 * @param res
 	 *            资源
+	 * @param isConstrain
+	 *            是否强制安排
+	 * 
 	 * @return Bean 报名考生信息
 	 */
 	public static Bean matchUser(Bean freeZw, Bean ksBean, KcapResource res, boolean isConstrain) {
 
 		Bean filtBean = new Bean(ksBean);
 
+		Bean busyZwBean = res.getBusyZwBean();
+
+		freeZw.get("KC_ID");
+
+		freeZw.get("SJ_CC");
+
+		freeZw.get("SJ_DATE");
+
 		Bean rule = res.getRuleBean();
+
+		Bean constrainFiltBean = null;
 
 		rtnLoop:
 
 		for (Object key : rule.keySet()) {
-			
-			Bean constrainFiltBean = new Bean();
 
 			if (isConstrain) {
+
+				constrainFiltBean = new Bean();
 
 				constrainFiltBean = (Bean) filtBean.clone();
 			}
@@ -49,13 +62,13 @@ public class KcapMatch {
 			case "R001":
 
 				// 相同考试前后左右不相邻
-				filtR001(freeZw, res.getBusyZwBean(), filtBean);
+				filtR001(freeZw, busyZwBean, filtBean);
 
 				break;
 			case "R002":
 
 				// 同一考生同一场场次连排 (同一考生 同一天 同一考场 同一座位 上一场次)
-				boolean isRtn = filtR002(freeZw, res.getBusyZwBean(), filtBean);
+				boolean isRtn = filtR002(freeZw, busyZwBean, filtBean);
 
 				if (isRtn) {
 					break rtnLoop;
@@ -77,7 +90,7 @@ public class KcapMatch {
 			case "R005":
 
 				// 来自同一机构考生不连排
-				filtR005(freeZw, res.getBusyZwBean(), filtBean);
+				filtR005(freeZw, busyZwBean, filtBean);
 
 				break;
 			case "R007":
@@ -169,6 +182,8 @@ public class KcapMatch {
 
 			String zwhKey = kcId + "^" + cc + "^" + ccDate;
 
+			Bean busyZwKc = busyZwBean.getBean(zwhKey);
+
 			String zwh = freeZw.getStr("ZW_ZWH_XT"); // 座位号 (行-列)
 
 			String[] zwhArray = zwh.split("-");
@@ -177,32 +192,32 @@ public class KcapMatch {
 
 			int col = Integer.parseInt(zwhArray[1]);
 
-			String front = zwhKey + "^" + (row - 1) + "-" + col; // 前
+			String front = (row - 1) + "-" + col; // 前
 
-			if (busyZwBean.containsKey(front)) {
+			if (busyZwKc.containsKey(front)) {
 
-				filtR001Ks(filtBean, busyZwBean.getBean(front));
+				filtR001Ks(filtBean, busyZwKc.getBean(front));
 			}
 
-			String back = zwhKey + "^" + (row + 1) + "-" + col; // 后
+			String back = (row + 1) + "-" + col; // 后
 
-			if (busyZwBean.containsKey(back)) {
+			if (busyZwKc.containsKey(back)) {
 
-				filtR001Ks(filtBean, busyZwBean.getBean(back));
+				filtR001Ks(filtBean, busyZwKc.getBean(back));
 			}
 
-			String left = zwhKey + "^" + row + "-" + (col - 1); // 左
+			String left = row + "-" + (col - 1); // 左
 
-			if (busyZwBean.containsKey(left)) {
+			if (busyZwKc.containsKey(left)) {
 
-				filtR001Ks(filtBean, busyZwBean.getBean(left));
+				filtR001Ks(filtBean, busyZwKc.getBean(left));
 			}
 
-			String right = zwhKey + "^" + row + "-" + (col + 1); // 右
+			String right = row + "-" + (col + 1); // 右
 
-			if (busyZwBean.containsKey(right)) {
+			if (busyZwKc.containsKey(right)) {
 
-				filtR001Ks(filtBean, busyZwBean.getBean(right));
+				filtR001Ks(filtBean, busyZwKc.getBean(right));
 			}
 
 		} catch (Exception e) {
@@ -298,8 +313,6 @@ public class KcapMatch {
 
 			String zwh = freeZw.getStr("ZW_ZWH_XT"); // 座位号 (行-列)
 
-			// String zwhKey = kcId + "^" + cc + "^" + ccDate + "^" + zwh;
-
 			Bean filtTemp = new Bean();
 
 			for (Object key : busyZwBean.keySet()) {
@@ -314,12 +327,11 @@ public class KcapMatch {
 
 					String dateTemp = array[2];
 
-					String zwhTemp = array[3];
-
 					// 同一天 同一考场 同一座位 上一场次
-					if (dateTemp.equals(ccDate) && kcIdTemp.equals(kcId) && zwhTemp.equals(zwh) && ccTemp == (cc - 1)) {
+					if (dateTemp.equals(ccDate) && kcIdTemp.equals(kcId) && busyZwBean.getBean(key).containsKey(zwh)
+							&& ccTemp == (cc - 1)) {
 
-						Bean busy = busyZwBean.getBean(key);
+						Bean busy = busyZwBean.getBean(key).getBean(zwh);
 
 						String ucode = busy.getStr("U_CODE"); // 考生编码
 
@@ -454,6 +466,8 @@ public class KcapMatch {
 
 			String zwhKey = kcId + "^" + cc + "^" + ccDate;
 
+			Bean busyZwKc = busyZwBean.getBean(zwhKey);
+
 			String zwh = freeZw.getStr("ZW_ZWH_XT"); // 座位号 (行-列)
 
 			String[] zwhArray = zwh.split("-");
@@ -462,18 +476,18 @@ public class KcapMatch {
 
 			int col = Integer.parseInt(zwhArray[1]);
 
-			String left = zwhKey + "^" + row + "-" + (col - 1); // 左
+			String left = row + "-" + (col - 1); // 左
 
-			if (busyZwBean.containsKey(left)) {
+			if (busyZwKc.containsKey(left)) {
 
-				filtR005Ks(filtBean, busyZwBean.getBean(left));
+				filtR005Ks(filtBean, busyZwKc.getBean(left));
 			}
 
-			String right = zwhKey + "^" + row + "-" + (col + 1); // 右
+			String right = row + "-" + (col + 1); // 右
 
-			if (busyZwBean.containsKey(right)) {
+			if (busyZwKc.containsKey(right)) {
 
-				filtR005Ks(filtBean, busyZwBean.getBean(right));
+				filtR005Ks(filtBean, busyZwKc.getBean(right));
 			}
 
 		} catch (Exception e) {
@@ -569,6 +583,8 @@ public class KcapMatch {
 
 			String zwhKey = kcId + "^" + cc + "^" + ccDate;
 
+			Bean busyZwKc = busyZwBean.getBean(zwhKey);
+
 			String zwh = freeZw.getStr("ZW_ZWH_XT"); // 座位号 (行-列)
 
 			String[] zwhArray = zwh.split("-");
@@ -577,13 +593,13 @@ public class KcapMatch {
 
 			int col = Integer.parseInt(zwhArray[1]);
 
-			String front = zwhKey + "^" + (row - 1) + "-" + col; // 前
-			String back = zwhKey + "^" + (row + 1) + "-" + col; // 后
-			String left = zwhKey + "^" + row + "-" + (col - 1); // 左
-			String right = zwhKey + "^" + row + "-" + (col + 1); // 右
+			String front = (row - 1) + "-" + col; // 前
+			String back = (row + 1) + "-" + col; // 后
+			String left = row + "-" + (col - 1); // 左
+			String right = row + "-" + (col + 1); // 右
 
-			if (busyZwBean.containsKey(front) || busyZwBean.containsKey(back) || busyZwBean.containsKey(left)
-					|| busyZwBean.containsKey(right)) {
+			if (busyZwKc.containsKey(front) || busyZwKc.containsKey(back) || busyZwKc.containsKey(left)
+					|| busyZwKc.containsKey(right)) {
 
 				filtBean = null;
 			}
@@ -592,7 +608,7 @@ public class KcapMatch {
 
 			filtBean = null;
 		}
-		
+
 		return filtBean;
 	}
 
@@ -664,7 +680,7 @@ public class KcapMatch {
 			return;
 		}
 
-		String kcLv = freeZw.getStr("KC_LV"); //考场层级 一级考场 二级考场
+		String kcLv = freeZw.getStr("KC_LV"); // 考场层级 一级考场 二级考场
 
 		String jsonStr = rule.getStr("MX_VALUE2");
 
