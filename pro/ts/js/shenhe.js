@@ -1066,7 +1066,6 @@ var listPage = function () {
      this.gotoPage(this._lPage.PAGES);
  };
  listPage.prototype.bldTable = function (listData) {
-	 debugger;
 	 var table = "";
 	 var checkbox = "";
 	 if(tabnum==1){

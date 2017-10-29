@@ -285,6 +285,7 @@ public class BmlbServ extends CommonServ {
 							beans.set("BM_SH_STATE", 2);
 						}
 						if (ad_result.equals("0")) {
+							//通过
 							beans.set("BM_SH_STATE", 2);
 						}
 					}
@@ -350,8 +351,6 @@ public class BmlbServ extends CommonServ {
 						allman= blist.substring(0,blist.length()-1);
 						node_name = out.getStr("NODE_NAME");
 						SH_LEVEL = out.getInt("SH_LEVEL");	
-					}else{
-						return new OutBean().setError("没有审核人");
 					}
 
 					// 添加到审核表中
@@ -405,11 +404,13 @@ public class BmlbServ extends CommonServ {
 					 }
 					 //自动加手动
 					 if (count == 3) {
-						 shBean.set("SH_OTHER", allman);// 其他办理人
 					 if (ad_result.equals("1")) {
+						 shBean.set("SH_OTHER", "");// 其他办理人
 					 ServDao.save("TS_BMSH_PASS", shBean);
 					 }
 					 if (ad_result.equals("2")) {
+						 shBean.set("SH_OTHER", "");// 其他办理人
+
 					 ServDao.save("TS_BMSH_NOPASS", shBean);
 					 }
 					 if(ad_result.equals("0")){
@@ -1406,10 +1407,12 @@ public class BmlbServ extends CommonServ {
 			for (Bean bean : finds) {
 				if("".equals(bean.getStr("SH_UCODE"))){
 					return new OutBean().set("yzxx", bean.getStr("SH_MIND"));
+				}else{
+					return new OutBean().set("yzxx","");
 				}
 			}
 		}
-		return new OutBean().setError("获取验证信息失败");
+		return new OutBean().set("yzxx","");
 	}
 	
 	/**

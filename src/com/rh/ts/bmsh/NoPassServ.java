@@ -712,11 +712,16 @@ public class NoPassServ extends CommonServ {
 		}else{*/
 			//管理员以下的所有机构部门
 			
-			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
-			for (Bean bean : finds) {
-				dept_code+=","+bean.getStr("DEPT_CODE");
+			if(user.getDeptCode().equals("0010100000")){
+				//所有人员
+				deptwhere="";
+			}else{
+				List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
+				for (Bean bean : finds) {
+					dept_code+=","+bean.getStr("DEPT_CODE");
+				}
+				deptwhere = "AND S_DEPT IN ("+dept_code+")";
 			}
-			 deptwhere = "AND S_DEPT IN ("+dept_code+")";
 		
 		
 		//根据审核  机构 匹配当前机构下的所有人

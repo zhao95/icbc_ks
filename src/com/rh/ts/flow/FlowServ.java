@@ -248,6 +248,10 @@ public class FlowServ extends CommonServ {
 							node_name = bean2.getStr("NODE_NAME");
 						}
 					}
+					 if(bean.getStr("DEPT_CODE").equals(userBean.getDeptCode())){
+							s+=bean.getStr("SHR_USERCODE")+",";
+							node_name = bean2.getStr("NODE_NAME");
+						}
 				}
 			
 		}
@@ -276,6 +280,10 @@ public class FlowServ extends CommonServ {
 							s+=bean.getStr("SHR_USERCODE")+",";
 							node_name = bean2.getStr("NODE_NAME");
 						}
+					}
+					 if(bean.getStr("DEPT_CODE").equals(userBean.getDeptCode())){
+						s+=bean.getStr("SHR_USERCODE")+",";
+						node_name = bean2.getStr("NODE_NAME");
 					}
 				}
 		}

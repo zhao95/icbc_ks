@@ -22,7 +22,9 @@ public class YearLimit implements IRule {
 		String id = userBean.getStr("_PK_");
 		Bean find = ServDao.find("SY_ORG_USER",id);
 		String str = find.getStr("USER_WORK_DATE");
-		
+		if("".equals(str)){
+			return false;
+		}
 		//判断此人入职时长
 		
 		long time2 = 0;

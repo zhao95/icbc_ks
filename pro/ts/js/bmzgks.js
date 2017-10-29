@@ -718,8 +718,33 @@ function xminfoshow(){
 		   $($(tds[6]).find("div").eq(0)).html("");
 	}	
 	
+	$("#user_mobile1").blur(function(){
+		var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+		if(!myreg.test($("#user_mobile1").val())){ 
+		    alert('请输入有效的手机号码！'); 
+		    return false; 
+		} 
+
+	})
+	$("#user_mobile2").blur(function(){
+		var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+		if(!myreg.test($("#user_mobile1").val())){ 
+		    alert('请输入有效的手机号码！'); 
+		    return false; 
+		} 
+
+	})
+	
+	
 	//获取应考试的值
 	function tijiao(){
+		if($("#user_mobile1").val()==""){
+			alert("请填写手机号");
+			$("#tjbt").attr("data-target","");
+			return false;
+		}
+		
+		
 		if($("input[name=checkboxaa]:checked").length==0){
 			alert("请点选考试");
 			$("#tjbt").attr("data-target","");
@@ -729,7 +754,6 @@ function xminfoshow(){
 		var rowlength = motaitable.rows.length-1;
 		//选中了 重复的报名需要先删除再提交
 		var exist = false;
-		debugger;
 			$("div[name=existedbm]").each(function(){
 				$(this.parentNode.parentNode.parentNode).find("input[name=checkboxaa]").each(function(){
 					if($(this).prop("checked")){
@@ -846,6 +870,8 @@ function xminfoshow(){
 				       '<td style="text-align:left">'+tds[4].innerHTML+'</td>';
 		       }
 			}
+			
+			
 			 $("#tjbt").attr("data-target","#tiJiao");
 	}
 	

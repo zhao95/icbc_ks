@@ -885,11 +885,16 @@ public class StayServ extends CommonServ {
 		 deptwhere = "AND S_DEPT IN ("+deptcodes+")";
 		}else{*/
 			//管理员以下的所有机构
+		if(user.getDeptCode().equals("0010100000")){
+			//所有人员
+			deptwhere="";
+		}else{
 			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
 			for (Bean bean : finds) {
 				dept_code+=","+bean.getStr("DEPT_CODE");
 			}
-			 deptwhere = "AND S_DEPT IN ("+dept_code+")";
+			deptwhere = "AND S_DEPT IN ("+dept_code+")";
+		}
 		//根据审核  机构 匹配当前机构下的所有人
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();
@@ -1002,11 +1007,17 @@ public class StayServ extends CommonServ {
 		}else{
 			//自己所在机构以下的所有数据
 			//管理员以下的所有机构
-			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
-			for (Bean bean : finds) {
-				dept_code+=","+bean.getStr("DEPT_CODE");
+			String deptwhere1="";
+			if(user.getDeptCode().equals("0010100000")){
+				//所有人员
+				 deptwhere1 = "AND XM_ID='"+xmid+"'";
+			}else{
+				List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
+				for (Bean bean : finds) {
+					dept_code+=","+bean.getStr("DEPT_CODE");
+				}
+				deptwhere1 = "AND S_DEPT IN ("+dept_code+") AND XM_ID='"+xmid+"'";
 			}
-			String deptwhere1 = "AND S_DEPT IN ("+dept_code+") AND XM_ID='"+xmid+"'";
 			String where2 = deptwhere1;
 			 list = ServDao.finds("TS_BMSH_STAY", where2);
 			 list1 = ServDao.finds("TS_BMSH_PASS", where2);

@@ -7,6 +7,7 @@ function init(){
 	var result = FireFly.doAct("TS_BMLB_BM","getShowData",param);
 	var result1 = FireFly.doAct("TS_BMLB_BM","getZdYzxx",param);
 	var dataArray = result1.yzxx;
+	
 	if(dataArray!=""){
 		dataArray=dataArray.replace(/'/g, '"');  
 		dataArray=JSON.parse(dataArray);
@@ -47,24 +48,26 @@ function init(){
 			           '<td id="yzxx"></td>',
 			           '</tr>'].join("");
 			$("#tableid tbody").append(trs);
-			
- 	 		for(var j=0;j<dataArray.length;j++){
- 					if(j==0){
- 						$("#yzxx").append('<div style="height:5px;"></div>');
- 					}
- 					if(dataArray[j].VLIDATE=="true"){
-                     $("#yzxx").append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'</div>');
-    					
- 				}if(dataArray[j].VLIDATE=="false"){
- 					
- 						$("#yzxx").append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');
- 				}
- 				
- 				if(dataArray[j].VLIDATE=="STAY"){
- 					
+			if(dataArray!=""){
+				
+				for(var j=0;j<dataArray.length;j++){
+					if(j==0){
+						$("#yzxx").append('<div style="height:5px;"></div>');
+					}
+					if(dataArray[j].VLIDATE=="true"){
+						$("#yzxx").append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'</div>');
+						
+					}if(dataArray[j].VLIDATE=="false"){
+						
+						$("#yzxx").append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');
+					}
+					
+					if(dataArray[j].VLIDATE=="STAY"){
+						
 						$("#yzxx").append('<div">'+dataArray[j].NAME+'</div>');
+					}
 				}
- 				}
+			}
 			
 		}else{
 				//非资格
