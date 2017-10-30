@@ -6,6 +6,8 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServMgr;
+import com.rh.ts.xmgl.kcap.KcapResource;
+import com.rh.ts.xmgl.kcap.arrange.ArrangeSeat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,5 +64,30 @@ public class YapzwServ extends CommonServ {
         outBean.setData(beanList);
         return outBean;
     }
+    
+    
+    /**
+     * 执行考场自动安排座位
+     * @param paramBean
+     * @return
+     */
+	public OutBean doArrangeSeat(ParamBean paramBean) {
+
+		OutBean outBean = new OutBean();
+
+		String xmId = paramBean.getStr("XM_ID");
+
+		String odeptId = paramBean.getStr("ODEPT_CODE");
+
+		KcapResource res = new KcapResource(xmId, odeptId);
+		
+		ArrangeSeat as = new ArrangeSeat();
+		
+		as.doArrange(res);
+		
+		outBean.setOk();
+
+		return outBean;
+	}
 
 }

@@ -31,16 +31,13 @@ public class KcapMatch {
 	 * @return Bean 报名考生信息
 	 */
 	public static Bean matchUser(Bean freeZw, Bean ksBean, KcapResource res, boolean isConstrain) {
-
-		Bean filtBean = new Bean(ksBean);
-
+		
 		Bean busyZwBean = res.getBusyZwBean();
 
-		freeZw.get("KC_ID");
+		// 根据考试时长筛选考生
+		filtR000(freeZw, busyZwBean, ksBean);
 
-		freeZw.get("SJ_CC");
-
-		freeZw.get("SJ_DATE");
+		Bean filtBean = new Bean(ksBean);
 
 		Bean rule = res.getRuleBean();
 
@@ -775,4 +772,56 @@ public class KcapMatch {
 
 	}
 
+	/**
+	 * 筛选 60、90分钟考试混排;120分钟混排;150分钟混排
+	 * 
+	 * @param freeZw
+	 * @param busyZwBean
+	 * @param filtBean
+	 */
+	private static void filtR000(Bean freeZw, Bean busyZwBean, Bean filtBean) {
+
+		String busyKey = freeZw.getStr("KC_ID") + "^" + freeZw.getStr("SJ_CC") + "^" + freeZw.getStr("SJ_DATE");
+
+		if (busyZwBean.containsKey(busyKey)) {
+
+			Bean busyZwKc = busyZwBean.getBean(busyKey);
+
+			if (busyZwKc != null && !busyZwKc.isEmpty()) {
+
+				Bean tb = new Bean();
+
+				for (Object key : busyZwKc.keySet()) {
+
+					String ksTime = busyZwKc.getBean(key).getStr("BM_KS_TIME");
+
+					tb.set(ksTime, ksTime);
+				}
+
+				if (tb.containsKey("60") && !tb.containsKey("90")) { // 考试时长只包含60分钟
+
+					filtBean.remove("90");
+					filtBean.remove("120");
+					filtBean.remove("150");
+
+				} else if (tb.containsKey("90")) { // 考试时长包含90分钟
+
+					filtBean.remove("120");
+					filtBean.remove("150");
+
+				} else if (tb.containsKey("120")) { // 考试时长含120分钟
+
+					filtBean.remove("60");
+					filtBean.remove("90");
+					filtBean.remove("150");
+
+				} else if (tb.containsKey("150")) { // 考试时长含150分钟
+
+					filtBean.remove("60");
+					filtBean.remove("90");
+					filtBean.remove("120");
+				}
+			}
+		}
+	}
 }

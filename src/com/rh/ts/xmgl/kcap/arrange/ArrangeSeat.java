@@ -11,7 +11,7 @@ import com.rh.ts.xmgl.kcap.KcapRuleEnum;
 
 public class ArrangeSeat {
 
-	public void doArrange(Bean param, KcapResource res) {
+	public void doArrange(KcapResource res) {
 
 		int priority = res.getKsPriority(); // 0 最少考场 1 最少场次
 
@@ -197,7 +197,7 @@ public class ArrangeSeat {
 
 						busyZwKcTemp.set(zwhKey, busyZw);
 
-						resetBusyZw.set(kcKey, busyZw);
+						resetBusyZw.set(kcKey, busyZwKcTemp);
 
 						// 将当前座位从 已安排资源移除
 						res.getBusyZwBean().remove(kcKey);
@@ -229,7 +229,7 @@ public class ArrangeSeat {
 
 						busyZwKcTemp.set(zwhKey, busyZw);
 
-						resetBusyZw.set(kcKey, busyZw);
+						resetBusyZw.set(kcKey, busyZwKcTemp);
 
 						// 将当前座位从 已安排资源移除
 						res.getBusyZwBean().remove(kcKey);
