@@ -576,7 +576,6 @@ rh.vi.cardView.prototype._bldWin = function() {
     	widPercent = this.widHeiArray[0];
     	hei = this.widHeiArray[1];
     	position = this.xyArray;
-    	alert(hei);
     	if(hei>1000){
     		hei="800";
     	}
@@ -610,10 +609,14 @@ rh.vi.cardView.prototype._bldWin = function() {
 			}
 		}
 	});
+	debugger;
+	jQuery("#" + this.dialogId).parent().css("position","absolute");
+	jQuery("#" + this.dialogId).parent().css("top","100px");
     jQuery("#" + this.tabsId).tabs({});
     this.mainLi.click();
     this.winDialog.dialog("open");
     this.winDialog.parent().addClass("rh-ui-dialog").addClass("bodyBack"); 
+    this.winDialog.parent().css("top","100px");
     if (this.miniCard) {//小卡片设置区分边框
     	this.winDialog.addClass("rh-ui-dialog-mini-border");
     	this.winDialog.parent().addClass("rh-ui-dialog-mini");
