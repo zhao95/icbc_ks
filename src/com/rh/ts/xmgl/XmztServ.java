@@ -58,7 +58,7 @@ public class XmztServ extends CommonServ {
 	
 	/**
 	 * 项目状态使用到的扩展类
-	 * 获取到项目管里中考场安排中的考试时间，将对应状态给前端进度条使用
+	 * 获取到项目管理中考场安排中的考试时间，将对应状态给前端进度条使用
 	 *	@param xm_id
 	 *	@return 字符串类型的考试时间对应的状态
 	 */
@@ -87,38 +87,43 @@ public class XmztServ extends CommonServ {
 		List<Object> queryParams1=new ArrayList<>();
 		queryParams1.add(xm_id);
 		List<Bean> beanList1 = Transaction.getExecutor().query(sql1,queryParams1);
-		//获取开始时间和结束时间，并将其格式化后与当前时间比较，返回状态值
-		String SJ_START_TIME = beanList1.get(0).getStr("SJ_START");
-		String SJ_END_TIME = beanList.get(0).getStr("SJ_END");
-		Date currentTime = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Date sj_start_Date = null;
-		Date sj_end_Date = null;
-		Boolean start_flag=true;
-		Boolean end_flag=true;
-		String divState="";
 		Bean returnBean = new Bean();
-		try {
-			sj_start_Date = sdf.parse(SJ_START_TIME);
-			sj_end_Date = sdf.parse(SJ_END_TIME);
-			start_flag = currentTime.before(sj_start_Date);
-			end_flag = currentTime.before(sj_end_Date);
-			if(start_flag){
-				divState="未开始";
-				returnBean.set("divState", divState);
-			}else{
-				if(end_flag){
-					divState="考试中";
+
+		if(beanList.size() > 0 && beanList1.size() > 0){
+			//获取开始时间和结束时间，并将其格式化后与当前时间比较，返回状态值
+			String SJ_START_TIME = beanList1.get(0).getStr("SJ_START");
+			String SJ_END_TIME = beanList.get(0).getStr("SJ_END");
+			Date currentTime = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			Date sj_start_Date = null;
+			Date sj_end_Date = null;
+			Boolean start_flag=true;
+			Boolean end_flag=true;
+			String divState="";
+			try {
+				sj_start_Date = sdf.parse(SJ_START_TIME);
+				sj_end_Date = sdf.parse(SJ_END_TIME);
+				start_flag = currentTime.before(sj_start_Date);
+				end_flag = currentTime.before(sj_end_Date);
+				if(start_flag){
+					divState="未开始";
 					returnBean.set("divState", divState);
 				}else{
-					divState="考后请假";
-					returnBean.set("divState", divState);
+					if(end_flag){
+						divState="考试中";
+						returnBean.set("divState", divState);
+					}else{
+						divState="考后请假";
+						returnBean.set("divState", divState);
+					}
 				}
+			} catch (ParseException e) {
+				throw new TipException("服务器异常，获取动态失败！");
 			}
-		} catch (ParseException e) {
-			throw new TipException("服务器异常，获取动态失败！");
+		}else{
+			returnBean.set("divState", "未启用该模块");
+			return returnBean;
 		}
-		
 		return returnBean;
 		
 	}
