@@ -66,6 +66,7 @@ function bindCard() {
  	 });
  	 //复制
  	 $(".hoverDiv [actcode='copy']").unbind("click").bind("click", function(){
+ 		
  		var pkCode = jQuery(this).attr("rowpk");
  	    param = {};
  	    param["pkCodes"] = pkCode;

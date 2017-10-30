@@ -23,7 +23,7 @@ rh.vi.rhSelectListView = function(options) {
  * 渲染页面主方法
  */
 rh.vi.rhSelectListView.prototype.show = function(event,positionArray, dialogSizeArray) {
-	debugger;
+	
 	var _self = this;
 	//工作流特殊处理frame
 	this._workflowControl();
