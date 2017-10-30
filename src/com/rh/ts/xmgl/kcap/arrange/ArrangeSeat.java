@@ -15,8 +15,6 @@ public class ArrangeSeat {
 
 		int priority = res.getKsPriority(); // 0 最少考场 1 最少场次
 
-		int ksConstrain = res.getKsConstrain(); // 不符合规则考试 是否强制安排
-
 		if (priority == 1) { // 最少场次
 
 			arrangeCc(res, false);
@@ -25,6 +23,8 @@ public class ArrangeSeat {
 
 			arrangeKc(res, false);
 		}
+
+		int ksConstrain = res.getKsConstrain(); // 不符合规则考试 是否强制安排
 
 		if (ksConstrain == 1) { // 强制安排
 
@@ -36,7 +36,6 @@ public class ArrangeSeat {
 
 				arrangeKc(res, true);
 			}
-
 		}
 
 		// 考生人数少于机器数一半时，考生左右间隔不低于1个座位，前后不低于1个
@@ -152,6 +151,7 @@ public class ArrangeSeat {
 
 	/**
 	 * 考生人数少于机器数一半时重新安排座位
+	 * 
 	 * @param res
 	 */
 	private void arrangeR006(KcapResource res) {
@@ -164,16 +164,12 @@ public class ArrangeSeat {
 
 		Bean resetBusyZw = new Bean();
 
-		int busyZwSize = res.getBusyZwBean().size();
-
 		Bean busyZwClone = (Bean) res.getBusyZwBean().clone();
 
-		for (Object key : busyZwClone.keySet()) {
+		for (Object kcKey : busyZwClone.keySet()) {
 
-			Bean busyZw = busyZwClone.getBean(key);
-
-			// key 考场Id^场次^日期^座位号
-			String[] keyArray = key.toString().split("^");
+			// key 考场Id^场次^日期
+			String[] keyArray = kcKey.toString().split("^");
 
 			String kcId = keyArray[0];
 
@@ -181,65 +177,81 @@ public class ArrangeSeat {
 
 			String date = keyArray[2];
 
-			String zwh = keyArray[3];
+			Bean busyZwKc = busyZwClone.getBean(kcKey);
 
-			int freeZwSize = 0;
+			int busyZwSize = busyZwKc.size();
 
-			if (priority == 1) { // 最少场次
+			for (Object zwhKey : busyZwKc.keySet()) {
 
-				freeZwSize = res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId).size();
+				Bean busyZw = busyZwKc.getBean(zwhKey);
 
-				if (busyZwSize < freeZwSize) { // 安排考生人数少于机器数一半
+				int freeZwSize = 0;
 
-					resetBusyZw.set(key, busyZw);
+				if (priority == 1) { // 最少场次
 
-					// 将当前座位从 已安排资源移除
-					res.getBusyZwBean().remove(key);
+					freeZwSize = res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId).size();
 
-					// 将当前座位添加 至 空闲座位资源
-					res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId).set(zwh, busyZw);
+					if (busyZwSize < freeZwSize) { // 安排考生人数少于机器数一半
 
-					resetKc.set(kcId, res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId));
+						Bean busyZwKcTemp = resetBusyZw.getBean(kcKey);
 
-					Bean temp = new Bean();
-					temp.set(busyZw.getStr("U_CODE"), busyZw);
+						busyZwKcTemp.set(zwhKey, busyZw);
 
-					if (resetKs.containsKey(date)) {
+						resetBusyZw.set(kcKey, busyZw);
 
-						resetKs.set(date, mergeBean(temp, resetKs.getBean(date)));
+						// 将当前座位从 已安排资源移除
+						res.getBusyZwBean().remove(kcKey);
 
-					} else {
-						resetKs.set(date, temp);
+						// 将当前座位添加 至 空闲座位资源
+						res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId).set(zwhKey, busyZw);
+
+						resetKc.set(kcId, res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId));
+
+						Bean temp = new Bean();
+						temp.set(busyZw.getStr("U_CODE"), busyZw);
+
+						if (resetKs.containsKey(date)) {
+
+							resetKs.set(date, mergeBean(temp, resetKs.getBean(date)));
+
+						} else {
+							resetKs.set(date, temp);
+						}
+					}
+
+				} else { // 最少考场
+
+					freeZwSize = res.getFreeCcZwBean().getBean(kcId).getBean(cc).getBean(date).size();
+
+					if (busyZwSize < freeZwSize) { // 安排考生人数少于机器数一半
+
+						Bean busyZwKcTemp = resetBusyZw.getBean(kcKey);
+
+						busyZwKcTemp.set(zwhKey, busyZw);
+
+						resetBusyZw.set(kcKey, busyZw);
+
+						// 将当前座位从 已安排资源移除
+						res.getBusyZwBean().remove(kcKey);
+
+						// 将当前座位添加 至 空闲座位资源
+						res.getFreeCcZwBean().getBean(kcId).getBean(cc).getBean(date).set(zwhKey, busyZw);
+
+						resetKc.set(kcId, res.getFreeCcZwBean().getBean(kcId).getBean(cc).getBean(date));
+
+						Bean temp = new Bean();
+						temp.set(busyZw.getStr("U_CODE"), busyZw);
+
+						if (resetKs.containsKey(date)) {
+
+							resetKs.set(date, mergeBean(temp, resetKs.getBean(date)));
+
+						} else {
+							resetKs.set(date, temp);
+						}
 					}
 				}
 
-			} else { // 最少考场
-
-				freeZwSize = res.getFreeCcZwBean().getBean(kcId).getBean(cc).getBean(date).size();
-
-				if (busyZwSize < freeZwSize) { // 安排考生人数少于机器数一半
-
-					resetBusyZw.set(key, busyZw);
-
-					// 将当前座位从 已安排资源移除
-					res.getBusyZwBean().remove(key);
-
-					// 将当前座位添加 至 空闲座位资源
-					res.getFreeCcZwBean().getBean(kcId).getBean(cc).getBean(date).set(zwh, busyZw);
-
-					resetKc.set(kcId, res.getFreeCcZwBean().getBean(kcId).getBean(cc).getBean(date));
-
-					Bean temp = new Bean();
-					temp.set(busyZw.getStr("U_CODE"), busyZw);
-
-					if (resetKs.containsKey(date)) {
-
-						resetKs.set(date, mergeBean(temp, resetKs.getBean(date)));
-
-					} else {
-						resetKs.set(date, temp);
-					}
-				}
 			}
 		}
 
@@ -384,7 +396,9 @@ public class ArrangeSeat {
 				}
 			}
 
-			res.getBusyZwBean().set(kcId + "^" + cc + "^" + date + "^" + zwh, busyZw);
+			Bean busyKc = (Bean) res.getBusyZwBean().getBean(kcId + "^" + cc + "^" + date).clone();
+			busyKc.set(zwh, busyZw);
+			res.getBusyZwBean().set(kcId + "^" + cc + "^" + date, busyKc);
 		}
 	}
 
