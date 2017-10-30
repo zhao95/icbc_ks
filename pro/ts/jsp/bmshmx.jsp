@@ -96,7 +96,7 @@
 		String address = bean.getStr("SH_ULOGIN");
 	%>
 		 <tr height="50px">
-		<td align="center"><%=j %></td><td><%=shdate %></td><td align="center"><%=shr %></td><td align="center"><%=shlog %></td><td align="center"><%=jibie %></td><td align="center"><%=status %></td><td id="liyou<%=i %>" align="left"><%=liyou %></td><td align="center"><%=address %></td>
+		<td align="center"><%=j %></td><td><%=shdate %></td><td align="center"><%=shr %></td><td align="center"><%=shlog %></td><td align="center"><%=jibie %></td><td align="center"><%=status %></td><td id="liyou<%=i %>" align="center"><%=liyou %></td><td align="center"><%=address %></td>
 		</tr> 
 		<%}}%>
 	</tbody>

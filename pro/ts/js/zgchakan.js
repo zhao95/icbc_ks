@@ -23,6 +23,7 @@ function init(){
 	$("#xmname").html(xmname);
 	$("#bmtime").html("报名时间："+xm_state+"~~"+xm_end);
 	$("#ksxzs").html(ksxz);
+	$("#user_mobile1").html(result.bmbean.BM_PHONE);
 		 var jb = "";
 		 var lbname = result.bmbean.BM_LB;
 		 var  xlname= result.bmbean.BM_XL

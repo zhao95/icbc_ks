@@ -35,12 +35,14 @@ public class PasswordLoginModule extends AbstractLoginModule {
         String cmpyCode;
         // 接受的参数：id,password 或者 loginName,password,cmpyCode
         String id = paramBean.getStr(PARAM_ID);
+        
         String password = paramBean.getStr(PARAM_PASSWORD);
         if (id.length() > 0) { //id认证模式
             userBean = UserMgr.getUserByMobileOrMail(id);
             cmpyCode = userBean.getStr("CMPY_CODE");
         } else { //login和cmpy认证模式
             String loginName = paramBean.getStr(PARAM_LOGINNAME);
+            loginName = loginName.trim();
             cmpyCode = paramBean.getStr(PARAM_CMPYCODE);
             if (loginName.length() <= 0 || password.length() <= 0 || cmpyCode.length() <= 0) {
                 throw new RuntimeException("认证参数错误，用户名：" + loginName + ";公司编码：" + cmpyCode 

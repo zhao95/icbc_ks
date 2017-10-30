@@ -709,17 +709,17 @@ function selectcreate(){
               }));
           } else {
 // 		this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
-              this._page.append("<span class='disabled ui-corner-4'><</span>");
+              this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
           }
           this._page.append("<span class='current ui-corner-4'>" + this._lPage.NOWPAGE + "</span>");	//当前页
           if (this._lData.length === this._lPage.SHOWNUM) {//下一页
 // 		this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
-              this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+              this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function () {
                   _self.nextPage();
               }));
           } else {
 // 		this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
-              this._page.append("<span class='disabled ui-corner-4'>></span>");
+              this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
           }
       } else if (!jQuery.isEmptyObject(this._lPage)) {
           // 当前页码
@@ -738,12 +738,12 @@ function selectcreate(){
           // 显示上一页
           if (currentPageNum !== 1) {
 // 		this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
-              this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
+              this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function () {
                   _self.prePage();
               }));
           } else {
 // 		this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
-              this._page.append("<span class='disabled ui-corner-4'><</span>");
+              this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
           }
           // 移动页码
           if (currentPageNum > this.startNum + Math.floor((this.endNum - this.startNum) / 2)) {// 如果点击了后面的页码，则后移
@@ -802,12 +802,12 @@ function selectcreate(){
           // 显示下一页
           if (currentPageNum !== sumPage) {
 // 		this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
-              this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+              this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function () {
                   _self.nextPage();
               }));
           } else {
 // 		this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
-              this._page.append("<span class='disabled ui-corner-4'>></span>");
+              this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
           }
           // 显示跳转到指定页码
           if (sumPage > 6) {
