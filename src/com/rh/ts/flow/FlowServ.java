@@ -118,70 +118,121 @@ public class FlowServ extends CommonServ {
 		return list;
 	    }
 	 
-	    
-    /**
-     * 保存之后的拦截方法，由子类重载
-     *
-     * @param paramBean
-     *            参数信息 可以通过paramBean获取数据库中的原始数据信息： Bean oldBean =
-     *            paramBean.getSaveOldData();
-     *            可以通过方法paramBean.getFullData()获取数据库原始数据加上修改数据的完整的数据信息： Bean
-     *            fullBean = paramBean.getSaveFullData();
-     *            可以通过paramBean.getAddFlag()是否为true判断是否为添加模式
-     * @param outBean
-     *            输出信息 可以通过outBean.getSaveIds()获取实际插入的数据主键
-     */
-    public void afterSave(ParamBean paramBean, OutBean outBean) {
-	String dataId = paramBean.getId();
-	Boolean flag = paramBean.getAddFlag();
-	// 添加
-	if (flag) {
-	    int wfsSteps = paramBean.getInt("WFS_STEPS");
-	    createStep(dataId, wfsSteps);
-	} else {
-
-	    // 得到新级数
-	    int wfsSteps = paramBean.getInt("WFS_STEPS");
-	    // 得到旧级数
-	    int oldStept = paramBean.getSaveOldData().getInt("WFS_STEPS");
-
-	    if (wfsSteps != 0) {
-		if (wfsSteps != oldStept) {
-		    ServDao.deletes("TS_WFS_NODE_APPLY", new Bean().set("WFS_ID", dataId));
+	    /**
+	     * 保存之后的拦截方法，由子类重载
+	     *
+	     * @param paramBean
+	     *            参数信息 可以通过paramBean获取数据库中的原始数据信息： Bean oldBean =
+	     *            paramBean.getSaveOldData();
+	     *            可以通过方法paramBean.getFullData()获取数据库原始数据加上修改数据的完整的数据信息： Bean
+	     *            fullBean = paramBean.getSaveFullData();
+	     *            可以通过paramBean.getAddFlag()是否为true判断是否为添加模式
+	     * @param outBean
+	     *            输出信息 可以通过outBean.getSaveIds()获取实际插入的数据主键
+	     */
+	    public void afterSave(ParamBean paramBean, OutBean outBean) {
+		String dataId = paramBean.getId();
+		Boolean flag = paramBean.getAddFlag();
+		// 添加
+		if (flag) {
+		    int wfsSteps = paramBean.getInt("WFS_STEPS");
+		    createStep(dataId, wfsSteps);
+		} 
+		else {
+		    // 得到新级数
+		    int wfsSteps = paramBean.getInt("WFS_STEPS");
+		    // 得到旧级数
+		    int oldStept = paramBean.getSaveOldData().getInt("WFS_STEPS");
+		    if (wfsSteps != 0) {
+			     //新级数大于老级数
+			    if(wfsSteps>oldStept){
+			    	addStep( dataId,  wfsSteps, oldStept);
+			    }else{
+			    //老级数大于新级数
+			    	lessenStep( dataId,  wfsSteps);	
+			    }
+		    }
 		}
-		createStep(dataId, wfsSteps);
+	  }
+	     //创建
+	    public void createStep(String dataId, int step) {
+		for (int a = 0; a < step; a++) {
+		    Bean bean = new Bean();
+		    bean.set("WFS_ID", dataId);
+		    bean.set("NODE_STEPS", a + 1);
+		    switch (a + 1) {
+		    case 1:
+			bean.set("NODE_NAME", "最终审核级别");
+			break;
+		    case 2:
+			bean.set("NODE_NAME", "一级审核级别");
+			break;
+		    case 3:
+			bean.set("NODE_NAME", "二级审核级别");
+			break;
+		    case 4:
+			bean.set("NODE_NAME", "三级审核级别");
+			break;
+		    case 5:
+			bean.set("NODE_NAME", "最低级审核级别");
+			break;
+		    default:
+			break;
+		    }
+		    ServDao.save("TS_WFS_NODE_APPLY", bean);
+		  }
 	    }
-	}
-    }
-
-    public void createStep(String dataId, int step) {
-	for (int a = 0; a < step; a++) {
-	    Bean bean = new Bean();
-	    bean.set("WFS_ID", dataId);
-	    bean.set("NODE_STEPS", a + 1);
-	    switch (a + 1) {
-	    case 1:
-		bean.set("NODE_NAME", "最终审核级别");
-		break;
-	    case 2:
-		bean.set("NODE_NAME", "一级审核级别");
-		break;
-	    case 3:
-		bean.set("NODE_NAME", "二级审核级别");
-		break;
-	    case 4:
-		bean.set("NODE_NAME", "三级审核级别");
-		break;
-	    case 5:
-		bean.set("NODE_NAME", "最低级审核级别");
-		break;
-	    default:
-		break;
+	    //增加节点
+	    public void addStep(String dataId, int newSteps,int oldSteps) {
+	    	for (int a =oldSteps; a <newSteps ; a++) {
+	    	    Bean bean = new Bean();
+	    	    bean.set("WFS_ID", dataId);
+	    	    bean.set("NODE_STEPS", a + 1);
+	    	    switch (a + 1) {
+	    	    case 1:
+	    		bean.set("NODE_NAME", "最终审核级别");
+	    		break;
+	    	    case 2:
+	    		bean.set("NODE_NAME", "一级审核级别");
+	    		break;
+	    	    case 3:
+	    		bean.set("NODE_NAME", "二级审核级别");
+	    		break;
+	    	    case 4:
+	    		bean.set("NODE_NAME", "三级审核级别");
+	    		break;
+	    	    case 5:
+	    		bean.set("NODE_NAME", "最低级审核级别");
+	    		break;
+	    	    default:
+	    		break;
+	    	    }
+	    	    ServDao.save("TS_WFS_NODE_APPLY", bean);
+	    	}
+	    	 String where = " and WFS_ID='" + dataId + "'";
+			 ServDao.finds("TS_WFS_NODE_APPLY", where);
+	        }
+	  //减少节点
+	    public void lessenStep(String dataId, int newSteps) {
+	    	String where = " and WFS_ID='" + dataId + "'";
+	   		List<Bean> listBeans=ServDao.finds("TS_WFS_NODE_APPLY", where);
+	   		if(listBeans!=null && !listBeans.isEmpty()){
+	   			for(Bean  bean:listBeans){
+	   				SqlBean delSql = new SqlBean();
+	   				int  NODE_STEPS=bean.getInt("NODE_STEPS");
+	   				//String wheredelete = " and WFS_ID='" + dataId + "' and NODE_STEPS='"+NODE_STEPS+"'";
+	   				
+	   				delSql.set("NODE_STEPS", NODE_STEPS);
+	   				if(NODE_STEPS>newSteps){
+	   					ServDao.delete("TS_WFS_NODE_APPLY", delSql);
+	   				}
+	   			}
+	   		}
 	    }
-	    ServDao.save("TS_WFS_NODE_APPLY", bean);
-	}
-    }
-
+   
+	    
+	    
+	    
     /**
      * 提供报名审核流程的方法.
      * examerUserCode是起草人的用户编码，level为层级，xmId为ID,flowName为流程名字，shrUserCode为审核人用户编码
