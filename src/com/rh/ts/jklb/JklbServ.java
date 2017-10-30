@@ -96,21 +96,58 @@ public class JklbServ extends CommonServ {
     }
 
     /**
-     * 审核请假
+     * 人工审核请假
      *
      * @param paramBean
      * @return
      */
     public OutBean updateData(Bean paramBean) {
-        Transaction.begin();
+       /* String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
+        String sh_status = paramBean.getStr("shstatus");//同意 不同意
+        String sh_reason = paramBean.getStr("shreason");//审核内容
+        String isRetreat = paramBean.getStr("isRetreat");//是否被退回
+        String paramTodoId = paramBean.getStr("todoId");//待办id*/
+        // sh_status = sh_status.equals("1") ? "同意" : "不同意";
+        UserBean currentUser = Context.getUserBean();//
+        return this.updateData2(paramBean, currentUser);
+    }
+
+    /**
+     * 系统审核请假
+     *
+     * @param paramBean {shstatus:"2",shreason:...,isRetreat:"true",todoId:"todoId"}
+     * @return OutBean
+     */
+    public OutBean updateDataBySystem(Bean paramBean) {
+       /* String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
+        String sh_status = paramBean.getStr("shstatus");//同意 不同意
+        // sh_status = sh_status.equals("1") ? "同意" : "不同意";
+        String sh_reason = paramBean.getStr("shreason");//审核内容
+        String isRetreat = paramBean.getStr("isRetreat");//是否被退回id*/
+
+        String paramTodoId = paramBean.getStr("todoId");//待办
+        Bean todoBean = ServDao.find(TODO_SERVID, paramTodoId);
+        String ownerCode = todoBean.getStr("OWNER_CODE");
+        UserBean currentUser = UserMgr.getUser(ownerCode);
+        return this.updateData2(paramBean, currentUser);
+    }
+
+    /**
+     * 审核请假
+     *
+     * @param paramBean
+     * @return
+     */
+    private OutBean updateData2(Bean paramBean, UserBean currentUser) {
         OutBean outBean = new OutBean();
-        String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
+//        String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
         String sh_status = paramBean.getStr("shstatus");//同意 不同意
         String sh_reason = paramBean.getStr("shreason");//审核内容
         String isRetreat = paramBean.getStr("isRetreat");//是否被退回
         String paramTodoId = paramBean.getStr("todoId");//待办id
         // sh_status = sh_status.equals("1") ? "同意" : "不同意";
-        UserBean currentUser = Context.getUserBean();//
+
+        Transaction.begin();
         Bean todoBean = ServDao.find(TODO_SERVID, paramTodoId);
         String nodeSteps;
         if (todoBean == null) {
@@ -164,24 +201,27 @@ public class JklbServ extends CommonServ {
             jk_status = "1";
         }
         jkbean.set("JK_STATUS", jk_status);
-        ServDao.update(servId, jkbean);
+        ServDao.update(TSJK_SERVID, jkbean);
 
-        String jkKsname = jkbean.getStr("JK_KSNAME");
-        String[] bmIds = jkKsname.split(",");
-        for (String bmId : bmIds) {
-            ParamBean queryParamBean = new ParamBean();
-            queryParamBean.set("BM_ID", bmId);
-            Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
-            if (bean == null) {
-                continue;
+        if ("2".equals(jk_status)) {
+            //借考已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
+            String jkKsname = jkbean.getStr("JK_KSNAME");
+            String[] bmIds = jkKsname.split(",");
+            for (String bmId : bmIds) {
+                ParamBean queryParamBean = new ParamBean();
+                queryParamBean.set("BM_ID", bmId);
+                Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
+                if (bean == null) {
+                    continue;
+                }
+                if ("1".equals(bean.getStr("BM_STATUS"))) {
+                    bean.set("BM_STATUS", "3");
+                } else {
+                    bean.set("BM_STATUS", "2");
+                }
+                bean.set("JK_ODEPT", jkbean.getStr("JK_YJFH"));
+                ServDao.update(TS_BMSH_PASS_SERVID, bean);
             }
-            if ("1".equals(bean.getStr("BM_STATUS"))) {
-                bean.set("BM_STATUS", "3");
-            } else {
-                bean.set("BM_STATUS", "2");
-            }
-            bean.set("JK_ODEPT", jkbean.getStr("JK_YJFH"));
-            ServDao.update(TS_BMSH_PASS_SERVID, bean);
         }
 
         if ("1".equals(jk_status)) {

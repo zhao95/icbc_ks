@@ -9,7 +9,6 @@ import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.util.Constant;
 
-import java.io.Console;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,9 +67,9 @@ public class QjlbServ extends CommonServ {
         qjbean.set("QJ_STATUS", "1");   //  1"审核中"; 2  "已通过";3 "未通过";
         qjbean.set("QJ_DATE", new SimpleDateFormat(dateFormatString).format(new Date()));
         qjbean.set("QJ_KSTIME", lbDate);//考试开始时间   todo  TS_BMSH_PASS  BM_ID  TS_BMLB_BM
-        qjbean.set("S_DEPT",bmBean.get("S_DEPT"));
-        qjbean.set("S_ODEPT",bmBean.get("S_ODEPT"));
-        qjbean.set("S_TDEPT",bmBean.get("S_TDEPT"));
+        qjbean.set("S_DEPT", bmBean.get("S_DEPT"));
+        qjbean.set("S_ODEPT", bmBean.get("S_ODEPT"));
+        qjbean.set("S_TDEPT", bmBean.get("S_TDEPT"));
         Bean qjbd = ServDao.create(servId, qjbean);
         //获取到请假id
         //获取请假表单对象
@@ -90,17 +89,14 @@ public class QjlbServ extends CommonServ {
         return outBean;
     }
 
+
     /**
-     * 审核请假
+     * 人工审批请假
      *
      * @param paramBean
      * @return
      */
     public OutBean updateData(Bean paramBean) {
-        Transaction.begin();
-        OutBean outBean = new OutBean();
-
-        String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
         //获取前台传过来的值
 //        String qj_status = paramBean.getStr("qjstatus");
 //        String qjId = paramBean.getStr("qjid");
@@ -114,6 +110,59 @@ public class QjlbServ extends CommonServ {
 //        String s_dname = paramBean.getStr("deptname");
 //        String usercode = paramBean.getStr("usercode");
         UserBean currentUser = Context.getUserBean();//当前用户
+        return this.updateData2(paramBean, currentUser);
+    }
+
+    /**
+     * 系统审核请假
+     *
+     * @param paramBean {shstatus:"2",shreason:...,isRetreat:"true",todoId:"todoId"}
+     * @return OutBean
+     */
+    public OutBean updateDataBySystem(Bean paramBean) {
+        //获取前台传过来的值
+        /*String sh_status = paramBean.getStr("shstatus");//同意 不同意
+        String sh_reason = paramBean.getStr("shreason");//审核内容
+        String isRetreat = paramBean.getStr("isRetreat");//是否被退回*/
+        String paramTodoId = paramBean.getStr("todoId");//待办id
+
+//        String qj_status = paramBean.getStr("qjstatus");
+//        String qjId = paramBean.getStr("qjid");
+
+//        String sh_statusStr = sh_status.equals("1") ? "同意" : "不同意";
+//        String user_longin = paramBean.getStr("userloginname");
+//        String user_name = paramBean.getStr("username");
+//        String s_dname = paramBean.getStr("deptname");
+//        String usercode = paramBean.getStr("usercode");
+        Bean todoBean = ServDao.find(TODO_SERVID, paramTodoId);
+        String ownerCode = todoBean.getStr("OWNER_CODE");
+        UserBean currentUser = UserMgr.getUser(ownerCode);
+        return this.updateData2(paramBean, currentUser);
+    }
+
+    /**
+     * 审核请假
+     *
+     * @param paramBean
+     * @return
+     */
+    private OutBean updateData2(Bean paramBean, UserBean currentUser) {
+        OutBean outBean = new OutBean();
+//        UserBean currentUser = Context.getUserBean();//当前用户
+        //获取前台传过来的值
+//        String qj_status = paramBean.getStr("qjstatus");
+//        String qjId = paramBean.getStr("qjid");
+        String sh_status = paramBean.getStr("shstatus");//同意 不同意
+        String sh_reason = paramBean.getStr("shreason");//审核内容
+        String isRetreat = paramBean.getStr("isRetreat");//是否被退回
+        String paramTodoId = paramBean.getStr("todoId");//待办id
+//        String sh_statusStr = sh_status.equals("1") ? "同意" : "不同意";
+//        String user_longin = paramBean.getStr("userloginname");
+//        String user_name = paramBean.getStr("username");
+//        String s_dname = paramBean.getStr("deptname");
+//        String usercode = paramBean.getStr("usercode");
+
+        Transaction.begin();
         Bean todoBean = ServDao.find(TODO_SERVID, paramTodoId);
         String nodeSteps;
         if (todoBean == null) {
@@ -169,23 +218,26 @@ public class QjlbServ extends CommonServ {
             qj_status = "1";
         }
         qjbean.set("QJ_STATUS", qj_status);
-        ServDao.update(servId, qjbean);
+        ServDao.update(TSQJ_SERVID, qjbean);
 
-        String qjKsname = qjbean.getStr("QJ_KSNAME");
-        String[] bmIds = qjKsname.split(",");
-        for (String bmId : bmIds) {
-            ParamBean queryParamBean = new ParamBean();
-            queryParamBean.set("BM_ID", bmId);
-            Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
-            if (bean == null) {
-                continue;
+        if ("2".equals(qj_status)) {
+            //请假已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
+            String qjKsname = qjbean.getStr("QJ_KSNAME");
+            String[] bmIds = qjKsname.split(",");
+            for (String bmId : bmIds) {
+                ParamBean queryParamBean = new ParamBean();
+                queryParamBean.set("BM_ID", bmId);
+                Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
+                if (bean == null) {
+                    continue;
+                }
+                if ("2".equals(bean.getStr("BM_STATUS"))) {
+                    bean.set("BM_STATUS", "3");
+                } else {
+                    bean.set("BM_STATUS", "1");
+                }
+                ServDao.update(TS_BMSH_PASS_SERVID, bean);
             }
-            if ("2".equals(bean.getStr("BM_STATUS"))) {
-                bean.set("BM_STATUS", "3");
-            } else {
-                bean.set("BM_STATUS", "1");
-            }
-            ServDao.update(TS_BMSH_PASS_SERVID, bean);
         }
 
         if ("1".equals(qj_status)) {
@@ -230,7 +282,7 @@ public class QjlbServ extends CommonServ {
         flowParamBean.set("flowName", 3); //1:报名审核流程 2:异地借考流程 3:请假审核流程
         OutBean shBean = ServMgr.act("TS_WFS_APPLY", "backFlow", flowParamBean);
 //        new FlowServ().backFlow(flowParamBean);
-        List<Bean> shList = (List<Bean>) shBean.get("result");
+        List<Bean> shList = shBean.getList("result");
         outBean.putAll(shBean);
         if (CollectionUtil.isEmpty(shList)) {
             if (shList != null && shList.size() == 0) {
@@ -405,9 +457,9 @@ public class QjlbServ extends CommonServ {
      */
     public int getLeaveCount(String userCode) {
         //今年审批过的请假
-         String where = "and USER_CODE = '" + userCode + "' and QJ_STATUS = '2'" +
-          " and to_date(QJ_DATE,'yyyy-MM-dd hh24:mi:ss') between to_date(to_char(sysdate, 'yyyy' )||'-01-01','yyyy-mm-dd') and to_date((to_char(sysdate, 'yyyy' )+1)||'-01-01','yyyy-mm-dd')";
-       // String where = "and  QJ_STATUS='2' and  USER_CODE='" + userCode + "'";
+        String where = "and USER_CODE = '" + userCode + "' and QJ_STATUS = '2'" +
+                " and to_date(QJ_DATE,'yyyy-MM-dd hh24:mi:ss') between to_date(to_char(sysdate, 'yyyy' )||'-01-01','yyyy-mm-dd') and to_date((to_char(sysdate, 'yyyy' )+1)||'-01-01','yyyy-mm-dd')";
+        // String where = "and  QJ_STATUS='2' and  USER_CODE='" + userCode + "'";
         List<Bean> queryQjList = ServDao.finds(TSQJ_SERVID, where);//获得当前已经请假的数据TS_QJLB_QJ
         int count = 0;
         if (queryQjList != null && !queryQjList.isEmpty()) {
@@ -418,7 +470,7 @@ public class QjlbServ extends CommonServ {
                 if (qjDates.length() > 0) {
                     String[] qjDate = qjDates.split(",");
                     count += qjDate.length;
-                } 
+                }
             }
         } else {
             count = 0;
