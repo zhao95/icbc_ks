@@ -576,6 +576,15 @@ rh.vi.cardView.prototype._bldWin = function() {
     	widPercent = this.widHeiArray[0];
     	hei = this.widHeiArray[1];
     	position = this.xyArray;
+    	alert(hei);
+    	if(hei>1000){
+    		hei="800";
+    	}
+    }else{
+    	if(hei>1000){
+    		hei="800";
+    	}
+
     }
 	jQuery("#" + this.dialogId).dialog({
 		autoOpen: false,
