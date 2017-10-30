@@ -609,7 +609,6 @@ rh.vi.cardView.prototype._bldWin = function() {
 			}
 		}
 	});
-	debugger;
 	jQuery("#" + this.dialogId).parent().css("position","absolute");
 	jQuery("#" + this.dialogId).parent().css("top","100px");
     jQuery("#" + this.tabsId).tabs({});
