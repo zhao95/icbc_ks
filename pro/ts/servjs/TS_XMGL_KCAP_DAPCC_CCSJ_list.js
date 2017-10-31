@@ -1,8 +1,8 @@
 var _viewer = this;
 
-$(".rhGrid-page").hide(); //隐藏分页区域
-
-$("ul[class='tabUL tabUL-bottom ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header']").hide(); //隐藏关联子表title
+$(".rhGrid-page").hide(); // 隐藏分页区域
+$("#TS_XMGL_KCAP_DAPCC_CCSJ .rhGrid").find("tr").unbind("dblclick");
+$("ul[class='tabUL tabUL-bottom ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header']").hide(); // 隐藏关联子表title
 
 var linkWhere = _viewer.opts.linkWhere;
 var ccId = linkWhere.split("'")[1];
@@ -35,9 +35,42 @@ _viewer.getBtn("myAdd").unbind("click").bind("click", function(event) {
 	    	_viewer.refresh();
 	    }
 	};
-	//2.用系统的查询选择组件 rh.vi.rhSelectListView()
+	// 2.用系统的查询选择组件 rh.vi.rhSelectListView()
 	var queryView = new rh.vi.rhSelectListView(options);
 	queryView.show(event);
+});
+
+$("#TS_XMGL_KCAP_DAPCC_CCSJ .rhGrid").find("tr").each(function(index, item) {
+	if(index != 0){
+		var dataId = item.id;
+		if(dataId == "") return;
+		var addType = $(item).find("td[icode='SJ_ADDTYPE']")[0].innerText;
+		var start = $(item).find("td[icode='SJ_START']")[0].innerText;
+		var end = $(item).find("td[icode='SJ_END']")[0].innerText;
+		if(addType !=1 && !CountMin(start,end)){
+			$(item).find("a").hide(); 
+		}
+	}
+});
+	
+function CountMin(val1,val2){
+	var val1 = val1.substring(11).split(":");
+	var val2 = val2.substring(11).split(":");
+	var num1 = parseInt(val1[0])*60 + parseInt(val1[1]);
+	var num2 = parseInt(val2[0])*60 + parseInt(val2[1]);
+	if(num2-num1 >= 120){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+_viewer.grid.getBtn("edit").unbind("click").bind("click",function() {
+	var pk = jQuery(this).attr("rowpk");// 获取主键信息
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+    temp[UIConst.PK_KEY] = pk;
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
 });
 
 /*

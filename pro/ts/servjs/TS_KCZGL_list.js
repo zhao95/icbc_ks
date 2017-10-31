@@ -3,7 +3,8 @@ var  module = 'EXAM_GROUP';
 $(".rhGrid").find("tr").unbind("dblclick");
 $("#TS_KCZGL .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
-		var dataId = item.id;		
+		var dataId = item.id;
+		if(dataId == "") return;
 		var state = $(item).find("td[icode='KCZ_STATE']").attr("title");
 		
 		$(item).find("td[icode='BUTTONS']").append("<div operCode='option' rowpk='"+dataId+"'><font size='3'>···</font></div>");

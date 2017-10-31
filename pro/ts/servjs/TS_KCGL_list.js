@@ -10,6 +10,7 @@ $(".rhGrid").find("tr").unbind("dblclick");
 $("#TS_KCGL .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
+		if(dataId == "") return;
 		//列表添加考场管理员 不用视图，提高查询效率
 		FireFly.doAct("TS_KCGL_GLY","finds",{"_SELECT_":"GLY_NAME","_WHERE_":"and kc_id = '"+dataId+"'"},true,false,function(data){
 			if(data._DATA_.length > 0){

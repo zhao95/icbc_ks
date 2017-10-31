@@ -4,6 +4,7 @@ $(".rhGrid").find("tr").unbind("dblclick");
 $("#TS_KCGL_SH .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
+		if(dataId == "") return;
 		var state = $(item).find("td[icode='KC_STATE']")[0].innerText;
 		var state2 = $(item).find("td[icode='KC_STATE2']")[0].innerText;
 		var user_pvlg=_viewer._userPvlg["TS_KCGL_SH_PVLG"];
