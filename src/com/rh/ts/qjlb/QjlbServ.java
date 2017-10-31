@@ -242,14 +242,20 @@ public class QjlbServ extends CommonServ {
             }
             //请假通过 修改请假次数和请假周数
             ParamBean getQxBean = new ParamBean();
-            getQxBean.put("bmids ", qjKsname);
+            getQxBean.put("bmids", qjKsname);
             getQxBean.put("user_code", qjbean.getStr("USER_CODE"));
             getQxBean.put("cishu", ConfMgr.getConf("TS_KSQJ_SETCONUTS", "0"));
             getQxBean.put("zhoushu", ConfMgr.getConf("TS_KSQJ_WEEK_MAXNUM", "0"));
             try {
-                ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
+           Bean   result =   ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
+           if(!"true".equals(result.getStr("yes"))){
+        	   Transaction.rollback();
+        	   outBean.setError((String)result.get(Constant.RTN_MSG));
+           }
             } catch (Exception e) {
                 e.printStackTrace();
+                Transaction.rollback();
+                outBean.setError("审批失败");
             }
         }
 

@@ -44,7 +44,7 @@ public class QjNumServ extends CommonServ {
 			int weeknum = finds.get(0).getInt("WEEK_NUM");
 			int cishunum = finds.get(0).getInt("CISHU_NUM");
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:MM:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
 			
 			if(weeknum==zhoushu){
 				//判断是否为同一周
@@ -122,13 +122,13 @@ public class QjNumServ extends CommonServ {
 		
 		String code = paramBean.getStr("user_code");
 		
-		UserBean userBean = Context.getUserBean(code);
+		Bean userBean = ServDao.find("SY_ORG_USER", code);
 		
-		String name = userBean.getName();
+		String name = userBean.getStr("USER_NAME");
 		
 		List<Bean> finds = ServDao.finds("TS_BM_QJ_NUM","AND QJ_CODE='"+code+"'");
 		
-		if(finds!=null){
+		if(finds!=null&&finds.size()!=0){
 			//一周  判断是否为同一周
 			Bean bean = finds.get(0);
 			
@@ -138,7 +138,7 @@ public class QjNumServ extends CommonServ {
 			//结束时间
 			String endtime = bean.getStr("XM_END_TIME");
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:MM:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
 			
 			String newstartdate = "";
 			
@@ -275,7 +275,7 @@ public class QjNumServ extends CommonServ {
 				    Bean newbean = new Bean(); 
 					newbean.set("QJ_CODE", code);
 					newbean.set("WEEK_NUM", "1");
-					newbean.set("CISHU_NUMM", wannacishu);
+					newbean.set("CISHU_NUM", wannacishu);
 					newbean.set("QJ_NAME", name);
 					//根据报名id找项目考试开始结束时间
 					String bmid = bmidarr[0];

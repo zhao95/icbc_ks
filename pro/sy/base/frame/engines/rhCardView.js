@@ -162,14 +162,6 @@ rh.vi.cardView.prototype.show = function(drag) {
 	}
 	this._bldCardLayout();
 	this._afterLoad();
-	//将滚动条 下移
-	var heitht =  jQuery("div[class='form-container']").parent().parent().parent().css("height");
-	  //最外层 删除 滑动 
-	jQuery("div[class='form-container']").parent().parent().parent().removeClass("ui-dialog-content"); 
-	jQuery("div[class='form-container']").parent().parent().parent().css("height","");
-	jQuery("div[class='form-container']").parent().parent().parent().css("overflow-y",""); 
-	jQuery("div[class='form-container']").parent().parent().parent().css("overflow-x","");
-	jQuery("div[class='form-container']").wrap("<div style='overflow-y:auto;overflow-x:hidden;height:"+heitht+"'>");
 	if(drag){
 		this.drag();
 	}
@@ -414,7 +406,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
    //返回
    if (this.opts.backBtn === true) {//显示返回按钮
 	   var backLi = jQuery("<li></li>").addClass("rhCard-backLi").css("display","none").appendTo(_self.mainUL);
-	   this.backA = jQuery("<a></a>").attr("id","rhCard-back").addClass("rhCard-close").appendTo(backLi);
+       this.backA = jQuery("<a></a>").attr("id","rhCard-back").addClass("").appendTo(backLi);
 	   /*if (window.ICBC) {
 		   this.backA.css({"display":"none"});
 	   }*/
@@ -622,17 +614,35 @@ rh.vi.cardView.prototype._bldWin = function() {
     this.winDialog.parent().addClass("rh-ui-dialog").addClass("bodyBack"); 
     //定位
     this.winDialog.parent().css("position","absolute");
-    this.winDialog.parent().css("top","100px");
+    this.winDialog.parent().css("top","30px");
     if (this.miniCard) {//小卡片设置区分边框
     	this.winDialog.addClass("rh-ui-dialog-mini-border");
     	this.winDialog.parent().addClass("rh-ui-dialog-mini");
     	//chaizhiqiang:小卡片有自己的头，隐藏dialog的titlebar
-    	this.winDialog.siblings(".ui-dialog-titlebar").hide();
+    	/*this.winDialog.siblings(".ui-dialog-titlebar").hide();*/
+    	//滚动框  小卡片头显示
+    	var div = this.winDialog.parent().find("div:first");
+    	div.find("span:first").html(this.winDialog.find("ul:first").find("a:first").html());
+    	this.winDialog.find("ul:first").find("a:first").html("");
+    	var flag = "false";
+    	this.winDialog.css("border-top","0px");
+    	this.winDialog.find("ul:first").find("a").each(function(index,item){
+    		if(index!=1){
+    			var hrefstr = $(this).attr("href");
+    			if(hrefstr!=undefined){
+    				flag = "true";
+    			}
+    		}
+    	});
+    	if(flag=="false"){
+    		this.winDialog.find("ul:first").remove();
+    	}
+    	
     } else {
     	Tools.rhSetBodyBack();//设置背景
     }
     if ((this._cardIn != true) && (this.miniCard == false)) {//单条记录进卡片
-    	_parent.window.scrollTo(0,0); //进入卡片，外层页面滚动到顶部
+    	_parent.window.scrollTo(0,0); //进入卡片，外层页面滚动到顶部;
     } else if (this.miniCard === true) {//小卡片滚动定位
     	var top = this.winDialog.parent().css("top") + "";
     	top = top.split("px");
