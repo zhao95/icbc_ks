@@ -1267,7 +1267,7 @@ rh.vi.cardView.prototype._saveForm = function() {
     //保存之前的监听方法beforeSave()
     if (_self.beforeSave() == false) {
 //    	_self.cardBarTipError("校验未通过！");
-    	_self.cardBarTipError(Language.transStatic("rhWfCardViewNodeExtends_string1"));
+//    	_self.cardBarTipError(Language.transStatic("rhWfCardViewNodeExtends_string1"));
     	return false;
     }
 	 //保存意见方法

@@ -120,13 +120,16 @@ $(function() {
 					stateBean["_extWhere"]= "and XM_ID='"+xm_id+"'";
 					var stateResult = FireFly.doAct("TS_XMGL_KCAP_DAPCC","query",stateBean);
 					
-//					debugger;
 					if(stateResult._DATA_.length!=0){
 							kcMsg ="准考证打印及考前请假";
 					}else{
 						kcMsg = "进行中";
 					}
+				}else if(kcap_state_msg =="未启用"){
+					kcMsg = "未启用";
 				}
+			}else if(kccs_state_msg== undefined && kcap_state_msg == undefined){
+				kcMsg = "未启用该模块";
 			}
 			divOverColor = $("#jdtDivInner3").css("background-color");
 			$("#jdtDivInner3").css("background-color", "#fad09e");
@@ -185,8 +188,6 @@ $(function() {
 	var CurrentUser_code = System.getUser("USER_CODE");
 	param1["_extWhere"] = "and STR1='" + CurrentUser_code + "' AND OBJ_INT1 ='1'";
 	var resultUserAssociateXM = FireFly.doAct("TS_XMZT", "query", param1);
-
-
 	if (resultUserAssociateXM._DATA_.length != 0) {
 		var xm_id = resultUserAssociateXM._DATA_[0].DATA_ID;
 		// 上面结果的项目id获取到，再查询到对应的项目的挂接模块
@@ -211,10 +212,10 @@ $(function() {
 			}
 			
 			if (jdtNum == undefined) {
-				jdtNum = "0.0";
+				jdtNum = "0";
 			} else {
 				var jdeNumArr = jdtNum.split(".");
-				jdtNum = jdeNumArr[0] + "0.0";
+				jdtNum = jdeNumArr[0] + "0";
 			}
 			
 			// 此时数组存储的是内容为查询到的挂接模块的名称
@@ -263,6 +264,12 @@ $(function() {
 				// 获取到模块对应的状态和颜色的值
 				var currentDiv = nameMap[currentN];
 				var currentColor = typeMap[currentT];
+				var currentTT = currentT;
+				if(currentTT==""){
+					currentTT="未启用";
+				}
+				//将每一个项目挂接的模块姓名和状态添加到对象中。
+				xm_gj_name_state_map[currentN] = currentTT;
 				// 如果当前模块的状态属于已完成或者进行中， 则将该模块存储进CurrentXMGJ数组
 				if (currentColor === "c2" || currentColor === "c3") {
 					CurrentXMGJ.push(current_xm._DATA_[i]);
@@ -422,7 +429,8 @@ $(function() {
 		var url = FireFly.getContextPath() + "/qt/jsp/xmzt.jsp";
 		window.location.href = url;
 	});
-
+	//根据进度条样式自动适应分辨率,点击切换时触发该函数，判断body的类名是否包含layout-boxed ，若包含则设置 
+//	window.screen.width
 
 
 });

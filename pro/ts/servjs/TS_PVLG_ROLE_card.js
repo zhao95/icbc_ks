@@ -84,7 +84,7 @@ render = function() {
 		  
 		  var ckallObj = $('<input type="checkbox" id="TS_PVLG_ROLE-CHECK_ALL_'+obj.ITEM_CODE+'">').appendTo(ckallSpan);
 		  
-		  ckallSpan.append($("<label style='padding-left:5px'>全选</label>"));
+		  ckallSpan.append($("<label style='padding-left:8px'>全选</label>"));
 		  
 		  //全选功能
 		  ckallObj.change(function() {
@@ -94,7 +94,7 @@ render = function() {
 		  //显示功能选项(多选)
 		  optRender(obj.ITEM_CODE, rightDiv);
 		
-		  var right = $("<span class='right form__right70'>").append(rightDiv1).append(rightDiv);
+		  var right = $("<span class='right form__right90'>").append(rightDiv1).append(rightDiv);
 		
 		  row.append(left).append(right);
 		
@@ -242,6 +242,13 @@ _viewer.beforeSave = function() {
 //	var rtnMsg = rtn._MSG_;
 	
 //	showTip(rtnMsg);
+	
+	var changeData = this.getChangeData();
+	 
+	 if (jQuery.isEmptyObject(changeData)) {
+		 this.cardClearTipLoad();
+	     return false;
+	 }
 	
 };
 
