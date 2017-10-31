@@ -583,11 +583,11 @@ rh.vi.cardView.prototype._bldWin = function() {
     	widPercent = this.widHeiArray[0];
     	hei = this.widHeiArray[1];
     	position = this.xyArray;
-    	if(hei>1000){
+    	if(hei>800){
     		hei="800";
     	}
     }else{
-    	if(hei>1000){
+    	if(hei>800){
     		hei="800";
     	}
 
