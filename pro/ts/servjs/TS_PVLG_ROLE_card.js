@@ -84,7 +84,7 @@ render = function() {
 		  
 		  var ckallObj = $('<input type="checkbox" id="TS_PVLG_ROLE-CHECK_ALL_'+obj.ITEM_CODE+'">').appendTo(ckallSpan);
 		  
-		  ckallSpan.append($("<label style='padding-left:5px'>全选</label>"));
+		  ckallSpan.append($("<label style='padding-left:8px'>全选</label>"));
 		  
 		  //全选功能
 		  ckallObj.change(function() {
