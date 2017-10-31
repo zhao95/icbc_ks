@@ -185,7 +185,9 @@ var tabnum=1;
 					if(firtds[j].children[0].id==px_column){
 						firtds[j].children[0].name="rtcheckbox";
 						var s =  firtds[j].parentNode.innerHTML;
-						firtds[j].parentNode.remove();
+						/*firtds[j].parentNode.remove(true);*/
+						var table = firtds[j].parentNode.parentNode;
+						table.removeChild(firtds[j].parentNode);
 						 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px #f5f5f5">'+s+'</tr>')
 					}
 				}
@@ -618,7 +620,8 @@ function removeleft(){
 	  $('input:checkbox[name=pxcheckbox]:checked').each(function(){
 		  $(this).attr("name","rtcheckbox");
 		 var s =  this.parentNode.parentNode.innerHTML;
-		 this.parentNode.parentNode.remove();
+		 var table = this.parentNode.parentNode.parentNode;
+			table.removeChild( this.parentNode.parentNode);
 		 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px #f5f5f5">'+s+'</tr>')
 	  });
 	document.getElementById("daixuan").checked=false;
@@ -628,7 +631,8 @@ function removeright(){
 	  $('input:checkbox[name=rtcheckbox]:checked').each(function(){
 		  $(this).attr("name","pxcheckbox");
 		 var s =  this.parentNode.parentNode.innerHTML;
-		 this.parentNode.parentNode.remove();
+		 var table = this.parentNode.parentNode.parentNode;
+			table.removeChild( this.parentNode.parentNode);
 		 $("#pxtable tbody").append('<tr style="border-bottom:solid 1px #f5f5f5">'+s+'</tr>')
 	  });
 	  document.getElementById("daixuanrt").checked=false;
@@ -639,7 +643,8 @@ $("#leftalla").click(function(){
 	$('input:checkbox[name=pxcheckbox]').each(function(){
 		  $(this).attr("name","rtcheckbox");
 		 var s =  this.parentNode.parentNode.innerHTML;
-		 this.parentNode.parentNode.remove();
+		 var table = this.parentNode.parentNode.parentNode;
+			table.removeChild( this.parentNode.parentNode);
 		 $("#pxtable2 tbody").append('<tr style="border-bottom:solid 1px #f5f5f5">'+s+'</tr>')
 	  });
 	 tuodongtr();
@@ -648,7 +653,8 @@ $("#rightalla").click(function(){
 	 $('input:checkbox[name=rtcheckbox]').each(function(){
 		  $(this).attr("name","pxcheckbox");
 		 var s =  this.parentNode.parentNode.innerHTML;
-		 this.parentNode.parentNode.remove();
+		 var table = this.parentNode.parentNode.parentNode;
+			table.removeChild( this.parentNode.parentNode);
 		 $("#pxtable tbody").append('<tr style="border-bottom:solid 1px #f5f5f5">'+s+'</tr>')
 	  });
 	 tuodongtr();
