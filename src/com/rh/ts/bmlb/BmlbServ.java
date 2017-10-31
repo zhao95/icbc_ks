@@ -1132,7 +1132,7 @@ public class BmlbServ extends CommonServ {
 			String bmid = bean.getStr("BM_ID");
 			Bean find = ServDao.find("TS_QJLB_QJ", bmid);
 			if(find!=null){
-				if(find.getStr("QJ_STATUS").equals('3')){
+				if(find.getStr("QJ_STATUS").equals('2')){
 					highlist.remove(bean);
 				}
 			}
@@ -1145,7 +1145,7 @@ public class BmlbServ extends CommonServ {
 			String bmid = bean.getStr("BM_ID");
 			Bean find = ServDao.find("TS_QJLB_QJ", bmid);
 			if(find!=null){
-				if(find.getStr("QJ_STATUS").equals('3')){
+				if(find.getStr("QJ_STATUS").equals('2')){
 					list.remove(bean);
 				}
 			}
@@ -1158,7 +1158,7 @@ public class BmlbServ extends CommonServ {
 			String bmid = bean.getStr("BM_ID");
 			Bean find = ServDao.find("TS_QJLB_QJ", bmid);
 			if(find!=null){
-				if(find.getStr("QJ_STATUS").equals('3')){
+				if(find.getStr("QJ_STATUS").equals('2')){
 					list1.remove(bean);
 				}
 			}
@@ -1171,7 +1171,7 @@ public class BmlbServ extends CommonServ {
 			String bmid = bean.getStr("BM_ID");
 			Bean find = ServDao.find("TS_QJLB_QJ", bmid);
 			if(find!=null){
-				if(find.getStr("QJ_STATUS").equals('3')){
+				if(find.getStr("QJ_STATUS").equals('2')){
 					list3.remove(bean);
 				}
 			}
