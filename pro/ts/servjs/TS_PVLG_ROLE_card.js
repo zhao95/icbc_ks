@@ -46,13 +46,6 @@ if(resultP._DATA_) {
 }
 //console.log("roleCheckedP",roleCheckedP);
 
-/*
- * 保存之前执行,业务代码可覆盖此方法
- */
-_viewer.beforeSave = function() {
-	
-};
-
 /**
  * 渲染角色所有模块 (主方法)
  */
@@ -243,6 +236,12 @@ _viewer.beforeSave = function() {
 	
 //	showTip(rtnMsg);
 	
+	 var changeData = this.getChangeData();
+	 
+	 if (jQuery.isEmptyObject(changeData)) {
+		 this.cardClearTipLoad();
+	     return false;
+	 }
 };
 
 //保存后刷新tree和列表
