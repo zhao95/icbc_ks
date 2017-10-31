@@ -162,6 +162,7 @@ rh.vi.cardView.prototype.show = function(drag) {
 	}
 	this._bldCardLayout();
 	this._afterLoad();
+	
 	if(drag){
 		this.drag();
 	}
@@ -406,7 +407,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
    //返回
    if (this.opts.backBtn === true) {//显示返回按钮
 	   var backLi = jQuery("<li></li>").addClass("rhCard-backLi").css("display","none").appendTo(_self.mainUL);
-       this.backA = jQuery("<a></a>").attr("id","rhCard-back").addClass("").appendTo(backLi);
+	   this.backA = jQuery("<a></a>").attr("id","rhCard-back").addClass("rhCard-close").appendTo(backLi);
 	   /*if (window.ICBC) {
 		   this.backA.css({"display":"none"});
 	   }*/
@@ -429,10 +430,8 @@ rh.vi.cardView.prototype._tabLayout = function() {
 			   };
 		   }
 		   //如果用户修改数据，提示用户保存
-		   if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {//修改
 			   if (jQuery.isEmptyObject(_self.getChangeData())) {
 			   } else {
-//				   var confirmDel=confirm("数据有修改，是否保存？");
 				   var confirmDel=confirm(Language.transStatic("rhCardView_string1"));
 				   if (confirmDel == true){
 					   if (_self.btns[UIConst.ACT_SAVE]) {
@@ -441,7 +440,6 @@ rh.vi.cardView.prototype._tabLayout = function() {
 					   }
 				   }
 			   }
-		   }
 		   //销毁特殊处理组件
 		   _self.destroyUI();
 		   if (_self._pCon) {//有设定容器
@@ -578,15 +576,10 @@ rh.vi.cardView.prototype._bldWin = function() {
     	if(hei>800){
     		hei="800";
     	}
-    }else{
-    	if(hei>800){
-    		hei="800";
-    	}
-
     }
 	jQuery("#" + this.dialogId).dialog({
 		autoOpen: false,
-		height: hei,
+		height: hei/2,
 		width: widPercent,
 		modal: _self._modal,
 		resizable:false,
@@ -620,12 +613,15 @@ rh.vi.cardView.prototype._bldWin = function() {
     	this.winDialog.parent().addClass("rh-ui-dialog-mini");
     	//chaizhiqiang:小卡片有自己的头，隐藏dialog的titlebar
     	/*this.winDialog.siblings(".ui-dialog-titlebar").hide();*/
-    	//滚动框  小卡片头显示
     	var div = this.winDialog.parent().find("div:first");
+    	div.css("background","#ccc");
+    	div.css("border-radius","1px");
+    	div.css("width","96.5%");
     	div.find("span:first").html(this.winDialog.find("ul:first").find("a:first").html());
     	this.winDialog.find("ul:first").find("a:first").html("");
     	var flag = "false";
     	this.winDialog.css("border-top","0px");
+    	
     	this.winDialog.find("ul:first").find("a").each(function(index,item){
     		if(index!=1){
     			var hrefstr = $(this).attr("href");
@@ -635,14 +631,20 @@ rh.vi.cardView.prototype._bldWin = function() {
     		}
     	});
     	if(flag=="false"){
-    		this.winDialog.find("ul:first").remove();
+    		this.winDialog.find("ul:first").css("display","none");
     	}
+    	this.winDialog.find("a[class='rhCard-close']").css("display","none");
+    	
+    	div.find("span:last").unbind("click").bind("click",function(){
+    		jQuery("a[class='rhCard-close']:last").trigger("mousedown");
+    	})
+    	
     	
     } else {
     	Tools.rhSetBodyBack();//设置背景
     }
     if ((this._cardIn != true) && (this.miniCard == false)) {//单条记录进卡片
-    	_parent.window.scrollTo(0,0); //进入卡片，外层页面滚动到顶部;
+    	_parent.window.scrollTo(0,0); //进入卡片，外层页面滚动到顶部
     } else if (this.miniCard === true) {//小卡片滚动定位
     	var top = this.winDialog.parent().css("top") + "";
     	top = top.split("px");
@@ -1267,7 +1269,7 @@ rh.vi.cardView.prototype._saveForm = function() {
     //保存之前的监听方法beforeSave()
     if (_self.beforeSave() == false) {
 //    	_self.cardBarTipError("校验未通过！");
-//    	_self.cardBarTipError(Language.transStatic("rhWfCardViewNodeExtends_string1"));
+    	_self.cardBarTipError(Language.transStatic("rhWfCardViewNodeExtends_string1"));
     	return false;
     }
 	 //保存意见方法
@@ -1278,7 +1280,7 @@ rh.vi.cardView.prototype._saveForm = function() {
     if (_self.saveValidateFlag) { //需要进行校验
 		if(!this.form.validate()) {
 //	    	_self.cardBarTipError("校验未通过");
-	    	_self.cardBarTipError(Language.transStatic("rhWfCardViewNodeExtends_string1"));
+//	    	_self.cardBarTipError(Language.transStatic("rhWfCardViewNodeExtends_string1"));
 	    	return false;
 	    }
 	}

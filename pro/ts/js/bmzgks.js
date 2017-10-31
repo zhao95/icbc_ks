@@ -970,7 +970,6 @@ function xminfoshow(){
 			    //表格行数
 			    var rows = tab.rows.length;
 			    if(rows>1){
-			    	debugger;
 					yk["BM_LB"]=lbcode;
 					yk["BM_XL"]=xlcode;
 					yk["BM_MK"]=mkvalue;
