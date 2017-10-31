@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.serv.ParamBean;
@@ -33,7 +34,10 @@ public class PvlgUtils {
 		ParamBean paramBean = (ParamBean) param.getBean("paramBean");
 
 		String ctlgModuleName = param.getStr("ctlgModuleName");
-
+		String deptPcode = param.getStr("fieldName");
+		if(deptPcode == null ||"".equals(deptPcode)){
+			deptPcode="CTLG_PCODE";
+		}
 		String serviceName = param.getStr("serviceName");
 
 		ServDefBean servDef = ServUtils.getServDef(serviceName);
@@ -84,7 +88,7 @@ public class PvlgUtils {
 						param_where.append(" AND  EXISTS ( ");
 						param_where.append(" SELECT CTLG_CODE FROM TS_COMM_CATALOG  A ");
 						param_where.append(" WHERE  A.CTLG_MODULE='" + ctlgModuleName + "' AND " + tableView
-								+ ".CTLG_PCODE = A.CTLG_CODE_H ");
+								+ "."+deptPcode+" = A.CTLG_CODE_H ");
 						param_where.append(" and INSTR (A.CTLG_PATH," + "'" + roles[0] + "') ");
 
 						param_where.append(") ");
@@ -101,7 +105,7 @@ public class PvlgUtils {
 			}
 		}
 	}
-
+     //机构
 	@SuppressWarnings("rawtypes")
 	public static void setOrgPvlgWhere(ParamBean param) {
 		
@@ -114,7 +118,10 @@ public class PvlgUtils {
 		ParamBean paramBean = (ParamBean) param.getBean("paramBean");
 
 		String serviceName = param.getStr("serviceName");
-
+		String deptPcode = param.getStr("fieldName");
+		if(deptPcode == null ||"".equals(deptPcode)){
+			deptPcode="CTLG_PCODE";
+		}
 		ServDefBean servDef = ServUtils.getServDef(serviceName);
 
 		String tableView = servDef.getTableView();
@@ -153,14 +160,14 @@ public class PvlgUtils {
 					}
 				}
 				if (!Strings.isBlank(result)) {
-					// result 排序
+					// result 排序DEPT_PCODE
 					String[] roles = result.split(",");
 
 					StringBuilder param_where = new StringBuilder();
 					param_where.append(" AND  EXISTS ( ");
 					param_where.append(" SELECT DEPT_CODE FROM SY_ORG_DEPT  A ");
 
-					param_where.append(" WHERE " + tableView + ".CTLG_PCODE = A.DEPT_CODE ");
+					param_where.append(" WHERE " + tableView + "."+deptPcode+" = A.DEPT_CODE ");
 
 					param_where.append(" and INSTR (A.CODE_PATH," + "'" + roles[0] + "') ");
 

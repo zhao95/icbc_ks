@@ -7,4 +7,3 @@ resin.conf
 rh.log*
 pro/WEB-INF/classes/*
 .externalToolBuilders/
-pro/WEB-INF/.gitignore

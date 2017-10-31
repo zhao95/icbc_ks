@@ -150,7 +150,7 @@ var deptCodes = "";
 //机构 【选择】链接
 $("#TS_PVLG_ROLE_UPDATE .rh-advSearch-table").find("a.rh-advSearch-sel").eq(1).unbind("click").bind("click",function(event){
 	//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
-	var configStr = "TS_ORG_ODEPT_ALL,{'TARGET':'','SOURCE':'DEPT_NAME~DEPT_CODE'," +
+	var configStr = "TS_ORG_DEPT,{'TARGET':'','SOURCE':'DEPT_NAME~DEPT_CODE~DEPT_TYPE'," +
 			"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
 	var options = {
 		"config" :configStr,
@@ -178,5 +178,16 @@ $("#TS_PVLG_ROLE_UPDATE .rh-advSearch-table").find("input[type='checkbox']").cha
 	}else{
 		$("input[id='"+checked+"']").attr("checked", false);
 		checked = $(this).attr("id");
+	}
+	
+	if(checked == ""){
+		_viewer.getBtn("addFun").show();
+		_viewer.getBtn("delFun").show();
+	}else if(checked == "ROLE_PID-1"){
+		_viewer.getBtn("addFun").hide();
+		_viewer.getBtn("delFun").show();
+	}else if(checked == "ROLE_PID-2"){
+		_viewer.getBtn("addFun").show();
+		_viewer.getBtn("delFun").hide();
 	}
 });

@@ -163,7 +163,6 @@ function bindCard() {
 			}else if(obj2[0].type== 'muty'){
 				var codestr = [];
 				var namestr = [];
-				debugger;
 				for(var a=0;a<obj2.length;a++){
 					if(a<obj2.length-2){
 						namestr[a]=obj2[a].val;
@@ -345,6 +344,7 @@ function bindCard() {
 		var mainTab = $('<div class="rhCard-mainTab ui-tabs-panel ui-widget-content" id="TEST-mainTab">').append(btnBar2,formCon2);
 		
 		$("#"+dialogCon).css("background-color","#F6F6F6").append(mainTab);
+		$("#"+dialogCon).parent().css("left","30%");
 		bindselect();
 		bindelete();
 		$("#SETTING-saveRuleVar").bind("click",function() {
