@@ -46,6 +46,13 @@ if(resultP._DATA_) {
 }
 //console.log("roleCheckedP",roleCheckedP);
 
+/*
+ * 保存之前执行,业务代码可覆盖此方法
+ */
+_viewer.beforeSave = function() {
+	
+};
+
 /**
  * 渲染角色所有模块 (主方法)
  */
@@ -69,9 +76,9 @@ render = function() {
 		  var left = $("<span class='left form__left30'>").append(leftDiv);
 		
 		  //右侧功能区域
-		  var rightDiv = $('<div class="blank fl wp">').css({"float":"left","width":"85%","clear":"none","border-left":"none"});
+		  var rightDiv = $('<div class="blank fl wp">').css({"float":"left","width":"90%","clear":"none","border-left":"none"});
 		  
-		  var rightDiv1 = $('<div class="blank fl wp">').css({"float":"left","width":"10%","clear":"none","background":"#ECF5FF"});
+		  var rightDiv1 = $('<div class="blank fl wp">').css({"float":"left","width":"8%","clear":"none","background":"#ECF5FF"});
 		  
 		  var ckallSpan = $('<span id="TS_PVLG_ROLE-CHECK_ALL_SPAN_'+obj.ITEM_CODE+'" class="ui-checkbox-default">').appendTo(rightDiv1);
 		  
@@ -87,7 +94,7 @@ render = function() {
 		  //显示功能选项(多选)
 		  optRender(obj.ITEM_CODE, rightDiv);
 		
-		  var right = $("<span class='right form__right70'>").append(rightDiv1).append(rightDiv);
+		  var right = $("<span class='right form__right90'>").append(rightDiv1).append(rightDiv);
 		
 		  row.append(left).append(right);
 		
@@ -236,12 +243,13 @@ _viewer.beforeSave = function() {
 	
 //	showTip(rtnMsg);
 	
-	 var changeData = this.getChangeData();
+	var changeData = this.getChangeData();
 	 
 	 if (jQuery.isEmptyObject(changeData)) {
 		 this.cardClearTipLoad();
 	     return false;
 	 }
+	
 };
 
 //保存后刷新tree和列表
