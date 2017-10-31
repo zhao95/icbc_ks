@@ -8,12 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import javax.swing.text.StyledEditorKit.ForegroundAction;
-
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
-
 import com.icbc.ctp.utility.StringUtil;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
@@ -48,32 +44,57 @@ public class XmglServ extends CommonServ {
 	 * @param paramBean
 	 * 
 	 */
-	public void copy(Bean paramBean) {
-		// OutBean NBean = new OutBean();
-		// 获取服务ID
-		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
-		// 获取 主键id list
-		String dataId = paramBean.getStr("pkCodes");
-		// 根据服务id 主键id获取 当前对象
-		Bean bean = ServDao.find(servId, dataId);
-		Bean NBean = new Bean();
-		NBean.set("XM_TITLE", bean.getStr("XM_TITLE"));
-		NBean.set("XM_NAME", bean.getStr("XM_NAME") + "_复制");
-		NBean.set("XM_FQDW_NAME", bean.getStr("XM_FQDW_NAME"));
-		NBean.set("XM_TYPE", bean.getStr("XM_TYPE"));
-		NBean.set("XM_START", bean.getStr("XM_START"));
-		NBean.set("XM_END", bean.getStr("XM_END"));
-		NBean.set("XM_GJ", bean.getStr("XM_GJ"));
-		NBean.set("XM_FQDW_CODE", bean.getStr("XM_FQDW_CODE"));
-		// 保存到数据库
-//		Bean res = ServDao.save(servId, NBean);
-		// 从数据库得到xm_id和xm_gj；
-		// String XMID = res.getStr("XM_ID");
-		// NBean.setSaveIds(XMID);
-		// afterSaveToSz(NBean);
-		// return NBean;
+	public OutBean copy(Bean paramBean) {
+		OutBean outBean = new OutBean();
+		String servId = paramBean.getStr("servId");
+		String primaryColCode = paramBean.getStr("primaryColCode");
+		String pkCode = paramBean.getStr("pkCode");
+		Bean bean = ServDao.find(servId, pkCode);
+		bean.remove(primaryColCode);
+		bean.setId("");
+		bean = delSysCol(bean);
+		ServDao.create(servId, bean);
+		return outBean;
+//		// OutBean NBean = new OutBean();
+//		// 获取服务ID
+//		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
+//		// 获取 主键id list
+//		String dataId = paramBean.getStr("pkCodes");
+//		// 根据服务id 主键id获取 当前对象
+//		Bean bean = ServDao.find(servId, dataId);
+//		Bean NBean = new Bean();
+//		NBean.set("XM_TITLE", bean.getStr("XM_TITLE"));
+//		NBean.set("XM_NAME", bean.getStr("XM_NAME") + "_复制");
+//		NBean.set("XM_FQDW_NAME", bean.getStr("XM_FQDW_NAME"));
+//		NBean.set("XM_TYPE", bean.getStr("XM_TYPE"));
+//		NBean.set("XM_START", bean.getStr("XM_START"));
+//		NBean.set("XM_END", bean.getStr("XM_END"));
+//		NBean.set("XM_GJ", bean.getStr("XM_GJ"));
+//		NBean.set("XM_FQDW_CODE", bean.getStr("XM_FQDW_CODE"));
+//		
+//		// 保存到数据库
+//		//Bean res =
+//				ServDao.save(servId, NBean);
+//		// 从数据库得到xm_id和xm_gj；
+//		// String XMID = res.getStr("XM_ID");
+//		// NBean.setSaveIds(XMID);
+//		// afterSaveToSz(NBean);
+//		// return NBean;
 	}
-
+	 /**
+     * 删除系统字段
+     * @param bean
+     * @return
+     */
+    public Bean delSysCol(Bean bean){
+	bean.remove("S_USER");
+	bean.remove("S_DEPT");
+	bean.remove("S_ODEPT");
+	bean.remove("S_TDEPT");
+	bean.remove("S_ATIME");
+	bean.remove("S_MTIME");
+	return bean;
+    }
 	// 下一步
 	public OutBean saveAndToSZ(Bean bean) {
 		OutBean result = new OutBean();
