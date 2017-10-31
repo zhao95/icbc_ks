@@ -7,5 +7,3 @@ resin.conf
 rh.log*
 pro/WEB-INF/classes/*
 .externalToolBuilders/
-pro/WEB-INF/.gitignore
-pro/WEB-INF/doc/SY_SERV/TS_XMGL_KCAP_DFPKS.json
