@@ -164,6 +164,8 @@ rh.vi.cardView.prototype.show = function(drag) {
 	this._afterLoad();
 	//将滚动条 下移
 	var heitht =  jQuery("div[class='form-container']").parent().parent().parent().css("height");
+	  //最外层 删除 滑动 
+	jQuery("div[class='form-container']").parent().parent().parent().removeClass("ui-dialog-content"); 
 	jQuery("div[class='form-container']").parent().parent().parent().css("height","");
 	jQuery("div[class='form-container']").parent().parent().parent().css("overflow-y",""); 
 	jQuery("div[class='form-container']").parent().parent().parent().css("overflow-x","");
