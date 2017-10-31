@@ -76,9 +76,9 @@ render = function() {
 		  var left = $("<span class='left form__left30'>").append(leftDiv);
 		
 		  //右侧功能区域
-		  var rightDiv = $('<div class="blank fl wp">').css({"float":"left","width":"90%","clear":"none","border-left":"none"});
+		  var rightDiv = $('<div class="blank fl wp">').css({"float":"left","width":"85%","clear":"none","border-left":"none"});
 		  
-		  var rightDiv1 = $('<div class="blank fl wp">').css({"float":"left","width":"8%","clear":"none","background":"#ECF5FF"});
+		  var rightDiv1 = $('<div class="blank fl wp">').css({"float":"left","width":"10%","clear":"none","background":"#ECF5FF"});
 		  
 		  var ckallSpan = $('<span id="TS_PVLG_ROLE-CHECK_ALL_SPAN_'+obj.ITEM_CODE+'" class="ui-checkbox-default">').appendTo(rightDiv1);
 		  
