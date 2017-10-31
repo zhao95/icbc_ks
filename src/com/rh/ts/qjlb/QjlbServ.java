@@ -4,6 +4,7 @@ import com.icbc.ctp.utility.CollectionUtil;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
+import com.rh.core.comm.ConfMgr;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
@@ -24,6 +25,7 @@ public class QjlbServ extends CommonServ {
     private final static String COMM_MIND_SERVID = "TS_COMM_MIND";
     private final static String TSQJ_BM_SERVID = "TS_QJLB_BM";
     private final static String TS_BMSH_PASS_SERVID = "TS_BMSH_PASS";
+    private final static String TS_BM_QJ_NUM_SERVID = "TS_BM_QJ_NUM";
     private final static String dateFormatString = "yyyy-MM-dd HH:mm:ss";
 
     /**
@@ -237,6 +239,17 @@ public class QjlbServ extends CommonServ {
                     bean.set("BM_STATUS", "1");
                 }
                 ServDao.update(TS_BMSH_PASS_SERVID, bean);
+            }
+            //请假通过 修改请假次数和请假周数
+            ParamBean getQxBean = new ParamBean();
+            getQxBean.put("bmids ", qjKsname);
+            getQxBean.put("user_code", qjbean.getStr("USER_CODE"));
+            getQxBean.put("cishu", ConfMgr.getConf("TS_KSQJ_SETCONUTS", "0"));
+            getQxBean.put("zhoushu", ConfMgr.getConf("TS_KSQJ_WEEK_MAXNUM", "0"));
+            try {
+                ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
