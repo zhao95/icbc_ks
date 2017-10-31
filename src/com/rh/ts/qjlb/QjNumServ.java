@@ -98,6 +98,9 @@ public class QjNumServ extends CommonServ {
 				return new OutBean().setError("考试次数超过上限");
 			}
 		}
+		if(wannacishu>cishu){
+			return new OutBean().setError("考试次数超过上限");
+		}
 		return new OutBean().set("yes", "true");
 	}
 	/**
@@ -117,11 +120,11 @@ public class QjNumServ extends CommonServ {
 		//总周数
 		int zhoushu = paramBean.getInt("zhoushu");
 		
-		UserBean userBean = Context.getUserBean();
+		String code = paramBean.getStr("user_code");
+		
+		UserBean userBean = Context.getUserBean(code);
 		
 		String name = userBean.getName();
-		
-		String code = userBean.getCode();
 		
 		List<Bean> finds = ServDao.finds("TS_BM_QJ_NUM","AND QJ_CODE='"+code+"'");
 		
@@ -197,7 +200,7 @@ public class QjNumServ extends CommonServ {
 						   }
 						   if(Flag){
 							   //可请假  但是第二周了
-							   bean.set("WEEK_NUM", "2");
+							   bean.set("WEEK_NUM", pastweeknum+1);
 							   bean.set("CISHU_NUM",bean.getInt("CISHU_NUM")+wannacishu);
 							   bean.set("XM_START_TIME", newstartdate);
 							   bean.set("XM_END_TIME",newenddate);

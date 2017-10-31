@@ -491,7 +491,11 @@
     }
     //提交申请
     function applyForLeave() {
-        var currentUserWorkNum = System.getUser("USER_WORK_NUM");
+        //var currentUserWorkNum = System.getUser("USER_WORK_NUM");
+//        var data = {USER_WORK_NUM: currentUserWorkNum};
+	//判断此人能否请假
+	
+    var currentUserWorkNum = System.getUser("USER_WORK_NUM");
 
         function saveData(fileId) {
             var qjtitle = document.getElementById("qjtitle").value;
@@ -506,6 +510,7 @@
                     bmids += "," + bmidsArray[i].value;
                 }
             }
+            
             var param = {};
             param["qjimg"] = fileId;
             param["qjtitle"] = qjtitle;
@@ -515,13 +520,39 @@
             param["qjreason"] = qjreason;
             param["bmids"] = bmids;
             param["user_name"] = System.getUser("USER_NAME");
-
+            debugger;
+            	var cishu =  FireFly.getConfig("TS_KSQJ_SETCONUTS").CONF_VALUE;
+            	var zhoushu =  FireFly.getConfig("TS_KSQJ_WEEK_MAXNUM").CONF_VALUE;
+			if(bmids===""){
+				 alert("请选择请假的考试")
+				 return false;
+			}else{
+				var bmidarr = bmids.split(",");
+				if(bmidarr>cishu){
+					alert("选择考试超过上限")
+					return false;
+				}
+			}
 
             if (qjtitle === "") {
                 alert("标题不能为空");
-            } else if (bmids === "") {
-                alert("请选择请假的考试")
             } else {
+            	
+            	var paramstr={};
+            	
+            	paramstr["cishu"]=cishu;
+            	
+            	paramstr["bmids"] = bmids;
+            	
+            	paramstr["zhoushu"]=zhoushu;
+            	
+            	var result = FireFly.doAct("TS_BM_QJ_NUM","getFlag",paramstr);
+            	
+            	if(result.yes=="true"){
+            	}else{
+            		return false;
+            	}
+            	
                 FireFly.doAct("TS_QJLB_QJ", "addData", param, false, false, function (response) {
 
                     if (response._MSG_.indexOf('ERROR') >= 0) {
@@ -540,6 +571,7 @@
                     }
 
                 });
+                
             }
 
         }
