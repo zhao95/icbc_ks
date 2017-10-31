@@ -91,7 +91,7 @@ if (scVal != "" && scVal != null) {
 								param["DEPT_TYPE"] = "2";
 								param["S_FLAG"] = "1";
 								
-								var odept3Arr = FireFly.doAct("TS_ORG_ODEPT_ALL","finds", param)._DATA_;
+								var odept3Arr = FireFly.doAct("TS_ORG_DEPT","finds", param)._DATA_;
 								if(odept3Arr.length > 0){
 									for(var i=0;i<odept3Arr.length;i++){
 										var deptCode = odept3Arr[i].DEPT_CODE;
@@ -136,7 +136,7 @@ $(".deptNameA").click(function() {
 					var trPK = trObj[0].id;
 					if (myType == "1") {
 						$(this).attr("myType", "2");
-						var odept3Arr = FireFly.doAct("TS_ORG_ODEPT_ALL","finds", {"_WHERE_" : "AND DEPT_PCODE = '" + trPK+ "'"})._DATA_;
+						var odept3Arr = FireFly.doAct("TS_ORG_DEPT","finds", {"_WHERE_" : "AND DEPT_PCODE = '" + trPK+ "' AND DEPT_TYPE=2"})._DATA_;
 						for (var i = 0; i < odept3Arr.length; i++) {
 							var deptCode = odept3Arr[i].DEPT_CODE;
 							var deptName = odept3Arr[i].DEPT_NAME;
