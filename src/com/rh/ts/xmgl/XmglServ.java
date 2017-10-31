@@ -44,42 +44,29 @@ public class XmglServ extends CommonServ {
 	 * @param paramBean
 	 * 
 	 */
-	public OutBean copy(Bean paramBean) {
-		OutBean outBean = new OutBean();
-		String servId = paramBean.getStr("servId");
-		String primaryColCode = paramBean.getStr("primaryColCode");
-		String pkCode = paramBean.getStr("pkCode");
-		Bean bean = ServDao.find(servId, pkCode);
-		bean.remove(primaryColCode);
-		bean.setId("");
-		bean = delSysCol(bean);
-		ServDao.create(servId, bean);
-		return outBean;
-//		// OutBean NBean = new OutBean();
-//		// 获取服务ID
-//		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
-//		// 获取 主键id list
-//		String dataId = paramBean.getStr("pkCodes");
-//		// 根据服务id 主键id获取 当前对象
-//		Bean bean = ServDao.find(servId, dataId);
-//		Bean NBean = new Bean();
-//		NBean.set("XM_TITLE", bean.getStr("XM_TITLE"));
-//		NBean.set("XM_NAME", bean.getStr("XM_NAME") + "_复制");
-//		NBean.set("XM_FQDW_NAME", bean.getStr("XM_FQDW_NAME"));
-//		NBean.set("XM_TYPE", bean.getStr("XM_TYPE"));
-//		NBean.set("XM_START", bean.getStr("XM_START"));
-//		NBean.set("XM_END", bean.getStr("XM_END"));
-//		NBean.set("XM_GJ", bean.getStr("XM_GJ"));
-//		NBean.set("XM_FQDW_CODE", bean.getStr("XM_FQDW_CODE"));
-//		
-//		// 保存到数据库
-//		//Bean res =
-//				ServDao.save(servId, NBean);
-//		// 从数据库得到xm_id和xm_gj；
-//		// String XMID = res.getStr("XM_ID");
-//		// NBean.setSaveIds(XMID);
-//		// afterSaveToSz(NBean);
-//		// return NBean;
+	public void copy(Bean paramBean) {
+		// OutBean NBean = new OutBean();
+		// 获取服务ID
+		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
+		// 获取 主键id list
+		String dataId = paramBean.getStr("pkCodes");
+		// 根据服务id 主键id获取 当前对象
+		Bean bean = ServDao.find(servId, dataId);
+		Bean NBean = new Bean();
+		NBean.set("XM_TITLE", bean.getStr("XM_TITLE"));
+		NBean.set("XM_NAME", bean.getStr("XM_NAME") + "_复制");
+		NBean.set("XM_FQDW_NAME", bean.getStr("XM_FQDW_NAME"));
+		NBean.set("XM_TYPE", bean.getStr("XM_TYPE"));
+		NBean.set("XM_START", bean.getStr("XM_START"));
+		NBean.set("XM_END", bean.getStr("XM_END"));
+		NBean.set("XM_KSSTARTDATA", bean.getStr("XM_KSSTARTDATA"));
+		NBean.set("XM_KSENDDATA", bean.getStr("XM_KSENDDATA"));
+		NBean.set("CTLG_PCODE", bean.getStr("CTLG_PCODE"));
+		NBean.set("XM_JD", bean.getStr("XM_JD"));
+		NBean.set("EXCEL_TEMPLATE_ID", bean.getStr("EXCEL_TEMPLATE_ID"));
+		NBean.set("XM_GJ", bean.getStr("XM_GJ"));
+		NBean.set("XM_FQDW_CODE", bean.getStr("XM_FQDW_CODE"));
+		ServDao.save(servId, NBean);
 	}
 	 /**
      * 删除系统字段
