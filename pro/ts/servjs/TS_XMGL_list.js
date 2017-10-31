@@ -61,19 +61,8 @@ function bindCard() {
  	 //编辑
  	 $(".hoverDiv [actcode='edit']").unbind("click").bind("click", function(){
  		var pkCode = jQuery(this).attr("rowpk");
- 		//$(".hoverDiv").css('display','none');
- 		//openMyCard(pkCode);
- 		var paramModify = {};
-		paramModify["_extWhere"] = "and XM_ID ='"+pkCode+"'";
-		var beanFb = FireFly.doAct(_viewer.servId, "query", paramModify);
-		//判断是否已发布，否则提示已经发布，不能修改 
-		if(beanFb._DATA_ != 0){
-			if(beanFb._DATA_[0].XM_STATE=="1"){
-				Tip.show("已发布不能再编辑！");
-			}else if(beanFb._DATA_[0].XM_STATE=="0"){
-				openMyCard(pkCode);
-			}
-		}
+ 		$(".hoverDiv").css('display','none');
+ 		openMyCard(pkCode);
  	 });
  	 //复制
  	 $(".hoverDiv [actcode='copy']").unbind("click").bind("click", function(){
@@ -87,21 +76,11 @@ function bindCard() {
  	 //设置
  	 $(".hoverDiv [actcode='set']").unbind("click").bind("click", function(){
  		var pkCode = jQuery(this).attr("rowpk");
- 		var paramModify = {};
-		paramModify["_extWhere"] = "and XM_ID ='"+pkCode+"'";
-		var beanFb = FireFly.doAct(_viewer.servId, "query", paramModify);
-		//判断是否已发布，否则提示已经发布，不能修改 
-		if(beanFb._DATA_ != 0){
-			if(beanFb._DATA_[0].XM_STATE=="1"){
-				Tip.show("已发布不能再设置！");
-			}else if(beanFb._DATA_[0].XM_STATE=="0"){
 	 	var extWhere = "and XM_ID = '" + pkCode + "'";
 		var params = {"XM_ID" : pkCode,"_extWhere" : extWhere};
 		var url = "TS_XMGL_SZ.list.do?&_extWhere=" + extWhere;
 		var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
 		Tab.open(options);
-			}
-		}
  	 });
  	 //删除
  	 $(".hoverDiv [actcode='delete']").unbind("click").bind("click", function(){
