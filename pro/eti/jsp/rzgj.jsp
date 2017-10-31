@@ -298,7 +298,7 @@
             for (var i = 0; i < dataList.length; i++) {
                 var data = dataList[i];
                 if (data.state !== '无效') {
-                    result.add(data);
+                    result.push(data);
                 }
             }
             this._setViewContent(result, this.info.currentDataList.length > 0);
