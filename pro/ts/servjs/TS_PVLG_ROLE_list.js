@@ -6,7 +6,7 @@ var height = jQuery(window).height()-50;
 $("#TS_PVLG_ROLE .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
-		
+		if(dataId == "") return;
 		var roleType = $(item).find("td[icode='ROLE_TYPE']").text();
 		
 		if(roleType ==1) {

@@ -169,7 +169,7 @@ public class PvlgUtils {
 
 					param_where.append(" WHERE " + tableView + "."+deptPcode+" = A.DEPT_CODE ");
 
-					param_where.append(" and INSTR (A.CODE_PATH," + "'" + roles[0] + "') ");
+  					param_where.append(" and INSTR (A.CODE_PATH," + "'" + roles[0] + "') ");
 
 					param_where.append(") ");
 					paramBean.set(Constant.PARAM_WHERE, param_where.toString());
