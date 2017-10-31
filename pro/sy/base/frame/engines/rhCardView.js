@@ -162,7 +162,12 @@ rh.vi.cardView.prototype.show = function(drag) {
 	}
 	this._bldCardLayout();
 	this._afterLoad();
-	
+	//将滚动条 下移
+	var heitht =  jQuery("div[class='form-container']").parent().parent().parent().css("height");
+	jQuery("div[class='form-container']").parent().parent().parent().css("height","");
+	jQuery("div[class='form-container']").parent().parent().parent().css("overflow-y",""); 
+	jQuery("div[class='form-container']").parent().parent().parent().css("overflow-x","");
+	jQuery("div[class='form-container']").wrap("<div style='overflow-y:auto;overflow-x:hidden;height:"+heitht+"'>");
 	if(drag){
 		this.drag();
 	}
@@ -609,12 +614,12 @@ rh.vi.cardView.prototype._bldWin = function() {
 			}
 		}
 	});
-	jQuery("#" + this.dialogId).parent().css("position","absolute");
-	jQuery("#" + this.dialogId).parent().css("top","100px");
     jQuery("#" + this.tabsId).tabs({});
     this.mainLi.click();
     this.winDialog.dialog("open");
     this.winDialog.parent().addClass("rh-ui-dialog").addClass("bodyBack"); 
+    //定位
+    this.winDialog.parent().css("position","absolute");
     this.winDialog.parent().css("top","100px");
     if (this.miniCard) {//小卡片设置区分边框
     	this.winDialog.addClass("rh-ui-dialog-mini-border");
