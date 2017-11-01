@@ -96,9 +96,10 @@ _viewer.getBtn("initCatalog").unbind("click").bind("click",function(event) {
 	var pcodeh = _viewer._transferData["CTLG_PCODE_H"];
 	
 	if(pcodeh == "" || typeof(pcodeh) == "undefined") {
-		alert("请选择同步目录的层级 !");
-		_loadbar.hideDelayed();
-		return;
+		pcodeh = "";
+//		alert("请选择同步目录的层级 !");
+//		_loadbar.hideDelayed();
+//		return;
 	}
 	
 	var param = {};
@@ -109,11 +110,12 @@ _viewer.getBtn("initCatalog").unbind("click").bind("click",function(event) {
 	param["CMPY_CODE"] = cmpyCode;
 	param["CTLG_MODULE"] = module;
 	
-	var result = FireFly.doAct(_viewer.servId, "initCatalog", param, false);
-    if (result[UIConst.RTN_MSG].indexOf(UIConst.RTN_OK) == 0) {//成功后刷新列表
-    	_viewer.refresh();
-    	_loadbar.hideDelayed();
-    }
+	FireFly.doAct(_viewer.servId, "initCatalog", param, true,false, function(data) {
+		_loadbar.hideDelayed();
+		if (data[UIConst.RTN_MSG].indexOf(UIConst.RTN_OK) == 0) {//成功后刷新列表
+	    	_viewer.refresh();
+	    }
+	});
     
 });
 
