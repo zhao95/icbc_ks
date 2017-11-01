@@ -88,6 +88,7 @@ function xminfoshow(){
     		//获取后台传过来的key
          	for(var i=0;i<checkeddata.length;i++){
          		var a=checkeddata[i].ID;
+         		var b = checkeddata[i].BM_XL;
          		if(data.none=="true"){
          			$("#"+a).append('<div style="height:5px;"></div>');
          			$("#"+a).append('<div style="height:5px;"></div>');
@@ -105,14 +106,21 @@ function xminfoshow(){
        			if(divtext1==null||divtext1.length==0){
        				var shArray=true;
        				var shs = true;
-       				//判断此考试是否已报名  如果已报名审核通过 必须删除 才能提交
+       				//判断此考试是否已报名  如果已报名审核通过 必须删除 才能提交\
+       				debugger;
        					var resdata = results.list;
        					var FLAG = false;
+       					var xlflag=false; 
        					var xlcode = "";
        				for(var z=0;z<resdata.length;z++){
        					if(resdata[z].KSLBK_ID==a){
        						xlcode=resdata[z].BM_XL_CODE;
        						FLAG = true;
+       						
+       					}
+       					if(resdata[z].BM_XL_CODE==b){
+       						//本序列 只能报名一个
+       						xlflag = true;
        					}
        				}
        				if(FLAG){
@@ -121,6 +129,17 @@ function xminfoshow(){
        						$("#"+yzjg).append("审核不通过");
        					}else{
        						$("#"+a).append('已报名此考试,请撤销再报名');
+       						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
+       						$("#"+yzjg).append("审核不通过");
+       					}
+       					continue;
+       				}
+       				if(xlflag){
+       					if(b==STATION_NO_CODE){
+       						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">本序列只能报考一个,请撤销再提交或请选择其它考试</div>');
+       						$("#"+yzjg).append("审核不通过");
+       					}else{
+       						$("#"+a).append('已报名此序列,请撤销再报名');
        						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
        						$("#"+yzjg).append("审核不通过");
        					}

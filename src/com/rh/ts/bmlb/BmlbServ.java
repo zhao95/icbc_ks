@@ -1125,7 +1125,7 @@ public class BmlbServ extends CommonServ {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 		String strdate = sdf.format(date);
 		//跨序列高级考试
-		String highwhere = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=3 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE='1'";
+		String highwhere = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=3  AND BM_STATE='1'";
 		List<Bean> highlist = ServDao.finds("TS_BMLB_BM",highwhere);
 		//查询出  通过了但请假没考的 的数据  这些数据不算
 		for (Bean bean : highlist) {
@@ -1139,7 +1139,7 @@ public class BmlbServ extends CommonServ {
 		}
 		out.set("highnum", highlist.size());
 		//夸序列中级考试
-		String where = "AND BM_CODE="+"'"+user_code+"' AND  BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE='1'";
+		String where = "AND BM_CODE="+"'"+user_code+"' AND  BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2 AND BM_STATE='1'";
 		List<Bean> list = ServDao.finds("TS_BMLB_BM",where);
 		for (Bean bean : list) {
 			String bmid = bean.getStr("BM_ID");
@@ -1152,7 +1152,7 @@ public class BmlbServ extends CommonServ {
 		}
 		out.set("allnum", list.size());
 		//本序列考试
-		String where1 = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE='"+lb_code+"' AND BM_XL_CODE='"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE='1'";
+		String where1 = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE='"+lb_code+"' AND BM_XL_CODE='"+xl_code+"' AND BM_TYPE=2 AND BM_STATE='1'";
 		List<Bean>list1 = ServDao.finds("TS_BMLB_BM", where1);
 		for (Bean bean : list1) {
 			String bmid = bean.getStr("BM_ID");
@@ -1165,7 +1165,7 @@ public class BmlbServ extends CommonServ {
 		}
 		out.set("serianum", list1.size());
 		//夸序列  总数：
-		String where2 = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2 AND(BM_SH_STATE=0 or BM_SH_STATE=1) AND BM_STATE='1'";
+		String where2 = "AND BM_CODE="+"'"+user_code+"' AND BM_ENDDATE like"+"'%"+strdate+"%' AND BM_LB_CODE<>'"+lb_code+"' AND BM_XL_CODE<>'"+xl_code+"' AND BM_TYPE=2  AND BM_STATE='1'";
 		List<Bean> list3 = ServDao.finds("TS_BMLB_BM", where2);
 		for (Bean bean : list3) {
 			String bmid = bean.getStr("BM_ID");
@@ -1207,14 +1207,11 @@ public class BmlbServ extends CommonServ {
 		return new OutBean().set("list", list);
 		
 	}
-	//获取已报名的此项目的考试  且 已通过
+	//获取已报名的此项目的考试
 	public OutBean getBmData(Bean paramBean){
 		String xmid = paramBean.getStr("xmid");
 		String user_code = paramBean.getStr("user_code");
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String strdate = sdf.format(date);
-		String highwhere = " AND XM_ID='"+xmid+"' AND BM_CODE="+"'"+user_code+"' AND "+"'"+strdate+"' BETWEEN BM_STARTDATE AND BM_ENDDATE AND BM_STATE='1'";
+		String highwhere = " AND XM_ID='"+xmid+"' AND BM_CODE="+"'"+user_code+"' AND BM_STATE='1'";
 		List<Bean> finds = ServDao.finds("TS_BMLB_BM",highwhere);
 		return new OutBean().set("list", finds);
 	}
