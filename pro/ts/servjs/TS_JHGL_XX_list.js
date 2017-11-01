@@ -2,6 +2,7 @@ var _viewer = this;
 var params = _viewer.getParams();
 var projectId = params.JH_ID;
 var projectTitle = params.JH_TITLE;
+var projectYear=params.JH_YEAR;
 var height = jQuery(window).height()-200;
 var width = jQuery(window).width()-200;
 $(".rhGrid").find("tr").unbind("dblclick");
@@ -17,7 +18,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 	}
 
 	//打开添加页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
-    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100],"JH_ID":projectId,"JH_TITLE":projectTitle};
+    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100],"JH_ID":projectId,"JH_TITLE":projectTitle,"JH_YEAR":projectYear};
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
 });

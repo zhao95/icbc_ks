@@ -35,20 +35,12 @@ _viewer.beforeSave = function() {
 		return false;
  	}
 };
-//修改input时间样式
-//var xmStart=_viewer.getItem("XM_START");
-//var xmEnd=_viewer.getItem("XM_END");
-//var xmKsStartData=_viewer.getItem("XM_KSSTARTDATA");
-//var xmKsEndData=_viewer.getItem("XM_KSENDDATA");
-//$('#'+xmStart._opts.id+"_div").css('min-height','32px');
-//$('#'+xmEnd._opts.id+"_div").css('min-height','32px');
-//$('#'+xmKsStartData._opts.id+"_div").css('min-height','32px');
-//$('#'+xmKsEndData._opts.id+"_div").css('min-height','32px');
-
 
 if(_viewer._actVar == "cardAdd"){
 	var JH_ID = _viewer.opts.JH_ID;
 	var JH_TITLE = _viewer.opts.JH_TITLE;
+	var  JhYear=_viewer.opts.JH_YEAR;
 	_viewer.getItem("JH_PTITLE").setValue(JH_ID);
 	_viewer.getItem("JH_TITLE").setValue(JH_TITLE);
+	_viewer.getItem("JH_YEAR").setValue(JhYear);
 }
