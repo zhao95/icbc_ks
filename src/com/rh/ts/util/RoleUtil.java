@@ -8,74 +8,11 @@ import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
-import com.rh.core.serv.ServDao;
-import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.util.Strings;
 import com.rh.ts.pvlg.mgr.RoleMgr;
 
 public class RoleUtil {
-
-	public static String getPvlgSql(String servId, String userCode) {
-
-		if (Strings.isBlank(userCode)) {
-			UserBean userBean = Context.getUserBean();
-			userCode = userBean.getCode();
-		}
-
-		boolean ismgr = com.rh.core.org.mgr.UserMgr.existInRoles(userCode, "RADMIN");
-
-		if (ismgr) {
-			return "";
-		}
-
-		// 用户所有功能权限
-		Bean allOpt = getPvlgRole(userCode);
-
-		String pvlgkey = servId +"_PVLG";
-
-		Bean servPvlg = allOpt.getBean(pvlgkey);
-
-		SqlBean sql = new SqlBean();
-
-		if (servPvlg != null && !servPvlg.isEmpty()) {
-			
-			Bean listPvlg = servPvlg.getBean("list"); //查询的权限
-
-			String deptCodes = listPvlg.getStr("ROLE_DCODE");
-
-			if (!Strings.isBlank(deptCodes)) {
-
-				Bean param = new Bean().set("SERV_ID", servId);
-
-				List<Bean> list = ServDao.finds(TsConstant.SERV_CTLG_CONF, param);
-
-				if (list != null && !list.isEmpty()) {
-
-					Bean conf = list.get(0);
-
-					String mod = conf.getStr("SERV_MOD");
-
-					String col = conf.getStr("SERV_ITEM");
-
-					String[] dcodes = deptCodes.split(",");
-
-					if (!Strings.isBlank(mod)) {
-
-						for (String dcode : dcodes) {
-							dcode = mod + "_" + dcode;
-						}
-					}
-					sql.andIn(col, dcodes);
-				}
-			}
-		}
-
-		if (sql.isEmpty()) { // 无权限访问
-			return " and 1 = 2";
-		}
-		return sql.toString();
-	}
 
 	public static Bean getPvlgRole(String userCode) {
 		return getPvlgRole(userCode, "");
