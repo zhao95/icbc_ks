@@ -29,21 +29,62 @@ public class CccsServ extends CommonServ {
 		if (paramBean.getServId().equals(VIEW_CCCS)) {
 
 			String xmId = paramBean.getStr("XM_ID");
-
 			paramBean.setQueryNoPageFlag(true);
-
-			StringBuffer sb = new StringBuffer();
 			
-			sb.append(" AND DEPT_CODE in (SELECT JG_CODE FROM ").append(VIEW_GLJG);
-			
-			sb.append(" WHERE XM_ID = '").append(xmId).append("')");
-
-			paramBean.setQueryExtWhere(sb.toString());
+			String where = getWhere(xmId);
+			if (where.length() > 0) {
+			    paramBean.setQueryExtWhere(where);
+			}
+//			sb.append(" AND DEPT_CODE in (SELECT JG_CODE FROM ").append(VIEW_GLJG);
+//			sb.append(" WHERE XM_ID = '").append(xmId).append("')");
+//			paramBean.setQueryExtWhere(sb.toString());
 		}
-
 	}
-
-	/**
+	
+	
+    /**
+     * 找到当前机构
+     * @param list
+     * @return
+     */
+    public String getOdeptStr1(List<Bean> list) {
+	StringBuilder sb = new StringBuilder();
+	for (int i = 0; i < list.size(); i++) {
+	    String detpCode = list.get(i).getStr("JG_CODE");
+	    Bean bean = ServDao.find("SY_ORG_DEPT_ALL", detpCode);
+	    String odeptCode = bean.getStr("ODEPT_CODE");
+	    if(!odeptCode.isEmpty()){
+		sb.append(odeptCode + ",");
+	    }
+	}
+	return sb.toString();
+    }
+    /**
+     * 找到当前机构及下级机构
+     * @param list
+     * @return
+     */
+    public String getOdeptStr2(List<Bean> list) {
+	StringBuilder sb = new StringBuilder();
+	for (int i = 0; i < list.size(); i++) {
+	    String odeptCode = list.get(i).getStr("JG_CODE");
+	    Bean bean = ServDao.find("SY_ORG_DEPT_ALL", odeptCode);
+	    String codePath = bean.getStr("CODE_PATH");
+	    Bean whereBean = new Bean();
+	    whereBean.set("_SELECT_", "DEPT_CODE");
+	    whereBean.set("_WHERE_", "and DEPT_CODE = ODEPT_CODE and CODE_PATH like '" + codePath +"%'");
+	    List<Bean> tmpList = ServDao.finds("SY_ORG_DEPT_ALL", whereBean);
+	    for (int j = 0; j < tmpList.size(); j++) {
+		String tmpOdeptCode = tmpList.get(j).getStr("ODEPT_CODE");
+		if (!tmpOdeptCode.isEmpty()) {
+		    sb.append(tmpOdeptCode + ",");
+		}
+	    }
+	}
+	return sb.toString();
+    }
+	
+     /**
      * 场次管理 倒入考试组管理
      * @param paramBean
      * @return
@@ -141,8 +182,8 @@ public class CccsServ extends CommonServ {
 	if(sjVal == ""||cjVal == ""){
 	    return outBean.setError();
 	}
-	
-	String sqlWhere = "";
+		
+	String sqlWhere = getWhere(xmId);
 	List<Bean> list = ServDao.finds("TS_XMGL_CCCS_V", sqlWhere);
 	List<Bean> dataList = new ArrayList<Bean>();
 	for (int i = 0; i < list.size(); i++) {
@@ -167,6 +208,39 @@ public class CccsServ extends CommonServ {
 	return outBean.setOk();
     }
     
+    public String getWhere(String xmId) {
+	ParamBean param = new ParamBean();
+	param.set("_SELECT_", "JG_CODE,JG_TYPE");
+	param.set("_WHERE_", "and xm_id = '"+xmId+"'");
+	List<Bean> list = ServDao.finds(VIEW_GLJG, param);
+	List<Bean> list1 = new ArrayList<Bean>();
+	List<Bean> list2 = new ArrayList<Bean>();
+	for (int i = 0; i < list.size(); i++) {
+	    Bean bean = list.get(i);
+	    int type = bean.getInt("JG_TYPE");
+	    if(type == 1){
+		//部门
+		list1.add(bean);
+	    }else{
+		//机构
+		list2.add(bean);
+	    }
+	}
+	String odeptStr1 = getOdeptStr1(list1);
+	String odeptStr2 = getOdeptStr1(list2);
+	String odeptStr = odeptStr1 + odeptStr2;
+	if (odeptStr2.length() > 0) {
+	    odeptStr = odeptStr.substring(0, odeptStr.length() - 1);
+	}
+	
+	if(odeptStr.length() > 0){
+	    odeptStr = odeptStr.replace(",", "','");
+	    StringBuffer sb = new StringBuffer();
+	    sb.append(" AND DEPT_CODE in ('" + odeptStr + "')");
+	    return sb.toString();
+	}
+	return "";
+    }
     public LinkedHashMap<String, Bean> createLinkedHashMap(){
 	LinkedHashMap<String, Bean> lhMap = new LinkedHashMap<String, Bean>();
 	
