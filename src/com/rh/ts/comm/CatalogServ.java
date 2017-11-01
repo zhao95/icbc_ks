@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.StopWatch;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.rh.core.base.Bean;
 import com.rh.core.org.DeptBean;
@@ -23,6 +25,8 @@ import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.TsConstant;
 
 public class CatalogServ extends CommonServ {
+
+	private static Log log = LogFactory.getLog(CatalogServ.class);
 
 	final String servId = "TS_COMM_CATALOG";
 
@@ -89,12 +93,23 @@ public class CatalogServ extends CommonServ {
 		StopWatch sw = new StopWatch();
 
 		sw.start();
+		
+		DeptBean deptBean = null;
 
-		DeptBean deptBean = OrgMgr.getDept(dept);
+		if (Strings.isBlank(dept)) {
+			
+			List<DeptBean> list = OrgMgr.getTopDepts(cmpyCode);
+			
+			deptBean = list.get(0);
+
+		} else {
+			deptBean = OrgMgr.getDept(dept);
+		}
+		
 
 		for (String mod : modsArg) {
 
-			if (deptBean.getODeptCode().equals(dept)) {
+			if (deptBean.getODeptCode().equals(dept) || Strings.isBlank(dept)) {
 
 				syncOdeptCatalog(deptBean, mod, mods);
 
@@ -102,6 +117,8 @@ public class CatalogServ extends CommonServ {
 
 				syncDeptCatalog(deptBean, mod, mods);
 			}
+
+			DictMgr.clearCache("TS_CTLG_TREE_" + mod);
 		}
 
 		System.out.println(sw.toString());
@@ -156,7 +173,7 @@ public class CatalogServ extends CommonServ {
 
 		SqlBean sql = new SqlBean();
 
-		sql.andLikeRT("CODE_PATH", dept.getCodePath());
+		sql.and("ODEPT_CODE", dept.getODeptCode());
 
 		sql.and("S_FLAG", 1);
 
@@ -166,15 +183,26 @@ public class CatalogServ extends CommonServ {
 
 		sb.append(" WHERE CTLG_MODULE = ?");
 
-		sb.append(" AND CTLG_PATH like CONCAT(?,'%')");
+		sb.append(" AND S_ODEPT = ?");
+
+		// sb.append(" AND CTLG_PATH like CONCAT(?,'%')");
 
 		sb.append(" AND CTLG_CODE = ").append(ServMgr.SY_ORG_DEPT).append(".DEPT_CODE");
 
 		sb.append(" AND S_FLAG = ?)");
 
-		sql.appendWhere(sb.toString(), mod, dept.getCodePath(), 1);
+		sql.appendWhere(sb.toString(), mod, dept.getODeptCode(), 1);
+
+//		StopWatch sw = new StopWatch();
+//		sw.start();
+//		log.error("---------start------------");
+//		log.error(sql.getWhere());
+//		log.error(sql.get("_PREVALUES_").toString());
 
 		List<Bean> list = ServDao.finds(ServMgr.SY_ORG_DEPT, sql);
+
+//		log.error("----------stop-----------" + sw.toString());
+//		sw.stop();
 
 		if (list == null) {
 
@@ -332,6 +360,8 @@ public class CatalogServ extends CommonServ {
 					paramBean.set("CTLG_SHARE", addModule);
 				}
 
+				paramBean.set("S_ODEPT", parentCtlg.getStr("S_ODEPT"));// 所属机构
+
 				paramBean.set("CTLG_LEVEL", parentCtlg.getInt("CTLG_LEVEL") + 1);
 				paramBean.set("CTLG_TYPE", 3);
 
@@ -409,6 +439,7 @@ public class CatalogServ extends CommonServ {
 				dataBean.set("CTLG_LEVEL", paramBean.getStr("CTLG_LEVEL"));
 				dataBean.set("CTLG_TYPE", paramBean.getStr("CTLG_TYPE"));
 
+				dataBean.set("S_ODEPT", paramBean.getStr("S_ODEPT"));
 				dataBean.set("S_FLAG", 1);
 				dataBean.set("READ_FLAG", 2);
 
@@ -418,7 +449,6 @@ public class CatalogServ extends CommonServ {
 				int count = ServDao.count(TsConstant.SERV_CTLG_ALL, query);
 
 				if (count == 0) {
-					
 					ServDao.create(servId, dataBean);
 					DictMgr.clearCache("TS_CTLG_TREE_" + modCode);
 				}
@@ -488,6 +518,10 @@ public class CatalogServ extends CommonServ {
 
 			if (StringUtils.isNotBlank(paramBean.getStr("ODEPT_CODE"))) {
 				data.set("ODEPT_CODE", paramBean.getStr("ODEPT_CODE"));
+			}
+
+			if (StringUtils.isNotBlank(paramBean.getStr("S_ODEPT"))) {
+				data.set("S_ODEPT", paramBean.getStr("S_ODEPT"));
 			}
 
 			if (StringUtils.isNotBlank(paramBean.getStr("S_USER"))) {

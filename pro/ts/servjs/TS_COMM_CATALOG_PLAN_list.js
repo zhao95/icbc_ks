@@ -95,12 +95,13 @@ _viewer.getBtn("initCatalog").unbind("click").bind("click",function(event) {
 	
 	var pcodeh = _viewer._transferData["CTLG_PCODE_H"];
 	
-	console.log(_viewer._transferData);
+	console.log("pcodeh",pcodeh);
 	
 	if(pcodeh == "" || typeof(pcodeh) == "undefined") {
-		alert("请选择同步目录的层级 !");
-		_loadbar.hideDelayed();
-		return;
+		pcodeh = "";
+//		alert("请选择同步目录的层级 !");
+//		_loadbar.hideDelayed();
+//		return;
 	}
 	
 	var param = {};
