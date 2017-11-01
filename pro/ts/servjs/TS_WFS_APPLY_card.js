@@ -22,5 +22,5 @@ if(stept !=''){
 //保存后刷新tree和列表
 _viewer.afterSave = function() {
 	var  wfsId=_viewer.getItem("WFS_ID").getValue();
-	alert(wfsId);
+	
 };

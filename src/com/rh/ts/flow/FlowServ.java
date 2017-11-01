@@ -14,6 +14,7 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
+import com.rh.ts.pvlg.PvlgUtils;
 
 
 public class FlowServ extends CommonServ {
@@ -458,4 +459,14 @@ public class FlowServ extends CommonServ {
 	}
 	return outBean;
     }
+    
+    protected void beforeQuery(ParamBean paramBean) {
+		ParamBean param = new ParamBean();
+		param.set("paramBean", paramBean);
+		//param.set("fieldName","DEPT_PCODE");
+		param.set("serviceName", paramBean.getServId());
+		PvlgUtils.setOrgPvlgWhere(param);	
+	}  
+    
+    
 }
