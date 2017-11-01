@@ -4213,7 +4213,6 @@ function getDialog(dialogId,title,wid,hei) {
 
 function getListPvlg(item,user_pvlg,filed) {
 	var flag = false;
-	
 	if(filed == undefined) {
 		filed = "CTLG_PATH"
 	}
