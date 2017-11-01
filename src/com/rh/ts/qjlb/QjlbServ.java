@@ -13,6 +13,7 @@ import com.rh.core.util.Constant;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -474,43 +475,30 @@ public class QjlbServ extends CommonServ {
     /**
      * 请假次数统计
      */
-    public int getLeaveCount(String userCode) {
+    public OutBean getLeaveCount(ParamBean paramBean) {
+    	String userCode = paramBean.getStr("USER_CODE");
         //今年审批过的请假
-        String where = "and USER_CODE = '" + userCode + "' and QJ_STATUS = '2'" +
-                " and to_date(QJ_DATE,'yyyy-MM-dd hh24:mi:ss') between to_date(to_char(sysdate, 'yyyy' )||'-01-01','yyyy-mm-dd') and to_date((to_char(sysdate, 'yyyy' )+1)||'-01-01','yyyy-mm-dd')";
-        // String where = "and  QJ_STATUS='2' and  USER_CODE='" + userCode + "'";
-        List<Bean> queryQjList = ServDao.finds(TSQJ_SERVID, where);//获得当前已经请假的数据TS_QJLB_QJ
-        int count = 0;
-        if (queryQjList != null && !queryQjList.isEmpty()) {
-            //不为空的情况
-            for (Bean queryQj : queryQjList) {
-                String qjDates = queryQj.getStr("QJ_KSNAME");
-                //判断字符串的长
-                if (qjDates.length() > 0) {
-                    String[] qjDate = qjDates.split(",");
-                    count += qjDate.length;
-                }
-            }
-        } else {
-            count = 0;
+    	 Calendar now = Calendar.getInstance(); 
+    	 int year=now.get(Calendar.YEAR);  
+        String where = "and QJ_CODE = '" + userCode + "'and S_ATIME like '"+year+"%'";
+         List<Bean> beanList = ServDao.finds(TS_BM_QJ_NUM_SERVID, where);
+         Bean beanNum =null;
+         if(beanList!=null&&beanList.size()>0){
+        	 beanNum=beanList.get(0);
+         }
+        OutBean nBean=new OutBean();
+        if(beanNum!=null){
+             nBean.set("weekNum", beanNum.getStr("WEEK_NUM"));//获取周数
+             nBean.set("ciShuNum", beanNum.getStr("CISHU_NUM"));//获取次数
+        }else{
+        	nBean.set("weekNum", 0);//获取周数
+            nBean.set("ciShuNum", 0);//获取次数
+        	
         }
-        return count;
-    }
-//    
-
-    /**
-     * 通过QJ_ID获取考试名称日期
-     */
-    public boolean getBooleanWeek(String qjid) {
-        String whereTsqjBm = "and QJ_ID='" + qjid + "'";
-        List<Bean> ksList = ServDao.finds(TSQJ_BM_SERVID, whereTsqjBm);
-        List<String> dateList = new ArrayList();
-        for (Bean ks : ksList) {
-            String lbDate = ks.getStr("LB_DATE");
-            dateList.add(lbDate);
-        }
-        return true;
-    }
+        return nBean;
+       
+    }   
+    
 
 
 }
