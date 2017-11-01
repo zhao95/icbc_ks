@@ -7,6 +7,8 @@ import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.serv.bean.PageBean;
 import com.rh.core.util.Constant;
+import com.rh.ts.pvlg.PvlgUtils;
+
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -14,6 +16,15 @@ import java.util.*;
 public class DapccServ extends CommonServ {
 
     private final static String CHILD = "CHILD";
+
+    protected void beforeQuery(ParamBean paramBean) {
+	ParamBean param = new ParamBean();
+	String ctlgModuleName = "EXAM_ROOM";
+	param.set("paramBean", paramBean);
+	param.set("ctlgModuleName", ctlgModuleName);
+	param.set("serviceName", paramBean.getServId());
+	PvlgUtils.setOrgPvlgWhere(param);
+    }
 
 //    public OutBean getZwByKcId(ParamBean paramBean) {
 //        OutBean outBean = new OutBean();
