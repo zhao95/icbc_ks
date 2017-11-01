@@ -573,13 +573,11 @@ rh.vi.cardView.prototype._bldWin = function() {
     	widPercent = this.widHeiArray[0];
     	hei = this.widHeiArray[1];
     	position = this.xyArray;
-    	if(hei>800){
-    		hei="800";
-    	}
+    		hei="600";
     }
 	jQuery("#" + this.dialogId).dialog({
 		autoOpen: false,
-		height: hei/2,
+		height: hei,
 		width: widPercent,
 		modal: _self._modal,
 		resizable:false,
@@ -616,7 +614,6 @@ rh.vi.cardView.prototype._bldWin = function() {
     	var div = this.winDialog.parent().find("div:first");
     	div.css("background","#ccc");
     	div.css("border-radius","1px");
-    	div.css("width","96.5%");
     	div.find("span:first").html(this.winDialog.find("ul:first").find("a:first").html());
     	this.winDialog.find("ul:first").find("a:first").html("");
     	var flag = "false";
