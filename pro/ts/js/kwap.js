@@ -228,7 +228,8 @@ ListPage.prototype.bldPage = function () {
  */
 function bindHeaderAction() {
     $("#zdfpcc").click(function () {
-        $('#zdfpccModal').modal('show');
+        debugger;
+        $('#zdfpccModal').modal({backdrop: false, show: true});
     });
     $("#updatecc").click(function () {
         UpdateCCModal.show();
@@ -240,10 +241,10 @@ function bindHeaderAction() {
         LookJkModal.show();
     });
     $("#xngs").click(function () {
-        $('#xngsModal').modal('show');
+        $('#xngsModal').modal({backdrop: false, show: true});
     });
     $("#tjccap").click(function () {
-        $('#tjccapModal').modal('show');
+        $('#tjccapModal').modal({backdrop: false, show: true});
     });
     //伸缩按钮
     $("#toggle-sidebar").click(function () {
@@ -448,7 +449,7 @@ var ZdfpccModal = {
                                 settingOrgValue2Obj.direction = $("#org-direction").val();
                                 settingOrg.GZ_VALUE2 = JSON.stringify(settingOrgValue2Obj);
                             });
-                            selectOrgModal.modal('show');
+                            selectOrgModal.modal({backdrop: false, show: true});
 
                         }
                     );
@@ -507,7 +508,7 @@ var ZdfpccModal = {
                             settingXLValues2Obj.values = result;
                             settingXL.GZ_VALUE2 = JSON.stringify(settingXLValues2Obj);
                         });
-                        $selectXLModal.modal('show');
+                        $selectXLModal.modal({backdrop: false, show: true});
                     });
                     $item.append($btn);
                 }
@@ -556,39 +557,57 @@ var ZdfpccModal = {
         }
         return code;
     },
+
+    /**
+     * 自动安排考位
+     */
     doArrangeSeat: function () {
-        this.saveBeanList();
-        var code = this.getUserYAPAutoCode();
-        var codes = code.split(',');
-        for (var i = 0; i < codes.length; i++) {
-            var itemCode = codes[i];
-            //todo
-            if (itemCode !== '') {
-                if (itemCode === '0010100000') {
-                    var childs = FireFly.getDict('SY_ORG_ODEPT_ALL', itemCode)["0"].CHILD;
-                    for (var j = 0; j < childs.length; j++) {
-                        var child = childs[j];
-                        FireFly.doAct("TS_XMGL_KCAP_YAPZW", "doArrangeSeat", {XM_ID: this.xmId, ODEPT_CODE: child.ID});
+        this.saveBeanList(function () {
+            var code = this.getUserYAPAutoCode();
+            var codes = code.split(',');
+            for (var i = 0; i < codes.length; i++) {
+                var itemCode = codes[i];
+                if (itemCode !== '') {
+                    var dept = FireFly.doAct('SY_ORG_DEPT', 'byid', {'_PK_': itemCode});
+                    if (dept.DEPT_PCODE) {
+                        //有父级机构
+                        FireFly.doAct("TS_XMGL_KCAP_YAPZW", "doArrangeSeat", {XM_ID: this.xmId, ODEPT_CODE: itemCode});
+                    } else if (dept._MSG_ && dept._MSG_.indexOf('ERROR') >= 0) {
+                        //机构不存在
+                    } else {
+                        //机构存在，父id为空 ->为总行 获取总行下的所有机构安排考位
+                        var childs = FireFly.getDict('SY_ORG_ODEPT_ALL', itemCode)["0"].CHILD;
+                        for (var j = 0; j < childs.length; j++) {
+                            var child = childs[j];
+                            FireFly.doAct("TS_XMGL_KCAP_YAPZW", "doArrangeSeat", {
+                                XM_ID: this.xmId,
+                                ODEPT_CODE: child.ID
+                            });
+                        }
                     }
-                } else {
-                    FireFly.doAct("TS_XMGL_KCAP_YAPZW", "doArrangeSeat", {XM_ID: this.xmId, ODEPT_CODE: itemCode});
                 }
-                // FireFly.getDict('SY_ORG_ODEPT_ALL', undefined, " and ID='0010100000'")
-                // FireFly.getDictNames(FireFly.getDict('SY_ORG_ODEPT_ALL'), '0010100000');
             }
-        }
+        });
 
     },
 
-    saveBeanList: function () {
+    /**
+     * 保存配置信息
+     **/
+    saveBeanList: function (callback) {
         //  xmid  {id,value}
+        var self = this;
         var settings = this.getZdfpccModalValue();
         //
         FireFly.doAct("TS_XMGL_KCAP_GZ", "saveBeanList", {
             'data': JSON.stringify(
                 {XM_ID: this.xmId, BATCHDATAS: settings}
             )
-        }, false, false);
+        }, false, false, function () {
+            if (callback) {
+                callback.apply(self);
+            }
+        });
     },
     clone: function (obj) {
         var o;
@@ -631,7 +650,7 @@ var SubmissionArrangementModal = {
         if (this.submissionArrangementModal === '') {
             this.initData();
         }
-        this.submissionArrangementModal.modal('show');
+        this.submissionArrangementModal.modal({backdrop: false, show: true});
     }
 
 };
@@ -646,7 +665,7 @@ var LookJkModal = {
         if (this.lookJkModal === '') {
             this.initData();
         }
-        this.lookJkModal.modal('show');
+        this.lookJkModal.modal({backdrop: false, show: true});
     }
 };
 
@@ -683,7 +702,7 @@ var UpdateCCModal = {
         if (this.updateccModal === '') {
             this.initData();
         }
-        this.updateccModal.modal('show');
+        this.updateccModal.modal({backdrop: false, show: true});
     },
 
     getTreeData: function () {
@@ -1130,7 +1149,7 @@ var KcObject = {
                 for (var j = 0; j < trData.length; j++) {
                     var tdData = trData[j];
                     var $td = jQuery('<td id="' + tdData.ZW_ID + '" style="width:10%;">' +
-                        '   <span>' + tdData.ZW_ZWH_SJ + '</span>' +
+                        '   <span style="font-size: 1px;position: relative;top: -8px;left: -6px;">' + tdData.ZW_ZWH_SJ + '</span>' +
                         '   <span class="userName"></span>' +
 //                            '   <span class="close">x</span>' +
                         '</td>');
@@ -1138,9 +1157,9 @@ var KcObject = {
                 }
                 $kcInfoTbody.append($tr);
             }
-            /**/
+            //添加放置事件
             this.addDroppableEvent($("#kcInfo").find("td"));
-
+            //设置座位信息
             this.setZwForView(sjId);
 
         } else if (type === 'list') {
@@ -1230,6 +1249,9 @@ var KcObject = {
         }
     },
 
+    /**
+     * 设置已安排座位列表
+     **/
     setZwListContent: function (sjId, $kcInfoTbody) {
         $kcInfoTbody.html('');
         var zwListBean = FireFly.doAct("TS_XMGL_KCAP_YAPZW", "getYapzwContent", {SJ_ID: sjId});
@@ -1255,6 +1277,9 @@ var KcObject = {
         }
     },
 
+    /**
+     * 根据已安排座位id设置座位属性
+     **/
     setZwItemForView: function (yapzwId) {
         var self = this;
         var yapzw = this.getYapzwById(yapzwId);
@@ -1310,7 +1335,7 @@ var KcObject = {
 
 
     /**
-     * 添加拖拉放置事件
+     * 为座位添加拖拉放置事件
      **/
     addDroppableEvent: function ($element) {
         var self = this;
