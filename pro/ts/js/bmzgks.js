@@ -107,7 +107,7 @@ function xminfoshow(){
        				var shArray=true;
        				var shs = true;
        				//判断此考试是否已报名  如果已报名审核通过 必须删除 才能提交\
-       				debugger;
+//       				debugger;
        					var resdata = results.list;
        					var FLAG = false;
        					var xlflag=false; 

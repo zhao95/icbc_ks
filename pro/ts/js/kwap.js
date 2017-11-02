@@ -228,7 +228,7 @@ ListPage.prototype.bldPage = function () {
  */
 function bindHeaderAction() {
     $("#zdfpcc").click(function () {
-        debugger;
+//        debugger;
         $('#zdfpccModal').modal({backdrop: false, show: true});
     });
     $("#updatecc").click(function () {
