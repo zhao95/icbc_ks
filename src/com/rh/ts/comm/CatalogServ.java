@@ -39,6 +39,7 @@ public class CatalogServ extends CommonServ {
 	 * @return
 	 */
 	public OutBean initCatalog(ParamBean paramBean) {
+
 		OutBean outBean = new OutBean();
 
 		String ctlgPcode = paramBean.getStr("CTLG_PCODE_H");
@@ -93,19 +94,18 @@ public class CatalogServ extends CommonServ {
 		StopWatch sw = new StopWatch();
 
 		sw.start();
-		
+
 		DeptBean deptBean = null;
 
 		if (Strings.isBlank(dept)) {
-			
+
 			List<DeptBean> list = OrgMgr.getTopDepts(cmpyCode);
-			
+
 			deptBean = list.get(0);
 
 		} else {
 			deptBean = OrgMgr.getDept(dept);
 		}
-		
 
 		for (String mod : modsArg) {
 
@@ -138,15 +138,17 @@ public class CatalogServ extends CommonServ {
 	 */
 	private void syncOdeptCatalog(DeptBean odept, String mod, String shareMods) {
 
-		SqlBean sql = new SqlBean();
+		List<Bean> odeptList = null;
 
-		sql.andLikeRT("CODE_PATH", odept.getCodePath());
+		SqlBean sql1 = new SqlBean();
 
-		sql.and("DEPT_TYPE", OrgConstant.DEPT_TYPE_ORG);
+		sql1.andLikeRT("CODE_PATH", odept.getCodePath());
 
-		sql.and("S_FLAG", 1);
+		sql1.and("DEPT_TYPE", OrgConstant.DEPT_TYPE_ORG);
 
-		List<Bean> odeptList = ServDao.finds(ServMgr.SY_ORG_DEPT, sql);
+		sql1.and("S_FLAG", 1);
+
+		odeptList = ServDao.finds(ServMgr.SY_ORG_DEPT, sql1);
 
 		if (odeptList == null) {
 
@@ -193,16 +195,16 @@ public class CatalogServ extends CommonServ {
 
 		sql.appendWhere(sb.toString(), mod, dept.getODeptCode(), 1);
 
-//		StopWatch sw = new StopWatch();
-//		sw.start();
-//		log.error("---------start------------");
-//		log.error(sql.getWhere());
-//		log.error(sql.get("_PREVALUES_").toString());
+		StopWatch sw = new StopWatch();
+		sw.start();
+		log.error("---------start------------");
+		log.error(sql.getWhere());
+		log.error(sql.get("_PREVALUES_").toString());
 
 		List<Bean> list = ServDao.finds(ServMgr.SY_ORG_DEPT, sql);
 
-//		log.error("----------stop-----------" + sw.toString());
-//		sw.stop();
+		log.error("----------stop-----------" + sw.toString());
+		sw.stop();
 
 		if (list == null) {
 

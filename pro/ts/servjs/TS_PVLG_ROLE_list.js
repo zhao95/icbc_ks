@@ -1,7 +1,7 @@
 var _viewer = this;
 var width = jQuery(window).width()-200;
 var height = jQuery(window).height()-50;
-
+$(".rhGrid").find("tr").unbind("dblclick");
 //每一行添加编辑和删除
 $("#TS_PVLG_ROLE .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){

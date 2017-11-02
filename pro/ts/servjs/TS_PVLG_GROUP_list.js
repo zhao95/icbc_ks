@@ -1,10 +1,11 @@
 var _viewer = this;
 var width = jQuery(window).width()-200;
-var height = jQuery(window).height()-100;
+var height = jQuery(window).height()-50;
+//取消行点击事件
+$(".rhGrid").find("tr").unbind("dblclick");
 //查询选择时呈现的操作.
 if(_viewer.params.BUT){
-	//取消行点击事件
-	$(".rhGrid").find("tr").unbind("dblclick");
+	
 	$("#TS_PVLG_GROUP .rhGrid-thead tr").append('<th icode="button" class="rhGrid-thead-th" style="width:18.2%;">操作</th>');
 	$("#TS_PVLG_GROUP .rhGrid-tbody ").find("tr").each(function(index, item) {//icode="button" class="rhGrid-thead-th" style="width:18.2%;"
 			var dataId = item.id;
