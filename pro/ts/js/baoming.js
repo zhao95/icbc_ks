@@ -193,7 +193,7 @@ function selectcreate(){
  	            
  	            var nextVal = $next.val();
  	            var $nextItems = $next.find('option');
-				debugger;
+//				debugger;
  	            $next.find('option[' + opt.relativeKey + '="' + curKeyValue + '"]').each(function (){
  	            	if($(this).parent().is("span")){
  	            		$(this).unwrap();
@@ -858,7 +858,7 @@ function selectcreate(){
 				$("#loading").modal("show");
   }
 function yanzh(obj){
-	debugger;
+//	debugger;
   var xmeleid = "XMID"+obj;
   var bmeleid = "baomingid"+obj;
   var xmid =  document.getElementById(xmeleid).innerHTML;

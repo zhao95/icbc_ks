@@ -410,7 +410,7 @@ function bindCard() {
 				
 					saveRuleVarCode(dataId,"","",jsons,mx_name);
 			}else if(obj2[0].type=='XL'){
-					debugger;
+//					debugger;
 					//保存 序列
 					var mx_name = nameArg[0];
 					var jsons = "[";

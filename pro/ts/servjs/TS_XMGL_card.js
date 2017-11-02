@@ -61,7 +61,7 @@ _viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
 	var xmKsStartData=_viewer.getItem("XM_KSSTARTDATA").getValue();//考试开始时间
 	var xmKsEndData=_viewer.getItem("XM_KSENDDATA").getValue();//考试截至时间
 	var  xmName=_viewer.getItem("XM_NAME").getValue();
-	alert(xmName);
+//	alert(xmName);
 	if(xmName==""){
 		$("#TS_XMGL-XM_NAME").addClass("blankError").addClass("errorbox");
 	}else{
@@ -89,10 +89,10 @@ _viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
 //	};
 	var a=setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData);
 	//alert(typeof(a)!="undefined");
-	alert(a);
+//	alert(a);
 	if(xmName!="" && a ){
 	//if(xmName!="" && (a !=false||typeof(a)!="undefined")){
-		alert(23);
+//		alert(23);
 	_viewer.doActReload('saveAndToSZ');// 这里不用传参数，这个方法默认是获取所有值
 	var XM_ID = _viewer.getItem("XM_ID").getValue();// 执行完保存后，自动把ID回填了
 	var XM_TYPE = _viewer.getItem("XM_TYPE").getValue();// 得到类型值
@@ -147,7 +147,7 @@ _viewer.getItem("XM_TYPE").change(function(){
 	}
 });	
 
-function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){debugger;
+function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){
 	var xmStarts = xmStart.split('-');
     var xmEnds = xmEnd.split('-');
     var xmKsStartDatas = xmKsStartData.split('-');

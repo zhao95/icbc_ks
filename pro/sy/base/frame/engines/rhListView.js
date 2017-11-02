@@ -2540,7 +2540,7 @@ rh.vi.listView.prototype.getUserPvlg = function(){
  */
 rh.vi.listView.prototype._checkUserPvlg = function() {
 	var _self = this;
-	console.log("用户权限",_self._userPvlg);
+	console.log("全部权限",_self._userPvlg);
 	var odeptLv = System.getVar("@ODEPT_LEVEL@",0);
 	var deptCode = System.getVar("@DEPT_CODE@");
 	var deptPath = System.getVar("@CODE_PATH@");
@@ -2550,7 +2550,7 @@ rh.vi.listView.prototype._checkUserPvlg = function() {
 		
 		servPvlg = _self._userPvlg[_self.servId+"_PVLG"]
 	}
-	console.log("当前服务权限",servPvlg);
+	console.log(this.servId+"权限",servPvlg);
 	
 	if("admin" != System.getVar("@LOGIN_NAME@")){
 	

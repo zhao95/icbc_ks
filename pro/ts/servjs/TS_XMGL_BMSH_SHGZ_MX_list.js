@@ -164,7 +164,7 @@ function bindCard() {
 			}else if(obj2[0].type== 'muty'){
 				var codestr = [];
 				var namestr = [];
-				debugger;
+//				debugger;
 				for(var a=0;a<obj2.length;a++){
 					if(a<obj2.length-2){
 						namestr[a]=obj2[a].val;
@@ -411,7 +411,7 @@ function bindCard() {
 				
 					saveRuleVarCode(dataId,"","",jsons,mx_name);
 			}else if(obj2[0].type=='XL'){
-					debugger;
+//					debugger;
 					//保存 序列
 					var mx_name = nameArg[0];
 					var jsons = "[";

@@ -280,7 +280,7 @@ for (var i = 0; i < icodes.length; i++) {
         deleteThNum++;
     }
 }
-debugger;
+//debugger;
 //修改无记录tr的colspan值
 var rhGridTBody = _viewer.grid._table.find('.rhGrid-tbody');
 var rhGridShowNO = rhGridTBody.find('.rhGrid-showNO');

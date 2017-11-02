@@ -129,7 +129,7 @@ public class RoleUtil {
 	
 						odeptBean = userBean.getODeptBean().getParentDeptBean().getODeptBean();
 	
-						System.out.println("上级 lv=" + odeptBean.getLevel() + "   curLv=" + curLv);
+//						System.out.println("上级 lv=" + odeptBean.getLevel() + "   curLv=" + curLv);
 					}
 				}
 
