@@ -286,7 +286,10 @@ public class DataServ extends CommonServ {
 		List<Bean> odeptlist = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE '%"+dept_code+"%' AND DEPT_LEVEL='3' GROUP BY ODEPT_CODE ");
 		
 		if(odeptlist!=null&&odeptlist.size()!=0){
+			int ipi =1;
 			for (Bean bean2 : odeptlist) {
+				String ip = "172."+ ipi;
+				
 				//添加考场
 				int max = (int) (Math.random()*50);
 				int good = (int) (max*0.8);
@@ -338,6 +341,8 @@ public class DataServ extends CommonServ {
 						//系统座位号
 						int hangshu = max/10+1; //行数
 						int xthao = 1;
+						String first  = "";
+						String last  = "";
 						for(int z=1;z<=hangshu;z++){
 							if(xthao>max){
 								break;
@@ -352,9 +357,26 @@ public class DataServ extends CommonServ {
 								zwbean.set("ZW_ZWH_SJ", z+"-"+y);//实际座位号
 								zwbean.set("ZW_KY", 1);//可用
 								ServDao.save("TS_KCGL_ZWDYB", zwbean);
+								
+								Bean ipbean = new Bean();
+								ipbean.set("IPZ_IP", kcid);
+								ipbean.set("IPZ_ZWH", ip+"."+j+"."+xthao);
+								if(xthao==1){
+									first=ip+"."+j+"."+xthao;
+								}else if(xthao==max){
+									last=ip+"."+j+"."+xthao;
+								}
+								ipbean.set("KC_ID", kcid);
+								ServDao.save("TS_KCGL_ipzwh", ipbean);
 								xthao++;
 							}
 						}
+						
+						Bean ipscopebean = new  Bean();
+						ipscopebean.set("IPS_TITLE", kcname+j+"区段");
+						ipscopebean.set("KC_ID", kcid);
+						ipscopebean.set("IPS_SCOPE",first+"——"+last);
+						ServDao.save("ts_kcgl_ipscope", ipscopebean);
 					}
 				}else{
 					//二级
@@ -397,6 +419,8 @@ public class DataServ extends CommonServ {
 						//系统座位号
 						int hangshu = max/10+1; //行数
 						int xthao = 1;
+						String first  = "";
+						String last = "";
 						for(int z=1;z<=hangshu;z++){
 							if(xthao>max){
 								break;
@@ -411,12 +435,28 @@ public class DataServ extends CommonServ {
 								zwbean.set("ZW_ZWH_SJ", z+"-"+y);//实际座位号
 								zwbean.set("ZW_KY", 1);//可用
 								ServDao.save("TS_KCGL_ZWDYB", zwbean);
+								
+								Bean ipbean = new Bean();
+								ipbean.set("IPZ_IP", kcid);
+								ipbean.set("IPZ_ZWH", ip+"."+j+"."+xthao);
+								if(xthao==1){
+									first=ip+"."+j+"."+xthao;
+								}else if(xthao==max){
+									last=ip+"."+j+"."+xthao;
+								}
+								ipbean.set("KC_ID", kcid);
+								ServDao.save("TS_KCGL_ipzwh", ipbean);
 								 xthao++;
 							}
 						}
+						Bean ipscopebean = new  Bean();
+						ipscopebean.set("IPS_TITLE", kc_name+j+"区段");
+						ipscopebean.set("KC_ID", kcid);
+						ipscopebean.set("IPS_SCOPE",first+"——"+last);
+						ServDao.save("ts_kcgl_ipscope", ipscopebean);
 					}
 					}
-					
+				ipi++;
 			}
 		}
 		
