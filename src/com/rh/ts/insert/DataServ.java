@@ -42,7 +42,9 @@ public class DataServ extends CommonServ {
 		int i=0;
 		int j=0;
 		int a = 0;
-			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND CODE_PATH LIKE '%0130100000%' group by user_code limit 0,5000" );
+		List<Bean> DEPTLIST = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE '%0130100000%' and DEPT_LEVEL =3");
+		for (Bean bean : DEPTLIST) {
+			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,150" );
 			if(finds2!=null&&finds2.size()!=0){
 				
 				//向报名列表中插数据
@@ -155,11 +157,14 @@ public class DataServ extends CommonServ {
 						mindbean.set("S_DEPT",userBean.getStr("DEPT_CODE"));
 						ServDao.save("TS_COMM_MIND", mindbean);
 					}
+				}
 			}
+			
 		}
 			
-			
-			List<Bean> finds3 = ServDao.finds("SY_ORG_USER", " AND CODE_PATH LIKE '%0020000000%' group by user_code  limit 0,5000" );
+		List<Bean> DEPTLIST1 = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE '%0020000000%' AND DEPT_LEVEL =3");
+		for (Bean bean : DEPTLIST1) {
+			List<Bean> finds3 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,150" );
 			if(finds3!=null&&finds3.size()!=0){
 				
 				//向报名列表中插数据
@@ -274,9 +279,9 @@ public class DataServ extends CommonServ {
 					}
 			}
 		}
+		}
 			return new OutBean().setOk();
 	}
-	
 	/**
 	 * 插入考场  机构 系统座位号
 	 */
@@ -302,11 +307,10 @@ public class DataServ extends CommonServ {
 						int j=i+1;
 						
 						String kcname = bean2.getStr("DEPT_NAME");
-						kcname = kcname.substring(0, 2)+"一级考场";
-						 kcname = bean2.getStr("DEPT_NAME");
+						String KCNAME = kcname.substring(0, 2)+"一级考场";
 						String address = kcname.substring(0, 2)+"市区";
 						//一级
-						bean.set("KC_NAME", kcname+j);
+						bean.set("KC_NAME", KCNAME+j);
 						bean.set("KC_ADDRESS", address);
 						bean.set("KC_ODEPTNAME", fhbean.getStr("DEPT_NAME"));
 						bean.set("KC_ODEPTCODE", fhbean.getStr("DEPT_CODE"));
@@ -373,21 +377,20 @@ public class DataServ extends CommonServ {
 						}
 						
 						Bean ipscopebean = new  Bean();
-						ipscopebean.set("IPS_TITLE", kcname+j+"区段");
+						ipscopebean.set("IPS_TITLE", KCNAME+j+"区段");
 						ipscopebean.set("KC_ID", kcid);
 						ipscopebean.set("IPS_SCOPE",first+"——"+last);
 						ServDao.save("ts_kcgl_ipscope", ipscopebean);
 					}
+					ipi++;
 				}else{
 					//二级
 					String dept_name = bean2.getStr("DEPT_NAME");
-					String kc_name = dept_name.substring(0, dept_name.length()-2)+"二级考场";
+					String KCNAME = dept_name.substring(0, dept_name.length()-2)+"二级考场";
 					 dept_name = bean2.getStr("DEPT_NAME");
 					dept_name = dept_name.substring(0, dept_name.length()-2)+"区";
-					for(int i=0;i<2;i++){
 						Bean bean = new Bean();
-						int j=i+1;
-						bean.set("KC_NAME", kc_name+j);
+						bean.set("KC_NAME", KCNAME);
 						bean.set("KC_ADDRESS", dept_name);
 						bean.set("KC_ODEPTNAME", bean2.getStr("DEPT_NAME"));
 						bean.set("KC_ODEPTNAME", bean2.getStr("DEPT_NAME"));
@@ -438,11 +441,11 @@ public class DataServ extends CommonServ {
 								
 								Bean ipbean = new Bean();
 								ipbean.set("IPZ_IP", kcid);
-								ipbean.set("IPZ_ZWH", ip+"."+j+"."+xthao);
+								ipbean.set("IPZ_ZWH", ip+".1."+xthao);
 								if(xthao==1){
-									first=ip+"."+j+"."+xthao;
+									first=ip+".1."+xthao;
 								}else if(xthao==max){
-									last=ip+"."+j+"."+xthao;
+									last=ip+".1."+xthao;
 								}
 								ipbean.set("KC_ID", kcid);
 								ServDao.save("TS_KCGL_ipzwh", ipbean);
@@ -450,13 +453,12 @@ public class DataServ extends CommonServ {
 							}
 						}
 						Bean ipscopebean = new  Bean();
-						ipscopebean.set("IPS_TITLE", kc_name+j+"区段");
+						ipscopebean.set("IPS_TITLE", KCNAME+"区段");
 						ipscopebean.set("KC_ID", kcid);
 						ipscopebean.set("IPS_SCOPE",first+"——"+last);
 						ServDao.save("ts_kcgl_ipscope", ipscopebean);
 					}
-					}
-				ipi++;
+			
 			}
 		}
 		

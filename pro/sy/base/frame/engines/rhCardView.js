@@ -583,6 +583,9 @@ rh.vi.cardView.prototype._bldWin = function() {
     	position = this.xyArray;
     	
     }
+    if(hei<600){
+    	hei="530";
+    }
     if(hei>1000){
     	hei="800";
     }

@@ -331,7 +331,6 @@ public class XmglServ extends CommonServ {
 		for (int a = 0; a < xmarray.length; a++) {
 			ParamBean param = new ParamBean();
 			param.set("xmid", xmarray[a]);
-			String xmid = xmarray[a];
 			Bean outBeanCode = ServMgr.act("TS_XMGL_RYGL_V", "getCodes", param);
 			
 			String codes = outBeanCode.getStr("rycodes");
