@@ -23,19 +23,19 @@ body {background-color:#f5fafd;line-height:28px;font-size:14px;}
 </style>
 <body>
 <div>
-	<div id="rh_test_container_add" class="rh_test_container">
+	<div id="rh_test_container_add" class="rh_test_container" style="display:none;">
 	    <div class="rh_test_title">1. 可信任站点添加</div>
 	    <div id="rh_test_bat"></div>
 	</div>
 	<div class="rh_test_container">
-	 	<div class="rh_test_title">2. 浏览器测试</div>
+	 	<div class="rh_test_title">1. 浏览器测试</div>
 	 	<div id="rh_test_browser"></div>
 	</div>
 	<div id="rh_test_container_flash" class="rh_test_container">
-	 	<div class="rh_test_title">3. Flash测试</div>
+	 	<div class="rh_test_title">2. Flash测试</div>
 	    <div id="rh_test_flash"></div>
 	</div>
-	<div id="rh_test_container_ntko" class="rh_test_container">
+	<div id="rh_test_container_ntko" class="rh_test_container" style="display:none;">
 	    <div class="rh_test_title">4. NTKO测试和ZotnClient测试</div>
 	    <div id="rh_test_ntko" style="width:100%;text-align:center;">
 	       <iframe id="rh_test_ntko_iframe" src="ntkoTest.jsp" width="600px" height="40px" border='0' frameborder='0' style="border:1px blue solid;padding:0px;background-color:yellow;" allowtransparency=true scrolling=no></iframe>
