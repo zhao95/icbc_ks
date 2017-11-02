@@ -441,6 +441,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
 				   var confirmDel=confirm(Language.transStatic("rhCardView_string1"));
 				   if (confirmDel == true){
 					   if (_self.btns[UIConst.ACT_SAVE]) {
+						   _self.saveReturn= true;
 						   _self.btns[UIConst.ACT_SAVE].click();
 						   return false;
 					   }
@@ -580,9 +581,10 @@ rh.vi.cardView.prototype._bldWin = function() {
     	widPercent = this.widHeiArray[0];
     	hei = this.widHeiArray[1];
     	position = this.xyArray;
-    	if(this.defHeight){
-    		hei="530";
-    	}
+    	
+    }
+    if(hei>1000){
+    	hei="800";
     }
 	jQuery("#" + this.dialogId).dialog({
 		autoOpen: false,
