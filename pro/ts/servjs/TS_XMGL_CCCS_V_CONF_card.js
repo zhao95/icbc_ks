@@ -29,7 +29,8 @@ _viewer.getBtn("save").unbind("click").bind("click", function(event) {
 		Cookie.set("sjVal", sjVal, 1);
 		Cookie.set("cjVal", cjVal, 1);
 		_viewer.getParHandler().refresh();
-		_viewer.backA.mousedown();
+//		_viewer.backA.mousedown();
+		$("#TS_XMGL_CCCS_V_CONF-winDialog").prev().find("a.ui-dialog-titlebar-close").click();
 	}
 });
 

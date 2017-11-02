@@ -6,8 +6,13 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.StopWatch;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.rh.core.base.Bean;
+import com.rh.core.org.DeptBean;
+import com.rh.core.org.mgr.OrgMgr;
+import com.rh.core.org.util.OrgConstant;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -15,10 +20,13 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.dict.DictMgr;
+import com.rh.core.util.Strings;
 import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.TsConstant;
 
 public class CatalogServ extends CommonServ {
+
+	private static Log log = LogFactory.getLog(CatalogServ.class);
 
 	final String servId = "TS_COMM_CATALOG";
 
@@ -33,7 +41,7 @@ public class CatalogServ extends CommonServ {
 	public OutBean initCatalog(ParamBean paramBean) {
 		OutBean outBean = new OutBean();
 
-		// String odept = paramBean.getStr("ODEPT_CODE");
+		String ctlgPcode = paramBean.getStr("CTLG_PCODE_H");
 		String cmpyCode = paramBean.getStr("CMPY_CODE");
 		String moduleCode = paramBean.getStr("CTLG_MODULE");
 		String initModule = paramBean.getStr("INIT_MODULE");
@@ -57,7 +65,15 @@ public class CatalogServ extends CommonServ {
 			}
 		}
 
-		syncCatalog(moduleCode, cmpyCode);
+		if (Strings.isBlank(ctlgPcode)) {
+
+			syncCatalog(moduleCode, "", cmpyCode);
+		} else {
+
+			String dept = ctlgPcode.substring(ctlgPcode.indexOf("-") + 1, ctlgPcode.length());
+
+			syncCatalog(moduleCode, dept, cmpyCode);
+		}
 
 		return outBean.setOk();
 	}
@@ -65,36 +81,44 @@ public class CatalogServ extends CommonServ {
 	/**
 	 * 同步组织机构到指定目录类型，已存在的目录忽略
 	 * 
-	 * @param ctlgModules
-	 *            同步的目录类型 多个类型逗号隔开
+	 * @param mods
+	 *            同步模块 逗哥以逗号隔开
+	 * @param odept
 	 * @param cmpyCode
-	 *            公司编码
 	 */
-	private void syncCatalog(String ctlgModules, String cmpyCode) {
+	private void syncCatalog(String mods, String dept, String cmpyCode) {
 
-		String[] moduleArg = ctlgModules.split(",");
-
-		// 获取机构
-		SqlBean sql = new SqlBean();
-		sql.and("CMPY_CODE", cmpyCode);
-		sql.and("DEPT_TYPE", 2); // 2 机构
-		sql.and("S_FLAG", 1);
-		List<Bean> deptList = ServDao.finds(ServMgr.SY_ORG_DEPT_ALL, sql);
-
-		if (deptList == null) {
-			return;
-		}
+		String[] modsArg = mods.split(",");
 
 		StopWatch sw = new StopWatch();
+
 		sw.start();
+		
+		DeptBean deptBean = null;
 
-		for (String mod : moduleArg) {
+		if (Strings.isBlank(dept)) {
+			
+			List<DeptBean> list = OrgMgr.getTopDepts(cmpyCode);
+			
+			deptBean = list.get(0);
 
-			for (Bean bean : deptList) {
+		} else {
+			deptBean = OrgMgr.getDept(dept);
+		}
+		
 
-				syncCatalog(bean, mod, ctlgModules);
+		for (String mod : modsArg) {
+
+			if (deptBean.getODeptCode().equals(dept) || Strings.isBlank(dept)) {
+
+				syncOdeptCatalog(deptBean, mod, mods);
+
+			} else {
+
+				syncDeptCatalog(deptBean, mod, mods);
 			}
 
+			DictMgr.clearCache("TS_CTLG_TREE_" + mod);
 		}
 
 		System.out.println(sw.toString());
@@ -102,15 +126,54 @@ public class CatalogServ extends CommonServ {
 
 	}
 
-	private void syncCatalog(Bean odept, String mod, String ctlgModules) {
-
-		List<Bean> addCatalogList = new ArrayList<Bean>();
+	/**
+	 * 同步机构下的目录
+	 * 
+	 * @param odept
+	 *            同步机构
+	 * @param mod
+	 *            同步模块
+	 * @param shareMods
+	 *            共享模块
+	 */
+	private void syncOdeptCatalog(DeptBean odept, String mod, String shareMods) {
 
 		SqlBean sql = new SqlBean();
 
-		sql.and("ODEPT_CODE", odept.getStr("DEPT_CODE"));
+		sql.andLikeRT("CODE_PATH", odept.getCodePath());
 
-		// sql.and("DEPT_TYPE", OrgConstant.DEPT_TYPE_DEPT);
+		sql.and("DEPT_TYPE", OrgConstant.DEPT_TYPE_ORG);
+
+		sql.and("S_FLAG", 1);
+
+		List<Bean> odeptList = ServDao.finds(ServMgr.SY_ORG_DEPT, sql);
+
+		if (odeptList == null) {
+
+			return;
+		}
+
+		for (Bean bean : odeptList) {
+
+			DeptBean deptBean = new DeptBean(bean);
+
+			syncDeptCatalog(deptBean, mod, shareMods);
+		}
+
+	}
+
+	/**
+	 * 同步部门下的目录
+	 * 
+	 * @param dept
+	 * @param mod
+	 * @param shareMods
+	 */
+	private void syncDeptCatalog(DeptBean dept, String mod, String shareMods) {
+
+		SqlBean sql = new SqlBean();
+
+		sql.and("ODEPT_CODE", dept.getODeptCode());
 
 		sql.and("S_FLAG", 1);
 
@@ -118,23 +181,41 @@ public class CatalogServ extends CommonServ {
 
 		sb.append(" AND NOT EXISTS (SELECT CTLG_CODE FROM ").append(TsConstant.SERV_CTLG_ALL);
 
-		sb.append(" WHERE CTLG_MODULE = ? AND S_ODEPT = ?");
+		sb.append(" WHERE CTLG_MODULE = ?");
+
+		sb.append(" AND S_ODEPT = ?");
+
+		// sb.append(" AND CTLG_PATH like CONCAT(?,'%')");
 
 		sb.append(" AND CTLG_CODE = ").append(ServMgr.SY_ORG_DEPT).append(".DEPT_CODE");
 
 		sb.append(" AND S_FLAG = ?)");
 
-		sql.appendWhere(sb.toString(), mod, odept.getStr("DEPT_CODE"), 1);
+		sql.appendWhere(sb.toString(), mod, dept.getODeptCode(), 1);
+
+//		StopWatch sw = new StopWatch();
+//		sw.start();
+//		log.error("---------start------------");
+//		log.error(sql.getWhere());
+//		log.error(sql.get("_PREVALUES_").toString());
 
 		List<Bean> list = ServDao.finds(ServMgr.SY_ORG_DEPT, sql);
 
+//		log.error("----------stop-----------" + sw.toString());
+//		sw.stop();
+
 		if (list == null) {
+
 			list = new ArrayList<Bean>();
 		}
 
-		// list.add(odept);
+		createCatalog(list, mod, shareMods);
 
-		// Bean catlogBean = getCatalogBean(mod, list);
+	}
+
+	private void createCatalog(List<Bean> list, String mod, String shareMods) {
+
+		List<Bean> addCatalogList = new ArrayList<Bean>();
 
 		for (Bean dept : list) {
 
@@ -174,7 +255,7 @@ public class CatalogServ extends CommonServ {
 			}
 			addCatalog.set("CTLG_PATH_H", codePathH); // 模块+机构path
 			addCatalog.set("CTLG_PATH", codePath); // 机构path
-			addCatalog.set("CTLG_SHARE", ctlgModules); // 共享模块
+			addCatalog.set("CTLG_SHARE", shareMods); // 共享模块
 
 			addCatalog.set("CTLG_LEVEL", dept.getStr("DEPT_LEVEL"));// 目录层级
 
@@ -185,7 +266,6 @@ public class CatalogServ extends CommonServ {
 			addCatalog.set("READ_FLAG", 1); // 只读
 
 			addCatalogList.add(addCatalog);
-			// }
 
 		}
 
@@ -280,6 +360,8 @@ public class CatalogServ extends CommonServ {
 					paramBean.set("CTLG_SHARE", addModule);
 				}
 
+				paramBean.set("S_ODEPT", parentCtlg.getStr("S_ODEPT"));// 所属机构
+
 				paramBean.set("CTLG_LEVEL", parentCtlg.getInt("CTLG_LEVEL") + 1);
 				paramBean.set("CTLG_TYPE", 3);
 
@@ -357,10 +439,19 @@ public class CatalogServ extends CommonServ {
 				dataBean.set("CTLG_LEVEL", paramBean.getStr("CTLG_LEVEL"));
 				dataBean.set("CTLG_TYPE", paramBean.getStr("CTLG_TYPE"));
 
+				dataBean.set("S_ODEPT", paramBean.getStr("S_ODEPT"));
 				dataBean.set("S_FLAG", 1);
 				dataBean.set("READ_FLAG", 2);
 
-				ServDao.create(servId, dataBean);
+				Bean query = new Bean();
+				query.set("CTLG_MODULE", modCode);
+				query.set("CTLG_CODE", paramBean.getStr("CTLG_CODE"));
+				int count = ServDao.count(TsConstant.SERV_CTLG_ALL, query);
+
+				if (count == 0) {
+					ServDao.create(servId, dataBean);
+					DictMgr.clearCache("TS_CTLG_TREE_" + modCode);
+				}
 			}
 		}
 	}
@@ -427,6 +518,10 @@ public class CatalogServ extends CommonServ {
 
 			if (StringUtils.isNotBlank(paramBean.getStr("ODEPT_CODE"))) {
 				data.set("ODEPT_CODE", paramBean.getStr("ODEPT_CODE"));
+			}
+
+			if (StringUtils.isNotBlank(paramBean.getStr("S_ODEPT"))) {
+				data.set("S_ODEPT", paramBean.getStr("S_ODEPT"));
 			}
 
 			if (StringUtils.isNotBlank(paramBean.getStr("S_USER"))) {

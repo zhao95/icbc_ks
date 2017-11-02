@@ -15,7 +15,7 @@
     <%--<script
             src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>--%>
 
-    <%@ include file="../../sy/base/view/inHeader.jsp" %>
+    <%@ include file="../../sy/base/view/inHeader-icbc.jsp" %>
     <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
     <!-- AdminLTE Theme style -->
     <link rel="stylesheet" href="<%=CONTEXT_PATH%>/qt/dist/css/AdminLTE.min.css">
@@ -57,6 +57,29 @@
 
         .tip-red {
             color: red;
+        }
+
+        /*表格样式*/
+        #submissionArrangement-table > tbody > tr:nth-of-type(even) {
+            background-color: Azure;
+        }
+
+        /*#examref-table > tbody > tr > td, #examref-table > thead > tr > th {
+                    padding: 5px;
+                }*/
+        #submissionArrangement-table > thead > tr > th {
+            font-weight: bold
+        }
+
+        #selectXL-table > tbody > tr:nth-of-type(even) {
+            background-color: Azure;
+        }
+
+        /*#examref-table > tbody > tr > td, #examref-table > thead > tr > th {
+                    padding: 5px;
+                }*/
+        #selectXL-table > thead > tr > th {
+            font-weight: bold
         }
 
         /*滚动条样式*/
@@ -127,6 +150,11 @@
                title="">
                 <span class="rh-icon-inner">更改场次</span>
                 <span class="rh-icon-img btn-edit"></span>
+            </a>
+            <a class="rh-icon rhGrid-btnBar-a" id="submissionArrangement" actcode="submissionArrangement"
+               title="">
+                <span class="rh-icon-inner">查看场次安排情况</span>
+                <span class="rh-icon-img btn-search"></span>
             </a>
             <a
                     class="rh-icon rhGrid-btnBar-a" id="lookJk" actcode="lookJk" title="">
@@ -314,6 +342,169 @@
 </div>
 
 <%--查看借考人员  lookJkModal--%>
+<div class="modal" id="submissionArrangementModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    各单位场次安排情况
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <div class="row">
+                    <div class="col-sm-12">
+                        机构数：<span style="color: red">23</span>
+                        已提交：<span style="color: red">20</span>
+                        未提交：<span style="color: red">3</span>
+                    </div>
+                    <div class="col-sm-12">
+                        <table id="submissionArrangement-table" class="table table-border">
+                            <thead>
+                            <tr style="backGround-color:WhiteSmoke; height: 30px;font-weight: bold">
+                                <th>序号</th>
+                                <th>机构</th>
+                                <th>状态</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>10</td>
+                                <td>六安市分行</td>
+                                <td>已提交</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>六安市分行</td>
+                                <td>已提交</td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>六安市分行</td>
+                                <td>已提交</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-success" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+                <%--<button type="button" class="btn btn-default" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
+                </button>--%>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<%--selectXLModal--%>
+<div class="modal" id="selectXLModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="position: relative;left: 100px;">
+    <div class="modal-dialog" style="width: 450px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    选择序列
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <div class="row">
+                    <div class="col-sm-12 _scrollbar" style="height: 300px;overflow-y: scroll;">
+                        <table id="selectXL-table" class="table table-border">
+                            <thead>
+                            <tr style="backGround-color:WhiteSmoke; height: 30px;font-weight: bold">
+                                <th></th>
+                                <th>序号</th>
+                                <th>专业类</th>
+                                <th>序列</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <%--<tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>--%>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-success" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+                <%--<button type="button" class="btn btn-default" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
+                </button>--%>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<%--selectXLModal--%>
+<div class="modal" id="selectOrgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="position: relative;left: 100px;">
+    <div class="modal-dialog" style="width: 450px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    选择机构
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="rhSearch-button">
+                            <div class="rhSearch-inner">查询</div>
+                        </div>
+                        <div style="float: right;">
+                            <select id="org-direction" title="">
+                                <option value="forward">向前</option>
+                                <option value="back">向后</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 _scrollbar" style="height: 300px;overflow-y: scroll;">
+                        <div id="selectOrg-tree">
+                            <div class="content-navTree" style="border: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-success" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+                <%--<button type="button" class="btn btn-default" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
+                </button>--%>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<%--查看借考人员  lookJkModal--%>
 <div class="modal" id="lookJkModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -370,10 +561,10 @@
                     </div>
                     <div class="col-sm-8">
                         <label class="radio-inline">
-                            <input name="distribution" type="radio" value="indistinct" checked> 模糊分布
+                            <input name="least" type="radio" value="leastKc" checked>最少考场
                         </label>
                         <label class="radio-inline">
-                            <input name="distribution" value="distinct" type="radio"> 精确分布
+                            <input name="least" value="leastCc" type="radio">最少场次
                         </label>
                     </div>
                 </div>
@@ -391,7 +582,7 @@
                 </div>
             </div>
             <div class="modal-footer" style="text-align: center;">
-                <button type="button" class="btn btn-success" onclick="console.log(ZdfpccModal.getZdfpccModalValue())"
+                <button type="button" class="btn btn-success" onclick="console.log(ZdfpccModal.doArrangeSeat())"
                         data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
                     确定
                 </button>
@@ -461,7 +652,7 @@
     var xmId = '<%=xmId%>';
     $(function () {
         bindHeaderAction();
-        ZdfpccModal.setZdfpccModalContent();
+        ZdfpccModal.initData(xmId);
         KcObject.initData(xmId);
         KsObject.initData(xmId);
     });

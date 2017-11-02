@@ -7,6 +7,8 @@ import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.serv.bean.PageBean;
 import com.rh.core.util.Constant;
+import com.rh.ts.pvlg.PvlgUtils;
+
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -14,6 +16,15 @@ import java.util.*;
 public class DapccServ extends CommonServ {
 
     private final static String CHILD = "CHILD";
+
+    protected void beforeQuery(ParamBean paramBean) {
+	ParamBean param = new ParamBean();
+	String ctlgModuleName = "EXAM_ROOM";
+	param.set("paramBean", paramBean);
+	param.set("ctlgModuleName", ctlgModuleName);
+	param.set("serviceName", paramBean.getServId());
+	PvlgUtils.setOrgPvlgWhere(param);
+    }
 
 //    public OutBean getZwByKcId(ParamBean paramBean) {
 //        OutBean outBean = new OutBean();
@@ -214,10 +225,26 @@ public class DapccServ extends CommonServ {
         OutBean outBean = new OutBean();
         String kcId = paramBean.getStr("kcId");
         Set<String> hashSet = this.getKcRelateOrgCodeList(kcId);
-        Map<String, Bean> cache = new HashMap<>();
-        Bean rootDeptBean = this.getDeptList(hashSet, cache);
+        Bean rootDeptBean = getRootDeptBean(hashSet);
         outBean.putAll(rootDeptBean);
-        for (String deptCode : hashSet) {
+        return outBean;
+    }
+
+    public OutBean getOrgTreeByDeptCode(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String deptCodeStr = paramBean.getStr("deptCodeStr");
+        String[] codes = deptCodeStr.split(",");
+        /*Set<String> hashSet =*/
+        List<String> codeStrings = Arrays.asList(codes);
+        Bean rootDeptBean = getRootDeptBean(new HashSet<>(codeStrings));
+        outBean.putAll(rootDeptBean);
+        return outBean;
+    }
+
+    private Bean getRootDeptBean(Set<String> deptCodeList) {
+        Map<String, Bean> cache = new HashMap<>();
+        Bean rootDeptBean = this.getDeptList(deptCodeList, cache);
+        for (String deptCode : deptCodeList) {
             ParamBean queryBean = new ParamBean();
             queryBean.set("DICT_ID", "SY_ORG_ODEPT_ALL");
             queryBean.set("PID", deptCode);
@@ -227,8 +254,7 @@ public class DapccServ extends CommonServ {
                 this.putChild(cache.get(deptCode), item, false);
             }
         }
-
-        return outBean;
+        return rootDeptBean;
     }
 
     /**

@@ -29,17 +29,6 @@ var module = "ROLE";
 
 var params = _viewer.getParams();
 
-if(params.CTLG_MODULE) {
-//	module = params.CTLG_MODULE;
-
-	//打开页面 处理grid和tree 如(Tab.open)
-//	if(params.isHide == "true") {
-//		params.isHide = "false";
-//		var where = " AND CTLG_MODULE = '"+ module +"'";
-//		_viewer.refreshTreeGrid(where,where);
-//	}
-}
-
 if(module == "" || typeof(module) == "undefined") {
 	alert("目录所属模块为空，请重新打开列表！");
 }
@@ -104,27 +93,29 @@ _viewer.getBtn("initCatalog").unbind("click").bind("click",function(event) {
 	var _loadbar = new rh.ui.loadbar();
 	_loadbar.show(true);
 	
+	var pcodeh = _viewer._transferData["CTLG_PCODE_H"];
+	
+	if(pcodeh == "" || typeof(pcodeh) == "undefined") {
+		pcodeh = "";
+//		alert("请选择同步目录的层级 !");
+//		_loadbar.hideDelayed();
+//		return;
+	}
+	
 	var param = {};
 	
-	var odept = System.getVar("@ODEPT_CODE@");
 	var cmpyCode = System.getVar("@CMPY_CODE@");
 	
-	param["ODEPT_CODE"] = odept;
+	param["CTLG_PCODE_H"] = pcodeh;
 	param["CMPY_CODE"] = cmpyCode;
 	param["CTLG_MODULE"] = module;
 	
-	if(module == "ROOT"){
-//		param["INIT_MODULE"] = "all";
-		alert("无目录模块，同步失败！");
+	FireFly.doAct(_viewer.servId, "initCatalog", param, true,false, function(data) {
 		_loadbar.hideDelayed();
-		return;
-	}
-	
-	var result = FireFly.doAct(_viewer.servId, "initCatalog", param, false);
-    if (result[UIConst.RTN_MSG].indexOf(UIConst.RTN_OK) == 0) {//成功后刷新列表
-    	_viewer.refresh();
-    	_loadbar.hideDelayed();
-    }
+		if (data[UIConst.RTN_MSG].indexOf(UIConst.RTN_OK) == 0) {//成功后刷新列表
+	    	_viewer.refresh();
+	    }
+	});
     
 });
 

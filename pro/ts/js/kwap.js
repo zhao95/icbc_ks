@@ -1,4 +1,10 @@
 /*
+ * 特此声明：
+ * 本文件中  kc   对应表   ts_xmgl_kcap_dapcc_cc
+ *          cc   对应表   ts_xmgl_kcap_dapcc_ccsj
+ **/
+
+/*
  * 文件结构
  *
  * bindHeaderAction 绑定按钮事件
@@ -227,6 +233,9 @@ function bindHeaderAction() {
     $("#updatecc").click(function () {
         UpdateCCModal.show();
     });
+    $("#submissionArrangement").click(function () {
+        SubmissionArrangementModal.show();
+    });
     $("#lookJk").click(function () {
         LookJkModal.show();
     });
@@ -260,54 +269,371 @@ function bindHeaderAction() {
 
 /**
  * 自动分配模态框相关方法
+ *
+ * 配置项settingArray:GZK
+ * 配置项
  */
 var ZdfpccModal = {
 
-    settingArray: [
-        {id: 'setting1', name: '相同考试前后左右不相邻', checked: true, disabled: true},
-        {id: 'setting2', name: '同一考生同一考场场次连排'},
-        {id: 'setting3', name: '距离远近规则（里面配置，场次可以后可选择）'},
-        {id: 'setting4', name: '同一网点级机构考生均分安排'},
-        {id: 'setting5', name: '来自同一机构考生不连排'},
-        {id: 'setting6', name: '考生人数少于机器数一半时，考生左右间隔不低于2个座位，前后不低于1个'},
-        {id: 'setting7', name: '特定机构考生场次靠后安排'},
-        {id: 'setting8', name: '领导职务考生座位靠前安排'},
-        {id: 'setting9', name: '特定考试仅限于省分行安排（考试－考生，领导不能在当地考试，省分行）'}
-    ],
+    xmId: '',
+    settingArray: [],
+    hasSettingArray: [],
+    /*  {id: 'setting1', name: '相同考试前后左右不相邻', checked: true, disabled: true},
+     {id: 'setting2', name: '同一考生同一考场场次连排'},
+     {id: 'setting3', name: '距离远近规则（里面配置，场次可以后可选择）'},
+     {id: 'setting4', name: '同一网点级机构考生均分安排'},
+     {id: 'setting5', name: '来自同一机构考生不连排'},
+     {id: 'setting6', name: '考生人数少于机器数一半时，考生左右间隔不低于2个座位，前后不低于1个'},
+     {id: 'setting7', name: '特定机构考生场次靠后安排'},
+     {id: 'setting8', name: '领导职务考生座位靠前安排'},
+     {id: 'setting9', name: '特定考试仅限于省分行安排（考试－考生，领导不能在当地考试，省分行）'}
+     ],*/
+
+    initData: function (xmId) {
+        this.xmId = xmId;
+        this.setSettingArray();
+        this.setZdfpccModalContent();
+    },
+
+    reloadData: function () {
+        this.setSettingArray();
+        this.setZdfpccModalContent();
+    },
+
+    setSettingArray: function () {
+        var currentUserCode = System.getUser("USER_CODE");
+
+        var settingArrayBean = FireFly.doAct("TS_XMGL_KCAP_GZK", 'query', {'_NOPAGE_': true, '_ORDER_': ' GZ_SORT'});
+        this.settingArray = settingArrayBean._DATA_;
+        var hasSettingBean = FireFly.doAct("TS_XMGL_KCAP_GZ", 'query', {
+            '_NOPAGE_': true,
+            '_ORDER_': ' GZ_SORT',
+            '_extWhere': " and XM_ID ='" + this.xmId + "' and S_USER ='" + currentUserCode + "'"
+        });
+        this.hasSettingArray = hasSettingBean._DATA_;
+        for (var i = 0; i < this.settingArray.length; i++) {
+            var setting = this.settingArray[i];
+            for (var j = 0; j < this.hasSettingArray.length; j++) {
+                //如果hasSetting有值，说明已经配置了  checked设置为true
+                var hasSetting = this.hasSettingArray[j];
+                if (hasSetting.GZ_CODE === setting.GZ_CODE) {
+                    setting.checked = true;
+                    setting.GZ_VALUE2 = hasSetting.GZ_VALUE2;
+                }
+            }
+        }
+    },
 
     /**
      * 设置考生场次自动分配内容
      */
     setZdfpccModalContent: function () {
+        var self = this;
         var $allocationRule = $('#allocation-rule');
         $allocationRule.html('');
+
+        var $selectXLTbody = $('#selectXL-table').find('tbody');
+
         for (var i = 0; i < this.settingArray.length; i++) {
             var setting = this.settingArray[i];
-            $allocationRule.append(
-                [
+            if (setting.GZ_TYPE === '1') {
+                //GZ_TYPE为1  默认选择，不可变更
+                setting.disabled = true;
+                setting.checked = true;
+            }
+
+            if (setting.GZ_CODE === 'S001') {
+                //最少考场，最少场次 为单选框特殊处理
+                if (setting.GZ_VALUE2 === '0') {
+                    $('input[value="leastKc"]').attr("checked", true);
+                } else {
+                    $('input[value="leastCc"]').attr("checked", true);
+                }
+            }
+            else /*if (setting.GZ_CODE !== 'S001')*/ {
+                var $item = jQuery([
                     '<div class="checkbox">',
                     '   <label>',
-                    '     <input id="' + setting.id + '" type="checkbox" '
-                    + (setting.checked ? 'checked ' : ' ') + (setting.disabled ? 'disabled ' : ' ') + '>' + setting.name,
+                    '     <input id="' + setting.GZ_ID + '" type="checkbox" '
+                    + (setting.checked ? 'checked ' : ' ') + (setting.disabled ? 'disabled ' : ' ') + '>' + setting.GZ_NAME,
                     '   </label>',
                     '</div>'
-                ].join('')
-            );
+                ].join(''));
+
+                if (setting.GZ_CODE === 'R008') {
+                    //特定机构考生场次靠后安排
+                    var settingOrgIndex = i;
+                    var settingOrg = self.settingArray[settingOrgIndex];
+                    var $btn = jQuery([
+                        '   <span style=" position: relative;top: -5px;cursor: pointer;">',
+                        '       <span class="rh-icon-img btn-edit"></span>',
+                        '   </span>'
+                    ].join(''));
+                    $btn.bind('click', function () {
+                            var code = self.getUserYAPAutoCode();
+                            var data = FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getOrgTreeByDeptCode', {deptCodeStr: code});
+                            //jstree
+                            var root = {
+                                id: data.DEPT_CODE,
+                                text: data.DEPT_NAME,
+                                data: {id: data.DEPT_CODE, text: data.DEPT_NAME},
+                                children: []
+                            };
+                            var $selectOrgTreeContent = $('#selectOrg-tree').find('.content-navTree');
+
+                            var putChildren = function (parent, childs) {
+                                childs = childs ? childs : [];
+                                for (var i = 0; i < childs.length; i++) {
+                                    var child = childs[i];
+                                    var id = child.DEPT_CODE ? child.DEPT_CODE : child.ID;
+                                    var text = child.DEPT_NAME ? child.DEPT_NAME : child.NAME;
+                                    var item = {
+                                        id: id,
+                                        text: text,
+                                        data: child,
+                                        children: []
+                                    };
+                                    parent.children.push(item);
+                                    putChildren(item, child.CHILD);
+                                }
+                            };
+
+                            var childs = data.CHILD;
+                            putChildren(root, childs);
+
+                            try {
+                                $selectOrgTreeContent.jstree('destroy');//已经初始化tree，先destroy
+                            } catch (e) {
+                            }
+                            $selectOrgTreeContent.jstree({
+                                'core': {
+                                    "multiple": false,
+                                    'data': [root]
+                                },
+                                plugins: ["search", "sort", "types", "checkbox", "themes", "html_data"],
+                                "checkbox": {
+                                    "keep_selected_style": false,//是否默认选中
+                                    "three_state": false,//父子级别级联选择
+                                    "tie_selection": false
+                                }
+                            });
+
+                            if (!settingOrg.GZ_VALUE2) {
+                                settingOrg.GZ_VALUE2 = '{"values":"","direction":"back"}';
+                            }
+                            var settingOrgValue2Obj = JSON.parse(settingOrg.GZ_VALUE2);
+
+                            if (settingOrgValue2Obj.direction === 'back') {
+                                $("#org-direction").val("back");
+                            } else {
+                                $("#org-direction").val("forward");
+                            }
+
+                            var deptCodes = settingOrgValue2Obj.values.split(',');
+                            var resultCheckedNodes = [];
+                            for (var j = 0; j < deptCodes.length; j++) {
+                                var deptCode = deptCodes[j];
+                                resultCheckedNodes.push('#' + deptCode);
+                            }
+
+                            $selectOrgTreeContent.on("ready.jstree", function (e, data) {
+                                $selectOrgTreeContent.jstree("check_node", resultCheckedNodes);
+                            });
+
+                            var selectOrgModal = $('#selectOrgModal');
+                            selectOrgModal.css('z-index', '999999');
+
+                            selectOrgModal.find('button[class="btn btn-success"]').unbind('click').bind('click', function () {
+                                settingOrgValue2Obj.values = $selectOrgTreeContent.jstree("get_checked").join(',');
+                                settingOrgValue2Obj.direction = $("#org-direction").val();
+                                settingOrg.GZ_VALUE2 = JSON.stringify(settingOrgValue2Obj);
+                            });
+                            selectOrgModal.modal('show');
+
+                        }
+                    );
+                    $item.append($btn);
+
+                } else if (setting.GZ_CODE === 'R009') {
+                    //特定考试仅限于省分行安排
+                    var settingXLIndex = i;
+                    var settingXL = self.settingArray[settingXLIndex];
+                    var $btn = jQuery([
+                        '   <span style=" position: relative;top: -5px;cursor: pointer;">',
+                        '       <span class="rh-icon-img btn-edit"></span>',
+                        '   </span>'
+                    ].join(''));
+                    $btn.bind('click', function () {
+                        var list = FireFly.doAct("TS_XMGL_BM_KSLB", 'query', {
+                            '_NOPAGE_': true,
+                            "_AFTER_SELECT_KEYWORDS": "distinct",
+                            "_SELECT_": 'KSLB_XL_CODE,KSLB_XL,KSLB_NAME',
+                            '_extWhere': " and XM_ID ='" + self.xmId + "'"
+                        });
+                        var dataList = list._DATA_;
+                        $selectXLTbody.html('');
+                        var $selectXLModal = $('#selectXLModal');
+                        $selectXLModal.css('z-index', '999999');
+
+                        for (var j = 0; j < dataList.length; j++) {
+                            var item = dataList[j];
+                            var $tr = jQuery([
+                                '<tr id="' + item.KSLB_XL_CODE + '">',
+                                '   <td><input type="checkbox" code="' + item.KSLB_XL_CODE + '"></td>',
+                                '   <td>' + (j + 1) + '</td>',
+                                '   <td>' + item.KSLB_NAME__NAME + '</td>',
+                                '   <td>' + item.KSLB_XL__NAME + '</td>',
+                                '</tr>'
+                            ].join(''));
+                            if (settingXL.GZ_VALUE2 === undefined) {
+                                settingXL.GZ_VALUE2 = '{"values":""}';
+                            }
+                            var settingXLValues2Obj = JSON.parse(settingXL.GZ_VALUE2);
+                            if (settingXLValues2Obj.values.indexOf(item.KSLB_XL_CODE) >= 0) {
+                                $tr.find('input[type="checkbox"]').attr('checked', 'checked');//.= true;
+                            }
+                            $selectXLTbody.append($tr);
+                        }
+                        $selectXLModal.find('button[class="btn btn-success"]').unbind('click').bind('click', function () {
+                            settingXLValues2Obj.values = '';
+                            var result = '';
+                            var checkeids = $selectXLTbody.find('input[type=checkbox]:checked');
+                            for (var k = 0; k < checkeids.length; k++) {
+                                var checked = checkeids[k];
+                                result += $(checked).attr('code') + ',';
+                            }
+                            //去掉最后的逗号
+                            result = result.substring(0, result.length - 1);
+                            settingXLValues2Obj.values = result;
+                            settingXL.GZ_VALUE2 = JSON.stringify(settingXLValues2Obj);
+                        });
+                        $selectXLModal.modal('show');
+                    });
+                    $item.append($btn);
+                }
+
+                $allocationRule.append($item);
+            }
         }
     },
 
     getZdfpccModalValue: function () {
-        var result = {
-            distribution: 'indistinct'
-        };
-        result.distribution = $('input[name="distribution"]').filter(':checked').val();
+        var result = [];
+        // result.least =
 
         for (var i = 0; i < this.settingArray.length; i++) {
             var setting = this.settingArray[i];
-            result[setting.id] = $('#' + setting.id)[0].checked;
+            //特殊处理一些项
+            var cloneSetting = this.clone(setting);
+            delete cloneSetting.GZ_ID;
+            delete cloneSetting._PK_;
+            delete cloneSetting.S_USER;
+            delete cloneSetting.S_TDEPT;
+            delete cloneSetting.S_ODEPT;
+            delete cloneSetting.S_MTIME;
+            delete cloneSetting.S_FLAG;
+            delete cloneSetting.S_DEPT;
+            delete cloneSetting.S_CMPY;
+            delete cloneSetting.S_ATIME;
+            cloneSetting.XM_ID = this.xmId;
+            if (cloneSetting.GZ_CODE === 'S001') {
+                cloneSetting.GZ_VALUE2 = $('input[name="least"]').filter(':checked').val() === 'leastKc' ? '0' : '1';
+                result.push(cloneSetting);
+            } else if ($('#' + setting.GZ_ID)[0].checked) {
+                result.push(cloneSetting);
+            }
         }
         return result;
+    },
+
+    getUserYAPAutoCode: function () {
+        var userPvlg = FireFly.getUserPvlg(System.getUser("USER_CODE"));
+        var code;
+        try {
+            code = userPvlg.TS_XMGL_KCAP_YAPZW_PVLG.auto.ROLE_DCODE;
+        } catch (e) {
+            code = '';
+        }
+        return code;
+    },
+    doArrangeSeat: function () {
+        this.saveBeanList();
+        var code = this.getUserYAPAutoCode();
+        var codes = code.split(',');
+        for (var i = 0; i < codes.length; i++) {
+            var itemCode = codes[i];
+            //todo
+            if (itemCode !== '') {
+                if (itemCode === '0010100000') {
+                    var childs = FireFly.getDict('SY_ORG_ODEPT_ALL', itemCode)["0"].CHILD;
+                    for (var j = 0; j < childs.length; j++) {
+                        var child = childs[j];
+                        FireFly.doAct("TS_XMGL_KCAP_YAPZW", "doArrangeSeat", {XM_ID: this.xmId, ODEPT_CODE: child.ID});
+                    }
+                } else {
+                    FireFly.doAct("TS_XMGL_KCAP_YAPZW", "doArrangeSeat", {XM_ID: this.xmId, ODEPT_CODE: itemCode});
+                }
+                // FireFly.getDict('SY_ORG_ODEPT_ALL', undefined, " and ID='0010100000'")
+                // FireFly.getDictNames(FireFly.getDict('SY_ORG_ODEPT_ALL'), '0010100000');
+            }
+        }
+
+    },
+
+    saveBeanList: function () {
+        //  xmid  {id,value}
+        var settings = this.getZdfpccModalValue();
+        //
+        FireFly.doAct("TS_XMGL_KCAP_GZ", "saveBeanList", {
+            'data': JSON.stringify(
+                {XM_ID: this.xmId, BATCHDATAS: settings}
+            )
+        }, false, false);
+    },
+    clone: function (obj) {
+        var o;
+        if (typeof obj === "object") {
+            if (obj === null) {
+                o = null;
+            } else {
+                if (obj instanceof Array) {
+                    o = [];
+                    for (var i = 0, len = obj.length; i < len; i++) {
+                        o.push(this.clone(obj[i]));
+                    }
+                } else {
+                    o = {};
+                    for (var j in obj) {
+                        o[j] = this.clone(obj[j]);
+                    }
+                }
+            }
+        } else {
+            o = obj;
+        }
+        return o;
     }
+
+};
+
+var SubmissionArrangementModal = {
+    submissionArrangementModal: '',
+    initData: function () {
+        this.submissionArrangementModal = $('#submissionArrangementModal');
+    },
+    reloadData: function () {
+
+    },
+    getData: function () {
+
+    },
+    show: function () {
+        if (this.submissionArrangementModal === '') {
+            this.initData();
+        }
+        this.submissionArrangementModal.modal('show');
+    }
+
 };
 
 var LookJkModal = {
@@ -433,6 +759,8 @@ var KcObject = {
     kctree: {},//场次树jstree对象
     currentCc: '',//当前显示的场次
     currentParentKc: '',//当前显示的考场
+    currentYapzwArr: [],//当前场次已安排好的座位信息
+
     /*初始化界面数据*/
     initData: function (xmId) {
         this.xmId = xmId;
@@ -488,6 +816,18 @@ var KcObject = {
         }
         return result;
     },
+
+    getYapzwById: function (id) {
+        var result = null;
+        for (var i = 0; i < this.currentYapzwArr.length; i++) {
+            var yapzw = this.currentYapzwArr[i];
+            if (yapzw.YAPZW_ID === id) {
+                result = yapzw;
+            }
+        }
+        return result;
+    },
+
 
     getCCTreeNodes: function () {
         if (this.rootNodes) {
@@ -816,9 +1156,13 @@ var KcObject = {
                     idStr += ',' + id;
                 }
                 idStr.substring(1, idStr.length);
-                FireFly.doAct("TS_XMGL_KCAP_YAPZW", "delete", {_PK_: idStr}, false, false, function () {
-                    self.setZwListContent(sjId, $kcInfoTbody);
-                    KsObject.search();
+                FireFly.doAct("TS_XMGL_KCAP_YAPZW", "delete", {_PK_: idStr}, false, false, function (data) {
+                    if (data._MSG_.indexOf("ERROR") >= 0) {
+                        //后端错误
+                    } else {
+                        self.setZwListContent(sjId, $kcInfoTbody);
+                        KsObject.search();
+                    }
                 });
             });
             $kcTip.append($remove);
@@ -873,14 +1217,16 @@ var KcObject = {
     },
 
     setZwForView: function (sjId) {
+        this.currentYapzwArr = [];
         var zwListBean = FireFly.doAct("TS_XMGL_KCAP_YAPZW", "getYapZw", {SJ_ID: sjId});
         var zwList = zwListBean._DATA_;
+        this.currentYapzwArr = this.currentYapzwArr.concat(zwList);
         for (var i = 0; i < zwList.length; i++) {
             var zw = zwList[i];
             var $zw = $('#' + zw.ZW_ID);
             $zw.attr('shid', zw.SH_ID);
             $zw.find('.userName').html(zw.BM_NAME);
-            this.setZwItemForView(zw.ZW_ID, zw.YAPZW_ID, zw.BM_NAME);
+            this.setZwItemForView(zw.YAPZW_ID);
         }
     },
 
@@ -909,27 +1255,57 @@ var KcObject = {
         }
     },
 
-    setZwItemForView: function (zwId, yapzwId, userName) {
+    setZwItemForView: function (yapzwId) {
         var self = this;
+        var yapzw = this.getYapzwById(yapzwId);
+        var zwId = yapzw.ZW_ID;
+        var userName = yapzw.BM_NAME;
+        var shId = yapzw.SH_ID;
         var $zw = $('#' + zwId);
-        $zw.attr('yapzwId', yapzwId);
+        // $zw.attr('yapzwId', yapzwId);
         $zw.find('.userName').html(userName);
+        $zw.attr('shId', shId);
 //            $zw.droppable("destroy");
         $zw.droppable("disable");
         $zw.css('background', '#c4ffb3');
         var $span = jQuery('<span class="close">x</span>');
         $span.unbind('click').bind('click', function () {
-            FireFly.doAct("TS_XMGL_KCAP_YAPZW", "delete", {_PK_: yapzwId}, false, false, function () {
-                var $zw = $('#' + zwId);
-                $zw.droppable("enable");
+            FireFly.doAct("TS_XMGL_KCAP_YAPZW", "delete", {_PK_: yapzwId}, false, false, function (data) {
+                if (data._MSG_.indexOf("ERROR") >= 0) {
+                    //后端错误
+                } else {
+                    var $zw = $('#' + zwId);
+                    $zw.removeAttr('shId');
+                    $zw.droppable("enable");
+                    $zw.draggable("disable");
 //                    self.addDroppableEvent($zw);
-                $zw.find('.userName').html('');
-                $zw.find('.close').remove();
-                $zw.css('background', '');
-                KsObject.search();
+                    $zw.find('.userName').html('');
+                    $zw.find('.close').remove();
+                    $zw.css('background', '');
+                    KsObject.search();
+                }
             });
         });
         $zw.append($span);
+
+        $zw.draggable({
+            // cursor: 'move',
+            cursorAt: {left: 0, top: 0},
+            containment: 'body',
+            appendTo: 'body',
+            helper: function (event) {
+                return '<div>' + $zw.find('.userName').html() + '</div>';
+                // var cells = event.currentTarget.cells;
+                // return [
+                //     '<div style="/*width:30px;height: 30px;*/border:1px solid #999999;background-color: #91BDEA;">',//
+                //     '   <div>' + cells[6].innerText + '</div>',
+                //     '   <div>' + cells[7].innerText + '</div>',
+                //     '   <div>' + cells[11].innerText + '</div>',
+                //     '</div>'
+                // ].join('');
+            }
+        });
+        $zw.draggable("enable");
     },
 
 
@@ -951,20 +1327,33 @@ var KcObject = {
 //                    SJ_ID
                 var sjid = self.currentCc.SJ_ID;
                 var ccid = self.currentCc.CC_ID;
+                var sjCC = self.currentCc.SJ_CC;
+                var sjDate = self.currentCc.ccTime;
                 var kcid = self.currentParentKc.KC_ID;
-                var shId = $(ui.draggable[0]).attr('id');
+                var shId = $(ui.draggable[0]).attr('shId');
                 var zwId = $(this).attr('id');
-                var userCode = ui.draggable[0].cells[11].innerText.trim();
+                // var userCode = ui.draggable[0].cells[11].innerText.trim();
+
+                //从座位移动到座位 删除原来的
+                $(ui.draggable[0]).find('.close').click();
                 var _this = this;
-                FireFly.doAct("TS_XMGL_KCAP_YAPZW", 'save', {
+                FireFly.doAct("TS_XMGL_KCAP_YAPZW", 'saveBean', {
                     ZW_ID: zwId,
                     SJ_ID: sjid,
+                    SJ_CC: sjCC,
+                    SJ_DATE: sjDate,
                     CC_ID: ccid,
                     KC_ID: kcid,
-                    SH_ID: shId
+                    SH_ID: shId,
+                    XM_ID: self.xmId
                 }, false, false, function (data) {
-                    self.setZwItemForView(zwId, data.YAPZW_ID, ui.draggable[0].cells[6].innerText);
+                    if (data._MSG_.indexOf("ERROR") >= 0) {
+                        //后端错误
+                    } else {
+                        self.currentYapzwArr.push(data);
+                        self.setZwItemForView(data.YAPZW_ID);
 //                        $(_this).find(".userName").html(ui.draggable[0].cells[6].innerText);
+                    }
                 });
                 KsObject.search();
 //                    var inventor = ui.draggable.text();
@@ -1025,7 +1414,7 @@ var KsObject = {
             var ks = this.ksArr[i];
             for (var j = 0; j < ids.length; j++) {
                 var id = ids[j];
-                if (ks.KS_ID === id) {
+                if (ks.SH_ID === id) {
                     result.push(ks);
                 }
             }
@@ -1085,7 +1474,7 @@ var KsObject = {
         kcId = kcId ? kcId : '';
         var param = {kcId: kcId};
         FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getKsOrgTree', param, false, false, function (data) {
-            console.log(data);
+            // console.log(data);
             var root = {
                 id: data.DEPT_CODE,
                 text: data.DEPT_NAME,
@@ -1152,56 +1541,56 @@ var KsObject = {
     /**
      * 考生机构
      */
-    setKsOrgContent2: function (pdeptCode) {
-        pdeptCode = pdeptCode ? pdeptCode : '';
-        var $ksOrgTreeContent = $('#ksOrgTree').find('.content-navTree');
-        $ksOrgTreeContent.html('');
-        var data = FireFly.getDict('SY_ORG_ODEPT_ALL', pdeptCode);
-        var deptName = FireFly.getDictNames(FireFly.getDict('SY_ORG_ODEPT_ALL'), pdeptCode);
-        var root = {id: pdeptCode, text: deptName, data: {id: pdeptCode, text: deptName}, children: []};
-
-        var putChildren = function (parent, childs) {
-            childs = childs ? childs : [];
-            for (var i = 0; i < childs.length; i++) {
-                var child = childs[i];
-                var item = {
-                    id: child.ID,
-                    text: child.NAME,
-                    data: child,
-                    children: []
-                };
-                parent.children.push(item);
-                putChildren(item, child.CHILD);
-            }
-        };
-
-        var childs = data[0].CHILD;
-        putChildren(root, childs);
-
-        try {
-            this.ksOrgTree.jstree('destroy');//已经初始化tree，先destroy
-        } catch (e) {
-        }
-        this.ksOrgTree = $ksOrgTreeContent.jstree({
-            'core': {
-                "multiple": false,
-                'data': [root]
-            }
-        });
-
-        $ksOrgTreeContent.on("changed.jstree", function (e, data) {
-            var id = data.node.data.id;
-
-//                if (data.node.data.KC_ID) {
-//                    //选中考场
-//                    self.setKcInfo(data.node.data);
-//                } else {
-//                    var parentKcNode = $.jstree.reference(jstree).get_node(data.node.parent);
-//                    //选中场次
-//                    self.setCcInfo(data.node.data, parentKcNode.data);
-//                }
-        });
-    },
+//     setKsOrgContent2: function (pdeptCode) {
+//         pdeptCode = pdeptCode ? pdeptCode : '';
+//         var $ksOrgTreeContent = $('#ksOrgTree').find('.content-navTree');
+//         $ksOrgTreeContent.html('');
+//         var data = FireFly.getDict('SY_ORG_ODEPT_ALL', pdeptCode);
+//         var deptName = FireFly.getDictNames(FireFly.getDict('SY_ORG_ODEPT_ALL'), pdeptCode);
+//         var root = {id: pdeptCode, text: deptName, data: {id: pdeptCode, text: deptName}, children: []};
+//
+//         var putChildren = function (parent, childs) {
+//             childs = childs ? childs : [];
+//             for (var i = 0; i < childs.length; i++) {
+//                 var child = childs[i];
+//                 var item = {
+//                     id: child.ID,
+//                     text: child.NAME,
+//                     data: child,
+//                     children: []
+//                 };
+//                 parent.children.push(item);
+//                 putChildren(item, child.CHILD);
+//             }
+//         };
+//
+//         var childs = data[0].CHILD;
+//         putChildren(root, childs);
+//
+//         try {
+//             this.ksOrgTree.jstree('destroy');//已经初始化tree，先destroy
+//         } catch (e) {
+//         }
+//         this.ksOrgTree = $ksOrgTreeContent.jstree({
+//             'core': {
+//                 "multiple": false,
+//                 'data': [root]
+//             }
+//         });
+//
+//         $ksOrgTreeContent.on("changed.jstree", function (e, data) {
+//             var id = data.node.data.id;
+//
+// //                if (data.node.data.KC_ID) {
+// //                    //选中考场
+// //                    self.setKcInfo(data.node.data);
+// //                } else {
+// //                    var parentKcNode = $.jstree.reference(jstree).get_node(data.node.parent);
+// //                    //选中场次
+// //                    self.setCcInfo(data.node.data, parentKcNode.data);
+// //                }
+//         });
+//     },
 
     /**
      * 考生信息
@@ -1224,7 +1613,7 @@ var KsObject = {
 //                var odeptName = ks.S_ODEPT__NAME;
 //                var bmxlName = ks.BM_XL__NAME;
             $ksTableTbody.append([
-                '<tr scope="row" id="' + ks.SH_ID + '">',
+                '<tr scope="row" id="' + ks.SH_ID + '" shId="' + ks.SH_ID + '">',
                 '   <td><input type="checkbox"></td>',
                 '   <td>' + (i + 1) + '</td>',//序号
                 '   <td>' + ks.org1 + '</td>',//一级机构
@@ -1252,7 +1641,6 @@ var KsObject = {
             appendTo: 'body',
             helper: function (event) {
                 var cells = event.currentTarget.cells;
-                // debugger;
                 return [
                     '<div style="/*width:30px;height: 30px;*/border:1px solid #999999;background-color: #91BDEA;">',//
                     '   <div>' + cells[6].innerText + '</div>',
@@ -1263,7 +1651,6 @@ var KsObject = {
             },
         });
 
-//            $ksTableTbody.find('tr').draggable({revert: true});
     },
 
     search: function () {

@@ -29,17 +29,6 @@ var module = "ROOT";
 
 var params = _viewer.getParams();
 
-if(params.CTLG_MODULE) {
-	module = params.CTLG_MODULE;
-
-	//打开页面 处理grid和tree 如(Tab.open)
-	if(params.isHide == "true") {
-		params.isHide = "false";
-		var where = " AND CTLG_MODULE = '"+ module +"'";
-		_viewer.refreshTreeGrid(where,where);
-	}
-}
-
 if(module == "" || typeof(module) == "undefined") {
 	alert("目录所属模块为空，请重新打开列表！");
 }
@@ -107,19 +96,10 @@ _viewer.getBtn("initCatalog").unbind("click").bind("click",function(event) {
 	
 	var param = {};
 	
-	var odept = System.getVar("@ODEPT_CODE@");
 	var cmpyCode = System.getVar("@CMPY_CODE@");
 	
-	param["ODEPT_CODE"] = odept;
 	param["CMPY_CODE"] = cmpyCode;
 	param["CTLG_MODULE"] = module;
-	
-	if(module == "ROOT"){
-//		param["INIT_MODULE"] = "all";
-		alert("无目录模块，同步失败！");
-		_loadbar.hideDelayed();
-		return;
-	}
 	
 	var result = FireFly.doAct(_viewer.servId, "initCatalog", param, false);
     if (result[UIConst.RTN_MSG].indexOf(UIConst.RTN_OK) == 0) {//成功后刷新列表
@@ -191,6 +171,5 @@ _viewer.beforeDelete = function(pkArray) {
  * 删除后方法执行
  */
 _viewer.afterDelete = function() {
-	var where = " AND CTLG_MODULE = '"+ module +"'";
-	_viewer.refreshTreeGrid(where,where);
+	_viewer.refresh();
 }
