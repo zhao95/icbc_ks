@@ -418,7 +418,7 @@ public class CccsServ extends CommonServ {
 	    jgSum = jgSum.replaceAll(",", "','");
 	}
 	sjVal = sjVal.replaceAll(",", "','");
-	int poepleNum = ServDao.count("TS_XMGL_CCCS_KSGL", new ParamBean().setWhere("and KSLBK_TIME in ('"+sjVal+"') and ODEPT_CODE in ('"+jgSum+"')"));
+	int poepleNum = ServDao.count("TS_XMGL_CCCS_KSGL", new ParamBean().setWhere("and BM_KS_TIME in ('"+sjVal+"') and S_ODEPT in ('"+jgSum+"')"));
 	
 	res.set("CC_PEOPLE_NUM", poepleNum);
 	res.set("CC_COMPUTER_GOODNUM", goodSumNum);
