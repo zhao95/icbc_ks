@@ -125,19 +125,34 @@ function  jk(pk,xmglId){
 
 //试卷
 function sj(pk,xmglId){
-    var height = jQuery(window).height()-80;
-   var width = jQuery(window).width()-200;
+	var width = jQuery(window).width()-200;
+	var height = jQuery(window).height()-100;
     //创建弹出框
-    var popPrompt = new rh.ui.popPrompt({title:'项目设置试卷'});
-    popPrompt._layout(event, [100,100], [width,height]);
-    var dialogObj = jQuery("#" + popPrompt.dialogId);
-    jQuery(".ui-dialog-buttonpane button",dialogObj.parent()).css("display","none");//去掉确定关闭按钮
+//    var popPrompt = new rh.ui.popPrompt({title:'项目设置试卷'});
+//    popPrompt._layout(event, [100,50], [width,height]);
+//    var dialogObj = jQuery("#" + popPrompt.dialogId);
+//    jQuery(".ui-dialog-buttonpane button",dialogObj.parent()).css("display","none");//去掉确定关闭按钮
+    
+	getServListDialog(event,"sj_manager","项目设置试卷",width,height,[100,50]);
 
 	//创建 listView 放到弹出框中
     const ext =  " and XM_SZ_ID = '" + pk + "'";
+    
     var params={XM_ID:xmglId,XM_SZ_ID:pk};
-    var conf = {"sId":"TS_XMGL_SJ","pCon":popPrompt.winDialog,"showSearchFlag":"true","showTitleBarFlag":"false",
-        "listSonTabFlag":false,"readOnly":"false","params":params,"linkWhere":ext};
+    
+    var conf = {
+			"sId":"TS_XMGL_SJ",
+		    "pCon":jQuery("#sj_manager"),
+	        "resetHeiWid":_viewer._resetHeiWid,
+	        "parHandler":_viewer,
+	        "showSearchFlag":"true",
+	        "showTitleBarFlag":"false",
+	        "listSonTabFlag":false,
+	        "readOnly":"false",
+	        "params":params,
+	        "linkWhere":ext
+	    };
+    
     var listView = new rh.vi.listView(conf);
     listView.show();
 }
