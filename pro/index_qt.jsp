@@ -549,10 +549,9 @@
 		</div>
 
 		<footer class="main-footer" id="main-fotter-div">
-			<div align="center" style="color: white;font-size: 20px;">
-<!-- 				<img id="qt_footer_logo" class="img" src="/qt/img/u996.png"> -->
-				<strong>中国工商银行考试系统</strong>
-			</div>
+<!-- 			<div align="center" style="color: white;font-size: 20px;"> -->
+<!-- 				<strong>中国工商银行考试系统</strong> -->
+<!-- 			</div> -->
 			<div>
 				<table>
 					<tr id="qt_footer_tr" style="width: 90%;">
@@ -562,7 +561,7 @@
 						<td><span></span></td>
 						<td width="16%"><span>邮编：100140 </span></td>
 						<td><span>|</span></td>
-						<td width="14%" align="right"><span>2017 年 6 月 </span></td>
+						<td width="14%" align="right"><span>2017 年 12 月 </span></td>
 					</tr>
 				</table>
 			</div>
