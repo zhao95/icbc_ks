@@ -28,8 +28,9 @@ public class FlowServ extends CommonServ {
 			String servId = paramBean.getStr("servId");
 			String primaryColCode = paramBean.getStr("primaryColCode");
 			String pkCode = paramBean.getStr("pkCode");
-			String wfsName=paramBean.getStr("WFS_NAME");
+			
 			Bean bean = ServDao.find(servId, pkCode);
+			String wfsName =bean.getStr("WFS_NAME");
 			bean.remove(primaryColCode);
 			bean.setId("");
 			bean.set("WFS_NAME", wfsName+"_复制");
