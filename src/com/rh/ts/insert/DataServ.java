@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.CommonServ;
+import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ServDao;
 
 public class DataServ extends CommonServ {
@@ -12,7 +13,7 @@ public class DataServ extends CommonServ {
 	/**
 	 * 插数据
 	 */
-	public void insertinto(Bean paramBean){
+	public OutBean insertinto(Bean paramBean){
 		String xmid = paramBean.getStr("XMID");
 		String xmname = paramBean.getStr("XMNAME");
 		List<Bean> bmgllist = ServDao.finds("TS_XMGL_BMGL", "AND XM_ID = '"+xmid+"'");
@@ -41,7 +42,7 @@ public class DataServ extends CommonServ {
 		int i=0;
 		int j=0;
 		int a = 0;
-			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND CODE_PATH LIKE '%0130100000%' group by user_code limit 0,6000" );
+			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND CODE_PATH LIKE '%0130100000%' group by user_code limit 0,5000" );
 			if(finds2!=null&&finds2.size()!=0){
 				
 				//向报名列表中插数据
@@ -158,7 +159,7 @@ public class DataServ extends CommonServ {
 		}
 			
 			
-			List<Bean> finds3 = ServDao.finds("SY_ORG_USER", " AND CODE_PATH LIKE '%0020000000%' group by user_code  limit 0,6000" );
+			List<Bean> finds3 = ServDao.finds("SY_ORG_USER", " AND CODE_PATH LIKE '%0020000000%' group by user_code  limit 0,5000" );
 			if(finds3!=null&&finds3.size()!=0){
 				
 				//向报名列表中插数据
@@ -246,9 +247,9 @@ public class DataServ extends CommonServ {
 						shBean.set("BM_XL_CODE", kslbkbean.getStr("KSLB_XL_CODE"));
 						shBean.set("BM_MK_CODE", kslbkbean.getStr("KSLB_MK_CODE"));
 						shBean.set("BM_TYPE_NAME", kslbkbean.getStr("KSLB_TYPE_NAME"));
-						/*shBean.set("SH_NODE", "一级审核级别");// 目前审核节点
+						shBean.set("SH_NODE", "一级审核级别");// 目前审核节点
 						  shBean.set("SH_USER", "0000001111");// 当前办理人
-						  shBean.set("SH_OTHER", "0000001111");// 其他办理人*/	
+						  shBean.set("SH_OTHER", "0000001111");// 其他办理人	
 						shBean.set("S_ODEPT",userBean.getStr("ODEPT_CODE"));
 						shBean.set("S_TDEPT",userBean.getStr("TDEPT_CODE"));
 						shBean.set("S_DEPT",userBean.getStr("DEPT_CODE"));
@@ -273,5 +274,153 @@ public class DataServ extends CommonServ {
 					}
 			}
 		}
+			return new OutBean().setOk();
 	}
+	
+	/**
+	 * 插入考场  机构 系统座位号
+	 */
+	public OutBean insertkc(Bean paramBean){
+		String dept_code = paramBean.getStr("DEPT_CODE");
+		Bean fhbean = ServDao.find("SY_ORG_DEPT", dept_code);
+		List<Bean> odeptlist = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE '%"+dept_code+"%' AND DEPT_LEVEL='3' GROUP BY ODEPT_CODE ");
+		
+		if(odeptlist!=null&&odeptlist.size()!=0){
+			for (Bean bean2 : odeptlist) {
+				//添加考场
+				int max = (int) (Math.random()*50);
+				int good = (int) (max*0.8);
+				//本部
+				int indexOf = bean2.getStr("DEPT_NAME").indexOf("本部");
+				if(indexOf>-1){
+					
+					for(int i=0;i<4;i++){
+						Bean bean = new Bean();
+						int j=i+1;
+						
+						String kcname = bean2.getStr("DEPT_NAME");
+						kcname = kcname.substring(0, 2)+"一级考场";
+						 kcname = bean2.getStr("DEPT_NAME");
+						String address = kcname.substring(0, 2)+"市区";
+						//一级
+						bean.set("KC_NAME", kcname+j);
+						bean.set("KC_ADDRESS", address);
+						bean.set("KC_ODEPTNAME", fhbean.getStr("DEPT_NAME"));
+						bean.set("KC_ODEPTCODE", fhbean.getStr("DEPT_CODE"));
+						bean.set("KC_LEVEL", "一级");
+						bean.set("KC_CREATOR", "系统管理员");
+						bean.set("KC_MAX", max);
+						bean.set("KC_GOOD", good);
+						bean.set("KC_USE_NUM", "1");
+						bean.set("SERV_ID","TS_KCGL");
+						bean.set("KC_STATE2",0);
+						bean.set("CTLG_PCODE",bean2.getStr("DEPT_CODE"));
+					Bean kcbean = ServDao.create("TS_KCGL", bean);
+						String kcid =kcbean.getId();
+						//本部下关联机构
+						if(odeptlist.size()!=0){
+							//管联机构
+							int a=1;
+							for (Bean bean3 : odeptlist) {
+								Bean glbean = new Bean();
+									//机构
+									glbean.set("JG_TYPE", "2");
+								glbean.set("KC_ID", kcid);
+								glbean.set("JG_NAME", bean3.getStr("DEPT_NAME"));
+								glbean.set("JG_CODE", bean3.getStr("DEPT_CODE"));
+								glbean.set("JG_FAR", a);
+								ServDao.save("TS_KCGL_GLJG", glbean);
+								a++;
+							}
+							
+						}
+						
+						//系统座位号
+						int hangshu = max/10+1; //行数
+						int xthao = 1;
+						for(int z=1;z<=hangshu;z++){
+							if(xthao>max){
+								break;
+							}
+							for(int y=1;y<10;y++){
+								if(xthao>max){
+									break;
+								}
+								Bean zwbean  = new Bean();
+								zwbean.set("KC_ID", kcid);
+								zwbean.set("ZW_ZWH_XT", xthao);//系统座位号
+								zwbean.set("ZW_ZWH_SJ", z+"-"+y);//实际座位号
+								zwbean.set("ZW_KY", 1);//可用
+								ServDao.save("TS_KCGL_ZWDYB", zwbean);
+								xthao++;
+							}
+						}
+					}
+				}else{
+					//二级
+					String dept_name = bean2.getStr("DEPT_NAME");
+					String kc_name = dept_name.substring(0, dept_name.length()-2)+"二级考场";
+					 dept_name = bean2.getStr("DEPT_NAME");
+					dept_name = dept_name.substring(0, dept_name.length()-2)+"区";
+					for(int i=0;i<2;i++){
+						Bean bean = new Bean();
+						int j=i+1;
+						bean.set("KC_NAME", kc_name+j);
+						bean.set("KC_ADDRESS", dept_name);
+						bean.set("KC_ODEPTNAME", bean2.getStr("DEPT_NAME"));
+						bean.set("KC_ODEPTNAME", bean2.getStr("DEPT_NAME"));
+						bean.set("KC_ODEPTCODE", bean2.getStr("DEPT_CODE"));
+						bean.set("KC_LEVEL", "二级");
+						bean.set("KC_CREATOR", "系统管理员");
+						bean.set("KC_MAX", max);
+						bean.set("KC_GOOD", good);
+						bean.set("KC_USE_NUM", "1");
+						bean.set("SERV_ID","TS_KCGL");
+						bean.set("KC_STATE2",0);
+						bean.set("CTLG_PCODE",bean2.getStr("DEPT_CODE"));
+						Bean kcbean = ServDao.create("TS_KCGL", bean);
+						String kcid =kcbean.getId();
+						//分行下
+						
+							//管联机构
+								Bean glbean = new Bean();
+								//判断机构 或是部门
+									//机构
+								glbean.set("JG_TYPE", "2");
+								glbean.set("KC_ID", kcid);
+								glbean.set("JG_NAME", bean2.getStr("DEPT_NAME"));
+								glbean.set("JG_CODE", bean2.getStr("DEPT_CODE"));
+								glbean.set("JG_FAR", "0");
+								ServDao.save("TS_KCGL_GLJG", glbean);
+							
+						
+						//系统座位号
+						int hangshu = max/10+1; //行数
+						int xthao = 1;
+						for(int z=1;z<=hangshu;z++){
+							if(xthao>max){
+								break;
+							}
+							for(int y=1;y<10;y++){
+								if(xthao>max){
+									break;
+								}
+								Bean zwbean  = new Bean();
+								zwbean.set("KC_ID", kcid);
+								zwbean.set("ZW_ZWH_XT", xthao);//系统座位号
+								zwbean.set("ZW_ZWH_SJ", z+"-"+y);//实际座位号
+								zwbean.set("ZW_KY", 1);//可用
+								ServDao.save("TS_KCGL_ZWDYB", zwbean);
+								 xthao++;
+							}
+						}
+					}
+					}
+					
+			}
+		}
+		
+	return new OutBean().setOk();
+	} 
+	
 }
