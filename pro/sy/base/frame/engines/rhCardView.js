@@ -21,8 +21,13 @@ rh.vi.cardView = function(options) {
 		"cardIn":false,//单条记录进卡片
 		"widHeiArray":null,//小卡片窗口的[宽度,高度]
 		"xyArray":null,//小卡片窗口的[x坐标,y坐标]
-		"servDef":null //服务定义数据
+		"servDef":null, //服务定义数据
+		"defHeight":options.defHeight  // 特例 重新定义card高度
+		
    };
+   if(this.defHeight!=false){
+	   this.defHeight =true;
+   }
    this._pkCode = options[UIConst.PK_KEY] || "";
    this.opts = jQuery.extend(defaults,options);
    this.servId = this.opts.sId;
@@ -575,10 +580,7 @@ rh.vi.cardView.prototype._bldWin = function() {
     	widPercent = this.widHeiArray[0];
     	hei = this.widHeiArray[1];
     	position = this.xyArray;
-    	if(hei>"1000"){
-    		hei = "800"
-    	}else{
-    		
+    	if(this.defHeight){
     		hei="530";
     	}
     }

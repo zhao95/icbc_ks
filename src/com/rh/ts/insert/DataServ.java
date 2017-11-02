@@ -21,9 +21,9 @@ public class DataServ extends CommonServ {
 		String end = bmgllist.get(0).getStr("BM_END");
 		//项目ID下的  包含的考试类别  
 		//高级考试
-		List<Bean> kslbklist1 = ServDao.finds("TS_XMGL_BM_KSLB"," AND KSLB_TYPE = '3' AND XM_ID='"+xmid+"'");
+		List<Bean> kslbklist1 = ServDao.finds("TS_XMGL_BM_KSLB"," AND KSLB_TYPE = '3' AND XM_ID='"+xmid+"'  group by KSLB_XL_CODE");
 		//中级考试
-		List<Bean> kslbklist2 = ServDao.finds("TS_XMGL_BM_KSLB"," AND  (KSLB_TYPE = '2' or KSLB_TYPE=1) AND XM_ID='"+xmid+"'");
+		List<Bean> kslbklist2 = ServDao.finds("TS_XMGL_BM_KSLB"," AND  (KSLB_TYPE = '2' or KSLB_TYPE=1) AND XM_ID='"+xmid+"'  group by KSLB_XL_CODE");
 		
 				List<Bean> KSLBLIST = ServDao.finds("TS_XMGL_BM_KSLB", "AND XM_ID='"+xmid+"'");
 				String lb_code ="";
@@ -72,13 +72,13 @@ public class DataServ extends CommonServ {
 						}
 						a=j;
 					}
-					List<Bean> kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' limit "+a+","+2);
+					List<Bean> kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' group by KSLB_XL_CODE limit "+a+","+2);
 					if(cengji>=3&&kslbklist.size()==0){
 						wherestr = " AND  (KSLB_TYPE = '2' or KSLB_TYPE=1) ";
 						if(a>kslbklist2.size()-3){
 							a=0;
 						}
-						kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' limit "+a+","+2);
+						kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' group by KSLB_XL_CODE limit "+a+","+2);
 					}
 					
 					for (Bean kslbkbean : kslbklist) {
@@ -189,13 +189,13 @@ public class DataServ extends CommonServ {
 						}
 						a=j;
 					}
-					List<Bean> kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' limit "+a+","+2);
+					List<Bean> kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"'  group by KSLB_XL_CODE limit "+a+","+2);
 					if(cengji>=3&&kslbklist.size()==0){
 						wherestr = " AND  (KSLB_TYPE = '2' or KSLB_TYPE=1) ";
 						if(a>kslbklist2.size()-3){
 							a=0;
 						}
-						kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' limit "+a+","+2);
+						kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"'  group by KSLB_XL_CODE limit "+a+","+2);
 					}
 					
 					for (Bean kslbkbean : kslbklist) {
@@ -291,7 +291,7 @@ public class DataServ extends CommonServ {
 				String ip = "172."+ ipi;
 				
 				//添加考场
-				int max = (int) (Math.random()*50);
+				int max = (int) (Math.random()*70)+30;
 				int good = (int) (max*0.8);
 				//本部
 				int indexOf = bean2.getStr("DEPT_NAME").indexOf("本部");
