@@ -137,11 +137,13 @@ public class YapzwServ extends CommonServ {
         String bmXl = bmshPassBean.getStr("BM_XL");//序列编码
         String bmMk = bmshPassBean.getStr("BM_MK");//模块编码
         String bmType = bmshPassBean.getStr("BM_TYPE");//BM_LV BM_TYPE //级别编码
+        String bmKsTime = bmshPassBean.getStr("BM_KS_TIME");//模块编码
 
         paramBean.put("BM_LB", bmLb);
         paramBean.put("BM_XL", bmXl);
         paramBean.put("BM_MK", bmMk);
         paramBean.put("BM_LV", bmType);
+        paramBean.put("BM_KS_TIME", bmKsTime);
 
         paramBean.put("U_CODE", userCode);//U_CODE	考生编码
         paramBean.put("U_ODEPT", userBean.getODeptCode());//U_ODEPT 考生机构
