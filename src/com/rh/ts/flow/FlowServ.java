@@ -228,6 +228,7 @@ public class FlowServ extends CommonServ {
 	   				//String wheredelete = " and WFS_ID='" + dataId + "' and NODE_STEPS='"+NODE_STEPS+"'";
 	   				
 	   				delSql.set("NODE_STEPS", NODE_STEPS);
+	   				delSql.set("WFS_ID", dataId);
 	   				if(NODE_STEPS>newSteps){
 	   					ServDao.delete("TS_WFS_NODE_APPLY", delSql);
 	   				}
