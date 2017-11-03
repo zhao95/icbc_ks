@@ -21,6 +21,7 @@ if (scVal != "" && scVal != null) {
 	$("#TS_XMGL_CCCS_V .rhGrid").find("tr").each(function(index, item) {
 						if (index != 0) {
 							var dataId = item.id;
+							if(dataId == "") return;
 							var param = {};
 							if (cjVal == "1") {
 								param["_WHERE_"] = "and xm_id = '"+ xmId + "' and KC_LEVEL = '一级' and KC_ODEPTCODE='"+ dataId + "'";

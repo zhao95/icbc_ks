@@ -12,19 +12,19 @@ $("#TS_KCGL .rhGrid").find("tr").each(function(index, item) {
 		var dataId = item.id;
 		if(dataId == "") return;
 		//列表添加考场管理员 不用视图，提高查询效率
-		FireFly.doAct("TS_KCGL_GLY","finds",{"_SELECT_":"GLY_NAME","_WHERE_":"and kc_id = '"+dataId+"'"},true,false,function(data){
-			if(data._DATA_.length > 0){
-				var GlyNames = "";
-				for(var i=0;i<data._DATA_.length;i++){
-					var tmpGlyName = data._DATA_[i].GLY_NAME;
-					GlyNames += tmpGlyName;
-					if(data._DATA_.length - i != 1){
-						GlyNames += ",";
-					}
-				}
-				$(item).find("td[icode='GLY_NAME']").html(GlyNames);
-			}
-		});
+//		FireFly.doAct("TS_KCGL_GLY","finds",{"_SELECT_":"GLY_NAME","_WHERE_":"and kc_id = '"+dataId+"'"},true,false,function(data){
+//			if(data._DATA_.length > 0){
+//				var GlyNames = "";
+//				for(var i=0;i<data._DATA_.length;i++){
+//					var tmpGlyName = data._DATA_[i].GLY_NAME;
+//					GlyNames += tmpGlyName;
+//					if(data._DATA_.length - i != 1){
+//						GlyNames += ",";
+//					}
+//				}
+//				$(item).find("td[icode='GLY_NAME']").html(GlyNames);
+//			}
+//		});
 		
 		var state = $(item).find("td[icode='KC_STATE']").attr("title");
 		
