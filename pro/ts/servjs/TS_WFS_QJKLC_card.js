@@ -1,8 +1,10 @@
 var _viewer = this;
+//借考 值为2
+var type = _viewer.getParHandler().getParHandler().getParHandler().getParHandler().getItem("WFS_SERVID").getValue();
 //获取wfs_ID,并保存
 if(_viewer.opts.act == "cardAdd"){
 	var WFS_ID = _viewer.opts.WFS_ID;
-	var NODE_ID = _viewer.opts.WFS_ID;
+	var NODE_ID = _viewer.opts.NODE_ID;
 	if(typeof(WFS_ID)!="undefined"){ 
 		_viewer.getItem("WFS_ID").setValue(WFS_ID);
 	}
@@ -29,7 +31,9 @@ if(sel == 0){
 	_viewer.getItem("QJKLC_SHQZ").show();
 	_viewer.hideGroup("dept");
 	_viewer.hideGroup("post");
-	_viewer.getItem("QJKLC_ZDDEPT_COLCODE").show();
+	if(type != 2){
+		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").show();
+	}
 }
 
 _viewer.getItem("QJKLC_SEL").change(function(){
@@ -51,7 +55,9 @@ _viewer.getItem("QJKLC_SEL").change(function(){
 		_viewer.getItem("QJKLC_SHQZ").show();
 		_viewer.hideGroup("dept");
 		_viewer.hideGroup("post");
-		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").show();
+		if(type != 2){
+			_viewer.getItem("QJKLC_ZDDEPT_COLCODE").show();
+		}
 	}
 });
 
