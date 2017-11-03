@@ -153,7 +153,7 @@ public class PassServ extends CommonServ {
 		parambean.set("flowName", 1);
 		parambean.set("xmId", xmid);
 		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
-		List<Bean> flowlist = outbean.getList("result");
+		List<Bean> flowlist = outbean.getList("resultlist");
 		for (Bean bean : flowlist) {
 			if (shenuser.equals(bean.getStr("SHR_USERCODE"))) {
 				levels = bean.getStr("NODE_STEPS");
@@ -284,17 +284,11 @@ public class PassServ extends CommonServ {
 					parambean1.set("xmId", xmid);
 					OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
 							parambean1);
-					List<Bean> list1 = outbean1.getList("result");
-
 					String allman1 = "";
-					for (int l = 0; l < list1.size(); l++) {
+					String blist1 = outbean1.getStr("result");
 
-						if (l == list1.size() - 1) {
-							allman1 += list1.get(l).getStr("SHR_USERCODE");
-						} else {
-							allman1 += list1.get(l).getStr("SHR_USERCODE") + ",";
-						}
-
+					if(!"".equals(blist1)){
+						allman1= blist1.substring(0,blist1.length()-1);
 					}
 					newBean.set("SH_USER", shenuser);
 					newBean.set("SH_LEVEL", level);

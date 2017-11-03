@@ -157,7 +157,7 @@ public class NoPassServ extends CommonServ {
 		parambean.set("flowName", 1);
 		parambean.set("xmId", xmid);
 		OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow", parambean);
-		List<Bean> flowlist = outbean.getList("result");
+		List<Bean> flowlist = outbean.getList("resultlist");
 		for (Bean bean : flowlist) {
 			if (shenuser.equals(bean.getStr("SHR_USERCODE"))) {
 				levels = bean.getStr("NODE_STEPS");

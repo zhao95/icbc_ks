@@ -183,6 +183,7 @@ public class StayServ extends CommonServ {
 		// 获取当前的审核层级 如果是最高层级审核结束只留下最高级的审核人
 		for (String id : ss) {
 			if (!"".equals(id)) {
+				
 				Bean bean = ServDao.find("TS_BMSH_STAY", id);
 				String bmid = bean.getStr("BM_ID");
 				// 获取审核人信息
@@ -254,17 +255,11 @@ public class StayServ extends CommonServ {
 							parambean1.set("xmId", xmid);
 							OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
 									parambean1);
-							List<Bean> list1 = outbean1.getList("result");
-
 							String allman1 = "";
-							for (int l = 0; l < list1.size(); l++) {
+							String blist1 = outbean1.getStr("result");
 
-								if (l == list1.size() - 1) {
-									allman1 += list1.get(l).getStr("SHR_USERCODE");
-								} else {
-									allman1 += list1.get(l).getStr("SHR_USERCODE") + ",";
-								}
-
+							if(!"".equals(blist1)){
+								allman1= blist1.substring(0,blist1.length()-1);
 							}
 							newBean.set("SH_USER", shenuser);
 							newBean.set("SH_LEVEL", level);
@@ -297,17 +292,12 @@ public class StayServ extends CommonServ {
 							parambean1.set("xmId", xmid);
 							OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
 									parambean1);
-							List<Bean> list1 = outbean1.getList("result");
 
 							String allman1 = "";
-							for (int l = 0; l < list1.size(); l++) {
+							String blist1 = outbean1.getStr("result");
 
-								if (l == list1.size() - 1) {
-									allman1 += list1.get(l).getStr("SHR_USERCODE");
-								} else {
-									allman1 += list1.get(l).getStr("SHR_USERCODE") + ",";
-								}
-
+							if(!"".equals(blist1)){
+								allman1= blist1.substring(0,blist1.length()-1);
 							}
 							newBean.set("SH_USER", shenuser);
 							newBean.set("SH_LEVEL", level);
@@ -365,17 +355,12 @@ public class StayServ extends CommonServ {
 						parambean1.set("xmId", xmid);
 						OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
 								parambean1);
-						List<Bean> list1 = outbean1.getList("result");
 
 						String allman1 = "";
-						for (int l = 0; l < list1.size(); l++) {
+						String blist1 = outbean1.getStr("result");
 
-							if (l == list1.size() - 1) {
-								allman1 += list1.get(l).getStr("SHR_USERCODE");
-							} else {
-								allman1 += list1.get(l).getStr("SHR_USERCODE") + ",";
-							}
-
+						if(!"".equals(blist1)){
+							allman1= blist1.substring(0,blist1.length()-1);
 						}
 						newBean.set("SH_USER", shenuser);
 						newBean.set("SH_LEVEL", level);
