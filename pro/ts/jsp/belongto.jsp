@@ -171,7 +171,7 @@ if(userBean != null) {
 					<table class="rhGrid JPadding JColResizer" id="staytable">
 					<thead>
 							<tr style="backGround-color:WhiteSmoke; height: 30px">
-							<th style="width: 2%; text-align: center"><input type="checkbox" name="checkbox1" value="checkboxaa" onchange="change(this)"></th>
+							<th style="width: 2%; text-align: center"><input style="display:none" type="checkbox" name="checkbox1" value="checkboxaa" onchange="change(this)"></th>
 								<th style="width: 3%; text-align: center">序号</th>
 								<th style="width: 8%; text-align: center">操作</th>
 								<!--从 TS_BMSH_PX中查找 当前审核人的 排序字段记录 没有的话 默认为空 循环遍历 list输出th  -->
@@ -242,7 +242,7 @@ if(userBean != null) {
 					<table class="rhGrid JPadding JColResizer" id="passtable">
 						<thead id="tem" class="">
 							<tr id="firsttr" style="backGround-color:WhiteSmoke; height: 30px">
-							<th style="width: 5%; text-align: center"><input type="checkbox" name="checkbox2" value="checkboxbb" onchange="changeb(this)"></th>
+							<th style="width: 5%; text-align: center"><input style="display:none" type="checkbox" name="checkbox2" value="checkboxbb" onchange="changeb(this)"></th>
 								<th style="width: 5%; text-align: center">序号</th>
 								<th style="width: 5%; text-align: center">操作</th>
 							
@@ -313,7 +313,7 @@ if(userBean != null) {
 					<table class="rhGrid JPadding JColResizer" id="nopasstable">
 						<thead id="tem" class="">
 							<tr style="backGround-color:WhiteSmoke; height: 30px">
-							<th style="width: 5%; text-align: center"><input type="checkbox" name="checkbox3" value="checkboxcc" onchange="changec(this)"></th>
+							<th style="width: 5%; text-align: center"><input style="display:none"  type="checkbox" name="checkbox3" value="checkboxcc" onchange="changec(this)"></th>
 								<th 
 									style="width: 5%; text-align: center">序号</th>
 								<th style="width: 5%; text-align: center">操作</th>
