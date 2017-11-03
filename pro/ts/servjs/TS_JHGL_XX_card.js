@@ -35,12 +35,3 @@ _viewer.beforeSave = function() {
 		return false;
  	}
 };
-
-if(_viewer._actVar == "cardAdd"){
-	var JH_ID = _viewer.opts.JH_ID;
-	var JH_TITLE = _viewer.opts.JH_TITLE;
-	var  JhYear=_viewer.opts.JH_YEAR;
-	_viewer.getItem("JH_PTITLE").setValue(JH_ID);
-	_viewer.getItem("JH_TITLE").setValue(JH_TITLE);
-	_viewer.getItem("JH_YEAR").setValue(JhYear);
-}

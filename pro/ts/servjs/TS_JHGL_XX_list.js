@@ -18,7 +18,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 	}
 
 	//打开添加页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
-    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100],"JH_ID":projectId,"JH_TITLE":projectTitle,"JH_YEAR":projectYear};
+    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100],"links":_viewer.links};
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
 });

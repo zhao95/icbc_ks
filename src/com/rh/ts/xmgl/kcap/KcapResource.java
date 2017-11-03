@@ -19,6 +19,7 @@ import com.rh.core.org.util.OrgConstant;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
+import com.rh.core.util.Constant;
 import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
 
@@ -103,15 +104,18 @@ public class KcapResource {
 	 */
 	private void loadKs(String xmId, String odept) {
 
-		List<Bean> jkKsList = getJkKsList(xmId, odept);
+		List<Bean> jkKsList = getKsList(xmId, odept, 1);
 
 		jkKsBean = ksList2Bean(jkKsList, "S_ODEPT", "BM_KS_TIME", "BM_CODE");
 
 		// 考试
-		List<Bean> ksList = getKsList(xmId, odept);
+		List<Bean> ksList = getKsList(xmId, odept, 0);
 
-		ksList.addAll(jkKsList);
+		if (jkKsList != null) {
 
+			ksList.addAll(jkKsList);
+		}
+		
 		ksBean = ksList2Bean(ksList, "S_ODEPT", "BM_KS_TIME", "BM_CODE");
 	}
 
@@ -833,19 +837,27 @@ public class KcapResource {
 	}
 
 	/**
-	 * 借考考生
+	 * 获取考生
 	 * 
 	 * @param xmId
 	 * @param odept
+	 * @param status
+	 *            0正常 1借考 2请假
 	 * @return
 	 */
-	private List<Bean> getJkKsList(String xmId, String odept) {
+	private List<Bean> getKsList(String xmId, String odept, int status) {
+
+		String odeptField = "S_ODEPT";
+
+		if (status == 1) {
+			odeptField = "JK_ODEPT";
+		}
 
 		SqlBean sql = new SqlBean().and("a.XM_ID", xmId).and("a.S_FLAG", 1);
 
 		sql.selects(" a.*,p.STATION_TYPE,p.STATION_TYPE_CODE,p.STATION_NO,p.STATION_NO_CODE ");
 
-		sql.and("a.BM_STATUS", 1);// 借考
+		sql.and("a.BM_STATUS", status);
 
 		sql.appendWhere(" AND a.BM_CODE = p.PERSON_ID");
 
@@ -853,62 +865,11 @@ public class KcapResource {
 
 			String codePath = OrgMgr.getOdept(odept).getCodePath();
 
-			// SqlBean sqlIn = new SqlBean();
-			// sqlIn.selects("DEPT_CODE");
-			// sqlIn.tables(ServMgr.SY_ORG_DEPT);
-			// sqlIn.andLikeRT(ServMgr.SY_ORG_DEPT + ".CODE_PATH", codePath);
-			// sqlIn.and(ServMgr.SY_ORG_DEPT + ".DEPT_TYPE",
-			// OrgConstant.DEPT_TYPE_ORG);
-			// sqlIn.and(ServMgr.SY_ORG_DEPT + ".CMPY_CODE", cmpyCode);
-			// sqlIn.and(ServMgr.SY_ORG_DEPT + ".S_FLAG", 1);
-			// sql.andInSub("a.JK_ODEPT", sqlIn.toString(), sqlIn.getVars());
-
 			StringBuffer sb = new StringBuffer();
 			sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE ");
 			sb.append(" SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
 			sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
-			sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a.JK_ODEPT");
-			sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath + "','%') )");
-			sql.appendWhere(sb.toString());
-		}
-
-		sql.tables(TsConstant.SERV_BMSH_PASS + " a, SY_HRM_ZDSTAFFPOSITION p ");
-
-		String notExistsSql = " select * from " + TsConstant.SERV_KCAP_YAPZW + " b where b.SH_ID = a.SH_ID";
-
-		sql.appendWhere(" AND NOT EXISTS  (" + notExistsSql + ")");
-
-		log.error(sql.getWhere().toString() + "   " + sql.getVars());
-
-		List<Bean> jkList = Transaction.getExecutor().query(sql.toString(), sql.getVars());
-
-		return jkList;
-	}
-
-	/**
-	 * 无请假借考 考生
-	 * 
-	 * @param xmId
-	 * @param odept
-	 * @return
-	 */
-	private List<Bean> getKsList(String xmId, String odept) {
-
-		SqlBean sql = new SqlBean().and("a.XM_ID", xmId).and("a.BM_CODE", "p.PERSON_ID").and("a.S_FLAG", 1);
-
-		sql.selects(" a.*,p.STATION_TYPE,p.STATION_TYPE_CODE,p.STATION_NO,p.STATION_NO_CODE ");
-
-		sql.and("a.BM_STATUS", 0);// 借考
-
-		if (!Strings.isBlank(odept)) {
-
-			String codePath = OrgMgr.getOdept(odept).getCodePath();
-
-			StringBuffer sb = new StringBuffer();
-			sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE ");
-			sb.append(" SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
-			sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
-			sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a.S_ODEPT");
+			sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a." + odeptField);
 			sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath + "','%') )");
 			sql.appendWhere(sb.toString());
 		}
@@ -917,9 +878,13 @@ public class KcapResource {
 
 		String notExistsSql = " select * from " + TsConstant.SERV_KCAP_YAPZW + " b where b.SH_ID = a.SH_ID";
 
-		sql.appendWhere(" AND NOT EXSITS (" + notExistsSql + ")");
+		sql.appendWhere(" AND NOT EXISTS (" + notExistsSql + ")");
 
-		List<Bean> ksList = Transaction.getExecutor().query(sql.toString(), sql.getVars());
+		String where = "select " + sql.getStr(Constant.PARAM_SELECT) + " from " + sql.getStr(Constant.PARAM_TABLE);
+
+		where += " where 1=1 " + sql.getWhere();
+
+		List<Bean> ksList = Transaction.getExecutor().query(where, sql.getVars());
 
 		return ksList;
 	}
