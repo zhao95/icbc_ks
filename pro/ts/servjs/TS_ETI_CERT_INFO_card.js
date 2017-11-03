@@ -14,7 +14,7 @@ function loadPostionSequenceOption() {
             "_SELECT_": "KSLBK_XL",
             "_ORDER_": "KSLBK_XL",
             "_AFTER_SELECT_KEYWORDS": "distinct",
-            "_linkWhere": " and KSLBK_NAME='" + postionType + "' and KSLBK_XL is not null ",
+            "_linkWhere": " and KSLBK_CODE='" + postionType + "' and KSLBK_XL is not null ",
             "_NOPAGE_": "true"
         };
         var result = FireFly.getListData("TS_XMGL_BM_KSLBK", data, false);

@@ -18,12 +18,12 @@ public class DapccServ extends CommonServ {
     private final static String CHILD = "CHILD";
 
     protected void beforeQuery(ParamBean paramBean) {
-	ParamBean param = new ParamBean();
-	String ctlgModuleName = "EXAM_ROOM";
-	param.set("paramBean", paramBean);
-	param.set("ctlgModuleName", ctlgModuleName);
-	param.set("serviceName", paramBean.getServId());
-	PvlgUtils.setOrgPvlgWhere(param);
+        ParamBean param = new ParamBean();
+        String ctlgModuleName = "EXAM_ROOM";
+        param.set("paramBean", paramBean);
+        param.set("ctlgModuleName", ctlgModuleName);
+        param.set("serviceName", paramBean.getServId());
+        PvlgUtils.setOrgPvlgWhere(param);
     }
 
 //    public OutBean getZwByKcId(ParamBean paramBean) {
@@ -194,13 +194,27 @@ public class DapccServ extends CommonServ {
         OutBean outBean = new OutBean();
         String DEPT_CODE = "KC_ODEPTCODE";//KC_ODEPTCODE：根据考场所属机构挂靠考场；DEPT_CODE：根据关联机构挂靠考场
         String xmId = paramBean.getStr("xmId");
+        String roleDeptCode = paramBean.getStr("deptCodeStr");
         List<Object> values = new ArrayList<>();
         values.add(xmId);
+        String[] splitDeptCode = roleDeptCode.split(",");
+        StringBuilder deptBuilder = new StringBuilder("and ( ");
+        for (String deptCode : splitDeptCode) {
+            values.add("%" + deptCode + "%");
+            deptBuilder.append(" e.CODE_PATH like ? ").append("or ");
+        }
+        String deptSql = deptBuilder.substring(0, deptBuilder.length() - 3) + ")";
+
+        //查询出所有有权限的考场
+        // xmId:该项目 a待安排考场 a.XM_ID
+        // roleDeptCode:当前用户所拥有的权限  e考场所属机构 e.CODE_PATH like %roleDeptCode%
+        //b考场信息 c考场关联机构 d考场关联机构信息
         List<Bean> list = Transaction.getExecutor().query("select a.*,d.DEPT_CODE,b.KC_ODEPTCODE from TS_XMGL_KCAP_DAPCC a " +
                 "INNER JOIN TS_KCGL b on b.KC_ID =a.KC_ID " +
                 "INNER JOIN TS_KCGL_GLJG c on c.KC_ID=a.KC_ID " +
                 "LEFT JOIN SY_ORG_DEPT d on d.DEPT_CODE = c.JG_CODE " +
-                "where a.XM_ID=?", values);
+                "LEFT JOIN SY_ORG_DEPT e on b.KC_ODEPTCODE = e.DEPT_CODE " +
+                "where a.XM_ID=? " + deptSql, values);
         Set<String> hashSet = new HashSet<>();
         for (Bean bean : list) {
             hashSet.add(bean.getStr(DEPT_CODE));
@@ -372,7 +386,9 @@ public class DapccServ extends CommonServ {
         String deptCode = userBean.getDeptCode();
         List<Object> values = new ArrayList<>();
         values.add(deptCode);
-        Bean bean = Transaction.getExecutor().queryOne("select * from TS_ODEPT_LEVEL_V where DEPT_CODE = ?", values);
+
+        Bean bean =ServDao.find("SY_ORG_DEPT", deptCode);
+//        Bean bean = Transaction.getExecutor().queryOne("select * from sy_org_dept where DEPT_CODE = ?", values);
         String codePath = bean.getStr("CODE_PATH");
 
         String[] splits = codePath.split("\\^");//0010100000^0020000000^0020000087^
