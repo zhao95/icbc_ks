@@ -1790,7 +1790,7 @@ rh.vi.listView.prototype._bldNavTree = function() {
 				        		delete _self.navTreeWhere[item.rhItemCode];//删除条件
 				        	} else {
 				        		var flag = _self.beforeTreeNodeClickLoad(item,id,dictId);
-				        		if(typeof(flag) != "undefined" && !flag){
+				        		if(typeof(flag) != "undefined" && !flag && (dictId.indexOf('TS_ORG_DEPT')>=0 || dictId.indexOf('TS_CTLG_TREE')>=0)) {
 				        			if (nodeObj.hasClass("bbit-tree-selected")) {//节点取消选中
 						        		nodeObj.removeClass("bbit-tree-selected");
 						        		nodeObj.removeClass("rh-bbit-tree-selected");
