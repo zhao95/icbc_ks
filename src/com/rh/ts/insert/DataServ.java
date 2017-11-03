@@ -357,25 +357,23 @@ public class DataServ extends CommonServ {
 								}
 								Bean zwbean  = new Bean();
 								zwbean.set("KC_ID", kcid);
-								zwbean.set("ZW_ZWH_XT", xthao);//系统座位号
-								zwbean.set("ZW_ZWH_SJ", z+"-"+y);//实际座位号
+								zwbean.set("ZW_ZWH_XT", z+"-"+y);//系统座位号
+								zwbean.set("ZW_ZWH_SJ", xthao);//实际座位号
 								zwbean.set("ZW_KY", 1);//可用
 								ServDao.save("TS_KCGL_ZWDYB", zwbean);
 								
 								Bean ipbean = new Bean();
-								ipbean.set("IPZ_IP", kcid);
-								ipbean.set("IPZ_ZWH", ip+"."+j+"."+xthao);
+								ipbean.set("IPZ_IP", ip+"."+j+"."+xthao);
+								ipbean.set("IPZ_ZWH", z+"-"+y);
 								if(xthao==1){
 									first=ip+"."+j+"."+xthao;
-								}else if(xthao==max){
-									last=ip+"."+j+"."+xthao;
 								}
 								ipbean.set("KC_ID", kcid);
 								ServDao.save("TS_KCGL_ipzwh", ipbean);
 								xthao++;
 							}
 						}
-						
+						last=ip+"."+j+"."+max;
 						Bean ipscopebean = new  Bean();
 						ipscopebean.set("IPS_TITLE", KCNAME+j+"区段");
 						ipscopebean.set("KC_ID", kcid);
@@ -423,7 +421,7 @@ public class DataServ extends CommonServ {
 						int hangshu = max/10+1; //行数
 						int xthao = 1;
 						String first  = "";
-						String last = "";
+						String last = ip+".1."+max;
 						for(int z=1;z<=hangshu;z++){
 							if(xthao>max){
 								break;
@@ -434,18 +432,16 @@ public class DataServ extends CommonServ {
 								}
 								Bean zwbean  = new Bean();
 								zwbean.set("KC_ID", kcid);
-								zwbean.set("ZW_ZWH_XT", xthao);//系统座位号
-								zwbean.set("ZW_ZWH_SJ", z+"-"+y);//实际座位号
+								zwbean.set("ZW_ZWH_XT", z+"-"+y);//系统座位号
+								zwbean.set("ZW_ZWH_SJ", xthao);//实际座位号
 								zwbean.set("ZW_KY", 1);//可用
 								ServDao.save("TS_KCGL_ZWDYB", zwbean);
 								
 								Bean ipbean = new Bean();
-								ipbean.set("IPZ_IP", kcid);
-								ipbean.set("IPZ_ZWH", ip+".1."+xthao);
+								ipbean.set("IPZ_IP", ip+".1."+xthao);
+								ipbean.set("IPZ_ZWH", z+"-"+y);
 								if(xthao==1){
 									first=ip+".1."+xthao;
-								}else if(xthao==max){
-									last=ip+".1."+xthao;
 								}
 								ipbean.set("KC_ID", kcid);
 								ServDao.save("TS_KCGL_ipzwh", ipbean);

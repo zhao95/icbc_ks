@@ -280,6 +280,12 @@ public class XmglServ extends CommonServ {
 				qz += "," + bean.getStr("G_ID");
 				continue;
 			}
+			
+			if(deptcodelist.contains(str)){
+				qz += "," + bean.getStr("G_ID");
+				continue;
+			}
+			
 				List<DeptBean> listdept = OrgMgr.getChildDepts(bean.getStr("S_CMPY"),str);
 				// 判断此人是否在此机构下
 				// 管理员以下的所有机构
@@ -288,6 +294,7 @@ public class XmglServ extends CommonServ {
 						qz += "," + bean.getStr("G_ID");
 					}
 			}
+				
 		}
 		if (!Strings.isBlank(qz)) {
 			// 去掉重复群组
