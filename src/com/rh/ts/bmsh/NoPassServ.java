@@ -230,17 +230,10 @@ public class NoPassServ extends CommonServ {
 					parambean.set("xmId", xmid);
 					OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow",
 							parambean);
-					List<Bean> list = outbean.getList("result");
+					String blist = outbean.getStr("result");
 
-					for (int l = 0; l < list.size(); l++) {
-
-						if (l == list.size() - 1) {
-
-							allman += list.get(l).getStr("SHR_USERCODE");
-						} else {
-							allman += list.get(l).getStr("SHR_USERCODE") + ",";
-						}
-
+					if(!"".equals(blist)){
+						allman= blist.substring(0,blist.length()-1);
 					}
 
 				}
@@ -379,19 +372,12 @@ public class NoPassServ extends CommonServ {
 			parambean.set("odeptCode", bean.getStr("S_ODEPT"));
 			OutBean outbean = ServMgr
 					.act("TS_WFS_APPLY", "backFlow", parambean);
-			List<Bean> list1 = outbean.getList("result");
-
 			String allman = "";
 			int nowlevel = level;
-			for (int l = 0; l < list1.size(); l++) {
+			String blist = outbean.getStr("result");
 
-				if (l == list1.size() - 1) {
-
-					allman += list1.get(l).getStr("SHR_USERCODE");
-				} else {
-					allman += list1.get(l).getStr("SHR_USERCODE") + ",";
-				}
-
+			if(!"".equals(blist)){
+				allman= blist.substring(0,blist.length()-1);
 			}
 			bean.remove("SH_ID");
 			bean.remove("S_CMPY");

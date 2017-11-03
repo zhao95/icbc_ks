@@ -1492,7 +1492,7 @@ public class BmlbServ extends CommonServ {
 			String servid = paramBean.getStr("servId");
 			UserBean user = Context.getUserBean();
 			String user_code = user.getStr("USER_CODE");
-			String dept_code = user.getStr("DEPT_CODE");
+			String dept_code = user.getStr("ODEPT_CODE");
 			String belongdeptcode = "";
 			String xmid = paramBean.getStr("xmid");
 			String compycode = user.getCmpyCode();
@@ -1533,11 +1533,16 @@ public class BmlbServ extends CommonServ {
 				}else{
 					//管理员以下的所有机构部门
 					
-					List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
-					for (Bean bean : finds) {
-						dept_code+=","+bean.getStr("DEPT_CODE");
-					}
-					 deptwhere = "AND S_DEPT IN ("+dept_code+")";
+					if(dept_code.equals("0010100000")){
+						 deptwhere="";
+					 }else{
+						 List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
+						 for (Bean bean : finds) {
+							 dept_code+=","+bean.getStr("DEPT_CODE");
+						 }
+						 deptwhere = "AND S_DEPT IN ("+dept_code+")";
+						 
+					 }
 				}
 				
 			//根据审核  机构 匹配当前机构下的所有人

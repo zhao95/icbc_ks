@@ -197,17 +197,12 @@ public class StayServ extends CommonServ {
 				parambean.set("xmId", xmid);
 				OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow",
 						parambean);
-				List<Bean> list = outbean.getList("result");
 
 				String allman = "";
-				for (int l = 0; l < list.size(); l++) {
+				String blist = outbean.getStr("result");
 
-					if (l == list.size() - 1) {
-						allman += list.get(l).getStr("SHR_USERCODE");
-					} else {
-						allman += list.get(l).getStr("SHR_USERCODE") + ",";
-					}
-
+				if(!"".equals(blist)){
+					allman= blist.substring(0,blist.length()-1);
 				}
 				//
 				// 审核通过
