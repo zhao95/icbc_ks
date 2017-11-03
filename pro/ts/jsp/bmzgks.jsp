@@ -213,7 +213,7 @@ position: absolute;
 					</table>
 				</div>
 				<div style="width: 90%; 60 px; padding-top: 20px; text-align: left;">
-					<span style="color: #0782cb;">★ 跨序列应报名的考试</span> <span
+					<span style="color: #0782cb;">★ 跨序列报名的考试</span> <span
 						style="color: #fdb64f;">(提示：只允许选择两个跨序列的考试)</span>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<button class="btn btn-success" id='selectks' 
