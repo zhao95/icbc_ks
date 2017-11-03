@@ -322,8 +322,8 @@ public class DataServ extends CommonServ {
 						bean.set("KC_GOOD", good);
 						bean.set("KC_USE_NUM", "1");
 						bean.set("SERV_ID","TS_KCGL");
-						bean.set("KC_STATE2",0);
-						bean.set("CTLG_PCODE",bean2.getStr("DEPT_CODE"));
+						bean.set("KC_STATE",5);
+						bean.set("CTLG_PCODE",fhbean.getStr("DEPT_CODE"));
 						bean.set("KC_CODE", kc_code);
 					Bean kcbean = ServDao.create("TS_KCGL", bean);
 						String kcid =kcbean.getId();
@@ -404,7 +404,7 @@ public class DataServ extends CommonServ {
 						bean.set("KC_GOOD", good);
 						bean.set("KC_USE_NUM", "1");
 						bean.set("SERV_ID","TS_KCGL");
-						bean.set("KC_STATE2",0);
+						bean.set("KC_STATE",5);
 						bean.set("CTLG_PCODE",bean2.getStr("DEPT_CODE"));
 						bean.set("KC_CODE", kc_code);
 						Bean kcbean = ServDao.create("TS_KCGL", bean);

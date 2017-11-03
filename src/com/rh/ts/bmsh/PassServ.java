@@ -646,7 +646,7 @@ public class PassServ extends CommonServ {
 		UserBean user = Context.getUserBean();
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
-		String dept_code = user.getStr("DEPT_CODE");
+		String dept_code = user.getStr("ODEPT_CODE");
 		
 		/*if("belong".equals(xianei)){*/
 		//根据项目id找到流程下的所有节点
@@ -681,11 +681,11 @@ public class PassServ extends CommonServ {
 		 deptwhere = "AND S_DEPT IN ("+deptcodes+")";
 		}else{*/
 			//管理员以下的所有机构
-		if(user.getDeptCode().equals("0010100000")){
+		if(user.getODeptCode().equals("0010100000")){
 			//所有人员
 			deptwhere="";
 		}else{
-			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
+			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
 			for (Bean bean : finds) {
 				dept_code+=","+bean.getStr("DEPT_CODE");
 			}

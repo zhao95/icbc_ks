@@ -671,7 +671,7 @@ public class NoPassServ extends CommonServ {
 	public Bean getBelongToList(Bean paramBean) {
 		//当前审核人
 		UserBean user = Context.getUserBean();
-		String dept_code = user.getStr("DEPT_CODE");
+		String dept_code = user.getStr("ODEPT_CODE");
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		/*if("belong".equals(xianei)){
@@ -712,11 +712,11 @@ public class NoPassServ extends CommonServ {
 		}else{*/
 			//管理员以下的所有机构部门
 			
-			if(user.getDeptCode().equals("0010100000")){
+			if(user.getODeptCode().equals("0010100000")){
 				//所有人员
 				deptwhere="";
 			}else{
-				List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
+				List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
 				for (Bean bean : finds) {
 					dept_code+=","+bean.getStr("DEPT_CODE");
 				}

@@ -848,7 +848,7 @@ public class StayServ extends CommonServ {
 	public Bean getBelongToList(Bean paramBean) {
 		//当前审核人
 		UserBean user = Context.getUserBean();
-		String dept_code = user.getStr("DEPT_CODE");
+		String dept_code = user.getStr("ODEPT_CODE");
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		/*if("belong".equals(xianei)){
@@ -885,11 +885,11 @@ public class StayServ extends CommonServ {
 		 deptwhere = "AND S_DEPT IN ("+deptcodes+")";
 		}else{*/
 			//管理员以下的所有机构
-		if(user.getDeptCode().equals("0010100000")){
+		if(user.getODeptCode().equals("0010100000")){
 			//所有人员
 			deptwhere="";
 		}else{
-			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
+			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
 			for (Bean bean : finds) {
 				dept_code+=","+bean.getStr("DEPT_CODE");
 			}
@@ -960,7 +960,7 @@ public class StayServ extends CommonServ {
 				String user_code = user.getStr("USER_CODE");
 				String belongdeptcode = "";
 				String xmid = paramBean.getStr("xmid");
-				String dept_code = user.getStr("DEPT_CODE");
+				String dept_code = user.getStr("ODEPT_CODE");
 				List<Bean> list =  new ArrayList<Bean>();
 				List<Bean> list1 = new ArrayList<Bean>();
 				List<Bean> list2 = new ArrayList<Bean>();
@@ -1008,11 +1008,11 @@ public class StayServ extends CommonServ {
 			//自己所在机构以下的所有数据
 			//管理员以下的所有机构
 			String deptwhere1="";
-			if(user.getDeptCode().equals("0010100000")){
+			if(user.getODeptCode().equals("0010100000")){
 				//所有人员
 				 deptwhere1 = "AND XM_ID='"+xmid+"'";
 			}else{
-				List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getDeptCode());
+				List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
 				for (Bean bean : finds) {
 					dept_code+=","+bean.getStr("DEPT_CODE");
 				}
