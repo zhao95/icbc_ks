@@ -223,14 +223,55 @@ ListPage.prototype.bldPage = function () {
     return this._page;
 };
 
+
+function initData() {
+    var deptCodeStr = Utils.getUserYAPAutoCode();
+    var split = deptCodeStr.split(',');
+    for (var i = 0; i < split.length; i++) {
+        var itemCode = split[i];
+        if (itemCode !== '') {
+            var dept = FireFly.doAct('SY_ORG_DEPT', 'byid', {'_PK_': itemCode});
+            if (dept.DEPT_PCODE) {
+                //有父级机构
+                $("#tjccap").css('display', 'block');
+                $("#publish").css('display', 'none');
+            } else if (dept._MSG_ && dept._MSG_.indexOf('ERROR') >= 0) {
+                //机构不存在
+            } else {
+                //机构存在，父id为空 ->为总行 获取总行下的所有机构安排考位
+                $("#tjccap").css('display', 'none');
+                $("#publish").css('display', 'block');
+            }
+        }
+    }
+    bindHeaderAction(xmId);
+    ZdfpccModal.initData(xmId);
+    KcObject.initData(xmId);
+    KsObject.initData(xmId);
+}
 /**
  * 绑定页首按钮事件
  */
-function bindHeaderAction() {
+function bindHeaderAction(xmId) {
+    /*提交场次安排后不能 安排座位*/
+    function zdfpccDisableAftertjccap() {
+        if (Utils.getCanDraggable() === false) {
+            $("#zdfpcc").removeClass('rh-icon').addClass('rh-icon-disable');
+            $("#updatecc").removeClass('rh-icon').addClass('rh-icon-disable');
+            $("#zdfpcc").unbind('click');
+            $("#updatecc").unbind('click');
+            $("#tjccap").removeClass('rh-icon').addClass('rh-icon-disable');
+            $("#tjccap").unbind('click');
+            $("#publish").removeClass('rh-icon').addClass('rh-icon-disable');
+            $("#publish").unbind('click');
+        }
+    }
+
     $("#zdfpcc").click(function () {
 //        debugger;
         $('#zdfpccModal').modal({backdrop: false, show: true});
     });
+
     $("#updatecc").click(function () {
         UpdateCCModal.show();
     });
@@ -246,6 +287,26 @@ function bindHeaderAction() {
     $("#tjccap").click(function () {
         $('#tjccapModal').modal({backdrop: false, show: true});
     });
+    $("#publish").click(function () {
+        $('#publishModal').modal({backdrop: false, show: true});
+    });
+
+    //提交确定按钮事件
+    $("#tjccapModal").find('button[class="btn btn-success"]').bind('click', function () {
+        var deptCodeStr = Utils.getUserYAPAutoCode();
+        var split = deptCodeStr.split(',');
+        for (var i = 0; i < split.length; i++) {
+            var itemDeptCode = split[i];
+            if (itemDeptCode !== '') {
+                FireFly.doAct('TS_XMGL_KCAP_TJJL', 'save', {TJ_DEPT_CODE: itemDeptCode, XM_ID: xmId});
+            }
+        }
+        Utils.getCanDraggable(true);
+        KcObject.reloadCCInfo();
+        KsObject.setDfpKsContent();
+        zdfpccDisableAftertjccap();
+    });
+
     //伸缩按钮
     $("#toggle-sidebar").click(function () {
         var speed = 200;
@@ -266,6 +327,8 @@ function bindHeaderAction() {
             });
         }
     });
+
+    zdfpccDisableAftertjccap();
 }
 
 /**
@@ -371,8 +434,8 @@ var ZdfpccModal = {
                         '   </span>'
                     ].join(''));
                     $btn.bind('click', function () {
-                            var code = self.getUserYAPAutoCode();
-                            var data = FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getOrgTreeByDeptCode', {deptCodeStr: code});
+                            var deptCodeStr = Utils.getUserYAPAutoCode();
+                            var data = FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getOrgTreeByDeptCode', {deptCodeStr: deptCodeStr});
                             //jstree
                             var root = {
                                 id: data.DEPT_CODE,
@@ -547,24 +610,13 @@ var ZdfpccModal = {
         return result;
     },
 
-    getUserYAPAutoCode: function () {
-        var userPvlg = FireFly.getUserPvlg(System.getUser("USER_CODE"));
-        var code;
-        try {
-            code = userPvlg.TS_XMGL_KCAP_YAPZW_PVLG.auto.ROLE_DCODE;
-        } catch (e) {
-            code = '';
-        }
-        return code;
-    },
-
     /**
      * 自动安排考位
      */
     doArrangeSeat: function () {
         this.saveBeanList(function () {
-            var code = this.getUserYAPAutoCode();
-            var codes = code.split(',');
+            var deptCodeStr = Utils.getUserYAPAutoCode();
+            var codes = deptCodeStr.split(',');
             for (var i = 0; i < codes.length; i++) {
                 var itemCode = codes[i];
                 if (itemCode !== '') {
@@ -639,6 +691,8 @@ var SubmissionArrangementModal = {
     submissionArrangementModal: '',
     initData: function () {
         this.submissionArrangementModal = $('#submissionArrangementModal');
+
+
     },
     reloadData: function () {
 
@@ -779,6 +833,7 @@ var KcObject = {
     currentCc: '',//当前显示的场次
     currentParentKc: '',//当前显示的考场
     currentYapzwArr: [],//当前场次已安排好的座位信息
+    currentType: 'view',//当前场次展示方式 list view
 
     /*初始化界面数据*/
     initData: function (xmId) {
@@ -792,8 +847,10 @@ var KcObject = {
     /*从后端获取初始化数据并处理*/
     getInitData: function (callback) {
         var self = this;//self指向KcObject
+        var deptCodeStr = Utils.getUserYAPAutoCode();
         FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getKcAndCc", {
-                "xmId": self.xmId
+                "xmId": self.xmId,
+                "deptCodeStr": deptCodeStr
             }, false, false, function (data) {
                 //处理数据
                 if (data !== "") {
@@ -1079,8 +1136,12 @@ var KcObject = {
         $kcInfoTbody.append($bodyTr);
     },
 
+    reloadCCInfo: function () {
+        this.setCcInfo(this.currentCc, this.currentParentKc, this.currentType);
+    },
 
     _setCcInfoType: function (type) {
+        this.currentType = type;
         this.setCcInfo(this.currentCc, this.currentParentKc, type);
     },
     /**
@@ -1163,31 +1224,31 @@ var KcObject = {
             this.setZwForView(sjId);
 
         } else if (type === 'list') {
-
-            $kcTip.append('<div style="margin:0 10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>');
-            var $remove = jQuery('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-up" style="color:green;"></i><span>移出</span></div>');
-            $remove.bind('click', function () {
-                var $trs = Utils.getTableTbodyCheckedTrs("kcInfo");
-                var idStr = '';
-                for (var i = 0; i < $trs.length; i++) {
-                    var $tr = $trs[i];
-                    var id = $tr.attr('id');
-                    idStr += ',' + id;
-                }
-                idStr.substring(1, idStr.length);
-                FireFly.doAct("TS_XMGL_KCAP_YAPZW", "delete", {_PK_: idStr}, false, false, function (data) {
-                    if (data._MSG_.indexOf("ERROR") >= 0) {
-                        //后端错误
-                    } else {
-                        self.setZwListContent(sjId, $kcInfoTbody);
-                        KsObject.search();
+            if (Utils.getCanDraggable()) {
+                $kcTip.append('<div style="margin:0 10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>');
+                var $remove = jQuery('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-up" style="color:green;"></i><span>移出</span></div>');
+                $remove.bind('click', function () {
+                    var $trs = Utils.getTableTbodyCheckedTrs("kcInfo");
+                    var idStr = '';
+                    for (var i = 0; i < $trs.length; i++) {
+                        var $tr = $trs[i];
+                        var id = $tr.attr('id');
+                        idStr += ',' + id;
                     }
+                    idStr.substring(1, idStr.length);
+                    FireFly.doAct("TS_XMGL_KCAP_YAPZW", "delete", {_PK_: idStr}, false, false, function (data) {
+                        if (data._MSG_.indexOf("ERROR") >= 0) {
+                            //后端错误
+                        } else {
+                            self.setZwListContent(sjId, $kcInfoTbody);
+                            KsObject.search();
+                        }
+                    });
                 });
-            });
-            $kcTip.append($remove);
-            $kcTip.append('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-down" style="color:green;" aria-hidden="true"></i><span>添加</span></div>');
-            $kcTip.append('<div style="margin-right:10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>');
-
+                $kcTip.append($remove);
+                $kcTip.append('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-down" style="color:green;" aria-hidden="true"></i><span>添加</span></div>');
+                $kcTip.append('<div style="margin-right:10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>');
+            }
             // $kcTip.append([
             //     '<div style="margin:0 10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>',
             //     '<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-up" style="color:green;"></i><span>移出</span></div>',
@@ -1290,47 +1351,53 @@ var KcObject = {
         // $zw.attr('yapzwId', yapzwId);
         $zw.find('.userName').html(userName);
         $zw.attr('shId', shId);
-//            $zw.droppable("destroy");
-        $zw.droppable("disable");
         $zw.css('background', '#c4ffb3');
-        var $span = jQuery('<span class="close">x</span>');
-        $span.unbind('click').bind('click', function () {
-            FireFly.doAct("TS_XMGL_KCAP_YAPZW", "delete", {_PK_: yapzwId}, false, false, function (data) {
-                if (data._MSG_.indexOf("ERROR") >= 0) {
-                    //后端错误
-                } else {
-                    var $zw = $('#' + zwId);
-                    $zw.removeAttr('shId');
-                    $zw.droppable("enable");
-                    $zw.draggable("disable");
+
+        if (Utils.getCanDraggable()) {
+            //允许拖拉设置拖拉事件
+            $zw.droppable("disable");
+            //$zw.droppable("destroy");
+            var $span = jQuery('<span class="close">x</span>');
+            $span.unbind('click').bind('click', function () {
+                FireFly.doAct("TS_XMGL_KCAP_YAPZW", "delete", {_PK_: yapzwId}, false, false, function (data) {
+                    if (data._MSG_.indexOf("ERROR") >= 0) {
+                        //后端错误
+                    } else {
+                        var $zw = $('#' + zwId);
+                        $zw.removeAttr('shId');
+                        $zw.droppable("enable");
+                        $zw.draggable("disable");
 //                    self.addDroppableEvent($zw);
-                    $zw.find('.userName').html('');
-                    $zw.find('.close').remove();
-                    $zw.css('background', '');
-                    KsObject.search();
+                        $zw.find('.userName').html('');
+                        $zw.find('.close').remove();
+                        $zw.css('background', '');
+                        KsObject.search();
+                    }
+                });
+            });
+            $zw.append($span);
+
+            $zw.draggable({
+                // cursor: 'move',
+                cursorAt: {left: 0, top: 0},
+                containment: 'body',
+                appendTo: 'body',
+                helper: function (event) {
+                    return '<div>' + $zw.find('.userName').html() + '</div>';
+                    // var cells = event.currentTarget.cells;
+                    // return [
+                    //     '<div style="/*width:30px;height: 30px;*/border:1px solid #999999;background-color: #91BDEA;">',//
+                    //     '   <div>' + cells[6].innerText + '</div>',
+                    //     '   <div>' + cells[7].innerText + '</div>',
+                    //     '   <div>' + cells[11].innerText + '</div>',
+                    //     '</div>'
+                    // ].join('');
                 }
             });
-        });
-        $zw.append($span);
+            $zw.draggable("enable");
 
-        $zw.draggable({
-            // cursor: 'move',
-            cursorAt: {left: 0, top: 0},
-            containment: 'body',
-            appendTo: 'body',
-            helper: function (event) {
-                return '<div>' + $zw.find('.userName').html() + '</div>';
-                // var cells = event.currentTarget.cells;
-                // return [
-                //     '<div style="/*width:30px;height: 30px;*/border:1px solid #999999;background-color: #91BDEA;">',//
-                //     '   <div>' + cells[6].innerText + '</div>',
-                //     '   <div>' + cells[7].innerText + '</div>',
-                //     '   <div>' + cells[11].innerText + '</div>',
-                //     '</div>'
-                // ].join('');
-            }
-        });
-        $zw.draggable("enable");
+        }
+
     },
 
 
@@ -1338,55 +1405,63 @@ var KcObject = {
      * 为座位添加拖拉放置事件
      **/
     addDroppableEvent: function ($element) {
-        var self = this;
-        $element.droppable({
-            activeClass: "droppable-active",//"ui-state-default",  droppable-active
-            hoverClass: "droppable-hover",//"ui-state-hover",  droppable-hover
-            drop: function (event, ui) {
+        if (Utils.getCanDraggable()) {
+            //允许拖拉
+            var self = this;
+            $element.droppable({
+                activeClass: "droppable-active",//"ui-state-default",  droppable-active
+                hoverClass: "droppable-hover",//"ui-state-hover",  droppable-hover
+                drop: function (event, ui) {
 //                    ccId;
-                //YAPZW_ID
+                    //YAPZW_ID
 //                    CC_ID
 //                    ZW_ID
 //                    KC_ID
 //                    SH_ID
 //                    SJ_ID
-                var sjid = self.currentCc.SJ_ID;
-                var ccid = self.currentCc.CC_ID;
-                var sjCC = self.currentCc.SJ_CC;
-                var sjDate = self.currentCc.ccTime;
-                var kcid = self.currentParentKc.KC_ID;
-                var shId = $(ui.draggable[0]).attr('shId');
-                var zwId = $(this).attr('id');
-                // var userCode = ui.draggable[0].cells[11].innerText.trim();
+                    var sjid = self.currentCc.SJ_ID;
+                    var ccid = self.currentCc.CC_ID;
+                    var sjCC = self.currentCc.SJ_CC;
+                    var sjDate = self.currentCc.ccTime;
+                    var kcid = self.currentParentKc.KC_ID;
+                    var shId = $(ui.draggable[0]).attr('shId');
+                    var zwId = $(this).attr('id');
+                    // var userCode = ui.draggable[0].cells[11].innerText.trim();
 
-                //从座位移动到座位 删除原来的
-                $(ui.draggable[0]).find('.close').click();
-                var _this = this;
-                FireFly.doAct("TS_XMGL_KCAP_YAPZW", 'saveBean', {
-                    ZW_ID: zwId,
-                    SJ_ID: sjid,
-                    SJ_CC: sjCC,
-                    SJ_DATE: sjDate,
-                    CC_ID: ccid,
-                    KC_ID: kcid,
-                    SH_ID: shId,
-                    XM_ID: self.xmId
-                }, false, false, function (data) {
-                    if (data._MSG_.indexOf("ERROR") >= 0) {
-                        //后端错误
-                    } else {
-                        self.currentYapzwArr.push(data);
-                        self.setZwItemForView(data.YAPZW_ID);
+                    //从座位移动到座位 删除原来的
+                    $(ui.draggable[0]).find('.close').click();
+                    var _this = this;
+                    FireFly.doAct("TS_XMGL_KCAP_YAPZW", 'saveBean', {
+                        ZW_ID: zwId,
+                        SJ_ID: sjid,
+                        SJ_CC: sjCC,
+                        SJ_DATE: sjDate,
+                        CC_ID: ccid,
+                        KC_ID: kcid,
+                        SH_ID: shId,
+                        XM_ID: self.xmId
+                    }, false, false, function (data) {
+                        if (data._MSG_.indexOf("ERROR") >= 0) {
+                            //后端错误
+                        } else {
+                            self.currentYapzwArr.push(data);
+                            self.setZwItemForView(data.YAPZW_ID);
+                            $(ui.draggable[0]);
+                            if (ui.draggable[0].tagName === 'TR') {
+                                //非列表拖拉进来的 不刷新考生列表
+                                KsObject.search();
+                            }
 //                        $(_this).find(".userName").html(ui.draggable[0].cells[6].innerText);
-                    }
-                });
-                KsObject.search();
+                        }
+                    });
+
 //                    var inventor = ui.draggable.text();
 //                    $(this).find("input").val(inventor);
 //                    $(c.tr).remove();
 //                    $(c.helper).remove();
-            }
-        });
+                }
+            });
+        }
     }
 };
 
@@ -1659,23 +1734,25 @@ var KsObject = {
         Utils.addTableCheckboxChangeEvent('ksTable');
         $('#ksTablePage').css('display', 'block');
 
-        $ksTable.find("tbody tr").draggable({
-            // cursor: 'move',
-            cursorAt: {left: 33, top: 55},
-            containment: 'body',
-            appendTo: 'body',
-            helper: function (event) {
-                var cells = event.currentTarget.cells;
-                return [
-                    '<div style="/*width:30px;height: 30px;*/border:1px solid #999999;background-color: #91BDEA;">',//
-                    '   <div>' + cells[6].innerText + '</div>',
-                    '   <div>' + cells[7].innerText + '</div>',
-                    '   <div>' + cells[11].innerText + '</div>',
-                    '</div>'
-                ].join('');
-            },
-        });
-
+        if (Utils.getCanDraggable()) {
+            //允许拖拉
+            $ksTable.find("tbody tr").draggable({
+                // cursor: 'move',
+                cursorAt: {left: 33, top: 55},
+                containment: 'body',
+                appendTo: 'body',
+                helper: function (event) {
+                    var cells = event.currentTarget.cells;
+                    return [
+                        '<div style="/*width:30px;height: 30px;*/border:1px solid #999999;background-color: #91BDEA;">',//
+                        '   <div>' + cells[6].innerText + '</div>',
+                        '   <div>' + cells[7].innerText + '</div>',
+                        '   <div>' + cells[11].innerText + '</div>',
+                        '</div>'
+                    ].join('');
+                },
+            });
+        }
     },
 
     search: function () {
@@ -1736,6 +1813,47 @@ var KsObject = {
 };
 
 var Utils = {
+
+    _canDraggable: undefined,//是否允许拖拉安排考生 外部获取请使用getCanDraggable方法
+
+    /**
+     * 是否允许拖拉安排考位
+     */
+    getCanDraggable: function (reloadFlag) {
+
+        if (this._canDraggable === undefined || reloadFlag) {
+            this._canDraggable = false;
+
+            var deptCodeStr = this.getUserYAPAutoCode();
+            var split = deptCodeStr.split(',');
+            for (var i = 0; i < split.length; i++) {
+                var itemDeptCode = split[i];
+                if (itemDeptCode !== '') {
+                    var queryBean = FireFly.doAct("TS_XMGL_KCAP_TJJL", "query", {
+                        '_NOPAGE_': true,
+                        '_extWhere': " and TJ_DEPT_CODE ='" + itemDeptCode + "' and XM_ID ='" + xmId + "'"
+                    });
+                    this._canDraggable = queryBean._DATA_.length <= 0;
+                }
+            }
+        }
+        return this._canDraggable;
+    },
+
+    /**
+     * 获取当前登录用户考位安排权限
+     * @returns {*}
+     */
+    getUserYAPAutoCode: function () {
+        var userPvlg = FireFly.getUserPvlg(System.getUser("USER_CODE"));
+        var code;
+        try {
+            code = userPvlg.TS_XMGL_KCAP_YAPZW_PVLG.auto.ROLE_DCODE;
+        } catch (e) {
+            code = '';
+        }
+        return code;
+    },
     /**
      * 表格添加全选/全不选功能（复选框）
      * @param tableId table id
