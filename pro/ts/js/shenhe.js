@@ -258,7 +258,7 @@ function firall(){
 									$(this.parentNode.parentNode).css("background-color", color);
 								}
 							});
-							 alert("请查看审核级数您的上级已审核您没有审核此数据的权利");
+							 alert("您无权修改上级审核结果！");
 							 flag=true;
 							 return;
 						 

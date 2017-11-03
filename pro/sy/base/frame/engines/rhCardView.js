@@ -177,7 +177,7 @@ rh.vi.cardView.prototype.show = function(drag) {
  * 小卡片拖拽
  */
 rh.vi.cardView.prototype.drag = function() {
-	$(".ui-dialog").draggable({handle:".ui-widget-header", containment: "body", scroll: false });
+	/*$(".ui-dialog").draggable({handle:".ui-widget-header", containment: "body", scroll: false });*/
 };
 
 /*
@@ -618,7 +618,7 @@ rh.vi.cardView.prototype._bldWin = function() {
     this.winDialog.dialog("open");
     this.winDialog.parent().addClass("rh-ui-dialog").addClass("bodyBack"); 
     //定位
-    this.winDialog.parent().css("position","absolute");
+    this.winDialog.parent().css("position","fixed");
     this.winDialog.parent().css("top","30px");
     if (this.miniCard) {//小卡片设置区分边框
     	this.winDialog.addClass("rh-ui-dialog-mini-border");

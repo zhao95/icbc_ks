@@ -298,21 +298,25 @@ public class FlowServ extends CommonServ {
 				String str = bean2.getStr("NODE_ID");
 				List<Bean> finds = ServDao.finds("TS_WFS_BMSHLC", "and NODE_ID='"+str+"'");
 				for (Bean bean : finds) {
-					if(bean.getStr("DEPT_CODE").equals("0010100000")){
-						s+=bean.getStr("SHR_USERCODE")+",";
-						node_name = bean2.getStr("NODE_NAME");
-						continue;
-					}
-					if(bean.getStr("DEPT_CODE").equals(userBean.getDeptCode())){
-						s+=bean.getStr("SHR_USERCODE")+",";
-						node_name = bean2.getStr("NODE_NAME");
-						continue;
-					}
-					List<DeptBean> childDepts = OrgMgr.getChildDepts(bean2.getStr("S_CMPY"), bean.getStr("DEPT_CODE"));
-					for (DeptBean deptBean : childDepts) {
-						if(deptBean.getCode().equals( userBean.getDeptCode())){
+					String dept_code = bean.getStr("DEPT_CODE");
+					String[] split = dept_code.split(",");
+					for (String string : split) {
+						if(string.equals("0010100000")){
 							s+=bean.getStr("SHR_USERCODE")+",";
 							node_name = bean2.getStr("NODE_NAME");
+							break;
+						}
+						if(string.equals(userBean.getDeptCode())){
+							s+=bean.getStr("SHR_USERCODE")+",";
+							node_name = bean2.getStr("NODE_NAME");
+							break;
+						}
+						List<DeptBean> childDepts = OrgMgr.getChildDepts(bean2.getStr("S_CMPY"), string);
+						for (DeptBean deptBean : childDepts) {
+							if(deptBean.getCode().equals(userBean.getDeptCode())){
+								s+=bean.getStr("SHR_USERCODE")+",";
+								node_name = bean2.getStr("NODE_NAME");
+							}
 						}
 					}
 				}

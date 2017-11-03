@@ -461,7 +461,7 @@ if(userBean != null) {
 				
 				</div>
 				<div class="modal-footer" style="text-align:center;height:50px">
-					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;margin-top:-10px;font-size:16px;height:35px;width:80px" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;margin-top:-10px;font-size:16px;height:35px;width:80px" data-dismiss="modal">关闭</button>
 				</div>
 				
 			</div><!-- /.modal-content -->
