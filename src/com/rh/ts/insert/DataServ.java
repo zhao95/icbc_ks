@@ -292,6 +292,7 @@ public class DataServ extends CommonServ {
 		
 		if(odeptlist!=null&&odeptlist.size()!=0){
 			int ipi =1;
+			int bianhao = 1;
 			for (Bean bean2 : odeptlist) {
 				String ip = "172."+ ipi;
 				
@@ -305,7 +306,8 @@ public class DataServ extends CommonServ {
 					for(int i=0;i<4;i++){
 						Bean bean = new Bean();
 						int j=i+1;
-						
+						//考场编号
+						String kc_code = "AH10000"+bianhao;
 						String kcname = bean2.getStr("DEPT_NAME");
 						String KCNAME = kcname.substring(0, 2)+"一级考场";
 						String address = kcname.substring(0, 2)+"市区";
@@ -322,6 +324,7 @@ public class DataServ extends CommonServ {
 						bean.set("SERV_ID","TS_KCGL");
 						bean.set("KC_STATE2",0);
 						bean.set("CTLG_PCODE",bean2.getStr("DEPT_CODE"));
+						bean.set("KC_CODE", kc_code);
 					Bean kcbean = ServDao.create("TS_KCGL", bean);
 						String kcid =kcbean.getId();
 						//本部下关联机构
@@ -379,9 +382,11 @@ public class DataServ extends CommonServ {
 						ipscopebean.set("KC_ID", kcid);
 						ipscopebean.set("IPS_SCOPE",first+"——"+last);
 						ServDao.save("ts_kcgl_ipscope", ipscopebean);
+						bianhao++;
 					}
 					ipi++;
 				}else{
+					String kc_code = "AH10000"+bianhao;
 					//二级
 					String dept_name = bean2.getStr("DEPT_NAME");
 					String KCNAME = dept_name.substring(0, dept_name.length()-2)+"二级考场";
@@ -401,6 +406,7 @@ public class DataServ extends CommonServ {
 						bean.set("SERV_ID","TS_KCGL");
 						bean.set("KC_STATE2",0);
 						bean.set("CTLG_PCODE",bean2.getStr("DEPT_CODE"));
+						bean.set("KC_CODE", kc_code);
 						Bean kcbean = ServDao.create("TS_KCGL", bean);
 						String kcid =kcbean.getId();
 						//分行下
@@ -453,6 +459,7 @@ public class DataServ extends CommonServ {
 						ipscopebean.set("KC_ID", kcid);
 						ipscopebean.set("IPS_SCOPE",first+"——"+last);
 						ServDao.save("ts_kcgl_ipscope", ipscopebean);
+						bianhao++;
 					}
 			
 			}

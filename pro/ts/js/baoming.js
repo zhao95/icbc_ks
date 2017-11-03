@@ -836,7 +836,7 @@ function selectcreate(){
 		  yanzh(obj); 
 		},1000);*/
 	  yanzh(obj); 
-		var opts = {
+		/*var opts = {
 				  lines: 12, // The number of lines to draw
 				  length: 10, // The length of each line
 				  width: 16, // The line thickness
@@ -854,7 +854,7 @@ function selectcreate(){
 				  left: 'auto' // Left position relative to parent in px
 				};
 				var target = document.getElementById('loadiv');
-				var spinner = new Spinner(opts).spin(target);
+				var spinner = new Spinner(opts).spin(target);*/
 				$("#loading").modal("show");
   }
 function yanzh(obj){
