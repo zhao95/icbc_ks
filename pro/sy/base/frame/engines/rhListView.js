@@ -1866,7 +1866,7 @@ rh.vi.listView.prototype._bldNavTree = function() {
 	       _self.navTreeContainer.hover(
 	    	   function(event) {
 		    	   if (jQuery(".content-navTree-close").length == 0) {
-		    		   var close = jQuery("<div></div>").addClass("content-navTree-close").appendTo(jQuery(this));
+		    		 /*  var close = jQuery("<div></div>").addClass("content-navTree-close").appendTo(jQuery(this));*/
 		    		   close.bind("click",function(event) {
 		    			   if (jQuery(".content-navTree-close").hasClass("content-navTree-expand")) {
 		    				   _self.navTreeContainer.width(_self.navTreeContainer.data("orWid")-1);
