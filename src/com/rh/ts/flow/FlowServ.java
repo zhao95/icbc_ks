@@ -307,7 +307,7 @@ public class FlowServ extends CommonServ {
 						node_name = bean2.getStr("NODE_NAME");
 						continue;
 					}
-					List<DeptBean> childDepts = OrgMgr.getChildDepts(bean2.getStr("CMPY_CODE"), bean.getStr("DEPT_CODE"));
+					List<DeptBean> childDepts = OrgMgr.getChildDepts(bean2.getStr("S_CMPY"), bean.getStr("DEPT_CODE"));
 					for (DeptBean deptBean : childDepts) {
 						if(deptBean.getCode().equals( userBean.getDeptCode())){
 							s+=bean.getStr("SHR_USERCODE")+",";

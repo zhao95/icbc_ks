@@ -210,7 +210,6 @@ public class OrgMgr {
         condition.append("%'");
         condition.append("and DEPT_CODE != '" + deptCode + "'");
         condition.append("and S_FLAG != '3' ");
-        condition.append("and ODEPT_CODE = '").append(deptBean.getODeptCode()).append("'");
         
         Bean paramBean = new Bean();
         paramBean.set(Constant.PARAM_WHERE, condition.toString());
