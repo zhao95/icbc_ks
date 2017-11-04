@@ -170,7 +170,7 @@ jQuery(document).ready(function(){
 				"_WHERE_":" and START_DATE like '"+tDate+"%' or END_DATE like '"+tDate+"%' or (CAL_TYPE=2 and CAL_MONTH='"+tDate+"')",
 				"_ORDER_":"START_DATE,END_DATE"
 			};
-			var rtn = FireFly.doAct("TS_KS_CAL","finds",params,false);
+			var rtn = FireFly.doAct("TS_KS_CAL","query",params,false);
 			return rtn._DATA_;
 		} 
 		return [];

@@ -428,30 +428,7 @@
 							<!-- /.box-header -->
 							<div class="box-body no-padding" style="margin-bottom: 10px; min-height: 180px;">
 								<table class="table no-border">
-									<tr>
-										<td>
-											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #398daf;">
-												●
-											</span>
-											关于使用正规浏览器...</td>
-										<td>2017-05-31</td>
-									</tr>
-									<tr>
-										<td>
-											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #b4dbc0;">
-												●
-											</span>
-											个人对公初级专业资...</td>
-										<td>2017-05-21</td>
-									</tr>
-									<tr>
-										<td>
-											<span style="width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;color: #ff0000;">
-												●
-											</span>
-											综合中级专业资格认</td>
-										<td>2017-05-11</td>
-									</tr>
+								<tbody></tbody>
 								</table>
 							</div>
 							<!-- /.box-body -->
