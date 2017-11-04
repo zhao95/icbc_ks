@@ -39,7 +39,7 @@ public class ArrangeSeat {
 		}
 
 		// 考生人数少于机器数一半时，考生左右间隔不低于1个座位，前后不低于1个
-		if (res.getRuleBean().containsKey(KcapRuleEnum.R006)) {
+		if (res.getRuleBean().containsKey(KcapRuleEnum.R006.getCode())) {
 
 			arrangeR006(res);
 		}
