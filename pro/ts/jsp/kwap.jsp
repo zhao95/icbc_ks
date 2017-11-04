@@ -360,9 +360,9 @@
             <div class="modal-body" style="padding: 24px;">
                 <div class="row">
                     <div class="col-sm-12">
-                        机构数：<span style="color: red">23</span>
-                        已提交：<span style="color: red">20</span>
-                        未提交：<span style="color: red">3</span>
+                        机构数：<span id="totalCount" style="color: red">23</span>
+                        已提交：<span id="hasCount" style="color: red">20</span>
+                        未提交：<span id="noCount" style="color: red">3</span>
                     </div>
                     <div class="col-sm-12">
                         <table id="submissionArrangement-table" class="table table-border">
@@ -475,19 +475,26 @@
             </div>
             <div class="modal-body" style="padding: 24px;">
                 <div class="row">
-                    <div class="col-sm-12">
-                        <div class="rhSearch-button">
-                            <div class="rhSearch-inner">查询</div>
-                        </div>
-                        <div style="float: right;">
-                            <select id="org-direction" title="">
-                                <option value="forward">向前</option>
-                                <option value="back">向后</option>
-                            </select>
-                        </div>
+                    <div class="col-sm-6">
+                        <input id="select-org-tree-search-name" type="text" title=""
+                               class="form-control">
+                        <%-- <button id="select-org-tree-search" class="btn btn-default" value="查询"
+                                 style="margin:5px;float:left;background:linear-gradient(180deg,rgb(123,202,249)0%,rgb(136,218,236)2%,rgba(148,221,245,1)3%,rgb(75,189,239)93%,rgb(91,200,218)96%,rgb(155,214,243)100%);background-color:#5bc8da;color:#fff;padding:2px 11px;">
+                             查询
+                         </button>--%>
+                        <%-- <div class="rhSearch-button">
+                             <div class="rhSearch-inner">查询</div>
+                         </div>--%>
                     </div>
-                    <div class="col-sm-12 _scrollbar" style="height: 300px;overflow-y: scroll;">
-                        <div id="selectOrg-tree">
+                    <div class="col-sm-6">
+                        <select id="org-direction" title="" class="form-control" style="float: right;max-width: 82px;">
+                            <option value="forward">靠前</option>
+                            <option value="back">靠后</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-12 ">
+                        <div id="selectOrg-tree" style="height: 300px;overflow-y: scroll;margin-top: 9px;"
+                             class="_scrollbar">
                             <div class="content-navTree" style="border: none;"></div>
                         </div>
                     </div>
@@ -683,7 +690,7 @@
 <script type="text/javascript">
     var xmId = '<%=xmId%>';
     $(function () {
-        initData();
+        initData(xmId);
     });
 </script>
 
