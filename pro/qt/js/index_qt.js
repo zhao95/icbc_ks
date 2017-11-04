@@ -45,6 +45,7 @@ function showMenu() {
      param["nowpage"]= 1;
      var act = FireFly.doAct("TS_XMGL", "getUncheckList", param);
      var list = act.alllist;
+     //查询是否有待审核的数据
 	if (data.menuList.length > 0) {
 		for (var i = 0; i < data.menuList.length; i++) {
 //			debugger;
@@ -52,11 +53,39 @@ function showMenu() {
 			    	 //不显示
 				  continue;
 			     }
-			$(".sidebar-menu")
-					.append(
-							'<li><a href="'+data.menuList[i].MENU_URL+'" target="blank"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
-									+ data.menuList[i].MENU_NAME
-									+ '</span></a></li>');
+			  if(data.menuList[i].MENU_NAME=="报名审核"){
+				  //报名审核 数据  是否有 待审核的数据
+				  var xmids = "";
+				  for(var j=0;j<list.length;j++){
+					  xmids+=list[j].XM_ID+",";
+				  }
+				  var paramstay = {};
+				  paramstay["ids"]=xmids;
+				 var result =  FireFly.doAct("TS_BMSH_STAY","getStayList",paramstay);
+				  if(result.flag!="true"){
+					  //有待审核的数据
+					  $(".sidebar-menu")
+						.append(
+								'<li><a href="'+data.menuList[i].MENU_URL+'" target="blank"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
+										+ data.menuList[i].MENU_NAME
+										+ '</span></a></li>');
+				  }else{
+					 var num =  result.num
+					  //有需要 审核的数据  <span class="label label-warning" id="tipSum">0</span>
+					  $(".sidebar-menu")
+						.append(
+								'<li><a href="'+data.menuList[i].MENU_URL+'" target="blank"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
+										+ data.menuList[i].MENU_NAME
+										+ '</span><span class="label label-warning" id="tipSum">'+num+'</span></a></li>');
+				  }
+			  }else{
+				  
+				  $(".sidebar-menu")
+				  .append(
+						  '<li><a href="'+data.menuList[i].MENU_URL+'" target="blank"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
+						  + data.menuList[i].MENU_NAME
+						  + '</span></a></li>');
+			  }
 		}
 	}
 }

@@ -44,7 +44,7 @@ public class DataServ extends CommonServ {
 		int a = 0;
 		List<Bean> DEPTLIST = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE '%0130100000%' and DEPT_LEVEL =3");
 		for (Bean bean : DEPTLIST) {
-			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,150" );
+			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,10" );
 			if(finds2!=null&&finds2.size()!=0){
 				
 				//向报名列表中插数据
@@ -86,7 +86,7 @@ public class DataServ extends CommonServ {
 					for (Bean kslbkbean : kslbklist) {
 						Bean beans = new Bean();
 						
-						String ks_time = kslbkbean.getStr("KSLBK_TIME");
+						String ks_time = kslbkbean.getStr("KSLB_TIME");
 						beans.set("BM_YIYI_STATE", 0);
 						beans.set("RZ_YEAR", "");
 						beans.set("BM_CODE", userBean.getId());
@@ -164,7 +164,7 @@ public class DataServ extends CommonServ {
 			
 		List<Bean> DEPTLIST1 = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE '%0020000000%' AND DEPT_LEVEL =3");
 		for (Bean bean : DEPTLIST1) {
-			List<Bean> finds3 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,150" );
+			List<Bean> finds3 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,10" );
 			if(finds3!=null&&finds3.size()!=0){
 				
 				//向报名列表中插数据
@@ -206,7 +206,7 @@ public class DataServ extends CommonServ {
 					for (Bean kslbkbean : kslbklist) {
 						Bean beans = new Bean();
 						
-						String ks_time = kslbkbean.getStr("KSLBK_TIME");
+						String ks_time = kslbkbean.getStr("KSLB_TIME");
 						beans.set("BM_YIYI_STATE", 0);
 						beans.set("RZ_YEAR", "");
 						beans.set("BM_CODE", userBean.getId());

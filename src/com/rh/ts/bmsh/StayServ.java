@@ -1010,5 +1010,70 @@ public class StayServ extends CommonServ {
 		out.set("allnum", list.size()+list1.size()+list2.size());
 		return out;
 	}
-
+	/**
+	 * 审核人是否有需要审核的数据提醒
+	 */
+	public OutBean getStayList(Bean paramBean){
+		String str = paramBean.getStr("ids");
+		String[] split = str.split(",");
+		UserBean userBean = Context.getUserBean();
+		String user_code = userBean.getCode();
+		List<Bean> list = new ArrayList<Bean>();
+		for (String string : split) {
+			if(!"".equals(string)){
+				//当前审核人 待审核的数据
+				List<Bean> list1 = ServDao.finds("TS_BMSH_STAY", "AND XM_ID='"+string+"'");
+				
+				for (Bean bean : list1) {
+					String other = bean.getStr("SH_OTHER");
+					if (other.contains(user_code)) {
+						list.add(bean);
+					}
+				}
+				
+				
+			}
+		}
+		OutBean out = new OutBean();
+		if(list.size()==0){
+			out.set("num", 0);
+			return  out.set("flag", "false");
+		}else{
+			out.set("num", list.size());
+			return out.set("flag", "true");
+		}
+		
+	}
+	
+	/**
+	 * 审核人需要审核的数据提醒（一个项目下）
+	 */
+	public OutBean getsingxmnum(Bean paramBean){
+		String str = paramBean.getStr("xmid");
+		UserBean userBean = Context.getUserBean();
+		String user_code = userBean.getCode();
+		List<Bean> list = new ArrayList<Bean>();
+			if(!"".equals(str)){
+				//当前审核人 待审核的数据
+				List<Bean> list1 = ServDao.finds("TS_BMSH_STAY", "AND XM_ID='"+str+"'");
+				
+				for (Bean bean : list1) {
+					String other = bean.getStr("SH_OTHER");
+					if (other.contains(user_code)) {
+						list.add(bean);
+					}
+				
+				
+		}
+			}
+		OutBean out = new OutBean();
+		if(list.size()==0){
+			out.set("num", 0);
+			return  out.set("flag", "false");
+		}else{
+			out.set("num", list.size());
+			return out.set("flag", "true");
+		
+	}
+}
 }
