@@ -197,6 +197,8 @@ public class DapccServ extends CommonServ {
         String roleDeptCode = paramBean.getStr("deptCodeStr");
         List<Object> values = new ArrayList<>();
         values.add(xmId);
+
+        //根据用户权限code（deptCodeStr）过滤考场
         String[] splitDeptCode = roleDeptCode.split(",");
         StringBuilder deptBuilder = new StringBuilder("and ( ");
         for (String deptCode : splitDeptCode) {

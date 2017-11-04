@@ -224,7 +224,7 @@ ListPage.prototype.bldPage = function () {
 };
 
 
-function initData() {
+function initData(xmId) {
     var deptCodeStr = Utils.getUserYAPAutoCode();
     var split = deptCodeStr.split(',');
     for (var i = 0; i < split.length; i++) {
@@ -246,6 +246,7 @@ function initData() {
     }
     bindHeaderAction(xmId);
     ZdfpccModal.initData(xmId);
+    SubmissionArrangementModal.initData(xmId);
     KcObject.initData(xmId);
     KsObject.initData(xmId);
 }
@@ -268,7 +269,6 @@ function bindHeaderAction(xmId) {
     }
 
     $("#zdfpcc").click(function () {
-//        debugger;
         $('#zdfpccModal').modal({backdrop: false, show: true});
     });
 
@@ -294,11 +294,19 @@ function bindHeaderAction(xmId) {
     //提交确定按钮事件
     $("#tjccapModal").find('button[class="btn btn-success"]').bind('click', function () {
         var deptCodeStr = Utils.getUserYAPAutoCode();
-        var split = deptCodeStr.split(',');
-        for (var i = 0; i < split.length; i++) {
-            var itemDeptCode = split[i];
+        var deptCodes = deptCodeStr.split(',');
+        deptCodes = Utils.arrayUnique(deptCodes.concat(KcObject.getAllKcODeptCode()));
+        for (var i = 0; i < deptCodes.length; i++) {
+            var itemDeptCode = deptCodes[i];
             if (itemDeptCode !== '') {
-                FireFly.doAct('TS_XMGL_KCAP_TJJL', 'save', {TJ_DEPT_CODE: itemDeptCode, XM_ID: xmId});
+                //避免重复提交 保存前先查询
+                var queryBean = FireFly.doAct("TS_XMGL_KCAP_TJJL", "query", {
+                    '_NOPAGE_': true,
+                    '_extWhere': " and TJ_DEPT_CODE ='" + itemDeptCode + "' and XM_ID ='" + xmId + "'"
+                });
+                if (queryBean._DATA_.length <= 0) {
+                    FireFly.doAct('TS_XMGL_KCAP_TJJL', 'save', {TJ_DEPT_CODE: itemDeptCode, XM_ID: xmId}, false);
+                }
             }
         }
         Utils.getCanDraggable(true);
@@ -418,8 +426,9 @@ var ZdfpccModal = {
                 var $item = jQuery([
                     '<div class="checkbox">',
                     '   <label>',
-                    '     <input id="' + setting.GZ_ID + '" type="checkbox" '
-                    + (setting.checked ? 'checked ' : ' ') + (setting.disabled ? 'disabled ' : ' ') + '>' + setting.GZ_NAME,
+                    '       <input id="' + setting.GZ_ID + '" type="checkbox" '
+                    + (setting.checked ? 'checked ' : ' ') + (setting.disabled ? 'disabled ' : ' ') + '>',
+                    '       <span class="setting-name">' + setting.GZ_NAME + '</span>',
                     '   </label>',
                     '</div>'
                 ].join(''));
@@ -428,6 +437,17 @@ var ZdfpccModal = {
                     //特定机构考生场次靠后安排
                     var settingOrgIndex = i;
                     var settingOrg = self.settingArray[settingOrgIndex];
+                    if (!settingOrg.GZ_VALUE2) {
+                        settingOrg.GZ_VALUE2 = '{"values":"","direction":"back"}';
+                    }
+                    var settingOrgValue2Obj = JSON.parse(settingOrg.GZ_VALUE2);
+                    var $itemSettingName = $item.find('.setting-name');
+                    if (settingOrgValue2Obj.direction === 'back') {
+                        $itemSettingName.html($itemSettingName.html().replace('前', '后'));
+                    } else {
+                        $itemSettingName.html($itemSettingName.html().replace('后', '前'));
+                    }
+
                     var $btn = jQuery([
                         '   <span style=" position: relative;top: -5px;cursor: pointer;">',
                         '       <span class="rh-icon-img btn-edit"></span>',
@@ -441,6 +461,7 @@ var ZdfpccModal = {
                                 id: data.DEPT_CODE,
                                 text: data.DEPT_NAME,
                                 data: {id: data.DEPT_CODE, text: data.DEPT_NAME},
+                                state: {opened: true},
                                 children: []
                             };
                             var $selectOrgTreeContent = $('#selectOrg-tree').find('.content-navTree');
@@ -482,11 +503,6 @@ var ZdfpccModal = {
                                 }
                             });
 
-                            if (!settingOrg.GZ_VALUE2) {
-                                settingOrg.GZ_VALUE2 = '{"values":"","direction":"back"}';
-                            }
-                            var settingOrgValue2Obj = JSON.parse(settingOrg.GZ_VALUE2);
-
                             if (settingOrgValue2Obj.direction === 'back') {
                                 $("#org-direction").val("back");
                             } else {
@@ -510,10 +526,32 @@ var ZdfpccModal = {
                             selectOrgModal.find('button[class="btn btn-success"]').unbind('click').bind('click', function () {
                                 settingOrgValue2Obj.values = $selectOrgTreeContent.jstree("get_checked").join(',');
                                 settingOrgValue2Obj.direction = $("#org-direction").val();
+                                var $settingName = $('#' + settingOrg.GZ_ID).parent().find('.setting-name');
+                                if (settingOrgValue2Obj.direction === 'back') {
+                                    $settingName.html($settingName.html().replace('前', '后'));
+                                } else {
+                                    $settingName.html($settingName.html().replace('后', '前'));
+                                }
                                 settingOrg.GZ_VALUE2 = JSON.stringify(settingOrgValue2Obj);
                             });
-                            selectOrgModal.modal({backdrop: false, show: true});
 
+                            //添加选择机构搜索事件
+                            var to = false;
+                            var $treeSearchName = selectOrgModal.find('#select-org-tree-search-name');
+                            // var $treeSearch = selectOrgModal.find('#select-org-tree-search');
+                            var searchF = function () {
+                                if (to) {
+                                    clearTimeout(to);
+                                }
+                                to = setTimeout(function () {
+                                    var v = $treeSearchName.val();
+                                    $selectOrgTreeContent.jstree(true).search(v, false, true);
+                                }, 250);
+                            };
+                            // $treeSearch.unbind('click').bind('click', searchF);
+                            $treeSearchName.unbind('keyup').bind('keyup', searchF);
+
+                            selectOrgModal.modal({backdrop: false, show: true});
                         }
                     );
                     $item.append($btn);
@@ -628,9 +666,11 @@ var ZdfpccModal = {
                         //机构不存在
                     } else {
                         //机构存在，父id为空 ->为总行 获取总行下的所有机构安排考位
-                        var childs = FireFly.getDict('SY_ORG_ODEPT_ALL', itemCode)["0"].CHILD;
-                        for (var j = 0; j < childs.length; j++) {
-                            var child = childs[j];
+                        var ccTreeNodes = KcObject.getCCTreeNodes();
+                        var children = ccTreeNodes[0].children;
+                        // var childs = FireFly.getDict('SY_ORG_ODEPT_ALL', itemCo de)["0"].CHILD;
+                        for (var j = 0; j < children.length; j++) {
+                            var child = children[j];
                             FireFly.doAct("TS_XMGL_KCAP_YAPZW", "doArrangeSeat", {
                                 XM_ID: this.xmId,
                                 ODEPT_CODE: child.ID
@@ -688,22 +728,42 @@ var ZdfpccModal = {
 };
 
 var SubmissionArrangementModal = {
+    xmId: '',
     submissionArrangementModal: '',
-    initData: function () {
+    initData: function (xmId) {
         this.submissionArrangementModal = $('#submissionArrangementModal');
-
-
+        this.xmId = xmId;
     },
-    reloadData: function () {
+    setData: function () {
+        var $arrangementTbody = $('#submissionArrangement-table').find('tbody');
+        $arrangementTbody.html('');
+        var data = this.getData();
+        var dataList = data._DATA_;
 
+        $('#totalCount').html(data.totalCount);
+        $('#hasCount').html(data.hasCount);
+        $('#noCount').html(data.noCount);
+
+        for (var i = 0; i < dataList.length; i++) {
+            var item = dataList[i];
+            $arrangementTbody.append([
+                '<tr>',
+                '   <td>' + ( i + 1) + '</td>',
+                '   <td>' + item.DEPT_NAME + '</td>',
+                '   <td>' + (item.isTj === 'true' ? '已提交' : '<span style="color:red">未提交</span>') + '</td>',
+                '</tr>'
+            ].join(''));
+        }
     },
     getData: function () {
-
+        var userYAPAutoCode = Utils.getUserYAPAutoCode();
+        return FireFly.doAct("TS_XMGL_KCAP_TJJL", "getKcOrgStatus", {
+            XM_ID: this.xmId,
+            pvlgDeptCodeStr: userYAPAutoCode
+        }, false);
     },
     show: function () {
-        if (this.submissionArrangementModal === '') {
-            this.initData();
-        }
+        this.setData();
         this.submissionArrangementModal.modal({backdrop: false, show: true});
     }
 
@@ -882,6 +942,18 @@ var KcObject = {
         }
     },
 
+    /**
+     * 获取所有考场所属机构数组(未去重)
+     */
+    getAllKcODeptCode: function () {
+        var res = [];
+        for (var i = 0; i < this.kcArr.length; i++) {
+            var kc = this.kcArr[i];
+            res.push(kc.KC_ODEPTCODE);
+        }
+        return res;
+    },
+
     getCcById: function (id) {
         var result = null;
         for (var i = 0; i < this.ccArr.length; i++) {
@@ -924,7 +996,7 @@ var KcObject = {
         var dataType = this.getDataType(data);
         switch (dataType) {
             case 'dept':
-                node = {id: data.DEPT_CODE, text: data.DEPT_NAME, data: data, children: []};
+                node = {id: data.DEPT_CODE, text: data.DEPT_NAME, data: data, state: {opened: true}, children: []};
                 break;
             case 'kc':
                 this.kcArr.push(data);
@@ -1530,6 +1602,8 @@ var KsObject = {
         if (this.kcId !== kcId) {
             this.kcId = kcId;
             this.setKsOrgContent(kcId);
+            KsObject.searchDeptCode = ''; //初始化 机构搜索条件
+            KsObject.search();
         }
     },
 
@@ -1579,6 +1653,7 @@ var KsObject = {
                 id: data.DEPT_CODE,
                 text: data.DEPT_NAME,
                 data: {id: data.DEPT_CODE, text: data.DEPT_NAME},
+                state: {opened: true},
                 children: []
             };
             var $ksOrgTreeContent = $('#ksOrgTree').find('.content-navTree');
@@ -1637,60 +1712,6 @@ var KsObject = {
         });
 
     },
-
-    /**
-     * 考生机构
-     */
-//     setKsOrgContent2: function (pdeptCode) {
-//         pdeptCode = pdeptCode ? pdeptCode : '';
-//         var $ksOrgTreeContent = $('#ksOrgTree').find('.content-navTree');
-//         $ksOrgTreeContent.html('');
-//         var data = FireFly.getDict('SY_ORG_ODEPT_ALL', pdeptCode);
-//         var deptName = FireFly.getDictNames(FireFly.getDict('SY_ORG_ODEPT_ALL'), pdeptCode);
-//         var root = {id: pdeptCode, text: deptName, data: {id: pdeptCode, text: deptName}, children: []};
-//
-//         var putChildren = function (parent, childs) {
-//             childs = childs ? childs : [];
-//             for (var i = 0; i < childs.length; i++) {
-//                 var child = childs[i];
-//                 var item = {
-//                     id: child.ID,
-//                     text: child.NAME,
-//                     data: child,
-//                     children: []
-//                 };
-//                 parent.children.push(item);
-//                 putChildren(item, child.CHILD);
-//             }
-//         };
-//
-//         var childs = data[0].CHILD;
-//         putChildren(root, childs);
-//
-//         try {
-//             this.ksOrgTree.jstree('destroy');//已经初始化tree，先destroy
-//         } catch (e) {
-//         }
-//         this.ksOrgTree = $ksOrgTreeContent.jstree({
-//             'core': {
-//                 "multiple": false,
-//                 'data': [root]
-//             }
-//         });
-//
-//         $ksOrgTreeContent.on("changed.jstree", function (e, data) {
-//             var id = data.node.data.id;
-//
-// //                if (data.node.data.KC_ID) {
-// //                    //选中考场
-// //                    self.setKcInfo(data.node.data);
-// //                } else {
-// //                    var parentKcNode = $.jstree.reference(jstree).get_node(data.node.parent);
-// //                    //选中场次
-// //                    self.setCcInfo(data.node.data, parentKcNode.data);
-// //                }
-//         });
-//     },
 
     /**
      * 考生信息
@@ -1818,6 +1839,7 @@ var Utils = {
 
     /**
      * 是否允许拖拉安排考位
+     * @param reloadFlag 是否刷新
      */
     getCanDraggable: function (reloadFlag) {
 
@@ -1942,6 +1964,23 @@ var Utils = {
             dictData.push({ID: dict[codeName], NAME: dict[codeName]});
         }
         return dictData;
+    },
+
+    /**
+     * 数组去重
+     * @param arr 数组
+     * @returns {Array}
+     */
+    arrayUnique: function (arr) {
+        var res = [];
+        var json = {};
+        for (var i = 0; i < arr.length; i++) {
+            if (!json[arr[i]]) {
+                res.push(arr[i]);
+                json[arr[i]] = 1;
+            }
+        }
+        return res;
     }
 
 };
