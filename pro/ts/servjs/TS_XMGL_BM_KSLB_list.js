@@ -34,8 +34,8 @@ function bindCard(){
 }		
 _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
-	var configStr = "TS_XMGL_BM_KSLBK,{'TARGET':'','SOURCE':'KSLBK_NAME~KSLBK_CODE~KSLBK_XL~KSLBK_XL_CODE~KSLBK_MK~KSLBK_MKCODE~KSLBK_TYPE_NAME~KSLBK_TYPE~KSLBK_ID'," +
-			"'HIDE':'KSLBK_CODE~KSLBK_XL_CODE~KSLBK_MKCODE~KSLBK_TYPE','TYPE':'multi','HTMLITEM':''}";
+	var configStr = "TS_XMGL_BM_KSLBK,{'TARGET':'','SOURCE':'KSLBK_NAME~KSLBK_CODE~KSLBK_XL~KSLBK_XL_CODE~KSLBK_MK~KSLBK_MKCODE~KSLBK_TYPE_NAME~KSLBK_TYPE~KSLBK_ID~KSLBK_TIME'," +
+			"'HIDE':'KSLBK_CODE~KSLBK_XL_CODE~KSLBK_MKCODE~KSLBK_TYPE~KSLBK_TIME','TYPE':'multi','HTMLITEM':''}";
 	var options = {
 		"config" :configStr,
 		"parHandler":_viewer,
@@ -50,6 +50,7 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	    	var XLcodes = idArray.KSLBK_XL_CODE.split(",");
 	    	var MKcodes = idArray.KSLBK_MKCODE.split(",");
 	    	var typename = idArray.KSLBK_TYPE_NAME.split(",");
+	    	var kslbTime = idArray.KSLBK_TIME.split(",");
 	    	var paramjson={};
 	    	var paramlist = [];
 	    	for(var i=0;i<ids.length;i++){
@@ -70,6 +71,7 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	   				param["KSLB_XL_CODE"]=XLcodes[i];
 	   				param["KSLB_MK_CODE"]=MKcodes[i];
 	   				param["KSLB_TYPE_NAME"]=typename[i];
+	   				param["KSLB_TIME"]=kslbTime[i];
 	   				paramlist.push(param);
 	   				console.log(param);
 	    	    }
