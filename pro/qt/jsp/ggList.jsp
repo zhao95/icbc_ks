@@ -186,7 +186,8 @@
             var showNum = parseInt(jQuery('#showNumSelect').find("option:selected").val());
             var data = {};
             data["_PAGE_"] = {"NOWPAGE": num, "SHOWNUM": showNum};
-            return FireFly.getListData("TS_GG", data, false);
+//             return FireFly.getListData("TS_GG", data, false);
+            return FireFly.doAct("TS_GG", "finds",data);
         };
         /*根据listdata构建表格*/
         ListPage.prototype.bldTable = function (dataList) {

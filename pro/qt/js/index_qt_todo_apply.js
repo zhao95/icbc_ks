@@ -181,7 +181,7 @@ function setApplyContent() {
  */
 function setAnnouncementContent() {
     var data = {};
-    var ggList = FireFly.doAct("TS_GG", 'query', data, false);
+    var ggList = FireFly.doAct("TS_GG", 'finds', data, false);
     var tbodyEl = jQuery('#announcement-box').find('.table tbody');
     tbodyEl.html('');
 

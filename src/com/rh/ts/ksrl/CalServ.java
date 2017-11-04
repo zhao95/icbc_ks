@@ -11,11 +11,14 @@ import jxl.Sheet;
 import jxl.Workbook;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
 import com.rh.core.comm.FileMgr;
+import com.rh.core.org.UserBean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.core.util.Constant;
 import com.rh.core.util.DateUtils;
 
 /**
@@ -105,6 +108,22 @@ public class CalServ extends CommonServ {
 		
 		return outBean;
 		
+	}
+	
+	
+	// 查询前添加查询条件
+	protected void beforeFinds(ParamBean paramBean) {
+		ParamBean roleParam = new ParamBean();
+		UserBean userBean = Context.getUserBean();
+		String userCode = userBean.getStr("USER_CODE");
+		String userOdeptCode = userBean.getStr("ODEPT_CODE");
+		//用户编码设置进roleParam里面，使其查询处用户所有的权限
+		roleParam.set("USER_CODE", userCode);
+		
+		StringBuilder param_where = new StringBuilder();
+		param_where.append(" AND  (SELECT d.code_path from sy_org_dept d   ");
+		param_where.append(" WHERE d.dept_code ='"+userOdeptCode+"') like CONCAT('%',S_ODEPT,'^%') ");
+		paramBean.set(Constant.PARAM_WHERE, param_where.toString());
 	}
 	
 	
