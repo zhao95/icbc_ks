@@ -158,6 +158,11 @@ public class KcapResource {
 			log.error("------------------leaderBean-------------------");
 			log.error(this.getLeaderBean().toString());
 		}
+		
+		if (this.getFarKsBean() != null) {
+			log.error("------------------farKsBean-------------------");
+			log.error(this.getFarKsBean().toString());
+		}
 	}
 
 	/**
@@ -858,15 +863,15 @@ public class KcapResource {
 
 					String dCode = jg.getStr("JG_CODE");
 
-					List<Bean> jgksList = null;
+//					List<Bean> jgksList = null;
 
 					if (jg.getInt("JG_FAR") == 1) { // 关联考场距离远的机构
 
-						jgksList = ksBean.getList(dCode);// 机构下考生list
+						Bean dCodeKs = ksBean.getBean(dCode);// 机构下考生list
 
-						farksBeanVal = commList2Bean(jgksList, "BM_CODE");
+//						farksBeanVal = commList2Bean(jgksList, "BM_CODE");
 
-						farKsBean.set(kcId, farksBeanVal);
+						farKsBean.set(kcId, dCodeKs);
 					}
 				}
 				// farKsBean.set(kcId, farksBeanVal);
