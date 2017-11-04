@@ -45,4 +45,30 @@ public class MxServ extends CommonServ {
 		}
 		return out;
 	}
+	/**
+	 * 保存提示信息
+	 */
+	public OutBean saveinfo(Bean paramBean){
+		String ids = paramBean.getStr("id");
+		String mx_name = paramBean.getStr("mx_name");
+		Bean find = ServDao.find("TS_XMGL_BMSH_SHGZ_MX",ids);
+		if(find!=null){
+			
+			find.set("MX_NAME", mx_name);
+		}
+		ServDao.save("TS_XMGL_BMSH_SHGZ_MX", find);
+		return new OutBean().setOk();
+	}
+	
+	/**
+	 * 取信息 重置
+	 */
+	public OutBean chongzhi(Bean paramBean){
+		OutBean out = new OutBean();
+		Bean find = ServDao.find("TS_XMGL_BMSH_SHGZK_MX", "Y01109");
+		if(find!=null){
+			out.set("gzbean", find.getStr("MX_NAME"));
+		}
+		return out;
+	}
 }

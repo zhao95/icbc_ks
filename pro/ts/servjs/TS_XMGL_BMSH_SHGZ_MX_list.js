@@ -2,10 +2,19 @@ var _viewer = this;
 $(".rhGrid").find("tr").unbind("dblclick");
 $("th[icode='BUTTONS']").css('width','15%');
 //每一行添加编辑和删除
+var idinfo = "";
 $("#TS_XMGL_BMSH_SHGZ_MX .rhGrid").find("tr").each(function(index, item) {
+	var table = this;
 	if(index != 0) {
 		var value1 = $('td[icode="MX_VALUE1"]',item).text();
 		var val = $('td[icode="MX_VALUE2"]',item).text();
+		if(val.indexOf("rzyear")>-1){
+			idinfo=item.id;
+			$(table).css("display",'none');
+		}
+		if(idinfo!=""){
+			$($(table).find("td").eq(0)).html(index-1);
+		}
 		if(value1 == 1 && val.length >0) {
 				 obj2=eval(val);  
 			var dataId = item.id;
@@ -269,7 +278,13 @@ function bindCard() {
 			butt.innerHTML="请选择";
 			butt.id="GLxlbutton";
 			
-			formConDiv7.append($("<div style='padding-top:10px;color:red;font-size:13px'>说明：管理类报名时验证不通过时提示管理任职年限进入手动审核</div>"));
+			var divinfo = $("<div style='padding-top:10px;color:red;font-size:13px'></div>");
+			
+			var result = FireFly.byId("TS_XMGL_BMSH_SHGZ_MX",idinfo);
+			
+			var inputinfo = $('<button id="resetinfo">重置</button><input type="text" id="RULE-VAR-INPUT" value='+result.MX_NAME+' style="width:90%;border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">');
+			divinfo.append(inputinfo);
+			formConDiv7.append(divinfo);
 		}else{
 			for(var i=0;i<nameArg.length;i++) {
 				if(obj2[0].type == 'dateyear') {
@@ -422,6 +437,16 @@ function bindCard() {
 					}
 					jsons+="]"
 					mx_name+=nameArg[nameArg.length-1];
+					var mx_name1 = $("#RULE-VAR-INPUT").val();
+					if(""!=mx_name1){
+						var param={};
+						param["id"]=idinfo;
+						param["mx_name"]=mx_name1;
+						FireFly.doAct("TS_XMGL_BMSH_SHGZ_MX","saveinfo",param);
+					}else{
+						alert("请输入提示信息");
+						return false;
+					}
 					saveRuleVarCode(dataId,"","",jsons,mx_name);
 				}else{
 				var text = "";
@@ -470,6 +495,15 @@ function bindelete(){
 		});
 		}
 	});
+	$("#resetinfo").click(function(){
+		//从规则库中将数据查出 
+		var param = {};
+		var result = FireFly.doAct("TS_XMGL_BMSH_SHGZ_MX","chongzhi",param);
+		var mx_name = result.gzbean;
+		$("#RULE-VAR-INPUT").val("");
+		$("#RULE-VAR-INPUT").val(mx_name);
+	});
+	
 	$("#chongzhi").click(function(){
 		//从规则库中将数据查出 
 		var param = {};
@@ -526,6 +560,7 @@ function bindselect(){
 			queryView.show(event);
 	})
 	$("#GLxlbutton").click(function(){
+		
 			var configStr = "TS_XMGL_BM_KSLBK_XL,{'TARGET':'KSLBK_XL~KSLBK_XL_CODE','SOURCE':'KSLBK_XL~KSLBK_XL_CODE'," +
 			"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
 			var options = {

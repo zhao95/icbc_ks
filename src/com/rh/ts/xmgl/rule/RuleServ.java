@@ -145,24 +145,10 @@ public class RuleServ extends CommonServ {
 									flag=true;
 									result=false;
 								}
-							}else if(mx_name.indexOf("rzyear")!=-1){
+							}else if(bean.getStr("MX_VALUE2").indexOf("rzyear")!=-1){
 								//管理员任职年限提示
 								
-								str = bean.getStr("MX_VALUE2");
-								
-								JSONArray jsarray;
-								
-								try {
-									jsarray = new JSONArray(str);
-									
-									JSONObject jsonObject = jsarray.getJSONObject(jsarray.length()-1);
-									String string = jsonObject.getString("val");
-									str = mx_name.replace("#rzyear#", string);
-									
-								} catch (JSONException e) {
-									
-									e.printStackTrace();
-								}
+								str =mx_name;
 								result=false;
 							}else{
 								result = this.vlidateOne(clazz, bean); // 执行验证
