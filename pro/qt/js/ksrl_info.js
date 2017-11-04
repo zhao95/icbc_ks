@@ -23,7 +23,8 @@ var listPage = function () {
      data["_extWhere"] = sqlWhere;
      //控制当前页数,显示的条数
      data["_PAGE_"] = {"NOWPAGE": num, "SHOWNUM": 30};
-     return FireFly.getListData("TS_KS_CAL", data, false);
+/*     return FireFly.getListData("TS_KS_CAL", data, false);*/
+     return FireFly.doAct("TS_KS_CAL", "finds");
 //     debugger;
  };
  //全局变量  sql查询条件(页面输入的搜索条件)
@@ -60,7 +61,7 @@ var listPage = function () {
      	//页面的输入查询条件放入传递的参数中
      	param["_extWhere"] = sqlWhere;
      	//获取到查询后的数据
-     	var searchResult = FireFly.doAct("TS_KS_CAL","query",param);
+     	var searchResult = FireFly.doAct("TS_KS_CAL","finds",param);
      	//将数据填入页面
      	listPage._lPage = searchResult._PAGE_;
      	listPage._lData = searchResult._DATA_;

@@ -1,15 +1,28 @@
 var _viewer = this;
-
-_viewer.getItem("JKGL_START_DATE").obj.unbind("click").bind("click", function() {
-	    WdatePicker({
-	        maxDate : "#F{$dp.$D('" + _viewer.servId + "-JKGL_END_DATE')}"
-	    });
-	});
-_viewer.getItem("JKGL_END_DATE").obj.unbind("click").bind("click", function() {
-	    WdatePicker({
-	        minDate : "#F{$dp.$D('" + _viewer.servId + "-JKGL_START_DATE')}"
-	    });
-	});
+_viewer.beforeSave = function() {
+	var beginTime=_viewer.getItem("JKGL_START_DATE").getValue();
+	var endTime=_viewer.getItem("JKGL_END_DATE").getValue();
+    var beginTimes = beginTime.substring(0, 10).split('-');
+    var endTimes = endTime.substring(0, 10).split('-');debugger;
+     beginTime = beginTimes[1] + '-' + beginTimes[2] + '-' + beginTimes[0] ;
+     endTime = endTimes[1] + '-' + endTimes[2] + '-' + endTimes[0] ;
+    var a = (Date.parse(endTime) - Date.parse(beginTime)) / 3600 / 1000;
+    if(a < 0||a == 0){
+ 		$("#TS_JKGL-JKGL_START_DATE").addClass("blankError").addClass("errorbox");
+ 		$("#TS_JKGL-JKGL_END_DATE").addClass("blankError").addClass("errorbox");
+		return false;
+ 	}
+};
+//_viewer.getItem("JKGL_START_DATE").obj.unbind("click").bind("click", function() {
+//	    WdatePicker({
+//	        maxDate : "#F{$dp.$D('" + _viewer.servId + "-JKGL_END_DATE')}"
+//	    });
+//	});
+//_viewer.getItem("JKGL_END_DATE").obj.unbind("click").bind("click", function() {
+//	    WdatePicker({
+//	        minDate : "#F{$dp.$D('" + _viewer.servId + "-JKGL_START_DATE')}"
+//	    });
+//	});
 
 //刚进卡片页面要判断参加考试序列，加载出对应的模块
 var testSequValue=_viewer.getItem("JKGL_TEST_SEQU").getValue();
