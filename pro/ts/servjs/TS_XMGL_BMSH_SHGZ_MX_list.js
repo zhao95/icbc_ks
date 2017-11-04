@@ -432,7 +432,9 @@ function bindCard() {
 				saveRuleVar(dataId,text,jsonStr);
 			}
 		});
-
+		
+		$("div[class='ui-dialog ui-widget ui-widget-content ui-corner-all ui-draggable ui-resizable']").css("left","30%");
+		
 	});
 	jQuery("td [id='TS_XMGL_BMSH_SHGZ_MX-copy']").unbind("click").bind("click", function() {
 		var dataId = jQuery(this).attr("rowpk");
