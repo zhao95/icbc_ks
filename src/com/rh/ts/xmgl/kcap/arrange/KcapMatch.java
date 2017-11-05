@@ -31,7 +31,7 @@ public class KcapMatch {
 	 * @return Bean 报名考生信息
 	 */
 	public static Bean matchUser(Bean freeZw, Bean ksBean, KcapResource res, boolean isConstrain) {
-		
+
 		Bean busyZwBean = res.getBusyZwBean();
 
 		// 根据考试时长筛选考生
@@ -126,7 +126,7 @@ public class KcapMatch {
 
 				Bean timeBean = filtBean.getBean(time);
 
-				for (Object user : filtBean.keySet()) { // 遍历时长下考生bean
+				for (Object user : timeBean.keySet()) { // 遍历时长下考生bean
 
 					Object val = timeBean.get(user);
 
@@ -145,9 +145,12 @@ public class KcapMatch {
 				}
 			}
 
-			int index = new Random().nextInt(list.size()); // 随机获取list索引
+			if (!list.isEmpty()) {
 
-			return list.get(index);
+				int index = new Random().nextInt(list.size()); // 随机获取list索引
+
+				return list.get(index);
+			}
 		}
 
 		return new Bean();

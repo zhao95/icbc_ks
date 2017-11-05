@@ -118,51 +118,19 @@ public class KcapResource {
 
 		// 加载规则
 		loadRule(xmId);
-		log.error("------------------ruleBean-------------------");
-		log.error(this.getRuleBean().toString());
 
 		// 考场信息
 		loadKc(xmId, odept);
-		log.error("------------------kcBean-------------------");
-		log.error(this.getKcBean().toString());
 
 		// 考生信息
 		loadKs(xmId, odept);
-		// log.error("------------------freeKsBean-------------------");
-		// for (Object obj : this.getFreeKsBean().keySet()) {
-		// log.error("----------------" + obj +
-		// "--freeKsBean-------------------");
-		// log.error(this.getFreeKsBean().getBean(obj));
-		// }
-		// log.error("------------------JkKsBean-------------------");
-		// log.error(this.getJkKsBean().toString());
 
 		// 考场座位安排
 		loadZw(xmId, odept);
-		log.error("------------------busyBean-------------------");
-		log.error(this.getBusyZwBean().toString());
-
-		if (this.getFreeCcZwBean() != null) {
-			log.error("------------------freeCcZwBean-------------------");
-			log.error(this.getFreeCcZwBean().toString());
-		}
-		if (this.getFreeKcZwBean() != null) {
-			log.error("------------------freeKcZwBean-------------------");
-			log.error(this.getFreeKcZwBean().toString());
-		}
 		// 网点
 		// loadBranch();
 		// 加载其他资源
 		loadOther();
-		if (this.getLeaderBean() != null) {
-			log.error("------------------leaderBean-------------------");
-			log.error(this.getLeaderBean().toString());
-		}
-		
-		if (this.getFarKsBean() != null) {
-			log.error("------------------farKsBean-------------------");
-			log.error(this.getFarKsBean().toString());
-		}
 	}
 
 	/**
@@ -336,7 +304,7 @@ public class KcapResource {
 			String ruleCode = rule.getStr("GZ_CODE");
 
 			ruleBean.set(ruleCode, rule);
-			
+
 			if (KcapRuleEnum.S001.getCode().equals(ruleCode)) { // 最少考场，最少场次
 
 				String val = rule.getStr("GZ_VALUE2");
@@ -349,7 +317,7 @@ public class KcapResource {
 			} else if (KcapRuleEnum.S002.getCode().equals(ruleCode)) { // 无符合规则考生
 																		// 是否强制安排
 				ksConstrain = 1; // 1 强制安排
-			} 
+			}
 		}
 	}
 
@@ -502,7 +470,7 @@ public class KcapResource {
 			}
 		}
 	}
-	
+
 	private void loadBranch() {
 
 		for (Object key : kcBean.keySet()) { // 所有机构下的考场bean
@@ -648,11 +616,25 @@ public class KcapResource {
 
 					zwhBeanVal.set(kcId, zwBean);
 
-					Bean dayBean = new Bean();
+					Bean dateBean = new Bean();// {key日期：val座位Bean}
 
-					dayBean.set(date, zwhBeanVal); // {key日期：val座位Bean}
+					if (freeCcZwBean.containsKey(sjCc)) {
 
-					freeCcZwBean.set(sjCc, dayBean);
+						dateBean = (Bean) freeCcZwBean.getBean(sjCc).clone();
+
+						if (dateBean.containsKey(date)) {
+
+							dateBean.getBean(date).putAll(zwhBeanVal);
+
+						} else {
+
+							dateBean.set(date, zwhBeanVal);
+						}
+					} else {
+
+						dateBean.set(date, zwhBeanVal);
+					}
+					freeCcZwBean.set(sjCc, dateBean);
 				}
 			}
 		}
@@ -677,9 +659,19 @@ public class KcapResource {
 
 		for (Object key : temp.keySet()) {
 
-			List<Bean> list = temp.getList(key);
+			Object tobj = temp.get(key);
 
-			Bean timeBean = commList2Bean(list, keys[1]);// "BM_KS_TIME"
+			Bean timeBean = new Bean();
+
+			if (tobj instanceof Bean) {
+
+				timeBean.putAll(timeBean);
+
+			} else if (tobj instanceof List) {
+				List<Bean> list = temp.getList(key);
+
+				timeBean = commList2Bean(list, keys[1]);// "BM_KS_TIME"
+			}
 
 			Bean temp1 = new Bean();
 
@@ -687,9 +679,18 @@ public class KcapResource {
 
 			for (Object key1 : temp1.keySet()) {
 
-				List<Bean> list1 = temp1.getList(key1);
+				Object obj = temp1.get(key1);
 
-				timeBean.remove(key1).put(key1, commList2Bean(list1, keys[2]));// "BM_CODE"
+				if (obj instanceof Bean) {
+
+					timeBean.remove(key1).put(key1, temp1.getBean(key1));// "BM_CODE"
+
+				} else if (obj instanceof List) {
+
+					List<Bean> list1 = temp1.getList(key1);
+
+					timeBean.remove(key1).put(key1, commList2Bean(list1, keys[2]));// "BM_CODE"
+				}
 			}
 
 			ksBean.remove(key).put(key, timeBean);
@@ -851,7 +852,7 @@ public class KcapResource {
 
 			for (Bean kcInfo : kcinfoList) {
 
-				Bean farksBeanVal = new Bean();
+				// Bean farksBeanVal = new Bean();
 
 				String kcId = kcInfo.getBean("INFO").getStr("KC_ID");
 
@@ -863,13 +864,13 @@ public class KcapResource {
 
 					String dCode = jg.getStr("JG_CODE");
 
-//					List<Bean> jgksList = null;
+					// List<Bean> jgksList = null;
 
 					if (jg.getInt("JG_FAR") == 1) { // 关联考场距离远的机构
 
 						Bean dCodeKs = ksBean.getBean(dCode);// 机构下考生list
 
-//						farksBeanVal = commList2Bean(jgksList, "BM_CODE");
+						// farksBeanVal = commList2Bean(jgksList, "BM_CODE");
 
 						farKsBean.set(kcId, dCodeKs);
 					}
@@ -1082,5 +1083,53 @@ public class KcapResource {
 	 */
 	public Bean getFarKsBean() {
 		return farKsBean;
+	}
+
+	public void showResLog() {
+
+		if (this.getRuleBean() != null) {
+			log.error("------------------ruleBean-------------------");
+			log.error(this.getRuleBean().toString());
+		}
+
+		if (this.getKcBean() != null) {
+			log.error("------------------kcBean-------------------");
+			log.error(this.getKcBean().toString());
+		}
+
+		if (this.getFreeKsBean() != null) {
+			log.error("------------------freeKsBean-------------------");
+			log.error(this.getFreeKsBean().toString());
+		}
+
+		if (this.getJkKsBean() != null) {
+			log.error("------------------JkKsBean-------------------");
+			log.error(this.getJkKsBean().toString());
+		}
+
+		if (this.getBusyZwBean() != null) {
+			log.error("------------------busyBean-------------------");
+			log.error(this.getBusyZwBean().toString());
+		}
+
+		if (this.getFreeCcZwBean() != null) {
+			log.error("------------------freeCcZwBean-------------------");
+			log.error(this.getFreeCcZwBean().toString());
+		}
+
+		if (this.getFreeKcZwBean() != null) {
+			log.error("------------------freeKcZwBean-------------------");
+			log.error(this.getFreeKcZwBean().toString());
+		}
+
+		if (this.getLeaderBean() != null) {
+			log.error("------------------leaderBean-------------------");
+			log.error(this.getLeaderBean().toString());
+		}
+
+		if (this.getFarKsBean() != null) {
+			log.error("------------------farKsBean-------------------");
+			log.error(this.getFarKsBean().toString());
+		}
 	}
 }
