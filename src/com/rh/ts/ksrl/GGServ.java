@@ -38,10 +38,11 @@ public class GGServ  extends CommonServ{
 		OutBean outBean = new OutBean();
 		UserBean userBean = Context.getUserBean();
 		String userCode = userBean.getCode();
-		Bean userPvlgToHT = RoleUtil.getPvlgRole(userCode,"TS_QT_HqT");
-		String userPvlgToHT_Flag = userPvlgToHT.getStr("TS_QT_HT");
+		Bean userPvlgToHT = RoleUtil.getPvlgRole(userCode,"TS_QT_HT");
+		Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_QT_HT_PVLG");
+		String userPvlgToHT_Flag = userPvlgToHTBean.getStr("show");
 		if(userPvlgToHT_Flag!=""){
-			if(userPvlgToHT.getStr("show").equals("0")){
+			if(userPvlgToHTBean.getStr("show").equals("0")){
 				outBean.set("hasRole", "2");
 			}else{
 				outBean.set("hasRole", "1");
