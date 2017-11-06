@@ -133,6 +133,8 @@ rh.vi.cardView = function(options) {
 	}
    
    console.log(this.servId+"权限",servPvlg);
+   
+   this._cancelSave = false; //取消保存
 };
 
 /**
@@ -586,7 +588,7 @@ rh.vi.cardView.prototype._bldWin = function() {
     	position = this.xyArray;
     	
     }
-    if(hei<800){
+    if(hei<600){
     	hei="530";
     }
     if(hei>1000){
@@ -661,7 +663,6 @@ rh.vi.cardView.prototype._bldWin = function() {
     	_parent.window.scrollTo(0,top[0]);
     }
 };
-
 /*
  * 构建卡片布局，包括form和下方关联的功能
  */
@@ -1281,6 +1282,10 @@ rh.vi.cardView.prototype._saveForm = function() {
     if (_self.beforeSave() == false) {
 //    	_self.cardBarTipError("校验未通过！");
     	_self.cardBarTipError(Language.transStatic("rhWfCardViewNodeExtends_string1"));
+    	return false;
+    }
+    
+    if(_self._cancelSave == true){
     	return false;
     }
 	 //保存意见方法
@@ -2474,8 +2479,12 @@ rh.vi.cardView.prototype.openEnglishDialog = function(servId, dataId) {
 /*
  * 获取用户权限(工行考试系统 权限管理)
  */
-rh.vi.listView.prototype.getUserPvlg = function(){
+rh.vi.cardView.prototype.getUserPvlg = function() {
 	var _self = this;
 	return _self._userPvlg;
 	
+};
+
+rh.vi.cardView.prototype.cancelSave = function(flag){
+	this._cancelSave = flag;
 };
