@@ -233,7 +233,6 @@ function showTodoTip() {
 	//跳转后台按钮的可见判断
 	var btnParam={}
 	var btnRoleResult=FireFly.doAct("TS_GG","btnRoleFun",btnParam);
-	debugger;
 	var hasRoleFlag = btnRoleResult.hasRole;
 	if(hasRoleFlag!=undefined){
 		if(hasRoleFlag==="1"){
