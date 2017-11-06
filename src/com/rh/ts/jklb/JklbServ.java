@@ -1,27 +1,22 @@
 package com.rh.ts.jklb;
 
+import com.icbc.ctp.utility.CollectionUtil;
+import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
+import com.rh.core.base.db.Transaction;
+import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.UserMgr;
+import com.rh.core.serv.*;
+import com.rh.core.serv.dict.DictMgr;
+import com.rh.core.util.Constant;
+import com.rh.ts.util.TsConstant;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-
-import com.rh.core.base.Context;
-import com.icbc.ctp.utility.CollectionUtil;
-import com.icbc.ctp.utility.StringUtil;
-import com.rh.core.base.Bean;
-import com.rh.core.base.db.Transaction;
-import com.rh.core.org.UserBean;
-import com.rh.core.org.mgr.UserMgr;
-import com.rh.core.serv.CommonServ;
-import com.rh.core.serv.OutBean;
-import com.rh.core.serv.ParamBean;
-import com.rh.core.serv.ServDao;
-import com.rh.core.serv.ServMgr;
-import com.rh.core.util.Constant;
-import com.rh.ts.flow.FlowServ;
 
 
 public class JklbServ extends CommonServ {
@@ -385,7 +380,7 @@ public class JklbServ extends CommonServ {
                 String bmMk = (String) bmBean.get("BM_MK");
                 String bmType = (String) bmBean.get("BM_TYPE");
                 String lbDate = (String) bmBean.get("LB_DATE");
-                String bm_bt = bmType + "-" + bmXl + "-" + bmMk;
+                String bm_bt = DictMgr.getName("TS_XMGL_BM_KSLBK_LV", bmType) + "-" + bmXl + "-" + bmMk;
                 String title = "";
                 if (!"".equals(bmMk)) {
                     title = bm_bt;
@@ -394,6 +389,11 @@ public class JklbServ extends CommonServ {
                 }
                 tsBmshPass.set("lbDate", lbDate);
                 tsBmshPass.set("title", title);
+                //获取项目名称 临时方法
+                OutBean xmBean = ServMgr.act(TsConstant.SERV_XMGL, "byid", new ParamBean().setId(xmId));
+                String xmName = xmBean.getStr("XM_NAME");
+                tsBmshPass.set("XM_NAME", xmName);
+
             } else {
                 iterator.remove();
             }
