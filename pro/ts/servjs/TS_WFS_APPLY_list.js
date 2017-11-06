@@ -1,6 +1,7 @@
 var _viewer = this;
 //var module = 'WPS';
 var height = jQuery(window).height()-120;
+alert(height);
 var width = jQuery(window).width()-200;
 //列表需要建一个code为buttons的自定义字段。
 $("#TS_WFS_APPLY .rhGrid").find("tr").each(function(index,item){
@@ -75,28 +76,28 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	_viewer.listClearTipLoad();
 	return flag;
 };
-////重写add方法
-//_viewer.getBtn("add").unbind("click").bind("click",function() {
-//	var pcodeh = _viewer._transferData["CTLG_PCODE"];
-//		if(pcodeh == "" || typeof(pcodeh) == "undefined") {
-//		alert("请选择添加目录的层级 !");
-//		return false;
-//	}
-//	
-//	var temp = {"act":UIConst.ACT_CARD_ADD,
-//			"sId":_viewer.servId,
-//			"params":  {
-//				//"CTLG_MODULE" : module,
-//			},
-//			"transferData": _viewer._transferData,
-//			"links":_viewer.links,
-//			"parHandler":_viewer,
-//			"widHeiArray":[width,height],
-//			"xyArray":[50,50]
-//	};
-//	console.log(temp);
-//	var cardView = new rh.vi.cardView(temp);
-//	
-//	cardView.show();
-//	
-//});
+//重写add方法
+_viewer.getBtn("add").unbind("click").bind("click",function() {debugger;
+	var pcodeh = _viewer._transferData["CTLG_PCODE"];
+		if(pcodeh == "" || typeof(pcodeh) == "undefined") {
+		alert("请选择添加目录的层级 !");
+		return false;
+	}
+	
+	var temp = {"act":UIConst.ACT_CARD_ADD,
+			"sId":_viewer.servId,
+			"params":  {
+				//"CTLG_MODULE" : module,
+			},
+			"transferData": _viewer._transferData,
+			"links":_viewer.links,
+			"parHandler":_viewer,
+			"widHeiArray":[width,height],
+			"xyArray":[50,50]
+	};
+	console.log(temp);
+	var cardView = new rh.vi.cardView(temp);
+	
+	cardView.show();
+	
+});
