@@ -434,8 +434,11 @@ rh.vi.cardView.prototype._tabLayout = function() {
 				   return false;
 			   };
 		   }
+		   
+		   
 		   //如果用户修改数据，提示用户保存
-		   if ((_self._actVar == UIConst.ACT_CARD_MODIFY) || (_self.beforeSaveCheck == true)) {
+           if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {
+
 			   if (jQuery.isEmptyObject(_self.getChangeData())) {
 			   } else {
 				   var confirmDel=confirm(Language.transStatic("rhCardView_string1"));
@@ -601,16 +604,16 @@ rh.vi.cardView.prototype._bldWin = function() {
 			_self.mainUL.show();
 		},
 		close: function() {
-			if (jQuery.browser.version == "8.0") {//解决浏览器IE8下工作流返回右侧黑板bug
-				_self.winDialog.remove();
-				_self.winDialog.empty();
-			} else {
-				_self.winDialog.empty();		
-				_self.winDialog.remove();
-			}
-			if (_self._parHandler) {
-				_self._parHandler._resetHeiWid();
-			}
+				if (jQuery.browser.version == "8.0") {//解决浏览器IE8下工作流返回右侧黑板bug
+					_self.winDialog.remove();
+					_self.winDialog.empty();
+				} else {
+					_self.winDialog.empty();		
+					_self.winDialog.remove();
+				}
+				if (_self._parHandler) {
+					_self._parHandler._resetHeiWid();
+				}
 		}
 	});
     jQuery("#" + this.tabsId).tabs({});
@@ -645,10 +648,6 @@ rh.vi.cardView.prototype._bldWin = function() {
     		this.winDialog.find("ul:first").css("display","none");
     	}
     	this.winDialog.find("a[class='rhCard-close']").css("display","none");
-    	
-    	div.find("span:last").unbind("click").bind("click",function(){
-    		jQuery("a[class='rhCard-close']:last").trigger("mousedown");
-    	})
     	
     	
     } else {

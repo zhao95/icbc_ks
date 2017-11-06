@@ -134,8 +134,13 @@ $.widget("ui.dialog", {
 				.addClass( "ui-dialog-titlebar-close  ui-corner-all" )
 				.attr( "role", "button" )
 				.click(function( event ) {
-					event.preventDefault();
-					that.close( event );
+					var confirmstr = confirm("您是否要关闭？");
+					if(confirmstr){
+						event.preventDefault();
+						that.close( event );
+					}else{
+						return false;
+					}
 				})
 				.appendTo( uiDialogTitlebar );
 
