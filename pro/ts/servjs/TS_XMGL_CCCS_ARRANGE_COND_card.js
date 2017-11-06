@@ -85,5 +85,5 @@ function addMin(a,b) {
 	b = parseInt(b);
 	var time = new Date(a.replace(/"-"/g, "/"));
 	time.setMinutes(time.getMinutes() + b);
-	return (time.format("yyyy-mm-dd hh:MM")).toString();
+	return rhDate.patternData("yyyy-mm-dd hh:MM",time);
 }
