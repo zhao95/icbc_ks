@@ -1,7 +1,6 @@
 var _viewer = this;
 //var module = 'WPS';
-var height = jQuery(window).height()-120;
-alert(height);
+var height = jQuery(window).height()-250;
 var width = jQuery(window).width()-200;
 //列表需要建一个code为buttons的自定义字段。
 $("#TS_WFS_APPLY .rhGrid").find("tr").each(function(index,item){
@@ -83,7 +82,6 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {debugger;
 		alert("请选择添加目录的层级 !");
 		return false;
 	}
-	
 	var temp = {"act":UIConst.ACT_CARD_ADD,
 			"sId":_viewer.servId,
 			"params":  {
