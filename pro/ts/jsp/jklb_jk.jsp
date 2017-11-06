@@ -241,15 +241,12 @@
                             <form action="<%=CONTEXT_PATH%>/sy/base/frame/coms/ueditor/jsp/imageUp.jsp" method="post"
                                   id="imgformid" enctype="multipart/form-data">
                                 <div class="form-group" id="caseIma">
-                                    <label class="" style="cursor:pointer;"><%--btn btn-primary--%>
-
-                                        <img style="padding-left:20px;font-size:10px" alt="选择"
-                                             src="<%=CONTEXT_PATH %>/ts/image/005.png">&nbsp;&nbsp;<a
-                                                style="color: #91dce4;" href="#">上传</a>
-
-                                        <%--选择图片--%>
-                                        <input type="file" style="display: none;" class="form-control" id="caseImage"
-                                               name="file" onchange="viewImage(this)"/><%--viewImage   upImg--%>
+                                    <label class="" style="cursor:pointer;">
+                                        <div style="float: left;background-image: url(<%=CONTEXT_PATH%>/ts/image/005.png);width: 32px;height: 32px;">
+                                            &nbsp;&nbsp;
+                                        </div>
+                                        <div style="margin-top: 5px;margin-left: 2px;color: #91dce4;float: left;" href="#">上传</div>
+                                        <input type="file" style="display: none;" class="form-control" id="caseImage" name="file" onchange="viewImage(this)">
                                     </label>
                                 </div>
                                 <input type="text" name="SERV_ID" value="TS_JKLB_JK" style="display: none;"/>
@@ -281,13 +278,13 @@
         <div class="row">
             <div class="col-sm-offset-4 col-sm-3">
                 <button onclick="applyForLeave()" class="btn btn-success"
-                        style="width:150px;height:45px;background-color: #00c2c2;">
+                        style="width:150px;height:45px;background-color: #00c2c2;font-size: 16px;">
                     提交申请
                 </button>
             </div>
             <div class="col-sm-3">
                 <button onclick="back()" class="btn btn-success"
-                        style="width:150px;height:45px;background-color: #00c2c2;">
+                        style="width:150px;height:45px;background-color: #00c2c2;font-size: 16px;">
                     返回
                     <div id="serverResponse"></div>
                 </button>
