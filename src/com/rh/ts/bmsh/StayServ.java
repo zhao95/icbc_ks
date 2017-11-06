@@ -793,6 +793,8 @@ public class StayServ extends CommonServ {
 	 * 根据usercode 获取username
 	 */
 	public Bean getusername(Bean paramBean) {
+		UserBean user = Context.getUserBean();
+		String usercod = user.getCode();
 		Bean outBean = new Bean();
 		String s = "";
 		String codes = paramBean.getStr("codes");
@@ -801,6 +803,9 @@ public class StayServ extends CommonServ {
 			for (int i = 0; i < split.length; i++) {
 
 				if (!"".equals(split[i])) {
+					if(usercod.equals(split[i])){
+						continue;
+					}
 					UserBean userBean = UserMgr.getUser(split[i]);
 					if (userBean.isEmpty()) {
 						return new OutBean().setError("ERROR:user_code 为空");
@@ -814,7 +819,7 @@ public class StayServ extends CommonServ {
 				}
 			}
 		}
-
+		
 		outBean.set("usernames", s);
 		return outBean;
 	}
