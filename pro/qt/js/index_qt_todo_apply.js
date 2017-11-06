@@ -234,11 +234,14 @@ function showTodoTip() {
 	var btnParam={}
 	var btnRoleResult=FireFly.doAct("TS_GG","btnRoleFun",btnParam);
 	var hasRoleFlag = btnRoleResult.hasRole;
-	if(hasRoleFlag==="1"){
-		jQuery("#btnToHT").css("display","block");
-	}else if(hasRoleFlag==="2"){
-		jQuery("#btnToHT").css("display","none");
+	if(hasRoleFlag!=undefined){
+		if(hasRoleFlag==="1"){
+			jQuery("#btnToHT").css("display","block");
+		}else if(hasRoleFlag==="2"){
+			jQuery("#btnToHT").css("display","none");
+		}	
 	}
+	
     //获取待办/提醒列表数据
     var tipListEl = jQuery('.index-qt-tip-list');
     tipListEl.html('');
