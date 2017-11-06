@@ -461,7 +461,11 @@ public class FlowServ extends CommonServ {
 		}
 		//3.自定义部门，审核人职位已填写
 		if(selDept == 1 && (!zdyDeptCode.equals("")) &&(!shzw.equals(""))){
-		    List<Bean> userlist = ServDao.finds("SY_ORG_USER_ALL", "and dept_code = '"+zdyDeptCode+"' and DUTY_LV_CODE = '"+shzw+"'");
+		    if(shzw.indexOf(",") != -1){
+			shzw = shzw.replace(",", "','");
+		    }
+		    
+		    List<Bean> userlist = ServDao.finds("SY_ORG_USER_ALL", "and dept_code = '"+zdyDeptCode+"' and DUTY_LV_CODE in( '"+shzw+"')");
 		    for (int i = 0; i < userlist.size(); i++) {
 			Bean tmpUser = new Bean();
 			tmpUser.set("SHR_NAME", userlist.get(i).getStr("USER_NAME"));
