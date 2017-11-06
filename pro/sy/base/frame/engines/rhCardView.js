@@ -185,6 +185,7 @@ rh.vi.cardView.prototype.drag = function() {
 /*
  * 布局卡片tabs和主功能页
  */
+var flagclose = 0;
 rh.vi.cardView.prototype._tabLayout = function() {
    var _self = this;
    //默认布局
@@ -418,6 +419,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
 	   /*if (window.ICBC) {
 		   this.backA.css({"display":"none"});
 	   }*/
+	   
 	   this.backA.on("mousedown",function() {
 		   if ((window.self == window.top) && (_self.miniCard == false)) {//顶层页面自动关闭
 			   if (jQuery("#viewPage").val() == "card") {
@@ -439,22 +441,26 @@ rh.vi.cardView.prototype._tabLayout = function() {
 		   
 		   
 		   //如果用户修改数据，提示用户保存
-           if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {
-
-			   if (jQuery.isEmptyObject(_self.getChangeData())) {
+		  
+           if (_self._actVar == UIConst.ACT_CARD_MODIFY) {
+			   if (jQuery.isEmptyObject(_self.getChangeData())||flagclose==1) {
+				   flagclose=0;
 			   } else {
 				   var confirmDel=confirm(Language.transStatic("rhCardView_string1"));
 				   if (confirmDel == true){
 					   if (_self.btns[UIConst.ACT_SAVE]) {
 						   _self.saveReturn= true;
 						   _self.btns[UIConst.ACT_SAVE].click();
+						 //销毁特殊处理组件
 						   return false;
 					   }
+					   }else{
+						   
 				   }
 			   }
 		   }
-		   //销毁特殊处理组件
-		   _self.destroyUI();
+		   
+           _self.destroyUI();
 		   if (_self._pCon) {//有设定容器
 			   _self._pCon.empty();
 		   } else {//默认body容器
@@ -563,6 +569,7 @@ rh.vi.cardView.prototype._bldURLTab = function(opts) {
  * 模拟点击返回按钮
  */
 rh.vi.cardView.prototype.backClick = function() {
+	flagclose++;
    this.backA.mousedown();
 };
 
@@ -669,6 +676,9 @@ rh.vi.cardView.prototype._bldWin = function() {
     	}
     	this.winDialog.find("a[class='rhCard-close']").css("display","none");
     	
+    	div.find("span:last").unbind("click").bind("click",function(){
+    		jQuery("a[class='rhCard-close']:last").trigger("mousedown");
+    	})
     	
     } else {
     	Tools.rhSetBodyBack();//设置背景
@@ -1318,7 +1328,6 @@ rh.vi.cardView.prototype._saveForm = function() {
 	    	return false;
 	    }
 	}
-    
     var changeData = this.getChangeData();
     if (jQuery.isEmptyObject(changeData)) {
 //   		_self.cardBarTipError("没有修改数据，未做提交！");
