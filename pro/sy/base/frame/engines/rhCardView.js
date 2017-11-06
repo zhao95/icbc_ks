@@ -588,12 +588,30 @@ rh.vi.cardView.prototype._bldWin = function() {
     	position = this.xyArray;
     	
     }
-    if(hei<600){
-    	hei="530";
-    }
-    if(hei>1000){
-    	hei="800";
-    }
+    var resolution  = window.screen.height;
+	if(resolution>=768){
+		
+		if(hei<800){
+			hei="530";
+		}
+		if(hei>1000){
+			hei="800";
+		}
+	}else if(550<resolution<768){
+			if(hei<800){
+				hei="390";
+			}
+			if(hei>1000){
+				hei="700";
+			}
+	}else if(resolution<=550){
+		if(hei<800){
+			hei="300";
+		}
+		if(hei>1000){
+			hei="600";
+		}
+	}
 	jQuery("#" + this.dialogId).dialog({
 		autoOpen: false,
 		height: hei,
