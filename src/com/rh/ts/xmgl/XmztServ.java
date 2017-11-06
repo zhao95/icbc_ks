@@ -121,7 +121,7 @@ public class XmztServ extends CommonServ {
 				throw new TipException("服务器异常，获取动态失败！");
 			}
 		}else{
-			returnBean.set("divState", "未启用该模块");
+			returnBean.set("divState", "未启用");
 			return returnBean;
 		}
 		return returnBean;

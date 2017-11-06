@@ -20,8 +20,7 @@ import org.apache.commons.io.LineIterator;
 public class inputMySQL {
 	 /** log */
     private static Log log = LogFactory.getLog(SqlExecutor.class);
-    /**sql执行时间*/
-    long sqlTime = 0;
+   
 	/**
 	 * 解析BIN数据包中的定长文件，使用连接池插入到DB
 	 * @throws IOException
@@ -30,16 +29,18 @@ public class inputMySQL {
 		log.info("-------------- impDatafromTable ---------------");
 		InfoBean infoBean = new InfoBean();
 		OperationDB operationDB = new OperationDB();
+		long sqlTime = 0;
+		int addRcorderSum =0;
 		// 优点：分段读取数据文件，没有最大文件限制，不会造成太大的压力。
 //		LineIterator it = FileUtils.lineIterator(new File("D://data1.txt"), "GBK");
-		LineIterator it = FileUtils.lineIterator(new File("C://ProgramData/MySQL/MySQL Server 5.7/Uploads/BOM_CMPSTRUINFO00000000001.BIN"), "GBK");
+		LineIterator it = FileUtils.lineIterator(new File("C://ProgramData/MySQL/MySQL Server 5.7/Uploads/BOM_CMPSTRUINFO0000000000.BIN"), "GBK");
 		// LineIterator it = FileUtils.lineIterator(new
 		// File("D://BOM_CMPSTRUINFO0000000000.BIN"), "GBK");
 		try {
 		 long startTime = System.currentTimeMillis(); // 起始时间
 		 long endTime = 0;
-		 @SuppressWarnings("unused")
-		long sqlTime = 0;
+		 
+		 
 			while (it.hasNext()) {
 				String lineTxt = it.nextLine();
 				lineTxt = new String(lineTxt.getBytes("GBK"), "ISO8859-1");
@@ -77,7 +78,7 @@ public class inputMySQL {
 
 				System.out.println(infoBean.toString());
 				// 将数据bean写入到数据库
-				int addRcorderSum = operationDB.addRcorder(infoBean);
+				addRcorderSum += operationDB.addRcorder(infoBean);
 				System.out.println("截止本次共更新数据："+addRcorderSum+" 条");
 				
 			}
@@ -105,7 +106,7 @@ public class inputMySQL {
 			e.printStackTrace();
 		} finally {
 			LineIterator.closeQuietly(it);
-			log.info("共耗时："+sqlTime+"秒。");
+			log.info("共耗时："+sqlTime+"毫秒。");
 		}
 
 	}

@@ -7,6 +7,7 @@ $(function () {
     setApplyContent();
     setAnnouncementContent();
     /**
+     * 跳转到后台的按钮可见判断
      * 首页上标题的信息展示方法
      * 点击跳转到用户个人信息的方法
      * 注销用户的方法
@@ -229,7 +230,15 @@ function doPost(to, data) {  //to:提交动作（action）,data:参数
  * 首页上标题栏 提醒信息按钮的下拉框内容
  */
 function showTodoTip() {
-
+	//跳转后台按钮的可见判断
+	var btnParam={}
+	var btnRoleResult=FireFly.doAct("TS_GG","btnRoleFun",btnParam);
+	var hasRoleFlag = btnRoleResult.hasRole;
+	if(hasRoleFlag==="1"){
+		jQuery("#btnToHT").css("display","block");
+	}else if(hasRoleFlag==="2"){
+		jQuery("#btnToHT").css("display","none");
+	}
     //获取待办/提醒列表数据
     var tipListEl = jQuery('.index-qt-tip-list');
     tipListEl.html('');

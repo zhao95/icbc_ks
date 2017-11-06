@@ -53,7 +53,8 @@ public class JhglServ extends CommonServ {
 					CalBean.set("BM_START_DATE", jhxxList.get(i).getStr("JH_BM_STARTDATE"));
 					CalBean.set("BM_END_DATE", jhxxList.get(i).getStr("JH_BM_ENDDATE"));
 					CalBean.set("KS_LEVEL", jhxxList.get(i).getStr("JH_LEVEL"));
-
+					CalBean.set("CTLG_PCODE", jhxxList.get(i).getStr("CTLG_PCODE"));
+					
 					CalBean.set("S_USER", jhxxList.get(i).getStr("S_USER"));
 					CalBean.set("S_TDEPT", jhxxList.get(i).getStr("S_TDEPT"));
 					CalBean.set("S_ODEPT", jhxxList.get(i).getStr("S_ODEPT"));
