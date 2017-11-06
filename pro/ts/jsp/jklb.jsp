@@ -111,7 +111,8 @@
                         <th style="width: 10%;text-align: center;" align="center;"><input type="checkbox" id="checkall">
                         </th>
                         <th style="width: 5%;" align="center">序号</th>
-                        <th style="width: 45%;">标题</th>
+                        <th style="width: 27%;">标题</th>
+                        <th style="width: 18%;">所属项目</th>
                         <th style="width: 15%;">报名人</th>
                         <th style="width: 25%">创建时间</th>
                     </tr>
@@ -203,6 +204,9 @@
                 '       ' + userCanLeave.title,//userCanLeave.title
                 '   </td>',
                 '   <td>',
+                '       ' + userCanLeave.XM_NAME,//userCanLeave.title
+                '   </td>',
+                '   <td>',
                 '       ' + userCanLeave.BM_NAME,//.title
                 '   </td>',
                 '   <td>',
@@ -228,11 +232,11 @@
             var jkDate = jk.JK_DATE;
             var jkStatus = jk.JK_STATUS;
             if (jkStatus === "1") {
-            	jkStatus = "审核中";
+                jkStatus = "审核中";
             } else if (jkStatus === "2") {
-            	jkStatus = "已通过";
+                jkStatus = "已通过";
             } else if (jkStatus === "3") {
-            	jkStatus = "未通过";
+                jkStatus = "未通过";
             }
             table1Tbody2.append([
                 '<tr style="height: 40px">',

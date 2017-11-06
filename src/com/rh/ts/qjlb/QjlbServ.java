@@ -8,11 +8,12 @@ import com.rh.core.comm.ConfMgr;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
+import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.util.Constant;
+import com.rh.ts.util.TsConstant;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -248,11 +249,11 @@ public class QjlbServ extends CommonServ {
             getQxBean.put("cishu", ConfMgr.getConf("TS_KSQJ_SETCONUTS", "0"));
             getQxBean.put("zhoushu", ConfMgr.getConf("TS_KSQJ_WEEK_MAXNUM", "0"));
             try {
-           Bean   result =   ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
-           if(!"true".equals(result.getStr("yes"))){
-        	   Transaction.rollback();
-        	   outBean.setError((String)result.get(Constant.RTN_MSG));
-           }
+                Bean result = ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
+                if (!"true".equals(result.getStr("yes"))) {
+                    Transaction.rollback();
+                    outBean.setError((String) result.get(Constant.RTN_MSG));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Transaction.rollback();
@@ -423,7 +424,7 @@ public class QjlbServ extends CommonServ {
                 String bmMk = (String) bmBean.get("BM_MK");
                 String bmType = (String) bmBean.get("BM_TYPE");
                 String lbDate = (String) bmBean.get("LB_DATE");
-                String bm_bt = bmType + "-" + bmXl + "-" + bmMk;
+                String bm_bt = DictMgr.getName("TS_XMGL_BM_KSLBK_LV", bmType) + "-" + bmXl + "-" + bmMk;
                 String title = "";
                 if (!"".equals(bmMk)) {
                     title = bm_bt;
@@ -432,6 +433,11 @@ public class QjlbServ extends CommonServ {
                 }
                 tsBmshPass.set("lbDate", lbDate);
                 tsBmshPass.set("title", title);
+                //获取项目名称 临时方法
+                OutBean xmBean = ServMgr.act(TsConstant.SERV_XMGL, "byid", new ParamBean().setId(xmId));
+                String xmName = xmBean.getStr("XM_NAME");
+                tsBmshPass.set("XM_NAME", xmName);
+
             } else {
                 iterator.remove();
             }
@@ -476,29 +482,28 @@ public class QjlbServ extends CommonServ {
      * 请假次数统计
      */
     public OutBean getLeaveCount(ParamBean paramBean) {
-    	String userCode = paramBean.getStr("USER_CODE");
+        String userCode = paramBean.getStr("USER_CODE");
         //今年审批过的请假
-    	 Calendar now = Calendar.getInstance(); 
-    	 int year=now.get(Calendar.YEAR);  
-        String where = "and QJ_CODE = '" + userCode + "'and S_ATIME like '"+year+"%'";
-         List<Bean> beanList = ServDao.finds(TS_BM_QJ_NUM_SERVID, where);
-         Bean beanNum =null;
-         if(beanList!=null&&beanList.size()>0){
-        	 beanNum=beanList.get(0);
-         }
-        OutBean nBean=new OutBean();
-        if(beanNum!=null){
-             nBean.set("weekNum", beanNum.getStr("WEEK_NUM"));//获取周数
-             nBean.set("ciShuNum", beanNum.getStr("CISHU_NUM"));//获取次数
-        }else{
-        	nBean.set("weekNum", 0);//获取周数
+        Calendar now = Calendar.getInstance();
+        int year = now.get(Calendar.YEAR);
+        String where = "and QJ_CODE = '" + userCode + "'and S_ATIME like '" + year + "%'";
+        List<Bean> beanList = ServDao.finds(TS_BM_QJ_NUM_SERVID, where);
+        Bean beanNum = null;
+        if (beanList != null && beanList.size() > 0) {
+            beanNum = beanList.get(0);
+        }
+        OutBean nBean = new OutBean();
+        if (beanNum != null) {
+            nBean.set("weekNum", beanNum.getStr("WEEK_NUM"));//获取周数
+            nBean.set("ciShuNum", beanNum.getStr("CISHU_NUM"));//获取次数
+        } else {
+            nBean.set("weekNum", 0);//获取周数
             nBean.set("ciShuNum", 0);//获取次数
-        	
+
         }
         return nBean;
-       
-    }   
-    
+
+    }
 
 
 }

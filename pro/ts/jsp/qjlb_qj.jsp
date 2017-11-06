@@ -218,19 +218,18 @@
 					<div class="col-sm-10">
 						<div class="row">
 							<div class="col-sm-12">
-								
+
 								<form
 									action="<%=CONTEXT_PATH%>/sy/base/frame/coms/ueditor/jsp/imageUp.jsp"
 									method="post" id="imgformid" enctype="multipart/form-data">
 									<div class="form-group" id="caseIma">
-										<label class="" style="cursor: pointer;">
-											<%--btn btn-primary--%> <img style="padding-left: 15px"
-											alt="选择" src="<%=CONTEXT_PATH%>/ts/image/005.png" />&nbsp;&nbsp;<a
-											style="color: #81bbb3;" href="#">上传</a> <%--选择图片--%> <input
-											type="file" style="display: none;" class="form-control"
-											id="caseImage" name="file" onchange="viewImage(this)" />
-										<%--viewImage   upImg--%>
-										</label>
+                                        <label class="" style="cursor:pointer;">
+                                            <div style="float: left;background-image: url(<%=CONTEXT_PATH%>/ts/image/005.png);width: 32px;height: 32px;">
+                                                &nbsp;&nbsp;
+                                            </div>
+                                            <div style="margin-top: 5px;margin-left: 2px;color: #91dce4;float: left;" href="#">上传</div>
+                                            <input type="file" style="display: none;" class="form-control" id="caseImage" name="file" onchange="viewImage(this)">
+                                        </label>
 									</div>
 									<input type="text" name="SERV_ID" value="TS_QJLB_QJ"
 										style="display: none;" /> <input type="text" name="DATA_ID"
@@ -262,12 +261,12 @@
 			<div class="row">
 				<div class="col-sm-offset-4 col-sm-3">
 					<button onclick="applyForLeave()" class="btn btn-success"
-						style="width: 150px; height: 45px; background-color: #00c2c2;">
+						style="width: 150px; height: 45px; background-color: #00c2c2;font-size: 16px;">
 						提交申请</button>
 				</div>
 				<div class="col-sm-3">
 					<button onclick="back()" class="btn btn-success"
-						style="width: 150px; height: 45px; background-color: #00c2c2;">
+						style="width: 150px; height: 45px; background-color: #00c2c2;font-size: 16px;">
 						返回
 						<div id="serverResponse"></div>
 					</button>
@@ -493,7 +492,7 @@
         //var currentUserWorkNum = System.getUser("USER_WORK_NUM");
 //        var data = {USER_WORK_NUM: currentUserWorkNum};
 	//判断此人能否请假
-	
+
     var currentUserWorkNum = System.getUser("USER_WORK_NUM");
 
         function saveData(fileId) {
@@ -509,7 +508,7 @@
                     bmids += "," + bmidsArray[i].value;
                 }
             }
-            
+
             var param = {};
             param["qjimg"] = fileId;
             param["qjtitle"] = qjtitle;
@@ -535,22 +534,22 @@
             if (qjtitle === "") {
                 alert("标题不能为空");
             } else {
-            	
+
             	var paramstr={};
-            	
+
             	paramstr["cishu"]=cishu;
-            	
+
             	paramstr["bmids"] = bmids;
-            	
+
             	paramstr["zhoushu"]=zhoushu;
-            	
+
             	var result = FireFly.doAct("TS_BM_QJ_NUM","getFlag",paramstr);
-            	
+
             	if(result.yes=="true"){
             	}else{
             		return false;
             	}
-            	
+
                 FireFly.doAct("TS_QJLB_QJ", "addData", param, false, false, function (response) {
 
                     if (response._MSG_.indexOf('ERROR') >= 0) {
@@ -569,7 +568,7 @@
                     }
 
                 });
-                
+
             }
 
         }
