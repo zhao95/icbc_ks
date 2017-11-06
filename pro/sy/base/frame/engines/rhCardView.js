@@ -586,7 +586,7 @@ rh.vi.cardView.prototype._bldWin = function() {
     	position = this.xyArray;
     	
     }
-    if(hei<600){
+    if(hei<800){
     	hei="530";
     }
     if(hei>1000){
@@ -661,6 +661,7 @@ rh.vi.cardView.prototype._bldWin = function() {
     	_parent.window.scrollTo(0,top[0]);
     }
 };
+
 /*
  * 构建卡片布局，包括form和下方关联的功能
  */
