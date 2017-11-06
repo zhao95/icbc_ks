@@ -234,7 +234,7 @@ public class StayServ extends CommonServ {
 							+ "'";
 					List<Bean> newlist = ServDao.finds("TS_BMSH_PASS", where);
 					if (newlist.size() != 0) {
-						Bean newBean = new Bean();
+						Bean newBean = newlist.get(0);
 						newBean.copyFrom(bean);
 						if(flag.equals("1")){
 							//    逐级  
