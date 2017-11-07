@@ -25,7 +25,7 @@ public class QjlbServ extends CommonServ {
     private final static String TODO_SERVID = "TS_COMM_TODO";
     private final static String DONE_SERVID = "TS_COMM_TODO_DONE";
     private final static String COMM_MIND_SERVID = "TS_COMM_MIND";
-    private final static String TSQJ_BM_SERVID = "TS_QJLB_BM";
+//    private final static String TSQJ_BM_SERVID = "TS_QJLB_BM";
     private final static String TS_BMSH_PASS_SERVID = "TS_BMSH_PASS";
     private final static String TS_BM_QJ_NUM_SERVID = "TS_BM_QJ_NUM";
     private final static String dateFormatString = "yyyy-MM-dd HH:mm:ss";
@@ -327,7 +327,7 @@ public class QjlbServ extends CommonServ {
 
                 Bean todoBean = new Bean();
                 todoBean.set("TITLE", qjTitle);
-                todoBean.set("TYPE", "0");//待办类型 1 请假 2借考  (? 0 请假)
+                todoBean.set("TYPE", "0");//待办类型 0 请假 1借考
                 todoBean.set("DATA_ID", qjId);
                 todoBean.set("NODE_STEPS", nodeSteps + "");//当前所在的流程级别
                 todoBean.set("NODE_NAME", nodeName);//当前所在的流程节点名称

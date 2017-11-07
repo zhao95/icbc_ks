@@ -36,14 +36,14 @@ function showTodoContent() {
 
     var typeNameMap = {
         '0': '请假',
-        '2': '借考',
-        '1': '异议'
+        '1': '借考',
+        '2': '异议'
     };
 
     var colorClassNameMap = {
         '0': 'qijia',
-        '2': 'jiekao',
-        '1': 'yiyi'
+        '1': 'jiekao',
+        '2': 'yiyi'
     };
 
     for (var i = 0; i < todoList.length; i++) {
@@ -72,7 +72,7 @@ function showTodoContent() {
                 var todoId = $(this).attr('id');
                 doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
             });
-        } else if (item.TYPE === '2') {
+        } else if (item.TYPE === '1') {
             itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
                 var dataId = $(this).attr('data-id');
                 var todoId = $(this).attr('id');
@@ -295,7 +295,7 @@ function showTodoTip() {
                 var todoId = $(this).attr('id');
                 doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId});
             });
-        } else if (item.TYPE === '2') {
+        } else if (item.TYPE === '1') {
             itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
                 var dataId = $(this).attr('data-id');
                 var todoId = $(this).attr('id');

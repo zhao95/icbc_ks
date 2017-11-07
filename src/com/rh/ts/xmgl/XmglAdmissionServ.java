@@ -17,6 +17,7 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.PageBean;
+import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.util.Constant;
 import com.rh.ts.util.POIExcelUtil;
 import com.rh.ts.util.TsConstant;
@@ -66,10 +67,12 @@ public class XmglAdmissionServ extends CommonServ {
         List<Object> values = new ArrayList<>();
         values.add(userCode);
 
+        //BM_STATUS not in('1','3')：项目中考试全部请假不显示
         String sql = "SELECT a.* FROM `ts_xmgl` a " +
                 " where exists (" +
-                "select 'X' from ts_bmsh_pass b where a.XM_ID =b.XM_ID and b.BM_CODE=? and b.BM_STATUS not in( '1','2','3')" +
-                ")";
+                "select 'X' from ts_bmsh_pass b where a.XM_ID =b.XM_ID and b.BM_CODE=? and b.BM_STATUS not in( '1','3')" +
+                ")" +
+                "order by a.XM_START";
 
         List<Bean> dataList = Transaction.getExecutor().queryPage(
                 sql, page.getNowPage(), page.getShowNum(), new ArrayList<>(values), null);
@@ -166,15 +169,18 @@ public class XmglAdmissionServ extends CommonServ {
         admissionFileBean.set("XM_ID", xmId);
         admissionFileBean.set("USER_CODE", userCode);
         List<Bean> existsBeanList = ServDao.finds(TsConstant.SERV_XMGL_ADMISSION_FILE, admissionFileBean);
+        Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+        String xmKcapPublishTime = xmBean.getStr("XM_KCAP_PUBLISH_TIME");
 
-        if (existsBeanList.size() > 0 && StringUtils.isNotEmpty(existsBeanList.get(0).getStr("FILE_ID"))) {
-            //已生成该项目该考生的准考证，直接返回
+        if (existsBeanList.size() > 0 && StringUtils.isNotEmpty(existsBeanList.get(0).getStr("FILE_ID"))//已生成该项目该考生的准考证
+                && existsBeanList.get(0).getStr("S_ATIME").compareTo(xmKcapPublishTime) > 0//生成时间在发布之后
+                ) {
+            //已生成该项目该考生的准考证并且 生成时间在发布之后，直接返回
             fileId = existsBeanList.get(0).getStr("FILE_ID");
             pdfFileBean = FileMgr.getFile(fileId);
         } else {
             //还未生成，执行生成代码
             UserBean userBean = UserMgr.getUser(userCode);
-            Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
             String excel_template_id = xmBean.getStr("EXCEL_TEMPLATE_ID");
             String excelTemplateId = "";
             if (StringUtils.isNotEmpty(excel_template_id)) {
@@ -183,7 +189,7 @@ public class XmglAdmissionServ extends CommonServ {
             InputStream in;
             if (StringUtils.isBlank(excelTemplateId)) {
                 throw new TipException("准考证模板未定义");
-            }else if(!(excelTemplateId.contains("xls")||excelTemplateId.contains("xlsx"))){
+            } else if (!(excelTemplateId.contains("xls") || excelTemplateId.contains("xlsx"))) {
                 throw new TipException("准考证模板格式错误");
             }
 
@@ -201,8 +207,14 @@ public class XmglAdmissionServ extends CommonServ {
                 if (pdfFlag == 0) {
                     //pdf转换成功：添加/更新 TS_XMGL_ADMISSION_FILE  上传pdf文件
                     if (existsBeanList.size() > 0) {
-                        //存在admissionFileBean数据，但fileId为空
+                        //存在admissionFileBean数据
                         admissionFileBean = existsBeanList.get(0);
+                        String existFileId = admissionFileBean.getStr("FILE_ID");
+                        if (StringUtils.isNotBlank(existFileId)) {
+                            //fileId 不为空 删除文件
+                            FileMgr.deleteFile(existFileId);
+                            admissionFileBean.set("FILE_ID", "");
+                        }
                     } else {
                         //不存在admissionFileBean，创建
                         admissionFileBean.set("FILE_ID", "");
@@ -244,9 +256,9 @@ public class XmglAdmissionServ extends CommonServ {
      * @throws IOException IOException
      */
     public File generateAdmissionExcelFile(String xmId, String userCode, InputStream inputStream) throws IOException {
-         /* todo 获取数据bean*/
-        //基本信息 {title} {userCode} {userName} {userSexName} {orgName} {kcName} {kcAdress}
         Bean dataBean = new Bean();
+
+        //基本信息 {title} {userCode} {userName} {userSexName} {orgName} {kcName} {kcAdress}
         Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
         UserBean userBean = UserMgr.getUser(userCode);
         dataBean.put("title", xmBean.getStr("XM_NAME"));
@@ -255,10 +267,6 @@ public class XmglAdmissionServ extends CommonServ {
         String userSexName = "1".equals(userBean.getStr("USER_SEX")) ? "女" : "男";
         dataBean.put("userSexName", userSexName);
         dataBean.put("orgName", userBean.getDeptName());
-        dataBean.put("kcName", "todo-考场名称");
-        dataBean.put("kcAddress", "todo-考场地址");
-
-//        dataBean.put("ksName", "ksName1");
 
         //picture
 //        bufferImg = ImageIO.read(new File("C:\\Users\\shenh\\Pictures\\Saved Pictures\\微信截图_20170901180205.png"));
@@ -270,9 +278,47 @@ public class XmglAdmissionServ extends CommonServ {
             dataBean.put("pictureFileSuffix", fileId.substring(fileId.lastIndexOf(".") + 1, fileId.length()));
         }
 
-        // todo ksList
+        //ksList
+        String sql = "select f.BM_TYPE,f.BM_MK,f.BM_XL,f.BM_TITLE,b.KC_NAME,b.KC_ADDRESS,e.ZW_ZWH_SJ,d.SJ_START,c.BM_KS_TIME  " +
+                "from ts_xmgl_kcap_yapzw a " +
+                "left join ts_kcgl b on b.KC_ID = a.KC_ID " +
+                "left join ts_bmsh_pass c on c.SH_ID = a.SH_ID " +
+                "left join ts_xmgl_kcap_dapcc_ccsj d on d.SJ_ID = a.SJ_ID " +
+                "left join ts_kcgl_zwdyb e on e.ZW_ID = a.ZW_ID " +
+                "left join ts_bmlb_bm f on f.BM_ID = c.BM_ID " +
+                "where a.XM_ID =? and c.BM_CODE =?";
+        List<Object> values = new ArrayList<>();
+        values.add(xmId);
+        values.add(userCode);
+
+        List<Bean> ksbakList = new ArrayList<>();
+        List<Bean> ksDataList = Transaction.getExecutor().query(sql, values);
+        ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and ");
 //        ServDao.finds();
         //SERV_KCAP_YAPZW
+        for (Bean ksDataBean : ksDataList) {
+            String bmTitle = (String) ksDataBean.get("BM_TITLE");
+            String bmXl = (String) ksDataBean.get("BM_XL");
+            String bmMk = (String) ksDataBean.get("BM_MK");
+            String bmType = (String) ksDataBean.get("BM_TYPE");
+            String bm_bt = DictMgr.getName("TS_XMGL_BM_KSLBK_LV", bmType) + "-" + bmXl + "-" + bmMk;
+            String title;
+            if (!"".equals(bmMk)) {
+                title = bm_bt;
+            } else {
+                title = bmTitle;
+            }
+            Bean kcBean = new Bean();
+            kcBean.set("kcName", ksDataBean.getStr("KC_NAME"));//考场名称
+            kcBean.set("kcAddress", ksDataBean.getStr("KC_ADDRESS"));//考场地址
+            kcBean.set("ksName", title);//考试名称
+            kcBean.set("ksXTZW", ksDataBean.getStr("ZW_ZWH_SJ"));//考试座位号
+            kcBean.set("ksBeginTime", ksDataBean.getStr("SJ_START"));//考试开始时间
+            kcBean.set("ksDuration", ksDataBean.getStr("BM_KS_TIME"));//考试时长
+            ksbakList.add(kcBean);
+        }
+        dataBean.set("ksList", ksbakList);
+
         //需要替换的考试信息 rowIndex colIndex
         Map<String, Integer> ksIndexMap = new HashMap<>();
 
@@ -281,6 +327,8 @@ public class XmglAdmissionServ extends CommonServ {
         ksInfoFieldNameList.add("{ksXTZW}");
         ksInfoFieldNameList.add("{ksBeginTime}");
         ksInfoFieldNameList.add("{ksDuration}");
+        ksInfoFieldNameList.add("{kcName}");
+        ksInfoFieldNameList.add("{kcAddress}");
 
         List<String> list = new ArrayList<>();
         for (Object o : dataBean.keySet()) {
@@ -379,7 +427,12 @@ public class XmglAdmissionServ extends CommonServ {
             /*考试信息*/
             List<Bean> ksList = dataBean.getList("ksList");
 
-            int ksNameRowIndex, ksNameColIndex, ksXTZWRowIndex, ksXTZWColIndex, ksBeginTimeRowIndex, ksBeginTimeColIndex, ksDurationRowIndex, ksDurationColIndex;
+            int ksNameRowIndex, ksNameColIndex,
+                    ksXTZWRowIndex, ksXTZWColIndex,
+                    ksBeginTimeRowIndex, ksBeginTimeColIndex,
+                    ksDurationRowIndex, ksDurationColIndex,
+                    kcNameRowIndex, kcNameColIndex,
+                    kcAddressRowIndex, kcAddressColIndex;
             ksNameRowIndex = ksIndexMap.get("ksNameRowIndex");
             ksNameColIndex = ksIndexMap.get("ksNameColIndex");
             ksXTZWRowIndex = ksIndexMap.get("ksXTZWRowIndex");
@@ -388,6 +441,10 @@ public class XmglAdmissionServ extends CommonServ {
             ksBeginTimeColIndex = ksIndexMap.get("ksBeginTimeColIndex");
             ksDurationRowIndex = ksIndexMap.get("ksDurationRowIndex");
             ksDurationColIndex = ksIndexMap.get("ksDurationColIndex");
+            kcNameRowIndex = ksIndexMap.get("kcNameRowIndex");
+            kcNameColIndex = ksIndexMap.get("kcNameColIndex");
+            kcAddressRowIndex = ksIndexMap.get("kcAddressRowIndex");
+            kcAddressColIndex = ksIndexMap.get("kcAddressColIndex");
 
             if (!CollectionUtil.isEmpty(ksList)) {
                 Bean ksBean = ksList.get(0);
@@ -395,6 +452,8 @@ public class XmglAdmissionServ extends CommonServ {
                 String ksXTZW = ksBean.getStr("ksXTZW");
                 String ksBeginTime = ksBean.getStr("ksBeginTime");
                 String ksDuration = ksBean.getStr("ksDuration");
+                String kcName = ksBean.getStr("kcName");
+                String kcAddress = ksBean.getStr("kcAddress");
                 //ksName
                 HSSFRow row = sheet.getRow(ksNameRowIndex);
                 if (row != null) {
@@ -427,7 +486,22 @@ public class XmglAdmissionServ extends CommonServ {
                         cell.setCellValue(ksDuration);
                     }
                 }
-
+                //kcName
+                HSSFRow row5 = sheet.getRow(kcNameRowIndex);
+                if (row4 != null) {
+                    HSSFCell cell = row5.getCell(kcNameColIndex);
+                    if (cell != null) {
+                        cell.setCellValue(kcName);
+                    }
+                }
+                //kcAddress
+                HSSFRow row6 = sheet.getRow(kcAddressRowIndex);
+                if (row6 != null) {
+                    HSSFCell cell = row6.getCell(kcAddressColIndex);
+                    if (cell != null) {
+                        cell.setCellValue(kcAddress);
+                    }
+                }
             }
 
             List<Integer> nums = new ArrayList<>();
@@ -435,6 +509,8 @@ public class XmglAdmissionServ extends CommonServ {
             nums.add(ksNameRowIndex);
             nums.add(ksXTZWRowIndex);
             nums.add(ksBeginTimeRowIndex);
+            nums.add(kcNameRowIndex);
+            nums.add(kcAddressRowIndex);
 
             Integer max = Collections.max(nums);
             Integer min = Collections.min(nums);

@@ -8,7 +8,6 @@ import com.rh.core.serv.*;
 import com.rh.core.serv.bean.PageBean;
 import com.rh.core.util.Constant;
 import com.rh.ts.pvlg.PvlgUtils;
-
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -228,7 +227,10 @@ public class DapccServ extends CommonServ {
 //        List<Bean> list = ServDao.finds("TS_XMGL_KCAP_DAPCC", "and XM_ID='" + xmId + "'");
         for (Bean item : list) {
             String ccId = item.getId();
-            List<Bean> list2 = ServDao.finds("TS_XMGL_KCAP_DAPCC_CCSJ", "and CC_ID = '" + ccId + "'");
+            ParamBean queryParamBean = new ParamBean();
+            queryParamBean.set(Constant.PARAM_WHERE, "and CC_ID = '" + ccId + "'");
+            queryParamBean.set(Constant.PARAM_ORDER, " SJ_START");
+            List<Bean> list2 = ServDao.finds("TS_XMGL_KCAP_DAPCC_CCSJ", queryParamBean);
             item.set(CHILD, list2);
             this.putChild(cache.get(item.getStr(DEPT_CODE)), item, true);
         }
@@ -389,7 +391,7 @@ public class DapccServ extends CommonServ {
         List<Object> values = new ArrayList<>();
         values.add(deptCode);
 
-        Bean bean =ServDao.find("SY_ORG_DEPT", deptCode);
+        Bean bean = ServDao.find("SY_ORG_DEPT", deptCode);
 //        Bean bean = Transaction.getExecutor().queryOne("select * from sy_org_dept where DEPT_CODE = ?", values);
         String codePath = bean.getStr("CODE_PATH");
 

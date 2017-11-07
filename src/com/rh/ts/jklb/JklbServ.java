@@ -102,6 +102,7 @@ public class JklbServ extends CommonServ {
         String sh_reason = paramBean.getStr("shreason");//审核内容
         String isRetreat = paramBean.getStr("isRetreat");//是否被退回
         String paramTodoId = paramBean.getStr("todoId");//待办id*/
+
         // sh_status = sh_status.equals("1") ? "同意" : "不同意";
         UserBean currentUser = Context.getUserBean();//
         return this.updateData2(paramBean, currentUser);
@@ -285,7 +286,7 @@ public class JklbServ extends CommonServ {
 
                 Bean todoBean = new Bean();
                 todoBean.set("TITLE", jkTitle);
-                todoBean.set("TYPE", "2");//待办类型 1 请假 2借考
+                todoBean.set("TYPE", "1");//待办类型 0 请假 1借考
                 todoBean.set("DATA_ID", jkId);
                 todoBean.set("NODE_STEPS", nodeSteps + "");//当前所在的流程级别
                 todoBean.set("NODE_NAME", nodeName);//当前所在的流程节点名称
@@ -318,7 +319,7 @@ public class JklbServ extends CommonServ {
         if (bmids.length > 0) {
             sbu.append("'").append(bmids[0]).append("'");
             for (int i = 1; i < bmids.length; i++) {
-                String bmid = bmids[i];
+//                String bmid = bmids[i];
                 sbu.append(",'").append(bmids[i]).append("'");
             }
         }

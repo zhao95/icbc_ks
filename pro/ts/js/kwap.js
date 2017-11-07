@@ -801,7 +801,7 @@ var UpdateCCModal = {
 
         if (tree1Selected.length <= 0 || tree2Selected.length <= 0) {
             alert('请选择场次');
-        } else if (KcObject.getCcById(tree1Selected[0]) === null || KcObject.getCcById(tree2Selected[0]) === null) {
+        } else if (KcObject.getSjById(tree1Selected[0]) === null || KcObject.getSjById(tree2Selected[0]) === null) {
             alert('选中非场次，请重新选择');
         } else if (tree1Selected[0] === tree2Selected[0]) {
             alert('两边选择的为同一场次，请重新选择');
@@ -965,6 +965,17 @@ var KcObject = {
         return result;
     },
 
+    getSjById: function (id) {
+        var result = null;
+        for (var i = 0; i < this.ccArr.length; i++) {
+            var cc = this.ccArr[i];
+            if (cc.SJ_ID === id) {
+                result = cc;
+            }
+        }
+        return result;
+    },
+
     getYapzwById: function (id) {
         var result = null;
         for (var i = 0; i < this.currentYapzwArr.length; i++) {
@@ -1107,17 +1118,7 @@ var KcObject = {
         var $kcInfoTbody = $kcInfo.find('tbody');
         $kcInfoTbody.html('');
 
-        //kcTip
-        $kcTip.append([
-            '<span style="color:#12769C;">当前考场及场次：</span>',
-            '考场数:<span id="kcCount" class="tip-red">3</span>',
-            '场次数数：<span id="ccCount" class="tip-red">11</span>',
-            '考生数：<span id="ksCount" class="tip-red">800</span>',
-            '（借入：<span id="jieruCount" class="tip-red">3</span>，',
-            '借出：<span id="jiechuCount" class="tip-red">2</span>，',
-            '请假：<span id="qjCount" class="tip-red">1</span>）',
-            '已安排：<span id="yapCount" class="tip-red">790</span>'
-        ].join(''));
+        var ccCount = 0;//场次数
 
         var ccTimes = [];//kcArrhz中对应的所有场次时间
         //获取所有的场次时间
@@ -1164,6 +1165,7 @@ var KcObject = {
                 }
 
                 if (hasCcTime(kc.CHILD, ccTime)) {
+                    ccCount++;
                     $bodyTr.append('<td>' + '0 / 0' + '</td>');
                 } else {
                     $bodyTr.append('<td></td>');
@@ -1171,6 +1173,20 @@ var KcObject = {
             }
             $kcInfoTbody.append($bodyTr);
         }
+
+        //kcTip
+        $kcTip.append([
+            '<span style="color:#12769C;">当前考场及场次：</span>',
+            '考场数:<span id="kcCount" class="tip-red">' + kcArr.length + '</span>&nbsp;',
+            '场次数数：<span id="ccCount" class="tip-red">' + ccCount + '</span>&nbsp;',
+            '考生数：<span id="ksCount" class="tip-red">800</span>&nbsp;',
+            '（借入：<span id="jieruCount" class="tip-red">3</span>&nbsp;',
+            '借出：<span id="jiechuCount" class="tip-red">2</span>&nbsp;',
+            '请假：<span id="qjCount" class="tip-red">1</span>）',
+            '已安排：<span id="yapCount" class="tip-red">790</span>'
+        ].join(''));
+
+
     },
 
     /**
@@ -1241,7 +1257,7 @@ var KcObject = {
             '' + parentKc.KC_NAME,
             '&nbsp;&nbsp;' + cc.ccTime,
             '最优数：<span class="tip-red">48</span>',
-            '已安排：<span style="color:green">48</span>',
+            '已安排：<span id="cc-info-yap-count" style="color:green">' + this.currentYapzwArr.length + '</span>',
             '借考：<span style="color:#00a7d0">1</span>，',
             '请假：<span class="tip-red">1</span>',
             '<div onclick="KcObject._setCcInfoType(\'list\')" style="cursor:pointer;padding: 3px;float: right"><i class="fa fa fa-list-ul"></i></div>',
@@ -1282,7 +1298,7 @@ var KcObject = {
                 for (var j = 0; j < trData.length; j++) {
                     var tdData = trData[j];
                     var $td = jQuery('<td id="' + tdData.ZW_ID + '" style="width:10%;">' +
-                        '   <span style="font-size: 1px;position: relative;top: -8px;left: -6px;">' + tdData.ZW_ZWH_SJ + '</span>' +
+                        '   <span style="font-size: 12px;position: relative;top: -8px;left: -6px;">' + tdData.ZW_ZWH_SJ + '</span>' +
                         '   <span class="userName"></span>' +
 //                            '   <span class="close">x</span>' +
                         '</td>');
