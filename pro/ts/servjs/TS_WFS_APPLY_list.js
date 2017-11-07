@@ -2,6 +2,7 @@ var _viewer = this;
 //var module = 'WPS';
 var height = jQuery(window).height()-250;
 var width = jQuery(window).width()-200;
+$(".rhGrid").find("tr").unbind("dblclick");
 //列表需要建一个code为buttons的自定义字段。
 $("#TS_WFS_APPLY .rhGrid").find("tr").each(function(index,item){
 	if(index !=0){

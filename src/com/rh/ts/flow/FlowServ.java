@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rh.core.base.Bean;
-import com.rh.core.base.Context;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
@@ -14,6 +13,7 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
+import com.rh.core.util.Strings;
 import com.rh.ts.pvlg.PvlgUtils;
 
 
@@ -252,7 +252,8 @@ public class FlowServ extends CommonServ {
 	int level = paramBean.getInt("level");
 	String xmId = paramBean.getStr("xmId");
 	String bmcode = paramBean.getStr("examerUserCode");
-	Bean userBean = ServDao.find("SY_ORG_USER", bmcode);
+//	Bean userBean = ServDao.find("SY_ORG_USER", bmcode);
+	UserBean userBean = UserMgr.getUser(bmcode);
 	//表单Bean
 	Bean formBean = paramBean.getBean("form");
 	//1:报名审核流程 2:异地借考流程 3:请假审核流程
@@ -398,9 +399,10 @@ public class FlowServ extends CommonServ {
 		String zdyDeptCode = shBean.getStr("DEPT_CODE");
 		String shzw = shBean.getStr("QJKLC_SHZW_CODE");
 		String colCodel = shBean.getStr("QJKLC_ZDDEPT_COLCODE");
+		String qzOrgLv = shBean.getStr("QJKLC_QZDEPT_CODE");
 
 		//1.审核人已填写
-		if(selType == 1){
+		if(selType == 1){ // 人
 		    if(!shUserCode.equals("")){
 			Bean shUser = new Bean();
 			shUser.set("SHR_NAME", shrName);
@@ -408,13 +410,36 @@ public class FlowServ extends CommonServ {
 			resList.add(shUser);
 			continue;
 		    }
-		}else if(selType == 2){
+		}else if(selType == 2){ //群组
 		    String sqlWhere = "";
-		    if(colCodel.equals("")){
-			sqlWhere = "and G_ID = '"+shqzCode+"' and ODEPT_CODE='"+shrOdeptCode+"'";
-		    }else{
-			String formOdept = formBean.getStr(colCodel);
-			sqlWhere = "and G_ID = '"+shqzCode+"' and ODEPT_CODE='"+formOdept+"'";
+		    
+		    if(!Strings.isBlank(qzOrgLv)) { //群组所属机构层级
+		    	
+		    	String odept = userBean.getODeptCode();
+		    	
+		    	int curlv = userBean.getODeptBean().getLevel();//当前用户机构层级
+		    	
+		    	int qzLv = Integer.parseInt(qzOrgLv); //群组机构层级
+		    	
+				if (curlv > qzLv) {
+					
+					DeptBean odeptBean = userBean.getODeptBean();
+					
+					for (int i = 0; i < (curlv - qzLv); i++) {
+						
+						odeptBean = odeptBean.getParentDeptBean().getODeptBean();
+					}
+					
+					odept = odeptBean.getODeptCode();
+				}
+		    	
+				sqlWhere = "and G_ID = '" + shqzCode + "' and ODEPT_CODE='" + odept + "'";
+		    	
+		    } else if(!colCodel.equals("")) { //借考机构
+		    	String formOdept = formBean.getStr(colCodel);
+				sqlWhere = "and G_ID = '"+shqzCode+"' and ODEPT_CODE='"+formOdept+"'";
+		    } else {
+		    	sqlWhere = "and G_ID = '"+shqzCode+"' and ODEPT_CODE='"+shrOdeptCode+"'";
 		    }
 		    
 		    List<Bean> list2 = ServDao.finds("TS_PVLG_GROUP_USER",sqlWhere );

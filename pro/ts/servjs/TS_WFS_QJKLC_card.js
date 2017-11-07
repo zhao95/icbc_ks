@@ -14,49 +14,63 @@ if(_viewer.opts.act == "cardAdd"){
 }
 
 var sel = _viewer.getItem("QJKLC_SEL").getValue();
-if(sel == 0){
+if(sel == 0){ //部门
 	_viewer.getItem("QJKLC_SHR").hide();
 	_viewer.getItem("QJKLC_SHQZ").hide();
 	_viewer.showGroup("dept");
 	_viewer.showGroup("post");
 	_viewer.getItem("QJKLC_ZDDEPT_COLCODE").hide();
-}else if(sel == 1){
+	_viewer.getItem("QJKLC_QZDEPT_CODE").hide();
+}else if(sel == 1){//人
 	_viewer.getItem("QJKLC_SHR").show();
 	_viewer.getItem("QJKLC_SHQZ").hide();
 	_viewer.hideGroup("dept");
 	_viewer.hideGroup("post");
 	_viewer.getItem("QJKLC_ZDDEPT_COLCODE").hide();
-}else{
+	_viewer.getItem("QJKLC_QZDEPT_CODE").hide();
+}else{ //群组
 	_viewer.getItem("QJKLC_SHR").hide();
 	_viewer.getItem("QJKLC_SHQZ").show();
 	_viewer.hideGroup("dept");
 	_viewer.hideGroup("post");
-	if(type != 2){
-		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").show();
+	
+	if(type == 2){ //如果借考
+		_viewer.getItem("QJKLC_QZDEPT_CODE").hide(); //隐藏机构层级
+		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").show();//显示用于被借考审核
+	} else {
+		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").hide();
+		_viewer.getItem("QJKLC_QZDEPT_CODE").show();
 	}
 }
 
 _viewer.getItem("QJKLC_SEL").change(function(){
 	sel = _viewer.getItem("QJKLC_SEL").getValue();
-	if(sel == 0){
+	if(sel == 0){ //部门
 		_viewer.getItem("QJKLC_SHR").hide();
 		_viewer.getItem("QJKLC_SHQZ").hide();
 		_viewer.showGroup("dept");
 		_viewer.showGroup("post");
 		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").hide();
-	}else if(sel == 1){
+		_viewer.getItem("QJKLC_QZDEPT_CODE").hide();
+	}else if(sel == 1){ //人
 		_viewer.getItem("QJKLC_SHR").show();
 		_viewer.getItem("QJKLC_SHQZ").hide();
 		_viewer.hideGroup("dept");
 		_viewer.hideGroup("post");
 		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").hide();
-	}else{
+		_viewer.getItem("QJKLC_QZDEPT_CODE").hide();
+	}else{ //群组
 		_viewer.getItem("QJKLC_SHR").hide();
 		_viewer.getItem("QJKLC_SHQZ").show();
 		_viewer.hideGroup("dept");
 		_viewer.hideGroup("post");
-		if(type != 2){
-			_viewer.getItem("QJKLC_ZDDEPT_COLCODE").show();
+		
+		if(type == 2){ //如果借考
+			_viewer.getItem("QJKLC_QZDEPT_CODE").hide(); //隐藏机构层级
+			_viewer.getItem("QJKLC_ZDDEPT_COLCODE").show();//显示用于被借考审核
+		} else {
+			_viewer.getItem("QJKLC_ZDDEPT_COLCODE").hide();
+			_viewer.getItem("QJKLC_QZDEPT_CODE").show();
 		}
 	}
 });
