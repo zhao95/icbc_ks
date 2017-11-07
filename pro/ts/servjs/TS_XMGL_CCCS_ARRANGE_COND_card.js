@@ -83,7 +83,35 @@ function getCc(){
  */
 function addMin(a,b) {
 	b = parseInt(b);
-	var time = new Date(a.replace(/"-"/g, "/"));
-	time.setMinutes(time.getMinutes() + b);
-	return (time.format("yyyy-mm-dd hh:MM")).toString();
+	var date = new Date(a.replace(/"-"/g, "/"));
+	
+	date.setMinutes(date.getMinutes() + b);
+	
+	var sp1 = "-";
+    var sp2 = ":";
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hours = date.getHours();
+    var min = date.getMinutes();
+    var sec = date.getSeconds();
+    
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (day >= 0 && day <= 9) {
+    	day = "0" + day;
+    }
+    if (hours >= 0 && hours <= 9) {
+    	hours = "0" + hours;
+    }
+    if (min >= 0 && min <= 9) {
+    	min = "0" + min;
+    }
+    if (sec >= 0 && sec <= 9) {
+    	sec = "0" + sec;
+    }
+    
+    var currentdate = date.getFullYear() + sp1 + month + sp1 + day + " " + hours + sp2 + min;
+    
+	return currentdate;
 }
