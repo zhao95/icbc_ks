@@ -947,7 +947,7 @@ public class BmlbServ extends CommonServ {
 		String where = "AND BM_ID=" + "'" + id + "'";
 		List<Bean> list = ServDao.finds("TS_BMLB_BM", where);
 		if (list.size() == 0) {
-			return new OutBean().setOk("信息为空");
+			return new OutBean().setError("数据错误，数据不存在");
 		}
 		Bean outBean = new Bean();
 		
