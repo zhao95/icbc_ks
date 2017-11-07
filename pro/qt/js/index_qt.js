@@ -76,7 +76,7 @@ function showMenu() {
 						.append(
 								'<li><a href="'+data.menuList[i].MENU_URL+'" target="blank"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
 										+ data.menuList[i].MENU_NAME
-										+ '</span><span class="label label-warning" id="tipSum">'+num+'</span></a></li>');
+										+ '</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-warning" id="tipSum">'+num+'</span></a></li>');
 				  }
 			  }else{
 				  
