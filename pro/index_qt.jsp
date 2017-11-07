@@ -9,7 +9,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!-- <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" > -->
-<title>前台首页</title>
+<title>工商银行考试系统首页</title>
 <meta
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">

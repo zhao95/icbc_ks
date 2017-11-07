@@ -10,7 +10,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>考试计划详情</title>
+<title>考试日历详情</title>
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <!-- 获取后台数据 -->
 <%@ include file="../../sy/base/view/inHeader.jsp"%>

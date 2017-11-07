@@ -16,7 +16,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>集成平台</title>
+<title>工商银行考试系统</title>
 <link rel="apple-touch-icon-precomposed"
 	href="/apple-touch-icon-precompose.png" />
 <link rel="shortcut icon" href="favicon.ico" />
@@ -71,7 +71,7 @@
 
 		function checkLang() {
 			if (getCookie("RhLanguage") == "zh") {
-				document.title = '集成平台';
+				document.title = '工商银行考试系统';
 				$("#form_title").html("");
 				$("#form_cmpy").html("公司");
 				//     	$("#form_username").html("用户名：");
