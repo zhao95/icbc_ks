@@ -56,7 +56,7 @@ public class JkglServ extends CommonServ {
     	Date date = new Date();
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	String format = sdf.format(date);
-    	String where ="AND JKGL_USER_CODE='"+str+"' AND '"+format+"' BETWEEN JKGL_START_DATE AND JKGL_END_DATE";
+    	String where ="AND JKGL_RLZY='"+str+"' AND '"+format+"' BETWEEN JKGL_START_DATE AND JKGL_END_DATE";
     	List<Bean> finds = ServDao.finds("TS_JKGL",where);
     	String str2 = "";
     	if(finds!=null && finds.size()!=0){

@@ -62,6 +62,7 @@ function tiaozhuan(i){
 	
 		//获取禁考的配置信息  并显示给前台
 		$("#jkxxinfo").html(tsyjson);
+		 $("#jkxxinfo").attr("disabled","disabled");
 		$("#jkinfo").modal('show');
 		return;
 	}

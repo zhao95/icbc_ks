@@ -250,15 +250,16 @@ position: absolute;
 		</div><!-- /.modal -->
 	</div>
 	<div class="modal fade" id="jkinfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
-		<div class="modal-dialog" style="width:40%">
+		<div class="modal-dialog" style="width:30%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
 					<h4 class="modal-title">
-					禁考信息	<span style="margin-left:5%;color:black" id = 'jkxxinfo'></span>
+					禁考提示
 					</h4>
 				</div>
-				
-				
+				<div align="center">
+				<textarea style="display:table-cell;vertical-align:middle;width:400px;height:80px" id = 'jkxxinfo'></textarea>
+				</div>
 				<div class="modal-footer" style="text-align:center;height:50px">
 					<button type="button" onclick = "closemotai()" class="btn btn-default" style=";background:lightseagreen;color:white;height:30px;width:70px;" data-dismiss="modal">确定</button>
 				</div>
