@@ -14,7 +14,8 @@ var Language = {
 	
 	pageTitle : {
 		en : "ICBC Platform",
-		zh : "工商银行集成平台"
+//		zh : "工商银行集成平台"
+		zh : "工商银行考试系统后台管理"
 	},
 	
 	waitUpload : {
