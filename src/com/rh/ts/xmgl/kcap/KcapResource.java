@@ -27,6 +27,8 @@ import com.rh.ts.util.TsConstant;
 public class KcapResource {
 
 	private static Log log = LogFactory.getLog(KcapResource.class);
+	
+	private String xmId = "";
 
 	/**
 	 * 领导职务考生
@@ -98,6 +100,8 @@ public class KcapResource {
 	// private Bean branchBean = null;
 
 	public KcapResource(String xmId) {
+		
+		this.xmId = xmId;
 
 		// 加载规则
 		loadRule(xmId);
@@ -115,6 +119,8 @@ public class KcapResource {
 	}
 
 	public KcapResource(String xmId, String odept) {
+		
+		this.xmId = xmId;
 
 		// 加载规则
 		loadRule(xmId);
@@ -458,7 +464,7 @@ public class KcapResource {
 
 					for (String kslb : val.split(",")) {
 
-						String[] array = kslb.split("^"); // array[0]序列，array[1]模块，array[2]等级
+						String[] array = kslb.split("\\^"); // array[0]序列，array[1]模块，array[2]等级
 
 						spExamBean.set(kslb, array);
 					}
@@ -1083,6 +1089,11 @@ public class KcapResource {
 	 */
 	public Bean getFarKsBean() {
 		return farKsBean;
+	}
+	
+
+	public String getXmId() {
+		return xmId;
 	}
 
 	public void showResLog() {

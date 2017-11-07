@@ -4,40 +4,69 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.rh.core.base.Bean;
+import com.rh.core.base.db.Transaction;
 import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.util.OrgConstant;
 import com.rh.core.serv.ServDao;
+import com.rh.core.serv.bean.SqlBean;
 import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.kcap.KcapResource;
 import com.rh.ts.xmgl.kcap.KcapRuleEnum;
 
 public class ArrangeSeat {
 
+	private static Log log = LogFactory.getLog(KcapResource.class);
+
 	public void doArrange(KcapResource res) {
 
 		int priority = res.getKsPriority(); // 0 最少考场 1 最少场次
 
-		if (priority == 1) { // 最少场次
+		try {
+//			Transaction.begin();
 
-			arrangeCc(res, false);
+			if (priority == 1) { // 最少场次
 
-		} else { // 最少考场
+				arrangeCc(res, false);
 
-			arrangeKc(res, false);
+			} else { // 最少考场
+
+				arrangeKc(res, false);
+			}
+
+//			Transaction.commit();
+
+		} catch (Exception e) {
+			log.error(e);
+		} finally {
+//			Transaction.end();
 		}
 
 		int ksConstrain = res.getKsConstrain(); // 不符合规则考试 是否强制安排
 
 		if (ksConstrain == 1) { // 强制安排
 
-			if (priority == 1) { // 最少场次
+			try {
+				Transaction.begin();
 
-				arrangeCc(res, true);
+				if (priority == 1) { // 最少场次
 
-			} else { // 最少考场
+					arrangeCc(res, true);
 
-				arrangeKc(res, true);
+				} else { // 最少考场
+
+					arrangeKc(res, true);
+				}
+
+				Transaction.commit();
+
+			} catch (Exception e) {
+				log.error(e);
+			} finally {
+				Transaction.end();
 			}
 		}
 
@@ -109,7 +138,14 @@ public class ArrangeSeat {
 
 							Bean filtKs = KcapMatch.matchUser(freeZw, ks, res, isConstrain);// 符合座位安排规则的考生
 
-							resetRes(freeZw, filtKs, res);
+							try {
+
+								resetRes(freeZw, filtKs, res);
+
+							} catch (Exception e) {
+
+								log.error(e.getMessage(), e);
+							}
 						}
 					}
 				}
@@ -185,7 +221,14 @@ public class ArrangeSeat {
 
 							Bean filtKs = KcapMatch.matchUser(freeZw, ks, res, isConstrain);// 符合座位规则的考生
 
-							resetRes(freeZw, filtKs, res);
+							try {
+
+								resetRes(freeZw, filtKs, res);
+
+							} catch (Exception e) {
+
+								log.error(e.getMessage(), e);
+							}
 						}
 					}
 				}
@@ -210,10 +253,12 @@ public class ArrangeSeat {
 
 		Bean busyZwClone = (Bean) res.getBusyZwBean().clone();
 
+		Bean delBean = new Bean();
+
 		for (Object kcKey : busyZwClone.keySet()) {
 
 			// key 考场Id^场次^日期
-			String[] keyArray = kcKey.toString().split("^");
+			String[] keyArray = kcKey.toString().split("\\^");
 
 			String kcId = keyArray[0];
 
@@ -225,7 +270,7 @@ public class ArrangeSeat {
 
 			int busyZwSize = busyZwKc.size();
 
-			for (Object zwhKey : busyZwKc.keySet()) {
+			for (Object zwhKey : busyZwKc.keySet()) { // 遍历座位安排信息
 
 				Bean busyZw = busyZwKc.getBean(zwhKey);
 
@@ -236,6 +281,8 @@ public class ArrangeSeat {
 					freeZwSize = res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId).size();
 
 					if (busyZwSize < freeZwSize) { // 安排考生人数少于机器数一半
+
+						delBean.set(kcKey, "");
 
 						Bean busyZwKcTemp = resetBusyZw.getBean(kcKey);
 
@@ -269,6 +316,8 @@ public class ArrangeSeat {
 
 					if (busyZwSize < freeZwSize) { // 安排考生人数少于机器数一半
 
+						delBean.set(kcKey, "");
+
 						Bean busyZwKcTemp = resetBusyZw.getBean(kcKey);
 
 						busyZwKcTemp.set(zwhKey, busyZw);
@@ -295,8 +344,39 @@ public class ArrangeSeat {
 						}
 					}
 				}
-
 			}
+		}
+
+		try {
+
+//			Transaction.begin();
+
+			for (Object key : delBean.keySet()) {
+
+				String[] keyArray = key.toString().split("\\^");
+
+				String kcId = keyArray[0];
+
+				String cc = keyArray[1];
+
+				String date = keyArray[2];
+
+				SqlBean sql = new SqlBean();
+
+				sql.and("XM_ID", res.getXmId());
+				sql.and("KC_ID", kcId);
+				sql.and("SJ_CC", cc);
+				sql.and("SJ_DATE", date);
+
+				ServDao.delete(TsConstant.SERV_KCAP_YAPZW, sql);
+			}
+
+//			Transaction.commit();
+
+		} catch (Exception e) {
+			log.error(e);
+		} finally {
+//			Transaction.end();
 		}
 
 		for (Object key : resetKc.keySet()) {
@@ -305,7 +385,14 @@ public class ArrangeSeat {
 
 			KcapMatch.filtR006(resetZw, resetBusyZw, resetKs);
 
-			resetRes(resetZw, resetKs, res);
+			try {
+
+				resetRes(resetZw, resetKs, res);
+
+			} catch (Exception e) {
+
+				log.error(e.getMessage(), e);
+			}
 		}
 
 	}
@@ -431,26 +518,26 @@ public class ArrangeSeat {
 			if (delFreeKs && delFreeKc) {// 删除考场考生资源成功
 
 				// 添加已安排考场资源
-				Bean busyZw = new Bean();
+				Bean addZw = new Bean();
 
-				busyZw.set("SH_ID", shId);
-				busyZw.set("ZW_ID", freeZw.getStr("ZW_ID"));
-				busyZw.set("ZW_XT", zwh);
-				busyZw.set("SJ_ID", freeZw.getStr("SJ_ID"));
-				busyZw.set("SJ_CC", cc);
-				busyZw.set("SJ_DATE", date);
-				busyZw.set("CC_ID", freeZw.getStr("CC_ID"));
-				busyZw.set("KC_ID", kcId);
+				addZw.set("SH_ID", shId);
+				addZw.set("ZW_ID", freeZw.getStr("ZW_ID"));
+				addZw.set("ZW_XT", zwh);
+				addZw.set("SJ_ID", freeZw.getStr("SJ_ID"));
+				addZw.set("SJ_CC", cc);
+				addZw.set("SJ_DATE", date);
+				addZw.set("CC_ID", freeZw.getStr("CC_ID"));
+				addZw.set("KC_ID", kcId);
 
-				busyZw.set("XM_ID", filtKs.getStr("XM_ID"));
-				busyZw.set("BM_LB", filtKs.getStr("BM_LB_CODE"));
-				busyZw.set("BM_XL", filtKs.getStr("BM_XL_CODE"));
-				busyZw.set("BM_MK", filtKs.getStr("BM_MK_CODE"));
-				busyZw.set("BM_LV", filtKs.getStr("BM_TYPE"));
-				busyZw.set("BM_KS_TIME", ksTime);
+				addZw.set("XM_ID", filtKs.getStr("XM_ID"));
+				addZw.set("BM_LB", filtKs.getStr("BM_LB_CODE"));
+				addZw.set("BM_XL", filtKs.getStr("BM_XL_CODE"));
+				addZw.set("BM_MK", filtKs.getStr("BM_MK_CODE"));
+				addZw.set("BM_LV", filtKs.getStr("BM_TYPE"));
+				addZw.set("BM_KS_TIME", ksTime);
 
-				busyZw.set("U_ODEPT", ksOdept);
-				busyZw.set("U_CODE", uCode);
+				addZw.set("U_ODEPT", ksOdept);
+				addZw.set("U_CODE", uCode);
 
 				Bean jkKs = res.getJkKsBean().getBean(ksOdept);
 
@@ -468,7 +555,7 @@ public class ArrangeSeat {
 								&& ks.getStr("BM_TYPE").equals(filtKs.getStr("BM_TYPE"))
 								&& ks.getStr("XM_ID").equals(filtKs.getStr("XM_ID"))) {
 
-							busyZw.set("U_TYPE", 1);
+							addZw.set("U_TYPE", 1);
 						}
 
 					} else if (jkKsObj instanceof List) {
@@ -483,18 +570,18 @@ public class ArrangeSeat {
 									&& ks.getStr("BM_TYPE").equals(filtKs.getStr("BM_TYPE"))
 									&& ks.getStr("XM_ID").equals(filtKs.getStr("XM_ID"))) {
 
-								busyZw.set("U_TYPE", 1);
+								addZw.set("U_TYPE", 1);
 								break;
 							}
 						}
 					}
 				}
 
-				Bean busyKc = res.getBusyZwBean().getBean(kcId + "^" + cc + "^" + date);
-				busyKc.set(zwh, busyZw);
-				res.getBusyZwBean().set(kcId + "^" + cc + "^" + date, busyKc);
+				ServDao.create(TsConstant.SERV_KCAP_YAPZW, addZw);
 
-				ServDao.create(TsConstant.SERV_KCAP_YAPZW, busyZw);
+				Bean busyKc = res.getBusyZwBean().getBean(kcId + "^" + cc + "^" + date);
+				busyKc.set(zwh, addZw);
+				res.getBusyZwBean().set(kcId + "^" + cc + "^" + date, busyKc);
 			}
 		}
 	}
