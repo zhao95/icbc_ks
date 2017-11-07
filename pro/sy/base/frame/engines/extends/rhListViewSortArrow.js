@@ -29,18 +29,22 @@ rh.vi.listView.prototype._removeServOrderInfo = function (servId) {
 			}
 		}
 		
-		if(index == infoArr.length-1){
-			infoArr.pop();
-		}else if(index >=0 ){
-			var isModify = false;
-			for(var j=index; j<infoArr.length-1; j++){
-				infoArr[j] = infoArr[j+1];
-				isModify = true;
-			}
-			
-			if(isModify){
+		try{
+			if(index == infoArr.length-1){
 				infoArr.pop();
+			}else if(index >=0 ){
+				var isModify = false;
+				for(var j=index; j<infoArr.length-1; j++){
+					infoArr[j] = infoArr[j+1];
+					isModify = true;
+				}
+				
+				if(isModify){
+					infoArr.pop();
+				}
 			}
+		}catch(e){
+			
 		}
 	}
 }
