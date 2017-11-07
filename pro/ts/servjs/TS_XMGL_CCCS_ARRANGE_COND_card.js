@@ -81,37 +81,13 @@ function getCc(){
  * @param b 分钟
  * @returns
  */
-function addMin(a,b) {
+function addMin(a,b){
+	
 	b = parseInt(b);
-	var date = new Date(a.replace(/"-"/g, "/"));
+	var atime = a.replace(/-/g, "/");
+	var date = new Date(atime);
 	
-	date.setMinutes(date.getMinutes() + b);
-	
-	var sp1 = "-";
-    var sp2 = ":";
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
-    var hours = date.getHours();
-    var min = date.getMinutes();
-    var sec = date.getSeconds();
+	date.setMinutes(date.getMinutes()+b);
     
-    if (month >= 1 && month <= 9) {
-        month = "0" + month;
-    }
-    if (day >= 0 && day <= 9) {
-    	day = "0" + day;
-    }
-    if (hours >= 0 && hours <= 9) {
-    	hours = "0" + hours;
-    }
-    if (min >= 0 && min <= 9) {
-    	min = "0" + min;
-    }
-    if (sec >= 0 && sec <= 9) {
-    	sec = "0" + sec;
-    }
-    
-    var currentdate = date.getFullYear() + sp1 + month + sp1 + day + " " + hours + sp2 + min;
-    
-	return currentdate;
+	return rhDate.patternData("yyyy-mm-dd hh:MM",date);
 }

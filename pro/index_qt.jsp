@@ -149,20 +149,6 @@
 				<!-- 分割线 -->
 				<div style="width: 100%; height: 5px; background-color: #063c5d;position: absolute;top:12px;left: 0px;"></div>
 				<ul class="sidebar-menu" id="sdfsdfsf" style="position: relative;top: 15px;">
-					<!-- <li class="header"><i class="fa fa-book"></i><span>首页</span></li> -->
-					<!-- <li><a href="../../documentation/index.html"><i
-							class="fa fa-book"></i> <span>我的报名</span><span
-							class="pull-right-container"> <span
-								class="label label-primary pull-right">4</span>
-						</span></a></li>
-					<li><a href="../../documentation/index.html"><i
-							class="fa fa-book"></i> <span>我的考试</span></a></li>
-					<li><a href="../../documentation/index.html"><i
-							class="fa fa-book"></i> <span>我的请假</span><span
-							class="pull-right-container"> <span
-								class="label label-primary pull-right">3</span>
-						</span></a></li>
-					 -->
 				</ul>
 			</section>
 			<!-- /.sidebar -->
@@ -259,7 +245,7 @@
 								<li ><a href="#tab-zsjs" data-toggle="tab" aria-expanded="true">知识竞赛(<span id="" >3</span>) </a> </li><li style="color:#e2e4e7">|  </li>
 								<li ><a href="#tab-qtks" data-toggle="tab" aria-expanded="true">其他考试(<span id="" >6</span>) </a></li>
 								
-								<li onclick="window.open('/#')" class="index-list-more-a" >
+								<li class="index-list-more-a" >
 									更多
 									<a style="background: url(/qt/img/more_12x11.png) no-repeat;width: 12px;height: 11px;top: 30%;right: -15px;position: absolute;"></a>
 								</li>
