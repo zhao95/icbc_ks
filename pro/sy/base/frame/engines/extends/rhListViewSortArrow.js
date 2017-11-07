@@ -114,21 +114,24 @@ rh.vi.listView.prototype._isNeedToPaintOrder = function (servId){
  */
 rh.vi.listView.prototype._addOrderInfoIntoSystem = function (newOrderInfo){
 	var temp = System.getVars();
-	if(temp["@SERV_ORDER_INFO@"]){
-		var orderInfos = temp["@SERV_ORDER_INFO@"];
-		for (var i=0; i<orderInfos.length; i++){
-			if(orderInfos[i].SERV_ID == newOrderInfo.SERV_ID){
-				orderInfos[i] = newOrderInfo;
-				break;
+	try{
+		if(temp["@SERV_ORDER_INFO@"]){
+			var orderInfos = temp["@SERV_ORDER_INFO@"];
+			for (var i=0; i<orderInfos.length; i++){
+				if(orderInfos[i].SERV_ID == newOrderInfo.SERV_ID){
+					orderInfos[i] = newOrderInfo;
+					break;
+				}
 			}
+			if(i == orderInfos.length){
+				orderInfos.push(newOrderInfo);
+			}
+		}else{
+		    var orderInfos = new Array();
+		    orderInfos.push(newOrderInfo);
+		    temp["@SERV_ORDER_INFO@"] = orderInfos;
 		}
-		if(i == orderInfos.length){
-			orderInfos.push(newOrderInfo);
-		}
-	}else{
-	    var orderInfos = new Array();
-	    orderInfos.push(newOrderInfo);
-	    temp["@SERV_ORDER_INFO@"] = orderInfos;
+	} catch(e){
 	}
 }
 
