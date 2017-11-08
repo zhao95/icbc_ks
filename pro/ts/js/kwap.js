@@ -225,119 +225,224 @@ ListPage.prototype.bldPage = function () {
 
 
 function initData(xmId) {
-    var deptCodeStr = Utils.getUserYAPAutoCode();
-    var split = deptCodeStr.split(',');
-    for (var i = 0; i < split.length; i++) {
-        var itemCode = split[i];
-        if (itemCode !== '') {
-            var dept = FireFly.doAct('SY_ORG_DEPT', 'byid', {'_PK_': itemCode});
-            if (dept.DEPT_PCODE) {
-                //有父级机构
-                $("#tjccap").css('display', 'block');
-                $("#publish").css('display', 'none');
-            } else if (dept._MSG_ && dept._MSG_.indexOf('ERROR') >= 0) {
-                //机构不存在
-            } else {
-                //机构存在，父id为空 ->为总行 获取总行下的所有机构安排考位
-                $("#tjccap").css('display', 'none');
-                $("#publish").css('display', 'block');
-            }
-        }
-    }
-    bindHeaderAction(xmId);
+    HeaderBtn.initData(xmId);
     ZdfpccModal.initData(xmId);
     SubmissionArrangementModal.initData(xmId);
     KcObject.initData(xmId);
     KsObject.initData(xmId);
 }
-/**
- * 绑定页首按钮事件
- */
-function bindHeaderAction(xmId) {
-    /*提交场次安排后不能 安排座位*/
-    function zdfpccDisableAftertjccap() {
-        if (Utils.getCanDraggable() === false) {
-            $("#zdfpcc").removeClass('rh-icon').addClass('rh-icon-disable');
-            $("#updatecc").removeClass('rh-icon').addClass('rh-icon-disable');
-            $("#zdfpcc").unbind('click');
-            $("#updatecc").unbind('click');
-            $("#tjccap").removeClass('rh-icon').addClass('rh-icon-disable');
-            $("#tjccap").unbind('click');
-            $("#publish").removeClass('rh-icon').addClass('rh-icon-disable');
-            $("#publish").unbind('click');
+
+var HeaderBtn = {
+
+    initData: function (xmId) {
+        this.setTjFbBtn(xmId);
+        this.bindHeaderAction(xmId);
+    },
+    //设置提交发布按钮
+    setTjFbBtn: function (xmId) {
+        //unPublish
+        var xmBean = FireFly.doAct("TS_XMGL", "byid", {"_PK_": xmId}, false);
+        // xmBean.S_USER;
+        var typeBean = FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getTjOrPublish", {XM_ID: xmId}, false);
+
+        if (typeBean.type === 'publish') {
+            $("#tjccap").css('display', 'none');
+            var userYAPPublishCode = Utils.getUserYAPPublishCode();
+            var canPublishBean = FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getCanPublish", {
+                XM_ID: xmId,
+                UserYAPPublishCode: userYAPPublishCode
+            }, false);
+            if (canPublishBean.canPublish === 'true') {
+                if (xmBean.XM_KCAP_PUBLISH_TIME === '') {
+                    //项目未发布 显示发布
+                    $("#publish").css('display', 'block');
+                } else {
+                    $("#unPublish").css('display', 'block');
+                }
+            } else {
+                //没有发布权限,不显示发布 取消发布按钮
+                $("#publish").css('display', 'none');
+                $("#unPublish").css('display', 'none');
+            }
+        } else {
+            $("#tjccap").css('display', 'block');
+            $("#publish").css('display', 'none');
         }
-    }
+        // var deptCodeStr = Utils.getUserYAPAutoCode();
+        // var split = deptCodeStr.split(',');
+        // for (var i = 0; i < split.length; i++) {
+        //     var itemCode = split[i];
+        //     if (itemCode !== '') {
+        //         var dept = FireFly.doAct('SY_ORG_DEPT', 'byid', {'_PK_': itemCode});
+        //         if (dept.DEPT_PCODE) {
+        //             //有父级机构
+        //             $("#tjccap").css('display', 'block');
+        //             $("#publish").css('display', 'none');
+        //         } else if (dept._MSG_ && dept._MSG_.indexOf('ERROR') >= 0) {
+        //             //机构不存在
+        //         } else {
+        //             //机构存在，父id为空 ->为总行 获取总行下的所有机构安排考位
+        //             $("#tjccap").css('display', 'none');
+        //             $("#publish").css('display', 'block');
+        //         }
+        //
+        //     }
+        // }
+    },
 
-    $("#zdfpcc").click(function () {
-        $('#zdfpccModal').modal({backdrop: false, show: true});
-    });
+    /*提交场次安排后不能 安排座位*/
+    zdfpccDisableAftertjccap: function () {
+        if (Utils.getCanDraggable() === false) {
+            this.setNoCanArrange();
+        } else {
+            this.setCanArrange();
+        }
+    },
 
-    $("#updatecc").click(function () {
-        UpdateCCModal.show();
-    });
-    $("#submissionArrangement").click(function () {
-        SubmissionArrangementModal.show();
-    });
-    $("#lookJk").click(function () {
-        LookJkModal.show();
-    });
-    $("#xngs").click(function () {
-        $('#xngsModal').modal({backdrop: false, show: true});
-    });
-    $("#tjccap").click(function () {
-        $('#tjccapModal').modal({backdrop: false, show: true});
-    });
-    $("#publish").click(function () {
-        $('#publishModal').modal({backdrop: false, show: true});
-    });
+    //可以安排
+    setCanArrange: function () {
+        $("#zdfpcc").removeClass('rh-icon-disable').addClass('rh-icon');
+        $("#updatecc").removeClass('rh-icon-disable').addClass('rh-icon');
+        $("#tjccap").removeClass('rh-icon-disable').addClass('rh-icon');
+        $("#publish").removeClass('rh-icon-disable').addClass('rh-icon');
 
-    //提交确定按钮事件
-    $("#tjccapModal").find('button[class="btn btn-success"]').bind('click', function () {
-        var deptCodeStr = Utils.getUserYAPAutoCode();
-        var deptCodes = deptCodeStr.split(',');
-        deptCodes = Utils.arrayUnique(deptCodes.concat(KcObject.getAllKcODeptCode()));
-        for (var i = 0; i < deptCodes.length; i++) {
-            var itemDeptCode = deptCodes[i];
-            if (itemDeptCode !== '') {
-                //避免重复提交 保存前先查询
-                var queryBean = FireFly.doAct("TS_XMGL_KCAP_TJJL", "query", {
-                    '_NOPAGE_': true,
-                    '_extWhere': " and TJ_DEPT_CODE ='" + itemDeptCode + "' and XM_ID ='" + xmId + "'"
-                });
-                if (queryBean._DATA_.length <= 0) {
-                    FireFly.doAct('TS_XMGL_KCAP_TJJL', 'save', {TJ_DEPT_CODE: itemDeptCode, XM_ID: xmId}, false);
+        $("#zdfpcc").click(function () {
+            $('#zdfpccModal').modal({backdrop: false, show: true});
+        });
+        $("#updatecc").click(function () {
+            UpdateCCModal.show();
+        });
+        $("#tjccap").click(function () {
+            $('#tjccapModal').modal({backdrop: false, show: true});
+        });
+        $("#publish").click(function () {
+            $('#publishModal').modal({backdrop: false, show: true});
+        });
+
+    },
+
+    //不可以安排
+    setNoCanArrange: function () {
+        $("#zdfpcc").removeClass('rh-icon').addClass('rh-icon-disable');
+        $("#updatecc").removeClass('rh-icon').addClass('rh-icon-disable');
+        $("#zdfpcc").unbind('click');
+        $("#updatecc").unbind('click');
+        $("#tjccap").removeClass('rh-icon').addClass('rh-icon-disable');
+        $("#tjccap").unbind('click');
+        $("#publish").removeClass('rh-icon').addClass('rh-icon-disable');
+        $("#publish").unbind('click');
+    },
+    /**
+     * 绑定页首按钮事件
+     */
+    bindHeaderAction: function (xmId) {
+        var self = this;
+        this.setCanArrange();
+        $("#submissionArrangement").click(function () {
+            SubmissionArrangementModal.show();
+        });
+        $("#lookJk").click(function () {
+            LookJkModal.show();
+        });
+        $("#xngs").click(function () {
+            $('#xngsModal').modal({backdrop: false, show: true});
+        });
+
+        $("#unPublish").click(function () {
+            $('#unPublishModal').modal({backdrop: false, show: true});
+        });
+
+        //提交确定按钮事件
+        $("#tjccapModal").find('button[class="btn btn-success"]').bind('click', function () {
+            var deptCodeStr = Utils.getUserYAPAutoCode();
+            var deptCodes = deptCodeStr.split(',');
+            deptCodes = Utils.arrayUnique(deptCodes.concat(KcObject.getAllKcODeptCode()));
+            for (var i = 0; i < deptCodes.length; i++) {
+                var itemDeptCode = deptCodes[i];
+                if (itemDeptCode !== '') {
+                    //避免重复提交 保存前先查询
+                    var queryBean = FireFly.doAct("TS_XMGL_KCAP_TJJL", "query", {
+                        '_NOPAGE_': true,
+                        '_extWhere': " and TJ_DEPT_CODE ='" + itemDeptCode + "' and XM_ID ='" + xmId + "'"
+                    });
+                    if (queryBean._DATA_.length <= 0) {
+                        FireFly.doAct('TS_XMGL_KCAP_TJJL', 'save', {TJ_DEPT_CODE: itemDeptCode, XM_ID: xmId}, false);
+                    }
                 }
             }
-        }
-        Utils.getCanDraggable(true);
-        KcObject.reloadCCInfo();
-        KsObject.setDfpKsContent();
-        zdfpccDisableAftertjccap();
-    });
+            Utils.getCanDraggable(true);
+            KcObject.reloadCCInfo();
+            KsObject.setDfpKsContent();
+            self.zdfpccDisableAftertjccap();
+        });
 
-    //伸缩按钮
-    $("#toggle-sidebar").click(function () {
-        var speed = 200;
-        var $mainSidebar = $('.main-sidebar');
-        var $i = $(this).find('i');
-        if ($mainSidebar.width() === 15) {
-            //收缩状态
-            $('.content-wrapper').animate({marginLeft: "250px"}, speed);
-            $mainSidebar.animate({width: "250px"}, speed, function () {
-                $i.removeClass("fa-angle-right");
-                $i.addClass("fa-angle-left");
+        //发布确定按钮事件
+        $("#publishModal").find('button[class="btn btn-success"]').bind('click', function () {
+            var xmBean = {
+                XM_ID: xmId,
+                _PK_: xmId,
+                XM_KCAP_PUBLISH_USER_CODE: System.getUser("USER_CODE"),
+                XM_KCAP_PUBLISH_TIME: rhDate.getTime()
+            };
+            /*= FireFly.doAct("TS_XMGL", "byid", {"_PK_": xmId}, false);*/
+            // xmBean.XM_KCAP_PUBLISH_USER_CODE = System.getUser("USER_CODE");
+            // xmBean.XM_KCAP_PUBLISH_TIME = rhDate.getTime();
+            FireFly.doAct("TS_XMGL", "save", xmBean, false, false, function () {
+                alert("发布成功！");
             });
-        } else {
-            $('.content-wrapper').animate({marginLeft: "16px"}, speed);
-            $mainSidebar.animate({width: "16px"}, speed, function () {
-                $i.removeClass("fa-angle-left");
-                $i.addClass("fa-angle-right");
-            });
-        }
-    });
+            Utils.getCanDraggable(true);
+            KcObject.reloadCCInfo();
+            KsObject.setDfpKsContent();
+            self.zdfpccDisableAftertjccap();
+        });
 
-    zdfpccDisableAftertjccap();
-}
+        //取消发布确定按钮事件
+        $("#unPublishModal").find('button[class="btn btn-success"]').bind('click', function () {
+            var xmBean = {
+                XM_ID: xmId,
+                _PK_: xmId,
+                XM_KCAP_PUBLISH_USER_CODE: System.getUser("USER_CODE"),
+                XM_KCAP_PUBLISH_TIME: ''
+            };
+            /*= FireFly.doAct("TS_XMGL", "byid", {"_PK_": xmId}, false);*/
+            // xmBean.XM_KCAP_PUBLISH_USER_CODE = System.getUser("USER_CODE");
+            // xmBean.XM_KCAP_PUBLISH_TIME = rhDate.getTime();
+            FireFly.doAct("TS_XMGL", "save", xmBean, false, false, function () {
+                alert("取消发布成功！");
+            });
+            Utils.getCanDraggable(true);
+            KcObject.reloadCCInfo();
+            KsObject.setDfpKsContent();
+            self.zdfpccDisableAftertjccap();
+        });
+
+        //伸缩按钮
+        $("#toggle-sidebar").click(function () {
+            var speed = 200;
+            var $mainSidebar = $('.main-sidebar');
+            var $i = $(this).find('i');
+            if ($mainSidebar.width() === 15) {
+                //收缩状态
+                $('.content-wrapper').animate({marginLeft: "250px"}, speed);
+                $mainSidebar.animate({width: "250px"}, speed, function () {
+                    $i.removeClass("fa-angle-right");
+                    $i.addClass("fa-angle-left");
+                });
+            } else {
+                $('.content-wrapper').animate({marginLeft: "16px"}, speed);
+                $mainSidebar.animate({width: "16px"}, speed, function () {
+                    $i.removeClass("fa-angle-left");
+                    $i.addClass("fa-angle-right");
+                });
+            }
+        });
+
+        this.zdfpccDisableAftertjccap();
+    }
+
+
+};
+
 
 /**
  * 自动分配模态框相关方法
@@ -1277,6 +1382,13 @@ var KcObject = {
             }, false, false);
             var zwList = zwListBean._DATA_;
             var tData = [], trData, preLetter = null;
+            // var split = zw.ZW_ZWH_XT.split('-');
+            // try{
+            //     var split2 = split[0];
+            //     var split3 = split[1];
+            // }catch(e){
+            // }
+
             for (var i = 0; i < zwList.length; i++) {
                 var zw = zwList[i];
                 if (preLetter !== zw.ZW_ZWH_XT.substring(0, 1)) {
@@ -1297,17 +1409,27 @@ var KcObject = {
                 var $tr = jQuery("<tr></tr>");
                 for (var j = 0; j < trData.length; j++) {
                     var tdData = trData[j];
-                    var $td = jQuery('<td id="' + tdData.ZW_ID + '" style="width:10%;">' +
-                        '   <span style="font-size: 12px;position: relative;top: -8px;left: -6px;">' + tdData.ZW_ZWH_SJ + '</span>' +
-                        '   <span class="userName"></span>' +
+                    var $td;
+                    if (tdData.ZW_ID) {
+                        $td = jQuery('<td id="' + tdData.ZW_ID + '" style="width:10%;" class="can-arrange">' +
+                            '   <span style="font-size: 12px;position: relative;top: -8px;left: -6px;">' + tdData.ZW_ZWH_SJ + '</span>' +
+                            '   <span class="userName"></span>' +
 //                            '   <span class="close">x</span>' +
-                        '</td>');
+                            '</td>');
+                    } else {
+                        $td = jQuery('<td id="" style="width:10%;" >' +
+                            '   <span style="font-size: 12px;position: relative;top: -8px;left: -6px;"></span>' +
+                            '   <span class="userName"></span>' +
+//                            '   <span class="close">x</span>' +
+                            '</td>');
+                    }
+
                     $tr.append($td);
                 }
                 $kcInfoTbody.append($tr);
             }
             //添加放置事件
-            this.addDroppableEvent($("#kcInfo").find("td"));
+            this.addDroppableEvent($("#kcInfo").find(".can-arrange"));
             //设置座位信息
             this.setZwForView(sjId);
 
@@ -1510,7 +1632,7 @@ var KcObject = {
                     var sjid = self.currentCc.SJ_ID;
                     var ccid = self.currentCc.CC_ID;
                     var sjCC = self.currentCc.SJ_CC;
-                    var sjDate = self.currentCc.ccTime;
+                    var sjDate = self.currentCc.SJ_START.substring(0, 10);
                     var kcid = self.currentParentKc.KC_ID;
                     var shId = $(ui.draggable[0]).attr('shId');
                     var zwId = $(this).attr('id');
@@ -1518,7 +1640,7 @@ var KcObject = {
 
                     //从座位移动到座位 删除原来的
                     $(ui.draggable[0]).find('.close').click();
-                    var _this = this;
+                    // var _this = this;
                     FireFly.doAct("TS_XMGL_KCAP_YAPZW", 'saveBean', {
                         ZW_ID: zwId,
                         SJ_ID: sjid,
@@ -1781,7 +1903,7 @@ var KsObject = {
                 helper: function (event) {
                     var cells = event.currentTarget.cells;
                     return [
-                        '<div style="/*width:30px;height: 30px;*/border:1px solid #999999;background-color: #91BDEA;">',//
+                        '<div style="/*width:30px;height: 30px;*/background-color: #FFF8DC; border:1px solid #999999;border-radius:3px;padding: 3px">',//
                         '   <div>' + cells[6].innerText + '</div>',
                         '   <div>' + cells[7].innerText + '</div>',
                         '   <div>' + cells[11].innerText + '</div>',
@@ -1862,18 +1984,26 @@ var Utils = {
         if (this._canDraggable === undefined || reloadFlag) {
             this._canDraggable = false;
 
-            var deptCodeStr = this.getUserYAPAutoCode();
-            var split = deptCodeStr.split(',');
-            for (var i = 0; i < split.length; i++) {
-                var itemDeptCode = split[i];
-                if (itemDeptCode !== '') {
-                    var queryBean = FireFly.doAct("TS_XMGL_KCAP_TJJL", "query", {
-                        '_NOPAGE_': true,
-                        '_extWhere': " and TJ_DEPT_CODE ='" + itemDeptCode + "' and XM_ID ='" + xmId + "'"
-                    });
-                    this._canDraggable = queryBean._DATA_.length <= 0;
+            var xmBean = FireFly.doAct("TS_XMGL", "byid", {"_PK_": xmId}, false);
+            if (xmBean.XM_KCAP_PUBLISH_TIME !== '') {
+                //项目发布不允许拖拉
+            } else {
+                var deptCodeStr = this.getUserYAPAutoCode();
+                deptCodeStr = deptCodeStr === undefined ? '' : deptCodeStr;
+                var split = deptCodeStr.split(',');
+                for (var i = 0; i < split.length; i++) {
+                    var itemDeptCode = split[i];
+                    if (itemDeptCode !== '') {
+                        var queryBean = FireFly.doAct("TS_XMGL_KCAP_TJJL", "query", {
+                            '_NOPAGE_': true,
+                            '_extWhere': " and TJ_DEPT_CODE ='" + itemDeptCode + "' and XM_ID ='" + xmId + "'"
+                        });
+                        //提交后不允许拖拉
+                        this._canDraggable = queryBean._DATA_.length <= 0;
+                    }
                 }
             }
+
         }
         return this._canDraggable;
     },
@@ -1882,15 +2012,37 @@ var Utils = {
      * 获取当前登录用户考位安排权限
      * @returns {*}
      */
-    getUserYAPAutoCode: function () {
+    getUserYAPPvlgCode: function (type) {
         var userPvlg = FireFly.getUserPvlg(System.getUser("USER_CODE"));
         var code;
         try {
-            code = userPvlg.TS_XMGL_KCAP_YAPZW_PVLG.auto.ROLE_DCODE;
+            code = userPvlg.TS_XMGL_KCAP_YAPZW_PVLG[type].ROLE_DCODE;
         } catch (e) {
             code = '';
         }
         return code;
+    },
+    /**
+     * 获取当前登录用户考位发布权限
+     * @returns {*}
+     */
+    getUserYAPPublishCode: function () {
+        return this.getUserYAPPvlgCode("publish");
+    },
+    /**
+     * 获取当前登录用户考位安排权限
+     * @returns {*}
+     */
+    getUserYAPAutoCode: function () {
+        return this.getUserYAPPvlgCode("auto");
+        // var userPvlg = FireFly.getUserPvlg(System.getUser("USER_CODE"));
+        // var code;
+        // try {
+        //     code = userPvlg.TS_XMGL_KCAP_YAPZW_PVLG.auto.ROLE_DCODE;
+        // } catch (e) {
+        //     code = '';
+        // }
+        // return code;
     },
     /**
      * 表格添加全选/全不选功能（复选框）

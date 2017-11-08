@@ -293,7 +293,7 @@ public class XmglAdmissionServ extends CommonServ {
 
         List<Bean> ksbakList = new ArrayList<>();
         List<Bean> ksDataList = Transaction.getExecutor().query(sql, values);
-        ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and ");
+//        ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and ");
 //        ServDao.finds();
         //SERV_KCAP_YAPZW
         for (Bean ksDataBean : ksDataList) {

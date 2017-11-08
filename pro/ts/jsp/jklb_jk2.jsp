@@ -143,7 +143,7 @@
 
         <%--流程流转过程图--%>
         <div class="row">
-            <div class="col-sm-12 text-center" style="background-color: #ababab;">
+            <div class="col-sm-12 text-center" style="background-color: #dfdfdf;">
                 <div id="flowView" style="min-height: 50px;padding:10px;">
                     <div style="display: inline-block">
                                 <span style="position: relative;left: 26px;top:3px;

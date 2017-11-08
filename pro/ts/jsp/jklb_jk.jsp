@@ -523,7 +523,7 @@
             if (jktitle === "") {
                 alert("标题不能为空");
             } else if (bmids === "") {
-                alert("请选择请假的考试")
+                alert("请选择借考的考试");
             } else {
                 FireFly.doAct("TS_JKLB_JK", "addData", param, false, false, function (response) {
 
