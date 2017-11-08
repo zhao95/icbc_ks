@@ -8,9 +8,7 @@ import com.rh.core.util.Constant;
 
 public class KSHrmContactTask extends AbstractTableTask {
 
-	
-	private static final long serialVersionUID = -6767163757687871577L;
-	
+	private static final long serialVersionUID = -3159504261591380414L;
 	private static String HRM_ZDSTAFFCONTACT = "HRM_ZDSTAFFCONTACT";
 	private static String SY_HRM_ZDSTAFFCONTACT = "SY_HRM_ZDSTAFFCONTACT";
 
@@ -43,9 +41,10 @@ public class KSHrmContactTask extends AbstractTableTask {
 			if (updateFlag.equals("0") || updateFlag.equals("1")) {
 				// 暂时不做处理
 				data.set("S_FLAG", Constant.YES_INT);
-			} else if (updateFlag.equals("2")) {
+			} else if (updateFlag.equals("2") || updateFlag.equals("F")) {
 				data.set("S_FLAG", Constant.NO_INT);
 			} else {
+				log.error("数据更新标志未知错误:data:"+data+"updateFlag:"+updateFlag);
 				throw new TipException("【数据更新标志未知】！data : " + data + ", updateFlag : " + updateFlag);
 			}
 		}

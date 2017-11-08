@@ -17,14 +17,15 @@ import com.rh.core.util.Constant;
 
 public class KSHrmCertTask extends AbstractTableTask{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3873675468788462896L;
+
 	public KSHrmCertTask(String smtime, boolean flag) {
 		super(smtime, flag);
 	}
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7349931667093448949L;
 	private String HRM_ZDSTAFFCERT = "HRM_ZDSTAFFCERT";
 	private String SY_HRM_ZDSTAFFCERT = "SY_HRM_ZDSTAFFCERT";
 	
@@ -53,9 +54,10 @@ public class KSHrmCertTask extends AbstractTableTask{
 			if (updateFlag.equals("0") || updateFlag.equals("1")) {
 				// 暂时不做处理
 				data.set("S_FLAG", Constant.YES_INT);
-			} else if (updateFlag.equals("2")) {
+			} else if (updateFlag.equals("2") || updateFlag.equals("F")) {
 				data.set("S_FLAG", Constant.NO_INT);
 			} else {
+				log.error("错误:data:"+data+"updateFlag:"+updateFlag);
 				throw new TipException("【数据更新标志未知】！data : " + data + ", updateFlag : " + updateFlag);
 			}
 		}

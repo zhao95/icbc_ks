@@ -18,8 +18,7 @@ import com.rh.core.util.Constant;
 
 public class KSHrmStruTask extends AbstractTableTask {
 
-	private static final long serialVersionUID = -4242592420451676426L;
-	
+	private static final long serialVersionUID = -4859815702222201603L;
 	private String HRM_ZDSTAFFSTRU = "HRM_ZDSTAFFSTRU";
 	private String SY_HRM_ZDSTAFFSTRU = "SY_HRM_ZDSTAFFSTRU";
 
@@ -52,7 +51,7 @@ public class KSHrmStruTask extends AbstractTableTask {
 			if (updateFlag.equals("0") || updateFlag.equals("1")) {
 				// 暂时不做处理
 				data.set("S_FLAG", Constant.YES_INT);
-			} else if (updateFlag.equals("2")) {
+			} else if (updateFlag.equals("2")|| updateFlag.equals("F")) {
 				data.set("S_FLAG", Constant.NO_INT);
 			} else {
 				throw new TipException("【数据更新标志未知】！data : " + data + ", updateFlag : " + updateFlag);

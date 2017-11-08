@@ -131,12 +131,12 @@ public class KSNImpDataServ extends CommonServ {
 			threadPool.execute(hrmStaffPhoto);
 		}
 		//OK
-		if("".equals(tables) || tables.indexOf("TS_ETI_CERTINFO") > -1){
+		if("".equals(tables) || tables.indexOf("TS_ETI_CERT_INFO") > -1){
 			EtiCertInfo etiCertInfo = new EtiCertInfo(smtime, incrementFlag);
 			threadPool.execute(etiCertInfo);
 		}
 		//OK
-		if("".equals(tables) || tables.indexOf("TS_ETI_CERTQUAL") > -1){
+		if("".equals(tables) || tables.indexOf("TS_ETI_CERT_QUAL") > -1){
 			EtiCertQual etiCertQual = new EtiCertQual(smtime, incrementFlag);
 			threadPool.execute(etiCertQual);
 		}

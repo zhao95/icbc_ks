@@ -22,11 +22,11 @@ import com.rh.core.util.Constant;
  */
 public class KSHrmAdminTask extends AbstractTableTask{
 
+	private static final long serialVersionUID = 773302700991171190L;
 	public KSHrmAdminTask(String smtime, boolean flag) {
 		super(smtime, flag);
 	}
 
-	private static final long serialVersionUID = -5160760677695703088L;
 	private String HRM_ZDSTAFFADMIN = "HRM_ZDSTAFFADMIN";
 	private String SY_HRM_ZDSTAFFADMIN = "SY_HRM_ZDSTAFFADMIN";
 	@Override
@@ -54,9 +54,10 @@ public class KSHrmAdminTask extends AbstractTableTask{
 			if (updateFlag.equals("0") || updateFlag.equals("1")) {
 				// 暂时不做处理
 				data.set("S_FLAG", Constant.YES_INT);
-			} else if (updateFlag.equals("2")) {
+			} else if (updateFlag.equals("2") || updateFlag.equals("F")) {
 				data.set("S_FLAG", Constant.NO_INT);
 			} else {
+				log.error("错误:data:"+data+"updateFlag:"+updateFlag);
 				throw new TipException("【数据更新标志未知】！data : " + data + ", updateFlag : " + updateFlag);
 			}
 		}

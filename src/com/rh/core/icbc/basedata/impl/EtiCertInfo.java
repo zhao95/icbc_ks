@@ -8,11 +8,12 @@ import com.rh.core.util.Constant;
 
 public class EtiCertInfo extends AbstractTableTask {
 
+	private static final long serialVersionUID = 3313965585868296193L;
+
 	public EtiCertInfo(String smtime, boolean flag) {
 		super(smtime, flag);
 	}
 
-	private static final long serialVersionUID = -5569194931647388665L;
 	private String ETI_CERTINFO = "ETI_CERTINFO";
 	private String SY_ETI_CERTINFO = "TS_ETI_CERT_INFO";
 	
@@ -42,7 +43,7 @@ public class EtiCertInfo extends AbstractTableTask {
 			if (updateFlag.equals("1") || updateFlag.equals("2")) {
 				// 暂时不做处理
 				data.set("S_FLAG", Constant.YES_INT);
-			} else if (updateFlag.equals("3")) {
+			} else if (updateFlag.equals("3") || updateFlag.equals("F")) {
 				data.set("S_FLAG", Constant.NO_INT);
 			} else {
 				throw new TipException("【数据更新标志未知】！data : " + data + ", updateFlag : " + updateFlag);

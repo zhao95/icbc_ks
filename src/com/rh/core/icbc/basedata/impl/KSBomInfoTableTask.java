@@ -15,7 +15,6 @@ public class KSBomInfoTableTask extends AbstractTableTask {
 
 	private static final long serialVersionUID = 5809953607337190393L;
 
-
 	public KSBomInfoTableTask(String smtime, boolean flag) {
 		super(smtime, flag);
 	}

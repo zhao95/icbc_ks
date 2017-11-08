@@ -18,8 +18,7 @@ import com.rh.core.util.Constant;
 
 public class KSHrmNotesTask extends AbstractTableTask {
 
-	private static final long serialVersionUID = -4242592420451676426L;
-	
+	private static final long serialVersionUID = 532541010054344431L;
 	private String HRM_ZDSTAFFNOTES = "HRM_ZDSTAFFNOTES";
 	private String SY_HRM_ZDSTAFFNOTES = "SY_HRM_ZDSTAFFNOTES";
 
@@ -51,7 +50,7 @@ public class KSHrmNotesTask extends AbstractTableTask {
 			// 根据updateFlag将数据整理为删除和非删除
 			if (updateFlag.equals("0") || updateFlag.equals("1")) {
 				// 暂时不做处理
-			} else if (updateFlag.equals("2")) {
+			} else if (updateFlag.equals("2")|| updateFlag.equals("F")) {
 				data.set("S_FLAG", Constant.NO_INT);
 			} else {
 				throw new TipException("【数据更新标志未知】！data : " + data + ", updateFlag : " + updateFlag);
@@ -81,7 +80,7 @@ public class KSHrmNotesTask extends AbstractTableTask {
 			for (int i = 1; i <= total / SAVE_COUNT + 1; i++) {
 				final List<Bean> addList = new ArrayList<Bean>();
 				ParamBean param = new ParamBean();
-				param.setWhere(" AND 1=1");
+				param.setWhere(" AND 1=1 AND FLAG='1' ");
 				param.setShowNum(SAVE_COUNT);
 				param.setNowPage(i);
 				ServDao.findsCall("HRM_ZDSTAFFNOTES", param, new RowHandler() {
