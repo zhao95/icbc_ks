@@ -23,17 +23,19 @@ for(var i=0;i<datalist.length;i++){
 	});
 	j++;
 }
-
+function openMoreZhubanListPage(SERVID){
+	Tab.open({'url':'SY_COMM_TEMPL.show.do?model=view&pkCode='+SERVID,'tTitle':111,'menuFlag':3});
+}
 </script>
 <div id='TS_COMM_TODO' class='portal-box'>
-<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待我审批的借考</span><span class="portal-box-hideBtn  conHeanderTitle-expand"></span><span class="portal-box-more"><a href="###SY_COMM_REMIND" onclick="Tools.openCard(this)"></a></span></div>
+<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待我审批的借考</span><span class="portal-box-hideBtn  conHeanderTitle-expand"></span><span class="portal-box-more"><a href="#" onclick="openMoreZhubanListPage('TS_JK_BACHSH_DOOR')"></a></span></div>
 <div>
 
 <table border="solid 1px" width="100%">
 <tr style="background:whitesmoke;height:40px"><td width="5%" align="left">#</td><td width="35%" align="center">名称</td><td width="15%" align="center">审批开始时间</td><td width="15%" align="center">审批截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
 
 </table>
-<form id="tiaozhuanKCform" style="display:none" method="post" action="jklb_jk2.jsp">
+<form id="tiaozhuanKCform" target="_blank" style="display:none" method="post" action="jklb_jk2.jsp">
 <input id="todoId" name ="todoId" />
 <input id="jkid" name ="jkid" />
 </form>

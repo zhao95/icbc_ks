@@ -10,8 +10,8 @@
    '<td width="5%" align="center">'+datalist[i].xm_name+'</td>'+
    '<td width="5%" align="center">'+datalist[i].xm_start+'</td>'+
    '<td width="5%" align="center">'+datalist[i].xm_end+'</td>'+
-    	'<td align="center">未安排</td>'+
-    '<td align="center"><a  href="#" id='+xmszid+'><span style="color:lightblue">安排</span></a></td>'+
+    	'<td align="center">已安排</td>'+
+    '<td align="center"><a  href="#" id='+xmszid+'><span style="color:lightblue">查看</span></a></td>'+
     '<tr>';
    $("#kctable").append(newTr);
    $("#"+xmszid).click(function(){
@@ -23,14 +23,12 @@
        cardView.show();
    });
     } 
-    function openMoreZhubanListPage(SERVID){
-    	Tab.open({'url':'SY_COMM_TEMPL.show.do?model=view&pkCode='+SERVID,'tTitle':111,'menuFlag':3});
-    }
+  
 </script>
 <div id='TS_COMM_TODO' class='portal-box'>
-<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待我安排的考场</span><span class="portal-box-hideBtn  conHeanderTitle-expand"></span><span class="portal-box-more"><a href="#" onclick="openMoreZhubanListPage('TS_KC_ANPAI')"></a></span></div>
+<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">已安排的考场</span>&nbsp;&nbsp;<button class="btn" onclick="Tab.close()">返回</button></div>
 <div>
-            <table id="kctable" border="solid 1px lightgray" width="100%">
+            <table id="kctable" border="solid 1px" width="100%">
                   <tr style="background:whitesmoke;height:40px"><td width="5%" align="left">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">安排开始时间</td><td width="15%" align="center">安排截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
            
             </table>

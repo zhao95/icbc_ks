@@ -23,10 +23,12 @@ for(var i=0;i<datalist.length;i++){
 	});
 	j++;
 }
-
+function openMoreZhubanListPage(SERVID){
+	Tab.open({'url':'SY_COMM_TEMPL.show.do?model=view&pkCode='+SERVID,'tTitle':111,'menuFlag':3});
+}
 </script>
 <div id='TS_COMM_TODO' class='portal-box'>
-<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待审核的请假</span><span class="portal-box-hideBtn  conHeanderTitle-expand"></span><span class="portal-box-more"><a href="#" onclick="openMoreZhubanListPage()"></a></span></div>
+<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待审核的请假</span><span class="portal-box-hideBtn  conHeanderTitle-expand"></span><span class="portal-box-more"><a href="#" onclick="openMoreZhubanListPage('QJ_BACH_SP')"></a></span></div>
 <div>
 
 <table id="qjtable" border="solid 1px" width="100%">
@@ -34,7 +36,7 @@ for(var i=0;i<datalist.length;i++){
 
 </tr>
 </table>
-<form id="tiaozhuanform" style="display:none" method="post" action="qjlb_qj2.jsp">
+<form id="tiaozhuanform" target="_blank" style="display:none" method="post" action="qjlb_qj2.jsp">
 <input id="todoId" name ="todoId" />
 <input id="qjid" name ="qjid" />
 </form>

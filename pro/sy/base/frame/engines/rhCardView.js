@@ -586,16 +586,20 @@ rh.vi.cardView.prototype._bldWin = function() {
     if (parWid < 1028) {//判断屏幕的宽度
     	widPercent = "97%";
     } else if (parWid > 1800) {
-    	widPercent = "98.8%";
+    	widPercent = "90.8%";
     }
     widPercent = UIConst.CARD_WID || widPercent;
     if (this.miniCard) {//有替换的宽高度
     	widPercent = this.widHeiArray[0];
+    	if(widPercent>1251){
+    		widPercent=1251;
+    	}
     	hei = this.widHeiArray[1];
     	position = this.xyArray;
     	
     }
     var resolution  = window.screen.height;
+    var relativewid  = window.screen.width;
 	if(resolution>=768){
 		
 		if(hei<800){
@@ -650,6 +654,7 @@ rh.vi.cardView.prototype._bldWin = function() {
     //定位
     this.winDialog.parent().css("position","fixed");
     this.winDialog.parent().css("top","30px");
+    this.winDialog.parent().css("right","30px");
     if (this.miniCard) {//小卡片设置区分边框
     	this.winDialog.addClass("rh-ui-dialog-mini-border");
     	this.winDialog.parent().addClass("rh-ui-dialog-mini");

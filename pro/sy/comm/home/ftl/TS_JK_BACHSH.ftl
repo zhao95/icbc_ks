@@ -1,19 +1,4 @@
 <script type="text/javascript" >
-function openMoreZhubanListPage() {
-	var strWhere = "";
-	var params = {"extWhere":strWhere};
-	var opts = {"url":"TS_COMM_TODO.list.do", "tTitle":"待审批请假列表", "menuFlag":4, "params":params};
-	Tab.open(opts);
-}
-
-
-function openTitle(SERV_ID,DATA_ID){
-   $("#qjid").val(DATA_ID);
-   $("#servid").val(SERV_ID);
-   $("#tiaozhuanform").submit();
-}
-
-
 //全选
 $("#checkall").click(function(){
 	if($(this).prop("checked")){
@@ -31,7 +16,7 @@ $('#bachsh').click(function(){
 	var inputs = $("input[name='checkboxqj']:checked");
 	if(inputs.length==0){
 	alert("没有选中数据")
-	var winDialog = jQuery("<div></div>").addClass("selectDialog").attr("id","shdialog").attr("title","批量审批请假");
+	var winDialog = jQuery("<div></div>").addClass("selectDialog").attr("id","shdialog").attr("title","批量借考请假");
 	var container = '<div style="padding-top:8%"><span style="padding-left:20%" id="radiospan1"><input style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1" checked>审核通过&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="radiospan2"><input name="state" style="vertical-align:text-bottom; margin-bottom:-4;" type="radio" value="2">审核不通过</span></div>'
 		var content = jQuery(container).appendTo(winDialog);
 	
@@ -98,7 +83,7 @@ for(var i=0;i<datalist.length;i++){
 	$("#"+datalist[i].TODO_ID).click(function(){
 		var todoid = $(this).attr("id");
 		var qjid = $(this).parent().attr("id");
-		 $("#qjid").val(qjid);
+		 $("#jkid").val(qjid);
 		   $("#todoId").val(todoid);
 		   $("#tiaozhuanform").submit();
 	});
@@ -107,15 +92,15 @@ for(var i=0;i<datalist.length;i++){
 
 </script>
 <div id='TS_COMM_TODO' class='portal-box'>
-<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待审核的请假</span>&nbsp;&nbsp;<button class="btn" id="bachsh">批量审核</button>&nbsp;&nbsp;<button class="btn" id="sphistory">审批记录</button>&nbsp;&nbsp;<button class="btn" onclick="Tab.close()">返回</button></div>
+<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待审核的借考</span>&nbsp;&nbsp;<button class="btn" id="bachsh">批量审核</button>&nbsp;&nbsp;<button class="btn" id="sphistory">审批记录</button>&nbsp;&nbsp;<button class="btn" onclick="Tab.close()">返回</button></div>
 <div>
 <table id="qjtable" border="solid 1px" width="100%">
 <tr style="background:whitesmoke;height:40px"><td width="3%" align='center'><input type="checkbox" id="checkall"/></td><td width="5%" align="left">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">审核开始时间</td><td width="15%" align="center">审核截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
 
 </table>
-<form id="tiaozhuanform" style="display:none" method="post" action="qjlb_qj2.jsp">
-<input id="servid" name ="todoId" />
-<input id="qjid" name ="qjid" />
+<form id="tiaozhuanKCform" target="_blank" style="display:none" method="post" action="jklb_jk2.jsp">
+<input id="todoId" name ="todoId" />
+<input id="jkid" name ="jkid" />
 </form>
 </div>
 </div>
