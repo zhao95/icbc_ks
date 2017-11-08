@@ -35,7 +35,7 @@ if(sel == 0){ //部门
 	_viewer.hideGroup("post");
 	
 	if(type == 2){ //如果借考
-		_viewer.getItem("QJKLC_QZDEPT_CODE").hide(); //隐藏机构层级
+		_viewer.getItem("QJKLC_QZDEPT_CODE").show(); //隐藏机构层级
 		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").show();//显示用于被借考审核
 	} else {
 		_viewer.getItem("QJKLC_ZDDEPT_COLCODE").hide();
