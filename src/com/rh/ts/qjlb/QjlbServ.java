@@ -504,6 +504,33 @@ public class QjlbServ extends CommonServ {
         return nBean;
 
     }
-
+    /**
+     * 获取所有的请假待审批
+     */
+    public OutBean getQjData(Bean paramBean){
+    	UserBean user = Context.getUserBean();
+    	String user_code = user.getCode();
+    	String type = paramBean.getStr("type");
+    	List<Bean> qjlist = ServDao.finds("TS_COMM_TODO","AND OWNER_CODE='"+user_code+"' AND TYPE='"+type+"'");
+    	for (Bean bean : qjlist) {
+			String id = bean.getStr("XM_ID");
+			if(type.equals("1")){
+				Bean qjbean = ServDao.find("TS_XMGL_QJGL","and XM_ID='"+id+"'");
+				String start = qjbean.getStr("QJ_STADATE");
+				String end=qjbean.getStr("QJ_ENDDATWE");
+				bean.set("start", start);
+				bean.set("end", end);
+			}else if(type.equals("2")){
+				//借考数据
+				Bean qjbean = ServDao.find("TS_XMGL_YDJK","and XM_ID='"+id+"'");
+				String start = qjbean.getStr("YDJK_STADATE");
+				String end=qjbean.getStr("YDJK_ENDDATE");
+				bean.set("start", start);
+				bean.set("end", end);
+			}
+		}
+    	return new OutBean().set("datalist", qjlist);
+    	
+    }
 
 }
