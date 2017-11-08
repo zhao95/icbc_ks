@@ -191,3 +191,16 @@ $("#TS_PVLG_ROLE_UPDATE .rh-advSearch-table").find("input[type='checkbox']").cha
 		_viewer.getBtn("delFun").hide();
 	}
 });
+
+
+$("#TS_PVLG_ROLE_UPDATE .rhGrid").find("tr").each(function(index, item) {
+	if(index != 0){
+		var dataId = item.id;
+		if(dataId == "") return;
+		var roleType = $(item).find("td[icode='ROLE_TYPE']").text();
+		if(roleType ==1) {
+			var orgLv = $(item).find("td[icode='ROLE_ORG_LV__NAME']").text();
+			$(item).find("td[icode='ROLE_DNAME']").text(orgLv);
+		}
+	}
+});
