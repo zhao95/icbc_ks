@@ -331,7 +331,7 @@
                     <div id="nextStep" class="col-sm-3">
                         <button onclick="bcnext()" class="btn btn-success"
                                 style="width: 150px;height:45px;background-color: #00c2c2;">
-                            提交审批意见
+                            提交审批结果
                         </button>
                     </div>
                     <div class="col-sm-4">
@@ -351,7 +351,6 @@
             </div>
         </div>
 
-     
 
         <%--审批意见--%>
         <div class="row" id="shxxid" style="margin-top:60px">
@@ -410,7 +409,7 @@
 
             </div>
         </div>
-           <div class="row" style="padding-top:20px;display: none" id="fanhuiId">
+        <div class="row" style="padding-top:20px;display: none" id="fanhuiId">
             <div class="col-sm-12 text-center">
                 <button onclick="fanhui()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">
                     返回
@@ -452,6 +451,7 @@
 </div>
 
 <script type="text/javascript">
+    var contextPath = '<%=CONTEXT_PATH %>';
     $(function () {
         var todoId = '<%=todoId%>';
         var bmIdStr = '<%=qj_ksname%>';//报名id

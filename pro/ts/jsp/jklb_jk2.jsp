@@ -149,27 +149,27 @@
                                 <span style="position: relative;left: 26px;top:3px;
                      font-family: 'Arial Negreta', 'Arial Normal', 'Arial',serif;
                      font-weight: 700;font-style: normal;font-size: 16px;color: #FFFFFF;">1</span>
-                        <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5520.png">
+                        <img alt="" src="<%=CONTEXT_PATH%>/ts/image/u5520.png">
                         <span style="position: relative;font-size: 25px;top: 5px;">&nbsp;&nbsp;填写申请单&nbsp;&nbsp;</span>
                     </div>
 
-                    <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">
+                    <img alt="" src="<%=CONTEXT_PATH%>/ts/image/u5532.png">
 
                     <div style="display: inline-block">
                                 <span style="position: relative;left: 26px;top:3px;
                      font-family: 'Arial Negreta', 'Arial Normal', 'Arial',serif;
                      font-weight: 700;font-style: normal;font-size: 16px;">2</span>
-                        <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5522.png">
+                        <img alt="" src="<%=CONTEXT_PATH%>/ts/image/u5522.png">
                         <span style="position: relative;font-size: 25px;top: 5px;">&nbsp;&nbsp;部门领导审批&nbsp;&nbsp;</span>
                     </div>
 
-                    <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">
+                    <img alt="" src="<%=CONTEXT_PATH%>/ts/image/u5532.png">
 
                     <div style="display: inline-block">
                                 <span style="position: relative;left: 26px;top:3px;
                      font-family: 'Arial Negreta', 'Arial Normal', 'Arial',serif;
                      font-weight: 700;font-style: normal;font-size: 16px;">3</span>
-                        <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5524.png">
+                        <img alt="" src="<%=CONTEXT_PATH%>/ts/image/u5524.png">
                         <span style="position: relative;font-size: 25px;top: 5px;">&nbsp;&nbsp;考务管理人员审批</span>
                     </div>
 
@@ -263,7 +263,7 @@
                             <div id="localImag" style="display: block;height: 88px">
                                 <% if (jkImg != null && !jkImg.equals("")) {
                                 %>
-                                <img style="width: 88px;height: 88px;" src="<%=CONTEXT_PATH %>/file/<%=jkImg%>">
+                                <img style="width: 88px;height: 88px;" src="<%=CONTEXT_PATH%>/file/<%=jkImg%>">
                                 <%}%>
                             </div>
                         </div>
@@ -344,7 +344,7 @@
                     <div id="nextStep" class="col-sm-3">
                         <button onclick="bcnext()" class="btn btn-success"
                                 style="width: 150px;height:45px;background-color: #00c2c2;">
-                            提交审批意见
+                            提交审批结果
                         </button>
                     </div>
                     <div class="col-sm-4">
@@ -464,6 +464,7 @@
 </div>
 
 <script type="text/javascript">
+    var contextPath = '<%=CONTEXT_PATH %>';
     $(function () {
         var todoId = '<%=todoId%>';
         var bmIdStr = '<%=jk_ksname%>';

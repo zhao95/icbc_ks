@@ -17,7 +17,7 @@ function updateData(servId, param) {
             if (param.shstatus === '2') {
                 //不同意 退回
                 $('#tiJiaoTip').html('提示信息');
-                $('#tiJiaoContent').html('流程已退回');
+                $('#tiJiaoContent').html('该申请不通过');
             } else {
                 //模态框
                 if (response.shrNames) {
@@ -59,7 +59,7 @@ function showFlowView(todoId) {
                     '<div style="display: inline-block">',
                     '<span style="position: relative;left: 26px;top:3px;',
                     'font-weight: 700;font-style: normal;font-size: 21px;color: #FFFFFF;">1</span>',
-                    '<img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5522.png">',//style="width:20px;"
+                    '<img alt="" src="' + contextPath + '/ts/image/u5522.png">',//style="width:20px;"
                     '<span style="position: relative;font-size: 15px;top: 5px;">&nbsp;&nbsp;填写申请单&nbsp;&nbsp;</span>',
                     '</div>'
                 ].join('')
@@ -70,11 +70,11 @@ function showFlowView(todoId) {
                 var nodeSteps = node.NODE_STEPS;
                 flowView.append(
                     [
-                        '<img alt=""  style="width:50px;height:5px;" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">',
+                        '<img alt=""  style="width:50px;height:5px;" src="' + contextPath + '/ts/image/u5532.png">',
                         '<div style="display: inline-block">',
                         '   <span style="position: relative;left: 28px;top:3px;',
                         '       font-weight: 700;font-style: normal;font-size: 21px;color: #FFFFFF;">' + (i + 2) + '</span>',
-                        '   <img alt="" src="<%=CONTEXT_PATH %>/ts/image/' + (nodeSteps === todoBean.NODE_STEPS ? 'u5520.png' : 'u5522.png') + '">',
+                        '   <img alt="" src="' + contextPath + '/ts/image/' + (nodeSteps === todoBean.NODE_STEPS ? 'u5520.png' : 'u5522.png') + '">',
                         '   <span style="position: relative;font-size: 15px;top: 5px;">&nbsp;&nbsp;' + nodeName + '&nbsp;&nbsp;</span>',
                         '</div>'
                     ].join('')
