@@ -453,23 +453,28 @@ public class FlowServ extends CommonServ {
 		}
 		//2.预定义部门，审核人职位已填写
 		if(selDept == 0 && (!ydyBm.equals("")) &&(!shzw.equals(""))){
+			
+			if(shzw.indexOf(",") != -1){
+				shzw = shzw.replace(",", "','");
+			}
+			
 		    String sqlWhere = "";
 		    switch (ydyBm) {
 		    case "0":
 			//起草人部门
-			sqlWhere = "and dept_code = '"+deptCode+"' and DUTY_LV_CODE = '"+shzw+"'";
+			sqlWhere = "and dept_code = '"+deptCode+"' and DUTY_LV_CODE in ('"+shzw+"')";
 			break;
 		    case "1":
 			//起草人机构
-			sqlWhere = "and odept_code = '"+odeptCode+"' and DUTY_LV_CODE = '"+shzw+"'";
+			sqlWhere = "and odept_code = '"+odeptCode+"' and DUTY_LV_CODE in ('"+shzw+"')";
 			break;
 		    case "2":
 			//推送人部门
-			sqlWhere = "and dept_code = '"+shrDeptCode+"' and DUTY_LV_CODE = '"+shzw+"'";
+			sqlWhere = "and dept_code = '"+shrDeptCode+"' and DUTY_LV_CODE in ('"+shzw+"')";
 			break;
 		    case "3":
 			//推送人机构
-			sqlWhere = "and odept_code = '"+shrOdeptCode+"' and DUTY_LV_CODE = '"+shzw+"'";
+			sqlWhere = "and odept_code = '"+shrOdeptCode+"' and DUTY_LV_CODE in ('"+shzw+"')";
 			break;
 		    default:
 			break;
