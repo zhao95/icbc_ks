@@ -113,14 +113,7 @@ var listPage = function () {
 		    	    rows[i].style.backgroundColor = "Azure";  
 		    	  }  
 		    	} 
-		  	$("#"+datalist[i].TODO_ID).click(function(){
-				var todoid = $(this).attr("id");
-				var qjid = $(this).parent().attr("id");
-				 $("#jkid").val(qjid);
-				   $("#todoId").val(todoid);
-				   $("#hidden").val("2");
-				   $("#tiaozhuanKCform").submit();
-			});
+		  	
  }; 
  
  /*添加分页展示*/
@@ -166,6 +159,7 @@ var listPage = function () {
 
          // 总条数
          var allNum = parseInt(this._lPage.ALLNUM);
+        
          // 显示上一页
          if (currentPageNum !== 1) {
 //		this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
