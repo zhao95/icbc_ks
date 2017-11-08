@@ -1,6 +1,7 @@
 package com.rh.ts.xmgl;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
@@ -8,6 +9,7 @@ import com.rh.core.serv.*;
 import com.rh.core.serv.bean.PageBean;
 import com.rh.core.util.Constant;
 import com.rh.ts.pvlg.PvlgUtils;
+import com.rh.ts.util.TsConstant;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -25,18 +27,6 @@ public class DapccServ extends CommonServ {
         PvlgUtils.setOrgPvlgWhere(param);
     }
 
-//    public OutBean getZwByKcId(ParamBean paramBean) {
-//        OutBean outBean = new OutBean();
-//        String kcId = paramBean.getStr("kcId");
-//
-//        kcId
-//        outBean.set("", );
-//
-//        return outBean;
-//    }
-
-
-//    TS_XMGL_KCAP_DFPKS
 
     /**
      * 根据条件 获取考生信息
@@ -256,6 +246,68 @@ public class DapccServ extends CommonServ {
         List<String> codeStrings = Arrays.asList(codes);
         Bean rootDeptBean = getRootDeptBean(new HashSet<>(codeStrings));
         outBean.putAll(rootDeptBean);
+        return outBean;
+    }
+
+    /**
+     * 判断当前用户是否可以发布场次安排
+     *
+     * @param paramBean 当前登录人发布权限编码（多个机构编码逗号隔开）和项目id
+     * @return "true" "false"
+     */
+    public OutBean getCanPublish(ParamBean paramBean) {
+        String canPublish = "false";
+        String xmId = paramBean.getStr("XM_ID");
+        String userYAPPublishCode = paramBean.getStr("UserYAPPublishCode");
+
+        if (StringUtils.isNotBlank(userYAPPublishCode)) {//不为空，为空则没有权限
+            //如果用户的发布权限的编码 包括项目所属机构，则有发布权限 （通过sql  from sy_org_dept where DEPT_CODE =? and (CODE_PATH like ? or CODE_PATH like ? ...) ）
+            Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+            String xmFqdwCode = xmBean.getStr("XM_FQDW_CODE");
+            String sql = "select * from sy_org_dept where DEPT_CODE =? ";
+            StringBuilder deptSql = new StringBuilder();
+            List<Object> values = new ArrayList<>();
+            values.add(xmFqdwCode);
+            for (String s : userYAPPublishCode.split(",")) {
+                if (StringUtils.isNotBlank(s)) {
+                    values.add("%" + s + "%");
+                    deptSql.append("CODE_PATH like ? or ");
+                }
+            }
+            String whereSql = " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
+            List<Bean> beanList = Transaction.getExecutor().query(sql + whereSql, values);
+            if (beanList != null && beanList.size() > 0) {
+                canPublish = "true";
+            }
+        }
+        OutBean outBean = new OutBean();
+        outBean.set("canPublish", canPublish);
+        return outBean;
+    }
+
+    /**
+     * 显示提交还是发布
+     *
+     * @param paramBean XM_ID
+     * @return "tj" "publish"
+     */
+    public OutBean getTjOrPublish(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String xmId = paramBean.getStr("XM_ID");
+        String deptCode = Context.getUserBean().getDeptCode();
+        Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+        String xmFqdwCode = xmBean.getStr("XM_FQDW_CODE");
+        String sql = "select * from sy_org_dept where DEPT_CODE =? and CODE_PATH like ?";
+        List<Object> values = new ArrayList<>();
+        values.add(xmFqdwCode);
+        values.add("%" + deptCode + "%");
+        List<Bean> beanList = Transaction.getExecutor().query(sql, values);
+        if (beanList != null && beanList.size() > 0) {
+            //用户机构 属于 项目所属机构及以上机构，则用户显示发布按钮
+            outBean.set("type", "publish");
+        } else {
+            outBean.set("type", "tj");
+        }
         return outBean;
     }
 

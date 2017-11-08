@@ -13,7 +13,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
           name="viewport">
 
-    <%@ include file="../../sy/base/view/inHeader.jsp" %>
+    <%@ include file="../../sy/base/view/inHeader-icbc.jsp" %>
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet"
           href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
@@ -59,11 +59,11 @@
 //	String user_cmpy_date =userBean.getStr("USER_CMPY_DATE");
 
 %>
+<%@ include file="../../qt/jsp/header-logo.jsp" %>
 <div class="" style="padding: 10px">
-    <a href="<%=CONTEXT_PATH%>/index_qt.jsp">
-        <img style="padding-bottom:10px" src="<%=CONTEXT_PATH%>/ts/image/u1155.png" id="shouye">
-    </a>
-    <span style="color: blue; font-size: 20px">&nbsp;&nbsp;/&nbsp;&nbsp;我的请假</span>
+    <a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;"
+                                                  src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
+    <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;我的请假</span>
 </div>
 <%--tab标签页--%>
 <table id="myTab" class="nav nav-tabs"
@@ -141,7 +141,7 @@
                         <td style="width: 20%;">单位</td>
                         <td style="width: 10%;">请假人</td>
                         <td style="width: 10%">创建时间</td>
-                        <td style="width: 9%; ">审核状态</td>
+                        <td style="width: 9%;text-align: center ">审核状态</td>
                         <td style="width: 20%; text-align: center">操作</td>
                     </tr>
                     </thead>
@@ -258,10 +258,10 @@
                 '	<td>',
                 '	    ' + qjDate,
                 '	</td>',
-                '	<td>',
+                '	<td  style="text-align: center">',
                 '	    ' + qjStatus,
                 '	</td>',
-                '	<td>',
+                '	<td style="text-align: center">',
                 '	    <input type="button" onclick="chakan(this)" value="查看"',
                 '	        style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"/>',
                 '	</td>',
