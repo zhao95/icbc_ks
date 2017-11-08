@@ -348,6 +348,10 @@ var HeaderBtn = {
             $('#xngsModal').modal({backdrop: false, show: true});
         });
 
+        $("#unPublish").click(function () {
+            $('#unPublishModal').modal({backdrop: false, show: true});
+        });
+
         //提交确定按钮事件
         $("#tjccapModal").find('button[class="btn btn-success"]').bind('click', function () {
             var deptCodeStr = Utils.getUserYAPAutoCode();

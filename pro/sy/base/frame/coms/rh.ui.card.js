@@ -6901,7 +6901,7 @@ rh.ui.ItemFile.prototype.clear = function() {
  * 设置数据
  */
 rh.ui.ItemFile.prototype.setValue = function(val){
-	alert("setvalue");
+	// alert("setvalue");
 	if (val && val.length > 0 && val.indexOf(",") >= 0) {
 		var id_name = val.split(",");
 		var size = 18;
