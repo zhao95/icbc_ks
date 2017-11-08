@@ -3,7 +3,6 @@ package com.rh.ts.xmglsz;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import com.rh.core.base.Bean;
@@ -117,7 +116,6 @@ public class XmglszServ extends CommonServ {
 		UserBean userBean = Context.getUserBean();
 		String odeptcode = userBean.getODeptCode();
 	List<Bean> dataList = new ArrayList<Bean>();
-	
 	List<Bean> ALLList = ServDao.finds("TS_XMGL_SZ", "AND XM_SZ_NAME='考场安排' AND XM_SZ_TYPE='进行中'");
 	for (Bean bean : ALLList) {
 		boolean flag= false;
@@ -195,15 +193,16 @@ public class XmglszServ extends CommonServ {
 		}
 	}
 	return new OutBean().setData(dataList);
-	
 	}
+	//判断是否提交了数据
 public Boolean getTjState(String odeptcode,String xmid){
-	
 	 Bean sqlbean = new Bean();
 	 sqlbean.set("XM_ID", xmid);
 	 sqlbean.set("TJ_DEPT_CODE", odeptcode);
 	 int count = ServDao.count("TS_XMGL_KCAP_TJJL", sqlbean);
 	 return count==0?true:false;
 }
+
+
 
 }

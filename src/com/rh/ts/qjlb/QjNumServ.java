@@ -44,7 +44,7 @@ public class QjNumServ extends CommonServ {
 			int weeknum = finds.get(0).getInt("WEEK_NUM");
 			int cishunum = finds.get(0).getInt("CISHU_NUM");
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			
 			if(weeknum==zhoushu){
 				//判断是否为同一周
@@ -138,7 +138,7 @@ public class QjNumServ extends CommonServ {
 			//结束时间
 			String endtime = bean.getStr("XM_END_TIME");
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			
 			String newstartdate = "";
 			
@@ -174,7 +174,7 @@ public class QjNumServ extends CommonServ {
 								Date stdate = sdf.parse(startime);
 								Date endDate = sdf.parse(endtime);
 								if(!"".equals(ks_time)){
-									SimpleDateFormat simp = new SimpleDateFormat("yyy-mm-dd");
+									SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd");
 									Date ksdate = simp.parse(ks_time);
 									
 									if(ksdate.getTime()>endDate.getTime()||ksdate.getTime()<stdate.getTime()){

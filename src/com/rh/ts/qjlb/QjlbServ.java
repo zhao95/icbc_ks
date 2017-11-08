@@ -14,6 +14,7 @@ import com.rh.ts.util.TsConstant;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -508,27 +509,116 @@ public class QjlbServ extends CommonServ {
      * 获取所有的请假待审批
      */
     public OutBean getQjData(Bean paramBean){
+    	Bean _PAGE_ = new Bean();
+    	OutBean outBean = new OutBean();
+    	String NOWPAGE = paramBean.getStr("nowpage");
+		String SHOWNUM = paramBean.getStr("shownum");
     	UserBean user = Context.getUserBean();
     	String user_code = user.getCode();
     	String type = paramBean.getStr("type");
     	List<Bean> qjlist = ServDao.finds("TS_COMM_TODO","AND OWNER_CODE='"+user_code+"' AND TYPE='"+type+"'");
     	for (Bean bean : qjlist) {
 			String id = bean.getStr("XM_ID");
-			if(type.equals("1")){
-				Bean qjbean = ServDao.find("TS_XMGL_QJGL","and XM_ID='"+id+"'");
-				String start = qjbean.getStr("QJ_STADATE");
-				String end=qjbean.getStr("QJ_ENDDATWE");
-				bean.set("start", start);
-				bean.set("end", end);
-			}else if(type.equals("2")){
+			if(type.equals("0")){
+				List<Bean> qjdatelist= ServDao.finds("TS_XMGL_QJGL","and XM_ID='"+id+"'");
+				if(qjdatelist.size()!=0){
+					String start = qjdatelist.get(0).getStr("QJ_STADATE");
+					String end=qjdatelist.get(0).getStr("QJ_ENDDATWE");
+					bean.set("start", start);
+					bean.set("end", end);
+				}
+			}else if(type.equals("1")){
 				//借考数据
-				Bean qjbean = ServDao.find("TS_XMGL_YDJK","and XM_ID='"+id+"'");
-				String start = qjbean.getStr("YDJK_STADATE");
-				String end=qjbean.getStr("YDJK_ENDDATE");
+				List<Bean> qjdatelist = ServDao.finds("TS_XMGL_YDJK","and XM_ID='"+id+"'");
+				if(qjdatelist.size()!=0){
+				String start = qjdatelist.get(0).getStr("YDJK_STADATE");
+				String end=qjdatelist.get(0).getStr("YDJK_ENDDATE");
 				bean.set("start", start);
 				bean.set("end", end);
+				}
 			}
 		}
+    	
+    	int ALLNUM = qjlist.size();
+		// 计算页数
+		int meiye = Integer.parseInt(SHOWNUM);
+		int yeshu = ALLNUM / meiye;
+		int yushu = ALLNUM % meiye;
+		// 获取总页数
+		if (yushu != 0) {
+			yeshu += 1;
+		}
+
+		int nowpage = Integer.parseInt(NOWPAGE);
+		int showpage = Integer.parseInt(SHOWNUM);
+		// 计算第一项 开始
+		int chushi = (nowpage - 1) * showpage + 1;
+		// 计算结束项
+		int jieshu = (nowpage - 1) * showpage + showpage;
+		// 放到Array中
+		List<Bean> list2 = new ArrayList<Bean>();
+		if (ALLNUM == 0) {
+			// 没有数据
+		} else {
+
+			if (jieshu <= ALLNUM) {
+				// 循环将数据放入list2中返回给前台
+				for (int i = chushi; i <= jieshu; i++) {
+					list2.add(qjlist.get(i - 1));
+				}
+
+			} else {
+				for (int j = chushi; j < ALLNUM + 1; j++) {
+					list2.add(qjlist.get(j - 1));
+				}
+			}
+		}
+		outBean.set("list", list2);
+		_PAGE_.set("ALLNUM", qjlist.size());
+		_PAGE_.set("NOWPAGE", NOWPAGE);
+		_PAGE_.set("PAGES", yeshu);
+		outBean.set("_PAGE_", _PAGE_);
+		outBean.set("first", chushi);
+		outBean.set("datalist", qjlist);
+    	return outBean;
+    	
+    }
+    
+    
+    
+    /**
+     * 获取所有的请假待审批  首页 展示
+     */
+    public OutBean getQtData(Bean paramBean){
+    	
+    	UserBean user = Context.getUserBean();
+    	String user_code = user.getCode();
+    	String type = paramBean.getStr("type");
+    	List<Bean> qjlist = ServDao.finds("TS_COMM_TODO","AND OWNER_CODE='"+user_code+"' AND TYPE='"+type+"'");
+    	for (Bean bean : qjlist) {
+			String id = bean.getStr("XM_ID");
+			if(type.equals("0")){
+				List<Bean> qjdatelist= ServDao.finds("TS_XMGL_QJGL","and XM_ID='"+id+"'");
+				if(qjdatelist.size()!=0){
+					String start = qjdatelist.get(0).getStr("QJ_STADATE");
+					String end=qjdatelist.get(0).getStr("QJ_ENDDATWE");
+					bean.set("start", start);
+					bean.set("end", end);
+				}
+			}else if(type.equals("1")){
+				//借考数据
+				List<Bean> qjdatelist = ServDao.finds("TS_XMGL_YDJK","and XM_ID='"+id+"'");
+				if(qjdatelist.size()!=0){
+				String start = qjdatelist.get(0).getStr("YDJK_STADATE");
+				String end=qjdatelist.get(0).getStr("YDJK_ENDDATE");
+				bean.set("start", start);
+				bean.set("end", end);
+				}
+			}
+		}
+    
+
+		
     	return new OutBean().set("datalist", qjlist);
     	
     }

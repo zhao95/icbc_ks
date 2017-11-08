@@ -23,12 +23,13 @@
        cardView.show();
    });
     } 
-    function openMoreZhubanListPage(SERVID){
-    	Tab.open({'url':'SY_COMM_TEMPL.show.do?model=view&pkCode='+SERVID,'tTitle':111,'menuFlag':3});
-    }
+    	$("#openhasanpai").click(function(){
+		var opts={'url':'TS_ANPAI_PASS.list.do?','tTitle':'已安排考场','menuFlag':3};
+		Tab.open(opts);
+    	})
 </script>
 <div id='TS_COMM_TODO' class='portal-box'>
-<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待我安排的考场</span><span class="portal-box-hideBtn  conHeanderTitle-expand"></span><span class="portal-box-more"><a href="#" onclick="openMoreZhubanListPage('TS_KC_ANPAI')"></a></span></div>
+<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待我安排的考场</span><span class="portal-box-hideBtn  conHeanderTitle-expand"></span>&nbsp;&nbsp;&nbsp;&nbsp;<span><a href="#" id="openhasanpai" >查看已安排的考场</a></span></div>
 <div>
             <table id="kctable" border="solid 1px lightgray" width="100%">
                   <tr style="background:whitesmoke;height:40px"><td width="5%" align="left">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">安排开始时间</td><td width="15%" align="center">安排截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
