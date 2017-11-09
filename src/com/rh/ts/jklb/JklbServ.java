@@ -83,6 +83,7 @@ public class JklbServ extends CommonServ {
                 && ((String) outBean.get(Constant.RTN_MSG)).contains(Constant.RTN_MSG_ERROR)) {
             //有错误回滚
             Transaction.rollback();
+           
         } else {
             Transaction.commit();
         }
@@ -233,6 +234,7 @@ public class JklbServ extends CommonServ {
                 && (outBean.getStr(Constant.RTN_MSG)).contains(Constant.RTN_MSG_ERROR)) {
             //有错误回滚
             Transaction.rollback();
+            outBean.setError("数据有误审批失败");
         } else {
             Transaction.commit();
         }

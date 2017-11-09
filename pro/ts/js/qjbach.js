@@ -88,7 +88,7 @@ var listPage = function () {
 	 for(var i=0;i<datalist.length;i++){
 	 	var j=1;
 	 	var newTR='<tr style="height:40px">'+
-	 	'<td><input type="checkbox" id='+datalist[i].TODO_ID+' name="checkboxqj"/></td>'+
+	 	'<td align="center"><input type="checkbox" idcode='+datalist[i].TODO_ID+' name="checkboxqj"/></td>'+
 	 	'<td width="5%" align="center">'+j+'</td>'+
 	 	'<td width="5%" align="center">'+datalist[i].TITLE+'</td>'+
 	 	'<td width="5%" align="center">'+datalist[i].start+'</td>'+
@@ -266,7 +266,6 @@ var listPage = function () {
  })
 
  function mttijiao(){
-	 debugger;
 	 var param={};
 	 var radiovalue = $('input:radio:checked').val();
 	  var liyou = document.getElementById("liyou").value;
@@ -279,10 +278,10 @@ var listPage = function () {
 		 }
 		 var ids = "";
 		 $("input[name='checkboxqj']:checked").each(function(){
-			 ids+=$(this).attr("id");
+			 ids+=$(this).attr("idcode");
 		 });
 		 param["todoId"]=ids;
 		 //批量通过
 		 var result = FireFly.doAct("TS_QJLB_QJ","updateData",param);
-	 $("#tiJiao").modal().hide;
+		 $("#tiJiao").modal("hide");
  }
