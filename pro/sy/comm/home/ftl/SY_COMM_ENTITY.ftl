@@ -33,7 +33,7 @@ $("#qjbach").click(function(){
 <div>
 
 <table id="qjtable" border="solid 1px" width="100%">
-<tr style="background:whitesmoke;height:40px"><td width="5%" align="left">#</td><td width="35%" align="center">名称</td><td width="15%" align="center">审核开始时间</td><td width="15%" align="center">审核截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
+<tr style="background:whitesmoke;height:40px"><td width="5%" align="left">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">审核开始时间</td><td width="15%" align="center">审核截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
 
 </table>
 <form id="tiaozhuanform" target="_blank" style="display:none" method="post" action="/ts/jsp/qjlb_qj2.jsp">

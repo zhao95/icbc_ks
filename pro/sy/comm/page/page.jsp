@@ -190,4 +190,5 @@ if (window.ICBC) {
 	ICBC.openFirstTab();
 }
 </script>
+ <script src='<%=urlPath%>/ts/js/shouye.js'></script>
 </html>
