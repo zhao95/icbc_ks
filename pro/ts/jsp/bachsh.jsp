@@ -125,7 +125,7 @@ String loginname=userBean.getStr("USER_LOGIN_NAME");
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-	<form id="tiaozhuanKCform" target="_blank" style="display:none" method="post" action="/ts/jsp/jklb_jk2.jsp">
+	<form id="tiaozhuanform" target="_blank" style="display:none" method="post" action="/ts/jsp/qjlb_qj2.jsp">
 <input id="todoId" name ="todoId" />
 <input id="qjid" name ="qjid" />
 <input id="hidden" name ="hidden" />

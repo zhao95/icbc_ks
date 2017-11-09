@@ -20,7 +20,7 @@ for(var i=0;i<datalist.length;i++){
 		 $("#jkid").val(qjid);
 		   $("#todoId").val(todoid);
 		   $("#hidden").val("2");
-		   $("#tiaozhuanform").submit();
+		   $("#tiaozhuanKCform").submit();
 	});
 	j++;
 }
