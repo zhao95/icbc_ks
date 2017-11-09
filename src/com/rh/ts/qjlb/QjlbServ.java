@@ -105,10 +105,6 @@ public class QjlbServ extends CommonServ {
         //获取前台传过来的值
 //        String qj_status = paramBean.getStr("qjstatus");
 //        String qjId = paramBean.getStr("qjid");
-        String sh_status = paramBean.getStr("shstatus");//同意 不同意
-        String sh_reason = paramBean.getStr("shreason");//审核内容
-        String isRetreat = paramBean.getStr("isRetreat");//是否被退回
-        String paramTodoId = paramBean.getStr("todoId");//待办id
 //        String sh_statusStr = sh_status.equals("1") ? "同意" : "不同意";
 //        String user_longin = paramBean.getStr("userloginname");
 //        String user_name = paramBean.getStr("username");
@@ -166,115 +162,121 @@ public class QjlbServ extends CommonServ {
 //        String user_name = paramBean.getStr("username");
 //        String s_dname = paramBean.getStr("deptname");
 //        String usercode = paramBean.getStr("usercode");
-
-        Transaction.begin();
-        Bean todoBean = ServDao.find(TODO_SERVID, paramTodoId);
-        String nodeSteps;
-        if (todoBean == null) {
-            outBean.setError("待办已被处理，请返回！");
-            return outBean;
-        } else {
-            nodeSteps = (String) todoBean.get("NODE_STEPS");
-        }
-        String qjId = (String) todoBean.get("DATA_ID");
-        Bean qjbean = ServDao.find(TSQJ_SERVID, qjId);
-
-
-        //1、保存评审意见
-        //添加审核意见信息
-        Bean shyjBean = new Bean();
-        shyjBean.set("DATA_ID", qjId);
-        shyjBean.set("SH_TYPE", "1");//审核类别 1 意见 2 审核记录
-        shyjBean.set("SH_MIND", sh_reason);//意见内容
-
-        shyjBean.set("SH_NODE", todoBean.getStr("NODE_NAME"));//审核层级名称
-        shyjBean.set("SH_LEVEL", nodeSteps);//审核层级
-
-        shyjBean.set("SH_STATUS", sh_status);//审核状态// 同意 不同意
-        shyjBean.set("SH_UCODE", currentUser.getCode());//审核人UID(人力资源编码)
-        shyjBean.set("SH_ULOGIN", currentUser.getLoginName());//审核人登陆名
-        shyjBean.set("SH_UNAME", currentUser.getName());//审核人姓名
-        shyjBean.set("S_DNAME", currentUser.getDeptName());//审核人部门名称
-        ServDao.save(COMM_MIND_SERVID, shyjBean);
-
-        //3、删除待办 插入已办
-        //获取改请假的所有待办
-        List<Bean> todoList = ServDao.finds(TODO_SERVID, "and DATA_ID = '" + qjId + "'");
-        for (Bean bean : todoList) {
-            String todoId = (String) bean.get("TODO_ID");
-            if (todoId.equals(paramTodoId)) {
-                Bean doneBean = new Bean();
-                doneBean.putAll(bean);
-                doneBean.remove("TODO_ID");
-                doneBean.remove("_PK_");
-                ServDao.create(DONE_SERVID, doneBean);
-            }
-            ServDao.destroy(TODO_SERVID, todoId);
-        }
-
-        //2、修改请假状态，并产生待办
-        //被退回 3 、 流程结束 2 、 其他 1
-        String qj_status;
-        if ("true".equals(isRetreat)) {
-            qj_status = "3";
-        } else if ("1".equals(nodeSteps)) {
-            qj_status = "2";
-        } else {
-            qj_status = "1";
-        }
-        qjbean.set("QJ_STATUS", qj_status);
-        ServDao.update(TSQJ_SERVID, qjbean);
-
-        if ("2".equals(qj_status)) {
-            //请假已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
-            String qjKsname = qjbean.getStr("QJ_KSNAME");
-            String[] bmIds = qjKsname.split(",");
-            for (String bmId : bmIds) {
-                ParamBean queryParamBean = new ParamBean();
-                queryParamBean.set("BM_ID", bmId);
-                Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
-                if (bean == null) {
-                    continue;
-                }
-                if ("2".equals(bean.getStr("BM_STATUS"))) {
-                    bean.set("BM_STATUS", "3");
-                } else {
-                    bean.set("BM_STATUS", "1");
-                }
-                ServDao.update(TS_BMSH_PASS_SERVID, bean);
-            }
-            //请假通过 修改请假次数和请假周数
-            ParamBean getQxBean = new ParamBean();
-            getQxBean.put("bmids", qjKsname);
-            getQxBean.put("user_code", qjbean.getStr("USER_CODE"));
-            getQxBean.put("cishu", ConfMgr.getConf("TS_KSQJ_SETCONUTS", "0"));
-            getQxBean.put("zhoushu", ConfMgr.getConf("TS_KSQJ_WEEK_MAXNUM", "0"));
-            try {
-                Bean result = ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
-                if (!"true".equals(result.getStr("yes"))) {
-                    Transaction.rollback();
-                    outBean.setError((String) result.get(Constant.RTN_MSG));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Transaction.rollback();
-                outBean.setError("审批失败");
-            }
-        }
-
-        if ("1".equals(qj_status)) {
-            int nodeSteps1 = Integer.parseInt((String) todoBean.get("NODE_STEPS"));
-            doFlowTask(outBean, currentUser, qjbean, nodeSteps1);
-        }
-
-        if (outBean.get(Constant.RTN_MSG) != null
-                && ((String) outBean.get(Constant.RTN_MSG)).indexOf(Constant.RTN_MSG_ERROR) > 0) {
-            //有错误回滚
-            Transaction.rollback();
-        } else {
-            Transaction.commit();
-        }
-        Transaction.end();
+        String[] split = paramTodoId.split(",");
+        for (String string : split) {
+			if("".equals(string)){
+				continue;
+			}
+        	Transaction.begin();
+        	Bean todoBean = ServDao.find(TODO_SERVID, string);
+        	String nodeSteps;
+        	if (todoBean == null) {
+        		outBean.setError("待办已被处理，请返回！");
+        		return outBean;
+        	} else {
+        		nodeSteps = (String) todoBean.get("NODE_STEPS");
+        	}
+        	String qjId = (String) todoBean.get("DATA_ID");
+        	Bean qjbean = ServDao.find(TSQJ_SERVID, qjId);
+        	
+        	
+        	//1、保存评审意见
+        	//添加审核意见信息
+        	Bean shyjBean = new Bean();
+        	shyjBean.set("DATA_ID", qjId);
+        	shyjBean.set("SH_TYPE", "1");//审核类别 1 意见 2 审核记录
+        	shyjBean.set("SH_MIND", sh_reason);//意见内容
+        	
+        	shyjBean.set("SH_NODE", todoBean.getStr("NODE_NAME"));//审核层级名称
+        	shyjBean.set("SH_LEVEL", nodeSteps);//审核层级
+        	
+        	shyjBean.set("SH_STATUS", sh_status);//审核状态// 同意 不同意
+        	shyjBean.set("SH_UCODE", currentUser.getCode());//审核人UID(人力资源编码)
+        	shyjBean.set("SH_ULOGIN", currentUser.getLoginName());//审核人登陆名
+        	shyjBean.set("SH_UNAME", currentUser.getName());//审核人姓名
+        	shyjBean.set("S_DNAME", currentUser.getDeptName());//审核人部门名称
+        	ServDao.save(COMM_MIND_SERVID, shyjBean);
+        	
+        	//3、删除待办 插入已办
+        	//获取改请假的所有待办
+        	List<Bean> todoList = ServDao.finds(TODO_SERVID, "and DATA_ID = '" + qjId + "'");
+        	for (Bean bean : todoList) {
+        		String todoId = (String) bean.get("TODO_ID");
+        		if (todoId.equals(paramTodoId)) {
+        			Bean doneBean = new Bean();
+        			doneBean.putAll(bean);
+        			doneBean.remove("TODO_ID");
+        			doneBean.remove("_PK_");
+        			ServDao.create(DONE_SERVID, doneBean);
+        		}
+        		ServDao.destroy(TODO_SERVID, todoId);
+        	}
+        	
+        	//2、修改请假状态，并产生待办
+        	//被退回 3 、 流程结束 2 、 其他 1
+        	String qj_status;
+        	if ("true".equals(isRetreat)) {
+        		qj_status = "3";
+        	} else if ("1".equals(nodeSteps)) {
+        		qj_status = "2";
+        	} else {
+        		qj_status = "1";
+        	}
+        	qjbean.set("QJ_STATUS", qj_status);
+        	ServDao.update(TSQJ_SERVID, qjbean);
+        	
+        	if ("2".equals(qj_status)) {
+        		//请假已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
+        		String qjKsname = qjbean.getStr("QJ_KSNAME");
+        		String[] bmIds = qjKsname.split(",");
+        		for (String bmId : bmIds) {
+        			ParamBean queryParamBean = new ParamBean();
+        			queryParamBean.set("BM_ID", bmId);
+        			Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
+        			if (bean == null) {
+        				continue;
+        			}
+        			if ("2".equals(bean.getStr("BM_STATUS"))) {
+        				bean.set("BM_STATUS", "3");
+        			} else {
+        				bean.set("BM_STATUS", "1");
+        			}
+        			ServDao.update(TS_BMSH_PASS_SERVID, bean);
+        		}
+        		//请假通过 修改请假次数和请假周数
+        		ParamBean getQxBean = new ParamBean();
+        		getQxBean.put("bmids", qjKsname);
+        		getQxBean.put("user_code", qjbean.getStr("USER_CODE"));
+        		getQxBean.put("cishu", ConfMgr.getConf("TS_KSQJ_SETCONUTS", "0"));
+        		getQxBean.put("zhoushu", ConfMgr.getConf("TS_KSQJ_WEEK_MAXNUM", "0"));
+        		try {
+        			Bean result = ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
+        			if (!"true".equals(result.getStr("yes"))) {
+        				Transaction.rollback();
+        				outBean.setError((String) result.get(Constant.RTN_MSG));
+        			}
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        			Transaction.rollback();
+        			outBean.setError("审批失败");
+        		}
+        	}
+        	
+        	if ("1".equals(qj_status)) {
+        		int nodeSteps1 = Integer.parseInt((String) todoBean.get("NODE_STEPS"));
+        		doFlowTask(outBean, currentUser, qjbean, nodeSteps1);
+        	}
+        	
+        	if (outBean.get(Constant.RTN_MSG) != null
+        			&& ((String) outBean.get(Constant.RTN_MSG)).indexOf(Constant.RTN_MSG_ERROR) > 0) {
+        		//有错误回滚
+        		Transaction.rollback();
+        	} else {
+        		Transaction.commit();
+        	}
+        	Transaction.end();
+		}
+        
         return outBean;
     }
 
@@ -364,14 +366,12 @@ public class QjlbServ extends CommonServ {
         if (bmids.length > 0) {
             sbu.append("'").append(bmids[0]).append("'");
             for (int i = 1; i < bmids.length; i++) {
-                String bmid = bmids[i];
                 sbu.append(",'").append(bmids[i]).append("'");
             }
         }
 //        "TS_BMSH_PASS"
         List<Bean> tsBmshPassList = ServDao.finds("TS_BMLB_BM", "and BM_ID in(" + sbu.toString() + ")");//userCode
         for (Bean tsBmshPass : tsBmshPassList) {
-            String xmId = (String) tsBmshPass.get("XM_ID");
             //通过TS_BMLB_BM表，获取标题和考试开始时间信息
             String bmId = (String) tsBmshPass.get("BM_ID");
             Bean bmBean = ServDao.find("TS_BMLB_BM", bmId);

@@ -142,7 +142,11 @@ public class JklbServ extends CommonServ {
         String isRetreat = paramBean.getStr("isRetreat");//是否被退回
         String paramTodoId = paramBean.getStr("todoId");//待办id
         // sh_status = sh_status.equals("1") ? "同意" : "不同意";
-
+        String[] split = paramTodoId.split(",");
+        for (String string : split) {
+			if("".equals(string)){
+				continue;
+			}
         Transaction.begin();
         Bean todoBean = ServDao.find(TODO_SERVID, paramTodoId);
         String nodeSteps;
@@ -233,6 +237,7 @@ public class JklbServ extends CommonServ {
             Transaction.commit();
         }
         Transaction.end();
+        }
         return outBean;
     }
 
@@ -326,7 +331,6 @@ public class JklbServ extends CommonServ {
 //    "TS_BMSH_PASS"
         List<Bean> tsBmshPassList = ServDao.finds("TS_BMLB_BM", "and BM_ID in(" + sbu.toString() + ")");//userWorkNum
         for (Bean tsBmshPass : tsBmshPassList) {
-            String xmId = tsBmshPass.getStr("XM_ID");
             //通过TS_BMLB_BM表，获取标题和考试开始时间信息
             String bmId = tsBmshPass.getStr("BM_ID");
             Bean bmBean = ServDao.find("TS_BMLB_BM", bmId);
@@ -475,7 +479,6 @@ public class JklbServ extends CommonServ {
                         shyjBean.set("S_DNAME", "");//审核人部门名称
                         ServDao.save(COMM_MIND_SERVID, shyjBean);
                         //修改为不通过
-                        String jk_status = "";
                         jkBean.set("JK_STATUS", "3");
                         ServDao.update(TSJK_SERVID, jkBean);
                     }
