@@ -83,7 +83,7 @@ var listPage = function () {
      this.gotoPage(this._lPage.PAGES);
  };
  listPage.prototype.bldTable = function (listData) {
-	 $("#table tbody").html("");
+	 $("#qjtable tbody").html("");
 	 var datalist = listData.datalist;
 	 for(var i=0;i<datalist.length;i++){
 	 	var j=1;
@@ -285,3 +285,16 @@ var listPage = function () {
 		 var result = FireFly.doAct("TS_QJLB_QJ","updateData",param);
 		 $("#tiJiao").modal("hide");
  }
+ $("#checkall").click(function(){
+	 if($(this).prop("checked")){
+		 var kslxArray = $('input:checkbox[name=checkboxqj]');
+		 for(var i=0;i<kslxArray.length;i++){
+			 kslxArray[i].checked=true;
+		 }
+	 }else{
+		 var kslxArray = $('input:checkbox[name=checkboxqj]');
+		 for(var i=0;i<kslxArray.length;i++){
+			 kslxArray[i].checked=false;
+		 }
+	 }
+ })

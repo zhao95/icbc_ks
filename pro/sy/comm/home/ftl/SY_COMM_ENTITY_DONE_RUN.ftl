@@ -1,6 +1,6 @@
 <script type="text/javascript" >
 var param={};
-param['type']=1;
+param['type']="1";
 var result = FireFly.doAct("TS_QJLB_QJ","getQtData",param);
 var datalist = result.datalist;
 for(var i=0;i<datalist.length;i++){

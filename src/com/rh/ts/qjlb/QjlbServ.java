@@ -527,6 +527,9 @@ public class QjlbServ extends CommonServ {
 					String end=qjdatelist.get(0).getStr("QJ_ENDDATWE");
 					bean.set("start", start);
 					bean.set("end", end);
+				}else{
+					bean.set("start", "");
+					bean.set("end", "");
 				}
 			}else if(type.equals("1")){
 				//借考数据
@@ -536,6 +539,9 @@ public class QjlbServ extends CommonServ {
 				String end=qjdatelist.get(0).getStr("YDJK_ENDDATE");
 				bean.set("start", start);
 				bean.set("end", end);
+				}else{
+					bean.set("start", "");
+					bean.set("end", "");
 				}
 			}
 		}
@@ -605,6 +611,9 @@ public class QjlbServ extends CommonServ {
 					String end=qjdatelist.get(0).getStr("QJ_ENDDATWE");
 					bean.set("start", start);
 					bean.set("end", end);
+				}else{
+					bean.set("start", "");
+					bean.set("end", "");
 				}
 			}else if(type.equals("1")){
 				//借考数据
@@ -614,6 +623,9 @@ public class QjlbServ extends CommonServ {
 				String end=qjdatelist.get(0).getStr("YDJK_ENDDATE");
 				bean.set("start", start);
 				bean.set("end", end);
+				}else{
+					bean.set("start", "");
+					bean.set("end", "");
 				}
 			}
 		}

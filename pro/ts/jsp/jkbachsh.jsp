@@ -61,8 +61,11 @@ String loginname=userBean.getStr("USER_LOGIN_NAME");
 	<div id="table1" class=""
 		style="margin-left: 10px; position: relative; width: 98%">
 		<table id="qjtable" border="solid 1px" width="100%">
+		<thead>
 <tr style="background:whitesmoke;height:40px"><td width="3%" align='center'><input type="checkbox" id="checkall"/></td><td width="5%" align="left">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">审核开始时间</td><td width="15%" align="center">审核截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
-
+</thead>
+<tbody>
+</tbody>
 </table>
 			
 		<div id="fenyediiv"
