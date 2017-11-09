@@ -1241,7 +1241,7 @@ public class BmlbServ extends CommonServ {
 	 */
 	public OutBean getkslbk(Bean paramBean){
 		List<Bean> finds = null;
-			String where = "AND KSLBK_XL_CODE is null";
+			String where = "AND KSLBK_XL_CODE is null and KSLBK_CODE<>'023001'";
 			finds = ServDao.finds("TS_XMGL_BM_KSLBK", where);
 		return new OutBean().set("LBS", finds);
 	}

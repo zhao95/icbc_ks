@@ -188,6 +188,7 @@
             for (var i = 0; i < listData._DATA_.length; i++) {
                 var item = listData._DATA_[i];
                 var state = '';
+                var operDiv = jQuery('<div></div>');
                 if (new Date().getTime() > Date.parse(item.XM_END)) {
                     state = '已结束';
                 } else if (item.XM_KCAP_PUBLISH_TIME === '' || item.XM_KCAP_PUBLISH_TIME === null || item.XM_KCAP_PUBLISH_TIME === undefined) {
@@ -196,7 +197,6 @@
                     state = '可打印';
                 }
                 if (state === '可打印') {
-                    var operDiv = jQuery('<div></div>');
                     var lookBtn = jQuery(
                         '<input xm_id="' + item.XM_ID + '" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px;" value="查看"/>'
                     );

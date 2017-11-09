@@ -32,8 +32,8 @@ $("#qjbach").click(function(){
 <div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待审核的请假</span><span class="portal-box-hideBtn  conHeanderTitle-expand"></span><span class="portal-box-more"><a href="#" id="qjbach"></a></span></div>
 <div>
 
-<table id="qjtable" border="solid 1px" width="100%">
-<tr style="background:whitesmoke;height:40px"><td width="5%" align="left">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">审核开始时间</td><td width="15%" align="center">审核截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
+<table id="qjtable" border="solid 1px"  style="border:solid 1px lightgray" width="100%">
+<tr style="background:rgb(242, 255, 253);height:40px"><td width="5%" align="left">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">审核开始时间</td><td width="15%" align="center">审核截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
 
 </table>
 <form id="tiaozhuanform" target="_blank" style="display:none" method="post" action="/ts/jsp/qjlb_qj2.jsp">

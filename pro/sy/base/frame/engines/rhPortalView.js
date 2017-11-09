@@ -799,6 +799,8 @@ rh.vi.portalView.prototype._afterLoad = function() {
 	//去掉portal-box-title的移动手势
     if (this._model == "view") {
     	jQuery(".portal-box-title").css({"cursor":"auto"});
+    	jQuery(".portal-box-title").css({"background":"rgb(219, 255, 250)"});
+    	jQuery(".portal-box-title").css({"border-bottom":"rgb(219, 255, 250)"});
     } else {
     	//this._resize();
     }

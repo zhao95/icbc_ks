@@ -100,30 +100,35 @@ function bindCard() {
 				
 				//类别下拉框
 				//获取级别和级别code
+				var sediv = $('<div></div>');
 				for(var i=0;i<nameArg.length;i++) {
-					if(i<nameArg.length-3){
-						//类别下拉框
-						var select = document.createElement("select");  
-						var param={};
-						var result = FireFly.doAct("TS_BMLB_BM","getkslbk",param);
-						var pageEntity = result.LBS;
-						var codes = pageEntity[0].KSLBK_CODE;
-						for(var k=0;k<pageEntity.length;k++){
-							if(pageEntity[k].KSLBK_CODE==obj2[i].code){
+					if(i<nameArg.length-2){
+						if(i==0){
+							var span = document.createElement("span");
+							span.innerHTML=nameArg[i];
+							formConDiv7.append(span);
+						}else if(i==1){
+							//类别下拉框
+							var param={};
+							var result = FireFly.doAct("TS_BMLB_BM","getkslbk",param);
+							var pageEntity = result.LBS;
+							for(var k=0;k<pageEntity.length;k++){
+								var id = pageEntity[k].KSLBK_ID;
+								var name = pageEntity[k].KSLBK_NAME;
+								if(k==0){
+									var checkboxs = $('<span position="absolute">&nbsp;<input style="position:relative;top:5px" type="checkbox" id='+id+' name='+name+'>'+name+'&nbsp;</span>');
+									formConDiv7.append(checkboxs);
+								}else{
+									var checkboxs = $('<span position="absolute"><input style="position:relative;top:5px" type="checkbox" id='+id+' name='+name+'>'+name+'&nbsp;</span>');
+									formConDiv7.append(checkboxs);
+								}
 								
-								select.add(new Option(pageEntity[k].KSLBK_NAME,pageEntity[k].KSLBK_CODE,true,true)); 
-							}else{
-								select.add(new Option(pageEntity[k].KSLBK_NAME,pageEntity[k].KSLBK_CODE)); 
 							}
+							
 						}
-						select.name="lbselect";
-						var span = document.createElement("span");
-						span.innerHTML=nameArg[i]
-						formConDiv7.append(span);
 						
-						formConDiv7.append(select);
-					}else if(i==(nameArg.length-2)){
-						var inputaa = $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i].val);
+					}else if(i==(nameArg.length-1)){
+						var inputaa = $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i-1].val);
 						if(obj2[obj2.length-1].type=="int"){
 							inputaa.addClass("ui-text-default");
 							
@@ -137,11 +142,11 @@ function bindCard() {
 							inputaa.attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
 							
 						}
-						formConDiv7.append(nameArg[i]);
-						
-						formConDiv7.append(inputaa);
-						formConDiv7.append(nameArg[nameArg.length-1]);
-					}else if(i==(nameArg.length-3)){
+						sediv.append(nameArg[i]);
+						sediv.append(inputaa);
+						sediv.append(nameArg[nameArg.length-1]);
+						formConDiv7.append(sediv);
+					}else if(i==(nameArg.length-2)){
 						//初中高
 						var select = document.createElement("select");  
 						if(obj2[i].code=="1"){
@@ -160,16 +165,10 @@ function bindCard() {
 							select.add(new Option("初级","1")); 
 							select.add(new Option("中级","2")); 
 						}
-						var span = document.createElement("span");
-						span.innerHTML=nameArg[i]
-						formConDiv7.append(span);
-						formConDiv7.append(select);
+						sediv.append(select);
+						formConDiv7.append(sediv);
 					}
 				}
-				var  span= document.createElement("button");
-				span.id="minus";
-				span.innerHTML="删除";
-				formConDiv7.append(span);
 			}else if(obj2[0].type== 'muty'){
 				var codestr = [];
 				var namestr = [];
@@ -219,14 +218,29 @@ function bindCard() {
 						formConDiv7.append(select);
 					}else if (i==nameArg.length-2){
 						//int值
+						/*var inputaa = $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i].val);*/
 						var inputaa = $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i].val);
-						
+						if(obj2[obj2.length-1].type=="int"){
 							inputaa.addClass("ui-text-default");
 							
 							inputaa.css("width","50px");
+						}else{
+							
+							inputaa.addClass("Wdate ui-date-default").css("cursor","pointer");
+							
+							inputaa.css("width","150px");
+							
+							inputaa.attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
+							
+						}
+							/*inputaa.addClass("ui-text-default");
+							
+							inputaa.css("width","50px");*/
 							formConDiv7.append(nameArg[i]);
 							formConDiv7.append(inputaa);
 							formConDiv7.append(nameArg[i+1]);
+							
+							
 							var butt = document.createElement("button");
 							formConDiv7.append(butt);
 							butt.innerHTML="请选择";
@@ -285,6 +299,71 @@ function bindCard() {
 			var inputinfo = $('<button id="resetinfo">重置</button><input type="text" id="RULE-VAR-INPUT" value='+result.MX_NAME+' style="width:90%;border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">');
 			divinfo.append(inputinfo);
 			formConDiv7.append(divinfo);
+		}else if(obj2[0].type=='level'){
+			for(var i=0;i<nameArg.length;i++) {
+				debugger;
+				if(i<2){
+					if(i==0){
+						var span = document.createElement("span");
+						span.innerHTML=nameArg[i];
+						formConDiv7.append(span);
+					}else if(i==1){
+						//初中高级
+						var select = document.createElement("select");  
+						if(obj2[0].code=="1"){
+							select.id = "jibieselect";
+							select.add(new Option("初级","1",true,true)); 
+							select.add(new Option("中级","2")); 
+							select.add(new Option("高级","3")); 
+						}else if(obj2[i].code=="2"){
+							select.id = "jibieselect";
+							select.add(new Option("中级","2",true,true)); 
+							select.add(new Option("初级","1")); 
+							select.add(new Option("高级","3")); 
+						}else{
+							select.id = "jibieselect";
+							select.add(new Option("高级","3",true,true)); 
+							select.add(new Option("初级","1")); 
+							select.add(new Option("中级","2")); 
+						}
+						formConDiv7.append(select);
+						var span  = document.createElement("span");
+						span.innerHTML=nameArg[i];
+						formConDiv7.append(span);
+					}
+					
+				}else if(i==(nameArg.length-1)){
+					var inputaa = $('<input type="text" id="RULE-VAR-INPUT2" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i-1].val);
+					if(obj2[obj2.length-1].type=="int"){
+						inputaa.addClass("ui-text-default");
+						
+						inputaa.css("width","50px");
+					}else{
+						
+						inputaa.addClass("Wdate ui-date-default").css("cursor","pointer");
+						
+						inputaa.css("width","150px");
+						
+						inputaa.attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
+						
+					}
+					
+					formConDiv7.append(inputaa);
+					var span  = document.createElement("span");
+					span.innerHTML=nameArg[i];
+					formConDiv7.append(span);
+				}else if(i==(nameArg.length-2)){
+					var inputaa = $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i-1].val);
+						inputaa.addClass("ui-text-default");
+						
+						inputaa.css("width","50px");
+					formConDiv7.append(inputaa);
+					var span  = document.createElement("span");
+					span.innerHTML=nameArg[i];
+					formConDiv7.append(span);
+				}
+			}
+			
 		}else{
 			for(var i=0;i<nameArg.length;i++) {
 				if(obj2[0].type == 'dateyear') {
@@ -370,27 +449,23 @@ function bindCard() {
 					var mx_name = nameArg[0];
 					var selects = $(formConDiv7.find('select'));
 					var jsons = "[";
-					$(formConDiv7.find('select')).each(function(index,item){
+					$("input:checkbox:checked").each(function(index,item){
+							var name = $(this).attr("name");
+							var code = $(this).attr("id");
 						var flag=false;
-						for(var a=0;a<arr1.length;a++){
-							if(arr1[a]==$(this).val()){
-								flag=true;
-							}
-							if($(this).val()==""){
-								flag=true;
-							}
-						}
-						if(flag){
-						}else{
-							if(selects.length-1==index){
 								mx_name+="#select#";
-							}else{
+						arr1[index]=code;
+						jsons+='{"vari":"select","val":"'+name+'","type":"select","code":"'+code+'"},';
+					});
+					if($("input:checkbox:checked").length==0){
+						alert("考试类别必选，请选择");
+						return false;
+					}
+					$(formConDiv7.find('select')).each(function(index,item){
 								
-								mx_name+="#select#、";
-							}
+								mx_name+="#select#";
 						arr1[index]=$(this).val();
 						jsons+='{"vari":"select","val":"'+$(this).find("option:selected").text()+'","type":"select","code":"'+$(this).val()+'"},';
-						}
 					});
 					mx_name+=nameArg[nameArg.length-2];
 					mx_name+="#select#";
@@ -408,7 +483,7 @@ function bindCard() {
 					}
 					jsons+='{"vari":"muty","val":"'+$("#jibieselect").find("option:selected").text()+'","type":"muty","code":"'+$("#jibieselect").val()+'"},';
 					mx_name+="#muty#";
-					jsons+='{"vari":"muty","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"int"}]';
+					jsons+='{"vari":"muty","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"datetime"}]';
 					var ival = $("#RULE-VAR-INPUT").val();
 					if(isNaN(ival)){
 				    	alert("请输入数字!");
@@ -448,6 +523,26 @@ function bindCard() {
 						return false;
 					}
 					saveRuleVarCode(dataId,"","",jsons,mx_name);
+				}else if(obj2[0].type=='level'){
+					var arr1 = [];
+					var arr = [];
+					var mx_name = nameArg[0];
+					var jsons = "[";
+					$(formConDiv7.find('select')).each(function(index,item){
+								
+						mx_name+="#level#";
+						arr1[index]=$(this).val();
+						jsons+='{"vari":"level","val":"'+$(this).find("option:selected").text()+'","type":"level","code":"'+$(this).val()+'"},';
+					});
+					mx_name+=nameArg[1];
+					mx_name+="#level#";
+					mx_name+=nameArg[2];
+					jsons+='{"vari":"level","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"int"},';
+					mx_name+="#level#";
+					mx_name+=nameArg[3];
+					jsons+='{"vari":"level","val":"'+$("#RULE-VAR-INPUT2").val()+'","type":"datetime"}]';
+					saveRuleVarCode(dataId,arr,arr1,jsons,mx_name);
+					
 				}else{
 				var text = "";
 				$("input[name='yearlimit']").each(function(index,item){
