@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
+import com.rh.core.base.db.Transaction;
 import com.rh.core.comm.CacheMgr;
 import com.rh.core.comm.MenuServ;
 import com.rh.core.org.DeptBean;
@@ -302,6 +303,7 @@ public class UserMgr {
         return getUsersByCondition(condition.toString());
     }
 
+    
     /**
      * 取得部门用户列表
      * 
@@ -316,6 +318,22 @@ public class UserMgr {
         condition.append(" or " + COL_TDEPT_CODE + " in ('" + deptCodes + "'))");
         condition.append(" and " + COL_S_FLAG + "=1");
         return ServDao.finds(ServMgr.SY_ORG_USER, condition.toString());
+    }
+/**
+ * 取得机构下所有用户列表（包含下级机构）
+ * @param odeptCodes 机构编码
+ * @return 机构下所有用户数据集合（包含下级机构）
+ */
+    public static List<Bean> getUserListByOdept(String odeptCodes) {
+    	if (odeptCodes.indexOf(Constant.SEPARATOR) > 0) {
+    		odeptCodes = odeptCodes.replaceAll(Constant.SEPARATOR, "'" + Constant.SEPARATOR + "'");
+    	}
+    	String sqlForDeptPath ="SELECT CODE_PATH FROM SY_ORG_DEPT WHERE DEPT_CODE='"+odeptCodes+"'";
+    	Bean deptPathBean = Transaction.getExecutor().queryOne(sqlForDeptPath);
+    	String paramForDeptPath = deptPathBean.getStr("CODE_PATH");
+    	StringBuilder condition = new StringBuilder("  AND DEPT_CODE IN (SELECT DEPT_CODE FROM SY_ORG_DEPT WHERE 1=1 AND CODE_PATH LIKE '"+paramForDeptPath+"%') ");
+    	condition.append(" and " + COL_S_FLAG + "=1");
+    	return ServDao.finds(ServMgr.SY_ORG_USER, condition.toString());
     }
 
     /**

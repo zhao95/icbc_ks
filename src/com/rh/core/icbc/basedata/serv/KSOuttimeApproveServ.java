@@ -64,7 +64,7 @@ public class KSOuttimeApproveServ extends CommonServ {
 					SysQJParam.set("TODO_ID", todoid);
 					SysQJParam.set("isRetreat", true);
 					SysQJParam.set("shstatus", 2);
-					SysQJParam.set("shreason", "超时未审，系统默认不通过。");
+					SysQJParam.set("shreason", "(超时未审，系统默认不通过)");
 					SysQJParam.set("todoId", todoid);
 					ServMgr.act("TS_QJLB_QJ", "updateDataBySystem", SysQJParam);
 				}
@@ -115,7 +115,7 @@ public class KSOuttimeApproveServ extends CommonServ {
 					SysJKParam.set("TODO_ID", todoid);
 					SysJKParam.set("isRetreat", true);
 					SysJKParam.set("shstatus", 2);
-					SysJKParam.set("shreason", "超时未审，系统默认不通过。");
+					SysJKParam.set("shreason", "(超时未审，系统默认不通过)");
 					SysJKParam.set("todoId", todoid);
 					ServMgr.act("TS_JKLB_JK", "updateDataBySystem", SysJKParam);
 				}
