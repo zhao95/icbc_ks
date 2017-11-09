@@ -233,7 +233,7 @@ position: absolute;
 				<div style="padding-top:20px">
 				<table style="width:100%">
 				<tr>
-				<td style="width:10%"></td><td style="color:lightseagreen;font-size:13px;height:150px;vertical-align:top"><textarea id="liyou11" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:10%"></td><td style="color:lightseagreen;font-size:13px;height:150px;vertical-align:top"><textarea id="liyou11" style="background-color:white;border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
 				<table id="filehis">
@@ -258,7 +258,7 @@ position: absolute;
 					</h4>
 				</div>
 				<div align="center">
-				<textarea style="display:table-cell;vertical-align:middle;width:400px;height:80px" id = 'jkxxinfo'></textarea>
+				<textarea style="background-color:white;display:table-cell;vertical-align:middle;width:400px;height:80px" id = 'jkxxinfo'></textarea>
 				</div>
 				<div class="modal-footer" style="text-align:center;height:50px">
 					<button type="button" onclick = "closemotai()" class="btn btn-default" style=";background:lightseagreen;color:white;height:30px;width:70px;" data-dismiss="modal">确定</button>

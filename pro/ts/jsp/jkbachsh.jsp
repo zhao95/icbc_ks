@@ -113,7 +113,7 @@ String loginname=userBean.getStr("USER_LOGIN_NAME");
 				</table>
 				<table  style="height:100px;width:700px">
 				<tr>
-				<td style="text-align:right;width:17.5%;vertical-align:top">审核理由</td><td style="width:4%"></td><td style="width:75%;vertical-align:top"><textarea id="liyou" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="text-align:right;width:17.5%;vertical-align:top">审核理由</td><td style="width:4%"></td><td style="width:75%;vertical-align:top"><textarea id="liyou" style="border:solid 1px lightseagreen;height:90%;width:88%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
 				</div>

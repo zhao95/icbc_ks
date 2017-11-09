@@ -449,7 +449,7 @@ if(userBean != null) {
 				<div style="padding-top:10px">
 				<table style="width:100%">
 				<tr>
-				<td style="width:10%"></td><td style="height:105px;vertical-align:top"><textarea id="backliyou" style="border:solid 1px white;height:100%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:10%"></td><td style="height:105px;vertical-align:top"><textarea id="backliyou" style="background-color:white;border:solid 1px white;height:100%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
 				<div style="padding-left:50px;padding-top:10px;width:300px;font-size:16px;text-align:left;color:lightseagreen">
