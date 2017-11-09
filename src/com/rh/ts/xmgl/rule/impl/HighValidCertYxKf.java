@@ -36,12 +36,16 @@ public class HighValidCertYxKf implements IRule {
 			
 			SqlBean sql = new SqlBean();
 			
+			String codes = "";
 			for(int i=0;i<obj.length()-2;i++){
+				if(i==0){
+					codes+=obj.getJSONObject(i).getString("code");
+				}else{
+					codes+=","+obj.getJSONObject(i).getString("code");
+				}
 				
-				String yxCode = obj.getJSONObject(i).getString("code"); // 类别code
-				
-				sql.andIn("STATION_TYPE", yxCode);// 类别编号
 			}
+			sql.andIn("STATION_TYPE", codes.split(","));// 类别编号
 			sql.and("STU_PERSON_ID", user);// 人员编码
 
 			sql.andGTE("END_DATE", endDate);// 终止有效期 >= endDate
