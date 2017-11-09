@@ -47,7 +47,6 @@ public class KSNImpStateJob extends RhJob {
 
 	@Override
 	public void interrupt() {
-		// TODO Auto-generated method stub
 		System.out.println("---interrupt---");
 	}
 

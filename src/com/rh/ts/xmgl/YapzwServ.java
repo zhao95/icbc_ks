@@ -65,8 +65,8 @@ public class YapzwServ extends CommonServ {
         OutBean outBean = new OutBean();
         String sql = "SELECT " +
                 "a.*,d.IPZ_IP,d.IPZ_ZWH,b.YAPZW_ID " +
-                "FROM " +
-                "TS_BMSH_PASS a " +
+                ",(select COUNT(*) from TS_BMSH_PASS a2 where a2.BM_CODE=a.BM_CODE and a2.XM_ID=a.XM_ID AND a2.BM_STATUS NOT IN ('1', '3') ) as count " +
+                " FROM TS_BMSH_PASS a " +
                 "LEFT JOIN ts_xmgl_kcap_yapzw b ON a.SH_ID = b.SH_ID " +
                 "left join TS_KCGL_ZWDYB c on b.ZW_ID = c.ZW_ID " +
                 "left join TS_KCGL_IPZWH d on b.KC_ID=d.KC_ID and d.IPZ_ZWH=c.ZW_ZWH_SJ " +
