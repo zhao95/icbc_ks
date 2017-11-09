@@ -61,7 +61,7 @@ public class KSTipBMTask extends AbstractTipTask {
 						//将当前的项目信息存进集合中，后续取出发给所有报名可见人员
 						
 						//获取管理员自定义的通知文字，真实数据替换掉占位字符
-						String tipConfStartValue = ConfMgr.getConf("@C_TS_BM_START_TIP@", "TS_BM_START_TIP");
+						String tipConfStartValue = ConfMgr.getConf("TS_BM_START_TIP", "您可以报名的考试已经开启报名了。请登录工商银行考试系统查看。");
 						String tipConfStartValueReplaced = tipConfStartValue.replaceAll("#XM_TITLE#", BM_TITLE).replaceAll("#BM_START_DATE#", bmStart).replaceAll("#BM_END_DATE#", bmEnd);
 
 						//获取群组id，用，号拼接成字符串
@@ -98,7 +98,7 @@ public class KSTipBMTask extends AbstractTipTask {
 								//报名截止时间到
 								//判断是否到了报名截止时间，若是，通知报名截止
 								//将当前的项目信息存进集合中，后续取出发给所有报名可见人员
-								String tipConfEndValue = ConfMgr.getConf("@C_TS_BM_END_TIP@", "TS_BM_END_TIP");
+								String tipConfEndValue = ConfMgr.getConf("TS_BM_END_TIP", "您可以报名的考试已经截止报名。请登录工商银行考试系统查看。");
 								String tipConfEndValueReplaced = tipConfEndValue.replaceAll("#XM_TITLE#", BM_TITLE).replaceAll("#BM_START_DATE#", bmStart).replaceAll("#BM_END_DATE#", bmEnd);
 								
 								//获取群组id，用，号拼接成字符串
