@@ -233,13 +233,16 @@ function initData(xmId) {
 }
 
 var HeaderBtn = {
+    xmId: '',
 
     initData: function (xmId) {
-        this.setTjFbBtn(xmId);
+        this.xmId = xmId;
+        this.setTjFbBtn();
         this.bindHeaderAction(xmId);
     },
     //设置提交发布按钮
-    setTjFbBtn: function (xmId) {
+    setTjFbBtn: function () {
+        var xmId = this.xmId;
         //unPublish
         var xmBean = FireFly.doAct("TS_XMGL", "byid", {"_PK_": xmId}, false);
         // xmBean.S_USER;
@@ -394,6 +397,8 @@ var HeaderBtn = {
             KcObject.reloadCCInfo();
             KsObject.setDfpKsContent();
             self.zdfpccDisableAftertjccap();
+            $("#publish").css('display', 'none');
+            $("#unPublish").css('display', 'block');
         });
 
         //取消发布确定按钮事件
@@ -414,6 +419,8 @@ var HeaderBtn = {
             KcObject.reloadCCInfo();
             KsObject.setDfpKsContent();
             self.zdfpccDisableAftertjccap();
+            $("#publish").css('display', 'block');
+            $("#unPublish").css('display', 'none');
         });
 
         //伸缩按钮
@@ -1540,9 +1547,9 @@ var KcObject = {
                 '   <td>' + zw.BM_NAME + '</td>',//姓名
                 '   <td>' + zw.BM_XL + '-' + zw.BM_MK + '</td>',//考试名称
                 '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), zw.BM_TYPE) + '</td>',//级别
-                '   <td>Mark</td>',//报考数
+                '   <td>' + zw.COUNT + '</td>',//报考数
                 '   <td>' + zw.IPZ_IP + '</td>',//ip
-                '   <td>Mark</td>',//备注
+                '   <td></td>',//备注
                 '</tr>'
             ].join(''));
         }
@@ -1882,8 +1889,8 @@ var KsObject = {
                 '   <td>' + ks.BM_NAME + '</td>',//姓名
                 '   <td>' + ks.BM_XL + '-' + ks.BM_MK + '</td>',//考试名称
                 '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), ks.BM_TYPE) + '</td>',//级别
-                '   <td>Mark</td>',//报考数
-                '   <td>Mark</td>',//状态
+                '   <td>' + ks.COUNT + '</td>',//报考数
+                '   <td>' + ks.STATUS + '</td>',//状态
                 '   <td>' + ks.BM_CODE + '</td>',//人力资源编码
                 '</tr>'
             ].join(''));

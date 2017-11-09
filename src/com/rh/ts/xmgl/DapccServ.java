@@ -82,7 +82,7 @@ public class DapccServ extends CommonServ {
         configMap.put("searchBmXl", "BM_XL like ?");
         configMap.put("searchBmMk", "BM_MK like ?");
         configMap.put("searchBmJb", "BM_TYPE = ?");
-        //configMap.put("searchBmCount", " and USER_LOGIN_NAME like '%?%'"); //todo 报考数
+        //configMap.put("searchBmCount", "count = ?");todo 报考数
 
         List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
         String whereSql = (String) extWhereSqlData.get(0);
@@ -97,11 +97,14 @@ public class DapccServ extends CommonServ {
         }
         whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
 
-        String sql = "select a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH "
+        String sql = "select a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH"
+                + ",(select COUNT(*) from TS_BMSH_PASS a2 where a2.BM_CODE=a.BM_CODE and a2.XM_ID=a.XM_ID AND a2.BM_STATUS NOT IN ('1', '3') ) as count" +
+                ",(case a.BM_STATUS when '2' then '借考' else '' end) as status "
                 + "from TS_BMSH_PASS a "
                 + "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE "
                 + "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
-                + "where not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID)"
+                + "where not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
+                + " and a.BM_STATUS not in('1','3')"
                 + whereSql;
         //where 姓名/登录名/报考类型/报考数  bm_name /login_name?/
         List<Bean> dataList = Transaction.getExecutor().queryPage(

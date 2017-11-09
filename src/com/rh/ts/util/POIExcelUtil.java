@@ -68,9 +68,9 @@ public class POIExcelUtil {
             if (oldRange.getFirstRow() >= startRow && oldRange.getLastRow() <= endRow) {
                 int targetRowFrom = oldRange.getFirstRow() - startRow + position;
                 int targetRowTo = oldRange.getLastRow() - startRow + position;
-                oldRange.setFirstRow(targetRowFrom);
-                oldRange.setLastRow(targetRowTo);
-                toSheet.addMergedRegion(oldRange);
+                newRange.setFirstRow(targetRowFrom);
+                newRange.setLastRow(targetRowTo);
+//                toSheet.addMergedRegion(oldRange);
                 fromSheet.addMergedRegion(newRange);
             }
         }
@@ -166,10 +166,10 @@ public class POIExcelUtil {
             if (oldRange.getFirstRow() >= startRow && oldRange.getLastRow() <= endRow) {
                 int targetRowFrom = oldRange.getFirstRow() - startRow + position;
                 int targetRowTo = oldRange.getLastRow() - startRow + position;
-                oldRange.setFirstRow(targetRowFrom);
-                oldRange.setLastRow(targetRowTo);
-                toSheet.addMergedRegion(oldRange);
-                fromSheet.addMergedRegion(newRange);
+                newRange.setFirstRow(targetRowFrom);
+                newRange.setLastRow(targetRowTo);
+                toSheet.addMergedRegion(newRange);
+//                fromSheet.addMergedRegion(newRange);
             }
         }
 
@@ -192,103 +192,6 @@ public class POIExcelUtil {
                 continue;
             }
             HSSFRow toRow = toSheet.createRow(i - startRow + position);
-            toRow.setHeight(fromRow.getHeight());
-            for (j = fromRow.getFirstCellNum(); j <= fromRow.getPhysicalNumberOfCells(); j++) {
-                HSSFCell fromCell = fromRow.getCell(j);
-                if (fromCell == null) {
-                    continue;
-                }
-                HSSFCell toCell = toRow.createCell(j);
-                toCell.setCellStyle(fromCell.getCellStyle());
-                CellType cellTypeEnum = fromCell.getCellTypeEnum();
-                toCell.setCellType(cellTypeEnum);
-                switch (cellTypeEnum) {
-                    case BOOLEAN://HSSFCell.CELL_TYPE_BOOLEAN
-                        toCell.setCellValue(fromCell.getBooleanCellValue());
-                        // System.out.println("--------TYPE_BOOLEAN:" +
-                        // targetCell.getBooleanCellValue());
-                        break;
-                    case ERROR://HSSFCell.CELL_TYPE_ERRORF
-                        toCell.setCellErrorValue(FormulaError._NO_ERROR);//fromCell.getErrorCellValue()
-                        // System.out.println("--------TYPE_ERROR:" +
-                        // targetCell.getErrorCellValue());
-                        break;
-                    case FORMULA://HSSFCell.CELL_TYPE_FORMULA
-                        toCell.setCellFormula(parseFormula(fromCell.getCellFormula()));
-                        // System.out.println("--------TYPE_FORMULA:" +
-                        // targetCell.getCellFormula());
-                        break;
-                    case NUMERIC://HSSFCell.CELL_TYPE_NUMERIC
-                        toCell.setCellValue(fromCell.getNumericCellValue());
-                        // System.out.println("--------TYPE_NUMERIC:" +
-                        // targetCell.getNumericCellValue());
-                        break;
-                    case STRING://HSSFCell.CELL_TYPE_STRING
-                        toCell.setCellValue(fromCell.getRichStringCellValue());
-                        // System.out.println("--------TYPE_STRING:" + i +
-                        // targetCell.getRichStringCellValue());
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-
-    /**
-     * 复制行
-     * 如果是同一个HSSFWorkbook中的行请用此方法
-     */
-    public static void copyRows(HSSFWorkbook workbook, int sheetIndex, int startRow, int endRow, int position) {
-        HSSFSheet sheet = workbook.getSheetAt(sheetIndex);
-//        HSSFSheet toSheet = workbook.getSheetAt(toSheetIndex);
-        int i;
-        int j;
-
-        if ((startRow == -1) || (endRow == -1)) {
-            return;
-        }
-
-        List<CellRangeAddress> oldRanges = new ArrayList<>();
-        for (i = 0; i < sheet.getNumMergedRegions(); i++) {
-            oldRanges.add(sheet.getMergedRegion(i));
-        }
-
-        // 拷贝合并的单元格。原理：复制当前合并单元格后，原位置的格式会移动到新位置，需在原位置生成旧格式
-        for (CellRangeAddress oldRange : oldRanges) {
-            CellRangeAddress newRange = new CellRangeAddress(oldRange.getFirstRow(), oldRange.getLastRow(),
-                    oldRange.getFirstColumn(), oldRange.getLastColumn());
-
-            if (oldRange.getFirstRow() >= startRow && oldRange.getLastRow() <= endRow) {
-                int targetRowFrom = oldRange.getFirstRow() - startRow + position;
-                int targetRowTo = oldRange.getLastRow() - startRow + position;
-                oldRange.setFirstRow(targetRowFrom);
-                oldRange.setLastRow(targetRowTo);
-                sheet.addMergedRegion(oldRange);
-                sheet.addMergedRegion(newRange);
-            }
-        }
-
-        // 设置列宽
-        for (i = startRow; i <= endRow; i++) {
-            HSSFRow fromRow = sheet.getRow(i);
-            if (fromRow != null) {
-                for (j = fromRow.getLastCellNum(); j >= fromRow.getFirstCellNum(); j--) {
-                    sheet.setColumnWidth(j, sheet.getColumnWidth(j));
-                    sheet.setColumnHidden(j, false);
-                }
-                break;
-            }
-        }
-
-        // 拷贝行并填充数据
-        for (i = startRow; i <= endRow; i++) {
-            HSSFRow fromRow = sheet.getRow(i);
-            if (fromRow == null) {
-                continue;
-            }
-            HSSFRow toRow = sheet.createRow(i - startRow + position);
             toRow.setHeight(fromRow.getHeight());
             for (j = fromRow.getFirstCellNum(); j <= fromRow.getPhysicalNumberOfCells(); j++) {
                 HSSFCell fromCell = fromRow.getCell(j);
