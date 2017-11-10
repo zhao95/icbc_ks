@@ -39,10 +39,9 @@ public class BaseValidCert2YearBkxl implements IRule {
 		JSONArray obj;
 
 		try {
-
-
 			
 			obj = new JSONArray(jsonStr);
+			
 			JSONObject jsonObject = obj.getJSONObject(0);
 
 			Calendar c = Calendar.getInstance();
@@ -59,7 +58,7 @@ public class BaseValidCert2YearBkxl implements IRule {
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-			Date endDate = format.parse(bmEnd);
+			Date endDate = format.parse(endtime);  //指定时间  不用  报名结束时间
 
 			c.setTime(endDate);
 
