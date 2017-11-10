@@ -24,6 +24,7 @@ import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
+import com.rh.ts.util.RoleUtil;
 
 public class StayServ extends CommonServ {
 
@@ -833,7 +834,13 @@ public class StayServ extends CommonServ {
 	public Bean getBelongToList(Bean paramBean) {
 		//当前审核人
 		UserBean user = Context.getUserBean();
-		String dept_code = user.getStr("ODEPT_CODE");
+		Bean userPvlgToHT = RoleUtil.getPvlgRole(user.getCode(),"TS_BMGL_XNBM");
+		Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+		Bean str = (Bean)userPvlgToHTBean.get("XN_BM");
+		String dept_code = str.getStr("ROLE_DCODE");
+		if("".equals(dept_code)){
+			dept_code=user.getStr("ODEPT_CODE");
+		}
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		/*if("belong".equals(xianei)){
@@ -945,7 +952,13 @@ public class StayServ extends CommonServ {
 				String user_code = user.getStr("USER_CODE");
 				String belongdeptcode = "";
 				String xmid = paramBean.getStr("xmid");
-				String dept_code = user.getStr("ODEPT_CODE");
+				Bean userPvlgToHT = RoleUtil.getPvlgRole(user.getCode(),"TS_BMGL_XNBM");
+				Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+				Bean str = (Bean)userPvlgToHTBean.get("XN_BM");
+				String dept_code = str.getStr("ROLE_DCODE");
+				if("".equals(dept_code)){
+					dept_code=user.getStr("ODEPT_CODE");
+				}
 				List<Bean> list =  new ArrayList<Bean>();
 				List<Bean> list1 = new ArrayList<Bean>();
 				List<Bean> list2 = new ArrayList<Bean>();

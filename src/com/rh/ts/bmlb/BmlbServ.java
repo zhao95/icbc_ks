@@ -12,6 +12,7 @@ import java.util.List;
 
 
 
+
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -38,6 +39,7 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
+import com.rh.ts.util.RoleUtil;
 import com.rh.ts.xmgl.XmglMgr;
 
 public class BmlbServ extends CommonServ {
@@ -1573,5 +1575,29 @@ public class BmlbServ extends CommonServ {
 			}
 			}
 		return new OutBean().set("flag", "false");
+	}
+	/**
+	 * 是否有权限查看辖内报名
+	 */
+	public OutBean LOOKXN(Bean paramBean){
+		UserBean userBean = Context.getUserBean();
+		Bean userPvlgToHT = RoleUtil.getPvlgRole(userBean.getCode(),"TS_BMGL_XNBM");
+		Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+		if(userPvlgToHTBean==null){
+			return new OutBean().set("look", "false");
+		}
+		if("0".equals(userPvlgToHTBean.getStr("XN_BM"))){
+			return new OutBean().set("look", "false");
+		}else{
+			Bean str = (Bean)userPvlgToHTBean.get("XN_BM");
+			if(str==null){
+				return new OutBean().set("look", "false");
+			}
+			String dept_code = str.getStr("ROLE_DCODE");
+			if("".equals(dept_code)){
+				return new OutBean().set("look", "false");
+			}
+		}
+		return new OutBean().set("look", "true");
 	}
 	}

@@ -24,6 +24,8 @@ import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
+import com.rh.ts.pvlg.mgr.GroupMgr;
+import com.rh.ts.util.RoleUtil;
 
 public class PassServ extends CommonServ {
 	/** 每次获取数据条数 */
@@ -32,7 +34,7 @@ public class PassServ extends CommonServ {
 	private static final int EXCEL_MAX_NUM = 65536;
 
 	/**
-	 * /** 获取那一页的记录 返回
+	 *  获取那一页的记录 返回
 	 * 
 	 * @param paramBean
 	 * @return
@@ -640,8 +642,14 @@ public class PassServ extends CommonServ {
 		UserBean user = Context.getUserBean();
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
-		String dept_code = user.getStr("ODEPT_CODE");
 		
+		Bean userPvlgToHT = RoleUtil.getPvlgRole(user.getCode(),"TS_BMGL_XNBM");
+		Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+		Bean str = (Bean)userPvlgToHTBean.get("XN_BM");
+		String dept_code = str.getStr("ROLE_DCODE");
+		if("".equals(dept_code)){
+			dept_code=user.getStr("ODEPT_CODE");
+		}
 		/*if("belong".equals(xianei)){*/
 		//根据项目id找到流程下的所有节点
 		/*List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);

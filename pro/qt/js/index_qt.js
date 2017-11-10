@@ -37,6 +37,8 @@ function userInfo() {
  */
 function showMenu() {
 	var data = FireFly.doAct("TS_UTIL", "getMenu", {"S_FLAG":1});
+	var result = FireFly.doAct("TS_BMLB_BM","LOOKXN","");//是否可见辖内报名
+	var lookflag = result.look;
 	 var param = {};
      param["user_code"]=System.getVar("@USER_CODE@");
      param["zhuangtai"]="全部";
@@ -78,6 +80,8 @@ function showMenu() {
 										+ data.menuList[i].MENU_NAME
 										+ '</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-warning" id="tipSum">'+num+'</span></a></li>');
 				  }
+			  }else if(data.menuList[i].MENU_NAME=="查看辖内报名"&&lookflag=="false"){
+				  continue;
 			  }else{
 				  
 				  $(".sidebar-menu")
