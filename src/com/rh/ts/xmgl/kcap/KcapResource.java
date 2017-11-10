@@ -1076,7 +1076,7 @@ public class KcapResource {
 	/**
 	 * 已安排座位
 	 * 
-	 * @return Bean{考场ID^场次号^日期^座位号: 座位安排 Bean}
+	 * @return Bean{考场ID^场次号^日期: 座位安排 Bean}
 	 */
 	public Bean getBusyZwBean() {
 		return busyZwBean;

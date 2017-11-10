@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +17,8 @@ import com.rh.core.serv.bean.SqlBean;
 import com.rh.ts.xmgl.kcap.KcapResource;
 
 public class KcapMatch {
+	
+	private static Log log = LogFactory.getLog(KcapMatch.class);
 
 	/**
 	 * 匹配符合规则的考生bean
@@ -121,42 +125,7 @@ public class KcapMatch {
 			}
 		}
 
-		if (!filtBean.isEmpty()) {
-
-			ArrayList<Bean> list = new ArrayList<>();
-
-			for (Object time : filtBean.keySet()) { // 遍历考试时长
-
-				Bean timeBean = filtBean.getBean(time);
-
-				for (Object user : timeBean.keySet()) { // 遍历时长下考生bean
-
-					Object val = timeBean.get(user);
-
-					if (val instanceof Bean) { // 当前考生报考一个考试
-
-						Bean ks = timeBean.getBean(user);
-
-						list.add(ks);
-
-					} else if (val instanceof List) { // 当前考生报考多个考试
-
-						List<Bean> kslist = timeBean.getList(user);
-
-						list.addAll(kslist);
-					}
-				}
-			}
-
-			if (!list.isEmpty()) {
-
-				int index = new Random().nextInt(list.size()); // 随机获取list索引
-
-				return list.get(index);
-			}
-		}
-
-		return new Bean();
+		return randomFiltBean(filtBean);
 	}
 
 	/**
@@ -224,6 +193,8 @@ public class KcapMatch {
 			}
 
 		} catch (Exception e) {
+			
+			log.error(e);
 
 			filtBean = null;
 		}
@@ -247,7 +218,7 @@ public class KcapMatch {
 
 			for (Object time : temp.keySet()) { // 遍历考试时长
 
-				Bean timeBean = temp.getBean(time);
+				Bean timeBean = (Bean) temp.getBean(time).clone();
 
 				for (Object key : timeBean.keySet()) { // 遍历时长下考生bean
 
@@ -262,7 +233,7 @@ public class KcapMatch {
 
 					if (val instanceof Bean) { // 当前考生报考一个考试
 
-						Bean ks = timeBean.getBean(key);
+						Bean ks = (Bean) timeBean.getBean(key).clone();
 
 						// 判断是否相同考试的考生
 						if (shId.equals(ks.getStr("SH_ID"))) {
@@ -373,7 +344,8 @@ public class KcapMatch {
 						}
 					}
 				} catch (Exception e) {
-
+					
+					log.error(e);
 				}
 			}
 
@@ -385,7 +357,8 @@ public class KcapMatch {
 			}
 
 		} catch (Exception e) {
-
+			
+			log.error(e);
 		}
 
 		return false;
@@ -494,6 +467,8 @@ public class KcapMatch {
 			}
 
 		} catch (Exception e) {
+			
+			log.error(e);
 
 			filtBean = null;
 		}
@@ -608,6 +583,8 @@ public class KcapMatch {
 			}
 
 		} catch (Exception e) {
+			
+			log.error(e);
 
 			filtBean = null;
 		}
@@ -776,6 +753,61 @@ public class KcapMatch {
 			e.printStackTrace();
 		}
 
+	}
+	
+	/**
+	 * 随机获取考生
+	 * @param filtBean 通过规则筛选的考生
+	 * @return
+	 */
+	public static Bean randomFiltBean(Bean filtBean) {
+		
+		if (!filtBean.isEmpty()) {
+
+			ArrayList<Bean> singleList = new ArrayList<>();
+			
+			ArrayList<Bean> multiList = new ArrayList<>();
+
+			for (Object time : filtBean.keySet()) { // 遍历考试时长
+
+				Bean timeBean = filtBean.getBean(time);
+
+				for (Object user : timeBean.keySet()) { // 遍历时长下考生bean
+
+					Object val = timeBean.get(user);
+
+					if (val instanceof Bean) { // 当前考生报考一个考试
+
+						Bean ks = timeBean.getBean(user);
+
+						singleList.add(ks);
+
+					} else if (val instanceof List) { // 当前考生报考多个考试
+
+						List<Bean> kslist = timeBean.getList(user);
+
+						multiList.addAll(kslist);
+					}
+				}
+			}
+
+			//多个考试的考生,优先安排
+			if (!multiList.isEmpty()) {
+
+				int index = new Random().nextInt(multiList.size()); // 随机获取list索引
+
+				return multiList.get(index);
+			}
+			//单个考试的考生
+			if (!singleList.isEmpty()) {
+
+				int index = new Random().nextInt(singleList.size()); // 随机获取list索引
+
+				return singleList.get(index);
+			}
+		}
+		
+		return new Bean();
 	}
 
 	/**
