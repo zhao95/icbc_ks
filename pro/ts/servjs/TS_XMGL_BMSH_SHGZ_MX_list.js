@@ -569,15 +569,18 @@ function bindelete(){
 	$("#jqlike").click(function(){
 		if($("#jqlike").html()=="精确到日"){
 			$("#jqlike").html('模糊到年');
+			var nowdate = $("input[name='yearlimit']:first").val();
 			$("input[name='yearlimit']").each(function(){
 				$(this).attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
 				$(this).removeClass("WdateFmtErr");
 				$(this).addClass("Wdate ui-date-default").css("cursor","pointer");
-				$(this).val('20170809');
+				$(this).val(nowdate+'0101');
 			});
 		}else{
 		//模糊
 		$("#jqlike").html('精确到日');
+		var nowdate = $("input[name='yearlimit']:first").val();
+		nowdate = nowdate.substring(0,4);
 		$("input[name='yearlimit']").each(function(){
 			var inputaa = $('<input type="text" name="yearlimit" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val('1');
 			inputaa.attr("onfocus","WdatePicker({startDate:\'%y\',dateFmt:\'yyyy\',alwaysUseStartDate:false})");
@@ -585,7 +588,7 @@ function bindelete(){
 			inputaa.addClass("Wdate ui-date-default").css("cursor","pointer");
 			$(this).before(inputaa);
 			$(this).remove();
-			inputaa.val('2017');
+			inputaa.val(nowdate);
 			/*$(this).addClass("ui-text-default");*/
 		});
 		}
