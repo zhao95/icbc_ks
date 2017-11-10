@@ -51,7 +51,7 @@ public class HighValidCertYxKf implements IRule {
 			sql.andGTE("END_DATE", endDate);// 终止有效期 >= endDate
 
 			String dengjicode = obj.getJSONObject(obj.length()-2).getString("code"); // 类别code
-			sql.andIn("CERT_GRADE_CODE", dengjicode);// 证书等级编号
+			sql.andGTE("CERT_GRADE_CODE", dengjicode);// 证书等级编号
 
 			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
 

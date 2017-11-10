@@ -49,9 +49,9 @@ public class BaseCert2YearDgYxXd implements IRule {
 			String level =  obj.getJSONObject(obj.length()-2).getString("code");
 			sql.and("STU_PERSON_ID", user);// 人员编码
 
-			sql.andGTE("END_DATE", endDate);// 起始有效日期 <= dateTime
+			sql.andGTE("END_DATE", endDate);// 起始有效日期 >= dateTime
 
-			sql.and("CERT_GRADE_CODE", level);// 证书等级编号
+			sql.andGTE("CERT_GRADE_CODE", level);// 证书等级编号
 
 			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
 

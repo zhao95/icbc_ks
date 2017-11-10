@@ -227,6 +227,10 @@ function bindCard() {
 						
 					}
 			}else if(obj2[0].type=='string'){
+				var divtishi = document.createElement("div");
+				$(divtishi).css("padding-bottom","10px");
+				$(divtishi).html("禁考提示信息");
+				formConDiv7.append(divtishi);
 				var  BUTT= document.createElement("button");
 				BUTT.id="chongzhi";
 				BUTT.innerHTML="重置";
@@ -234,6 +238,11 @@ function bindCard() {
 				input8.val(name);
 				input8.css("width","400px");
 				formConDiv7.append(input8);
+				var div = document.createElement("div");
+				$(div).css("padding-top","10px");
+				$(div).css("color","red");
+				$(div).html("#reason#禁考原因,#stime#禁考开始时间,#endtime#禁考结束时间.变量位置可换,变量不可随意更改");
+				formConDiv7.append(div);
 		}else if(obj2[0].type=='XL'){
 			//管理类序列
 			var codestr = [];

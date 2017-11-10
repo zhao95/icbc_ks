@@ -78,7 +78,7 @@ public class BaseValidCert2YearBkxl implements IRule {
 
 			sql.andGTE("END_DATE", endtime);
 			
-			sql.and("CERT_GRADE_CODE", level);// 证书等级编号
+			sql.andGTE("CERT_GRADE_CODE", level);// 证书等级编号
 
 			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
 
