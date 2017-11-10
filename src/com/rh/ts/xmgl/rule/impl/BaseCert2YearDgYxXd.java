@@ -1,22 +1,16 @@
 package com.rh.ts.xmgl.rule.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
-import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.rule.IRule;
 
 /**
- * 投行用-已获对公、营销、信贷初级满N年 (起始有效日期 <= N年前日期)
- * 
+ * 投行用-已获对公、营销、信贷初级满N年 (起始有效日期 <= N年前日期)   证书有效期在yyyy-MM-dd 之前可以 
  * @author zjl
  *
  */
@@ -28,51 +22,36 @@ public class BaseCert2YearDgYxXd implements IRule {
 		String user = param.getStr("BM_CODE");
 
 		// 报名结束时间
-		String bmEnd = param.getStr("BM_ENDDATE");
-
 		String jsonStr = param.getStr("MX_VALUE2");
 
-		String twoYearAgo = ""; // 2年前日期 yyyy-mm-dd
 
 		JSONArray obj;
 
 		try {
 
 			obj = new JSONArray(jsonStr);
-			JSONObject jsonObject = obj.getJSONObject(0);
-			Calendar c = Calendar.getInstance();
-
-			String val = jsonObject.getString("val"); // 变量值
-
-			if (Strings.isBlank(val)) {
-				val = "2";
+			String codes = "";
+			for(int i=0;i<obj.length()-2;i++){
+				if(i==0){
+					codes+=obj.getJSONObject(i).getString("code");
+				}else{
+					codes+=","+obj.getJSONObject(i).getString("code");
+				}
+				
+			}
+			SqlBean sql = new SqlBean();
+			if(!"".equals(codes)){
+				String[] codearr = codes.split(",");
+				sql.andIn("STATION_NO",codearr);// 证书序列编号
 			}
 
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-			Date endDate = format.parse(bmEnd);
-
-			c.setTime(endDate);
-
-			c.add(Calendar.YEAR, -2);
-
-			Date y = c.getTime();
-
-			twoYearAgo = format.format(y);
-
-			SqlBean sql = new SqlBean();
-
+			String endDate = obj.getJSONObject(obj.length()-1).getString("val");
+			String level =  obj.getJSONObject(obj.length()-2).getString("code");
 			sql.and("STU_PERSON_ID", user);// 人员编码
 
-			sql.andLTE("BGN_DATE", twoYearAgo);// 起始有效日期 <= dateTime
+			sql.andGTE("END_DATE", endDate);// 起始有效日期 >= dateTime
 
-			String xd = "A000000000000000013"; // 信贷
-			String yx = "A000000000000000006"; // 营销
-			String dg = "A000000000000000022"; // 对公客户经理
-
-			sql.andIn("STATION_NO", xd, yx, dg);// 证书序列编号
-
-			sql.and("CERT_GRADE_CODE", "1");// 证书等级编号
+			sql.andGTE("CERT_GRADE_CODE", level);// 证书等级编号
 
 			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
 

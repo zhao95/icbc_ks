@@ -75,7 +75,6 @@ public class KSTipBMTask extends AbstractTipTask {
 								}
 							}
 							G_ID = G_ID.substring(0, G_ID.length()-1);
-//							G_ID = BMList.get(i).getStr("G_ID");
 							//通知相关数据bean
 							ParamBean tipParamBean = new ParamBean();
 							tipParamBean.set("G_ID", G_ID);
@@ -112,7 +111,6 @@ public class KSTipBMTask extends AbstractTipTask {
 										}
 									}
 									G_ID1 = G_ID1.substring(0, G_ID1.length()-1);
-//									G_ID = BMList.get(i).getStr("G_ID");
 									//通知相关数据bean
 									ParamBean tipBMEndParamBean = new ParamBean();
 									tipBMEndParamBean.set("G_ID", G_ID1);
@@ -126,21 +124,6 @@ public class KSTipBMTask extends AbstractTipTask {
 									//把当前通知信息的bean存储进集合中，取到所有通知人员后再处理
 									BMEndTZList.add(tipBMEndParamBean);
 								}
-								
-								
-								
-								/*//通知相关数据bean
-								ParamBean tipBMEndParamBean = new ParamBean();
-								
-								tipBMEndParamBean.set("G_ID", G_ID);
-								tipBMEndParamBean.set("XM_ID", XM_ID);
-								tipBMEndParamBean.set("XM_SZ_ID", XM_SZ_ID);
-								tipBMEndParamBean.set("BM_ID", BM_ID);
-								tipBMEndParamBean.set("BM_NAME", BM_TITLE);
-								tipBMEndParamBean.set("BM_KSXZ", BM_KSXZ);
-								tipBMEndParamBean.set("tipMsg", tipConfEndValueReplaced);
-								//把当前通知信息的bean存储进集合中，取到所有通知人员后再处理
-								BMEndTZList.add(tipBMEndParamBean);*/
 							}
 						}else{
 							//报名期间。啥也不做
@@ -159,7 +142,7 @@ public class KSTipBMTask extends AbstractTipTask {
 			for (int k = 0; k < BMStartTZList.size(); k++) {
 				String G_IDStr = BMStartTZList.get(k).getStr("G_ID");
 				//调用父类方法传入群组ID 获取所有的群组人员
-				List<Bean> allUserForTipBMStar = getAllUserForTip(G_IDStr);
+				List<Bean> allUserForTipBMStar = getAllUserForBMTip(G_IDStr);
 				System.out.println(allUserForTipBMStar);
 			}
 		}
@@ -168,17 +151,11 @@ public class KSTipBMTask extends AbstractTipTask {
 			for (int l = 0; l < BMEndTZList.size(); l++) {
 				String G_IDStr = BMEndTZList.get(l).getStr("G_ID");
 				//调用父类方法传入群组ID 获取所有的群组人员
-				List<Bean> allUserForTipBMEnd = getAllUserForTip(G_IDStr);
+				List<Bean> allUserForTipBMEnd = getAllUserForBMTip(G_IDStr);
 				System.out.println(allUserForTipBMEnd);
 			}
 		}
-		
-		
-		
-		
 		log.error("-------------完成通知参考人员报名相关信息（开始报名，截止报名）----------------");
-		
 		return true;
 	}
-
 }

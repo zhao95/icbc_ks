@@ -39,8 +39,9 @@ public class BaseValidCert2YearBkxl implements IRule {
 		JSONArray obj;
 
 		try {
-
+			
 			obj = new JSONArray(jsonStr);
+			
 			JSONObject jsonObject = obj.getJSONObject(0);
 
 			Calendar c = Calendar.getInstance();
@@ -51,9 +52,13 @@ public class BaseValidCert2YearBkxl implements IRule {
 				val = 2;
 			}
 
+			String endtime = obj.getJSONObject(obj.length()-1).getString("val");
+			
+			String level =obj.getJSONObject(obj.length()-2).getString("code");
+			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-			Date endDate = format.parse(bmEnd);
+			Date endDate = format.parse(endtime);  //指定时间  不用  报名结束时间
 
 			c.setTime(endDate);
 
@@ -71,7 +76,9 @@ public class BaseValidCert2YearBkxl implements IRule {
 
 			sql.and("STATION_NO", xl);// 序列编号
 
-			sql.and("CERT_GRADE_CODE", "1");// 证书等级编号
+			sql.andGTE("END_DATE", endtime);
+			
+			sql.andGTE("CERT_GRADE_CODE", level);// 证书等级编号
 
 			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
 

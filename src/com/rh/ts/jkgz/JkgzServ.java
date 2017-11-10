@@ -21,7 +21,7 @@ public class JkgzServ extends CommonServ {
 	String ids = paramBean.getStr("ids");
 	for (int i = 0; i < ids.split(",").length; i++) {
 	    String dataId = ids.split(",")[i];
-	    Bean bean = ServDao.find("TS_XMGL_BMSH_SHGZK", dataId);
+	    Bean bean = ServDao.find("TS_XMGL_BM_JKGLGZK", dataId);
 	    Bean dataBean = new Bean();
 	    dataBean.set("XM_ID", xmId);
 	    dataBean.set("GZK_ID", bean.getStr("GZ_ID"));
@@ -32,7 +32,7 @@ public class JkgzServ extends CommonServ {
 	    Bean gzBean = ServDao.save("TS_XMGL_BM_JKGZ", dataBean);
 	    String gzId = gzBean.getId();
 	    //TS_XMGL_BMSH_SHGZK_MX TS_XMGL_BMSH_SHGZK_MX
-	    List<Bean> gzkMxList = ServDao.finds("ts_xmgl_bm_jkglgzk_mx", "and GZ_ID = '"+dataId+"'");
+	    List<Bean> gzkMxList = ServDao.finds("TS_XMGL_BM_JKGLGZK_MX", "and GZ_ID = '"+dataId+"'");
 	    for (int j = 0; j < gzkMxList.size(); j++) {
 		Bean gzkMxBean = gzkMxList.get(j);
 		gzkMxBean.setId("");
