@@ -5,7 +5,7 @@
     for(var i=0;i<datalist.length;i++){
     	j++;
    var xmszid = datalist[i].XM_ID;
-   var newTr='<tr style="height:40px">'+
+   var newTr='<tr style="height:30px">'+
    '<td width="5%" align="center">			'+j+'		</td>'+
    '<td width="5%" align="center">'+datalist[i].xm_name+'</td>'+
    '<td width="5%" align="center">'+datalist[i].xm_start+'</td>'+
@@ -23,6 +23,7 @@
        cardView.show();
    });
     } 
+    $("td").css("border","solid 1px #dddddd");
     	$("#openhasanpai").click(function(){
 		var opts={'url':'TS_ANPAI_PASS.list.do?','tTitle':'已安排考场','menuFlag':3};
 		Tab.open(opts);
@@ -31,8 +32,8 @@
 <div id='TS_COMM_TODO' class='portal-box'>
 <div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待我安排的考场</span><span class="portal-box-hideBtn  conHeanderTitle-expand"></span>&nbsp;&nbsp;&nbsp;&nbsp;<span><a href="#" id="openhasanpai" >查看已安排的考场</a></span></div>
 <div>
-            <table id="kctable" border="solid 1px" style="border:solid 1px lightgray; width:100%">
-                  <tr style="background:rgb(242, 255, 253);height:40px"><td width="5%" align="left">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">安排开始时间</td><td width="15%" align="center">安排截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
+            <table id="kctable"  style="border:solid 1px  #dddddd; width:100%">
+                  <tr style="background:f4fbff;height:30px;color:#999999"><td width="5%" align="center">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">安排开始时间</td><td width="15%" align="center">安排截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
            
             </table>
         
