@@ -20,7 +20,7 @@ public class KSTipMessageServ extends CommonServ {
 	 * @return
 	 */
 	public OutBean startJob() {
-		RhThreadPool tipThreadPoll = new RhThreadPool(2, 4, 10);
+		RhThreadPool tipThreadPoll = new RhThreadPool(2, 5, 10);
 		//开始计时
 		StopWatch sw = new StopWatch();
 		sw.start();
