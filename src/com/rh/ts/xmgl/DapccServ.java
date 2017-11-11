@@ -20,10 +20,9 @@ public class DapccServ extends CommonServ {
 
     protected void beforeQuery(ParamBean paramBean) {
         ParamBean param = new ParamBean();
-        String ctlgModuleName = "EXAM_ROOM";
         param.set("paramBean", paramBean);
-        param.set("ctlgModuleName", ctlgModuleName);
         param.set("serviceName", paramBean.getServId());
+        param.set("fieldName", "CTLG_PCODE");
         PvlgUtils.setOrgPvlgWhere(param);
     }
 

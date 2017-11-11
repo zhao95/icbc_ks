@@ -139,19 +139,7 @@ public class ArrangeSeat {
 
 							freeZw.set("GLJG", res.getGljg(kcId));// 关联机构
 
-							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
-
-							try {
-
-								if (oneKs != null && !oneKs.isEmpty()) {
-
-									saveRes(freeZw, oneKs, odeptKs, res);
-								}
-
-							} catch (Exception e) {
-
-								log.error(e.getMessage(), e);
-							}
+							arrangeAndSave(freeZw, odeptKs, res, isConstrain);
 						}
 					}
 				}
@@ -221,24 +209,62 @@ public class ArrangeSeat {
 
 							freeZw.set("GLJG", res.getGljg(kcId));// 关联机构
 
-							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
-
-							try {
-
-								if (oneKs != null && !oneKs.isEmpty()) {
-
-									saveRes(freeZw, oneKs, odeptKs, res);
-
-								}
-
-							} catch (Exception e) {
-
-								log.error(e.getMessage(), e);
-							}
+							arrangeAndSave(freeZw, odeptKs, res, isConstrain);
 						}
 					}
 				}
 			}
+		}
+	}
+
+	private void arrangeAndSave(Bean freeZw, Bean odeptKs, KcapResource res, boolean isConstrain) {
+
+		boolean isNull = true;
+
+		for (Object time : odeptKs.keySet()) {
+
+			if (!odeptKs.getBean(time).isEmpty()) {
+
+				isNull = false;
+			}
+		}
+
+		if (isNull) {
+			return;
+		}
+
+		log.error("前：odeptKs");
+
+		for (Object key : odeptKs.keySet()) {
+
+			log.error("----" + key.toString() + ":" + odeptKs.getBean(key).size());
+		}
+
+		Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
+
+		try {
+
+			if (oneKs != null && !oneKs.isEmpty()) {
+
+				log.error("----安排考生:" + oneKs.getStr("BM_CODE") + ",shId:" + oneKs.getStr("SH_ID") + ",ksTime:"
+						+ oneKs.getStr("BM_KS_TIME"));
+
+				saveRes(freeZw, oneKs, odeptKs, res);
+
+			} else {
+				log.error("----没有符合规则考生");
+			}
+
+			log.error("后：odeptKs");
+
+			for (Object key : odeptKs.keySet()) {
+
+				log.error("----" + key.toString() + ":" + odeptKs.getBean(key).size());
+			}
+
+		} catch (Exception e) {
+
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -456,36 +482,15 @@ public class ArrangeSeat {
 					res.getFreeKcZwBean().getBean(kcId).getBean(cc).getBean(date).remove(zwh);
 				}
 
-				// for (Object key :
-				// res.getFreeKsBean().getBean(ksOdept).keySet()) {
-				//
-				// log.error(" 删除前--res.getFreeKsBean()： " + key.toString() +
-				// "="
-				// + res.getFreeKsBean().getBean(ksOdept).getBean(key).size());
-				// }
+				log.error("----移除res考生资源");
+				Bean ksBean = res.getFreeKsBean().getBean(ksOdept).getBean(ksTime);
 				// 移除考生资源
-				removeKs(res.getFreeKsBean().getBean(ksOdept).getBean(ksTime), uCode, shId);
+				removeKs(ksBean, uCode, shId);
 
-				// for (Object key :
-				// res.getFreeKsBean().getBean(ksOdept).keySet()) {
-				//
-				// log.error(" 删除后--res.getFreeKsBean()： " + key.toString() +
-				// "="
-				// + res.getFreeKsBean().getBean(ksOdept).getBean(key).size());
-				// }
-
-				// for (Object key : odeptKs.keySet()) {
-				// log.error(" 删除前--odeptKs： " + key.toString() + "=" +
-				// odeptKs.getBean(key).size());
-				// }
-
+				log.error("----移除odp考生资源");
+				Bean odeptTimeks = odeptKs.getBean(ksTime);
 				// 从过滤考生(odeptKs)中移除
-				removeKs(odeptKs.getBean(ksTime), uCode, shId);
-
-				// for (Object key : odeptKs.keySet()) {
-				// log.error(" 删除后--odeptKs： " + key.toString() + "=" +
-				// odeptKs.getBean(key).size());
-				// }
+				removeKs(odeptTimeks, uCode, shId);
 
 				Bean busyKc = res.getBusyZwBean().getBean(kcId + "^" + cc + "^" + date);
 
@@ -627,10 +632,13 @@ public class ArrangeSeat {
 
 		Object ksObj = ksBean.get(uCode);
 
+		if (ksObj == null) {
+			log.error("--------------------删除考生--uCode:" + uCode + "考生不存在");
+		}
+
 		if (ksObj instanceof Bean) {
 
-			// log.error("最终删除考生List--uCode:" + uCode + "--shId:" +
-			// ksBean.getBean(uCode).getStr("SH_ID"));
+			log.error("--------------------删除考生--uCode:" + uCode + "--shId:" + ksBean.getBean(uCode).getStr("SH_ID"));
 
 			ksBean.remove(uCode);
 
@@ -645,34 +653,33 @@ public class ArrangeSeat {
 				if (!ks.getStr("SH_ID").equals(shId)) {
 
 					tempList.add(ks);
+
+					log.error("--------------------uCode:" + uCode + "--" + ks.toString());
 				}
 			}
 
 			if (tempList.size() > 0) {
-
-				// log.error("最终删除考生List--uCode:" + uCode + "--shId:" + shId);
-
+				
 				ksBean.remove(uCode);
 
 				if (tempList.size() == 1) { // 当前考生还有一个考试
 
-					// Bean t = tempList.get(0);
-
-					// log.error("最终保留考生List--uCode:" + uCode + "--shId:" +
-					// t.getStr("SH_ID"));
+					log.error("--------------------保留考生Bean--uCode:" + uCode);
 
 					ksBean.set(uCode, tempList.get(0)); // 放入未安排考生资源
 
 				} else if (tempList.size() > 1) { // 当前考生还有多个考试
 
-					// for (Bean t : tempList) {
-					// log.error("最终保留考生List--uCode:" + uCode + "--shId:" +
-					// t.getStr("SH_ID"));
-					// }
+					log.error("--------------------保留考生List--uCode:" + uCode + ":" + tempList.size());
 
 					ksBean.set(uCode, tempList); // 放入未安排考生资源
+				} else {
+					
+					log.error("--------------------删除考生--uCode:" + uCode);
 				}
 			}
+		} else {
+			log.error("--------------------删除考生--uCode:" + uCode + ";失败：" + ksObj.getClass().getName());
 		}
 	}
 }

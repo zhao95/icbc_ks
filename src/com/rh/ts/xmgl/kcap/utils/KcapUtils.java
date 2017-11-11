@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.rh.core.base.Bean;
 import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.util.Strings;
 import com.rh.ts.xmgl.kcap.KcapResource;
 
 public class KcapUtils {
-	
+
+	private static Log log = LogFactory.getLog(KcapUtils.class);
+
 	/**
 	 * 合并bean。key重复，value合并List
 	 * 
@@ -20,7 +25,45 @@ public class KcapUtils {
 	 */
 	public static Bean mergeBean(Bean srcBean, Bean dstBean) {
 
-		Bean rtnBan = new Bean(dstBean);
+		// log.error("------------------mergeBean前:");
+		//
+		// for (Object key : srcBean.keySet()) {
+		//
+		// if (srcBean.get(key) instanceof Bean) {
+		//
+		// // log.error("------------------srcBeanBean:" +
+		// // srcBean.getBean(key).getStr("SH_ID"));
+		//
+		// } else if (srcBean.get(key) instanceof List) {
+		//
+		// log.error("------------------srcBeanList:key=" + key + "--" +
+		// srcBean.getList(key).size());
+		//
+		// }
+		//
+		// }
+		//
+		// for (Object key : dstBean.keySet()) {
+		//
+		// if (dstBean.get(key) instanceof Bean) {
+		//
+		// // log.error("------------------dstBeanBean:" +
+		// // dstBean.getBean(key).getStr("SH_ID"));
+		//
+		// } else if (dstBean.get(key) instanceof List) {
+		//
+		// if (dstBean.getList(key).size() == 0) {
+		// // log.error("------------------dstBeanList:key="+key+"--" +
+		// // dstBean.getList(key).toString());
+		// }
+		//
+		// log.error("------------------dstBeanList:key=" + key + "--" +
+		// dstBean.getList(key).size());
+		//
+		// }
+		// }
+
+		Bean rtnBan = (Bean) dstBean.clone();
 
 		for (Object key : srcBean.keySet()) {
 
@@ -40,9 +83,15 @@ public class KcapUtils {
 
 				} else if (dstObj instanceof List) {
 
-					List<Bean> t = rtnBan.getList(key);
+					List<Bean> tList = rtnBan.getList(key);
 
-					dstList.addAll(t);
+					for (Bean t : tList) {
+
+						if (t != null && !t.isEmpty()) {
+
+							dstList.add(t);
+						}
+					}
 				}
 
 				if (srcObj instanceof Bean) {
@@ -53,9 +102,15 @@ public class KcapUtils {
 
 				} else if (srcObj instanceof List) {
 
-					List<Bean> t = srcBean.getList(key);
+					List<Bean> tList = srcBean.getList(key);
 
-					dstList.addAll(t);
+					for (Bean t : tList) {
+
+						if (t != null && !t.isEmpty()) {
+
+							dstList.add(t);
+						}
+					}
 
 				}
 
@@ -68,9 +123,58 @@ public class KcapUtils {
 
 		}
 
-		return rtnBan;
+		Bean clone = (Bean) rtnBan.clone();
+
+		for (Object key : rtnBan.keySet()) {
+
+			if (rtnBan.get(key) instanceof List) {
+
+				List<Bean> list = rtnBan.getList(key);
+
+				List<Bean> tlist = new ArrayList<Bean>();
+
+				Bean temp = new Bean();
+
+				for (Bean bean : list) {
+
+					if (temp.containsKey(bean.get("SH_ID"))) {
+
+					} else {
+
+						temp.set(bean.get("SH_ID"), bean);
+
+						tlist.add(bean);
+					}
+				}
+
+				clone.set(key, tlist);
+			}
+		}
+
+		log.error("------------------mergeBean后:");
+
+		for (Object key : clone.keySet()) {
+
+			if (clone.get(key) instanceof Bean) {
+
+				// log.error("------------------rtnBanBean:" +
+				// clone.getBean(key).getStr("SH_ID"));
+
+			} else if (clone.get(key) instanceof List) {
+
+				log.error("------------------rtnBanList:key=" + key + "--" + clone.getList(key).size());
+
+//				List<Bean> list = clone.getList(key);
+//				for (Bean bean : list) {
+//
+//					log.error("------------------------------shId:" + bean.getStr("SH_ID") + "--" + bean.toString());
+//				}
+			}
+		}
+
+		return clone;
 	}
-	
+
 	public static String[] sortStr(Bean bean) {
 
 		String sort[] = new String[bean.keySet().size()];
@@ -185,9 +289,9 @@ public class KcapUtils {
 		Arrays.sort(codeSort);
 
 		for (int j = 0; j < codeSort.length; j++) {
-			
+
 			String code = codeSort[j];
-			
+
 			String[] codeArray = code.split("##");
 
 			sort[j] = codeArray[1];
