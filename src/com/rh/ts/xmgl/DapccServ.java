@@ -12,6 +12,8 @@ import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.TsConstant;
 import org.apache.commons.lang.StringUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DapccServ extends CommonServ {
@@ -55,6 +57,22 @@ public class DapccServ extends CommonServ {
         /*拼sql并查询*/
         String searchDeptCode = paramBean.getStr("searchDeptCode");
         String searchKcId = paramBean.getStr("searchKcId");
+        String searchSjId = paramBean.getStr("searchSjId");
+
+        long l;//选中的考场时长
+        try {
+            Bean sjBean = ServDao.find(TsConstant.SERV_KCAP_CCSJ, searchSjId);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String sjStart = sjBean.getStr("SJ_START");
+            String sjEnd = sjBean.getStr("SJ_END");
+            Date startDate = dateFormat.parse(sjStart);
+            Date endDate = dateFormat.parse(sjEnd);
+            l = (endDate.getTime() - startDate.getTime()) / 1000 / 60;
+        } catch (ParseException e) {
+            l = Long.MAX_VALUE;
+        }
+        paramBean.set("searchKsTime", "");
+
         Set<String> hashSet = this.getKcRelateOrgCodeList(searchKcId);
 //        if (hashSet.contains(searchDeptCode)) {
 //            paramBean.set("containDeptCode", searchDeptCode);
@@ -81,7 +99,8 @@ public class DapccServ extends CommonServ {
         configMap.put("searchBmXl", "BM_XL like ?");
         configMap.put("searchBmMk", "BM_MK like ?");
         configMap.put("searchBmJb", "BM_TYPE = ?");
-        //configMap.put("searchBmCount", "count = ?");todo 报考数
+//        configMap.put("searchKsTime", "CAST(BM_KS_TIME as SIGNED) < ?");
+//        configMap.put("searchBmCount", "count = ?");
 
         List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
         String whereSql = (String) extWhereSqlData.get(0);
@@ -95,6 +114,9 @@ public class DapccServ extends CommonServ {
             deptSql.append("CODE_PATH like ? or ");
         }
         whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
+        //考试时长
+        whereSql += " and CAST(BM_KS_TIME as SIGNED) <= ?";
+        values.add(l);
 
         String sql = "select a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH"
                 + ",(select COUNT(*) from TS_BMSH_PASS a2 where a2.BM_CODE=a.BM_CODE and a2.XM_ID=a.XM_ID AND a2.BM_STATUS NOT IN ('1', '3') ) as count" +
@@ -442,8 +464,8 @@ public class DapccServ extends CommonServ {
 
         UserBean userBean = UserMgr.getUser(userCode);
         String deptCode = userBean.getDeptCode();
-        List<Object> values = new ArrayList<>();
-        values.add(deptCode);
+//        List<Object> values = new ArrayList<>();
+//        values.add(deptCode);
 
         Bean bean = ServDao.find("SY_ORG_DEPT", deptCode);
 //        Bean bean = Transaction.getExecutor().queryOne("select * from sy_org_dept where DEPT_CODE = ?", values);
@@ -476,6 +498,57 @@ public class DapccServ extends CommonServ {
             result.set("org1", deptName);
         }
         return result;
+    }
+
+
+    /**
+     * 更改场次
+     *
+     * @param paramBean sjId sjId2
+     * @return outBean
+     */
+    public OutBean changeCc(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+
+        String sjId = paramBean.getStr("sjId");
+        String sjId2 = paramBean.getStr("sjId2");
+        Bean sjBean = ServDao.find(TsConstant.SERV_KCAP_CCSJ, sjId);
+        Bean sjBean2 = ServDao.find(TsConstant.SERV_KCAP_CCSJ, sjId2);
+        if (sjBean == null || sjBean2 == null) {
+            outBean.setError("操作失败！");
+        } else if (sjBean.getStr("CC_ID").equals(sjBean2.getStr("CC_ID"))) {
+            Transaction.begin();
+            try {
+                String tempId = "changeCCTempId";
+                String sql = "update ts_xmgl_kcap_yapzw set SJ_ID = ? where SJ_ID= ?";
+                List<Object> values = new LinkedList<>();
+
+                //
+                values.add(tempId);
+                values.add(sjId);
+                Transaction.getExecutor().execute(sql, values);
+                //
+                values.clear();
+                values.add(sjId);
+                values.add(sjId2);
+                Transaction.getExecutor().execute(sql, values);
+                //
+                values.clear();
+                values.add(sjId2);
+                values.add(tempId);
+                Transaction.getExecutor().execute(sql, values);
+
+                Transaction.commit();
+            } catch (Exception e) {
+                Transaction.rollback();
+                outBean.setError("操作失败！");
+            } finally {
+                Transaction.end();
+            }
+        } else {
+            outBean.setError("考场不同，请重新选择！");
+        }
+        return outBean;
     }
 
 }
