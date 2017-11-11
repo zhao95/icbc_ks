@@ -361,7 +361,7 @@
                     '       <div style="position: absolute;top:80px;left:-10px;font-size: 20px;width: 150px;">' + data.ISSUE_DATE_STR + '</div>',
                     '       <div style="height: ' + setting.height + 'px;width: 2px;background-color: #707070;position: absolute;top: -' + setting.height + 'px;left: 31px;"></div>',
                     '       <div style="text-align:center;position: absolute;top:' + (-setting.height - 43) + 'px;left:-58px;font-size: 16px;width: 185px;">',
-                    '           <div style="text-overflow: ellipsis;overflow: hidden;white-space:nowrap;">' + data.FNAME_CHN + '</div>',
+                    '           <div style="text-overflow: ellipsis;overflow: hidden;white-space:nowrap;" title="' + data.FNAME_CHN + (data.typeName ? '(' + data.typeName + ')' : '') + '">' + data.FNAME_CHN + (data.typeName ? '(' + data.typeName + ')' : '') + '</div>',
                     '           <div>(' + data.state + ')</div>',
                     '       </div>',
                     '       <div class="triangle-left" style="border-left: 33px solid ' + setting.color + ';position: absolute;top: -' + setting.height + 'px;left: 34px;"></div>',
