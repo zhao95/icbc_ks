@@ -2,12 +2,16 @@ package com.rh.ts.xmgl.kcap.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.TipException;
 import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.util.Strings;
 import com.rh.ts.xmgl.kcap.KcapResource;
@@ -15,6 +19,76 @@ import com.rh.ts.xmgl.kcap.KcapResource;
 public class KcapUtils {
 
 	private static Log log = LogFactory.getLog(KcapUtils.class);
+
+	/**
+	 * list 转 Bean
+	 * 
+	 * @param list
+	 *            待转换list
+	 * @param keyName
+	 *            字段名称
+	 * @return {keyName值:单个bean/多个list}
+	 */
+	public static Bean commList2Bean(List<Bean> list, String keyName) {
+
+		Bean newBean = new Bean();
+
+		if (list == null || list.isEmpty()) {
+			return newBean;
+		}
+
+		try {
+
+			for (Bean bean : list) {
+
+				String key = bean.getStr(keyName);
+
+				if (Strings.isBlank(key)) {
+
+					throw new TipException("transfer key:" + keyName + ", value is null");
+				}
+
+				if (newBean.containsKey(key)) { // 考生已存在
+
+					Object temp = newBean.get(key);
+
+					List<Bean> tempList = null;
+
+					if (temp instanceof Bean) {
+
+						tempList = new ArrayList<Bean>();
+
+						tempList.add(newBean.getBean(key));
+
+					} else if (temp instanceof List) {
+
+						tempList = newBean.getList(key);
+					} else {
+
+						log.error("---instanceof" + temp.getClass().getName());
+					}
+
+					tempList.add(bean);
+
+					newBean.set(key, tempList);
+
+				} else {
+
+					List<Bean> tempList = new ArrayList<Bean>();
+
+					tempList.add(bean);
+
+					newBean.set(key, tempList);
+				}
+			}
+		} catch (Exception e) {
+
+			log.error(e);
+
+			throw new TipException("commList2Bean transfer error! " + e);
+		}
+		return newBean;
+	}
 
 	/**
 	 * 合并bean。key重复，value合并List
@@ -111,7 +185,6 @@ public class KcapUtils {
 							dstList.add(t);
 						}
 					}
-
 				}
 
 				rtnBan.set(key, dstList);
@@ -151,7 +224,7 @@ public class KcapUtils {
 			}
 		}
 
-		log.error("------------------mergeBean后:");
+		// log.error("------------------mergeBean后:");
 
 		for (Object key : clone.keySet()) {
 
@@ -162,13 +235,9 @@ public class KcapUtils {
 
 			} else if (clone.get(key) instanceof List) {
 
-				log.error("------------------rtnBanList:key=" + key + "--" + clone.getList(key).size());
-
-//				List<Bean> list = clone.getList(key);
-//				for (Bean bean : list) {
-//
-//					log.error("------------------------------shId:" + bean.getStr("SH_ID") + "--" + bean.toString());
-//				}
+				// if(clone.getList(key).size() >1)
+				// log.error("------------------rtnBanList:key=" + key + "--" +
+				// clone.getList(key).size());
 			}
 		}
 
@@ -298,6 +367,59 @@ public class KcapUtils {
 		}
 
 		return sort;
+	}
+
+	public static Map<String, Bean> sortKc(Bean bean, KcapResource res) {
+
+		Bean kcBean = res.getKcBean();
+
+		Map<String, Bean> sortMap = new TreeMap<String, Bean>(new Comparator<String>() {
+			
+			public int compare(String obj1, String obj2) {
+				// 降序排序
+				return obj2.compareTo(obj1);
+			}
+		});
+
+		for (Object key : bean.keySet()) { // 考场
+
+			String kcId = key.toString();
+
+			outloop:
+
+			if (!Strings.isBlank(kcId)) {
+
+				for (Object ssjg : kcBean.keySet()) {// 所属机构
+
+					List<Bean> list = kcBean.getList(ssjg.toString());
+
+					for (Bean kc : list) {// 考场
+
+						Bean info = kc.getBean("INFO");
+
+						if (info.getStr("KC_ID").equals(kcId)) {
+
+							String kcCode = info.getStr("KC_CODE");
+
+							int lv = OrgMgr.getDept(ssjg.toString()).getLevel();
+
+							Bean val = new Bean();
+
+							val.set("KC_ID", kcId);
+
+							val.set("KC_NAME", info.getStr("KC_NAME"));
+
+							val.set("KC_CODE", kcCode);
+
+							sortMap.put(lv + "^" + kcCode, val);
+
+							break outloop;
+						}
+					}
+				}
+			}
+		}
+		return sortMap;
 	}
 
 }

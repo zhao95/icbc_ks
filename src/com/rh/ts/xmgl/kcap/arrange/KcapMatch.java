@@ -21,6 +21,8 @@ public class KcapMatch {
 
 	private static Log log = LogFactory.getLog(KcapMatch.class);
 
+	private static boolean showlog = false;
+
 	/**
 	 * 匹配符合规则的考生bean
 	 * 
@@ -36,14 +38,14 @@ public class KcapMatch {
 	 * @return Bean 报名考生信息
 	 */
 	public static Bean matchUser(Bean freeZw, Bean ksBean, KcapResource res, boolean isConstrain) {
-		
+
 		if (ksBean == null || ksBean.isEmpty()) {
 
 			return new Bean();
 		}
 
 		Bean busyZwBean = res.getBusyZwBean();
-		
+
 		Bean filtBean = new Bean(ksBean);
 
 		// 根据考试时长筛选考生
@@ -51,7 +53,7 @@ public class KcapMatch {
 
 		// 过滤 相同日期,相同场次的考生
 		filtKsSameCc(freeZw, busyZwBean, filtBean);
-		
+
 		if (filtBean == null || filtBean.isEmpty()) {
 
 			return new Bean();
@@ -62,7 +64,7 @@ public class KcapMatch {
 		rtnLoop:
 
 		for (Object key : rule.keySet()) {
-			
+
 			Bean constrainFiltBean = null;
 
 			if (isConstrain) {
@@ -413,7 +415,6 @@ public class KcapMatch {
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -598,16 +599,20 @@ public class KcapMatch {
 
 				filtBean = null;
 
-				if (busyZwKc.containsKey(front))
-					log.error("冲突座位:" + zwh + " 前:" + front + ":" + busyZwKc.getBean(front));
-				if (busyZwKc.containsKey(back))
-					log.error("冲突座位:" + zwh + " 后:" + back + ":" + busyZwKc.getBean(back));
-				if (busyZwKc.containsKey(left))
-					log.error("冲突座位:" + zwh + " 左:" + left + ":" + busyZwKc.getBean(left));
-				if (busyZwKc.containsKey(right))
-					log.error("冲突座位:" + zwh + " 右:" + right + ":" + busyZwKc.getBean(right));
+				if (showlog) {
+					if (busyZwKc.containsKey(front))
+						log.error("------filtR006冲突座位:" + zwh + " 前:" + front + ":" + busyZwKc.getBean(front));
+					if (busyZwKc.containsKey(back))
+						log.error("------filtR006冲突座位:" + zwh + " 后:" + back + ":" + busyZwKc.getBean(back));
+					if (busyZwKc.containsKey(left))
+						log.error("------filtR006冲突座位:" + zwh + " 左:" + left + ":" + busyZwKc.getBean(left));
+					if (busyZwKc.containsKey(right))
+						log.error("------filtR006冲突座位:" + zwh + " 右:" + right + ":" + busyZwKc.getBean(right));
+				}
 			} else {
-				log.error("安排座位:" + zwh);
+				if (showlog) {
+					log.error("------安排座位:" + zwh);
+				}
 			}
 
 		} catch (Exception e) {
@@ -950,7 +955,7 @@ public class KcapMatch {
 
 							filtBean.getBean(time).remove(ucode);
 
-//							log.error("移除相同日期，相同场次考生：" + time + ":" + ucode);
+							// log.error("移除相同日期，相同场次考生：" + time + ":" + ucode);
 						}
 					}
 

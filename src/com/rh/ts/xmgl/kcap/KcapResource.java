@@ -1,6 +1,7 @@
 package com.rh.ts.xmgl.kcap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -29,6 +30,8 @@ import com.rh.ts.xmgl.kcap.utils.KcapUtils;
 public class KcapResource {
 
 	private static Log log = LogFactory.getLog(KcapResource.class);
+
+	private boolean showlog = false;
 
 	private String xmId = "";
 
@@ -662,7 +665,9 @@ public class KcapResource {
 		String bmCodeCol = "";
 
 		if (ksList == null || ksList.isEmpty() || keys == null || keys.length < 3) {
-			return ksBean;
+
+			throw new TipException("获取考生失败！缺少信息：" + Arrays.toString(keys));
+
 		} else {
 
 			odeptCol = keys[0];
@@ -672,7 +677,7 @@ public class KcapResource {
 			bmCodeCol = keys[2];
 		}
 
-		ksBean = commList2Bean(ksList, odeptCol); // "S_ODEPT"
+		ksBean = KcapUtils.commList2Bean(ksList, odeptCol); // "S_ODEPT"
 
 		Bean odeptTemp = new Bean();
 
@@ -694,26 +699,46 @@ public class KcapResource {
 
 				List<Bean> list = odeptTemp.getList(odept);
 
-				timeBean = commList2Bean(list, ksTimeCol);// "BM_KS_TIME"
+				timeBean = KcapUtils.commList2Bean(list, ksTimeCol);// "BM_KS_TIME"
 			}
 
-			Bean temp1 = new Bean();
+			Bean timeTemp = new Bean();
 
-			temp1.putAll(timeBean);
+			timeTemp.putAll(timeBean);
 
-			for (Object key1 : temp1.keySet()) {
+			for (Object timekey : timeTemp.keySet()) { // 遍历考试时长
 
-				Object obj = temp1.get(key1);
+				Object obj = timeTemp.get(timekey);
 
 				if (obj instanceof Bean) {
 
-					timeBean.remove(key1).put(key1, temp1.getBean(key1));// "BM_CODE"
+					timeBean.remove(timekey).put(timekey, timeTemp.getBean(timekey));// "BM_CODE"
 
 				} else if (obj instanceof List) {
 
-					List<Bean> list1 = temp1.getList(key1);
+					List<Bean> uList = timeTemp.getList(timekey);
 
-					timeBean.remove(key1).put(key1, commList2Bean(list1, bmCodeCol));// "BM_CODE"
+					Bean uBean = KcapUtils.commList2Bean(uList, bmCodeCol);
+
+					if (showlog) {
+						for (Object k : uBean.keySet()) {
+
+							if (uBean.get(k) instanceof List) {
+
+								List<Bean> list = uBean.getList(k);
+
+								Bean b = new Bean();
+								for (Bean l : list) {
+									b.set(b.getStr("SH_ID"), "");
+									b.set(l.getStr("BM_CODE"), "");
+									b.set(l.getStr("BM_KS_TIME"), "");
+								}
+								log.error("---------------ksList2Bean-uBean-size:" + list.size() + " " + b.toString());
+							}
+						}
+					}
+
+					timeBean.remove(timekey).put(timekey, uBean);// "BM_CODE"
 				}
 			}
 
@@ -905,73 +930,6 @@ public class KcapResource {
 	}
 
 	/**
-	 * list 转 Bean
-	 * 
-	 * @param list
-	 *            待转换list
-	 * @param keyName
-	 *            字段名称
-	 * @return {keyName值:单个bean/多个list}
-	 */
-	private Bean commList2Bean(List<Bean> list, String keyName) {
-
-		Bean newBean = new Bean();
-
-		if (list == null || list.isEmpty()) {
-			return newBean;
-		}
-
-		try {
-
-			for (Bean bean : list) {
-
-				String key = bean.getStr(keyName);
-
-				if (newBean.containsKey(key)) { // 考生已存在
-
-					Object temp = newBean.get(key);
-
-					List<Bean> tempList = null;
-
-					if (temp instanceof Bean) {
-
-						tempList = new ArrayList<Bean>();
-
-						tempList.add(newBean.getBean(key));
-
-					} else if (temp instanceof List) {
-
-						tempList = newBean.getList(key);
-					} else {
-
-						log.error("---instanceof" + temp.getClass().getName());
-					}
-
-					tempList.add(bean);
-
-					newBean.set(key, tempList);
-
-				} else {
-
-					List<Bean> tempList = new ArrayList<Bean>();
-
-					tempList.add(bean);
-
-					newBean.set(key, tempList);
-				}
-
-			}
-
-		} catch (Exception e) {
-
-			log.error(e);
-
-			throw new TipException("commList2Bean transfer error! transfer key:" + keyName);
-		}
-		return newBean;
-	}
-
-	/**
 	 * 获取考生
 	 * 
 	 * @param xmId
@@ -1032,7 +990,7 @@ public class KcapResource {
 	 * @return
 	 */
 	public Bean getGljg(String kcId) {
-		
+
 		for (Object key : kcBean.keySet()) {
 
 			List<Bean> kcList = kcBean.getList(key);
@@ -1064,9 +1022,9 @@ public class KcapResource {
 
 		// Bean ksBean = res.getFreeKsBean();
 
-		for (Object key : gljg.keySet()) {
+		for (Object jgKey : gljg.keySet()) {
 
-			Bean jg = gljg.getBean(key);
+			Bean jg = gljg.getBean(jgKey);
 
 			String dCode = jg.getStr("JG_CODE");
 
@@ -1096,19 +1054,25 @@ public class KcapResource {
 
 		for (Object time : filtBean.keySet()) {
 
-			log.error("----------------getGljgKs----time:" + time);
+			int count = 0;
+			int ucount = 0;
 
 			for (Object ucode : filtBean.getBean(time).keySet()) {
 
+				ucount += 1;
+
 				if (filtBean.getBean(time).get(ucode) instanceof Bean) {
 
-					// log.error("-------------time:" +
-					// filtBean.getBean(time).getBean(ucode));
-				} else if (filtBean.getBean(time).get(ucode) instanceof List) {
-					log.error("--------------getGljgKs---ucode:" + ucode + "---"
-							+ filtBean.getBean(time).getList(ucode).size());
-				}
+					count += 1;
 
+				} else if (filtBean.getBean(time).get(ucode) instanceof List) {
+
+					count += filtBean.getBean(time).getList(ucode).size();
+				}
+			}
+
+			if (showlog) {
+				log.error("--------------------getGljgKs time:" + time + " ucount:=>" + ucount + ";bmcount=>" + count);
 			}
 
 		}
