@@ -37,6 +37,11 @@ public class BeforeHighCertDue implements IRule {
 
 			String val = jsonObject.getString("val"); // 变量值
 
+			//等级level
+			
+			String level = obj.getJSONObject(1).getString("code");
+
+			
 			SqlBean sql = new SqlBean();
 
 			sql.and("STU_PERSON_ID", user);// 人员编码
@@ -45,7 +50,7 @@ public class BeforeHighCertDue implements IRule {
 
 			sql.and("STATION_NO", xl);// 序列编号
 
-			sql.and("CERT_GRADE_CODE", "3");// 证书等级编号
+			sql.and("CERT_GRADE_CODE", level);// 证书等级编号
 			
 			sql.and("QUALFY_STAT", 3);// 获证状态(1-正常;2-获取中;3-过期)
 
