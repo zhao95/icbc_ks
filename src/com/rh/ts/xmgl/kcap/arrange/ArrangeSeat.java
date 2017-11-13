@@ -1,7 +1,6 @@
 package com.rh.ts.xmgl.kcap.arrange;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -9,14 +8,13 @@ import org.apache.commons.logging.LogFactory;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.db.Transaction;
-import com.rh.core.org.mgr.OrgMgr;
-import com.rh.core.org.util.OrgConstant;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.kcap.KcapResource;
 import com.rh.ts.xmgl.kcap.KcapRuleEnum;
+import com.rh.ts.xmgl.kcap.utils.KcapUtils;
 
 public class ArrangeSeat {
 
@@ -89,7 +87,7 @@ public class ArrangeSeat {
 
 		freeBean.putAll(res.getFreeCcZwBean());
 
-		int ccsort[] = sortInt(freeBean); // 场次号排序
+		int ccsort[] = KcapUtils.sortInt(freeBean); // 场次号排序
 
 		for (int cs = 0; cs < ccsort.length; cs++) {
 
@@ -99,7 +97,7 @@ public class ArrangeSeat {
 
 			int sjCC = Integer.parseInt(cc.toString());
 
-			String daysort[] = sortStr(freeCc); // 日期排序
+			String daysort[] = KcapUtils.sortStr(freeCc); // 日期排序
 
 			for (int ds = 0; ds < daysort.length; ds++) {
 
@@ -109,13 +107,17 @@ public class ArrangeSeat {
 
 				String date = day.toString();
 
-				for (Object kc : freeDayCc.keySet()) { // 遍历考场
+				String kcsort[] = KcapUtils.sortKcId(freeDayCc, res); // 考场排序
 
-					Bean freeKc = (Bean) freeDayCc.getBean(kc).clone();
+				for (int kc = 0; kc < kcsort.length; kc++) { // 遍历考场
 
-					Bean odeptKs = getGljgKs(kc.toString(), res);
+					String kcId = kcsort[kc];
 
-					String zwsort[] = sortStr(freeKc); // 座位排序
+					Bean freeKc = (Bean) freeDayCc.getBean(kcId).clone();
+
+					Bean odeptKs = res.getGljgKs(kcId);
+
+					String zwsort[] = KcapUtils.sortStr(freeKc); // 座位排序
 
 					for (int zs = 0; zs < zwsort.length; zs++) {
 
@@ -125,7 +127,7 @@ public class ArrangeSeat {
 
 							Bean freeZw = (Bean) freeKc.getBean(zwKey).clone(); // 座位信息
 
-							freeZw.set("KC_ID", kc.toString());
+							freeZw.set("KC_ID", kcId);
 
 							freeZw.set("CC_ID", freeKc.getStr("CC_ID"));
 
@@ -135,13 +137,7 @@ public class ArrangeSeat {
 
 							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
-							freeZw.set("GLJG", getGljg(kc.toString(), res));// 关联机构
-
-							for (Object key : odeptKs.keySet()) {
-
-								log.error(kc + "^" + sjCC + "^" + date + " start--odeptKs：  " + key.toString() + "="
-										+ odeptKs.getBean(key).size());
-							}
+							freeZw.set("GLJG", res.getGljg(kcId));// 关联机构
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
 
@@ -173,49 +169,47 @@ public class ArrangeSeat {
 
 		Bean freeBean = new Bean(res.getFreeKcZwBean());
 
-		for (Object kc : freeBean.keySet()) { // 遍历考场
+		String kcsort[] = KcapUtils.sortKcId(freeBean, res); // 考场排序
 
-			Bean freeKc = (Bean) freeBean.getBean(kc).clone();
+		for (int kc = 0; kc < kcsort.length; kc++) { // 遍历考场
 
-			Bean odeptKs = getGljgKs(kc.toString(), res);
+			String kcId = kcsort[kc];
 
-			int ccsort[] = sortInt(freeKc); // 场次号排序
+			Bean freeKc = (Bean) freeBean.getBean(kcId).clone();
 
-			for (int cs = 0; cs < ccsort.length; cs++) {
+			Bean odeptKs = res.getGljgKs(kcId);
+
+			int ccsort[] = KcapUtils.sortInt(freeKc); // 场次号排序
+
+			for (int cs = 0; cs < ccsort.length; cs++) {// 遍历场次号
 
 				String cc = String.valueOf(ccsort[cs]);
-
-				// for (Object cc : freeKc.keySet()) { // 遍历场次号
 
 				Bean freeCc = (Bean) freeKc.getBean(cc).clone();
 
 				int sjCC = Integer.parseInt(cc.toString());
 
-				String daysort[] = sortStr(freeCc); // 日期排序
+				String daysort[] = KcapUtils.sortStr(freeCc); // 日期排序
 
-				for (int ds = 0; ds < daysort.length; ds++) {
+				for (int ds = 0; ds < daysort.length; ds++) {// 遍历场次日期
 
 					String day = daysort[ds];
-
-					// for (Object day : freeCc.keySet()) { // 遍历场次日期
 
 					Bean freeDayCc = (Bean) freeCc.getBean(day).clone();
 
 					String date = day.toString();
 
-					String zwsort[] = sortStr(freeDayCc); // 座位排序
+					String zwsort[] = KcapUtils.sortStr(freeDayCc); // 座位排序
 
-					for (int zs = 0; zs < zwsort.length; zs++) {
+					for (int zs = 0; zs < zwsort.length; zs++) {// 遍历座位
 
 						String zwKey = zwsort[zs];
-
-						// for (Object zwKey : freeDayCc.keySet()) { // 遍历座位
 
 						if (freeDayCc.get(zwKey) instanceof Bean) {
 
 							Bean freeZw = (Bean) freeDayCc.getBean(zwKey).clone(); // 座位信息
 
-							freeZw.set("KC_ID", kc.toString());
+							freeZw.set("KC_ID", kcId);
 
 							freeZw.set("CC_ID", freeDayCc.getStr("CC_ID"));
 
@@ -225,13 +219,7 @@ public class ArrangeSeat {
 
 							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
-							freeZw.set("GLJG", getGljg(kc.toString(), res));// 关联机构
-
-							for (Object key : odeptKs.keySet()) {
-
-								log.error(kc + "^" + sjCC + "^" + date + " start--odeptKs：  " + key.toString() + "="
-										+ odeptKs.getBean(key).size());
-							}
+							freeZw.set("GLJG", res.getGljg(kcId));// 关联机构
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
 
@@ -337,7 +325,7 @@ public class ArrangeSeat {
 
 					if (resetFiltKs.containsKey(time)) {
 						// 待重新安排的考生资源
-						resetFiltKs.set(time, mergeBean(temp, resetFiltKs.getBean(time)));
+						resetFiltKs.set(time, KcapUtils.mergeBean(temp, resetFiltKs.getBean(time)));
 
 					} else {
 						// 待重新安排的考生资源
@@ -347,18 +335,11 @@ public class ArrangeSeat {
 
 				try {
 
-					// Transaction.begin();
-
-					/****************** begin-删除已安排考生座位 *****************/
-
 					SqlBean sql = new SqlBean().and("XM_ID", res.getXmId()).and("KC_ID", kcId);
 					sql.and("SJ_CC", cc).and("SJ_DATE", date);
 
 					ServDao.delete(TsConstant.SERV_KCAP_YAPZW, sql);
 
-					// log.error("delete---" + sql.toString());
-
-					/****************** begin-重新安排考生座位 *******************/
 					Bean resetKc = new Bean(); // 待重新安排的考场
 
 					if (priority == 1) { // 最少场次
@@ -368,7 +349,11 @@ public class ArrangeSeat {
 						resetKc = (Bean) res.getFreeKcZwBean().getBean(kcId).getBean(cc).getBean(date).clone();
 					}
 
-					for (Object key : resetKc.keySet()) { // 遍历座位
+					String zwsort[] = KcapUtils.sortStr(resetKc); // 座位排序
+
+					for (int zs = 0; zs < zwsort.length; zs++) {// 遍历座位
+
+						String key = zwsort[zs];
 
 						if (resetKc.get(key) instanceof Bean) {
 
@@ -408,15 +393,10 @@ public class ArrangeSeat {
 							}
 						}
 					}
-					// Transaction.commit();
-
 				} catch (Exception e) {
 
 					log.error(e);
-				} finally {
-					// Transaction.end();
 				}
-
 			} // busyZwSize < freeZwSize
 		}
 	}
@@ -476,30 +456,36 @@ public class ArrangeSeat {
 					res.getFreeKcZwBean().getBean(kcId).getBean(cc).getBean(date).remove(zwh);
 				}
 
-				for (Object key : res.getFreeKsBean().getBean(ksOdept).keySet()) {
-
-					log.error(" 删除前--res.getFreeKsBean()：  " + key.toString() + "="
-							+ res.getFreeKsBean().getBean(ksOdept).getBean(key).size());
-				}
+				// for (Object key :
+				// res.getFreeKsBean().getBean(ksOdept).keySet()) {
+				//
+				// log.error(" 删除前--res.getFreeKsBean()： " + key.toString() +
+				// "="
+				// + res.getFreeKsBean().getBean(ksOdept).getBean(key).size());
+				// }
 				// 移除考生资源
 				removeKs(res.getFreeKsBean().getBean(ksOdept).getBean(ksTime), uCode, shId);
 
-				for (Object key : res.getFreeKsBean().getBean(ksOdept).keySet()) {
+				// for (Object key :
+				// res.getFreeKsBean().getBean(ksOdept).keySet()) {
+				//
+				// log.error(" 删除后--res.getFreeKsBean()： " + key.toString() +
+				// "="
+				// + res.getFreeKsBean().getBean(ksOdept).getBean(key).size());
+				// }
 
-					log.error(" 删除后--res.getFreeKsBean()：  " + key.toString() + "="
-							+ res.getFreeKsBean().getBean(ksOdept).getBean(key).size());
-				}
-
-				for (Object key : odeptKs.keySet()) {
-					log.error(" 删除前--odeptKs：  " + key.toString() + "=" + odeptKs.getBean(key).size());
-				}
+				// for (Object key : odeptKs.keySet()) {
+				// log.error(" 删除前--odeptKs： " + key.toString() + "=" +
+				// odeptKs.getBean(key).size());
+				// }
 
 				// 从过滤考生(odeptKs)中移除
 				removeKs(odeptKs.getBean(ksTime), uCode, shId);
 
-				for (Object key : odeptKs.keySet()) {
-					log.error(" 删除后--odeptKs：  " + key.toString() + "=" + odeptKs.getBean(key).size());
-				}
+				// for (Object key : odeptKs.keySet()) {
+				// log.error(" 删除后--odeptKs： " + key.toString() + "=" +
+				// odeptKs.getBean(key).size());
+				// }
 
 				Bean busyKc = res.getBusyZwBean().getBean(kcId + "^" + cc + "^" + date);
 
@@ -510,8 +496,6 @@ public class ArrangeSeat {
 			} else {
 				log.error("添加失败--保存失败--" + kcId + "^" + cc + "^" + date + "^" + zwh);
 			}
-		} else {
-			log.error("添加失败--没有考生--" + kcId + "^" + cc + "^" + date + "^" + zwh);
 		}
 	}
 
@@ -614,7 +598,7 @@ public class ArrangeSeat {
 
 			addZw = ServDao.create(TsConstant.SERV_KCAP_YAPZW, addZw);
 
-			log.error("insert---" + addZw.getId());
+			// log.error("insert---" + addZw.getId());
 
 			// Transaction.commit();
 
@@ -625,176 +609,6 @@ public class ArrangeSeat {
 		}
 
 		return addZw;
-	}
-
-	/**
-	 * 获取考场下关联机构
-	 * 
-	 * @param kcId
-	 * @param res
-	 * @return
-	 */
-	private static Bean getGljg(String kcId, KcapResource res) {
-
-		Bean gljg = new Bean();
-
-		Bean allKcBean = res.getKcBean();
-
-		for (Object key : allKcBean.keySet()) {
-
-			List<Bean> kcList = allKcBean.getList(key);
-
-			for (Bean kc : kcList) {
-
-				if (kcId.equals(kc.getBean("INFO").getStr("KC_ID"))) {
-
-					return kc.getBean("GLJG");
-				}
-			}
-		}
-
-		return gljg;
-	}
-
-	/**
-	 * 考场关联的机构下考生
-	 * 
-	 * @param kcId
-	 * @param res
-	 * @return Bean{考试时长：考生Bean{考生编码：考生bean/list}}
-	 */
-	private static Bean getGljgKs(String kcId, KcapResource res) {
-
-		Bean filtBean = new Bean();
-
-		Bean gljg = getGljg(kcId, res);
-
-		Bean ksBean = res.getFreeKsBean();
-
-		for (Object key : gljg.keySet()) {
-
-			Bean jg = gljg.getBean(key);
-
-			String dCode = jg.getStr("JG_CODE");
-
-			if (jg.getInt("JG_TYPE") == OrgConstant.DEPT_TYPE_DEPT) { // 关联部门
-
-				dCode = OrgMgr.getOdept(dCode).getODeptCode(); // 获取机构
-			}
-
-			Bean timeKs = ksBean.getBean(dCode);
-
-			for (Object time : timeKs.keySet()) { // 遍历时长
-
-				Bean ks = timeKs.getBean(time); // 考生
-
-				if (filtBean.containsKey(time)) {
-
-					filtBean.set(time, mergeBean(ks, filtBean.getBean(time)));
-
-				} else {
-
-					filtBean.set(time, ks);
-				}
-			}
-		}
-
-		return filtBean;
-
-	}
-
-	/**
-	 * 合并bean。key重复，value合并List
-	 * 
-	 * @param srcBean
-	 * @param dstBean
-	 * @return
-	 */
-	private static Bean mergeBean(Bean srcBean, Bean dstBean) {
-
-		Bean rtnBan = new Bean(dstBean);
-
-		for (Object key : srcBean.keySet()) {
-
-			Object srcObj = srcBean.get(key);
-
-			if (rtnBan.containsKey(key)) { // 如果两个bean都存在相同key则 合并bean
-
-				Object dstObj = rtnBan.get(key);
-
-				List<Bean> dstList = new ArrayList<>();
-
-				if (dstObj instanceof Bean) {
-
-					Bean temp = rtnBan.getBean(key);
-
-					dstList.add(temp);
-
-				} else if (dstObj instanceof List) {
-
-					List<Bean> t = rtnBan.getList(key);
-
-					dstList.addAll(t);
-				}
-
-				if (srcObj instanceof Bean) {
-
-					Bean temp = srcBean.getBean(key);
-
-					dstList.add(temp);
-
-				} else if (srcObj instanceof List) {
-
-					List<Bean> t = srcBean.getList(key);
-
-					dstList.addAll(t);
-
-				}
-
-				rtnBan.set(key, dstList);
-
-			} else { // dstBean不存在
-
-				rtnBan.set(key, srcObj);
-			}
-
-		}
-
-		return rtnBan;
-	}
-
-	private String[] sortStr(Bean bean) {
-
-		String sort[] = new String[bean.keySet().size()];
-
-		int i = 0;
-
-		for (Object key : bean.keySet()) { // 遍历场次号
-
-			sort[i] = key.toString();
-			i++;
-		}
-
-		Arrays.sort(sort);
-
-		return sort;
-	}
-
-	private int[] sortInt(Bean bean) {
-
-		int sort[] = new int[bean.keySet().size()];
-
-		int i = 0;
-
-		for (Object key : bean.keySet()) { // 遍历场次号
-
-			sort[i] = Integer.parseInt(key.toString());
-			i++;
-		}
-
-		Arrays.sort(sort);
-
-		return sort;
 	}
 
 	/**
@@ -815,7 +629,8 @@ public class ArrangeSeat {
 
 		if (ksObj instanceof Bean) {
 
-			log.error("最终删除考生List--uCode:" + uCode + "--shId:" + ksBean.getBean(uCode).getStr("SH_ID"));
+			// log.error("最终删除考生List--uCode:" + uCode + "--shId:" +
+			// ksBean.getBean(uCode).getStr("SH_ID"));
 
 			ksBean.remove(uCode);
 
@@ -830,31 +645,30 @@ public class ArrangeSeat {
 				if (!ks.getStr("SH_ID").equals(shId)) {
 
 					tempList.add(ks);
-					log.error("保留考生List--uCode:" + uCode + "--shId:" + ks.getStr("SH_ID"));
-				} else {
-					log.error("移除考生List--uCode:" + uCode + "--shId:" + shId);
 				}
 			}
 
 			if (tempList.size() > 0) {
 
-				log.error("最终删除考生List--uCode:" + uCode + "--shId:" + shId);
+				// log.error("最终删除考生List--uCode:" + uCode + "--shId:" + shId);
 
 				ksBean.remove(uCode);
 
 				if (tempList.size() == 1) { // 当前考生还有一个考试
 
-					Bean t = tempList.get(0);
+					// Bean t = tempList.get(0);
 
-					log.error("最终保留考生List--uCode:" + uCode + "--shId:" + t.getStr("SH_ID"));
+					// log.error("最终保留考生List--uCode:" + uCode + "--shId:" +
+					// t.getStr("SH_ID"));
 
 					ksBean.set(uCode, tempList.get(0)); // 放入未安排考生资源
 
 				} else if (tempList.size() > 1) { // 当前考生还有多个考试
 
-					for (Bean t : tempList) {
-						log.error("最终保留考生List--uCode:" + uCode + "--shId:" + t.getStr("SH_ID"));
-					}
+					// for (Bean t : tempList) {
+					// log.error("最终保留考生List--uCode:" + uCode + "--shId:" +
+					// t.getStr("SH_ID"));
+					// }
 
 					ksBean.set(uCode, tempList); // 放入未安排考生资源
 				}

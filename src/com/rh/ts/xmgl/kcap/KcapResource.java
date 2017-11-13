@@ -23,6 +23,7 @@ import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
 import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
+import com.rh.ts.xmgl.kcap.utils.KcapUtils;
 
 public class KcapResource {
 
@@ -174,7 +175,7 @@ public class KcapResource {
 
 		values.add(xmId);
 
-		String sql = "select k.KC_ID,K.KC_ODEPTCODE,K.KC_ODEPTNAME,k.KC_SCORE,k.KC_STATE,k.KC_MAX,k.KC_GOOD,k.KC_LEVEL,c.CC_ID,c.XM_ID from TS_XMGL_KCAP_DAPCC c LEFT JOIN ts_kcgl k on k.kc_id = c.kc_id where c.XM_ID=? ";
+		String sql = "select k.KC_ID,k.KC_CODE,K.KC_ODEPTCODE,K.KC_ODEPTNAME,k.KC_SCORE,k.KC_STATE,k.KC_MAX,k.KC_GOOD,k.KC_LEVEL,c.CC_ID,c.XM_ID from TS_XMGL_KCAP_DAPCC c LEFT JOIN ts_kcgl k on k.kc_id = c.kc_id where c.XM_ID=? ";
 
 		if (!Strings.isBlank(odept)) {
 
@@ -488,7 +489,7 @@ public class KcapResource {
 				Bean jgBean = kcInfo.getBean("GLJG"); // 考场的关联机构Bean
 
 				for (Object jgkey : jgBean.keySet()) {
-
+					
 				}
 			}
 		}
@@ -788,7 +789,7 @@ public class KcapResource {
 			}
 
 			// 座位号
-			SqlBean zwsql = new SqlBean().and("KC_ID", kcId).and("S_FLAG", 1);
+			SqlBean zwsql = new SqlBean().and("KC_ID", kcId).and("S_FLAG", 1).and("ZW_KY", 1);
 			zwsql.selects("ZW_ID,ZW_ZWH_XT,ZW_ZWH_SJ,ZW_KY");
 			List<Bean> zwList = ServDao.finds(TsConstant.SERV_KCGL_ZWDYB, zwsql);
 
@@ -987,6 +988,81 @@ public class KcapResource {
 		List<Bean> ksList = Transaction.getExecutor().query(where, sql.getVars());
 
 		return ksList;
+	}
+	
+	
+	/**
+	 * 获取考场下关联机构
+	 * 
+	 * @param kcId
+	 * @param res
+	 * @return
+	 */
+	public Bean getGljg(String kcId) {
+
+		Bean gljg = new Bean();
+
+		for (Object key : kcBean.keySet()) {
+
+			List<Bean> kcList = kcBean.getList(key);
+
+			for (Bean kc : kcList) {
+
+				if (kcId.equals(kc.getBean("INFO").getStr("KC_ID"))) {
+
+					return kc.getBean("GLJG");
+				}
+			}
+		}
+
+		return gljg;
+	}
+
+	/**
+	 * 考场关联的机构下考生
+	 * 
+	 * @param kcId
+	 * @param res
+	 * @return Bean{考试时长：考生Bean{考生编码：考生bean/list}}
+	 */
+	public Bean getGljgKs(String kcId) {
+
+		Bean filtBean = new Bean();
+
+		Bean gljg = getGljg(kcId);
+
+//		Bean ksBean = res.getFreeKsBean();
+
+		for (Object key : gljg.keySet()) {
+
+			Bean jg = gljg.getBean(key);
+
+			String dCode = jg.getStr("JG_CODE");
+
+			if (jg.getInt("JG_TYPE") == OrgConstant.DEPT_TYPE_DEPT) { // 关联部门
+
+				dCode = OrgMgr.getOdept(dCode).getODeptCode(); // 获取机构
+			}
+
+			Bean timeKs = ksBean.getBean(dCode);
+
+			for (Object time : timeKs.keySet()) { // 遍历时长
+
+				Bean ks = timeKs.getBean(time); // 考生
+
+				if (filtBean.containsKey(time)) {
+
+					filtBean.set(time,  KcapUtils.mergeBean(ks, filtBean.getBean(time)));
+
+				} else {
+
+					filtBean.set(time, ks);
+				}
+			}
+		}
+
+		return filtBean;
+
 	}
 
 	public Bean getRuleBean() {

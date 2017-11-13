@@ -3,11 +3,7 @@
 "DICT_F_ID":"ITEM_CODE",
 "TABLE_ID":"SY_SERV_DICT_ITEM",
 "DICT_NAME_LAYER":"0",
-<<<<<<< .merge_file_a11108
-"S_MTIME":"2017-11-10 17:31:23:124",
-=======
-"S_MTIME":"2017-11-11 14:31:34:435",
->>>>>>> .merge_file_a11164
+"S_MTIME":"2017-11-10 18:28:57:789",
 "DICT_F_CMPY":"",
 "SY_SERV_DICT_ITEM":
 [
@@ -145,8 +141,6 @@
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
 "_ROWNUM_":"6",
-<<<<<<< .merge_file_a11108
-=======
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -167,27 +161,6 @@
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
 "_ROWNUM_":"7",
->>>>>>> .merge_file_a11164
-"ITEM_LEVEL":"0",
-"CODE_PATH":"",
-"EN_JSON":"",
-"ITEM_LEAF":"1",
-"ITEM_IMG":""
-},
-{
-"ITEM_FIELD2":"",
-"S_CMPY":"icbc",
-"ITEM_FIELD1":"",
-"ITEM_PCODE":"",
-"_PK_":"08mpVC4cil3eF8VWafY8",
-"ITEM_ID":"08mpVC4cil3eF8VWafY8",
-"ITEM_CODE":"TS_XMGL_KCAP_DAPCC_PVLG",
-"ITEM_FLAG":"1",
-"ITEM_NAME":"考场-待安排考场",
-"ITEM_ORDER":"72",
-"DICT_ID":"TS_PVLG_MOD",
-"S_PUBLIC":"1",
-"_ROWNUM_":"8",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -207,11 +180,7 @@
 "ITEM_ORDER":"80",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"7",
-=======
-"_ROWNUM_":"9",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"8",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -231,11 +200,7 @@
 "ITEM_ORDER":"701",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"8",
-=======
-"_ROWNUM_":"10",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"9",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -255,11 +220,7 @@
 "ITEM_ORDER":"990",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"9",
-=======
-"_ROWNUM_":"11",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"10",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -279,11 +240,7 @@
 "ITEM_ORDER":"991",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"10",
-=======
-"_ROWNUM_":"12",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"11",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -303,11 +260,7 @@
 "ITEM_ORDER":"992",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"11",
-=======
-"_ROWNUM_":"13",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"12",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -327,11 +280,7 @@
 "ITEM_ORDER":"993",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"12",
-=======
-"_ROWNUM_":"14",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"13",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -351,11 +300,7 @@
 "ITEM_ORDER":"994",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"13",
-=======
-"_ROWNUM_":"15",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"14",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -375,11 +320,7 @@
 "ITEM_ORDER":"2001",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"14",
-=======
-"_ROWNUM_":"16",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"15",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -399,11 +340,7 @@
 "ITEM_ORDER":"2002",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"15",
-=======
-"_ROWNUM_":"17",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"16",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -423,11 +360,7 @@
 "ITEM_ORDER":"3000",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"16",
-=======
-"_ROWNUM_":"18",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"17",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -447,11 +380,7 @@
 "ITEM_ORDER":"3001",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"17",
-=======
-"_ROWNUM_":"19",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"18",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -471,11 +400,7 @@
 "ITEM_ORDER":"4001",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-<<<<<<< .merge_file_a11108
-"_ROWNUM_":"18",
-=======
-"_ROWNUM_":"20",
->>>>>>> .merge_file_a11164
+"_ROWNUM_":"19",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",
@@ -495,7 +420,7 @@
 "ITEM_ORDER":"9999",
 "DICT_ID":"TS_PVLG_MOD",
 "S_PUBLIC":"1",
-"_ROWNUM_":"21",
+"_ROWNUM_":"20",
 "ITEM_LEVEL":"0",
 "CODE_PATH":"",
 "EN_JSON":"",

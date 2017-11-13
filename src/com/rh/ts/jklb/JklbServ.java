@@ -83,7 +83,7 @@ public class JklbServ extends CommonServ {
                 && ((String) outBean.get(Constant.RTN_MSG)).contains(Constant.RTN_MSG_ERROR)) {
             //有错误回滚
             Transaction.rollback();
-           
+
         } else {
             Transaction.commit();
         }
@@ -145,100 +145,100 @@ public class JklbServ extends CommonServ {
         // sh_status = sh_status.equals("1") ? "同意" : "不同意";
         String[] split = paramTodoId.split(",");
         for (String string : split) {
-			if("".equals(string)){
-				continue;
-			}
-        Transaction.begin();
-        Bean todoBean = ServDao.find(TODO_SERVID, paramTodoId);
-        String nodeSteps;
-        if (todoBean == null) {
-            outBean.setError("待办已被处理，请返回！");
-            return outBean;
-        } else {
-            nodeSteps = todoBean.getStr("NODE_STEPS");
-        }
-        String jkId = todoBean.getStr("DATA_ID");
-        Bean jkbean = ServDao.find(TSJK_SERVID, jkId);
-
-        //1、保存评审意见
-        //添加审核意见信息
-        Bean shyjBean = new Bean();
-        shyjBean.set("DATA_ID", jkId);
-        shyjBean.set("SH_TYPE", "1");//审核类别 1 意见 2 审核记录
-        shyjBean.set("SH_MIND", sh_reason);//意见内容
-
-        shyjBean.set("SH_NODE", todoBean.getStr("NODE_NAME"));//审核层级名称
-        shyjBean.set("SH_LEVEL", nodeSteps);//审核层级
-
-        shyjBean.set("SH_STATUS", sh_status);//审核状态// 同意 不同意
-        shyjBean.set("SH_UCODE", currentUser.getWorkNum());//审核人UID(人力资源编码)
-        shyjBean.set("SH_ULOGIN", currentUser.getLoginName());//审核人登陆名
-        shyjBean.set("SH_UNAME", currentUser.getName());//审核人姓名
-        shyjBean.set("S_DNAME", currentUser.getDeptName());//审核人部门名称
-        ServDao.save(COMM_MIND_SERVID, shyjBean);
-
-        //3、删除待办 插入已办
-        //获取改请假的所有待办
-        List<Bean> todoList = ServDao.finds(TODO_SERVID, "and DATA_ID = '" + jkId + "'");
-        for (Bean bean : todoList) {
-            String todoId = (String) bean.get("TODO_ID");
-            if (todoId.equals(paramTodoId)) {
-                Bean doneBean = new Bean();
-                doneBean.putAll(bean);
-                doneBean.remove("TODO_ID");
-                doneBean.remove("_PK_");
-                ServDao.create(DONE_SERVID, doneBean);
+            if ("".equals(string)) {
+                continue;
             }
-            ServDao.destroy(TODO_SERVID, todoId);
-        }
-        //2、修改请假状态，并产生待办
-        //被退回 3 、 流程结束 2 、 其他 1
-        String jk_status;
-        if ("true".equals(isRetreat)) {
-            jk_status = "3";
-        } else if ("1".equals(nodeSteps)) {
-            jk_status = "2";
-        } else {
-            jk_status = "1";
-        }
-        jkbean.set("JK_STATUS", jk_status);
-        ServDao.update(TSJK_SERVID, jkbean);
+            Transaction.begin();
+            Bean todoBean = ServDao.find(TODO_SERVID, paramTodoId);
+            String nodeSteps;
+            if (todoBean == null) {
+                outBean.setError("待办已被处理，请返回！");
+            } else {
+                nodeSteps = todoBean.getStr("NODE_STEPS");
 
-        if ("2".equals(jk_status)) {
-            //借考已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
-            String jkKsname = jkbean.getStr("JK_KSNAME");
-            String[] bmIds = jkKsname.split(",");
-            for (String bmId : bmIds) {
-                ParamBean queryParamBean = new ParamBean();
-                queryParamBean.set("BM_ID", bmId);
-                Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
-                if (bean == null) {
-                    continue;
+                String jkId = todoBean.getStr("DATA_ID");
+                Bean jkbean = ServDao.find(TSJK_SERVID, jkId);
+
+                //1、保存评审意见
+                //添加审核意见信息
+                Bean shyjBean = new Bean();
+                shyjBean.set("DATA_ID", jkId);
+                shyjBean.set("SH_TYPE", "1");//审核类别 1 意见 2 审核记录
+                shyjBean.set("SH_MIND", sh_reason);//意见内容
+
+                shyjBean.set("SH_NODE", todoBean.getStr("NODE_NAME"));//审核层级名称
+                shyjBean.set("SH_LEVEL", nodeSteps);//审核层级
+
+                shyjBean.set("SH_STATUS", sh_status);//审核状态// 同意 不同意
+                shyjBean.set("SH_UCODE", currentUser.getWorkNum());//审核人UID(人力资源编码)
+                shyjBean.set("SH_ULOGIN", currentUser.getLoginName());//审核人登陆名
+                shyjBean.set("SH_UNAME", currentUser.getName());//审核人姓名
+                shyjBean.set("S_DNAME", currentUser.getDeptName());//审核人部门名称
+                ServDao.save(COMM_MIND_SERVID, shyjBean);
+
+                //3、删除待办 插入已办
+                //获取改请假的所有待办
+                List<Bean> todoList = ServDao.finds(TODO_SERVID, "and DATA_ID = '" + jkId + "'");
+                for (Bean bean : todoList) {
+                    String todoId = (String) bean.get("TODO_ID");
+                    if (todoId.equals(paramTodoId)) {
+                        Bean doneBean = new Bean();
+                        doneBean.putAll(bean);
+                        doneBean.remove("TODO_ID");
+                        doneBean.remove("_PK_");
+                        ServDao.create(DONE_SERVID, doneBean);
+                    }
+                    ServDao.destroy(TODO_SERVID, todoId);
                 }
-                if ("1".equals(bean.getStr("BM_STATUS"))) {
-                    bean.set("BM_STATUS", "3");
+                //2、修改请假状态，并产生待办
+                //被退回 3 、 流程结束 2 、 其他 1
+                String jk_status;
+                if ("true".equals(isRetreat)) {
+                    jk_status = "3";
+                } else if ("1".equals(nodeSteps)) {
+                    jk_status = "2";
                 } else {
-                    bean.set("BM_STATUS", "2");
+                    jk_status = "1";
                 }
-                bean.set("JK_ODEPT", jkbean.getStr("JK_YJFH"));
-                ServDao.update(TS_BMSH_PASS_SERVID, bean);
+                jkbean.set("JK_STATUS", jk_status);
+                ServDao.update(TSJK_SERVID, jkbean);
+
+                if ("2".equals(jk_status)) {
+                    //借考已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
+                    String jkKsname = jkbean.getStr("JK_KSNAME");
+                    String[] bmIds = jkKsname.split(",");
+                    for (String bmId : bmIds) {
+                        ParamBean queryParamBean = new ParamBean();
+                        queryParamBean.set("BM_ID", bmId);
+                        Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
+                        if (bean == null) {
+                            continue;
+                        }
+                        if ("1".equals(bean.getStr("BM_STATUS"))) {
+                            bean.set("BM_STATUS", "3");
+                        } else {
+                            bean.set("BM_STATUS", "2");
+                        }
+                        bean.set("JK_ODEPT", jkbean.getStr("JK_YJFH"));
+                        ServDao.update(TS_BMSH_PASS_SERVID, bean);
+                    }
+                }
+
+                if ("1".equals(jk_status)) {
+                    int nodeSteps1 = Integer.parseInt(todoBean.getStr("NODE_STEPS"));
+                    doFlowTask(outBean, currentUser, jkbean, nodeSteps1);
+                }
+
+                if (outBean.get(Constant.RTN_MSG) != null
+                        && (outBean.getStr(Constant.RTN_MSG)).contains(Constant.RTN_MSG_ERROR)) {
+                    //有错误回滚
+                    Transaction.rollback();
+                    outBean.setError("数据有误审批失败");
+                } else {
+                    Transaction.commit();
+                }
+                Transaction.end();
             }
-        }
-
-        if ("1".equals(jk_status)) {
-            int nodeSteps1 = Integer.parseInt(todoBean.getStr("NODE_STEPS"));
-            doFlowTask(outBean, currentUser, jkbean, nodeSteps1);
-        }
-
-        if (outBean.get(Constant.RTN_MSG) != null
-                && (outBean.getStr(Constant.RTN_MSG)).contains(Constant.RTN_MSG_ERROR)) {
-            //有错误回滚
-            Transaction.rollback();
-            outBean.setError("数据有误审批失败");
-        } else {
-            Transaction.commit();
-        }
-        Transaction.end();
         }
         return outBean;
     }

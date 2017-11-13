@@ -908,6 +908,7 @@ var UpdateCCModal = {
 
     /*确定按钮事件*/
     ensure: function () {
+        var self = this;
         var tree1Selected = UpdateCCModal.updateCCTree1.jstree().get_selected();
         var tree2Selected = UpdateCCModal.updateCCTree2.jstree().get_selected();
 
@@ -915,11 +916,24 @@ var UpdateCCModal = {
             alert('请选择场次');
         } else if (KcObject.getSjById(tree1Selected[0]) === null || KcObject.getSjById(tree2Selected[0]) === null) {
             alert('选中非场次，请重新选择');
+        } else if (KcObject.getSjById(tree1Selected[0]).CC_ID !== KcObject.getSjById(tree2Selected[0]).CC_ID) {
+            alert('选中考场不相同，请重新选择');
         } else if (tree1Selected[0] === tree2Selected[0]) {
             alert('两边选择的为同一场次，请重新选择');
+        } else if (
+            (Date.parse(KcObject.getSjById(tree1Selected[0]).SJ_END) - Date.parse(KcObject.getSjById(tree1Selected[0]).SJ_START)) / 1000 / 60
+            !== (Date.parse(KcObject.getSjById(tree2Selected[0]).SJ_END) - Date.parse(KcObject.getSjById(tree2Selected[0]).SJ_START)) / 1000 / 60) {
+            // var sj1BmKsTime = ;
+            // var sj2BmKsTime = ;
+            alert('场次时长不同，请重新选择');
         } else {
-            alert(tree1Selected[0] + tree2Selected[0]);
-            this.updateccModal.modal('hide');
+            FireFly.doAct("TS_XMGL_KCAP_DAPCC", "changeCc",
+                {sjId: tree1Selected[0], sjId2: tree2Selected[0]},
+                true, false, function () {
+                    KcObject.reloadCCInfo();
+                    self.updateccModal.modal('hide');
+                }
+            );
         }
     },
 
@@ -1177,13 +1191,13 @@ var KcObject = {
                 //选中考场
                 self.setKcInfo(data.node.data);
                 //显示考场关联机构人员
-                KsObject.setKcRelateOrg(data.node.data.KC_ID);
+                KsObject.setKcRelateOrg(data.node.data.KC_ID, '');
             } else if (dataType === 'cc') {
                 var parentKcNode = $.jstree.reference(jstree).get_node(data.node.parent);
                 //选中场次
                 self.setCcInfo(data.node.data, parentKcNode.data);
                 //显示考场关联机构人员
-                KsObject.setKcRelateOrg(parentKcNode.data.KC_ID);
+                KsObject.setKcRelateOrg(parentKcNode.data.KC_ID, data.node.data.SJ_ID);
             } else if (dataType === 'dept') {
                 KcObject.setOrgKcInfo(data.node.data.DEPT_CODE);
 //                    var parent = data.node.parent;
@@ -1305,6 +1319,9 @@ var KcObject = {
      * 单个考场的信息
      */
     setKcInfo: function (kc) {
+        this.currentCc = {};
+        this.currentParentKc = kc;
+
         var $kcTip = $('#kcTip');
         $kcTip.html('');
         var $kcInfoThead = $('#kcInfo').find('thead');
@@ -1389,11 +1406,18 @@ var KcObject = {
             }, false, false);
             var zwList = zwListBean._DATA_;
             var tData = [], trData, preLetter = null;
-            // var split = zw.ZW_ZWH_XT.split('-');
-            // try{
-            //     var split2 = split[0];
-            //     var split3 = split[1];
-            // }catch(e){
+
+            // var rows = [];
+            // var cols = [];
+            // for (var i = 0; i < zwList.length; i++) {
+            //     var split = zw.ZW_ZWH_XT.split('-');
+            //     try {
+            //         var row = split[0];
+            //         var col = split[1];
+            //         rows.push(row);
+            //         cols.push(col);
+            //     } catch (e) {
+            //     }
             // }
 
             for (var i = 0; i < zwList.length; i++) {
@@ -1563,8 +1587,19 @@ var KcObject = {
         var yapzw = this.getYapzwById(yapzwId);
         var zwId = yapzw.ZW_ID;
         var userName = yapzw.BM_NAME;
+        var userCode = yapzw.BM_CODE;
         var shId = yapzw.SH_ID;
         var $zw = $('#' + zwId);
+
+        var deptCode = yapzw.S_ODEPT;
+        // FireFly.get
+        var deptName = FireFly.getDictNames(FireFly.getDict("TS_ORG_DEPT_ALL"), deptCode);
+        // debugger;
+        // BM_LB BM_XL BM_MK
+
+        var typeName = FireFly.getDictNames(FireFly.getDict("TS_XMGL_BM_KSLBK_LV"), yapzw.BM_TYPE);
+        var kslbName = yapzw.BM_LB + '-' + yapzw.BM_XL + '-' + yapzw.BM_MK + "-" + typeName;
+        $zw.attr('title', userName + '\n' + kslbName + '\n' + deptName);
         // $zw.attr('yapzwId', yapzwId);
         $zw.find('.userName').html(userName);
         $zw.attr('shId', shId);
@@ -1584,7 +1619,6 @@ var KcObject = {
                         $zw.removeAttr('shId');
                         $zw.droppable("enable");
                         $zw.draggable("disable");
-//                    self.addDroppableEvent($zw);
                         $zw.find('.userName').html('');
                         $zw.find('.close').remove();
                         $zw.css('background', '');
@@ -1599,17 +1633,15 @@ var KcObject = {
                 cursorAt: {left: 0, top: 0},
                 containment: 'body',
                 appendTo: 'body',
-                helper: function (event) {
-                    return '<div>' + $zw.find('.userName').html() + '</div>';
-                    // var cells = event.currentTarget.cells;
-                    // return [
-                    //     '<div style="/*width:30px;height: 30px;*/border:1px solid #999999;background-color: #91BDEA;">',//
-                    //     '   <div>' + cells[6].innerText + '</div>',
-                    //     '   <div>' + cells[7].innerText + '</div>',
-                    //     '   <div>' + cells[11].innerText + '</div>',
-                    //     '</div>'
-                    // ].join('');
-                }
+                helper: function (/*event*/) {
+                    return [
+                        '<div style="/*width:30px;height: 30px;*/background-color: #FFF8DC; border:1px solid #999999;border-radius:3px;padding: 3px">',//
+                        '   <div>' + userName + '</div>',
+                        '   <div>' + kslbName + '</div>',
+                        '   <div>' + userCode + '</div>',
+                        '</div>'
+                    ].join('');
+                },
             });
             $zw.draggable("enable");
 
@@ -1668,14 +1700,9 @@ var KcObject = {
                                 //非列表拖拉进来的 不刷新考生列表
                                 KsObject.search();
                             }
-//                        $(_this).find(".userName").html(ui.draggable[0].cells[6].innerText);
                         }
                     });
 
-//                    var inventor = ui.draggable.text();
-//                    $(this).find("input").val(inventor);
-//                    $(c.tr).remove();
-//                    $(c.helper).remove();
                 }
             });
         }
@@ -1742,13 +1769,17 @@ var KsObject = {
     /**
      * 根据考场id展示考场关联的机构
      * @param kcId
+     * @param sjId
      */
-    setKcRelateOrg: function (kcId) {
+    setKcRelateOrg: function (kcId, sjId) {
         if (this.kcId !== kcId) {
             this.kcId = kcId;
             this.setKsOrgContent(kcId);
-            KsObject.searchDeptCode = ''; //初始化 机构搜索条件
-            KsObject.search();
+            this.searchDeptCode = ''; //初始化 机构搜索条件
+            this.search();
+        } else if (this.sjId !== sjId) {
+            this.sjId = sjId;
+            this.search();
         }
     },
 
@@ -1941,6 +1972,7 @@ var KsObject = {
         return {
             searchDeptCode: this.searchDeptCode,
             searchKcId: this.kcId,
+            searchSjId: this.sjId,
             searchName: searchName,
             searchLoginName: searchLoginName,
             searchBmXl: searchBmXl,
