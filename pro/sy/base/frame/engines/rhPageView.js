@@ -121,7 +121,7 @@ rh.vi.pageView.prototype._bldMenu = function() {
 			//添加菜单的展开收起图标
 			var spanIcon = jQuery("<span style='float:right;'></span>").addClass("leftMenu-ui-icon").addClass("ui-icon-close");
 			jQuery("#left-homeMenu").find("h3").append(spanIcon);
-            var configCon = jQuery("<div style='background:#f3eeee;height:1000px'></div>").addClass("configDiv").appendTo(jQuery("#left-homeMenu"));
+            var configCon = jQuery("<div style='background:#f3eeee;height:50%'></div>").addClass("configDiv").appendTo(jQuery("#left-homeMenu"));
 
 //			var expandBar = jQuery("<a href='javascript:void(0);' title='收起边栏' class='leftMenu-close'></a>").appendTo(configCon);
 //			var configBar = jQuery("<a href='javascript:void(0);' title='风格配置' class='leftMenu-config'></a>").appendTo(configCon);
@@ -452,7 +452,7 @@ rh.vi.pageView.prototype._bldBanner = function() {
 	var perDiv = jQuery("<img class='rh-head-per-icon' id='rh-header-user-img'></img>").attr("src",perImg).appendTo(perConIn);
 
 	var perTip = jQuery("<div class='rh-head-per-tip'><span style='font-size:14px;width:70px;' title='"+System.getUser("USER_NAME")+"'>" + System.getUser("USER_NAME")
-			+ "</span><span style='cursor:pointer' id='shouye'>首页</span><span style='margin-left:5px;font-size:14px;width:70px;' title='"+System.getUser("DEPT_NAME")+"'>" + System.getUser("DEPT_NAME") + "</span></div>"
+			+ "</span><span style='margin-left:5px;font-size:14px;width:70px;' title='"+System.getUser("DEPT_NAME")+"'>" + System.getUser("DEPT_NAME") + "</span></div>"
 			+"<div  style='position: absolute; right: 40px;height: 25px;'  id='ht_loginOut_all' ><div class='ht_loginOut' title='退出用户' style='background: url(img/power-off.png) no-repeat;height: 25px;position: relative;width: 25px;top: 8%;left: 66px;cursor: pointer;'></div><div title='退出用户' class='ht_loginOut' style='position: absolute;left: 95px;top: 6px; min-width: 35px;font-size: 14px;color: white;cursor: pointer;'>退出</div></div>").appendTo(perConIn);
 	
 	jQuery("#shouye").unbind("click").bind("click",function(){
