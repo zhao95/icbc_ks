@@ -102,7 +102,6 @@ function bindCard() {
 				//获取级别和级别code
 				var sediv = $('<div></div>');
 				for(var i=0;i<nameArg.length;i++) {
-					debugger;
 					if(i<nameArg.length-2){
 						if(i==0){
 							var span = document.createElement("span");
@@ -171,9 +170,9 @@ function bindCard() {
 					}
 				}
 			}else if(obj2[0].type== 'muty'){
+				
 				var codestr = [];
 				var namestr = [];
-//				debugger;
 				for(var a=0;a<obj2.length;a++){
 					if(a<obj2.length-2){
 						namestr[a]=obj2[a].val;
@@ -187,15 +186,45 @@ function bindCard() {
 					if(i<nameArg.length-3){
 						var span  = document.createElement("span");
 						if(i==0){
-							span.innerHTML=obj2[i].val;
-							formConDiv7.append(nameArg[i]);
+							var name = "";
+						
+							if(i<nameArg.length-3){
+								for(var j=0;j<nameArg.length-3;j++){
+									if(j==nameArg.length-4){
+										
+										name +=obj2[j].val;
+									}else{
+										name +=obj2[j].val+",";
+									}
+								
+								}
+							
+							}
+							
+							span.innerHTML=nameArg[i]+"：";
+							$(span).css("position","relative");
+							$(span).css("top","-40px");
 							formConDiv7.append(span);
-						}else{
-							span.innerHTML=nameArg[i]+obj2[i].val;
-							formConDiv7.append(span);
+							var textarea = $('<textarea id="textareaid" style="position:relative;top:20px;width:415px;height:80px">'+name+'</textarea>');
+							formConDiv7.css("position","absolute");
+							formConDiv7.append(textarea);
+							var butt = document.createElement("button");
+							formConDiv7.append(butt);
+							butt.innerHTML="选择";
+							$(butt).css("position","relative");
+							$(butt).css("top","-40px");
+							butt.id="xlbutton";
+							/*span.innerHTML=nameArg[i]+obj2[i].val;
+							formConDiv7.append(span);*/
 						}
 					}else if(i==nameArg.length-3){
 						//初中高级
+						var span  = document.createElement("span");
+						span.innerHTML="证书等级：";
+						$(span).css("position","relative");
+						$(span).css("top","30px");
+						$(span).css("padding-left","15px");
+						formConDiv7.append(span);
 						var select = document.createElement("select");  
 						if(obj2[i].code=="1"){
 							select.id = "jibieselect";
@@ -213,9 +242,12 @@ function bindCard() {
 							select.add(new Option("初级","1")); 
 							select.add(new Option("中级","2")); 
 						}
-						var span  = document.createElement("span");
+						/*var span  = document.createElement("span");
 						span.innerHTML=nameArg[i];
-						formConDiv7.append(span);
+						formConDiv7.append(span);*/
+						$(select).css("position","relative");
+						$(select).css("top","30px");
+						$(select).css("margin-left","20px");
 						formConDiv7.append(select);
 					}else if (i==nameArg.length-2){
 						//int值
@@ -237,18 +269,27 @@ function bindCard() {
 							/*inputaa.addClass("ui-text-default");
 							
 							inputaa.css("width","50px");*/
-							formConDiv7.append(nameArg[i]);
+							/*formConDiv7.append(nameArg[i]);
 							formConDiv7.append(inputaa);
-							formConDiv7.append(nameArg[i+1]);
-							
-							
-							var butt = document.createElement("button");
+							formConDiv7.append(nameArg[i+1]);*/
+						var span  = document.createElement("div");
+						span.innerHTML="有效期：>=";
+						$(span).css("position","relative");
+						$(span).css("top","55px");
+						$(span).css("padding-left","10px");
+						formConDiv7.append(span);
+						$(inputaa).css("position","relative");
+						$(inputaa).css("top","30px");
+						$(inputaa).css("margin-left","100px");
+						formConDiv7.append(inputaa);
+							/*var butt = document.createElement("button");
 							formConDiv7.append(butt);
-							butt.innerHTML="请选择";
-							butt.id="xlbutton";
+							butt.innerHTML="选择";
+							butt.id="xlbutton";*/
 					}
 						
 					}
+				
 			}else if(obj2[0].type=='string'){
 				var  BUTT= document.createElement("button");
 				BUTT.id="chongzhi";
@@ -290,7 +331,7 @@ function bindCard() {
 				}
 			var butt = document.createElement("button");
 			formConDiv7.append(butt);
-			butt.innerHTML="请选择";
+			butt.innerHTML="选择";
 			butt.id="GLxlbutton";
 			
 			var divinfo = $("<div style='padding-top:10px;color:red;font-size:13px'></div>");
@@ -450,7 +491,7 @@ function bindCard() {
 		
 		var fieldsetCon5 = $('<div class="fieldsetContainer">').append(fieldset6);
 		
-		var itemDiv4 = $('<div class="item ui-corner-5" id="">').append(fieldsetCon5);
+		var itemDiv4 = $('<div class="item ui-corner-5" style="background:rgb(246, 246, 246);border-color:rgb(246, 246, 246)" id="">').append(fieldsetCon5);
 		
 		var formDiv3 = $('<div class="ui-form-default">').append(itemDiv4);
 		
@@ -687,10 +728,7 @@ function bindselect(){
 						xlnames=names;
 						xlcodes = codes;
 						var paramArray = [];
-						$(".formContent").find("span").each(function(index,item){
-								
-								$(this).remove();
-						});
+						$("#textareaid").html("");
 						var span = document.createElement("span");
 						var s = "";
 						for(var i=0;i<names.length;i++){
@@ -702,7 +740,7 @@ function bindselect(){
 							}
 						}
 						span.innerHTML=s;
-						$("#jibieselect").before(span);
+						$("#textareaid").html(s);
 						//批量保存
 						_viewer.refresh();
 					}
