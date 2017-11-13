@@ -387,17 +387,45 @@ function bindCard() {
 					}
 				}else{
 					if(obj2[0].type == 'date'){
-						if(i==nameArg.length-1) {
-							formConDiv7.append(nameArg[i]);
-						} else {
-							formConDiv7.append(nameArg[i]);
-							var inputaa = $('<input type="text" name="yearlimit" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i].val);
-							inputaa.addClass("Wdate ui-date-default").css("cursor","pointer");
-							inputaa.css("width","150px");
+						if(i==0){
+							if(i==nameArg.length-1) {
+								formConDiv7.append(nameArg[i]);
+							} else {
+								formConDiv7.append(nameArg[i]);
+								var inputaa = $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i].val);
+								inputaa.addClass("Wdate ui-date-default").css("cursor","pointer");
+								inputaa.css("width","150px");
+								
+								inputaa.attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
+								
+								formConDiv7.append(inputaa);
+							}
+						}else if(i==1){
+							var span  = document.createElement("span");
+							span.innerHTML=nameArg[i];
+							formConDiv7.append(span);
+							//初中高级
+							var select = document.createElement("select");  
+							if(obj2[i].code=="1"){
+								select.id = "jibieselect";
+								select.add(new Option("初级","1",true,true)); 
+								select.add(new Option("中级","2")); 
+								select.add(new Option("高级","3")); 
+							}else if(obj2[i].code=="2"){
+								select.id = "jibieselect";
+								select.add(new Option("中级","2",true,true)); 
+								select.add(new Option("初级","1")); 
+								select.add(new Option("高级","3")); 
+							}else{
+								select.id = "jibieselect";
+								select.add(new Option("高级","3",true,true)); 
+								select.add(new Option("初级","1")); 
+								select.add(new Option("中级","2")); 
+							}
+							formConDiv7.append(select);
 							
-							inputaa.attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
-							
-							formConDiv7.append(inputaa);
+						}else{
+							formConDiv7.append(nameArg[i]);
 						}
 
 					}else{
@@ -548,6 +576,23 @@ function bindCard() {
 					jsons+='{"vari":"level","val":"'+$("#RULE-VAR-INPUT2").val()+'","type":"datetime"}]';
 					saveRuleVarCode(dataId,arr,arr1,jsons,mx_name);
 					
+				}else if(obj2[0].type=='date'){
+					var arr1 = [];
+					var arr = [];
+					var mx_name = nameArg[0];
+					var jsons = "[";
+					mx_name+="#dateTime#";
+					mx_name+=nameArg[1];
+					jsons+='{"vari":"dateTime","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"date"},';
+					
+					$(formConDiv7.find('select')).each(function(index,item){
+								
+						mx_name+="#dateTime#";
+						arr1[index]=$(this).val();
+						jsons+='{"vari":"dateTime","val":"'+$(this).find("option:selected").text()+'","type":"date","code":"'+$(this).val()+'"}]';
+					});
+					mx_name+=nameArg[2];
+					saveRuleVarCode(dataId,arr,arr1,jsons,mx_name);
 				}else{
 				var text = "";
 				$("input[name='yearlimit']").each(function(index,item){
@@ -806,7 +851,6 @@ function saveRuleVar(dataId,val,obj2) {
 
 
 function saveRuleVarCode(dataId,arr,val,obj2,mx_name) {
-	
 	var ssss = obj2.split(",");
 	var paramstr = "";
 	var param = {};
