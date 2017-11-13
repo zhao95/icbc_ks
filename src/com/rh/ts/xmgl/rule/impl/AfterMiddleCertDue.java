@@ -48,8 +48,6 @@ public class AfterMiddleCertDue implements IRule {
 
 			sql.andGTE("CERT_GRADE_CODE", level);// 证书等级编号
 			
-			sql.and("QUALFY_STAT", 3);// 获证状态(1-正常;2-获取中;3-过期)
-
 			sql.and("S_FLAG", 1);
 
 			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sql);
