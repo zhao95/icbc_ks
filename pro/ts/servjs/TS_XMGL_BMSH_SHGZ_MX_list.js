@@ -273,7 +273,7 @@ function bindCard() {
 							formConDiv7.append(inputaa);
 							formConDiv7.append(nameArg[i+1]);*/
 						var span  = document.createElement("div");
-						span.innerHTML="有效期：>=";
+						span.innerHTML="有效期：<=";
 						$(span).css("position","relative");
 						$(span).css("top","55px");
 						$(span).css("padding-left","10px");
