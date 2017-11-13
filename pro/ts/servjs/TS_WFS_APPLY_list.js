@@ -77,7 +77,7 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	return flag;
 };
 //重写add方法
-_viewer.getBtn("add").unbind("click").bind("click",function() {debugger;
+_viewer.getBtn("add").unbind("click").bind("click",function() {
 	var pcodeh = _viewer._transferData["CTLG_PCODE"];
 		if(pcodeh == "" || typeof(pcodeh) == "undefined") {
 		alert("请选择添加目录的层级 !");
