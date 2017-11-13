@@ -4267,12 +4267,20 @@ function getListPvlg(item,user_pvlg,filed) {
 	var i=0;
 	for(let key in user_pvlg){
 		if(arr==null){
-			arr = user_pvlg[key].ROLE_DCODE;
+			if(user_pvlg[key].ROLE_DCODE){
+				
+				arr = user_pvlg[key].ROLE_DCODE;
+			}
+
 		}else{
-			var d = user_pvlg[key].ROLE_DCODE.split(",");
-			for(var k=0;k<d.length;k++){
-				if(arr.indexOf(d[k])<0){
-					arr+=+","+d[k];
+			
+			if(user_pvlg[key].ROLE_DCODE){
+				
+				var d = user_pvlg[key].ROLE_DCODE.split(",");
+				for(var k=0;k<d.length;k++){
+					if(arr.indexOf(d[k])<0){
+						arr+=+","+d[k];
+					}
 				}
 			}
 		}
