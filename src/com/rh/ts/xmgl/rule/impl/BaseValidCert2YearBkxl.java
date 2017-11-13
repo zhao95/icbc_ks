@@ -30,7 +30,6 @@ public class BaseValidCert2YearBkxl implements IRule {
 		String xl = param.getStr("BM_XL");
 
 		// 报名结束时间
-		String bmEnd = param.getStr("BM_ENDDATE");
 
 		String jsonStr = param.getStr("MX_VALUE2");
 
