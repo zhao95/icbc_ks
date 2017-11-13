@@ -343,7 +343,6 @@ function bindCard() {
 			formConDiv7.append(divinfo);
 		}else if(obj2[0].type=='level'){
 			for(var i=0;i<nameArg.length;i++) {
-				debugger;
 				if(i<2){
 					if(i==0){
 						var span = document.createElement("span");
@@ -374,7 +373,7 @@ function bindCard() {
 						formConDiv7.append(span);
 					}
 					
-				}else if(i==(nameArg.length-1)){
+				}else if(i==(nameArg.length-2)){
 					var inputaa = $('<input type="text" id="RULE-VAR-INPUT2" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i-1].val);
 					if(obj2[obj2.length-1].type=="int"){
 						inputaa.addClass("ui-text-default");
@@ -394,10 +393,9 @@ function bindCard() {
 					var span  = document.createElement("span");
 					span.innerHTML=nameArg[i];
 					formConDiv7.append(span);
-				}else if(i==(nameArg.length-2)){
+				}else if(i==(nameArg.length-1)){
 					var inputaa = $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i-1].val);
 						inputaa.addClass("ui-text-default");
-						
 						inputaa.css("width","50px");
 					formConDiv7.append(inputaa);
 					var span  = document.createElement("span");
@@ -611,10 +609,10 @@ function bindCard() {
 					mx_name+=nameArg[1];
 					mx_name+="#level#";
 					mx_name+=nameArg[2];
-					jsons+='{"vari":"level","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"int"},';
+					jsons+='{"vari":"level","val":"'+$("#RULE-VAR-INPUT2").val()+'","type":"datetime"},';
 					mx_name+="#level#";
 					mx_name+=nameArg[3];
-					jsons+='{"vari":"level","val":"'+$("#RULE-VAR-INPUT2").val()+'","type":"datetime"}]';
+					jsons+='{"vari":"level","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"int"}]';
 					saveRuleVarCode(dataId,arr,arr1,jsons,mx_name);
 					
 				}else if(obj2[0].type=='date'){
