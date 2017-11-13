@@ -44,8 +44,8 @@ public class XmglServ extends CommonServ {
 	 * @param paramBean
 	 * 
 	 */
-	public void copy(Bean paramBean) {
-		// OutBean NBean = new OutBean();
+	public  void copy(ParamBean paramBean) {
+		 //OutBean outBean = new OutBean();
 		// 获取服务ID
 		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
 		// 获取 主键id list
@@ -62,12 +62,38 @@ public class XmglServ extends CommonServ {
 		NBean.set("XM_KSSTARTDATA", bean.getStr("XM_KSSTARTDATA"));
 		NBean.set("XM_KSENDDATA", bean.getStr("XM_KSENDDATA"));
 		NBean.set("CTLG_PCODE", bean.getStr("CTLG_PCODE"));
+		NBean.set("XM_STATE", bean.getStr("XM_STATE"));
 		NBean.set("XM_JD", bean.getStr("XM_JD"));
 		NBean.set("EXCEL_TEMPLATE_ID", bean.getStr("EXCEL_TEMPLATE_ID"));
 		NBean.set("XM_GJ", bean.getStr("XM_GJ"));
 		NBean.set("XM_FQDW_CODE", bean.getStr("XM_FQDW_CODE"));
-		ServDao.save(servId, NBean);
+		NBean.set("XM_KHDKZ", bean.getStr("XM_KHDKZ"));
+		NBean.set("XM_KCAP_PUBLISH_USER_CODE", bean.getStr("XM_KCAP_PUBLISH_USER_CODE"));
+		NBean.set("XM_KCAP_PUBLISH_TIME", bean.getStr("XM_KCAP_PUBLISH_TIME"));
+		Bean beanA= ServDao.save(servId, NBean);
+		afterSaveToSz( beanA);
+		
 	}
+//	public OutBean copy(ParamBean paramBean) {
+//		OutBean outBean = new OutBean();
+//		String servId = paramBean.getStr("serv");
+//		//String primaryColCode = paramBean.getStr("primaryColCode");
+//		String pkCode = paramBean.getStr("pkCodes");
+//		Bean bean = ServDao.find(servId, pkCode);
+//		String name=bean.getStr("XM_NAME");
+//		
+//		//bean.remove(primaryColCode);
+//		bean.set("XM_ID","");
+//	
+//		bean.set("XM_NAME", name+"_复制");
+//		bean = delSysCol(bean);
+//		Bean newBean = ServDao.create(servId, bean);
+//		if (!newBean.getId().equals("")) {
+//			//copyLinkData(servId, pkCode, newBean.getId());
+//			outBean.setOk();
+//		}
+//		return outBean;
+//	}
 	 /**
      * 删除系统字段
      * @param bean
