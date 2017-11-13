@@ -46,7 +46,7 @@ public class BeforeHighCertDue implements IRule {
 
 			sql.and("STU_PERSON_ID", user);// 人员编码
 
-			sql.andLTE("END_DATE", val);// 终止有效期 <= val
+			sql.andLT("END_DATE", val);// 终止有效期 <= val
 
 			sql.and("STATION_NO", xl);// 序列编号
 
