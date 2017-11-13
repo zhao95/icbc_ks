@@ -39,7 +39,7 @@ function updateRolesFun(pkCodes,value1,value2,value3,action){
 		var mdCode = value1.replace("TS_PVLG_ROLE_UPDATE_FUNS-","");
 		var param = {"_WHERE_":"and ROLE_ID = '"+roleId+"' and MD_CODE = '"+mdCode+"'"};
 		FireFly.doAct("TS_PVLG_ROLE_MOD","finds",param,true,false,function(data){
-			if(data._DATA_.length > 0){
+			if(data._DATA_ && data._DATA_.length > 0){
 				var dataId = data._DATA_[0].MD_ID;
 				var mdVal = data._DATA_[0].MD_VAL;
 				//数据库存在相关的数据
@@ -47,25 +47,38 @@ function updateRolesFun(pkCodes,value1,value2,value3,action){
 					//添加功能  
 					if(mdVal.indexOf(value2) == -1){
 						var paramBean = {};
-						paramBean["MD_VAL"] = value2 + "," + mdVal;
+						
+						mdVal = value2 + "," + mdVal;
+						
+						mdVal = cutStartWith(mdVal,",");
+						
+						mdVal = cutEndWith(mdVal,",");
+						
+						paramBean["MD_VAL"] = mdVal;
 						paramBean["_PK_"] = dataId;
 						FireFly.doAct("TS_PVLG_ROLE_MOD","save",paramBean,true,false,function(data){
 							if(data._MSG_.indexOf("OK") != -1){
-								FireFly.doAct("TS_PVLG_ROLE_UPDATE","removeRoleCache",{"roleId":roleId,"module":mdCode});
+								FireFly.doAct("TS_PVLG_ROLE_UPDATE","removeRoleCache",{"roleId":roleId,"module":"TS_PVLG_ROLE_MOD"});
 							}
 						});
 					}
 				}else{
 					//删除功能	
 					if(mdVal.indexOf(value2) != -1){
+						
 						mdVal = mdVal.replace(value2,"");
 						mdVal = mdVal.replace(",,",",");
+						
+						mdVal = cutStartWith(mdVal,",");
+						
+						mdVal = cutEndWith(mdVal,",");
+						
 						var paramBean = {};
 						paramBean["MD_VAL"] = mdVal;
 						paramBean["_PK_"] = dataId;
 						FireFly.doAct("TS_PVLG_ROLE_MOD","save",paramBean,true,false,function(data){
 							if(data._MSG_.indexOf("OK") != -1){
-								FireFly.doAct("TS_PVLG_ROLE_UPDATE","removeRoleCache",{"roleId":roleId,"module":mdCode});
+								FireFly.doAct("TS_PVLG_ROLE_UPDATE","removeRoleCache",{"roleId":roleId,"module":"TS_PVLG_ROLE_MOD"});
 							}
 						});
 					}
@@ -79,9 +92,9 @@ function updateRolesFun(pkCodes,value1,value2,value3,action){
 					paramBean["MD_NAME"] = value3;
 					paramBean["MD_VAL"] = value2;
 					// 数据库添加新数据
-					FireFly.doAct("TS_PVLG_ROLE_MOD", "add", param,true, false,function(data){
+					FireFly.doAct("TS_PVLG_ROLE_MOD", "save", paramBean,true, false,function(data){
 						if(data._MSG_.indexOf("OK") != -1){
-							FireFly.doAct("TS_PVLG_ROLE_UPDATE","removeRoleCache",{"roleId":roleId,"module":mdCode});
+							FireFly.doAct("TS_PVLG_ROLE_UPDATE","removeRoleCache",{"roleId":roleId,"module":"TS_PVLG_ROLE_MOD"});
 						}
 					});
 				} else {
@@ -204,3 +217,25 @@ $("#TS_PVLG_ROLE_UPDATE .rhGrid").find("tr").each(function(index, item) {
 		}
 	}
 });
+
+function cutStartWith(val,str) {
+	
+	var reg=new RegExp("^"+str);
+	
+	if(reg.test(val)) {
+		val = val.substring(1,val.length);
+	}
+	
+	return val;  
+}
+
+function cutEndWith(val,str) {
+	
+	var reg=new RegExp(str+"$");  
+	
+	if(reg.test(val)) {
+		val = val.substring(0,val.length-1);
+	}
+	
+	return val;
+}

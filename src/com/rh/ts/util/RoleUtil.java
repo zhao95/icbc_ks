@@ -77,6 +77,8 @@ public class RoleUtil {
 
 						optBean.put(optCode, optPvlg);
 
+					} else {
+						optBean.put(optCode, 0);
 					}
 				} else {
 					optBean.put(optCode, 0);

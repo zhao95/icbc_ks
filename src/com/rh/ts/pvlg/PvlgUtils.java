@@ -76,7 +76,7 @@ public class PvlgUtils {
 							} else {
 								result = object2;
 							}
-						} catch (JSONException e) {
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}

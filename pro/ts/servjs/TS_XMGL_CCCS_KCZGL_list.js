@@ -27,10 +27,10 @@ $("#TS_XMGL_CCCS_KCZGL .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;		
 		$(item).find("td[icode='BUTTONS']").append(
-			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optLookBtn" rowpk="'+dataId+'" title="查看"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+	
-			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optZBtn" rowpk="'+dataId+'" title="组管理"><span class="rh-icon-inner">组管理</span><span class="rh-icon-img btn-edit"></span></a>'+
-			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optEditBtn" rowpk="'+dataId+'" title="编辑"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
-			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optDeleteBtn" rowpk="'+dataId+'" title="删除"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+			'<a class="rhGrid-td-rowBtnObj rh-icon" actcode="read" operCode="optLookBtn" rowpk="'+dataId+'" title="查看"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+	
+			'<a class="rhGrid-td-rowBtnObj rh-icon" actcode="groupmgr" operCode="optZBtn" rowpk="'+dataId+'" title="组管理"><span class="rh-icon-inner">组管理</span><span class="rh-icon-img btn-edit"></span></a>'+
+			'<a class="rhGrid-td-rowBtnObj rh-icon" actcode="upd" operCode="optEditBtn" rowpk="'+dataId+'" title="编辑"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
+			'<a class="rhGrid-td-rowBtnObj rh-icon" actcode="delete" operCode="optDeleteBtn" rowpk="'+dataId+'" title="删除"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
 		);	
 		// 为每个按钮绑定卡片
 		bindCard();
