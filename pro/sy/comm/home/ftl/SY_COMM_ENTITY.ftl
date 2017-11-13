@@ -11,7 +11,7 @@ for(var i=0;i<datalist.length;i++){
 	'<td width="5%" align="center">'+datalist[i].start+'</td>'+
 	'<td width="5%" align="center">'+datalist[i].end+'</td>'+
 	'<td align="center">待安排</td>'+
-	'<td align="center" id='+datalist[i].DATA_ID+'><a id='+datalist[i].TODO_ID+' href="javascript:void(0);"><span style="color:lightblue">审批</span></a></td>'+
+	'<td align="center" id='+datalist[i].DATA_ID+'><span style="color:lightblue"><a style="text-decoration:none;" id='+datalist[i].TODO_ID+' href="javascript:void(0);">审批</a></span></td>'+
 	'</tr>';
 	$("#qjtable").append(newTR);
 	$("#"+datalist[i].TODO_ID).click(function(){
@@ -38,7 +38,7 @@ $("#qjbach").click(function(){
 <tr style="background:f4fbff;height:30px;color:#999999"><td width="5%" align="center">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">审核开始时间</td><td width="15%" align="center">审核截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
 
 </table>
-<form id="tiaozhuanform" target="_blank" style="display:none" method="post" action="/ts/jsp/qjlb_qj2.jsp">
+<form id="tiaozhuanform" target="_blank" style="display:none" met`hod="post" action="/ts/jsp/qjlb_qj2.jsp">
 <input id="todoId" name ="todoId" />
 <input id="qjid" name ="qjid" />
 <input id="hidden" name ="hidden" />
