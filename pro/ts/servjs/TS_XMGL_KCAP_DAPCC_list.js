@@ -29,8 +29,12 @@ _viewer.getBtn("add").unbind("click").bind("click", function(event) {
 	    		data["KC_ID"] = ids[i];
 	    		data["KC_NAME"] = kcNames[i];
 	    		data["CTLG_PCODE"] = ctlgpCodes[i];
-	    		console.log(data);
-	    		FireFly.doAct("TS_XMGL_KCAP_DAPCC", "save", data);
+	    		FireFly.doAct("TS_XMGL_KCAP_DAPCC", "save", data,false,false,function(result){
+	    			
+					if(result._MSG_.indexOf("OK") == -1){
+						_viewer.listBarTipError("添加失败！");
+					}
+	    		});
 	    	}
 	    	_viewer.refresh();
 	    }
@@ -62,14 +66,19 @@ _viewer.getBtn("addOther").unbind("click").bind("click",function(event){
 	    "replaceCallBack":function(idArray) {
 	    	var ids = idArray.KC_ID.split(",");
 	    	var kcNames = idArray.KC_NAME.split(",");
-	    	var ctlgpCodes = idArray.KC_NAME.split(",");
+	    	var ctlgpCodes = idArray.CTLG_PCODE.split(",");
 	    	for(var i=0;i<ids.length;i++){
 	    		var data = {}
 	    		data["XM_ID"] = xmId;
 	    		data["KC_ID"] = ids[i];
 	    		data["KC_NAME"] = kcNames[i];
 	    		data["CTLG_PCODE"] = ctlgpCodes[i];
-	    		FireFly.doAct("TS_XMGL_KCAP_DAPCC", "save", data);
+	    		FireFly.doAct("TS_XMGL_KCAP_DAPCC", "save", data,false,false,function(result){
+	    			
+					if(result._MSG_.indexOf("OK") == -1){
+						_viewer.listBarTipError("添加失败！");
+					}
+	    		});
 	    	}
 	    	_viewer.refresh();
 	    }
