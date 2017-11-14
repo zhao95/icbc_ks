@@ -409,35 +409,24 @@ function bindCard() {
 							selectfuhao.add(new Option("<","2")); 
 							selectfuhao.add(new Option(">=","3")); 
 							selectfuhao.add(new Option("<=","4")); 
-							selectfuhao.add(new Option("=","5")); 
 						}else if(obj2[obj2.length-2].code=="2"){
 							selectfuhao.id = "fuhaobieselect2";
 							selectfuhao.add(new Option(">","1")); 
 							selectfuhao.add(new Option("<","2",true,true)); 
 							selectfuhao.add(new Option(">=","3")); 
 							selectfuhao.add(new Option("<=","4")); 
-							selectfuhao.add(new Option("=","5")); 
 						}else if(obj2[obj2.length-2].code=="3"){
 							selectfuhao.id = "fuhaobieselect2";
 							selectfuhao.add(new Option(">","1")); 
 							selectfuhao.add(new Option("<","2")); 
 							selectfuhao.add(new Option(">=","3",true,true)); 
 							selectfuhao.add(new Option("<=","4")); 
-							selectfuhao.add(new Option("=","5")); 
 						}else if(obj2[obj2.length-2].code=="4"){
 							selectfuhao.id = "fuhaobieselect2";
 							selectfuhao.add(new Option(">","1")); 
 							selectfuhao.add(new Option("<","2")); 
 							selectfuhao.add(new Option(">=","3")); 
 							selectfuhao.add(new Option("<=","4",true,true)); 
-							selectfuhao.add(new Option("=","5")); 
-						}else{
-							selectfuhao.id = "fuhaobieselect2";
-							selectfuhao.add(new Option(">","1")); 
-							selectfuhao.add(new Option("<","2")); 
-							selectfuhao.add(new Option(">=","3")); 
-							selectfuhao.add(new Option("<=","4")); 
-							selectfuhao.add(new Option("=","5",true,true)); 
 						}
 						sediv.append(spanfuhao);
 						sediv.append(selectfuhao);
