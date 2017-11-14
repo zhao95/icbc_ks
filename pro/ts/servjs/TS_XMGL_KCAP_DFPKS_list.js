@@ -17,3 +17,10 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	_viewer.listClearTipLoad();
 	return flag;
 };
+
+/*
+ * 删除前方法执行
+ */
+_viewer.beforeDelete = function(pkArray) {
+	showVerify(pkArray,_viewer);
+};

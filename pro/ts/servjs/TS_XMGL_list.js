@@ -107,6 +107,7 @@ function openMyCard(dataId,readOnly,showTab){
  * 目录管理
  */
 _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
+	
 	var params = {"isHide":"true", "CTLG_MODULE":module};
 	var options = {"url":"TS_COMM_CATALOG_PROJECT.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3,"top":true};
 	Tab.open(options);
@@ -118,12 +119,14 @@ $(".hoverDiv").find("a").hover(function() {
 	$(this).css("color", "#666666");//鼠标移出
 }); 
 
+
 /**
  * 发布按钮的功能
  */
-_viewer.getBtn("fabu").unbind("click").bind("click",function(){
+_viewer.getBtn("fabu").unbind("click").bind("click",function(){debugger;
 	//点击选择框，获取数据的id；
 	var pkAarry = _viewer.grid.getSelectPKCodes();
+
 	if(pkAarry.length==0){
 		_viewer.listBarTipError("请选择要发布的项目！");
 	}else{
@@ -146,6 +149,7 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){
 				
 		}
 	}
+	
 });
 
 

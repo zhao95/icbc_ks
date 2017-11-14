@@ -1,4 +1,10 @@
 var _viewer = this;
+var  nowDate=new   Date();
+var year=nowDate.getFullYear();//4位
+    var years =year.toString().substr(2, 2);
+var month=nowDate.getMonth()+1;//月份
+    month =(month<10 ? "0"+month:month); 
+var mydate = (years+month.toString());//1711
  //通过当前页得到关联的id,获取父级信息
 var  qzId= _viewer.getParHandler().getPKCode();
 var XM_SZ_ID=_viewer.getParHandler().getItem("XM_SZ_ID").getValue();
@@ -51,6 +57,7 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	    	var MKcodes = idArray.KSLBK_MKCODE.split(",");
 	    	var typename = idArray.KSLBK_TYPE_NAME.split(",");
 	    	var kslbTime = idArray.KSLBK_TIME.split(",");
+	    
 	    	var paramjson={};
 	    	var paramlist = [];
 	    	for(var i=0;i<ids.length;i++){
@@ -72,6 +79,11 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	   				param["KSLB_MK_CODE"]=MKcodes[i];
 	   				param["KSLB_TYPE_NAME"]=typename[i];
 	   				param["KSLB_TIME"]=kslbTime[i];
+	   				param["KSLB_KSNUM"]=mydate+LBcodes[i].toString().substr(LBcodes[i].toString().length-1,1)+XLcodes[i].toString().substr(0,1)+XLcodes[i].toString().substr(XLcodes[i].toString().length-4,4)+MKcodes[i].toString()+types[i];
+	   				
+	   				
+	   				
+	   				
 	   				paramlist.push(param);
 	   				console.log(param);
 	    	    }
