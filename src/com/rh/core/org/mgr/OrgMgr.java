@@ -199,15 +199,21 @@ public class OrgMgr {
      */
     public static List<DeptBean> getChildDepts(String cmpyId, String deptCode) {
     	DeptBean deptBean = getDept(deptCode);
-    	
+    	if(deptBean==null){
+    		return null;
+    	}
         List<DeptBean> deptBeanList = new ArrayList<DeptBean>();
         
         StringBuffer condition = new StringBuffer();
         condition.append(" and CMPY_CODE ='");
         condition.append(cmpyId);
-        condition.append("' and CODE_PATH like '");
-        condition.append(deptBean.getCodePath());
-        condition.append("%'");
+        if(!"".equals(deptBean.getCodePath())){
+        	condition.append("' and CODE_PATH like %'");
+        	condition.append(deptBean.getCodePath());
+        	condition.append("%'");
+        }else{
+        	return null;
+        }
         condition.append("and DEPT_CODE != '" + deptCode + "'");
         condition.append("and S_FLAG != '3' ");
         

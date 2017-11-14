@@ -302,6 +302,9 @@ public class XmglServ extends CommonServ {
 		// 所有机构
 		for (Bean bean : finds) {
 			String str = bean.getStr("USER_DEPT_CODE");// 机构编码
+			if("".equals(str)){
+				continue;
+			}
 			if("0010100000".equals(str)){
 				qz += "," + bean.getStr("G_ID");
 				continue;
