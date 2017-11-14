@@ -537,11 +537,7 @@ function bindCard() {
 					
 				}else if(i==(nameArg.length-2)){
 					var inputaa = $('<input type="text" id="RULE-VAR-INPUT2" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i-1].val);
-					if(obj2[obj2.length-1].type=="int"){
-						inputaa.addClass("ui-text-default");
 						
-						inputaa.css("width","50px");
-					}else{
 						
 						inputaa.addClass("Wdate ui-date-default").css("cursor","pointer");
 						
@@ -549,7 +545,6 @@ function bindCard() {
 						
 						inputaa.attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
 						
-					}
 					
 					formConDiv7.append(inputaa);
 					var span  = document.createElement("span");
