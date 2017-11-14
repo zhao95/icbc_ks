@@ -101,12 +101,11 @@ function bindCard() {
 				//获取级别和级别code
 				for(var i=0;i<nameArg.length;i++) {
 					var sediv = $('<div></div>');
-					if(i<(nameArg.length-4)){
+					if(i<(nameArg.length-5)){
 						if(i==0){
 							var span = document.createElement("span");
 							span.innerHTML=nameArg[i];
 							formConDiv7.append(span);
-						}else if(i==1){
 							//类别下拉框
 							var param={};
 							var result = FireFly.doAct("TS_BMLB_BM","getkslbk",param);
@@ -122,17 +121,15 @@ function bindCard() {
 									formConDiv7.append(checkboxs);
 								}
 								
-							}
 							
 						}
-						
+						}
 					}else if(i==(nameArg.length-1)){
 					}else if(i==(nameArg.length-3)){
-						
 						//初中高
 						var span = document.createElement("span");
 						span.innerHTML="证书有效期：";
-						var select = document.createElement("select");  
+						var select = document.createElement("select"); 
 						if(obj2[i].code=="1"){
 							select.id = "jibieselect";
 							select.add(new Option(">","1",true,true)); 
@@ -171,7 +168,7 @@ function bindCard() {
 						sediv.append(select);
 						sediv.append(inputaa);
 						formConDiv7.append(sediv);
-					}else if(i==(nameArg.length-4)){
+					}else if(i==(nameArg.length-5)){
 						//初中高
 						var spanfuhao = document.createElement("span");
 						spanfuhao.innerHTML="证书等级：";
