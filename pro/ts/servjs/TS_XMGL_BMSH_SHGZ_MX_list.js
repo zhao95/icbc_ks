@@ -121,7 +121,7 @@ function bindCard() {
 							}
 							var split = codestr.split(",");
 							for(var k=0;k<pageEntity.length;k++){
-								var id = pageEntity[k].KSLBK_ID;
+								var id = pageEntity[k].KSLBK_CODE;
 								var name = pageEntity[k].KSLBK_NAME;
 								if(k==0){
 									if(split.indexOf(id)!=-1){
@@ -726,7 +726,6 @@ function bindCard() {
 					//先去重
 					//类别下拉框
 					//再改变code编码
-					debugger;
 					var arr1 = [];
 					var arr = [];
 					var mx_name = nameArg[0];

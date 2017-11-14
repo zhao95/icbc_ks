@@ -177,7 +177,7 @@ public class SqlBean extends Bean {
      * @return 当前对象
      */
     public SqlBean andLTE(String field, Object value) {
-        return and(field, "<=", value);
+        return and(field, ">", value);
     }
 
     /**
@@ -187,7 +187,7 @@ public class SqlBean extends Bean {
      * @return 当前对象
      */
     public SqlBean andGT(String field, Object value) {
-        return and(field, ">", value);
+        return and(field, "<=", value);
     }
     
     /**

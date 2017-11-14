@@ -79,8 +79,6 @@ public class HighValidCertYxKf implements IRule {
 				sql.and("CERT_GRADE_CODE", dengjicode);//等于
 			}
 
-			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
-
 			sql.and("S_FLAG", 1);
 
 			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sql);
