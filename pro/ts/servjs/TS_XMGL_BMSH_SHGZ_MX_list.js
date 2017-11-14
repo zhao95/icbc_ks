@@ -97,12 +97,11 @@ function bindCard() {
 		var formConDiv7 = $('<div class="formContent style="width:100%;">');
 		var nameArg = name.split("#"+obj2[0].vari+"#");
 			if(obj2[0].type== 'select'){
-				
 				//类别下拉框
 				//获取级别和级别code
-				var sediv = $('<div></div>');
 				for(var i=0;i<nameArg.length;i++) {
-					if(i<nameArg.length-2){
+					var sediv = $('<div></div>');
+					if(i<(nameArg.length-4)){
 						if(i==0){
 							var span = document.createElement("span");
 							span.innerHTML=nameArg[i];
@@ -128,33 +127,87 @@ function bindCard() {
 						}
 						
 					}else if(i==(nameArg.length-1)){
-						var inputaa = $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i-1].val);
-						if(obj2[obj2.length-1].type=="int"){
-							inputaa.addClass("ui-text-default");
-							
-							inputaa.css("width","50px");
+					}else if(i==(nameArg.length-3)){
+						
+						//初中高
+						var span = document.createElement("span");
+						span.innerHTML="证书有效期：";
+						var select = document.createElement("select");  
+						if(obj2[i].code=="1"){
+							select.id = "jibieselect";
+							select.add(new Option(">","1",true,true)); 
+							select.add(new Option("<","2")); 
+							select.add(new Option(">=","3")); 
+							select.add(new Option("<=","4")); 
+						}else if(obj2[i].code=="2"){
+							select.id = "jibieselect";
+							select.add(new Option(">","1")); 
+							select.add(new Option("<","2",true,true)); 
+							select.add(new Option(">=","3")); 
+							select.add(new Option("<=","4")); 
+						}else if(obj2[i].code=="3"){
+							select.id = "jibieselect";
+							select.add(new Option(">","1")); 
+							select.add(new Option("<","2")); 
+							select.add(new Option(">=","3",true,true)); 
+							select.add(new Option("<=","4")); 
 						}else{
-							
+							select.id = "jibieselect";
+							select.add(new Option(">","1")); 
+							select.add(new Option("<","2")); 
+							select.add(new Option(">=","3")); 
+							select.add(new Option("<=","4",true,true)); 
+						}
+						var inputaa = $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[obj2.length-1].val);
+						
 							inputaa.addClass("Wdate ui-date-default").css("cursor","pointer");
 							
 							inputaa.css("width","150px");
 							
 							inputaa.attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
 							
-						}
-						sediv.append(nameArg[i-1]);
+						
+						sediv.append(span);
+						sediv.append(select);
 						sediv.append(inputaa);
-						sediv.append(nameArg[nameArg.length-1]);
 						formConDiv7.append(sediv);
-					}else if(i==(nameArg.length-2)){
+					}else if(i==(nameArg.length-4)){
 						//初中高
-						var select = document.createElement("select");  
+						var spanfuhao = document.createElement("span");
+						spanfuhao.innerHTML="证书等级：";
+						var selectfuhao = document.createElement("select");  
 						if(obj2[i].code=="1"){
+							selectfuhao.id = "fuhaobieselect";
+							selectfuhao.add(new Option(">","1",true,true)); 
+							selectfuhao.add(new Option("<","2")); 
+							selectfuhao.add(new Option(">=","3")); 
+							selectfuhao.add(new Option("<=","4")); 
+						}else if(obj2[i].code=="2"){
+							selectfuhao.id = "fuhaobieselect";
+							selectfuhao.add(new Option(">","1")); 
+							selectfuhao.add(new Option("<","2",true,true)); 
+							selectfuhao.add(new Option(">=","3")); 
+							selectfuhao.add(new Option("<=","4")); 
+						}else if(obj2[i].code=="3"){
+							selectfuhao.id = "fuhaobieselect";
+							selectfuhao.add(new Option(">","1")); 
+							selectfuhao.add(new Option("<","2")); 
+							selectfuhao.add(new Option(">=","3",true,true)); 
+							selectfuhao.add(new Option("<=","4")); 
+						}else{
+							selectfuhao.id = "fuhaobieselect";
+							selectfuhao.add(new Option(">","1")); 
+							selectfuhao.add(new Option("<","2")); 
+							selectfuhao.add(new Option(">=","3")); 
+							selectfuhao.add(new Option("<=","4",true,true)); 
+						}
+						var select = document.createElement("select");  
+						if(obj2[i+1].code=="1"){
 							select.id = "jibieselect";
 							select.add(new Option("初级","1",true,true)); 
 							select.add(new Option("中级","2")); 
 							select.add(new Option("高级","3")); 
-						}else if(obj2[i].code=="2"){
+						}else if(obj2[i+1].code=="2"){
 							select.id = "jibieselect";
 							select.add(new Option("中级","2",true,true)); 
 							select.add(new Option("初级","1")); 
@@ -165,8 +218,11 @@ function bindCard() {
 							select.add(new Option("初级","1")); 
 							select.add(new Option("中级","2")); 
 						}
+						sediv.append(spanfuhao);
+						sediv.append(selectfuhao);
 						sediv.append(select);
 						formConDiv7.append(sediv);
+						
 					}
 				}
 			}else if(obj2[0].type== 'muty'){
@@ -512,6 +568,7 @@ function bindCard() {
 					//先去重
 					//类别下拉框
 					//再改变code编码
+					debugger;
 					var arr1 = [];
 					var arr = [];
 					var mx_name = nameArg[0];
@@ -530,12 +587,18 @@ function bindCard() {
 						return false;
 					}
 					$(formConDiv7.find('select')).each(function(index,item){
-								
-								mx_name+="#select#";
-						arr1[index]=$(this).val();
-						jsons+='{"vari":"select","val":"'+$(this).find("option:selected").text()+'","type":"select","code":"'+$(this).val()+'"},';
+						var length = $(formConDiv7.find('select')).length;
+						if(index!=length-1){
+							mx_name+="#select#";
+							arr1[index]=$(this).val();
+							jsons+='{"vari":"select","val":"'+$(this).find("option:selected").text()+'","type":"select","code":"'+$(this).val()+'"},';
+						}else{
+							mx_name+=nameArg[nameArg.length-3];
+							mx_name+="#select#";
+							arr1[index]=$(this).val();
+							jsons+='{"vari":"select","val":"'+$(this).find("option:selected").text()+'","type":"select","code":"'+$(this).val()+'"},';
+						}
 					});
-					mx_name+=nameArg[nameArg.length-2];
 					mx_name+="#select#";
 					mx_name+=nameArg[nameArg.length-1];
 					jsons+='{"vari":"select","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"date"}]';
