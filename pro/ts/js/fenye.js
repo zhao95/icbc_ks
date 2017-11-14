@@ -125,7 +125,7 @@ var listPage = function () {
 			//创建新时间 判断 状态
 			var param1={};
 			param1["xmid"]=id;
-			var result1 = FireFly.doAct("TS_XMGL_BMGL","getBMState",param1);
+			var result1 = FireFly.doAct("TS_XMGL_BMGL","getSHState",param1);
 			var data1 = result1.list;
 			var pageEntity1 = JSON.parse(data1);
 			//报名开始时间

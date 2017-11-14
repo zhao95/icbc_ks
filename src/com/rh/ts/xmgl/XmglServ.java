@@ -643,7 +643,7 @@ public class XmglServ extends CommonServ {
 			String id = bean.getId();
 			ParamBean paramb = new ParamBean();
 			paramb.set("xmid", id);
-			OutBean out = ServMgr.act("TS_XMGL_BMGL", "getBMState", paramb);
+			OutBean out = ServMgr.act("TS_XMGL_BMGL", "getSHState", paramb);
 			String state = "";
 			List<Bean> list2 = out.getList("nojson");
 			if (list2.size() != 0) {
@@ -666,7 +666,7 @@ public class XmglServ extends CommonServ {
 					for (Bean codebean : finds3) {
 						if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
 							// 此流程内包含此审核人
-							if ("1".equals(zhuangtai) && "待报名".equals(state)) {
+							if ("1".equals(zhuangtai) && "进行中".equals(state)) {
 
 								SHlist.add(bean);
 							} else if ("2".equals(zhuangtai) && "已结束".equals(state)) {

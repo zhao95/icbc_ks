@@ -152,6 +152,75 @@ public class BmServ extends CommonServ {
 		}
 		return out;
 	}
-	
+	/**
+	 * 获取报名时间报名状态
+	 * @param paramBean
+	 * @return
+	 * @throws ParseException 
+	 */
+	public Bean getSHState(Bean paramBean) throws ParseException{
+		Bean outBean = new Bean();
+		String xmid = paramBean.getStr("xmid");
+		String where1 = "AND XM_ID="+"'"+xmid+"'";
+		List<Bean> listbean = ServDao.finds("TS_XMGL_BMSH",where1);
+		if(listbean.size()==0){
+			return new OutBean().set("list","");
+		}
+		Bean bmbean = listbean.get(0);
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
+		String startTime = bmbean.getStr("SH_START");
+		String endTime = bmbean.getStr("SH_END");
+		String state =bmbean.getStr("SH_STATE");
+		if(startTime!=""&&endTime!=""){
+			Date date1 = sdf.parse(startTime);
+			Date date2 = sdf.parse(endTime);
+			Date date = new Date();
+			if(date.getTime()<date2.getTime()&&date.getTime()>date1.getTime()){
+				if(state==""||state=="进行中"){
+					state = "待报名";
+				}
+			}else if(date.getTime()>date2.getTime()){
+				if(state==""||state=="审核结束"){
+					state="已结束";
+				}
+			}
+			}else{
+				if(state==""||state=="未开始"){
+					state="未开始";
+				}
+			}
+		
+		if(state=="进行中"){
+			state = "待报名";
+		}else if(state=="审核结束"){
+			state="已结束";
+		}else if(state==""){
+			state="未开始";
+		}
+		Bean newBean = new Bean();
+		newBean.set("STATE", state);
+		newBean.set("START_TIME",startTime);
+		newBean.set("END_TIME",endTime);
+		List<Bean> list = new ArrayList<Bean>();
+		list.add(newBean);
+		
+		  ObjectMapper mapper = new ObjectMapper();    
+	       StringWriter w = new StringWriter();  
+	       try {
+			mapper.writeValue(w, list);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		 catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	       outBean.set("list",w.toString());
+	       outBean.set("nojson", list);
+	       outBean.set("state", state);
+	       return outBean;
+		
+	}
 	
 }

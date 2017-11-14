@@ -26,6 +26,7 @@ for(var i=0;i<datalist.length;i++){
 }
 $("td").css("border","solid 1px #dddddd");
 $("#qjbach").click(function(){
+	$("#bach").val("1");
 	$("#bachformqj").submit();
 })
 </script>
@@ -44,6 +45,7 @@ $("#qjbach").click(function(){
 <input id="hidden" name ="hidden" />
 </form>
 <form id="bachformqj" target="_blank" style="display:none" method="post" action="/ts/jsp/bachsh.jsp">
+<input name = "bach" id="bach">
 </form>
 </div>
 </div>
