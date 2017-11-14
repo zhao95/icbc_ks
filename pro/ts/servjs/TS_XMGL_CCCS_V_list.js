@@ -26,8 +26,9 @@ if (scVal != "" && scVal != null) {
 							if (cjVal == "1") {
 								param["_WHERE_"] = "and xm_id = '"+ xmId + "' and KC_LEVEL = '一级' and KC_ODEPTCODE='"+ dataId + "'";
 								var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", param)._DATA_;
-								console.log("TS_XMGL_CCCS_UTIL_V 只有一个考场",kcArr);
+								
 								if (kcArr.length > 0) {
+									console.log("TS_XMGL_CCCS_UTIL_V 只有一个考场",kcArr);
 									var kcNum = kcArr.length;
 									$(item).find("td[icode='CC_KC_NUM']").html(kcNum);
 									var result = getResult(kcArr);
@@ -72,8 +73,9 @@ if (scVal != "" && scVal != null) {
 								var deptNameA = "<a href='javascript:void(0);' class='deptNameA' myType='1'>"+ deptName + "</>";
 								$(item).find("td[icode='DEPT_NAME']").html(deptNameA);
 								var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", param)._DATA_;
-								console.log("TS_XMGL_CCCS_UTIL_V 一级考场",kcArr);
+								
 								if(kcArr.length > 0){
+									console.log("TS_XMGL_CCCS_UTIL_V 一级考场",kcArr);
 									kcNumSum += kcArr.length;
 									var result = getResult(kcArr);
 									peopleNumSum += (result.CC_PEOPLE_NUM-0);
@@ -99,8 +101,8 @@ if (scVal != "" && scVal != null) {
 										var tempParam = {};
 										tempParam["_WHERE_"] = "and xm_id = '" + xmId+ "' and KC_LEVEL = '二级' and KC_ODEPTCODE='" + deptCode + "'";
 										var kcArrTemp = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", tempParam)._DATA_;
-										console.log("TS_XMGL_CCCS_UTIL_V 二级考场",kcArrTemp);
 										if(kcArrTemp.length > 0){
+											console.log("TS_XMGL_CCCS_UTIL_V 二级考场",kcArrTemp);
 											kcNumSum += kcArrTemp.length;
 											var result = getResult(kcArrTemp);
 											peopleNumSum += (result.CC_PEOPLE_NUM-0);
@@ -221,7 +223,6 @@ function getResult(kcArr){
 		jgSum = jgSum.replace(/,/g, "','");
 	}
 //	sjVal = sjVal.replace(/,/g, "','");
-//	console.log("sjVal",sjVal);
 	var poepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", {"_WHERE_":"and BM_KS_TIME in ("+sjVal+") and S_ODEPT in ('"+jgSum+"')"})._DATA_;
 //	var poepleNum = 100;
 	res["CC_PEOPLE_NUM"] = poepleNum;
