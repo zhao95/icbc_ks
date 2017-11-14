@@ -1,12 +1,16 @@
 var _viewer = this;
-
+var height = jQuery(window).height()-50;
+var width = jQuery(window).width()-100;
+//取消行点击事件
+$(".rhGrid").find("tr").unbind("dblclick");
 //每一行添加编辑和删除
 $("#TS_BM_GROUP_USER .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
 		
 		$(item).find("td[icode='BUTTONS']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_BM_GROUP_USER-delete" actcode="delete" rowpk="'+dataId+'"><span class="rh-icon-inner-notext">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+				'<a class="rhGrid-td-rowBtnObj rh-icon"  id="TS_BM_GROUP_USER_look" operCode="optLookBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_BM_GROUP_USER_delete" actcode="delete" rowpk="'+dataId+'"><span class="rh-icon-inner-notext">删除</span><span class="rh-icon-img btn-delete"></span></a>'
 				);
 		// 为每个按钮绑定卡片
 		bindCard();
@@ -16,11 +20,16 @@ $("#TS_BM_GROUP_USER .rhGrid").find("tr").each(function(index, item) {
 //绑定的事件     
 function bindCard() {
 	//当行删除事件
-	jQuery("td [id='TS_BM_GROUP_USER-delete']").unbind("click").bind("click", function() {
+	jQuery("td [id='TS_BM_GROUP_USER_delete']").unbind("click").bind("click", function() {
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
 	});
-	
+	 //查看
+	jQuery("td [id='TS_BM_GROUP_USER_look']").unbind("click").bind("click", function(){
+		var pkCode = jQuery(this).attr("rowpk");
+		//$(".hoverDiv").css('display','none');
+		openMyCard(pkCode,true);
+	 });
 /*	//当行编辑事件
 	jQuery("td [id='TS_BM_GROUP_USER-upd']").unbind("click").bind("click", function() {
 		var pkCode = jQuery(this).attr("rowpk");
@@ -28,6 +37,20 @@ function bindCard() {
 		var width = jQuery(window).width()-200;
 		rowEdit(pkCode,_viewer,[width,height],[100,100]);
 	});*/
+}
+
+//列表操作按钮 弹dialog
+function openMyCard(dataId,readOnly,showTab){debugger;
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[50,50]};
+    temp[UIConst.PK_KEY] = dataId;
+    if(readOnly != ""){
+    	temp["readOnly"] = readOnly;
+    }
+    if(showTab != ""){
+    	temp["showTab"] = showTab;
+    }
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
 }
 
 _viewer.getBtn("impUser").unbind("click").bind("click", function(event) {
