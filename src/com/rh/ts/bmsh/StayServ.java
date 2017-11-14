@@ -841,6 +841,7 @@ public class StayServ extends CommonServ {
 		if("".equals(dept_code)){
 			dept_code=user.getStr("ODEPT_CODE");
 		}
+		dept_code = dept_code.substring(0,9);
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		/*if("belong".equals(xianei)){
@@ -883,8 +884,11 @@ public class StayServ extends CommonServ {
 		}else{
 			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
 			for (Bean bean : finds) {
-				dept_code+=","+bean.getStr("DEPT_CODE");
+				if(!"".equals(bean.getStr("DEPT_CODE"))){
+					dept_code+=","+bean.getStr("DEPT_CODE");
+				}
 			}
+			dept_code=dept_code.substring(0,dept_code.length()-1);
 			deptwhere = "AND S_DEPT IN ("+dept_code+")";
 		}
 		//根据审核  机构 匹配当前机构下的所有人
@@ -959,6 +963,7 @@ public class StayServ extends CommonServ {
 				if("".equals(dept_code)){
 					dept_code=user.getStr("ODEPT_CODE");
 				}
+				dept_code = dept_code.substring(0,9);
 				List<Bean> list =  new ArrayList<Bean>();
 				List<Bean> list1 = new ArrayList<Bean>();
 				List<Bean> list2 = new ArrayList<Bean>();

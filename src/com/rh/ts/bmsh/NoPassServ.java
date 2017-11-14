@@ -665,6 +665,7 @@ public class NoPassServ extends CommonServ {
 		if("".equals(dept_code)){
 			dept_code=user.getStr("ODEPT_CODE");
 		}
+		dept_code = dept_code.substring(0,9);
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		/*if("belong".equals(xianei)){

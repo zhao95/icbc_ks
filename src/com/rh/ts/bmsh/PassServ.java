@@ -650,6 +650,7 @@ public class PassServ extends CommonServ {
 		if("".equals(dept_code)){
 			dept_code=user.getStr("ODEPT_CODE");
 		}
+		dept_code = dept_code.substring(0,9);
 		/*if("belong".equals(xianei)){*/
 		//根据项目id找到流程下的所有节点
 		/*List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);

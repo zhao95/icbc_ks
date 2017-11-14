@@ -208,7 +208,7 @@ public class OrgMgr {
         condition.append(" and CMPY_CODE ='");
         condition.append(cmpyId);
         if(!"".equals(deptBean.getCodePath())){
-        	condition.append("' and CODE_PATH like %'");
+        	condition.append("' and CODE_PATH like '%");
         	condition.append(deptBean.getCodePath());
         	condition.append("%'");
         }else{
