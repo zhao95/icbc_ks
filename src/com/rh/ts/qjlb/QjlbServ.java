@@ -5,6 +5,7 @@ import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.comm.ConfMgr;
+import com.rh.core.icbc.basedata.KSSendTipMessageServ;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
@@ -14,11 +15,7 @@ import com.rh.ts.util.TsConstant;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class QjlbServ extends CommonServ {
 
@@ -229,10 +226,25 @@ public class QjlbServ extends CommonServ {
                 qjbean.set("QJ_STATUS", qj_status);
                 ServDao.update(TSQJ_SERVID, qjbean);
 
-//            if ("2".equals(qj_status) || "3".equals(qj_status)) {
-//                //流程结束 发送消息
-//                new KSSendTipMessageServ().sendTipMessageBeanForICBC(qjbean, "qjResult");
-//            }
+                try {
+                    if ("2".equals(qj_status) || "3".equals(qj_status)) {
+                        //流程结束 发送消息
+                        //TS_QJ_RESULT_TIP 请假结果提醒语
+                        String qjResultMsg = ConfMgr.getConf("TS_QJ_RESULT_TIP", "您的请假申请，有了审批结果，可登录工商银行考试查看。");
+                        String qjTitle = qjbean.getStr("QJ_TITLE");
+                        String qjResult = (Objects.equals(qj_status, "2")) ? "通过" : "不通过";
+                        qjResultMsg = qjResultMsg
+                                .replaceAll("#QJ_TITLE#", qjTitle)
+                                .replaceAll("#QJ_RESULT#", qjResult);
+                        Bean qjResultTipBean = new Bean();
+                        qjResultTipBean.set("USER_CODE", qjbean.getStr("USER_CODE"));
+                        qjResultTipBean.set("tipMsg", qjResultMsg);
+                        new KSSendTipMessageServ().sendTipMessageBeanForICBC(qjResultTipBean, "qjResult");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("请假结果提醒失败，" + "QJ_ID:" + qjId + ",USER_CODE:" + qjbean.getStr("USER_CODE"));
+                }
 
                 if ("2".equals(qj_status)) {
                     //请假已通过 修改 TS_BMSH_PASS BM_STATUS字段信息

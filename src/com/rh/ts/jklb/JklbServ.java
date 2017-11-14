@@ -4,6 +4,8 @@ import com.icbc.ctp.utility.CollectionUtil;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
+import com.rh.core.comm.ConfMgr;
+import com.rh.core.icbc.basedata.KSSendTipMessageServ;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
@@ -13,10 +15,7 @@ import com.rh.ts.util.TsConstant;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 public class JklbServ extends CommonServ {
@@ -202,6 +201,26 @@ public class JklbServ extends CommonServ {
                 }
                 jkbean.set("JK_STATUS", jk_status);
                 ServDao.update(TSJK_SERVID, jkbean);
+
+                try {
+                    if ("2".equals(jk_status) || "3".equals(jk_status)) {
+                        //流程结束 发送消息
+                        //TS_JK_RESULT_TIP	借考结果提醒语
+                        String jkResultMsg = ConfMgr.getConf("TS_JK_RESULT_TIP", "您的借考申请，有了审批结果，可登录工商银行考试查看。");
+                        String jkTitle = jkbean.getStr("JK_TITLE");
+                        String jkResult = (Objects.equals(jk_status, "2")) ? "通过" : "不通过";
+                        jkResultMsg = jkResultMsg
+                                .replaceAll("#JK_TITLE#", jkTitle)
+                                .replaceAll("#JK_RESULT#", jkResult);
+                        Bean jkResultTipBean = new Bean();
+                        jkResultTipBean.set("USER_CODE", jkbean.getStr("USER_CODE"));
+                        jkResultTipBean.set("tipMsg", jkResultMsg);
+                        new KSSendTipMessageServ().sendTipMessageBeanForICBC(jkResultTipBean, "jkResult");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("借考结果提醒失败，" + "JK_ID:" + jkId + ",USER_CODE:" + jkbean.getStr("USER_CODE"));
+                }
 
                 if ("2".equals(jk_status)) {
                     //借考已通过 修改 TS_BMSH_PASS BM_STATUS字段信息

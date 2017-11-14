@@ -3,11 +3,14 @@ package com.rh.ts.xmgl;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
+import com.rh.core.comm.ConfMgr;
+import com.rh.core.icbc.basedata.KSSendTipMessageServ;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.serv.bean.PageBean;
 import com.rh.core.util.Constant;
+import com.rh.core.util.DateUtils;
 import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.TsConstant;
 import org.apache.commons.lang.StringUtils;
@@ -552,4 +555,87 @@ public class DapccServ extends CommonServ {
         return outBean;
     }
 
+    /**
+     * xngs 辖内公示
+     */
+    public OutBean xngs(ParamBean paramBean) {
+        String xmId = paramBean.getStr("XM_ID");
+        String kcIdStr = paramBean.getStr("KC_ID_STR");
+        String kcIdSql = "'" + kcIdStr.replaceAll(",", "','") + "'";
+        String sql = "update ts_xmgl_kcap_yapzw set PUBLICITY = '1 ' where XM_ID = ? and KC_ID in (" + kcIdSql + ")";
+        List<Object> values = new LinkedList<>();
+        values.add(xmId);
+        Transaction.getExecutor().execute(sql, values);
+
+        try {
+            //考场公示提醒
+            //TS_KCGS_START_TIP	考场公示提示语
+            Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+            String xmName = xmBean.getStr("XM_NAME");
+            String whereSql = "and XM_ID = '" + xmId + "' and KC_ID in (" + kcIdSql + ")";
+            List<Bean> beanList = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, whereSql);
+
+            String zkzStartTipMsg = ConfMgr.getConf("TS_KCGS_START_TIP", "您报名的考试开始公示考场，请登录工商银行考试系统查看详情。");
+            zkzStartTipMsg = zkzStartTipMsg.replaceAll("#XM_NAME#", xmName);
+            List<Bean> kczwShowTipList = new LinkedList<>();
+            for (Bean bean : beanList) {
+                String userCode = bean.getStr("U_CODE");
+                Bean kczwShowTip = new Bean();
+                kczwShowTip.set("USER_CODE", userCode);
+                kczwShowTip.set("tipMsg", zkzStartTipMsg);
+                kczwShowTipList.add(kczwShowTip);
+            }
+            new KSSendTipMessageServ().sendTipMessageListForICBC(kczwShowTipList, "kczwShow");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("考场公示提醒失败，" + "XM_ID:" + xmId + ",USER_CODE:" + Context.getUserBean().getName());
+        }
+        return new OutBean().setOk();
+    }
+
+    /**
+     * 场次发布
+     *
+     * @param paramBean XM_ID
+     * @return outBean
+     */
+    public OutBean publish(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String xmId = paramBean.getStr("XM_ID");
+        if (StringUtils.isNotBlank(xmId)) {
+            Bean updateXmBean = new Bean();
+            updateXmBean.setId(xmId);
+            updateXmBean.set("XM_ID", xmId);
+            updateXmBean.set("XM_KCAP_PUBLISH_USER_CODE", Context.getUserBean().getCode());
+            updateXmBean.set("XM_KCAP_PUBLISH_TIME", DateUtils.getDatetime());
+            ServDao.update(TsConstant.SERV_XMGL, updateXmBean);
+
+            try {
+                //准考证开始打印提醒
+                //TS_ZKZ_START_TIP 准考证开始打印提示语
+                Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+                String xmName = xmBean.getStr("XM_NAME");
+                String zkzStartTipMsg = ConfMgr.getConf("TS_ZKZ_START_TIP", "您所报名的考试，已可以打印准考证，祝考试顺利！");
+                zkzStartTipMsg = zkzStartTipMsg.replaceAll("#XM_NAME#", xmName);
+
+                List<Bean> zkzStarTipBeanList = new LinkedList<>();
+                List<Bean> beanList = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and XM_ID = '" + xmId + "'");
+                for (Bean bean : beanList) {
+                    String userCode = bean.getStr("U_CODE");
+                    Bean zkzStarTipBean = new Bean();
+                    zkzStarTipBean.set("USER_CODE", userCode);
+                    zkzStarTipBean.set("tipMsg", zkzStartTipMsg);
+                    zkzStarTipBeanList.add(zkzStarTipBean);
+                }
+                new KSSendTipMessageServ().sendTipMessageListForICBC(zkzStarTipBeanList, "zkzStar");
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("准考证开始打印提醒失败，" + "XM_ID:" + xmId);
+            }
+//            outBean.setOk();
+        } else {
+            outBean.setError();
+        }
+        return outBean;
+    }
 }
