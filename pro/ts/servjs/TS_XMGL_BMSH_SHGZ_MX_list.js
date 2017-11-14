@@ -100,7 +100,7 @@ function bindCard() {
 				//类别下拉框
 				//获取级别和级别code
 				for(var i=0;i<nameArg.length;i++) {
-					var sediv = $('<div></div>');
+					var sediv = $('<div style="padding-top:20px"></div>');
 					if(i<(nameArg.length-5)){
 						if(i==0){
 							var span = document.createElement("span");
@@ -679,7 +679,7 @@ function bindCard() {
 								select.add(new Option("中级","2")); 
 							}
 							sediv.append(select);
-						
+							sediv.css("padding-top","10px")
 							formConDiv7.append(sediv);
 						}
 					}else{
