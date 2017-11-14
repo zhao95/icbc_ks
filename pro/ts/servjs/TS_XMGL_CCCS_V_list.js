@@ -220,8 +220,9 @@ function getResult(kcArr){
 		jgSum = jgSum.substring(1);
 		jgSum = jgSum.replace(/,/g, "','");
 	}
-	sjVal = sjVal.replace(/,/g, "','");
-	var poepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", {"_WHERE_":"and BM_KS_TIME in ('"+sjVal+"') and S_ODEPT in ('"+jgSum+"')"})._DATA_;
+//	sjVal = sjVal.replace(/,/g, "','");
+//	console.log("sjVal",sjVal);
+	var poepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", {"_WHERE_":"and BM_KS_TIME in ("+sjVal+") and S_ODEPT in ('"+jgSum+"')"})._DATA_;
 //	var poepleNum = 100;
 	res["CC_PEOPLE_NUM"] = poepleNum;
 	res["CC_COMPUTER_GOODNUM"] = goodSumNum;
