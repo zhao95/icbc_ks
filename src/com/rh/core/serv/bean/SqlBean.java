@@ -171,23 +171,23 @@ public class SqlBean extends Bean {
     }
     
     /**
-     * 增加大于过滤项
-     * @param field 字段
-     * @param value 值
-     * @return 当前对象
-     */
-    public SqlBean andLTE(String field, Object value) {
-        return and(field, ">", value);
-    }
-
-    /**
      * 增加小于等于过滤项
      * @param field 字段
      * @param value 值
      * @return 当前对象
      */
-    public SqlBean andGT(String field, Object value) {
+    public SqlBean andLTE(String field, Object value) {
         return and(field, "<=", value);
+    }
+
+    /**
+     * 增加大于过滤项
+     * @param field 字段
+     * @param value 值
+     * @return 当前对象
+     */
+    public SqlBean andGT(String field, Object value) {
+        return and(field, ">", value);
     }
     
     /**

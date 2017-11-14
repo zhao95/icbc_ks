@@ -40,7 +40,8 @@ public class BeforeHighCertDue implements IRule {
 			
 			String fuhao =obj.getJSONObject(0).getString("code");
 			if(fuhao.equals("1")){
-				sql.andLTE("END_DATE", endDate);// 终止有效期 >= endDate
+				sql.andGT("END_DATE", endDate);// 终止有效期 >= endDate
+				
 			}else if(fuhao.equals("2")){
 				//小于
 				sql.andLT("END_DATE", endDate);// 终止有效期 >= endDate
@@ -49,7 +50,7 @@ public class BeforeHighCertDue implements IRule {
 				sql.andGTE("END_DATE", endDate);// 终止有效期 >= endDate
 			}else if(fuhao.equals("4")){
 				//小于等于
-				sql.andGT("END_DATE", endDate);// 终止有效期 >= endDate
+				sql.andLTE("END_DATE", endDate);// 终止有效期 >= endDate
 			}
 			
 			
@@ -58,7 +59,8 @@ public class BeforeHighCertDue implements IRule {
 			String fuhao2 = obj.getJSONObject(2).getString("code");
 			String dengjicode = obj.getJSONObject(obj.length()-1).getString("code"); // 
 			if(fuhao2.equals("1")){
-				sql.andLTE("CERT_GRADE_CODE", dengjicode);// 证书等级编号
+				
+				sql.andGT("CERT_GRADE_CODE", dengjicode);
 			}else if(fuhao2.equals("2")){
 				//小于
 				sql.andLT("CERT_GRADE_CODE", dengjicode);
@@ -67,7 +69,7 @@ public class BeforeHighCertDue implements IRule {
 				sql.andGTE("CERT_GRADE_CODE", dengjicode);
 			}else if(fuhao2.equals("4")){
 				//小于等于
-				sql.andGT("CERT_GRADE_CODE", dengjicode);
+				sql.andLTE("CERT_GRADE_CODE", dengjicode);// 证书等级编号
 			}else{
 				sql.and("CERT_GRADE_CODE", dengjicode);//等于
 			}

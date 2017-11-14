@@ -49,7 +49,8 @@ public class BaseCert2YearDgYxXd implements IRule {
 			//有效期 判断符号
 			String datefuhaocode = obj.getJSONObject(obj.length()-2).getString("code");
 			if(datefuhaocode.equals("1")){
-				sql.andLTE("END_DATE", endDate);// 终止有效期 >= endDate
+				
+				sql.andGT("END_DATE", endDate);// 终止有效期 >= endDate
 			}else if(datefuhaocode.equals("2")){
 				//小于
 				sql.andLT("END_DATE", endDate);// 终止有效期 >= endDate
@@ -58,14 +59,15 @@ public class BaseCert2YearDgYxXd implements IRule {
 				sql.andGTE("END_DATE", endDate);// 终止有效期 >= endDate
 			}else if(datefuhaocode.equals("4")){
 				//小于等于
-				sql.andGT("END_DATE", endDate);// 终止有效期 >= endDate
+				sql.andLTE("END_DATE", endDate);// 终止有效期 >= endDate
 			}
 			
 			String level =  obj.getJSONObject(obj.length()-3).getString("code");
 			//证书等级判断符号
 			String levelcode = obj.getJSONObject(obj.length()-4).getString("code");
 			if(levelcode.equals("1")){
-				sql.andLTE("CERT_GRADE_CODE", level);
+				sql.andGT("CERT_GRADE_CODE", level);
+				
 			}else if(levelcode.equals("2")){
 				//小于
 				sql.andLT("CERT_GRADE_CODE", level);
@@ -74,7 +76,7 @@ public class BaseCert2YearDgYxXd implements IRule {
 				sql.andGTE("CERT_GRADE_CODE", level);
 			}else if(levelcode.equals("4")){
 				//小于等于
-				sql.andGT("CERT_GRADE_CODE", level);
+				sql.andLTE("CERT_GRADE_CODE", level);
 			}else{
 				sql.and("CERT_GRADE_CODE", level);  //等于
 			}
