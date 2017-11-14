@@ -75,6 +75,8 @@ public class HighValidCertYxKf implements IRule {
 			}else if(fuhao2.equals("4")){
 				//小于等于
 				sql.andGT("CERT_GRADE_CODE", dengjicode);
+			}else{
+				sql.and("CERT_GRADE_CODE", dengjicode);//等于
 			}
 
 			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)

@@ -31,7 +31,7 @@ public class BaseCert2YearDgYxXd implements IRule {
 
 			obj = new JSONArray(jsonStr);
 			String codes = "";
-			for(int i=0;i<obj.length()-2;i++){
+			for(int i=0;i<obj.length()-4;i++){
 				if(i==0){
 					codes+=obj.getJSONObject(i).getString("code");
 				}else{
@@ -46,10 +46,39 @@ public class BaseCert2YearDgYxXd implements IRule {
 			}
 
 			String endDate = obj.getJSONObject(obj.length()-1).getString("val");
-			String level =  obj.getJSONObject(obj.length()-2).getString("code");
+			//有效期 判断符号
+			String datefuhaocode = obj.getJSONObject(obj.length()-2).getString("code");
+			if(datefuhaocode.equals("1")){
+				sql.andLTE("END_DATE", endDate);// 终止有效期 >= endDate
+			}else if(datefuhaocode.equals("2")){
+				//小于
+				sql.andLT("END_DATE", endDate);// 终止有效期 >= endDate
+			}else if(datefuhaocode.equals("3")){
+				//大于等于
+				sql.andGTE("END_DATE", endDate);// 终止有效期 >= endDate
+			}else if(datefuhaocode.equals("4")){
+				//小于等于
+				sql.andGT("END_DATE", endDate);// 终止有效期 >= endDate
+			}
+			
+			String level =  obj.getJSONObject(obj.length()-3).getString("code");
+			//证书等级判断符号
+			String levelcode = obj.getJSONObject(obj.length()-4).getString("code");
+			if(levelcode.equals("1")){
+				sql.andLTE("CERT_GRADE_CODE", level);
+			}else if(levelcode.equals("2")){
+				//小于
+				sql.andLT("CERT_GRADE_CODE", level);
+			}else if(levelcode.equals("3")){
+				//大于等于
+				sql.andGTE("CERT_GRADE_CODE", level);
+			}else if(levelcode.equals("4")){
+				//小于等于
+				sql.andGT("CERT_GRADE_CODE", level);
+			}else{
+				sql.and("CERT_GRADE_CODE", level);  //等于
+			}
 			sql.and("STU_PERSON_ID", user);// 人员编码
-
-			sql.andGTE("END_DATE", endDate);// 起始有效日期 >= dateTime
 
 			sql.andGTE("CERT_GRADE_CODE", level);// 证书等级编号
 
