@@ -147,11 +147,9 @@ public class RzgjServ extends CommonServ {
             queryBean.set(Constant.PARAM_WHERE, "and STATION_NO='" + STATION_NO_CODE + "' and CERT_GRADE_CODE between '1' and '" + POSTION_QUALIFICATION + "'");
             after = ServDao.count("TS_ETI_CERT_QUAL_V", queryBean);
 
-            queryBean = new Bean();
             queryBean.set(Constant.PARAM_WHERE, "and STATION_NO='" + STATION_NO_CODE + "' and CERT_GRADE_CODE between '" + POSTION_QUALIFICATION + "' and '4'");
             pre = ServDao.count("TS_ETI_CERT_QUAL_V", queryBean);
 
-            queryBean = new Bean();
             queryBean.set(Constant.PARAM_WHERE, "and STATION_NO='" + STATION_NO_CODE + "' and CERT_GRADE_CODE = '" + POSTION_QUALIFICATION + "'");
             other = num - pre - after;
         }
@@ -184,7 +182,7 @@ public class RzgjServ extends CommonServ {
         String[] classs = {"", "初级", "中级", "高级", "专家级"};
         int i = 0;
         try {
-            i = Integer.valueOf(type);
+            i = Integer.parseInt(type);
         } catch (Exception ignored) {
         }
         if (i >= classs.length || i < 0) {

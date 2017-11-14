@@ -225,6 +225,15 @@ ListPage.prototype.bldPage = function () {
 
 
 function initData(xmId) {
+    $("#topContent").resizable({
+        animate: false,
+        autoHide: false,
+        delay: 20,
+        handles: 's',
+        maxHeight: 700,
+        minHeight: 290,
+        alsoResize: '#ksOrgTreeContent,#ksContent'
+    });
     HeaderBtn.initData(xmId);
     ZdfpccModal.initData(xmId);
     SubmissionArrangementModal.initData(xmId);
@@ -381,16 +390,16 @@ var HeaderBtn = {
 
         //发布确定按钮事件
         $("#publishModal").find('button[class="btn btn-success"]').bind('click', function () {
-            var xmBean = {
-                XM_ID: xmId,
-                _PK_: xmId,
-                XM_KCAP_PUBLISH_USER_CODE: System.getUser("USER_CODE"),
-                XM_KCAP_PUBLISH_TIME: rhDate.getTime()
-            };
-            /*= FireFly.doAct("TS_XMGL", "byid", {"_PK_": xmId}, false);*/
-            // xmBean.XM_KCAP_PUBLISH_USER_CODE = System.getUser("USER_CODE");
-            // xmBean.XM_KCAP_PUBLISH_TIME = rhDate.getTime();
-            FireFly.doAct("TS_XMGL", "save", xmBean, false, false, function () {
+            // var xmBean = {
+            //     XM_ID: xmId,
+            //     _PK_: xmId,
+            //     XM_KCAP_PUBLISH_USER_CODE: System.getUser("USER_CODE"),
+            //     XM_KCAP_PUBLISH_TIME: rhDate.getTime()
+            // };
+            // FireFly.doAct("TS_XMGL", "save", xmBean, false, false, function () {
+            //     alert("发布成功！");
+            // });
+            FireFly.doAct("TS_XMGL_KCAP_DAPCC", "publish", {XM_ID: xmId}, false, false, function () {
                 alert("发布成功！");
             });
             Utils.getCanDraggable(true);
@@ -440,6 +449,21 @@ var HeaderBtn = {
                 $mainSidebar.animate({width: "16px"}, speed, function () {
                     $i.removeClass("fa-angle-left");
                     $i.addClass("fa-angle-right");
+                });
+            }
+        });
+
+        $("#xngsModal").find('button[class="btn btn-success"]').bind('click', function () {
+            if (KcObject.kcArr !== null && KcObject.kcArr !== undefined) {
+                //考场不为空
+                var kcStr = '';
+                for (var i = 0; i < KcObject.kcArr.length; i++) {
+                    var kc = KcObject.kcArr[i];
+                    kcStr += kc.KC_ID + ',';
+                }
+                FireFly.doAct("TS_XMGL_KCAP_DAPCC", "xngs", {
+                    XM_ID: xmId,
+                    KC_ID_STR: kcStr.substring(0, kcStr.length - 1)
                 });
             }
         });

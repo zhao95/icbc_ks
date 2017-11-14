@@ -197,30 +197,30 @@
                     state = '可打印';
                 }
                 if (state === '可打印') {
-                    var lookBtn = jQuery(
-                        '<input xm_id="' + item.XM_ID + '" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px;" value="查看"/>'
-                    );
+//                    var lookBtn = jQuery(
+//                        '<input xm_id="' + item.XM_ID + '" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px;" value="查看"/>'
+//                    );
                     var downBtn = jQuery(
                         '<input xm_id="' + item.XM_ID + '" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px;margin-left:10px;" value="下载"/>'
                     );
-                    lookBtn.bind('click', function () {
-//                    alert('查看');
-                        var xmId = $(this).attr("xm_id");
-                        var userCode = System.getUser("USER_CODE");
-
-                        FireFly.doAct('TS_XMGL_ADMISSION_FILE',
-                            'getAdmissionFile',
-                            {XM_ID: xmId, USER_CODE: userCode},
-                            true, false, function (response) {
-//                            debugger;
-                                if (response._MSG_.indexOf('ERROR,') >= 0) {
-                                    //生成pdf出错
-//                                alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,'), response._MSG_.length));
-                                } else {
-                                    doPost("admission-view.jsp", {XM_ID: xmId, USER_CODE: userCode});
-                                }
-                            });
-                    });
+//                    lookBtn.bind('click', function () {
+////                    alert('查看');
+//                        var xmId = $(this).attr("xm_id");
+//                        var userCode = System.getUser("USER_CODE");
+//
+//                        FireFly.doAct('TS_XMGL_ADMISSION_FILE',
+//                            'getAdmissionFile',
+//                            {XM_ID: xmId, USER_CODE: userCode},
+//                            true, false, function (response) {
+////                            debugger;
+//                                if (response._MSG_.indexOf('ERROR,') >= 0) {
+//                                    //生成pdf出错
+////                                alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,'), response._MSG_.length));
+//                                } else {
+//                                    doPost("admission-view.jsp", {XM_ID: xmId, USER_CODE: userCode});
+//                                }
+//                            });
+//                    });
                     downBtn.bind('click', function () {
 //                    alert('下载');
                         var xmId = $(this).attr("xm_id");
@@ -238,7 +238,7 @@
                                 }
                             });
                     });
-                    operDiv.append(lookBtn);
+//                    operDiv.append(lookBtn);
                     operDiv.append(downBtn);
                 }
 

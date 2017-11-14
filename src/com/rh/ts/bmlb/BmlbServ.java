@@ -694,7 +694,6 @@ public class BmlbServ extends CommonServ {
 			e.printStackTrace();
 		}
 
-		outBean.set("list", w.toString());
 		_PAGE_.set("ALLNUM", list.size());
 		_PAGE_.set("NOWPAGE", NOWPAGE);
 		_PAGE_.set("PAGES", yeshu);
@@ -1134,7 +1133,7 @@ public class BmlbServ extends CommonServ {
 			String bmid = bean.getStr("BM_ID");
 			Bean find = ServDao.find("TS_QJLB_QJ", bmid);
 			if(find!=null){
-				if(find.getStr("QJ_STATUS").equals('2')){
+				if(find.getStr("QJ_STATUS").equals("2")){
 					highlist.remove(bean);
 				}
 			}

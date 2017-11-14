@@ -227,7 +227,7 @@
         </section>
 
         <section class="content" style="padding:0;background-color: transparent;">
-            <div class="row-fluid1" style="border-top: 1px solid #bfdfee;">
+            <div id="topContent" class="row" style="border-top: 1px solid #bfdfee;margin:0;">
 
                 <div class="col-sm-3"
                      style="padding-left: 0;padding-right: 0;height: 100%;border-right: 1px solid #bfdfee;">
@@ -238,14 +238,15 @@
                             </div>
                         </div>
                         <div id="ksOrgTree" class="col-sm-12">
-                            <div class="_scrollbar content-navTree" style="height: 240px;border: none;margin:0"></div>
+                            <div id="ksOrgTreeContent" class="_scrollbar content-navTree"
+                                 style="height: 255px;border: none;margin:0"></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-sm-9 "
-                     style="padding-left:3px;padding-right:0;height:270px;">
-                    <div class="_scrollbar" style="overflow: auto;height:215px;">
+                     style="padding-left:3px;padding-right:0;">
+                    <div id="ksContent" class="_scrollbar" style="overflow: auto;height:215px;">
                         <table id="ksTable" class="table table-hover table-bordered"
                                border="1"><%-- dshtablea JPadding--%>
                             <thead id="tem" class="">
@@ -291,6 +292,11 @@
                     </div>
                 </div>
             </div>
+            <%--<div class="row" id="dragDiv">
+                <div class="col-sm-12" id="rDown"
+                     style="height: 2px;background-color: black; cursor: n-resize;z-index: 999;">
+                </div>
+            </div>--%>
             <div class="row">
                 <div id="kcTip" class="col-sm-12"
                      style="background-color: #ecedef; padding: 5px 39px 5px 5px;border-top: 1px solid #bfdfee;border-bottom: 1px solid #bfdfee;margin: 0 15px;">
@@ -599,6 +605,10 @@
                         data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
                     确定
                 </button>
+                <%--<button type="button" class="btn btn-default" onclick="ZdfpccModal.doArrangeSeat()"
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
+                </button>--%>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -613,16 +623,20 @@
                     &times;
                 </button>
                 <h5 class="modal-title">
-                    辖内公示
+                    辖内公示确定
                 </h5>
             </div>
             <div class="modal-body" style="padding: 24px;">
-                辖内公示
+                是否辖内公示座位信息？
             </div>
             <div class="modal-footer" style="text-align: center;">
                 <button type="button" class="btn btn-success" onclick=""
                         data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
                     确定
+                </button>
+                <button type="button" class="btn btn-default" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
                 </button>
             </div>
         </div><!-- /.modal-content -->
