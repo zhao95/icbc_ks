@@ -110,15 +110,35 @@ function bindCard() {
 							var param={};
 							var result = FireFly.doAct("TS_BMLB_BM","getkslbk",param);
 							var pageEntity = result.LBS;
+							var codestr="";
+							for(var j=0;j<(obj2.length-4);j++){
+								if(j==(obj2.length-5)){
+									codestr+=obj2[j].code;
+								}else{
+									
+									codestr+=obj2[j].code+",";
+								}
+							}
+							var split = codestr.split(",");
 							for(var k=0;k<pageEntity.length;k++){
 								var id = pageEntity[k].KSLBK_ID;
 								var name = pageEntity[k].KSLBK_NAME;
 								if(k==0){
-									var checkboxs = $('<span position="absolute">&nbsp;<input style="position:relative;top:5px" type="checkbox" id='+id+' name='+name+'>'+name+'&nbsp;</span>');
-									formConDiv7.append(checkboxs);
+									if(split.indexOf(id)!=-1){
+										var checkboxs = $('<span position="absolute">&nbsp;<input checked style="position:relative;top:5px" type="checkbox" id='+id+' name='+name+'>'+name+'&nbsp;</span>');
+										formConDiv7.append(checkboxs);
+									}else{
+										var checkboxs = $('<span position="absolute">&nbsp;<input style="position:relative;top:5px" type="checkbox" id='+id+' name='+name+'>'+name+'&nbsp;</span>');
+										formConDiv7.append(checkboxs);
+									}
 								}else{
-									var checkboxs = $('<span position="absolute"><input style="position:relative;top:5px" type="checkbox" id='+id+' name='+name+'>'+name+'&nbsp;</span>');
-									formConDiv7.append(checkboxs);
+									if(split.indexOf(id)!=-1){
+										var checkboxs = $('<span position="absolute"><input checked style="position:relative;top:5px" type="checkbox" id='+id+' name='+name+'>'+name+'&nbsp;</span>');
+										formConDiv7.append(checkboxs);
+									}else{
+										var checkboxs = $('<span position="absolute"><input style="position:relative;top:5px" type="checkbox" id='+id+' name='+name+'>'+name+'&nbsp;</span>');
+										formConDiv7.append(checkboxs);
+									}
 								}
 								
 							
