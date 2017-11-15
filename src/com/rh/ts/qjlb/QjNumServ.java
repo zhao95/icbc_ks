@@ -62,7 +62,7 @@ public class QjNumServ extends CommonServ {
 						List<Bean> kslist = ServDao.finds("ts_xmgl_kcap_yapzw","AND SH_ID='"+shpassbean.getId()+"'");
 						if(kslist!=null&&kslist.size()!=0){
 							if(!"".equals(kslist.get(0).getStr("SJ_DATE"))){
-								ks_time = kslist.get(0).getStr("SJ_DATE").split("(")[0];
+								ks_time = kslist.get(0).getStr("SJ_DATE").split("\\(")[0];
 							}else{
 								return new OutBean().setError("请假失败,考试时间为空");
 							}
@@ -162,7 +162,7 @@ public class QjNumServ extends CommonServ {
 									List<Bean> kslist = ServDao.finds("ts_xmgl_kcap_yapzw","AND SH_ID='"+shpassbean.getId()+"'");
 									if(kslist!=null&&kslist.size()!=0){
 										if(!"".equals(kslist.get(0).getStr("SJ_DATE"))){
-											ks_time = kslist.get(0).getStr("SJ_DATE").split("(")[0];
+											ks_time = kslist.get(0).getStr("SJ_DATE").split("\\(")[0];
 										}else{
 											return new OutBean().setError("请假失败,考试时间为空");
 										}
@@ -222,7 +222,7 @@ public class QjNumServ extends CommonServ {
 							List<Bean> kslist = ServDao.finds("ts_xmgl_kcap_yapzw","AND SH_ID='"+shpassbean.getId()+"'");
 							if(kslist!=null&&kslist.size()!=0){
 								if(!"".equals(kslist.get(0).getStr("SJ_DATE"))){
-									ks_time = kslist.get(0).getStr("SJ_DATE").split("(")[0];
+									ks_time = kslist.get(0).getStr("SJ_DATE").split("\\(")[0];
 								}else{
 									return new OutBean().setError("请假失败,考试时间为空");
 								}
