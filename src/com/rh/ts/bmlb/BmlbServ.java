@@ -1212,11 +1212,21 @@ public class BmlbServ extends CommonServ {
 	}
 	//获取已报名的此项目的考试
 	public OutBean getBmData(Bean paramBean){
+		OutBean out = new OutBean();
 		String xmid = paramBean.getStr("xmid");
 		String user_code = paramBean.getStr("user_code");
 		String highwhere = " AND XM_ID='"+xmid+"' AND BM_CODE="+"'"+user_code+"' AND BM_STATE='1'";
+		List<Bean> finds2 = ServDao.finds("TS_XMGL_BMSH", "and xm_id='"+xmid+"'");
 		List<Bean> finds = ServDao.finds("TS_BMLB_BM",highwhere);
-		return new OutBean().set("list", finds);
+		
+		if(finds2!=null&&finds2.size()!=0){
+			String zd = finds2.get(0).getStr("SH_ZDSH");
+			if(!"1".equals(zd)){
+				//不进行自动验证
+				out.set("zd","false");
+			}
+		}
+		return out.set("list", finds);
 	}
 	//获取所有的几点
 	public OutBean getKSLBK_IDs(Bean paramBean){
@@ -1490,7 +1500,6 @@ public class BmlbServ extends CommonServ {
 		 * @param paramBean
 		 * @return
 		 */
-			String xianei = paramBean.getStr("xianei");
 			//当前审核人
 			String servid = paramBean.getStr("servId");
 			UserBean user = Context.getUserBean();
@@ -1502,10 +1511,7 @@ public class BmlbServ extends CommonServ {
 				dept_code=user.getStr("ODEPT_CODE");
 			}
 			dept_code = dept_code.substring(0,10);
-			String user_code = user.getCode();
-			String belongdeptcode = "";
 			String xmid = paramBean.getStr("xmid");
-			String compycode = user.getCmpyCode();
 			String deptwhere = "";
 			/*if("belong".equals(xianei)){
 				//根据项目id找到流程下的所有节点
@@ -1616,4 +1622,20 @@ public class BmlbServ extends CommonServ {
 		}
 		return new OutBean().set("look", "true");
 	}
+	/**
+	 * 数据是否在代办中 代办 不可撤销
+	 */
+	public OutBean sureDelete(Bean paramBean){
+		String bmid = paramBean.getStr("bmid");
+		List<Bean> finds = ServDao.finds("TS_COMM_TODO", "and DATA_ID='"+bmid+"'");
+		List<Bean> finds1 = ServDao.finds("TS_COMM_TODO_DONE", "and DATA_ID='"+bmid+"'");
+		if(finds!=null&&finds.size()!=0){
+			return new OutBean().set("flag", "false");
+		}
+		if(finds1!=null&&finds1.size()!=0){
+			return new OutBean().set("flag", "false");
+		}
+		return new OutBean().set("flag", "true");
+	}
+	
 	}

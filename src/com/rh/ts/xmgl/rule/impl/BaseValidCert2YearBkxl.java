@@ -41,7 +41,7 @@ public class BaseValidCert2YearBkxl implements IRule {
 			
 			obj = new JSONArray(jsonStr);
 			
-			JSONObject jsonObject = obj.getJSONObject(obj.length()-2);
+			JSONObject jsonObject = obj.getJSONObject(obj.length()-1);
 
 			Calendar c = Calendar.getInstance();
 
@@ -51,7 +51,7 @@ public class BaseValidCert2YearBkxl implements IRule {
 				val = 2;
 			}
 			int valfu = -val;
-			String endtime = obj.getJSONObject(obj.length()-1).getString("val");
+			String endtime = obj.getJSONObject(obj.length()-2).getString("val");
 			
 			String level =obj.getJSONObject(0).getString("code");
 			

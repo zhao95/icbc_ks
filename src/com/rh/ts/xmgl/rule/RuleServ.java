@@ -346,7 +346,7 @@ public class RuleServ extends CommonServ {
 		String jsonStr = bean.getStr("MX_VALUE2");
 		String type = bean.getStr("MX_VALUE1");
 
-		if (type.equals("1")) {
+		if (type.equals("1")&&!"".equals(jsonStr)) {
 			try {
 				JSONArray jsonarray = new JSONArray(jsonStr); 
 				 // 过时方法
