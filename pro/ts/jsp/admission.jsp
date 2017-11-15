@@ -189,7 +189,7 @@
                 var item = listData._DATA_[i];
                 var state = '';
                 var operDiv = jQuery('<div></div>');
-                if (new Date().getTime() > Date.parse(item.XM_END)) {
+                if (new Date().getTime() > Date.parse(item.XM_END.replace('-','/'))) {
                     state = '已结束';
                 } else if (item.XM_KCAP_PUBLISH_TIME === '' || item.XM_KCAP_PUBLISH_TIME === null || item.XM_KCAP_PUBLISH_TIME === undefined) {
                     state = '未发布';

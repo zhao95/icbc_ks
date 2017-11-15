@@ -62,6 +62,21 @@ public class DapccServ extends CommonServ {
         String searchDeptCode = paramBean.getStr("searchDeptCode");
         String searchKcId = paramBean.getStr("searchKcId");
         String searchSjId = paramBean.getStr("searchSjId");
+        String searchJkCodePath = "";
+        if ("jk".equals(searchDeptCode)) {
+            searchDeptCode = "";
+            String sql = "SELECT b.CODE_PATH FROM TS_KCGL a " +
+                    "LEFT JOIN sy_org_dept b ON b.DEPT_CODE = a.KC_ODEPTCODE WHERE KC_ID = ?";
+            List<Object> values = new LinkedList<>();
+            values.add(searchKcId);
+            List<Bean> beanList = Transaction.getExecutor().query(sql, values);
+            //substring(b.CODE_PATH , 12, 10) 获取
+            if (beanList != null && beanList.size() > 0) {
+                Bean bean = beanList.get(0);
+                searchJkCodePath = bean.getStr("CODE_PATH");
+            }
+        }
+        paramBean.set("searchJkCodePath", searchJkCodePath);
 
         long l;//选中的考场时长
         try {
@@ -84,18 +99,21 @@ public class DapccServ extends CommonServ {
 //            paramBean.set("equalDeptCode", searchDeptCode);
 //        }
 //
-        Bean dept = this.getDeptByCode(searchDeptCode, null);
-        String deptLevel = dept.getStr("DEPT_LEVEL");
-        if ("3".equals(deptLevel) || "2".equals(deptLevel) || "1".equals(deptLevel)) {
-            paramBean.set("containDeptCode", searchDeptCode);
-        } else {
-            paramBean.set("equalDeptCode", searchDeptCode);
+
+        if(StringUtils.isNotBlank(searchDeptCode)){
+            Bean dept = this.getDeptByCode(searchDeptCode, null);
+            String deptLevel = dept.getStr("DEPT_LEVEL");
+            if ("3".equals(deptLevel) || "2".equals(deptLevel) || "1".equals(deptLevel)) {
+                paramBean.set("containDeptCode", searchDeptCode);
+            } else {
+                paramBean.set("equalDeptCode", searchDeptCode);
+            }
         }
 
         //拼凑whereSql配置
         Map<String, String> configMap = new HashMap<>();
         configMap.put("XM_ID", "XM_ID = ?");
-        configMap.put("containDeptCode", "CODE_PATH like ?");
+        configMap.put("containDeptCode", "c.CODE_PATH like ?");
 //        configMap.put("containDeptCode", "CODE_PATH like ?");
         configMap.put("equalDeptCode", "b.DEPT_CODE = ?");
         configMap.put("searchName", "USER_NAME like ?");
@@ -103,6 +121,8 @@ public class DapccServ extends CommonServ {
         configMap.put("searchBmXl", "BM_XL like ?");
         configMap.put("searchBmMk", "BM_MK like ?");
         configMap.put("searchBmJb", "BM_TYPE = ?");
+        configMap.put("searchJkCodePath", " a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
+                " and ? like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%')");
 //        configMap.put("searchKsTime", "CAST(BM_KS_TIME as SIGNED) < ?");
 //        configMap.put("searchBmCount", "count = ?");
 
@@ -115,7 +135,7 @@ public class DapccServ extends CommonServ {
         StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
         for (String s : hashSet) {
             values.add("%" + s + "%");
-            deptSql.append("CODE_PATH like ? or ");
+            deptSql.append("c.CODE_PATH like ? or ");
         }
         whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
         //考试时长
@@ -128,6 +148,7 @@ public class DapccServ extends CommonServ {
                 + "from TS_BMSH_PASS a "
                 + "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE "
                 + "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
+                + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
                 + "where not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
                 + " and a.BM_STATUS not in('1','3')"
                 + whereSql;

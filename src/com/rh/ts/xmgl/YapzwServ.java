@@ -6,10 +6,6 @@ import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.ts.util.TsConstant;
-import com.rh.core.serv.CommonServ;
-import com.rh.core.serv.OutBean;
-import com.rh.core.serv.ParamBean;
-import com.rh.core.serv.ServMgr;
 import com.rh.ts.xmgl.kcap.KcapResource;
 import com.rh.ts.xmgl.kcap.arrange.ArrangeSeat;
 
@@ -89,27 +85,28 @@ public class YapzwServ extends CommonServ {
 
     /**
      * 执行考场自动安排座位
+     *
      * @param paramBean
      * @return
      */
-	public OutBean doArrangeSeat(ParamBean paramBean) {
+    public OutBean doArrangeSeat(ParamBean paramBean) {
 
-		OutBean outBean = new OutBean();
+        OutBean outBean = new OutBean();
 
-		String xmId = paramBean.getStr("XM_ID");
+        String xmId = paramBean.getStr("XM_ID");
 
-		String odeptId = paramBean.getStr("ODEPT_CODE");
+        String odeptId = paramBean.getStr("ODEPT_CODE");
 
-		KcapResource res = new KcapResource(xmId, odeptId);
-		
-		ArrangeSeat as = new ArrangeSeat();
-		
-		as.doArrange(res);
-		
-		outBean.setOk();
+        KcapResource res = new KcapResource(xmId, odeptId);
 
-		return outBean;
-	}
+        ArrangeSeat as = new ArrangeSeat();
+
+        as.doArrange(res);
+
+        outBean.setOk();
+
+        return outBean;
+    }
 
     /**
      * @param paramBean
@@ -151,12 +148,38 @@ public class YapzwServ extends CommonServ {
         //SJ_CC	时间场次
         paramBean.put("ZW_XT", zwZwhXt);
 
-        paramBean.put("U_TYPE", 0);//是否借考 1借考
+        //1 请假 2 借考 3 请假 + 借考
+        int uType = (bmshPassBean.getStr("BM_STATUS").equals("2") || bmshPassBean.getStr("BM_STATUS").equals("3")) ? 1 : 0;
+        paramBean.put("U_TYPE", uType);//是否借考 1借考
         paramBean.put("ISSUE", 0);//是否 提交/发布
 
-        OutBean yapzwBean = super.save(paramBean);
+        OutBean yapzwBean = new OutBean();
+        try {
+            yapzwBean = super.save(paramBean);
+        } catch (Exception e) {
+            if (e.getCause().getMessage().contains("IDX_DATE_CC_USER")) {
+                yapzwBean.setError("IDX_DATE_CC_USER");
+            }
+        }
         String yapzwId = yapzwBean.getStr("YAPZW_ID");
-        yapzwBean.putAll(getYapZwById(yapzwId));
+        Bean yapZw = getYapZwById(yapzwId);
+        if (yapZw != null) {
+            yapzwBean.putAll(yapZw);
+        }
+
         return yapzwBean;
+    }
+
+    public OutBean getKcZwInfo(ParamBean paramBean) {
+        String kcId = paramBean.getStr("KC_ID");
+        String sjId = paramBean.getStr("SJ_ID");
+
+        List<Bean> zwList = ServDao.finds(TsConstant.SERV_KCGL_ZWDYB, " and KC_ID = '" + kcId + "'");//座位数
+        List<Bean> yapList = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and SJ_ID = '" + sjId + "'");//已安排座位数
+
+        OutBean outBean = new OutBean();
+        outBean.set("total", zwList.size());
+        outBean.set("yapNum", yapList.size());
+        return outBean;
     }
 }
