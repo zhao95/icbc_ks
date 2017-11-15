@@ -1,4 +1,7 @@
 var _viewer = this;
+var ksqzid = _viewer.getParHandler().getItem("KSQZ_ID").getValue();
+var xm_id =  _viewer.getParHandler().getItem("XM_ID").getValue();
+var gz_id =  _viewer.getParHandler().getItem("GZ_ID").getValue();
 $(".rhGrid").find("tr").unbind("dblclick");
 $("th[icode='BUTTONS']").css('width','15%');
 //每一行添加编辑和删除
@@ -1150,3 +1153,24 @@ function saveRuleVarCode(dataId,arr,val,obj2,mx_name) {
 _viewer.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 };
+//添加按钮
+_viewer.getBtn("add").unbind("click").bind("click", function(event) {
+	//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
+	var configStr = "TS_XMGL_BMSH_SHGZK_MX,{'TARGET':'','SOURCE':'GZ_NAME~MX_NAME~MX_ID'," +
+			"'HIDE':'MX_ID','TYPE':'multi','HTMLITEM':''}";
+	var options = {
+		"config" :configStr,
+		"parHandler":_viewer,
+		"formHandler":_viewer.form,
+	    "replaceCallBack":function(idArray) {//回调，idArray为选中记录的相应字段的数组集合
+	    	var ids = idArray.MX_ID;
+	    	FireFly.doAct(_viewer.servId, "impShgzMx", {"ids":ids,"ksqzId":ksqzid,"GZ_ID":gz_id,"xmId":xm_id}, true,false,function(data){
+	    		_viewer.refresh();
+	    	});	
+		}
+	};
+	//2.用系统的查询选择组件 rh.vi.rhSelectListView()
+	var queryView = new rh.vi.rhSelectListView(options);
+	queryView.show(event,[],[0,495]);
+});
+
