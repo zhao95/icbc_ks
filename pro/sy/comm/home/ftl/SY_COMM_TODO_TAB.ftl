@@ -31,7 +31,7 @@
     	
 </script>
 <div id='TS_COMM_TODO' class='portal-box'>
-<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待我安排的考场</span><span class="portal-box-hideBtn  conHeanderTitle-expand"></span>&nbsp;&nbsp;<a style="margin-left:82%;text-decoration:none" href="#" id="staykc">待安排考场</a></div>
+<div class='portal-box-title'><span class='portal-box-title-icon icon_portal_todo'></span><span class="portal-box-title-label">待我安排的考场</span><span class="portal-box-hideBtn  conHeanderTitle-expand"></span>&nbsp;&nbsp;<a style="margin-left:78%;text-decoration:none" href="#" id="staykc">已安排考场</a></div>
 <div>
             <table id="kctable"  style="border:solid 1px  #dddddd; width:100%">
                   <tr style="background:f4fbff;height:30px;color:#999999"><td width="5%" align="center">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">安排开始时间</td><td width="15%" align="center">安排截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
