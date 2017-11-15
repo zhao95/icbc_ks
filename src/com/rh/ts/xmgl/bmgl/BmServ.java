@@ -32,6 +32,12 @@ public class BmServ extends CommonServ {
 		String xmid = paramBean.getStr("xmid");
 		String where1 = "AND XM_ID="+"'"+xmid+"'";
 		List<Bean> listbean = ServDao.finds("TS_XMGL_BMGL",where1);
+		
+		List<Bean> finds = ServDao.finds("TS_XMGL_SZ", where1+" AND XM_SZ_NAME='报名'");
+		String state = "";
+		if(finds!=null&&finds.size()!=0){
+			 state = finds.get(0).getStr("XM_SZ_TYPE");
+		}
 		if(listbean.size()==0){
 			return new OutBean().set("list","");
 		}
@@ -39,17 +45,31 @@ public class BmServ extends CommonServ {
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
 		String startTime = bmbean.getStr("BM_START");
 		String endTime = bmbean.getStr("BM_END");
-		String state ="未开始";
 		if(startTime!=""&&endTime!=""){
 			Date date1 = sdf.parse(startTime);
 			Date date2 = sdf.parse(endTime);
 			Date date = new Date();
 			if(date.getTime()<date2.getTime()&&date.getTime()>date1.getTime()){
-			 state = "待报名";
+				if("".equals(state)||"进行中".equals(state)){
+					state = "待报名";
+				}
 			}else if(date.getTime()>date2.getTime()){
-				state="已结束";
+				if("".equals(state)||"审核结束".equals(state)){
+					state="已结束";
+				}
+			}else{
+				if("".equals(state)||"未开始".equals(state)){
+					state="未开始";
+				}
 			}
 			}
+		if("进行中".equals(state)){
+			state = "待报名";
+		}else if("审核结束".equals(state)){
+			state="已结束";
+		}else if("".equals(state)){
+			state="未开始";
+		}
 		Bean newBean = new Bean();
 		newBean.set("STATE", state);
 		newBean.set("START_TIME",startTime);
@@ -57,19 +77,7 @@ public class BmServ extends CommonServ {
 		List<Bean> list = new ArrayList<Bean>();
 		list.add(newBean);
 		
-		  ObjectMapper mapper = new ObjectMapper();    
-	       StringWriter w = new StringWriter();  
-	       try {
-			mapper.writeValue(w, list);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		 catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	       outBean.set("list",w.toString());
+	       outBean.set("list",list);
 	       outBean.set("nojson", list);
 	       outBean.set("state", state);
 	       return outBean;
@@ -176,25 +184,25 @@ public class BmServ extends CommonServ {
 			Date date2 = sdf.parse(endTime);
 			Date date = new Date();
 			if(date.getTime()<date2.getTime()&&date.getTime()>date1.getTime()){
-				if(state==""||state=="进行中"){
+				if("".equals(state)||"进行中".equals(state)){
 					state = "待报名";
 				}
 			}else if(date.getTime()>date2.getTime()){
-				if(state==""||state=="审核结束"){
+				if("".equals(state)||"审核结束".equals(state)){
 					state="已结束";
 				}
 			}
 			}else{
-				if(state==""||state=="未开始"){
+				if("".equals(state)||"未开始".equals(state)){
 					state="未开始";
 				}
 			}
 		
-		if(state=="进行中"){
+		if("进行中".equals(state)){
 			state = "待报名";
-		}else if(state=="审核结束"){
+		}else if("审核结束".equals(state)){
 			state="已结束";
-		}else if(state==""){
+		}else if("".equals(state)){
 			state="未开始";
 		}
 		Bean newBean = new Bean();
@@ -204,19 +212,8 @@ public class BmServ extends CommonServ {
 		List<Bean> list = new ArrayList<Bean>();
 		list.add(newBean);
 		
-		  ObjectMapper mapper = new ObjectMapper();    
-	       StringWriter w = new StringWriter();  
-	       try {
-			mapper.writeValue(w, list);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		 catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	       outBean.set("list",w.toString());
+		
+	       outBean.set("list",list);
 	       outBean.set("nojson", list);
 	       outBean.set("state", state);
 	       return outBean;

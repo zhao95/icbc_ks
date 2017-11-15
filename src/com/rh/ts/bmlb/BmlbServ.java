@@ -1516,7 +1516,7 @@ public class BmlbServ extends CommonServ {
 							for (String string : split) {
 								if(!"".equals(string)){
 									deptcodes+=string+",";
-									List<DeptBean> deptlist = OrgMgr.getChildDepts(compycode, string);
+									List<DeptBean> deptlist = OrgMgr.getChildDeptsAll(compycode, string);
 									for (Bean deptbean : deptlist) {
 										String id = deptbean.getId();
 										deptcodes+=id+",";
@@ -1537,7 +1537,7 @@ public class BmlbServ extends CommonServ {
 					if(dept_code.equals("0010100000")){
 						 deptwhere="";
 					 }else{
-						 List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
+						 List<DeptBean> finds = OrgMgr.getChildDeptsAll(compycode, user.getODeptCode());
 						 for (Bean bean : finds) {
 							 dept_code+=","+bean.getStr("DEPT_CODE");
 						 }

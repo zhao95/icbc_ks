@@ -315,7 +315,7 @@ public class XmglServ extends CommonServ {
 				continue;
 			}
 			
-				List<DeptBean> listdept = OrgMgr.getChildDepts(bean.getStr("S_CMPY"),str);
+				List<DeptBean> listdept = OrgMgr.getChildDeptsAll(bean.getStr("S_CMPY"),str);
 				// 判断此人是否在此机构下
 				// 管理员以下的所有机构
 				if(listdept==null){
