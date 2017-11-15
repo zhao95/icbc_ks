@@ -40,7 +40,7 @@ function bindCard() {
 }
 
 //列表操作按钮 弹dialog
-function openMyCard(dataId,readOnly,showTab){debugger;
+function openMyCard(dataId,readOnly,showTab){
 	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[50,50]};
     temp[UIConst.PK_KEY] = dataId;
     if(readOnly != ""){
@@ -96,7 +96,7 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function(event) {
 
 _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
 //	debugger;
-	var configStr = "SY_ORG_DEPT_SUB,{'TARGET':'DEPT_CODE~DEPT_NAME','SOURCE':'DEPT_CODE~DEPT_NAME'," +
+	var configStr = "TS_ORG_DEPT,{'TARGET':'DEPT_CODE~DEPT_NAME','SOURCE':'DEPT_CODE~DEPT_NAME'," +
 	"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
 	var options = {
 			"config" :configStr,
