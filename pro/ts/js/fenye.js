@@ -126,8 +126,7 @@ var listPage = function () {
 			var param1={};
 			param1["xmid"]=id;
 			var result1 = FireFly.doAct("TS_XMGL_BMGL","getSHState",param1);
-			var data1 = result1.list;
-			var pageEntity1 = JSON.parse(data1);
+			var pageEntity1 = result1.list;
 			//报名开始时间
 			var startTime = pageEntity1[0].START_TIME;
 			var state1 = pageEntity1[0].STATE;

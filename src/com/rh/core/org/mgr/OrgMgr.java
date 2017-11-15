@@ -487,4 +487,42 @@ public class OrgMgr {
 		return null;
 	}
 
+	
+	  /**
+     * 根据部门取得所有子处室  重写平台已有方法
+     * @param cmpyId 公司ID
+     * @param deptCode 部门编码
+     * @return 部门下的所有子处室
+     */
+    public static List<DeptBean> getChildDeptsAll(String cmpyId, String deptCode) {
+    	DeptBean deptBean = getDept(deptCode);
+    	if(deptBean==null){
+    		return null;
+    	}
+        List<DeptBean> deptBeanList = new ArrayList<DeptBean>();
+        
+        StringBuffer condition = new StringBuffer();
+        condition.append(" and CMPY_CODE ='");
+        condition.append(cmpyId);
+        if(!"".equals(deptBean.getCodePath())){
+        	condition.append("' and CODE_PATH like CONCAT('");
+        	condition.append(deptBean.getCodePath());
+        	condition.append("','%')");
+        }else{
+        	return null;
+        }
+        condition.append("and S_FLAG = '1' ");
+        
+        Bean paramBean = new Bean();
+        paramBean.set(Constant.PARAM_WHERE, condition.toString());
+        
+        List<Bean> beanList = ServDao.finds(ServMgr.SY_ORG_DEPT, paramBean);
+        if (beanList != null) {
+            for (Bean bean : beanList) {
+            	deptBeanList.add(new DeptBean(bean));
+            }
+        }
+
+        return deptBeanList;
+    }
 }

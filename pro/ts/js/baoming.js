@@ -379,8 +379,7 @@ function selectcreate(){
 		var param1={};
 		param1["xmid"]=id;
 		var result1 = FireFly.doAct("TS_XMGL_BMGL","getBMState",param1);
-		var data1 = result1.list;
-		var pageEntity1 = JSON.parse(data1);
+		var pageEntity1 = result1.list;
 		var startTime = pageEntity1[0].START_TIME;
 		var state = pageEntity1[0].STATE;
 		if(state=="待报名"){

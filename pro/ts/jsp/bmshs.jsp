@@ -239,8 +239,7 @@
 		param["xmid"]=id;
 		//通过项目查找报名信息
 		var result1 = FireFly.doAct("TS_XMGL_BMGL","getBMState",param);
-		var data1 = result1.list;
-		var pageEntity1 = JSON.parse(data1);
+		var pageEntity1 = result1.list;
 		var state1 = pageEntity1[0].STATE;
 		
 		var result = FireFly.doAct("TS_XMGL_BMGL","getXmInfo",param);
