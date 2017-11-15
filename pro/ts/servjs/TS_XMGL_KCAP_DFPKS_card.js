@@ -25,7 +25,8 @@ if(_viewer.getItem("BM_STATUS").getValue() == ""){
 
 
 
-_viewer.getItem("JK_ODEPT").change(function(){
-	var codept = _viewer.getItem("JK_ODEPT").getValue();
-	_viewer.getItem("S_ODEPT").setValue(codept);
-});
+//_viewer.getItem("JK_ODEPT").change(function(){
+//	var codept = _viewer.getItem("JK_ODEPT").getValue();
+//	_viewer.getItem("S_ODEPT").setValue(codept);
+//	_viewer.getItem("S_ODEPT").setText(codept);
+//});
