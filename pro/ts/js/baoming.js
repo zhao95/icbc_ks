@@ -644,7 +644,12 @@ function selectcreate(){
 		    if(shstate=="未开始"){
 		    	flagstate="手动审核未开始"
 		    }
-			if(flagstate=='审核进行中'){
+		    var conresu = FireFly.doAct("TS_BMLB_BM","getShState",{"XM_ID":XM_ID});
+		    if(conresu.count==0){
+		    	flagstate="无需审核";
+		    		sh_state_str="审核通过";
+		    }
+			if(flagstate=='审核进行中'||flagstate=="无需审核"){
 				//为table重新appendtr
 				//已提交异议
 		    	//没有提交异议  且没有撤销
