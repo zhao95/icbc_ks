@@ -12,6 +12,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
+import com.rh.core.base.db.Transaction;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
@@ -665,7 +666,7 @@ public class NoPassServ extends CommonServ {
 		if("".equals(dept_code)){
 			dept_code=user.getStr("ODEPT_CODE");
 		}
-		dept_code = dept_code.substring(0,9);
+		dept_code = dept_code.substring(0,10);
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		/*if("belong".equals(xianei)){
@@ -705,27 +706,32 @@ public class NoPassServ extends CommonServ {
 		 deptwhere = "AND S_DEPT IN ("+deptcodes+")";
 		}else{*/
 			//管理员以下的所有机构部门
-			
+		String servId = "TS_BMSH_NOPASS";
+		String NOWPAGE = paramBean.getStr("nowpage");
+		String SHOWNUM = paramBean.getStr("shownum");
+		String where1 = paramBean.getStr("where")+deptwhere;
+		List<Bean> list;
 			if(user.getODeptCode().equals("0010100000")){
 				//所有人员
-				deptwhere="";
+				list = ServDao.finds(servId, where1);
+
 			}else{
 				List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
 				for (Bean bean : finds) {
 					dept_code+=","+bean.getStr("DEPT_CODE");
 				}
 				deptwhere = "AND S_DEPT IN ("+dept_code+")";
+				DeptBean dept = OrgMgr.getDept(dept_code);
+				String codepath = dept.getCodePath();
+				String sql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
+				 list = Transaction.getExecutor().query(sql);
+				
 			}
 		
 		
 		//根据审核  机构 匹配当前机构下的所有人
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();
-		String servId = "TS_BMSH_NOPASS";
-		String NOWPAGE = paramBean.getStr("nowpage");
-		String SHOWNUM = paramBean.getStr("shownum");
-		String where1 = paramBean.getStr("where")+deptwhere;
-		List<Bean> list = ServDao.finds(servId, where1);
 
 		int ALLNUM = list.size();
 		// 计算页数

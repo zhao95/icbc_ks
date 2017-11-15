@@ -25,9 +25,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
+import com.rh.core.base.db.Transaction;
 import com.rh.core.comm.FileMgr;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
@@ -1492,13 +1494,20 @@ public class BmlbServ extends CommonServ {
 			//当前审核人
 			String servid = paramBean.getStr("servId");
 			UserBean user = Context.getUserBean();
-			String user_code = user.getStr("USER_CODE");
-			String dept_code = user.getStr("ODEPT_CODE");
+			Bean userPvlgToHT = RoleUtil.getPvlgRole(user.getCode(),"TS_BMGL_XNBM");
+			Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+			Bean str = (Bean)userPvlgToHTBean.get("XN_BM");
+			String dept_code = str.getStr("ROLE_DCODE");
+			if("".equals(dept_code)){
+				dept_code=user.getStr("ODEPT_CODE");
+			}
+			dept_code = dept_code.substring(0,10);
+			String user_code = user.getCode();
 			String belongdeptcode = "";
 			String xmid = paramBean.getStr("xmid");
 			String compycode = user.getCmpyCode();
 			String deptwhere = "";
-			if("belong".equals(xianei)){
+			/*if("belong".equals(xianei)){
 				//根据项目id找到流程下的所有节点
 				String belongwhere = "AND XM_ID='"+xmid+"'";
 				List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
@@ -1531,30 +1540,38 @@ public class BmlbServ extends CommonServ {
 					deptcodes=deptcodes.substring(0, deptcodes.length()-1)+"";
 				}
 				 deptwhere = "AND S_DEPT IN ("+deptcodes+")";
-				}else{
+				}else{*/
 					//管理员以下的所有机构部门
 					
 					if(dept_code.equals("0010100000")){
-						 deptwhere="";
+						deptwhere+="AND XM_ID='"+xmid+"'";
 					 }else{
-						 List<DeptBean> finds = OrgMgr.getChildDeptsAll(compycode, user.getODeptCode());
+						/* List<DeptBean> finds = OrgMgr.getChildDeptsAll(compycode, dept_code);
 						 for (Bean bean : finds) {
 							 dept_code+=","+bean.getStr("DEPT_CODE");
 						 }
 						 deptwhere = "AND S_DEPT IN ("+dept_code+")";
 						 
-					 }
+					 }*/
+					DeptBean dept = OrgMgr.getDept(dept_code);
+					String codepath = dept.getCodePath();
+					String sql = "select * from "+servid+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
+					List<Bean> query = Transaction.getExecutor().query(sql);
+					String ids = "";
+					for (Bean bean : query) {
+						ids+=bean.getId()+",";
+					}
+					return new OutBean().set("ids",ids);
 				}
 				
 			//根据审核  机构 匹配当前机构下的所有人
-			deptwhere+="AND XM_ID='"+xmid+"'";
+			
 			List<Bean> list = ServDao.finds(servid, deptwhere);
 			String ids = "";
 			for (Bean bean : list) {
 				ids+=bean.getId()+",";
 			}
 			return new OutBean().set("ids",ids);
-		
 	}
 	/**
 	 * 非资格不重复报名
