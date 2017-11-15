@@ -179,7 +179,7 @@ _viewer.getBtn("trash").unbind("click").bind("click", function(event) {
 });
 
 /*
-* 删除前方法执行
+* 删除前方法执行getUserXm
 */
 _viewer.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
