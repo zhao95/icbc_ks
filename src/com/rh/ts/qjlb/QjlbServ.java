@@ -12,6 +12,7 @@ import com.rh.core.serv.*;
 import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.util.Constant;
 import com.rh.ts.util.TsConstant;
+import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -477,7 +478,7 @@ public class QjlbServ extends CommonServ {
      */
     private boolean inApplyTime(String xmId) throws ParseException {
         boolean result = false;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormatString);
 
         List<Bean> xmSzList = ServDao.finds("TS_XMGL_SZ", "and XM_ID ='" + xmId + "' and XM_SZ_NAME ='请假'");
         if (xmSzList.size() > 0) {
@@ -492,7 +493,9 @@ public class QjlbServ extends CommonServ {
                     String qjStadate = (String) tsXmglQjglList.get(0).get("QJ_STADATE");
                     String qjEnddate = (String) tsXmglQjglList.get(0).get("QJ_ENDDATE");
                     //在申请时间内
-                    if (new Date().getTime() > sdf.parse(qjStadate).getTime() && new Date().getTime() < sdf.parse(qjEnddate).getTime()) {
+                    if (StringUtils.isBlank(qjStadate) || StringUtils.isBlank(qjEnddate)) {
+                        result = false;
+                    } else if (new Date().getTime() > sdf.parse(qjStadate).getTime() && new Date().getTime() < sdf.parse(qjEnddate).getTime()) {
                         result = true;
                     }
                 }

@@ -3,6 +3,7 @@
 <%@ page import="com.rh.core.serv.ParamBean" %>
 <%@ page import="com.rh.core.serv.ServMgr" %>
 <%@ page import="com.rh.core.serv.OutBean" %>
+<%@ page import="com.rh.core.org.mgr.UserMgr" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
@@ -376,6 +377,7 @@
                                 String shs_atime = shbean.getStr("S_ATIME");
                                 String shsDeptName = shbean.getStr("S_DNAME");
                                 String sh_node = shbean.getStr("SH_NODE");
+                                String shUcode = shbean.getStr("SH_UCODE");
                         %>
                         <li style="">
                             <b></b>
@@ -385,7 +387,7 @@
                                 </div>
                                 <div style="padding-bottom: 20px;">
                                     <img style="position: absolute;margin-left: 11px;width: 55px;height:55px;"
-                                         src="<%=CONTEXT_PATH%><%=Context.getUserBean().getStr("USER_IMG")%>"
+                                         src="<%=CONTEXT_PATH%><%=UserMgr.getUser(shUcode).getStr("USER_IMG")%>"
                                          onerror="this.src='<%=CONTEXT_PATH%>/sy/theme/default/images/common/user1.png'"><%----%>
 
                                     <div style="margin-left:78px;">
