@@ -1591,12 +1591,12 @@ public class BmlbServ extends CommonServ {
 				if(finds!=null){
 					if(finds.size()==0){
 					}else{
-						return new OutBean().set("flag", "true");
+						return new OutBean().set("flag", "false");
 					}
 				}
 			}
 			}
-		return new OutBean().set("flag", "false");
+		return new OutBean().set("flag", "true");
 	}
 	/**
 	 * 是否有权限查看辖内报名
