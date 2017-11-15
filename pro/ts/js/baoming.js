@@ -14,6 +14,15 @@ function chexiao(i){
 	//手动审核过后 不能删除
 	var aid = "chexiao"+i;
 	var aa = document.getElementById(aid).innerHTML;
+	var paramstr={};
+	paramstr["bmid"]=aa;
+	var resultflag = FireFly.doAct("TS_BMLB_BM","sureDelete",paramstr);
+	var flag = resultflag.flag;
+	if(flag=="false"){
+		alert("此数据已提交代办");
+		return false;
+	}
+	
 	if(aa=="撤销"){
 	var res = confirm("您确定要撤销吗？");
 

@@ -83,6 +83,25 @@ function xminfoshow(){
 			parambm["user_code"]=user_code;
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
+			var zd = results.zd;
+			
+			if(zd=="false"){
+				//直接通过
+			for(var i=0;i<checkeddata.length;i++){
+				
+				var a=checkeddata[i].ID;
+				$("#"+a).append('<div style="height:5px;"></div>');
+				$("#"+a).append('<div style="height:5px;"></div>');
+				$("#"+a).append('<div style="height:5px;"></div>');
+				var yzjg=a+"yzjg";
+				if(""==successinfo){
+						$("#"+yzjg).append("初步审核通过");
+					}else{
+						$("#"+yzjg).append(successinfo);
+					}
+			}
+			$("#loading").modal("hide");
+			}
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, false,true,function(data){
     		yzgz=data;
     		//获取后台传过来的key
@@ -125,7 +144,7 @@ function xminfoshow(){
        				}
        				if(FLAG){
        					if(xlcode==STATION_NO_CODE){
-       						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此考试,请撤销再提交或请选择其它考试</div>');
+       						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此考试,请再提交或请选择其它考试</div>');
        						$("#"+yzjg).append("审核不通过");
        					}else{
        						$("#"+a).append('已报名此考试,请撤销再报名');
