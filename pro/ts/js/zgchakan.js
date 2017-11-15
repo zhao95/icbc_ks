@@ -30,7 +30,7 @@ function init(){
 		 var  mkname = result.bmbean.BM_MK
 		 var jibietype = result.bmbean.BM_TYPE;
 		 //考试名称
-		 var bm_title = result.bmbean.TITLE;
+		 var bm_title = result.bmbean.BM_TITLE;
 		 if("1"==jibietype){
 			 jb="初级";
 		 }else if("2"==jibietype){
@@ -73,7 +73,7 @@ function init(){
 		}else{
 				//非资格
 				$("#tableid").html("");
-				$("#tableid").append("<thead><tr><th>考试名称</th><th>考试时间</th><th>审核结果</th></tr></thead>");
+				$("#tableid").append("<thead><tr><th style='text-align:center'>考试名称</th><th style='text-align:center'>考试时间</th><th style='text-align:center'>审核结果</th></tr></thead>");
 				$("#tableid").append('<tbody><tr><td>'+bm_title+'</td><td></td><td>'+shstate+'</td></tr></tbody>')
 			}
 }
