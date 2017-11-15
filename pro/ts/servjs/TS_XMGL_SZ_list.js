@@ -124,7 +124,7 @@ function  jk(pk,xmglId){
 }
 
 //试卷
-function sj(pk,xmglId){
+function sj(pk,xmglId){debugger;
 	var width = jQuery(window).width()-200;
 	var height = jQuery(window).height()-100;
     //创建弹出框
@@ -133,7 +133,7 @@ function sj(pk,xmglId){
 //    var dialogObj = jQuery("#" + popPrompt.dialogId);
 //    jQuery(".ui-dialog-buttonpane button",dialogObj.parent()).css("display","none");//去掉确定关闭按钮
     
-	getServListDialog(event,"sj_manager","项目设置试卷",width,height,[100,50]);
+	getServListDialog(event,"sj_manager","项目试卷",width,height,[100,50]);
 
 	//创建 listView 放到弹出框中
     const ext =  " and XM_SZ_ID = '" + pk + "'";
@@ -141,7 +141,7 @@ function sj(pk,xmglId){
     var params={XM_ID:xmglId,XM_SZ_ID:pk};
     
     var conf = {
-			"sId":"TS_XMGL_SJ",
+			"sId":"TS_XMGL_KSSJ",
 		    "pCon":jQuery("#sj_manager"),
 	        "resetHeiWid":_viewer._resetHeiWid,
 	        "parHandler":_viewer,

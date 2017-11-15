@@ -79,21 +79,27 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	   				param["KSLB_MK_CODE"]=MKcodes[i];
 	   				param["KSLB_TYPE_NAME"]=typename[i];
 	   				param["KSLB_TIME"]=kslbTime[i];
-	   				param["KSLB_KSNUM"]=mydate+LBcodes[i].toString().substr(LBcodes[i].toString().length-1,1)+XLcodes[i].toString().substr(0,1)+XLcodes[i].toString().substr(XLcodes[i].toString().length-4,4)+MKcodes[i].toString()+types[i];
+	   				param["KSLB_KSNUM"]=mydate
+	   				+LBcodes[i].toString().substr(LBcodes[i].toString().length-1,1)
+	   				+XLcodes[i].toString().substr(0,1)
+	   				+XLcodes[i].toString().substr(XLcodes[i].toString().length-4,4)
+	   				+MKcodes[i].toString()
+	   				+types[i];
+	   				param["KSLB_KSNAME"]=names[i]+(xls[i]=='无模块'?"":xls[i])+mks[i]+typename[i]+'试卷';
 	   				
-	   				
-	   				
+	   				//(month<10 ? "0"+month:month)
 	   				
 	   				paramlist.push(param);
 	   				console.log(param);
 	    	    }
     		});    
-	    	}
+	    	}debugger;
 	    	paramjson["BATCHDATAS"]= paramlist;
 	    	var result =FireFly.batchSave(_viewer.servId,paramjson,"",false,false);	
 	    	/*console.log(result);
 	    	_viewer.listBarTip("保存成功");
 	    	_viewer.listBarTipError("选择失败");*/
+	    	
 	    	_viewer.refresh();
 		}
 	
