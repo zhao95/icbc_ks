@@ -170,16 +170,18 @@ public class BmServ extends CommonServ {
 		Bean outBean = new Bean();
 		String xmid = paramBean.getStr("xmid");
 		String where1 = "AND XM_ID="+"'"+xmid+"'";
+		Bean find = ServDao.find("TS_XMGL", xmid);
 		List<Bean> listbean = ServDao.finds("TS_XMGL_BMSH",where1);
+		List<Bean> shlistbean = ServDao.finds("TS_XMGL_SZ",where1+ "and XM_SZ_NAME='审核'");
 		if(listbean.size()==0){
 			return new OutBean().set("list","");
 		}
 		Bean bmbean = listbean.get(0);
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		String startTime = bmbean.getStr("SH_START");
 		String endTime = bmbean.getStr("SH_END");
-		String state =bmbean.getStr("SH_STATE");
-		if(startTime!=""&&endTime!=""){
+		String state =shlistbean.get(0).getStr("XM_SZ_TYPE");
+		if(!"".equals(startTime)&&!"".equals(endTime)){
 			Date date1 = sdf.parse(startTime);
 			Date date2 = sdf.parse(endTime);
 			Date date = new Date();
@@ -188,23 +190,12 @@ public class BmServ extends CommonServ {
 					state = "待报名";
 				}
 			}else if(date.getTime()>date2.getTime()){
-				if("".equals(state)||"审核结束".equals(state)){
 					state="已结束";
-				}
-			}
 			}else{
-				if("".equals(state)||"未开始".equals(state)){
 					state="未开始";
-				}
 			}
-		
-		if("进行中".equals(state)){
-			state = "待报名";
-		}else if("审核结束".equals(state)){
-			state="已结束";
-		}else if("".equals(state)){
-			state="未开始";
 		}
+		
 		Bean newBean = new Bean();
 		newBean.set("STATE", state);
 		newBean.set("START_TIME",startTime);
