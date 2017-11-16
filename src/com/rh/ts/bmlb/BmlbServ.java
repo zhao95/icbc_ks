@@ -27,7 +27,6 @@ import org.json.JSONObject;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
-import com.rh.core.base.db.Transaction;
 import com.rh.core.comm.FileMgr;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;

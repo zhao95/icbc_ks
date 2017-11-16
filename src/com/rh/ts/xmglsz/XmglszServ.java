@@ -74,6 +74,8 @@ public class XmglszServ extends CommonServ {
 				out.setCount(1);
 			} else if (rg == 1) { // 人工审核
 				out.setCount(2);
+			}else{
+				out.setCount(0); // 无审核
 			}
 		} else {
 			out.setCount(0); // 无审核
