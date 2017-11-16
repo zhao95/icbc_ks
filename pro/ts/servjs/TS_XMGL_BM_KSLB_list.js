@@ -83,7 +83,7 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	   				+XLcodes[i].toString().substr(0,1)
 	   				+XLcodes[i].toString().substr(XLcodes[i].toString().length-4,4)
 	   				+MKcodes[i].toString()
-	   				+types[i];
+	   				+(types[i]=='无'? "":types[i]);
 	   				param["KSLB_KSNAME"]=names[i]+xls[i]+(mks[i]=='无模块'? "":mks[i])+typename[i]+'试卷';
 	   				paramlist.push(param);
 	   				console.log(param);
