@@ -173,11 +173,15 @@ function xminfoshow(){
 						}
 						shti=dataArray[j].TISHI;
 						if(dataArray[j].VLIDATE=="false"){
+							if(countflag!=1){
 							if(shti!="TRUE"){
 								shArray=false;
 							}else{
 								truetisi="true"
 								tishiyu=dataArray[j].tishiyu;
+							}
+							}else{
+								shArray=false;
 							}
 						}
 						if(dataArray[j].othergz=="false"){
@@ -201,28 +205,50 @@ function xminfoshow(){
        						yiyistate="2";
        					}
        				}
-       				
-       				if(shArray==true&&truetisi=="true"){
-       					$("#"+a).append('<div">管理任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
-       					$("#tishiyu").html(tishiyu);
-       					$("#yzxx").modal("show");
-       				}
-       				if(shArray==false){
-       					if(""==failerinfo){
-       						$("#"+yzjg).append('审核不通过');
-       					}else{
-       						$("#"+yzjg).append(failerinfo);
+       				if(countflag==1){
+       					//无手动
+           				if(shArray==false){
+           					if(""==failerinfo){
+           						$("#"+a).append('<div></div>');
+               					$("#"+a).append('<div></div>');
+           						$("#"+yzjg).append('审核不通过');
+           					}else{
+           						$("#"+yzjg).append(failerinfo);
+           					}
+           				}if(shArray==true){
+           					$("#"+a).append('<div></div>');
+           					$("#"+a).append('<div></div>');
+           					if(""==successinfo){
+           						$("#"+yzjg).append("审核通过");
+           					}else{
+           						$("#"+yzjg).append(successinfo);
+           					}
+           					$("#"+yzjg).append('<div></div>');
+           					$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
+           				}
+       				}else{
+       					if(shArray==true&&truetisi=="true"){
+       						$("#"+a).append('<div">管理任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
+       						$("#tishiyu").html(tishiyu);
+       						$("#yzxx").modal("show");
        					}
-       				}if(shArray==true){
-       					$("#"+a).append('<div></div>');
-       					$("#"+a).append('<div></div>');
-       					if(""==successinfo){
-       						$("#"+yzjg).append("初步审核通过");
-       					}else{
-       						$("#"+yzjg).append(successinfo);
+       					if(shArray==false){
+       						if(""==failerinfo){
+       							$("#"+yzjg).append('审核不通过');
+       						}else{
+       							$("#"+yzjg).append(failerinfo);
+       						}
+       					}if(shArray==true){
+       						$("#"+a).append('<div></div>');
+       						$("#"+a).append('<div></div>');
+       						if(""==successinfo){
+       							$("#"+yzjg).append("初步审核通过");
+       						}else{
+       							$("#"+yzjg).append(successinfo);
+       						}
+       						$("#"+yzjg).append('<div></div>');
+       						$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
        					}
-       					$("#"+yzjg).append('<div></div>');
-       					$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
        				}
 	       		}
          		}
@@ -610,8 +636,9 @@ function xminfoshow(){
 	}
 	//跨序列的考试
 	function fuzhi(){
+		var divstr="";
 		if(countflag==0||countflag==2){
-			var divstr = "<div></div><div></div><div></div>"
+			 divstr = "<div></div><div></div><div></div>"
 		}
 		var strchecked = checked.join(",");
 		paramstr={};
