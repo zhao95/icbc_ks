@@ -12,7 +12,6 @@ import java.util.List;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.icbc.ctp.utility.StringUtil;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
@@ -616,15 +615,14 @@ public class XmglServ extends CommonServ {
 	public Bean getUncheckList(Bean paramBean) {
 		Bean outBean = new Bean();
 		Bean _PAGE_ = new Bean();
-		String servId = "TS_XMGL";
 		String zhuangtai = paramBean.getStr("zhuangtai");
 		String user_code = paramBean.getStr("user_code");
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where");
-		List<Bean> list = ServDao.finds(servId, where1);
+		String sql = "SELECT * FROM TS_XMGL WHERE XM_ID IN(select XM_ID from TS_XMGL_BMSH WHERE SH_RGSH = '1') "+where1;
+		List<Bean> list = Transaction.getExecutor().query(sql);
 		List<Bean> SHlist = new ArrayList<Bean>();
-
 		for (Bean bean : list) {
 			// 根据报名id找到审核数据的状态
 			String id = bean.getId();
