@@ -42,7 +42,7 @@ public class BmServ extends CommonServ {
 			return new OutBean().set("list","");
 		}
 		Bean bmbean = listbean.get(0);
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		String startTime = bmbean.getStr("BM_START");
 		String endTime = bmbean.getStr("BM_END");
 		if(startTime!=""&&endTime!=""){
@@ -50,26 +50,16 @@ public class BmServ extends CommonServ {
 			Date date2 = sdf.parse(endTime);
 			Date date = new Date();
 			if(date.getTime()<date2.getTime()&&date.getTime()>date1.getTime()){
-				if("".equals(state)||"进行中".equals(state)){
+				if("进行中".equals(state)){
 					state = "待报名";
 				}
 			}else if(date.getTime()>date2.getTime()){
-				if("".equals(state)||"审核结束".equals(state)){
 					state="已结束";
-				}
 			}else{
-				if("".equals(state)||"未开始".equals(state)){
 					state="未开始";
-				}
 			}
 			}
-		if("进行中".equals(state)){
-			state = "待报名";
-		}else if("审核结束".equals(state)){
-			state="已结束";
-		}else if("".equals(state)){
-			state="未开始";
-		}
+		
 		Bean newBean = new Bean();
 		newBean.set("STATE", state);
 		newBean.set("START_TIME",startTime);
@@ -108,7 +98,14 @@ public class BmServ extends CommonServ {
 			 SH_TGTSY = listbean.get(0).getStr("SH_TGTSY");
 			 SH_BTGTSY = listbean.get(0).getStr("SH_BTGTSY");
 		 }
-		 shstate = listbean.get(0).getStr("SH_STATE");
+		 Bean shbean;
+		try {
+			shbean = getSHState(paramBean);
+			shstate =shbean.getStr("state");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	if(xmbean==null){
 		 outBean.set("xmname","");
@@ -170,7 +167,6 @@ public class BmServ extends CommonServ {
 		Bean outBean = new Bean();
 		String xmid = paramBean.getStr("xmid");
 		String where1 = "AND XM_ID="+"'"+xmid+"'";
-		Bean find = ServDao.find("TS_XMGL", xmid);
 		List<Bean> listbean = ServDao.finds("TS_XMGL_BMSH",where1);
 		List<Bean> shlistbean = ServDao.finds("TS_XMGL_SZ",where1+ "and XM_SZ_NAME='审核'");
 		if(listbean.size()==0){
@@ -186,8 +182,12 @@ public class BmServ extends CommonServ {
 			Date date2 = sdf.parse(endTime);
 			Date date = new Date();
 			if(date.getTime()<date2.getTime()&&date.getTime()>date1.getTime()){
-				if("".equals(state)||"进行中".equals(state)){
+				if("进行中".equals(state)){
 					state = "待报名";
+				}else if("已结束".equals(state)){
+					state="已结束";
+				}else{
+					state="未开始";
 				}
 			}else if(date.getTime()>date2.getTime()){
 					state="已结束";

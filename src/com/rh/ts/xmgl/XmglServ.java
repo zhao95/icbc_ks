@@ -666,12 +666,11 @@ public class XmglServ extends CommonServ {
 					for (Bean codebean : finds3) {
 						if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
 							// 此流程内包含此审核人
-							if ("1".equals(zhuangtai) && "进行中".equals(state)) {
-
+							if ("1".equals(zhuangtai) && "待报名".equals(state)) {
 								SHlist.add(bean);
 							} else if ("2".equals(zhuangtai) && "已结束".equals(state)) {
 								SHlist.add(bean);
-							} else if ("全部".equals(zhuangtai)) {
+							} else if ("全部".equals(zhuangtai)&&!"未开始".equals(state)) {
 								SHlist.add(bean);
 							}
 

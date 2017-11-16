@@ -111,7 +111,6 @@ var listPage = function () {
 	 }
 	 var pageEntity=JSON.parse(data);
 	 for(var i=0;i<pageEntity.length;i++){
-		 debugger;
 		 var strfirst = listData.first;
 		 var first = parseInt(strfirst);
  		 var name = pageEntity[i].XM_NAME;
@@ -130,6 +129,7 @@ var listPage = function () {
 			//报名开始时间
 			var startTime = pageEntity1[0].START_TIME;
 			var state1 = pageEntity1[0].STATE;
+			
 			if(state1=="待报名"){
 				state="报名审核"
 			}else if(state1=="已结束"){
@@ -169,7 +169,7 @@ var listPage = function () {
 				}else{
 					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td align="center">0</td><td style="text-align:center"><input class = "btn" type="button" onclick="tiaozhuan('+i+')" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></td></tr>');
 				}
-			}else{
+			}else if(state=="已结束"){
 					$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td align="center">0</td><td style="text-align:center"><input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" class="btn" type="button" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></td></tr>');	
 			}
  	  
