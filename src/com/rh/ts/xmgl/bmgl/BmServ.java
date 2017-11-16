@@ -45,13 +45,19 @@ public class BmServ extends CommonServ {
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		String startTime = bmbean.getStr("BM_START");
 		String endTime = bmbean.getStr("BM_END");
+	
+		//通知结束时间
+		Date date = new Date();
 		if(startTime!=""&&endTime!=""){
 			Date date1 = sdf.parse(startTime);
 			Date date2 = sdf.parse(endTime);
-			Date date = new Date();
 			if(date.getTime()<date2.getTime()&&date.getTime()>date1.getTime()){
 				if("进行中".equals(state)){
 					state = "待报名";
+				}else if("已结束".equals(state)){
+					state="已结束";
+				}else{
+					state="未开始";
 				}
 			}else if(date.getTime()>date2.getTime()){
 					state="已结束";
@@ -59,6 +65,7 @@ public class BmServ extends CommonServ {
 					state="未开始";
 			}
 			}
+		
 		
 		Bean newBean = new Bean();
 		newBean.set("STATE", state);

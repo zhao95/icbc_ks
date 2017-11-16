@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.icbc.ctp.utility.StringUtil;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
@@ -271,26 +274,6 @@ public class XmglServ extends CommonServ {
 		odeptcode = userBean.getDeptCode();
 		deptcodelist.add(odeptcode);
 
-		/*// 次机构数据
-		String where1 = "AND PERSON_ID='" + userBean.getStr("USER_CODE") + "' AND STRU_FLAG='1'";
-		List<Bean> slavelist = ServDao.finds("SY_HRM_ZDSTAFFSTRU", where1);
-
-		if (slavelist != null && slavelist.size() != 0) {
-			for (Bean bean : slavelist) {
-				String deptcode = bean.getStr("STRU_ID");
-				DeptBean dept = OrgMgr.getDept(bean.getStr("STRU_ID"));
-				String oDeptCode = dept.getODeptCode();
-				if (deptcode.equals(oDeptCode)) {
-					// 机构
-				} else {
-					// 部门
-					deptcodelist.add(bean.getStr("STRU_ID"));
-
-				}
-
-			}
-		}*/
-
 		// 本人所在的群组编码
 		ParamBean param1 = new ParamBean();
 		OutBean act = ServMgr.act("TS_BM_GROUP_USER", "getBmGroupCodes", param1);
@@ -354,7 +337,11 @@ public class XmglServ extends CommonServ {
 				}
 			}
 		}
-		List<Bean> list = ServDao.finds("TS_XMGL", "");
+		Date date  = new Date();
+		SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String datestr = simp.format(date);
+		String sql = "select * from ts_xmgl where xm_id in(SELECT XM_ID FROM TS_XMGL_BMGL WHERE '"+datestr+"' BETWEEN BM_TZ_START AND BM_TZ_END)";
+		List<Bean> list = Transaction.getExecutor().query(sql);
 		String s = "";
 		for (int i = 0; i < list.size(); i++) {
 			if (i == (list.size() - 1)) {
