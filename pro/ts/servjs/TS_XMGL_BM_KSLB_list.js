@@ -1,4 +1,8 @@
 var _viewer = this;
+var height = jQuery(window).height()-100;
+var width = jQuery(window).width()-100;
+//取消行点击事件
+$(".rhGrid").find("tr").unbind("dblclick");
 var  nowDate=new   Date();
 var year=nowDate.getFullYear();//4位
     var years =year.toString().substr(2, 2);
@@ -15,6 +19,7 @@ $("#TS_XMGL_BM_KSLB .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
 		$(item).find("td[icode='buttons']").append(
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BM_KSLB_look" operCode="optLookBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+
 				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BM_KSLB_delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
 		);
 		// 为每个按钮绑定卡片
@@ -35,9 +40,30 @@ function bindCard(){
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
 	});
-
+	 //查看
+	jQuery("td [id='TS_XMGL_BM_KSLB_look']").unbind("click").bind("click", function(){
+		var pkCode = jQuery(this).attr("rowpk");
+		//$(".hoverDiv").css('display','none');
+		openMyCard(pkCode,true);
+	 });
 	
-}		
+}
+
+//列表操作按钮 弹dialog
+function openMyCard(dataId,readOnly,showTab){
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[50,50]};
+    temp[UIConst.PK_KEY] = dataId;
+    if(readOnly != ""){
+    	temp["readOnly"] = readOnly;
+    }
+    if(showTab != ""){
+    	temp["showTab"] = showTab;
+    }
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+}
+
+
 _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
 	var configStr = "TS_XMGL_BM_KSLBK,{'TARGET':'','SOURCE':'KSLBK_NAME~KSLBK_CODE~KSLBK_XL~KSLBK_XL_CODE~KSLBK_MK~KSLBK_MKCODE~KSLBK_TYPE_NAME~KSLBK_TYPE~KSLBK_ID~KSLBK_TIME'," +
