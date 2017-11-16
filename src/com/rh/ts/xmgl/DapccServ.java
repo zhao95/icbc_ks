@@ -62,21 +62,6 @@ public class DapccServ extends CommonServ {
         String searchDeptCode = paramBean.getStr("searchDeptCode");
         String searchKcId = paramBean.getStr("searchKcId");
         String searchSjId = paramBean.getStr("searchSjId");
-        String searchJkCodePath = "";
-        if ("jk".equals(searchDeptCode)) {
-            searchDeptCode = "";
-            String sql = "SELECT b.CODE_PATH FROM TS_KCGL a " +
-                    "LEFT JOIN sy_org_dept b ON b.DEPT_CODE = a.KC_ODEPTCODE WHERE KC_ID = ?";
-            List<Object> values = new LinkedList<>();
-            values.add(searchKcId);
-            List<Bean> beanList = Transaction.getExecutor().query(sql, values);
-            //substring(b.CODE_PATH , 12, 10) 获取
-            if (beanList != null && beanList.size() > 0) {
-                Bean bean = beanList.get(0);
-                searchJkCodePath = bean.getStr("CODE_PATH");
-            }
-        }
-        paramBean.set("searchJkCodePath", searchJkCodePath);
 
         long l;//选中的考场时长
         try {
@@ -92,7 +77,6 @@ public class DapccServ extends CommonServ {
         }
         paramBean.set("searchKsTime", "");
 
-        Set<String> hashSet = this.getKcRelateOrgCodeList(searchKcId);
 //        if (hashSet.contains(searchDeptCode)) {
 //            paramBean.set("containDeptCode", searchDeptCode);
 //        } else {
@@ -100,7 +84,7 @@ public class DapccServ extends CommonServ {
 //        }
 //
 
-        if(StringUtils.isNotBlank(searchDeptCode)){
+        if (StringUtils.isNotBlank(searchDeptCode) && !"jk".equals(searchDeptCode)) {
             Bean dept = this.getDeptByCode(searchDeptCode, null);
             String deptLevel = dept.getStr("DEPT_LEVEL");
             if ("3".equals(deptLevel) || "2".equals(deptLevel) || "1".equals(deptLevel)) {
@@ -121,23 +105,46 @@ public class DapccServ extends CommonServ {
         configMap.put("searchBmXl", "BM_XL like ?");
         configMap.put("searchBmMk", "BM_MK like ?");
         configMap.put("searchBmJb", "BM_TYPE = ?");
-        configMap.put("searchJkCodePath", " a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
-                " and ? like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%')");
+//        configMap.put("searchJkCodePath", " a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
+//                " and ? like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%')");
 //        configMap.put("searchKsTime", "CAST(BM_KS_TIME as SIGNED) < ?");
 //        configMap.put("searchBmCount", "count = ?");
 
         List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
-        String whereSql = (String) extWhereSqlData.get(0);
         List<Object> values = (List<Object>) extWhereSqlData.get(1);
+        String whereSql = (String) extWhereSqlData.get(0);
+
+        //查找借考考生数据
+        if ("jk".equals(searchDeptCode)) {
+            String searchJkCodePath = "";
+            String sql = "SELECT b.CODE_PATH FROM TS_KCGL a " +
+                    "LEFT JOIN sy_org_dept b ON b.DEPT_CODE = a.KC_ODEPTCODE WHERE KC_ID = ?";
+            List<Object> values1 = new LinkedList<>();
+            values1.add(searchKcId);
+            List<Bean> beanList = Transaction.getExecutor().query(sql, values1);
+            //substring(b.CODE_PATH , 12, 10) 获取
+            if (beanList != null && beanList.size() > 0) {
+                Bean bean = beanList.get(0);
+                searchJkCodePath = bean.getStr("CODE_PATH");
+                values.add(searchJkCodePath);
+                whereSql += " and a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
+                        " and ? like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%')";
+//                paramBean.set("searchJkCodePath", searchJkCodePath);
+            }
+        } else {
+            //获取的考生在考场关联机构本级及下级的机构
+//        whereSql += "AND EXISTS (select 'X' from TS_KCGL_GLJG g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+//        values.add(searchKcId);
+            StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
+            Set<String> hashSet = this.getKcRelateOrgCodeList(searchKcId);
+            for (String s : hashSet) {
+                values.add(s);
+                deptSql.append("INSTR(c.CODE_PATH ,?)>0 or ");
+            }
+            whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
+        }
 //        Pair<String, List<Object>> extWhereSqlData
 
-        //获取的考生在考场关联机构本级及下级的机构
-        StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
-        for (String s : hashSet) {
-            values.add("%" + s + "%");
-            deptSql.append("c.CODE_PATH like ? or ");
-        }
-        whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
         //考试时长
         whereSql += " and CAST(BM_KS_TIME as SIGNED) <= ?";
         values.add(l);

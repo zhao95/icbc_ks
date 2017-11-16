@@ -809,7 +809,7 @@ var ZdfpccModal = {
                             var child = children[j];
                             FireFly.doAct("TS_XMGL_KCAP_YAPZW", "doArrangeSeat", {
                                 XM_ID: this.xmId,
-                                ODEPT_CODE: child.ID
+                                ODEPT_CODE: child.id
                             });
                         }
                     }
@@ -1830,6 +1830,7 @@ var KsObject = {
     clearData: function () {
         $('#ksOrgTreeContent').html('');
         $('#ksTable').find('tbody').html('');
+        $('#ksTablePage').css('display', 'none');
     },
 
     /**
@@ -2085,6 +2086,27 @@ var KsObject = {
 //                + 'searchBmMk:' + searchBmMk + '\n'
 //                + 'searchBmJb:' + searchBmJb,//FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), searchBmJb) + '\n'
 //                +'searchBmCount:' + searchBmCount + '\n');
+    },
+
+    /**
+     * 统计考生数
+     */
+    countKsCount:function (kcId,sjId) {
+        var params={};
+        var self = this;
+        var param = {
+            _linkWhere: " and XM_ID='" + self.xmId + "' ",
+            _linkServQuery: "2",
+            XM_ID: self.xmId
+        };
+        jQuery.extend(param, params);
+        jQuery.extend(param, params1);
+        return FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getKsContent', {data: JSON.stringify(param)}, false, false, function (data) {
+            self.ksArr = data._DATA_;
+            if (callback) {
+                callback.apply(self);
+            }
+        });
     },
 
     _initSearchValue: function () {

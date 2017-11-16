@@ -5,6 +5,7 @@ import com.rh.core.base.db.Transaction;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
+import com.rh.core.serv.dict.DictMgr;
 import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.kcap.KcapResource;
 import com.rh.ts.xmgl.kcap.arrange.ArrangeSeat;
@@ -170,6 +171,12 @@ public class YapzwServ extends CommonServ {
         return yapzwBean;
     }
 
+    /**
+     * 获取考场安排情况（已安排座位数/考场座位数）
+     *
+     * @param paramBean KC_ID SJ_ID
+     * @return {total,yapNum}
+     */
     public OutBean getKcZwInfo(ParamBean paramBean) {
         String kcId = paramBean.getStr("KC_ID");
         String sjId = paramBean.getStr("SJ_ID");
@@ -180,6 +187,47 @@ public class YapzwServ extends CommonServ {
         OutBean outBean = new OutBean();
         outBean.set("total", zwList.size());
         outBean.set("yapNum", yapList.size());
+        return outBean;
+    }
+
+    /**
+     * 根据BM_ID获取考生座位信息
+     *
+     * @param paramBean BM_ID
+     * @return outBean
+     */
+    public OutBean getKsZWInfoByBmId(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String bmId = paramBean.getStr("BM_ID");
+
+        String sql = "select f.BM_TYPE,f.BM_MK,f.BM_XL,f.BM_TITLE,b.KC_NAME,b.KC_ADDRESS,e.ZW_ZWH_SJ,d.SJ_START,c.BM_KS_TIME  " +
+                "from ts_xmgl_kcap_yapzw a " +
+                "left join ts_kcgl b on b.KC_ID = a.KC_ID " +
+                "left join ts_bmsh_pass c on c.SH_ID = a.SH_ID " +
+                "left join ts_xmgl_kcap_dapcc_ccsj d on d.SJ_ID = a.SJ_ID " +
+                "left join ts_kcgl_zwdyb e on e.ZW_ID = a.ZW_ID " +
+                "left join ts_bmlb_bm f on f.BM_ID = c.BM_ID " +
+                "where f.BM_ID =? order by d.SJ_START";
+        List<Object> values = new ArrayList<>();
+        values.add(bmId);
+        List<Bean> ksDataList = Transaction.getExecutor().query(sql, values);
+        if (ksDataList != null && ksDataList.size() > 0) {
+            Bean ksDataBean = ksDataList.get(0);
+
+            String bmTitle = (String) ksDataBean.get("BM_TITLE");
+            String bmXl = (String) ksDataBean.get("BM_XL");
+            String bmMk = (String) ksDataBean.get("BM_MK");
+            String bmType = (String) ksDataBean.get("BM_TYPE");
+            String bm_bt = DictMgr.getName("TS_XMGL_BM_KSLBK_LV", bmType) + "-" + bmXl + "-" + bmMk;
+            String title;
+            if (!"".equals(bmMk)) {
+                title = bm_bt;
+            } else {
+                title = bmTitle;
+            }
+            ksDataBean.set("title", title);
+            outBean.putAll(ksDataBean);
+        }
         return outBean;
     }
 }
