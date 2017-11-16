@@ -880,6 +880,7 @@ function bindCard() {
 		});
 		
 		$("div[class='ui-dialog ui-widget ui-widget-content ui-corner-all ui-draggable ui-resizable']").css("left","30%");
+		$("div[class='ui-dialog ui-widget ui-widget-content ui-corner-all ui-draggable ui-resizable']").css("top","20%");
 		
 	});
 	jQuery("td [id='TS_XMGL_BMSH_SHGZ_MX-copy']").unbind("click").bind("click", function() {
