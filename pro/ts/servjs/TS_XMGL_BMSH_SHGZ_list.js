@@ -11,10 +11,15 @@ if(_viewer.getParHandler()) {
 if(!xmId){
 	alert("项目ID为空，操作无效!");
 }
-
+var gzids = "";
 $(".rhGrid").find("tr").unbind("dblclick");
 $("#TS_XMGL_BMSH_SHGZ .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
+		if(index==1){
+			gzids+=$('td[icode="GZK_ID"]',item).text();
+		}else{
+			gzids+=","+$('td[icode="GZK_ID"]',item).text();
+		}
 		var dataId = item.id;		
 		$(item).find("td[icode='BUTTONS']").append(
 			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optSetBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">设置</span><span class="rh-icon-img btn-option"></span></a>'+
@@ -49,8 +54,15 @@ if(_viewer.getParHandler()) {
 	var ksqzId = _viewer.getParHandler().getPKCode();
 	_viewer.getBtn("add").unbind("click").bind("click", function(event) {
 		//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
+		var extwhere = "";
+		if(gzids!=""){
+			var gzarr = gzids.split(",");
+			for(var i=0;i<gzarr.length;i++){
+				extwhere += " AND GZ_ID != ^" +gzarr[i]+ "^";
+			}
+		}
 		var configStr = "TS_XMGL_BMSH_SHGZK,{'TARGET':'','SOURCE':'GZ_ID~GZ_TYPE~GZ_NAME~GZ_INFO'," +
-				"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
+				"'HIDE':'','EXTWHERE':'"+extwhere+"','TYPE':'multi','HTMLITEM':''}";
 		var options = {
 			"config" :configStr,
 			"parHandler":_viewer,
