@@ -646,15 +646,26 @@ listPage.prototype.bldTable = function (listData) {
         var successinfo = "";
         var failerinfo = "";
         var shstate = "审核中";
-        FireFly.doAct("TS_XMGL_BMGL", "getXmInfo", paramSH, true, false, function (data) {
-            successinfo = data.SH_TGTSY;
-            failerinfo = data.SH_BTGTSY;
-            shstate = data.shstate;
-        });
+      
+        var conresu = FireFly.doAct("TS_BMLB_BM", "getShState", {"XM_ID": XM_ID});
+        if (conresu.count == 0) {
+            flagstate = "无需审核";
+            sh_state_str = "审核通过";
+        }else if (conresu.count==1) {
+        	//判断是否有手动审核
+            flagstate = "无手动审核,审核结束";
+            shstate="已结束";
+        }else{
+        	  FireFly.doAct("TS_XMGL_BMGL", "getXmInfo", paramSH, true, false, function (data) {
+                  successinfo = data.SH_TGTSY;
+                  failerinfo = data.SH_BTGTSY;
+                  shstate = data.shstate;
+              });
+        }
         if (shstate == "") {
             shstate = "审核中";
         }
-        if (shstate == "审核结束") {
+        if (shstate == "已结束") {
             if (sh_state == 0) {
                 //审核中
                 sh_state_str = "审核未通过"
@@ -707,17 +718,13 @@ listPage.prototype.bldTable = function (listData) {
             '<td class="indexTD" style="text-align: center">' + leixng + '</td>' +
             '<td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">' + type + '</td>');
         var flagstate = '审核进行中';
-        if (shstate == "审核结束") {
-            flagstate = "审核结束"
+        if (shstate == "已结束") {
+            flagstate = "无手动审核,审核结束";
         }
         if (shstate == "未开始") {
             flagstate = "手动审核未开始"
         }
-        var conresu = FireFly.doAct("TS_BMLB_BM", "getShState", {"XM_ID": XM_ID});
-        if (conresu.count == 0) {
-            flagstate = "无需审核";
-            sh_state_str = "审核通过";
-        }
+       
         if (flagstate == '审核进行中' || flagstate == "无需审核") {
             //为table重新appendtr
             //已提交异议
@@ -782,7 +789,7 @@ listPage.prototype.bldTable = function (listData) {
                 $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a style=" id="chexiao">已撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
                 $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME"style="color:red;text-align: center">已撤销</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">' + flagstate + '</td>');
             }
-        } else if (flagstate == "审核结束") {
+        } else if (flagstate == "已结束") {
             $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
             $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
         } else {
