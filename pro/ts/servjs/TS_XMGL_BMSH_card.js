@@ -54,16 +54,24 @@ _viewer.beforeSave = function() {
 var flowSerTmp = _viewer.getItem("SH_RGSH").getValue(); 
 if(flowSerTmp == 1){
 	_viewer.getItem("SH_FLOW").show();
+	_viewer.getItem("SH_START").show();
+	_viewer.getItem("SH_END").show();
 }else if (flowSerTmp == 2){
 	_viewer.getItem("SH_FLOW").hide();
+	_viewer.getItem("SH_START").hide();
+	_viewer.getItem("SH_END").hide();
 }
 
 _viewer.getItem("SH_RGSH").change(function(){
 	flowSerTmp = _viewer.getItem("SH_RGSH").getValue(); 
 	if(flowSerTmp == 1){
 		_viewer.getItem("SH_FLOW").show();
+		_viewer.getItem("SH_START").show();
+		_viewer.getItem("SH_END").show();
 	}else if (flowSerTmp == 2){
 		_viewer.getItem("SH_FLOW").hide();
+		_viewer.getItem("SH_START").hide();
+		_viewer.getItem("SH_END").hide();
 	}
 });	
 	
