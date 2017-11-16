@@ -28,7 +28,7 @@ import com.rh.ts.xmgl.kcap.utils.KcapUtils;
 public class KcapResource {
 
 	private static Log log = LogFactory.getLog(KcapResource.class);
-	
+
 	private String xmId = "";
 
 	/**
@@ -101,7 +101,7 @@ public class KcapResource {
 	// private Bean branchBean = null;
 
 	public KcapResource(String xmId) {
-		
+
 		this.xmId = xmId;
 
 		// 加载规则
@@ -120,7 +120,7 @@ public class KcapResource {
 	}
 
 	public KcapResource(String xmId, String odept) {
-		
+
 		this.xmId = xmId;
 
 		// 加载规则
@@ -138,6 +138,8 @@ public class KcapResource {
 		// loadBranch();
 		// 加载其他资源
 		loadOther();
+
+		// showResLog();
 	}
 
 	/**
@@ -489,7 +491,7 @@ public class KcapResource {
 				Bean jgBean = kcInfo.getBean("GLJG"); // 考场的关联机构Bean
 
 				for (Object jgkey : jgBean.keySet()) {
-					
+
 				}
 			}
 		}
@@ -678,6 +680,8 @@ public class KcapResource {
 				List<Bean> list = temp.getList(key);
 
 				timeBean = commList2Bean(list, keys[1]);// "BM_KS_TIME"
+
+//				log.error("BM_KS_TIME----------S_ODEPT=" + key.toString() + ": " + ksBean.toString());
 			}
 
 			Bean temp1 = new Bean();
@@ -753,11 +757,11 @@ public class KcapResource {
 
 					temp.set("JG_NAME", dName);
 
-					gljg.set(dCode, temp);
+					gljg.set(dCode, temp.clone());
 
 				} else {
 
-					gljg.set(dCode, temp);
+					gljg.set(dCode, temp.clone());
 
 					UserBean user = Context.getUserBean();
 
@@ -775,15 +779,17 @@ public class KcapResource {
 
 					for (Bean odeptBean : odeptList) {
 
-						dCode = odeptBean.getStr("DEPT_CODE");
+						String childCode = odeptBean.getStr("DEPT_CODE");
 
-						dName = odeptBean.getStr("DEPT_NAME");
+						String childName = odeptBean.getStr("DEPT_NAME");
 
-						temp.set("JG_CODE", dCode);
+						Bean childTemp = new Bean();
 
-						temp.set("JG_NAME", dName);
+						childTemp.set("JG_CODE", childCode);
 
-						gljg.set(dCode, temp);
+						childTemp.set("JG_NAME", childName);
+
+						gljg.set(childCode, childTemp);
 					}
 				}
 			}
@@ -931,7 +937,11 @@ public class KcapResource {
 
 			} else {
 
-				newBean.set(key, bean);
+				List<Bean> blist = new ArrayList<Bean>();
+
+				blist.add(bean);
+
+				newBean.set(key, blist);
 			}
 		}
 		return newBean;
@@ -989,8 +999,7 @@ public class KcapResource {
 
 		return ksList;
 	}
-	
-	
+
 	/**
 	 * 获取考场下关联机构
 	 * 
@@ -1031,7 +1040,7 @@ public class KcapResource {
 
 		Bean gljg = getGljg(kcId);
 
-//		Bean ksBean = res.getFreeKsBean();
+		// Bean ksBean = res.getFreeKsBean();
 
 		for (Object key : gljg.keySet()) {
 
@@ -1044,7 +1053,9 @@ public class KcapResource {
 				dCode = OrgMgr.getOdept(dCode).getODeptCode(); // 获取机构
 			}
 
-			Bean timeKs = ksBean.getBean(dCode);
+			Bean timeKs = (Bean) ksBean.getBean(dCode).clone();
+
+//			log.error("-----------" + timeKs.toString());
 
 			for (Object time : timeKs.keySet()) { // 遍历时长
 
@@ -1052,17 +1063,16 @@ public class KcapResource {
 
 				if (filtBean.containsKey(time)) {
 
-					filtBean.set(time,  KcapUtils.mergeBean(ks, filtBean.getBean(time)));
+					filtBean.set(time, KcapUtils.mergeBean(ks, filtBean.getBean(time)));
 
 				} else {
 
-					filtBean.set(time, ks);
+					filtBean.set(time, ks.clone());
 				}
 			}
 		}
 
 		return filtBean;
-
 	}
 
 	public Bean getRuleBean() {
@@ -1166,7 +1176,6 @@ public class KcapResource {
 	public Bean getFarKsBean() {
 		return farKsBean;
 	}
-	
 
 	public String getXmId() {
 		return xmId;

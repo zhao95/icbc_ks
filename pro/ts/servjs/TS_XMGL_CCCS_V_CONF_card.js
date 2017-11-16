@@ -28,9 +28,18 @@ _viewer.getBtn("save").unbind("click").bind("click", function(event) {
 		Cookie.set("scVal", scVal, 1);
 		Cookie.set("sjVal", sjVal, 1);
 		Cookie.set("cjVal", cjVal, 1);
-		_viewer.getParHandler().refresh();
-//		_viewer.backA.mousedown();
-		$("#TS_XMGL_CCCS_V_CONF-winDialog").prev().find("a.ui-dialog-titlebar-close").click();
+
+		//		_viewer.cardBarTipLoad("提交中...");
+		//		Tip.showLoad("提交中...");
+
+		setTimeout(function() {
+			_viewer._parHandler.refreshGrid();
+		}, 100);
+		
+		_viewer.setParentNoRefresh();
+		_viewer.backA.mousedown();
+
+		//		$("#TS_XMGL_CCCS_V_CONF-winDialog").prev().find("a.ui-dialog-titlebar-close").mousedown();		
 	}
 });
 
