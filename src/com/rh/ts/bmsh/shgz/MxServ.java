@@ -87,6 +87,19 @@ public class MxServ extends CommonServ {
 	String ksqzId = paramBean.getStr("ksqzId");
 	for (int i = 0; i < ids.split(",").length; i++) {
 	    String dataId = ids.split(",")[i];
+	    if(dataId.equals("Y01108")){
+	    	  Bean bean = ServDao.find("TS_XMGL_BMSH_SHGZK_MX", "Y01109");
+	   	    Bean dataBean = new Bean();
+	   	    dataBean.set("XM_ID", xmId);
+	   	    dataBean.set("MX_NAME", bean.getStr("MX_NAME"));
+	   	    dataBean.set("MX_VALUE1", bean.getStr("MX_VALUE1"));
+	   	    dataBean.set("MX_VALUE2", bean.getStr("MX_VALUE2"));
+	   	    dataBean.set("MX_IMPL", bean.getStr("MX_IMPL"));
+	   	    dataBean.set("KSQZ_ID", ksqzId);
+	   	    dataBean.set("GZ_ID", gz_id);
+	   	    dataBean.set("GZK_MX_ID", bean.getStr("MX_ID"));
+	   	    ServDao.save("TS_XMGL_BMSH_SHGZ_MX", dataBean);
+	    }
 	    Bean bean = ServDao.find("TS_XMGL_BMSH_SHGZK_MX", dataId);
 	    Bean dataBean = new Bean();
 	    dataBean.set("XM_ID", xmId);
@@ -96,6 +109,7 @@ public class MxServ extends CommonServ {
 	    dataBean.set("MX_IMPL", bean.getStr("MX_IMPL"));
 	    dataBean.set("KSQZ_ID", ksqzId);
 	    dataBean.set("GZ_ID", gz_id);
+	    dataBean.set("GZK_MX_ID", bean.getStr("MX_ID"));
 	    ServDao.save("TS_XMGL_BMSH_SHGZ_MX", dataBean);
 	}
 	outBean.setOk();

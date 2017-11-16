@@ -2,6 +2,9 @@ var _viewer = this;
 var ksqzid = _viewer.getParHandler().getItem("KSQZ_ID").getValue();
 var xm_id =  _viewer.getParHandler().getItem("XM_ID").getValue();
 var gz_id =  _viewer.getParHandler().getItem("GZ_ID").getValue();
+var result = FireFly.byId("TS_XMGL_BMSH_SHGZ",gz_id);
+var gzk_id = result.GZK_ID;
+var MXIDS = "";
 $(".rhGrid").find("tr").unbind("dblclick");
 $("th[icode='BUTTONS']").css('width','15%');
 //每一行添加编辑和删除
@@ -9,9 +12,15 @@ var idinfo = "";
 $("#TS_XMGL_BMSH_SHGZ_MX .rhGrid").find("tr").each(function(index, item) {
 	var table = this;
 	if(index != 0) {
+		if(index==1){
+			MXIDS+=$('td[icode="GZK_MX_ID"]',item).text();
+		}else{
+			MXIDS+=","+$('td[icode="GZK_MX_ID"]',item).text();
+		}
 		var value1 = $('td[icode="MX_VALUE1"]',item).text();
 		var val = $('td[icode="MX_VALUE2"]',item).text();
 		if(val.indexOf("rzyear")>-1){
+			
 			idinfo=item.id;
 			$(table).css("display",'none');
 		}
@@ -1156,8 +1165,20 @@ _viewer.beforeDelete = function(pkArray) {
 //添加按钮
 _viewer.getBtn("add").unbind("click").bind("click", function(event) {
 	//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
-	var configStr = "TS_XMGL_BMSH_SHGZK_MX,{'TARGET':'','SOURCE':'GZ_NAME~MX_NAME~MX_ID'," +
-			"'HIDE':'MX_ID','TYPE':'multi','HTMLITEM':''}";
+	var configStr="";
+	if(MXIDS.length!=2&&MXIDS.length!=0){
+		var extwhere = "and GZ_ID=^" +gzk_id+ "^";
+		var mxarr = MXIDS.split(",");
+		for(var i=0;i<mxarr.length;i++){
+			extwhere+=" and MX_ID !=^"+mxarr[i]+"^"
+		}
+		 configStr = "TS_XMGL_BMSH_SHGZK_MX,{'TARGET':'','SOURCE':'GZ_NAME~MX_NAME~MX_ID'," +
+			"'HIDE':'MX_ID','EXTWHERE':'"+extwhere+"','TYPE':'multi','HTMLITEM':''}";
+	}else{
+		var extwhere = "and GZ_ID=^" +gzk_id+ "^ ";
+		 configStr = "TS_XMGL_BMSH_SHGZK_MX,{'TARGET':'','SOURCE':'GZ_NAME~MX_NAME~MX_ID'," +
+		"'HIDE':'MX_ID','EXTWHERE':' and GZ_ID=^" +gzk_id+ "^','TYPE':'multi','HTMLITEM':''}";
+	}
 	var options = {
 		"config" :configStr,
 		"parHandler":_viewer,
