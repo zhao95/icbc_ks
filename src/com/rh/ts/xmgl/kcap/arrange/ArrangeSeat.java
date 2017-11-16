@@ -8,6 +8,8 @@ import org.apache.commons.logging.LogFactory;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.db.Transaction;
+import com.rh.core.org.mgr.OrgMgr;
+import com.rh.core.org.util.OrgConstant;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Strings;
@@ -177,8 +179,6 @@ public class ArrangeSeat {
 
 			Bean freeKc = (Bean) freeBean.getBean(kcId).clone();
 
-			Bean odeptKs = res.getGljgKs(kcId);
-
 			int ccsort[] = KcapUtils.sortInt(freeKc); // 场次号排序
 
 			for (int cs = 0; cs < ccsort.length; cs++) {// 遍历场次号
@@ -192,6 +192,8 @@ public class ArrangeSeat {
 				String daysort[] = KcapUtils.sortStr(freeCc); // 日期排序
 
 				for (int ds = 0; ds < daysort.length; ds++) {// 遍历场次日期
+					
+					Bean odeptKs = res.getGljgKs(kcId);
 
 					String day = daysort[ds];
 
@@ -220,7 +222,7 @@ public class ArrangeSeat {
 							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
 							freeZw.set("GLJG", res.getGljg(kcId));// 关联机构
-
+							
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
 
 							try {
@@ -228,7 +230,6 @@ public class ArrangeSeat {
 								if (oneKs != null && !oneKs.isEmpty()) {
 
 									saveRes(freeZw, oneKs, odeptKs, res);
-
 								}
 
 							} catch (Exception e) {

@@ -43,7 +43,7 @@ rh.vi.cardView = function(options) {
    this._height = "";
    this._width = "";
    this._modal = false;//卡片模式
-   this._parentRefreshFlag = false;
+   this._parentRefreshFlag = true;
    this._areaId = this.opts.areaId;
    this._readOnly = this.opts.readOnly;
    this._pCon = this.opts.pCon;
@@ -466,7 +466,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
 		   } else {//默认body容器
 			   jQuery("#" + _self.dialogId).dialog("close");
 		   }
-//		   if (_self._parentRefreshFlag) { //列表页面刷新
+		   if (_self._parentRefreshFlag) { //列表页面刷新
 			   if (_self._parHandler) {
 				   try {
 					   _self._parHandler.refreshGrid(); 
@@ -474,7 +474,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
 					   //console.log(e.message);
 				   }
 			   }
-//		   }
+		   }
 		   
 		   if (_self._preTabHandlerRefresh) {//跨tab的句柄传递
 			   try {
@@ -2025,6 +2025,10 @@ rh.vi.cardView.prototype.getParams = function() {
  */
 rh.vi.cardView.prototype.setParentRefresh = function() {
 	return this._parentRefreshFlag = true;
+};
+
+rh.vi.cardView.prototype.setParentNoRefresh = function() {
+	return this._parentRefreshFlag = false;
 };
 /**
  * 取得意见(自定义)字段
