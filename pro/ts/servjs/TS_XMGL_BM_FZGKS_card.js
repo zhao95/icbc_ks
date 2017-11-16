@@ -12,7 +12,7 @@ var _viewer = this;
 //	    });
 //	});
  
-//针对开始和结束时间的校验
+//针对开始和结束时间的校验_viewer.afterSave
 _viewer.beforeSave = function() {
 	var beginTime=_viewer.getItem("FZGKS_STADATE").getValue();
 	var endTime=_viewer.getItem("FZGKS_ENDDATE").getValue();

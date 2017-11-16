@@ -57,10 +57,9 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	    	var MKcodes = idArray.KSLBK_MKCODE.split(",");
 	    	var typename = idArray.KSLBK_TYPE_NAME.split(",");
 	    	var kslbTime = idArray.KSLBK_TIME.split(",");
-	    
 	    	var paramjson={};
 	    	var paramlist = [];
-	    	for(var i=0;i<ids.length;i++){
+	    	 for(var i=0;i<ids.length;i++){
 	    		//从数据库中查找数据
 	    		FireFly.doAct("TS_XMGL_BM_KSLB","finds",{"_WHERE_":"and KSQZ_ID = '"+qzId+"' and KSLBK_ID='"+ids[i]+"'"},true,false,function(data){
 	    			if(data._DATA_.length ==0){
@@ -84,21 +83,35 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	   				+XLcodes[i].toString().substr(0,1)
 	   				+XLcodes[i].toString().substr(XLcodes[i].toString().length-4,4)
 	   				+MKcodes[i].toString()
-	   				+types[i];
-	   				param["KSLB_KSNAME"]=names[i]+(xls[i]=='无模块'?"":xls[i])+mks[i]+typename[i]+'试卷';
-	   				
-	   				//(month<10 ? "0"+month:month)
-	   				
+	   				+(types[i]=='无'? "":types[i]);
+	   				param["KSLB_KSNAME"]=names[i]+xls[i]+(mks[i]=='无模块'? "":mks[i])+typename[i]+'试卷';
 	   				paramlist.push(param);
 	   				console.log(param);
 	    	    }
     		});    
-	    	}debugger;
+	    	}
 	    	paramjson["BATCHDATAS"]= paramlist;
+	    	
 	    	var result =FireFly.batchSave(_viewer.servId,paramjson,"",false,false);	
-	    	/*console.log(result);
-	    	_viewer.listBarTip("保存成功");
-	    	_viewer.listBarTipError("选择失败");*/
+//	    	if(result._DATA_.length >0){
+//	    		for(var j=0;j<result._DATA_.length;j++){
+//	    			var paramKssj = {};
+//	    			
+//	    			paramKssj["KSSJ_KSNUM"]=result._DATA_[j].KSLB_KSNUM;
+//	    			paramKssj["KSSJ_KSNAME"]=result._DATA_[j].KSLB_KSNAME;
+//	    			paramKssj["XM_ID"]=result._DATA_[j].XM_ID;
+//	    			//paramKssj["XM_SZ_ID"]=result._DATA_[j].XM_SZ_ID;
+//	    			paramKssj["KSLB_ID"]=result._DATA_[j].KSLB_ID;
+//	    			paramKsList.push(paramKssj);
+//	    		}
+//	    		paramKsJson["BATCHDATAS"]= paramKsList;
+//	    		
+//	    		FireFly.batchSave("TS_XMGL_KSSJ",paramKsJson,"",false,false);//保存到考试试卷中
+//	    	}
+	    	//console.log(result);
+	    	//_viewer.listBarTip("保存成功");
+	    	//_viewer.listBarTipError("选择失败");*/
+	    	
 	    	
 	    	_viewer.refresh();
 		}
