@@ -7,6 +7,16 @@ var user_office_phone = System.getVar("@USER_OFFICE_PHONE@");
 var user_cmpy_date = System.getVar("@USER_CMPY_DATE@");
 var xm_id  = $("#xmidval").val();
 
+var paramstrs = {};
+paramstrs["XM_ID"]=xm_id;
+var resultcount = FireFly.doAct("TS_BMLB_BM","getShState",paramstrs);
+var countflag = resultcount.count
+if(resultcount.count==0){
+	$("#zgyzbt").attr("disabled","disabled");
+}else if(resultcount.count==2){
+	$("#zgyzbt").attr("disabled","disabled");
+}
+
 var bm_start="";//报名开始时间
 var bm_end = "";//报名结束时间
 var xm_name = "";//项目名称
@@ -83,25 +93,6 @@ function xminfoshow(){
 			parambm["user_code"]=user_code;
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
-			var zd = results.zd;
-			
-			if(zd=="false"){
-				//直接通过
-			for(var i=0;i<checkeddata.length;i++){
-				
-				var a=checkeddata[i].ID;
-				$("#"+a).append('<div style="height:5px;"></div>');
-				$("#"+a).append('<div style="height:5px;"></div>');
-				$("#"+a).append('<div style="height:5px;"></div>');
-				var yzjg=a+"yzjg";
-				if(""==successinfo){
-						$("#"+yzjg).append("初步审核通过");
-					}else{
-						$("#"+yzjg).append(successinfo);
-					}
-			}
-			$("#loading").modal("hide");
-			}
 		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, false,true,function(data){
     		yzgz=data;
     		//获取后台传过来的key
@@ -619,6 +610,9 @@ function xminfoshow(){
 	}
 	//跨序列的考试
 	function fuzhi(){
+		if(countflag==0||countflag==2){
+			var divstr = "<div></div><div></div><div></div>"
+		}
 		var strchecked = checked.join(",");
 		paramstr={};
 		paramstr["checked"]=strchecked;
@@ -662,7 +656,7 @@ function xminfoshow(){
 			       '<td >'+kslb_mk+'</td>'+
 			       '<td >'+kslb_type_name+'</td>'+
 			       '<td class="rhGrid-td-hide"><div>cannot</div></td>'+
-			       '<td ><div id="'+kslbk_id+'"></div></td>'+
+			       '<td ><div id="'+kslbk_id+'">'+divstr+'</div></td>'+
 			       '<td ><div id="'+kslbk_id+'yzjg"></div></td>'+
 				   '<td class="rhGrid-td-hide" ><input type="text" name="zgksname" value="'+kslbk_id+'"></td>'+
 				   '<td class="rhGrid-td-hide" >'+kslbk_id+'</td>'+

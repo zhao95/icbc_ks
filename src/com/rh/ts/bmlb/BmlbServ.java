@@ -1241,9 +1241,16 @@ public class BmlbServ extends CommonServ {
 		
 		if(finds2!=null&&finds2.size()!=0){
 			String zd = finds2.get(0).getStr("SH_ZDSH");
+			String sd = finds2.get(0).getStr("SH_RGSH");
 			if(!"1".equals(zd)){
 				//不进行自动验证
-				out.set("zd","false");
+				if(!"1".equals(sd)){
+					//不进行手动
+					out.set("zd","false");
+				}else{
+					//进行手动
+					out.set("zd","true");
+				}
 			}
 		}
 		return out.set("list", finds);
