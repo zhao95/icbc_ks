@@ -1,5 +1,5 @@
 var _viewer = this;
-debugger;
+
 if(_viewer.opts.act == "cardAdd"){
 	var XM_SZ_ID = _viewer.opts.XM_SZ_ID;
 	if(typeof(XM_SZ_ID)!="undefined"){ 
@@ -17,7 +17,7 @@ $("#TS_XMGL_BMSH-SH_LOOK_label").css("width","300px");
 $("#TS_XMGL_BMSH-SH_LOOK_div").css("padding-left","100px");
 //针对开始和结束时间的校验
 _viewer.beforeSave = function() {
-	debugger;
+	
 	var  xmRgsh=_viewer.getItem("SH_RGSH").getValue();//人工审核
 	 var xmZdsh=_viewer.getItem("SH_ZDSH").getValue();//自动审核 
 	var beginTime=_viewer.getItem("SH_START").getValue();
@@ -33,7 +33,7 @@ _viewer.beforeSave = function() {
 		return false;
  	}
     if(xmRgsh==2 && xmZdsh==2){
-	alert("人工审核和自动审核都选择'否',您确定不需要审核吗？");
+	alert("人工审核和自动审核都选择了'否'!");
     }
 };
 //_viewer.getItem("SH_START").obj.unbind("click").bind("click", function() {
