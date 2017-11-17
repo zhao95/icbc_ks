@@ -121,7 +121,7 @@ rh.vi.pageView.prototype._bldMenu = function() {
 			//添加菜单的展开收起图标
 			var spanIcon = jQuery("<span style='float:right;'></span>").addClass("leftMenu-ui-icon").addClass("ui-icon-close");
 			jQuery("#left-homeMenu").find("h3").append(spanIcon);
-            var configCon = jQuery("<div style='background:#f3eeee;height:50%'></div>").addClass("configDiv").appendTo(jQuery("#left-homeMenu"));
+            var configCon = jQuery("<div style='background:#f3eeee;height:200px'></div>").addClass("configDiv").appendTo(jQuery("#left-homeMenu"));
 
 //			var expandBar = jQuery("<a href='javascript:void(0);' title='收起边栏' class='leftMenu-close'></a>").appendTo(configCon);
 //			var configBar = jQuery("<a href='javascript:void(0);' title='风格配置' class='leftMenu-config'></a>").appendTo(configCon);
