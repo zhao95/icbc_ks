@@ -182,7 +182,7 @@ public class KcapResource {
 
 		values.add(xmId);
 
-		String sql = "select k.KC_ID,k.KC_CODE,K.KC_ODEPTCODE,K.KC_ODEPTNAME,k.KC_SCORE,k.KC_STATE,k.KC_MAX,k.KC_GOOD,k.KC_LEVEL,c.CC_ID,c.XM_ID from TS_XMGL_KCAP_DAPCC c LEFT JOIN ts_kcgl k on k.kc_id = c.kc_id where c.XM_ID=? ";
+		String sql = "select k.KC_ID,k.KC_NAME,k.KC_CODE,K.KC_ODEPTCODE,K.KC_ODEPTNAME,k.KC_SCORE,k.KC_STATE,k.KC_MAX,k.KC_GOOD,k.KC_LEVEL,c.CC_ID,c.XM_ID from TS_XMGL_KCAP_DAPCC c LEFT JOIN ts_kcgl k on k.kc_id = c.kc_id where c.XM_ID=? ";
 
 		if (!Strings.isBlank(odept)) {
 
@@ -529,6 +529,8 @@ public class KcapResource {
 				String kcLv = info.getStr("KC_LEVEL"); // 考场层级
 
 				String xmId = info.getStr("XM_ID"); // 项目id
+				
+				String kcName = info.getStr("KC_NAME");
 
 				List<Bean> zwhList = kcInfo.getList("ZWH");
 
@@ -561,6 +563,8 @@ public class KcapResource {
 					zwBean.set("SJ_START", cc.getStr("SJ_START"));
 
 					zwBean.set("SJ_END", cc.getStr("SJ_END"));
+					
+					zwBean.set("KC_NAME", kcName);
 
 					Bean dayBean = new Bean();
 
@@ -595,6 +599,8 @@ public class KcapResource {
 				String kcLv = info.getStr("KC_LEVEL"); // 考场层级
 
 				String xmId = info.getStr("XM_ID"); // 项目id
+				
+				String kcName = info.getStr("KC_NAME");
 
 				List<Bean> zwhList = kcInfo.getList("ZWH"); // 座位号
 
@@ -625,6 +631,8 @@ public class KcapResource {
 					zwBean.set("SJ_START", cc.getStr("SJ_START"));
 
 					zwBean.set("SJ_END", cc.getStr("SJ_END"));
+					
+					zwBean.set("KC_NAME", kcName);
 
 					Bean zwhBeanVal = new Bean();
 

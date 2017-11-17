@@ -51,7 +51,7 @@ public class ArrangeSeat {
 		if (ksConstrain == 1) { // 强制安排
 
 			try {
-				Transaction.begin();
+				// Transaction.begin();
 
 				if (priority == 1) { // 最少场次
 
@@ -62,12 +62,12 @@ public class ArrangeSeat {
 					arrangeKc(res, true);
 				}
 
-				Transaction.commit();
+				// Transaction.commit();
 
 			} catch (Exception e) {
 				log.error(e);
 			} finally {
-				Transaction.end();
+				// Transaction.end();
 			}
 		}
 
@@ -107,6 +107,8 @@ public class ArrangeSeat {
 
 				Bean freeDayCc = (Bean) freeCc.getBean(day).clone();
 
+				String kcName = freeDayCc.getStr("KC_NAME");
+
 				String date = day.toString();
 
 				String kcsort[] = KcapUtils.sortKcId(freeDayCc, res); // 考场排序
@@ -116,8 +118,6 @@ public class ArrangeSeat {
 					String kcId = kcsort[kc];
 
 					Bean freeKc = (Bean) freeDayCc.getBean(kcId).clone();
-
-					Bean odeptKs = res.getGljgKs(kcId);
 
 					String zwsort[] = KcapUtils.sortStr(freeKc); // 座位排序
 
@@ -139,7 +139,17 @@ public class ArrangeSeat {
 
 							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
-							freeZw.set("GLJG", res.getGljg(kcId));// 关联机构
+							// freeZw.set("GLJG", res.getGljg(kcId));// 关联机构
+
+							Bean odeptKs = res.getGljgKs(kcId);
+							
+							// 根据考试时长筛选考生
+							KcapMatch.filtKsTime(freeZw, res.getBusyZwBean(), odeptKs);
+
+							// 过滤 相同日期,相同场次的考生
+							KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
+							
+							log.error("----------安排考场-" + kcName + " " + date + " " + sjCC + " "	+ freeZw.getStr("ZW_ZWH_XT"));
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
 
@@ -169,8 +179,6 @@ public class ArrangeSeat {
 	 */
 	private void arrangeKc(KcapResource res, boolean isConstrain) {
 
-		log.error(res.getFreeKsBean());
-
 		Bean freeBean = new Bean(res.getFreeKcZwBean());
 
 		String kcsort[] = KcapUtils.sortKcId(freeBean, res); // 考场排序
@@ -195,11 +203,11 @@ public class ArrangeSeat {
 
 				for (int ds = 0; ds < daysort.length; ds++) {// 遍历场次日期
 
-					Bean odeptKs = res.getGljgKs(kcId);
-
 					String day = daysort[ds];
 
 					Bean freeDayCc = (Bean) freeCc.getBean(day).clone();
+
+					String kcName = freeDayCc.getStr("KC_NAME");
 
 					String date = day.toString();
 
@@ -223,7 +231,17 @@ public class ArrangeSeat {
 
 							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
-							freeZw.set("GLJG", res.getGljg(kcId));// 关联机构
+							// freeZw.set("GLJG", res.getGljg(kcId));// 关联机构
+
+							Bean odeptKs = res.getGljgKs(kcId);
+							
+							// 根据考试时长筛选考生
+							KcapMatch.filtKsTime(freeZw, res.getBusyZwBean(), odeptKs);
+
+							// 过滤 相同日期,相同场次的考生
+							KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
+							
+							log.error("----------安排考场-" + kcName + " " + date + " " + sjCC + " "	+ freeZw.getStr("ZW_ZWH_XT"));
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
 
@@ -439,7 +457,7 @@ public class ArrangeSeat {
 
 			String ksOdept = oneKs.getStr("S_ODEPT"); // 考生机构
 
-			if (bmStatus == 1) {
+			if (bmStatus == 2) {
 
 				ksOdept = oneKs.getStr("JK_ODEPT"); // 借考机构
 			}
@@ -460,14 +478,16 @@ public class ArrangeSeat {
 					res.getFreeKcZwBean().getBean(kcId).getBean(cc).getBean(date).remove(zwh);
 				}
 
-				for (Object key : res.getFreeKsBean().getBean(ksOdept).keySet()) {
-
-					log.error(" 删除前--res.getFreeKsBean()： " + key.toString() + "="
-							+ res.getFreeKsBean().getBean(ksOdept).getBean(key).size());
-				}
+				// for (Object key :
+				// res.getFreeKsBean().getBean(ksOdept).keySet()) {
+				//
+				// log.error(" 删除前--res.getFreeKsBean()： " + key.toString() +
+				// "="
+				// + res.getFreeKsBean().getBean(ksOdept).getBean(key).size());
+				// }
 				Bean ks = res.getFreeKsBean().getBean(ksOdept);
 				// 移除考生资源
-				removeKs(ks.getBean(ksTime), uCode, shId, true);
+				removeKs(ks.getBean(ksTime), uCode, shId, false);
 
 				for (Object key : res.getFreeKsBean().getBean(ksOdept).keySet()) {
 
@@ -512,7 +532,7 @@ public class ArrangeSeat {
 
 		String ksOdept = oneKs.getStr("S_ODEPT"); // 考生机构
 
-		if (bmStatus == 1) {
+		if (bmStatus == 2) {
 			ksOdept = oneKs.getStr("JK_ODEPT"); // 借考机构
 		}
 
