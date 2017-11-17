@@ -149,6 +149,15 @@ public class DapccServ extends CommonServ {
         whereSql += " and CAST(BM_KS_TIME as SIGNED) <= ?";
         values.add(l);
 
+        //默认获取未安排的人员,isArrange = 'false'  获取安排人员
+        if (!"false".equals(paramBean.getStr("isArrange"))) {
+            //默认获取未安排的人员
+            whereSql += " and not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID)";
+        }
+
+        configMap.put("isArrange", " not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) ");
+
+
         String sql = "select a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH"
                 + ",(select COUNT(*) from TS_BMSH_PASS a2 where a2.BM_CODE=a.BM_CODE and a2.XM_ID=a.XM_ID AND a2.BM_STATUS NOT IN ('1', '3') ) as count" +
                 ",(case a.BM_STATUS when '2' then '借考' else '' end) as status "
@@ -156,9 +165,10 @@ public class DapccServ extends CommonServ {
                 + "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE "
                 + "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
                 + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
-                + "where not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
-                + " and a.BM_STATUS not in('1','3')"
+                + "where a.BM_STATUS not in('1','2','3')"
                 + whereSql;
+        /*not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
+                + " and */
         //where 姓名/登录名/报考类型/报考数  bm_name /login_name?/
         List<Bean> dataList = Transaction.getExecutor().queryPage(
                 sql, page.getNowPage(), page.getShowNum(), new ArrayList<>(values), null);
@@ -664,6 +674,20 @@ public class DapccServ extends CommonServ {
         } else {
             outBean.setError();
         }
+        return outBean;
+    }
+
+    /**
+     * 获取机构下考场待安排考生数
+     *
+     * @return outBean
+     */
+    public OutBean getDeptKcCount(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String kcIdStr = paramBean.getStr("KC_ID");
+        String[] split = kcIdStr.split(",");
+//        bean
+
         return outBean;
     }
 }

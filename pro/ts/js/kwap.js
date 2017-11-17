@@ -271,6 +271,8 @@ var HeaderBtn = {
                 } else {
                     $("#unPublish").css('display', 'block');
                 }
+
+
             } else {
                 //没有发布权限,不显示发布 取消发布按钮
                 $("#publish").css('display', 'none');
@@ -432,26 +434,79 @@ var HeaderBtn = {
             $("#unPublish").css('display', 'none');
         });
 
-        //伸缩按钮
-        $("#toggle-sidebar").click(function () {
-            var speed = 200;
+        function sidebarFunction() {
             var $mainSidebar = $('.main-sidebar');
             var $i = $(this).find('i');
-            if ($mainSidebar.width() === 15) {
+            if ($mainSidebar.width() < 20) {
                 //收缩状态
                 $('.content-wrapper').animate({marginLeft: "250px"}, speed);
                 $mainSidebar.animate({width: "250px"}, speed, function () {
                     $i.removeClass("fa-angle-right");
                     $i.addClass("fa-angle-left");
+                    $('#topContent').resize();
                 });
             } else {
                 $('.content-wrapper').animate({marginLeft: "16px"}, speed);
                 $mainSidebar.animate({width: "16px"}, speed, function () {
                     $i.removeClass("fa-angle-left");
                     $i.addClass("fa-angle-right");
+                    $('#topContent').resize();
+                });
+            }
+        }
+
+        var speed = 200;
+        //伸缩按钮
+        $("#toggle-sidebar").click(function () {
+            sidebarFunction();
+        });
+
+        $("#maximize").click(function () {
+            sidebarFunction();
+            if ($(this).find('img').attr('src').indexOf('maximize') > 0) {
+                $(this).find('img').attr('src', FireFly.getContextPath() + '/ts/image/fit-size.png');
+
+                var number = document.documentElement.clientHeight - 127;
+                if (number < 557) {
+                    number = 557;
+                }
+                $('#ksOrgTreeContent').animate({height: number + 'px'}, speed);
+                $('#ksContent').animate({height: number + 'px'}, speed, function () {
+                    $('#bottom-content').css('display', 'none');
+                });
+            } else {
+                $(this).find('img').attr('src', FireFly.getContextPath() + '/ts/image/maximize.png');
+                $('#ksOrgTreeContent').animate({height: '255px'}, speed);
+                $('#ksContent').animate({height: '255px'}, speed, function () {
+                    $('#bottom-content').css('display', 'block');
                 });
             }
         });
+        //底部伸缩按钮
+        $("#toggle-bottom-sidebar").click(function () {
+            var $bottomContent = $('#bottom-content');
+            $bottomContent.animate({
+                height: 'toggle'
+            });
+            // $bottomContent.slideToggle("slow");
+            // var speed = 200;
+            // var $i = $(this).find('i');
+            // if ($bottomContent.height() === 15) {
+            //     //收缩状态
+            //     // $('.content-wrapper').animate({marginLeft: "250px"}, speed);
+            //     $bottomContent.animate({height: "auto"}, speed, function () {
+            //         $i.removeClass("fa-angle-up");
+            //         $i.addClass("fa-angle-down");
+            //     });
+            // } else {
+            //     // $('.content-wrapper').animate({marginLeft: "16px"}, speed);
+            //     $bottomContent.animate({height: "16px"}, speed, function () {
+            //         $i.removeClass("fa-angle-down");
+            //         $i.addClass("fa-angle-up");
+            //     });
+            // }
+        });
+
 
         $("#xngsModal").find('button[class="btn btn-success"]').bind('click', function () {
             if (KcObject.kcArr !== null && KcObject.kcArr !== undefined) {
@@ -879,7 +934,7 @@ var SubmissionArrangementModal = {
         $('#totalCount').html(data.totalCount);
         $('#hasCount').html(data.hasCount);
         $('#noCount').html(data.noCount);
-
+        debugger;
         for (var i = 0; i < dataList.length; i++) {
             var item = dataList[i];
             $arrangementTbody.append([
@@ -1223,8 +1278,17 @@ var KcObject = {
                 //显示考场关联机构人员
                 KsObject.setKcRelateOrg(parentKcNode.data.KC_ID, data.node.data.SJ_ID);
             } else if (dataType === 'dept') {
+                var parent = data.node.parent;
                 KsObject.clearData();
-                self.setOrgKcInfo(data.node.data.DEPT_CODE);
+                //去除currentParentKc currentCc
+                self.currentParentKc = null;
+                self.currentCc = null;
+                KsObject.reloadKsOrgTip();
+                if (parent === '#') {
+                    // self.setKcArrInfo(self.kcArr);
+                } else {
+                    self.setOrgKcInfo(data.node.data.DEPT_CODE);
+                }
 //                    var parent = data.node.parent;
 //                    if (parent !== '#') {
 //                        var deptCode = data.node.data.DEPT_CODE;
@@ -1340,16 +1404,23 @@ var KcObject = {
             $kcInfoTbody.append($bodyTr);
         }
 
+        var kcIdStr = '';
+        for (var i = 0; i < kcArr.length; i++) {
+            var kc = kcArr[i];
+            kcIdStr += kc.KC_ID + ',';
+        }
+        var bean = FireFly.doAct('TS_XMGL_KCAP_DAPCC', 'getDeptKcCount', {KC_ID: kcIdStr}, false, false);
+
         //kcTip
         $kcTip.append([
             '<span style="color:#12769C;">当前考场及场次：</span>',
-            '考场数:<span id="kcCount" class="tip-red">' + kcArr.length + '</span>&nbsp;',
-            '场次数数：<span id="ccCount" class="tip-red">' + ccCount + '</span>&nbsp;',
-            '考生数：<span id="ksCount" class="tip-red">800</span>&nbsp;',
-            '（借入：<span id="jieruCount" class="tip-red">3</span>&nbsp;',
-            '借出：<span id="jiechuCount" class="tip-red">2</span>&nbsp;',
-            '请假：<span id="qjCount" class="tip-red">1</span>）',
-            '已安排：<span id="yapCount" class="tip-red">' + yapTotalCount + '</span>'
+            '考场数:<span id="kcCount" class="tip-white">' + kcArr.length + '</span>&nbsp;',
+            '场次数：<span id="ccCount" class="tip-white">' + ccCount + '</span>&nbsp;',
+            '考生数：<span id="ksCount" class="tip-white">800</span>&nbsp;',
+            '（借入：<span id="jieruCount" class="tip-white">3</span>&nbsp;',
+            '借出：<span id="jiechuCount" class="tip-white">2</span>&nbsp;',
+            '请假：<span id="qjCount" class="tip-white">1</span>）',
+            '已安排：<span id="yapCount" class="tip-white">' + yapTotalCount + '</span>'
         ].join(''));
 
 
@@ -1373,6 +1444,7 @@ var KcObject = {
         $kcTip.append([
             '<span style="color:#12769C;">当前考场及场次：</span>' + kc.KC_NAME,
         ].join(''));
+        KsObject.reloadKsOrgTip();
 
         //thead
         var $headTr = jQuery('<tr style="background-color: #e3e6ea"></tr>');
@@ -1432,10 +1504,10 @@ var KcObject = {
             '<span style="color:#12769C;">当前考场及场次：</span>',
             '' + parentKc.KC_NAME,
             '&nbsp;&nbsp;' + cc.ccTime,
-            '最优数：<span id="optimal-number" class="tip-red"></span>',
-            '已安排：<span id="cc-info-yap-count" style="color:green">' + this.currentYapzwArr.length + '</span>',
-            '借考：<span id="cc-info-jk-count" style="color:#00a7d0">0</span>，',
-            '请假：<span id="cc-info-qj-count" class="tip-red">0</span>',
+            '&nbsp;最优数：<span id="optimal-number" class="tip-white"></span>',
+            '&nbsp;已安排：<span id="cc-info-yap-count" class="tip-white">' + this.currentYapzwArr.length + '</span>',
+            '&nbsp;借考：<span id="cc-info-jk-count" class="tip-white">0</span>',
+            /*',请假：<span id="cc-info-qj-count" class="tip-white">0</span>',*/
             '<div onclick="KcObject._setCcInfoType(\'list\')" style="cursor:pointer;padding: 3px;float: right"><i class="fa fa fa-list-ul"></i></div>',
             '<div onclick="KcObject._setCcInfoType(\'view\')" style="cursor:pointer;padding: 3px;float: right"><i class="fa fa-dashboard" aria-hidden="true"></i></div>',
         ].join(''));
@@ -1535,7 +1607,7 @@ var KcObject = {
                     });
                 });
                 $kcTip.append($remove);
-                $kcTip.append('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-down" style="color:green;" aria-hidden="true"></i><span>添加</span></div>');
+                // $kcTip.append('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-down" style="color:green;" aria-hidden="true"></i><span>添加</span></div>');
                 $kcTip.append('<div style="margin-right:10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>');
             }
             // $kcTip.append([
@@ -1605,19 +1677,19 @@ var KcObject = {
      */
     reloadCCTip: function () {
         $('#cc-info-yap-count').html(this.currentYapzwArr.length);
-        var jkCount = 0, qjCount = 0;
+        var jkCount = 0/*, qjCount = 0*/;
         for (var i = 0; i < this.currentYapzwArr.length; i++) {
             var currentYapzw = this.currentYapzwArr[i];
             if (currentYapzw.BM_STATUS === '2' || currentYapzw.BM_STATUS === '3') {
                 jkCount++;
             }
-            if (currentYapzw.BM_STATUS === '1' || currentYapzw.BM_STATUS === '3') {
-                qjCount++;
-            }
+            /*if (currentYapzw.BM_STATUS === '1' || currentYapzw.BM_STATUS === '3') {
+             qjCount++;
+             }*/
         }
-        $('#cc-info-qj-count').html(qjCount);
+        // $('#cc-info-qj-count').html(qjCount);
         $('#cc-info-jk-count').html(jkCount);
-
+        KsObject.reloadKsOrgTip();
         // $('optimal-number').html();//最优数
     },
 
@@ -1664,7 +1736,6 @@ var KcObject = {
         var deptCode = yapzw.S_ODEPT;
         // FireFly.get
         var deptName = FireFly.getDictNames(FireFly.getDict("TS_ORG_DEPT_ALL"), deptCode);
-        // debugger;
         // BM_LB BM_XL BM_MK
 
         var typeName = FireFly.getDictNames(FireFly.getDict("TS_XMGL_BM_KSLBK_LV"), yapzw.BM_TYPE);
@@ -1989,6 +2060,57 @@ var KsObject = {
     },
 
     /**
+     * 刷新ksOrgTip
+     **/
+    reloadKsOrgTip: function () {
+        // var count = 0;
+        // var totalCount=0;
+        // if (KcObject.currentParentKc || KcObject.currentCc) {
+        //     count += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID));
+        //     count += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID, true));
+        //     totalCount += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID,false,true));
+        //     totalCount += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID, true,true));
+        //     // $('#ksOrgTipKsCount').html(count);
+        // } /*else {
+        //     $('#ksOrgTipKsCount').html('');
+        // }*/
+        // $('#ksOrgTip').html('[<span class="tip-red" id="ksOrgTipKsCount">' + count + '</span>' +
+        //     '/' +
+        //     '<span class="tip-red" id="ksOrgTipKsTotalCount">'+totalCount+'</span>]');
+        // //ksOrgTipKsCount   ksOrgTipKsTotalCount
+    },
+
+    /**
+     * 统计考生数
+     */
+    countKsCount: function (kcId, sjId, isJk, totalArrange) {
+        var self = this;
+        var params1 = {};
+        params1._PAGE_ = {};
+        params1._PAGE_.NOWPAGE = 1;
+        params1._PAGE_.SHOWNUM = 1;
+        if (isJk) {
+            params1.searchDeptCode = 'jk';
+        }
+        if (totalArrange) {
+            params1.isArrange = 'false';
+        }
+        var params = {
+            _linkWhere: " and XM_ID='" + self.xmId + "' ",
+            _linkServQuery: "2",
+            XM_ID: self.xmId,
+            /**/
+            searchKcId: kcId,
+            searchSjId: sjId
+        };
+        // jQuery.extend(param, params);
+        jQuery.extend(params, params1);
+        var doAct = FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getKsContent', {data: JSON.stringify(params)}, false, false);
+        return doAct._PAGE_.ALLNUM;
+    },
+
+
+    /**
      * 考生信息
      **/
     setDfpKsContent: function () {
@@ -2020,7 +2142,7 @@ var KsObject = {
                 '   <td>' + ks.BM_XL + '-' + ks.BM_MK + '</td>',//考试名称
                 '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), ks.BM_TYPE) + '</td>',//级别
                 '   <td>' + ks.COUNT + '</td>',//报考数
-                '   <td>' + ks.STATUS + '</td>',//状态
+                // '   <td>' + ks.STATUS + '</td>',//状态
                 '   <td>' + ks.BM_CODE + '</td>',//人力资源编码
                 '</tr>'
             ].join(''));
@@ -2043,7 +2165,7 @@ var KsObject = {
                         '<div style="/*width:30px;height: 30px;*/background-color: #FFF8DC; border:1px solid #999999;border-radius:3px;padding: 3px">',//
                         '   <div>' + cells[6].innerText + '</div>',
                         '   <div>' + cells[7].innerText + '</div>',
-                        '   <div>' + cells[11].innerText + '</div>',
+                        '   <div>' + cells[10].innerText + '</div>',
                         '</div>'
                     ].join('');
                 },
@@ -2086,27 +2208,6 @@ var KsObject = {
 //                + 'searchBmMk:' + searchBmMk + '\n'
 //                + 'searchBmJb:' + searchBmJb,//FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), searchBmJb) + '\n'
 //                +'searchBmCount:' + searchBmCount + '\n');
-    },
-
-    /**
-     * 统计考生数
-     */
-    countKsCount:function (kcId,sjId) {
-        var params={};
-        var self = this;
-        var param = {
-            _linkWhere: " and XM_ID='" + self.xmId + "' ",
-            _linkServQuery: "2",
-            XM_ID: self.xmId
-        };
-        jQuery.extend(param, params);
-        jQuery.extend(param, params1);
-        return FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getKsContent', {data: JSON.stringify(param)}, false, false, function (data) {
-            self.ksArr = data._DATA_;
-            if (callback) {
-                callback.apply(self);
-            }
-        });
     },
 
     _initSearchValue: function () {
