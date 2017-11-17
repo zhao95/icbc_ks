@@ -3,7 +3,11 @@ var user_name = System.getVar("@USER_NAME@");
 var user_sex = System.getVar("@USER_SEX@");
 var odept_name = System.getVar("@ODEPT_NAME@");
 var dept_code = System.getVar("@DEPT_CODE@");
-var user_office_phone = System.getVar("@USER_OFFICE_PHONE@");
+var param = {};
+param["user_code"]=user_code;
+var resultphone = FireFly.doAct("TS_BMLB_BM","getPhone",param);
+var user_office_phone=resultphone.phone;
+$("#user_mobile1").val(user_office_phone);
 var user_cmpy_date = System.getVar("@USER_CMPY_DATE@");
 var xm_id  = $("#xmidval").val();
 

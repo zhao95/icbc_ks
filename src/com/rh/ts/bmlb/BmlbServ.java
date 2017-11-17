@@ -65,7 +65,7 @@ public class BmlbServ extends CommonServ {
 		String user_name = paramBean.getStr("USER_NAME");
 		String user_sex = paramBean.getStr("USER_SEX");
 		String odept_name = paramBean.getStr("ODEPT_NAME");
-		String user_office_phone = paramBean.getStr("USER_OFFICE_PHONE");
+		String ryl_mobile = paramBean.getStr("USER_OFFICE_PHONE");
 		String user_mobile = paramBean.getStr("USER_MOBILE");
 		String user_cmpy_date = paramBean.getStr("USER_CMPY_DATE");
 		String xm_id = paramBean.getStr("XM_ID");
@@ -84,7 +84,7 @@ public class BmlbServ extends CommonServ {
 			beans.set("BM_NAME", user_name);
 			beans.set("BM_SEX", user_sex);
 			beans.set("ODEPT_NAME", odept_name);
-			beans.set("BM_OFFICE_PHONE", user_office_phone);
+			beans.set("BM_OFFICE_PHONE", ryl_mobile);
 			beans.set("BM_PHONE", user_mobile);
 			beans.set("BM_ATIME", user_cmpy_date);
 			beans.set("BM_STARTDATE", fzgks_date1);
@@ -158,6 +158,21 @@ public class BmlbServ extends CommonServ {
 			
 
 		}
+		// 添加公共表
+		String struc = "AND DATA_ID=" + "'" + user_code + "' AND SERV_ID = 'ts_bmlb_bm'";
+		List<Bean> ucList = ServDao.finds("TS_OBJECT", struc);
+		if (ucList != null && ucList.size() > 0) {
+			Bean objBean=ucList.get(0);
+			objBean.set("STR1", ryl_mobile);
+			ServDao.save("TS_OBJECT", objBean);
+		} else {
+			Bean objBean = new Bean();
+			objBean.set("SERV_ID", "TS_BMLB_BM");
+			objBean.set("DATA_ID", user_code);
+			objBean.set("STR1", ryl_mobile);
+			ServDao.save("TS_OBJECT", objBean);
+		}
+
 	}
 
 	/**
@@ -339,21 +354,20 @@ public class BmlbServ extends CommonServ {
 					yzBean.set("AD_UNAME", user_name);
 					ServDao.save("TS_BMSH_AUDIT", yzBean);
 
-					/*// 添加公共表
-					String struc = "AND DATA_ID=" + "'" + user_code + "'";
+					// 添加公共表
+					String struc = "AND DATA_ID=" + "'" + user_code + "' AND SERV_ID = 'ts_bmlb_bm'";
 					List<Bean> ucList = ServDao.finds("TS_OBJECT", struc);
-					Bean objBean = new Bean();
 					if (ucList != null && ucList.size() > 0) {
-						String id = ucList.get(0).getStr("ID");
-						objBean.setId(id);
+						Bean objBean=ucList.get(0);
 						objBean.set("STR1", ryl_mobile);
 						ServDao.save("TS_OBJECT", objBean);
 					} else {
+						Bean objBean = new Bean();
 						objBean.set("SERV_ID", "TS_BMLB_BM");
 						objBean.set("DATA_ID", user_code);
 						objBean.set("STR1", ryl_mobile);
 						ServDao.save("TS_OBJECT", objBean);
-					}*/
+					}
 
 					// 获取流程相关信息
 					ParamBean param = new ParamBean();
@@ -1721,5 +1735,20 @@ public class BmlbServ extends CommonServ {
 		int count = XmglMgr.existSh(XMID);
 		return new OutBean().set("count", count);
 	}
-	
+	/**
+	 * 融易联
+	 */
+	public OutBean getPhone(Bean paramBean){
+		String user_code = paramBean.getStr("user_code");
+		OutBean out = new OutBean();
+		List<Bean> finds = ServDao.finds("TS_OBJECT","AND SERV_ID='ts_bmlb_bm' AND DATA_ID = '"+user_code+"'");
+		if(finds!=null&&finds.size()!=0){
+			String phone = finds.get(0).getStr("STR1");
+			out.set("phone", phone);
+			
+		}else{
+			out.set("phone", "");
+		}
+		return out;
+	}
 	}
