@@ -100,10 +100,17 @@ _viewer.getItem("SH_ZDSH").change(function(){
 			_viewer.getItem("SH_TGTSY").show();
 			_viewer.getItem("SH_BTGTSY").show();
 		}
+		$("a[opercode='optOption']").each(function(){
+			$(this).css("display","block");
+			$(this).css("margin-left","40%");
+		});
 	}else if(autoTmp==2){
 		_viewer.getItem("SH_TSY").hide();
 		_viewer.getItem("SH_TGTSY").hide();
 		_viewer.getItem("SH_BTGTSY").hide();
+		$("a[opercode='optOption']").each(function(){
+			$(this).css("display","none");
+		});
 	}
 });
 
