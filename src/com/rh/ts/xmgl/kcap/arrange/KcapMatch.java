@@ -288,7 +288,7 @@ public class KcapMatch {
 
 			String date = freeZw.getStr("SJ_DATE"); // 考试日期
 
-			String zwh = freeZw.getStr("ZW_ZWH_XT"); // 座位号 (行-列)
+//			String zwh = freeZw.getStr("ZW_ZWH_XT"); // 座位号 (行-列)
 
 			String beforeKey = kcId + "^" + (cc - 1) + "^" + date;
 

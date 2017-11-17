@@ -91,6 +91,11 @@ public class KcapResource {
 	private Bean kcBean = null;
 
 	/**
+	 * 考场关联机构
+	 */
+	private Bean kcOrgBean = null;
+
+	/**
 	 * 无请假考生 key:考生机构 value:list
 	 */
 	private Bean ksBean = null;
@@ -654,17 +659,33 @@ public class KcapResource {
 	 */
 	private Bean ksList2Bean(List<Bean> ksList, String... keys) {
 
-		Bean ksBean = new Bean();
+		Bean aksBean = new Bean();
 
 		if (ksList == null || ksList.isEmpty() || keys == null || keys.length < 3) {
-			return ksBean;
+			return aksBean;
 		}
 
-		ksBean = commList2Bean(ksList, keys[0]); // "S_ODEPT"
+		aksBean = commList2Bean(ksList, keys[0]); // "S_ODEPT"
+
+		for (Object odept : aksBean.copyOf().keySet()) {
+
+			boolean ishas = false;
+
+			for (Object kc : kcOrgBean.keySet()) {
+
+				if (kcOrgBean.getBean(kc).containsKey(odept)) {
+					ishas = true;
+				}
+			}
+
+			if (!ishas) {
+				aksBean.remove(odept);
+			}
+		}
 
 		Bean temp = new Bean();
 
-		temp.putAll(ksBean);
+		temp.putAll(aksBean);
 
 		for (Object key : temp.keySet()) {
 
@@ -681,7 +702,8 @@ public class KcapResource {
 
 				timeBean = commList2Bean(list, keys[1]);// "BM_KS_TIME"
 
-//				log.error("BM_KS_TIME----------S_ODEPT=" + key.toString() + ": " + ksBean.toString());
+				// log.error("BM_KS_TIME----------S_ODEPT=" + key.toString() +
+				// ": " + aksBean.toString());
 			}
 
 			Bean temp1 = new Bean();
@@ -704,10 +726,10 @@ public class KcapResource {
 				}
 			}
 
-			ksBean.remove(key).put(key, timeBean);
+			aksBean.remove(key).put(key, timeBean);
 		}
 
-		return ksBean;
+		return aksBean;
 	}
 
 	/**
@@ -717,6 +739,8 @@ public class KcapResource {
 	private void kcList2Bean(List<Bean> kcList) {
 
 		kcBean = new Bean();
+
+		kcOrgBean = new Bean();
 
 		for (Bean item : kcList) {
 
@@ -793,6 +817,8 @@ public class KcapResource {
 					}
 				}
 			}
+
+			kcOrgBean.set(kcId, gljg);
 
 			// 座位号
 			SqlBean zwsql = new SqlBean().and("KC_ID", kcId).and("S_FLAG", 1).and("ZW_KY", 1);
@@ -1055,7 +1081,7 @@ public class KcapResource {
 
 			Bean timeKs = (Bean) ksBean.getBean(dCode).clone();
 
-//			log.error("-----------" + timeKs.toString());
+			// log.error("-----------" + timeKs.toString());
 
 			for (Object time : timeKs.keySet()) { // 遍历时长
 
@@ -1179,6 +1205,10 @@ public class KcapResource {
 
 	public String getXmId() {
 		return xmId;
+	}
+
+	public Bean getKcOrgBean() {
+		return kcOrgBean;
 	}
 
 	public void showResLog() {
