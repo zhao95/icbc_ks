@@ -1153,13 +1153,14 @@ public class UserMgr {
      * @param mainCode 主用户编码
      * @return List<Bean> 兼岗记录
      */
-    public static List<Bean> getJiangangListByMainUser(String mainCode) {
+    public static List<Bean> getJiangangListByMainUser(String mainCode,String cmpy_code) {
         // 获取兼岗表的bean
         List<Bean> records;
         SqlBean sql = new SqlBean();
         sql.and("RELATION_TYPE", Constant.YES_INT);
         sql.and("S_FLAG", Constant.YES_INT);
         sql.and("ORIGIN_USER_CODE", mainCode);
+        sql.and("CMPY_CODE", cmpy_code);
         records = ServDao.finds("SY_ORG_USER_JIANGANG", sql);
         if (records == null) {
             records = new ArrayList<Bean>();
@@ -1172,9 +1173,9 @@ public class UserMgr {
      * @param mainCode 主用户编码
      * @return List<Bean> 兼岗用户列表
      */
-    public static List<Bean> getAuxiliaryUserBeansByMainUser(String mainCode) {
+    public static List<Bean> getAuxiliaryUserBeansByMainUser(String mainCode,String cmpy_code) {
         // 根据主用户编码获得兼岗记录
-        List<Bean> records = getJiangangListByMainUser(mainCode);
+        List<Bean> records = getJiangangListByMainUser(mainCode,cmpy_code);
         // 转换成userbean
         List<Bean> users = new ArrayList<Bean>();
         if (records.size() > 0) {
@@ -1196,7 +1197,7 @@ public class UserMgr {
      */
     public static String getJiangangUserStrByMainUser(String mainCode) {
         // 根据主用户编码获得兼岗记录
-        List<Bean> records = getJiangangListByMainUser(mainCode);
+        List<Bean> records = getJiangangListByMainUser(mainCode,"");
         // 转换成userbean
         String userCodeStr = "";
         if (records.size() > 0) {
@@ -1220,9 +1221,9 @@ public class UserMgr {
      * @param mainCode 主用户编码
      * @return List<Bean> 兼岗用户编码（逗号分隔）
      */
-    public static String getJiangangUserStrWithoutMainUser(String mainCode) {
+    public static String getJiangangUserStrWithoutMainUser(String mainCode,String cmpy_code) {
         // 根据主用户编码获得兼岗记录
-        List<Bean> records = getJiangangListByMainUser(mainCode);
+        List<Bean> records = getJiangangListByMainUser(mainCode,cmpy_code);
         // 转换成userbean
         String userCodeStr = "";
         if (records.size() > 0) {

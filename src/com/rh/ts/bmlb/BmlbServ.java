@@ -93,7 +93,7 @@ public class BmlbServ extends CommonServ {
 			beans.set("XM_ID", xm_id);
 			int count = XmglMgr.existSh(xm_id);
 			
-			if(count == 0){
+			if(count == 0||count==1){
 				beans.set("BM_SH_STATE", 1);
 				// 新增到数据库
 				Bean bmbean =ServDao.create(servId, beans);
@@ -543,7 +543,7 @@ public class BmlbServ extends CommonServ {
 	 *
 	 * @param paramBean
 	 * @return
-	 */
+	 *//*
 	public Bean getSelectName(Bean paramBean) {
 		String servId = paramBean.getStr("servId");
 		String id = paramBean.getStr("id");
@@ -573,7 +573,7 @@ public class BmlbServ extends CommonServ {
 		outBean.set("list", w.toString());
 		return outBean;
 
-	}
+	}*/
 
 	/**
 	 * 获取项目下 已经报考的考试
@@ -1328,7 +1328,7 @@ public class BmlbServ extends CommonServ {
 	 */
 	public OutBean getkslbk(Bean paramBean){
 		List<Bean> finds = null;
-			String where = "AND KSLBK_XL_CODE is null and KSLBK_CODE<>'023001'";
+			String where = "AND KSLBK_XL_CODE is null and KSLBK_CODE<>'023001'";//管理类没有考试
 			finds = ServDao.finds("TS_XMGL_BM_KSLBK", where);
 		return new OutBean().set("LBS", finds);
 	}

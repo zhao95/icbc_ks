@@ -66,6 +66,9 @@ public class JsonUtils {
         Bean bean = null;
         if (str != null && str.length() > 0) {
             try {
+            	if(str.length()==10){
+            		str="{DS_NAME=''}";
+            	}
                 JSONObject jsObject = new JSONObject(str);
                 bean = toBean(jsObject);
             } catch (Exception e) {

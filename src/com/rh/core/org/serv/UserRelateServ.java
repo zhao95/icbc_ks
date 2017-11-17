@@ -328,6 +328,7 @@ public class UserRelateServ extends CommonServ {
     private void repairJianRelation(ParamBean paramBean) {
         String mainUserCode = paramBean.getStr("ORIGIN_USER_CODE");
         String auxUserCode = paramBean.getStr("USER_CODE");
+        String cmpy_code = paramBean.getStr("CMPY_CODE");
         UserBean mainUser = UserMgr.getUser(mainUserCode);
         UserBean auxUser = UserMgr.getUser(auxUserCode);
         String mainWorkNum = mainUser.getStr("USER_WORK_NUM");
@@ -344,12 +345,12 @@ public class UserRelateServ extends CommonServ {
             if (mainJianFlag == Constant.NO_INT
                     && auxJianFlag == Constant.NO_INT) {
                 String tempJianCodes = UserMgr
-                        .getJiangangUserStrWithoutMainUser(auxUserCode);
+                        .getJiangangUserStrWithoutMainUser(auxUserCode,cmpy_code);
                 if (!tempJianCodes.isEmpty()) {
                     throw new TipException("兼岗用户已经做为主用户存在兼岗关系");
                 }
                 String jianCodes = UserMgr
-                        .getJiangangUserStrWithoutMainUser(mainUserCode);
+                        .getJiangangUserStrWithoutMainUser(mainUserCode,cmpy_code);
                 //修复开始
                 if (!jianCodes.isEmpty() && jianCodes.indexOf(auxUserCode) >= 0) {
                     // 有兼岗关系
