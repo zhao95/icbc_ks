@@ -1,5 +1,6 @@
 var _viewer = this;
 $("#TS_XMGL_CCCS_ARRANGE_COND-save").css("right",300);
+//取消行点击事件
 
 var xmId = _viewer.getParHandler().getParHandler().getPKCode();
 
@@ -23,6 +24,14 @@ _viewer.getBtn("ok").click(function(){
 	
 	if(date == ""){
 		alert("日期未填写");
+		return false;
+	}
+	var amTimes = parseInt((am_num==""? "0":am_num));
+	var pmTimes = parseInt((pm_num==""? "0":pm_num));
+	var nmTimes = parseInt((nm_num==""? "0":nm_num));
+	var times=(amTimes+pmTimes+nmTimes);
+	if(sum !=times){
+		alert("场次数不匹配");
 		return false;
 	}
 	if(am_time != "" &&  am_num!= "" && am_info != ""){//am_inter != "" &&

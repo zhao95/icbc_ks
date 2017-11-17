@@ -1,5 +1,5 @@
 var _viewer = this;
-
+$(".rhGrid").find("tr").unbind("dblclick");
 _viewer.getBtn("new").unbind("click").bind("click", function(event) {
 	var temp = {
 		"act" : UIConst.ACT_CARD_ADD,
