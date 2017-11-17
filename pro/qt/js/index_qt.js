@@ -82,8 +82,14 @@ function showMenu() {
 				  }
 			  }else if(data.menuList[i].MENU_NAME=="查看辖内报名"&&lookflag=="false"){
 				  continue;
-			  }else{
+			  }else if(data.menuList[i].MENU_NAME=="首页"){
 				  
+				  $(".sidebar-menu")
+				  .append(
+						  '<li><a href="'+data.menuList[i].MENU_URL+'"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
+						  + data.menuList[i].MENU_NAME
+						  + '</span></a></li>');
+			  }else{
 				  $(".sidebar-menu")
 				  .append(
 						  '<li><a href="'+data.menuList[i].MENU_URL+'" target="blank"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
