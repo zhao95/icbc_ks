@@ -51,7 +51,7 @@ public class Language {
 
 			initMap();
 
-			if (!isEn() && !isChinese(msg)) {
+			if (!isEn()) {
 				return msg;
 			}
 
