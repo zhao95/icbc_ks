@@ -96,14 +96,15 @@ function bindCard(){
 	});
 	
 	//复制
-	jQuery(".hoverDiv [operCode='optCopyBtn']").unbind("click").bind("click", function(){
+	jQuery(".hoverDiv [operCode='optCopyBtn']").unbind("click").bind("click", function(){debugger;
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
-		FireFly.doAct("TS_UTIL","copy",{"servId":_viewer.servId,"pkCode":pkCode,"primaryColCode":"KC_ID"},true,false,function(data){
-			if(data._MSG_.indexOf("OK")!= -1){
+		var a=FireFly.doAct("TS_UTIL","copy",{"servId":_viewer.servId,"pkCode":pkCode,"primaryColCode":"KC_ID"},true,false,function(data){
+			if(data._MSG_.indexOf("OK")!= -1){debugger;
 				window.location.reload();
 			}
 		});
+		console.log(a);
 	});
 	
 	//当行编辑事件

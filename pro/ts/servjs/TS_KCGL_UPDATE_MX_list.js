@@ -1,5 +1,6 @@
 var _viewer = this;
-
+//取消行点击事件
+$(".rhGrid").find("tr").unbind("dblclick");
 $("#TS_KCGL_UPDATE_MX .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var colValue = $(item).find("td[icode='MX_COL']").text();
