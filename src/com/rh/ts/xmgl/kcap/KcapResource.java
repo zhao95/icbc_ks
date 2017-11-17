@@ -155,7 +155,7 @@ public class KcapResource {
 	 */
 	private void loadKs(String xmId, String odept) {
 
-		List<Bean> jkKsList = getKsList(xmId, odept, 1);
+		List<Bean> jkKsList = getKsList(xmId, odept, 2);
 
 		jkKsBean = ksList2Bean(jkKsList, "S_ODEPT", "BM_KS_TIME", "BM_CODE");
 
@@ -979,14 +979,14 @@ public class KcapResource {
 	 * @param xmId
 	 * @param odept
 	 * @param status
-	 *            0正常 1借考 2请假
+	 *            0正常 1请假 2借考
 	 * @return
 	 */
 	private List<Bean> getKsList(String xmId, String odept, int status) {
 
 		String odeptField = "S_ODEPT";
 
-		if (status == 1) {
+		if (status == 2) {
 			odeptField = "JK_ODEPT";
 		}
 
