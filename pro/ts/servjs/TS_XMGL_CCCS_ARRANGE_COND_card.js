@@ -4,17 +4,18 @@ $("#TS_XMGL_CCCS_ARRANGE_COND-save").css("right",300);
 var xmId = _viewer.getParHandler().getParHandler().getPKCode();
 
 _viewer.getBtn("ok").click(function(){
-	var date = _viewer.getItem("CONF_DATE").getValue();
-	var am_time = _viewer.getItem("CONF_AM_TIME").getValue();
-	var am_inter = _viewer.getItem("CONF_AM_INTER").getValue();
-	var am_num = _viewer.getItem("CONF_AM_NUM").getValue();
-	var am_info = _viewer.getItem("CONF_AM_INFO").getValue();
-	
+	var sum=_viewer.getItem("CONF_SUM").getValue();//场次总数
+	var date = _viewer.getItem("CONF_DATE").getValue();//日期
+	var am_time = _viewer.getItem("CONF_AM_TIME").getValue();//开始时间（上午）
+	var am_inter = _viewer.getItem("CONF_AM_INTER").getValue();//间隔（分钟）
+	var am_num = _viewer.getItem("CONF_AM_NUM").getValue();//场次数
+	var am_info = _viewer.getItem("CONF_AM_INFO").getValue();//时长
+	//下午
 	var pm_time = _viewer.getItem("CONF_PM_TIME").getValue();
 	var pm_inter = _viewer.getItem("CONF_PM_INTER").getValue();
 	var pm_num = _viewer.getItem("CONF_PM_NUM").getValue();
 	var pm_info = _viewer.getItem("CONF_PM_INFO").getValue();
-	
+	//晚上
 	var nm_time = _viewer.getItem("CONF_NM_TIME").getValue();
 	var nm_inter = _viewer.getItem("CONF_NM_INTER").getValue();
 	var nm_num = _viewer.getItem("CONF_NM_NUM").getValue();
@@ -24,15 +25,15 @@ _viewer.getBtn("ok").click(function(){
 		alert("日期未填写");
 		return false;
 	}
-	if(am_time != "" && am_inter != "" && am_num!= "" && am_info != ""){
+	if(am_time != "" &&  am_num!= "" && am_info != ""){//am_inter != "" &&
 		am_info = am_info.replace(/，/g, ",");
-		js(date,am_time,am_inter,am_num,am_info);
+		js(date,am_time,am_inter,am_num,am_info);//	日期、开始时间、间隔、场次数、时长
 	}
-	if(pm_time != "" && pm_inter != "" && pm_num!= "" && pm_info != ""){
+	if(pm_time != "" &&  pm_num!= "" && pm_info != ""){//pm_inter != "" &&
 		pm_info = pm_info.replace(/，/g, ",");
 		js(date,pm_time,pm_inter,pm_num,pm_info);
 	}
-	if(nm_time != "" && nm_inter != "" && nm_num!= "" && nm_info != ""){
+	if(nm_time != "" &&  nm_num!= "" && nm_info != ""){//nm_inter != "" &&
 		nm_info = nm_info.replace(/，/g, ",");
 		js(date,nm_time,nm_inter,nm_num,nm_info);
 	}
@@ -44,19 +45,19 @@ _viewer.getBtn("close").click(function(){
 });
 
 function js(date,time,inter,num,info){
-	info = info.replace(/，/g, ",");
-	var info_num = info.split(",").length;
+	//info = info.replace(/，/g, ",");
+	var info_num = info.split(",").length;//永远是1
 	var start = date + " " +time;
 	var end = "";
-	if(num == info_num || num < info_num){
+	if(num == info_num || num > info_num){
 		for(var i=0;i<num;i++){
-			end = addMin(start,info.split(",")[i]);
+			end = addMin(start,info);
 			var param = {};
-			param["ARR_START"]=start;
-			param["ARR_END"]=end;
-			param["ARR_TIME"]=info.split(",")[i];
+			param["ARR_START"]=start;//开始时间
+			param["ARR_END"]=end;//结束时间
+			param["ARR_TIME"]=info;//考试时长
 			param["XM_ID"]=xmId;
-			param["ARR_CC"]= getCc();
+			param["ARR_CC"]= getCc();//场次
 			param["ARR_STATE"]= 0;
 			FireFly.doAct("TS_XMGL_CCCS_ARRANGE", "save", param, false);	
 			start = addMin(end,inter);
@@ -65,7 +66,28 @@ function js(date,time,inter,num,info){
 		alert("条件输入不正确");
 	}
 }
-
+//function js(date,time,inter,num,info){debugger;
+////info = info.replace(/，/g, ",");
+//var info_num = info.split(",").length;//永远是1
+//var start = date + " " +time;
+//var end = "";
+//if(num == info_num || num > info_num){
+//	for(var i=0;i<num;i++){
+//		end = addMin(start,info.split(",")[i]);
+//		var param = {};
+//		param["ARR_START"]=start;
+//		param["ARR_END"]=end;
+//		param["ARR_TIME"]=info.split(",")[i];
+//		param["XM_ID"]=xmId;
+//		param["ARR_CC"]= getCc();
+//		param["ARR_STATE"]= 0;
+//		FireFly.doAct("TS_XMGL_CCCS_ARRANGE", "save", param, false);	
+//		start = addMin(end,inter);
+//	}
+//}else{
+//	alert("条件输入不正确");
+//}
+//}
 function getCc(){
 	var resData = FireFly.doAct("TS_XMGL_CCCS_ARRANGE", "finds", {"_SELECT_":"max(ARR_CC) ARR_CC","_WHERE_":"and xm_id='"+xmId+"'"}, false);	
 	if(resData._DATA_.length != 0){
@@ -89,5 +111,5 @@ function addMin(a,b){
 	
 	date.setMinutes(date.getMinutes()+b);
     
-	return rhDate.patternData("yyyy-mm-dd hh:MM",date);
+	return rhDate.patternData("yyyy-MM-dd hh:mm",date);
 }
