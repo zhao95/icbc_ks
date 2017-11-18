@@ -35,13 +35,13 @@ public class KcapMatch {
 	 * @return Bean 报名考生信息
 	 */
 	public static Bean matchUser(Bean freeZw, Bean ksBean, KcapResource res, boolean isConstrain) {
-
-		Bean busyZwBean = res.getBusyZwBean();
-
+		
 		if (ksBean == null || ksBean.isEmpty()) {
 
 			return new Bean();
 		}
+		
+		Bean busyZwBean = res.getBusyZwBean();
 
 		Bean filtBean = (Bean) ksBean.clone();
 
@@ -861,62 +861,43 @@ public class KcapMatch {
 
 		return new Bean();
 	}
-
+	
 	/**
-	 * 筛选 60、90分钟考试混排;120分钟混排;150分钟混排
-	 * 
+	 * 根据考试时长 筛选考生  60、90分钟考试混排;120分钟混排;150分钟混排
 	 * @param freeZw
-	 * @param busyZwBean
 	 * @param filtBean
 	 */
-	public static void filtKsTime(Bean freeZw, Bean busyZwBean, Bean filtBean) {
+	public static void filtKsTime(Bean freeZw, Bean filtBean) {
 
 		if (filtBean == null || filtBean.isEmpty()) {
 			return;
 		}
+		
+		String ksTime = freeZw.getStr("SJ_TIME");
+		
+		if (ksTime.contains("60") && !ksTime.contains("90")) { // 考试时长只60分钟
 
-		String busyKey = freeZw.getStr("KC_ID") + "^" + freeZw.getStr("SJ_CC") + "^" + freeZw.getStr("SJ_DATE");
+			filtBean.remove("90");
+			filtBean.remove("120");
+			filtBean.remove("150");
 
-		if (busyZwBean.containsKey(busyKey)) {
+		} else if (ksTime.contains("90")) { // 考试时长90分钟
 
-			Bean busyZwKc = busyZwBean.getBean(busyKey);
+			filtBean.remove("120");
+			filtBean.remove("150");
 
-			if (busyZwKc != null && !busyZwKc.isEmpty()) {
+		} else if (ksTime.contains("120")) { // 考试时长120分钟
 
-				Bean tb = new Bean();
+			filtBean.remove("60");
+			filtBean.remove("90");
+			filtBean.remove("150");
 
-				for (Object key : busyZwKc.keySet()) {
+		} else if (ksTime.contains("150")) { // 考试时长150分钟
 
-					String ksTime = busyZwKc.getBean(key).getStr("BM_KS_TIME");
-
-					tb.set(ksTime, ksTime);
-				}
-
-				if (tb.containsKey("60") && !tb.containsKey("90")) { // 考试时长只包含60分钟
-
-					filtBean.remove("90");
-					filtBean.remove("120");
-					filtBean.remove("150");
-
-				} else if (tb.containsKey("90")) { // 考试时长包含90分钟
-
-					filtBean.remove("120");
-					filtBean.remove("150");
-
-				} else if (tb.containsKey("120")) { // 考试时长含120分钟
-
-					filtBean.remove("60");
-					filtBean.remove("90");
-					filtBean.remove("150");
-
-				} else if (tb.containsKey("150")) { // 考试时长含150分钟
-
-					filtBean.remove("60");
-					filtBean.remove("90");
-					filtBean.remove("120");
-				}
-			}
-		}
+			filtBean.remove("60");
+			filtBean.remove("90");
+			filtBean.remove("120");
+		}	
 	}
 
 	/**

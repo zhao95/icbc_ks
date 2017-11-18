@@ -7,9 +7,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.rh.core.base.Bean;
-import com.rh.core.base.db.Transaction;
-import com.rh.core.org.mgr.OrgMgr;
-import com.rh.core.org.util.OrgConstant;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Strings;
@@ -91,7 +88,7 @@ public class ArrangeSeat {
 
 		int ccsort[] = KcapUtils.sortInt(freeBean); // 场次号排序
 
-		for (int cs = 0; cs < ccsort.length; cs++) {
+		for (int cs = 0; cs < ccsort.length; cs++) { // 遍历场次
 
 			String cc = String.valueOf(ccsort[cs]);
 
@@ -101,7 +98,7 @@ public class ArrangeSeat {
 
 			String daysort[] = KcapUtils.sortStr(freeCc); // 日期排序
 
-			for (int ds = 0; ds < daysort.length; ds++) {
+			for (int ds = 0; ds < daysort.length; ds++) { // 遍历日期
 
 				String day = daysort[ds];
 
@@ -119,9 +116,11 @@ public class ArrangeSeat {
 
 					Bean freeKc = (Bean) freeDayCc.getBean(kcId).clone();
 
+					String ksTime = freeKc.getStr("SJ_TIME");
+
 					String zwsort[] = KcapUtils.sortStr(freeKc); // 座位排序
 
-					for (int zs = 0; zs < zwsort.length; zs++) {
+					for (int zs = 0; zs < zwsort.length; zs++) { // 遍历座位
 
 						String zwKey = zwsort[zs];
 
@@ -139,17 +138,20 @@ public class ArrangeSeat {
 
 							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
+							freeZw.set("SJ_TIME", ksTime);
+
 							// freeZw.set("GLJG", res.getGljg(kcId));// 关联机构
 
 							Bean odeptKs = res.getGljgKs(kcId);
-							
+
 							// 根据考试时长筛选考生
-							KcapMatch.filtKsTime(freeZw, res.getBusyZwBean(), odeptKs);
+							KcapMatch.filtKsTime(freeZw, odeptKs);
 
 							// 过滤 相同日期,相同场次的考生
 							KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
-							
-							log.error("----------安排考场-" + kcName + " " + date + " " + sjCC + " "	+ freeZw.getStr("ZW_ZWH_XT"));
+
+							log.error("----------安排考场-" + kcName + " " + date + " " + sjCC + " "
+									+ freeZw.getStr("ZW_ZWH_XT"));
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
 
@@ -165,11 +167,10 @@ public class ArrangeSeat {
 								log.error(e.getMessage(), e);
 							}
 						}
-					}
-				}
-			}
-		}
-
+					} // 座位
+				} // 考场
+			} // 考试日期
+		} // 场次
 	}
 
 	/**
@@ -207,6 +208,8 @@ public class ArrangeSeat {
 
 					Bean freeDayCc = (Bean) freeCc.getBean(day).clone();
 
+					String ksTime = freeDayCc.getStr("SJ_TIME");
+
 					String kcName = freeDayCc.getStr("KC_NAME");
 
 					String date = day.toString();
@@ -231,17 +234,18 @@ public class ArrangeSeat {
 
 							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
-							// freeZw.set("GLJG", res.getGljg(kcId));// 关联机构
+							freeZw.set("SJ_TIME", ksTime);
 
 							Bean odeptKs = res.getGljgKs(kcId);
-							
+
 							// 根据考试时长筛选考生
-							KcapMatch.filtKsTime(freeZw, res.getBusyZwBean(), odeptKs);
+							KcapMatch.filtKsTime(freeZw, odeptKs);
 
 							// 过滤 相同日期,相同场次的考生
 							KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
-							
-							log.error("----------安排考场-" + kcName + " " + date + " " + sjCC + " "	+ freeZw.getStr("ZW_ZWH_XT"));
+
+							log.error("----------安排--考场：" + kcName + " 日期：" + date + " 场次：" + sjCC + " 座位："
+									+ freeZw.getStr("ZW_ZWH_XT"));
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
 
@@ -257,10 +261,10 @@ public class ArrangeSeat {
 								log.error(e.getMessage(), e);
 							}
 						}
-					}
-				}
-			}
-		}
+					}//座位
+				}//日期
+			}//场次
+		}//考场
 	}
 
 	/**
@@ -453,7 +457,7 @@ public class ArrangeSeat {
 
 			String ksTime = oneKs.getStr("BM_KS_TIME");// 考试时长
 
-			int bmStatus = oneKs.getInt("BM_STATUS");
+			int bmStatus = oneKs.getInt("BM_STATUS");// 1请假 2借考
 
 			String ksOdept = oneKs.getStr("S_ODEPT"); // 考生机构
 
@@ -580,8 +584,6 @@ public class ArrangeSeat {
 		addZw.set("U_ODEPT", ksOdept);
 		addZw.set("U_CODE", uCode);
 
-		// Bean jkKs = res.getJkKsBean().getBean(ksOdept);
-
 		if (jkKs.containsKey(uCode)) { // 判断是否借考
 
 			Object jkKsObj = jkKs.get(uCode);
@@ -618,8 +620,6 @@ public class ArrangeSeat {
 			// Transaction.begin();
 
 			addZw = ServDao.create(TsConstant.SERV_KCAP_YAPZW, addZw);
-
-			// log.error("insert---" + addZw.getId());
 
 			// Transaction.commit();
 

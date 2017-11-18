@@ -21,6 +21,7 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
+import com.rh.core.util.DateUtils;
 import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.kcap.utils.KcapUtils;
@@ -182,7 +183,8 @@ public class KcapResource {
 
 		values.add(xmId);
 
-		String sql = "select k.KC_ID,k.KC_NAME,k.KC_CODE,K.KC_ODEPTCODE,K.KC_ODEPTNAME,k.KC_SCORE,k.KC_STATE,k.KC_MAX,k.KC_GOOD,k.KC_LEVEL,c.CC_ID,c.XM_ID from TS_XMGL_KCAP_DAPCC c LEFT JOIN ts_kcgl k on k.kc_id = c.kc_id where c.XM_ID=? ";
+		String sql = "select k.KC_ID,k.KC_NAME,k.KC_CODE,K.KC_ODEPTCODE,K.KC_ODEPTNAME,k.KC_SCORE,k.KC_STATE,k.KC_MAX,k.KC_GOOD,k.KC_LEVEL,c.CC_ID,c.XM_ID "
+				+ "from TS_XMGL_KCAP_DAPCC c LEFT JOIN ts_kcgl k on k.kc_id = c.kc_id where c.XM_ID=? ";
 
 		if (!Strings.isBlank(odept)) {
 
@@ -241,18 +243,6 @@ public class KcapResource {
 		SqlBean sql = new SqlBean().and("XM_ID", xmId);
 
 		if (!Strings.isBlank(odept)) {
-
-			// UserBean user = Context.getUserBean();
-			// String cmpyCode = user.getCmpyCode();
-			// String codePath = OrgMgr.getOdept(odept).getCodePath();
-			// SqlBean sqlIn = new SqlBean();
-			// sqlIn.selects("DEPT_CODE");
-			// sqlIn.tables(ServMgr.SY_ORG_DEPT);
-			// sqlIn.andLikeRT(ServMgr.SY_ORG_DEPT + ".CODE_PATH", codePath);
-			// sqlIn.and(ServMgr.SY_ORG_DEPT + ".DEPT_TYPE",
-			// OrgConstant.DEPT_TYPE_ORG);
-			// sqlIn.and(ServMgr.SY_ORG_DEPT + ".S_FLAG", 1);
-			// sql.andInSub("U_ODEPT", sqlIn.toString(), sqlIn.getVars());
 
 			String codePath = OrgMgr.getOdept(odept).getCodePath();
 
@@ -529,7 +519,7 @@ public class KcapResource {
 				String kcLv = info.getStr("KC_LEVEL"); // 考场层级
 
 				String xmId = info.getStr("XM_ID"); // 项目id
-				
+
 				String kcName = info.getStr("KC_NAME");
 
 				List<Bean> zwhList = kcInfo.getList("ZWH");
@@ -563,7 +553,14 @@ public class KcapResource {
 					zwBean.set("SJ_START", cc.getStr("SJ_START"));
 
 					zwBean.set("SJ_END", cc.getStr("SJ_END"));
-					
+
+					long difftime = DateUtils.getDiffTime(cc.getStr("SJ_START"), cc.getStr("SJ_END"),
+							"yyyy-MM-dd HH:mm");
+
+					int minute = (int) Math.ceil(difftime / 60000);
+
+					zwBean.set("SJ_TIME", minute);
+
 					zwBean.set("KC_NAME", kcName);
 
 					Bean dayBean = new Bean();
@@ -599,7 +596,7 @@ public class KcapResource {
 				String kcLv = info.getStr("KC_LEVEL"); // 考场层级
 
 				String xmId = info.getStr("XM_ID"); // 项目id
-				
+
 				String kcName = info.getStr("KC_NAME");
 
 				List<Bean> zwhList = kcInfo.getList("ZWH"); // 座位号
@@ -631,7 +628,14 @@ public class KcapResource {
 					zwBean.set("SJ_START", cc.getStr("SJ_START"));
 
 					zwBean.set("SJ_END", cc.getStr("SJ_END"));
-					
+
+					long difftime = DateUtils.getDiffTime(cc.getStr("SJ_START"), cc.getStr("SJ_END"),
+							"yyyy-MM-dd HH:mm");
+
+					int minute = (int) Math.ceil(difftime / 60000);
+
+					zwBean.set("SJ_TIME", minute);
+
 					zwBean.set("KC_NAME", kcName);
 
 					Bean zwhBeanVal = new Bean();
