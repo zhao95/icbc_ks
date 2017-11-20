@@ -332,6 +332,9 @@ var HeaderBtn = {
         $("#publish").click(function () {
             $('#publishModal').modal({backdrop: false, show: true});
         });
+        $("#clearYapzw").click(function () {
+            $('#clearYapzwModal').modal({backdrop: false, show: true});
+        });
 
     },
 
@@ -345,6 +348,8 @@ var HeaderBtn = {
         $("#tjccap").unbind('click');
         $("#publish").removeClass('rh-icon').addClass('rh-icon-disable');
         $("#publish").unbind('click');
+        $("#clearYapzw").removeClass('rh-icon').addClass('rh-icon-disable');
+        $("#clearYapzw").unbind('click');
     },
     /**
      * 绑定页首按钮事件
@@ -433,6 +438,21 @@ var HeaderBtn = {
             $("#publish").css('display', 'block');
             $("#unPublish").css('display', 'none');
         });
+
+        //清除座位安排确定按钮事件
+        $("#clearYapzwModal").find('button[class="btn btn-success"]').bind('click', function () {
+            var kcIdStr = '';
+            for (var i = 0; i < KcObject.kcArr.length; i++) {
+                var kc = KcObject.kcArr[i];
+                kcIdStr += kc.KC_ID + ',';
+            }
+            FireFly.doAct("TS_XMGL_KCAP_DAPCC", "clearYapzw", {KC_ID_STR: kcIdStr}, false, false, function () {
+                alert("清除座位安排成功！");
+            });
+            KcObject.reloadCCInfo();
+            KsObject.setDfpKsContent();
+        });
+
 
         function sidebarFunction() {
             var $mainSidebar = $('.main-sidebar');
@@ -1662,6 +1682,7 @@ var KcObject = {
         var zwListBean = FireFly.doAct("TS_XMGL_KCAP_YAPZW", "getYapZw", {SJ_ID: sjId});
         var zwList = zwListBean._DATA_;
         this.currentYapzwArr = this.currentYapzwArr.concat(zwList);
+        KsObject.reloadKsOrgTipFlag = false;
         for (var i = 0; i < zwList.length; i++) {
             var zw = zwList[i];
             var $zw = $('#' + zw.ZW_ID);
@@ -1669,7 +1690,9 @@ var KcObject = {
             $zw.find('.userName').html(zw.BM_NAME);
             this.setZwItemForView(zw.YAPZW_ID);
         }
+        KsObject.reloadKsOrgTipFlag = true;
         this.reloadCCTip();
+        KsObject.reloadKsOrgTip();
     },
 
     /**
@@ -1689,7 +1712,6 @@ var KcObject = {
         }
         // $('#cc-info-qj-count').html(qjCount);
         $('#cc-info-jk-count').html(jkCount);
-        KsObject.reloadKsOrgTip();
         // $('optimal-number').html();//最优数
     },
 
@@ -1765,6 +1787,7 @@ var KcObject = {
                         $zw.css('background', '');
                         self.currentYapzwArr.splice(self.currentYapzwArr.indexOf(yapzw), 1);
                         self.reloadCCTip();
+                        KsObject.reloadKsOrgTip(1);
                         KsObject.search();
                     }
                 });
@@ -1849,6 +1872,7 @@ var KcObject = {
                                 KsObject.search();
                             }
                             self.reloadCCTip();
+                            KsObject.reloadKsOrgTip(-1);
                         }
                     });
 
@@ -2059,25 +2083,47 @@ var KsObject = {
 
     },
 
+    reloadKsOrgTipFlag: true,
+    reloadKsOrgTipCount: 0,
+    ksOrgTipInfo: {},
     /**
      * 刷新ksOrgTip
      **/
-    reloadKsOrgTip: function () {
-        // var count = 0;
-        // var totalCount=0;
-        // if (KcObject.currentParentKc || KcObject.currentCc) {
-        //     count += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID));
-        //     count += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID, true));
-        //     totalCount += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID,false,true));
-        //     totalCount += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID, true,true));
-        //     // $('#ksOrgTipKsCount').html(count);
-        // } /*else {
-        //     $('#ksOrgTipKsCount').html('');
-        // }*/
-        // $('#ksOrgTip').html('[<span class="tip-red" id="ksOrgTipKsCount">' + count + '</span>' +
-        //     '/' +
-        //     '<span class="tip-red" id="ksOrgTipKsTotalCount">'+totalCount+'</span>]');
-        // //ksOrgTipKsCount   ksOrgTipKsTotalCount
+    reloadKsOrgTip: function (noReloadCount) {
+        //*this.reloadKsOrgTipFlag = false 不做操作
+        if (!this.reloadKsOrgTipFlag) {
+            return;
+        }
+        var count = 0;
+        var totalCount = 0;
+        var kcId = '';
+        var sjId = '';
+        if (KcObject.currentParentKc || KcObject.currentCc) {
+            kcId = KcObject.currentParentKc.KC_ID;
+            sjId = KcObject.currentCc.SJ_ID;
+            //*this.reloadKsOrgTipFlag = false 不做操作
+            //*noReload 为false 向后端请求
+            //*noReload 为-2 -1 1 2 3 已安排-2 -1 +1 +2 +3
+            if (sjId === this.ksOrgTipInfo.sjId && noReloadCount) {
+                count = this.ksOrgTipInfo.count + noReloadCount;
+                totalCount = this.ksOrgTipInfo.totalCount;
+            } else {
+                count += parseInt(this.countKsCount(kcId, sjId));
+                count += parseInt(this.countKsCount(kcId, sjId, true));
+                totalCount += parseInt(this.countKsCount(kcId, sjId, false, true));
+                totalCount += parseInt(this.countKsCount(kcId, sjId, true, true));
+            }
+
+            // $('#ksOrgTipKsCount').html(count);
+        }
+        /*else {
+         $('#ksOrgTipKsCount').html('');
+         }*/
+        this.ksOrgTipInfo = {kcId: kcId, sjId: sjId, count: count, totalCount: totalCount};
+        $('#ksOrgTip').html('[<span class="tip-red" id="ksOrgTipKsCount">' + count + '</span>' +
+            '/' +
+            '<span class="tip-red" id="ksOrgTipKsTotalCount">' + totalCount + '</span>]');
+        //ksOrgTipKsCount   ksOrgTipKsTotalCount
     },
 
     /**

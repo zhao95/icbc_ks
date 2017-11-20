@@ -679,6 +679,33 @@ public class DapccServ extends CommonServ {
     }
 
     /**
+     * 清除座位安排
+     *
+     * @param paramBean KC_ID_STR
+     * @return outBean
+     */
+    public OutBean clearYapzw(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String kcIdStr = paramBean.getStr("KC_ID_STR");
+        String[] split = kcIdStr.split(",");
+        StringBuilder whereSql = new StringBuilder();
+        List<Object> values = new ArrayList<Object>();
+        for (String kcId : split) {
+            if (StringUtils.isNotBlank(kcId)) {
+                values.add(kcId);
+                whereSql.append("?,");
+            }
+        }
+        String substring = whereSql.substring(0, whereSql.length() - 1);
+        Bean whereBean = new Bean();
+        whereBean.put(Constant.PARAM_PRE_VALUES, values);
+        whereBean.put(Constant.PARAM_WHERE, "and KC_ID in (" + substring + ")");
+        ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean);
+
+        return outBean;
+    }
+
+    /**
      * 获取机构下考场待安排考生数
      *
      * @return outBean

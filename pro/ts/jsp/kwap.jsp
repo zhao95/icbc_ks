@@ -189,6 +189,9 @@
             <a style="display: none;" class="rh-icon rhGrid-btnBar-a" id="unPublish" actcode="unPublish" title="">
                 <span class="rh-icon-inner">取消发布场次安排</span><span class="rh-icon-img btn-ok"></span>
             </a>
+            <a <%--style="display: none;"--%> class="rh-icon rhGrid-btnBar-a" id="clearYapzw" actcode="clearYapzw" title="">
+                <span class="rh-icon-inner">清除座位安排</span><span class="rh-icon-img btn-clear"></span>
+            </a>
             <a style="cursor: pointer;float: right;padding: 7px 10px;" class="" id="maximize" actcode="maximize"
                title="">
                 <img src="<%=CONTEXT_PATH%>/ts/image/maximize.png" alt="">
@@ -727,7 +730,7 @@
     </div><!-- /.modal -->
 </div>
 
-<%--发布场次安排--%>
+<%--取消发布场次安排--%>
 <div class="modal" id="unPublishModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -756,6 +759,34 @@
     </div><!-- /.modal -->
 </div>
 
+<%--清除座位安排--%>
+<div class="modal" id="clearYapzwModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    清除座位安排确认
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                是否清除座位安排？
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-success" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+                <button type="button" class="btn btn-default" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 
 <script src="<%=CONTEXT_PATH%>/ts/js/kwap.js"></script>
 
