@@ -209,7 +209,7 @@ public class JklbServ extends CommonServ {
                         //TS_JK_RESULT_TIP	借考结果提醒语
                         String jkResultMsg = ConfMgr.getConf("TS_JK_RESULT_TIP", "您的借考申请，有了审批结果，可登录工商银行考试查看。");
                         String jkTitle = jkbean.getStr("JK_TITLE");
-                        String jkResult = (Objects.equals(jk_status, "2")) ? "通过" : "不通过";
+                        String jkResult = ("2".equals(jk_status)) ? "通过" : "不通过";
                         jkResultMsg = jkResultMsg
                                 .replaceAll("#JK_TITLE#", jkTitle)
                                 .replaceAll("#JK_RESULT#", jkResult);

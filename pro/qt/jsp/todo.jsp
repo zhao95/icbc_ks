@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <%
     final String CONTEXT_PATH = request.getContextPath();
+    String batch = request.getParameter("batch");
 %>
 <html>
 <head>
@@ -12,7 +13,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
           name="viewport">
     <!-- 获取后台数据 -->
-    <%@ include file="../../sy/base/view/inHeader.jsp" %>
+    <%@ include file="../../sy/base/view/inHeader-icbc.jsp" %>
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet"
           href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
@@ -123,12 +124,19 @@
              style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
             <span style="margin-left: 50px; padding-top: 10px">未处理待办</span>
         </div>
+        <div style="display:none;width:85px;;background-color:lightseagreen;margin-left:5%;color:white;margin-top:10px"
+             id="batchsh" class="btn">
+            批量审核
+        </div>
         <div style="margin-left: 10px; background-color: white; height: 20px; width: 98%"></div>
         <div id="table1" class="" style="margin-left: 10px; width: 98%">
             <div class="content-main1">
                 <table class="rhGrid  JColResizer" id="todo-table"><%--JPadding--%>
                     <thead class="">
                     <tr style="backGround-color:WhiteSmoke; height: 30px">
+                        <th id="todo-th-checkbox" style="display: none;text-align: center;">
+                            <input type="checkbox" title=""/>
+                        </th>
                         <th class="" style="width: 10%; text-align: center">序号</th>
                         <th class="" style="width: 20%;">名称</th>
                         <th class="" style="width: 10%;">类型</th>
@@ -207,8 +215,87 @@
     </div>
 </div>
 
+<div class="modal fade" id="tiJiao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"
+     aria-hidden="true" style="padding-top:5%">
+    <div class="modal-dialog" style="width:50%">
+        <div class="modal-content">
+            <div class="modal-header"
+                 style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
+                批量审核
+            </div>
+            <form id="formmotai" method="post" action="bmshzg.jsp">
+                <div>
+                    <table style="height:125px;font-size:14px;">
+                        <tr style="height:25%">
+                            <td style="text-align:right;width:20%">审核人姓名</td>
+                            <td style="width:5%"></td>
+                            <td>
+                                <input id="userName" style="height:30px" type="text" name="shren" readonly/>
+                            </td>
+                            <td style="width:3%"></td>
+                            <td style="text-align:right">审核人登录名</td>
+                            <td style="width:5%"></td>
+                            <td>
+                                <input id="loginName" style="height:30px" type="text" name="shdlming" readonly/>
+                            </td>
+                        </tr>
+                        <tr style="height:25%">
+                            <td style="text-align:right">审核状态</td>
+                            <td style="width:5%"></td>
+                            <td><span id="radiospan1"><input style="vertical-align:text-bottom; margin-bottom:-3px;"
+                                                             name="state" type="radio" value="1" checked>审核通过&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <span id="radiospan2">
+                                    <input name="state" style="vertical-align:text-bottom; margin-bottom:-4px;"
+                                           type="radio" value="2">
+                                    审核不通过
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="height:100px;width:700px">
+                        <tr>
+                            <td style="text-align:right;width:17.5%;vertical-align:top">审核理由</td>
+                            <td style="width:4%"></td>
+                            <td style="width:75%;vertical-align:top"><textarea id="liyou"
+                                                                               style="border:solid 1px lightseagreen;height:90%;width:88%"
+                                                                               wrap="soft"></textarea></td>
+                        </tr>
+                    </table>
+                </div>
+                <input type="hidden" id="mokuai"/>
+            </form>
+            <div class="modal-footer" style="text-align:center;height:60px">
+                <button type="button" class="btn btn-primary" style="height:35px;background:lightseagreen;width:80px"
+                        onclick="mttijiao()">审核
+                </button>
+                <button type="button" class="btn btn-default"
+                        style="background:lightseagreen;margin-left:100px;color:white;height:35px;width:80px"
+                        data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
 <script>
+
     $(function () {
+        var batch = '<%=batch%>';
+        if (batch === '1' || batch === '2') {
+            $('#todo-th-checkbox').css('display', 'block');
+            $('#batchsh').css('display', 'block');
+        }
+
+        $('#batchsh').unbind('click').bind('click', function () {
+            $('#tiJiao').modal({backdrop: false, show: true});
+        });
+
+        var userName = System.getUser('USER_NAME');
+        var loginName = System.getUser('LOGIN_NAME');
+        $('#userName').val(userName);
+        $('#loginName').val(loginName);
+
 
         //tab标签页切换改变图标
         function changeImg($img) {
@@ -289,6 +376,11 @@
         /*获取搜索条件 where语句*/
         ListPage.prototype.getExtWhere = function () {
             var extWhere = "and OWNER_CODE='" + System.getUser("USER_CODE") + "'";
+            if (batch === '1') {
+                extWhere += " and TYPE ='0'";
+            } else if (batch === '2') {
+                extWhere += " and TYPE ='1'";
+            }
 //            for (var i = 0; i < icodes.length; i++) {
 //                var icode = icodes[i];
 //                var select = jQuery('select[icode="' + icode + '"]');
@@ -321,13 +413,13 @@
             for (var i = 0; i < listData._DATA_.length; i++) {
                 var item = listData._DATA_[i];
                 var tr = jQuery('<tr></tr>');
-
+                if (batch === '1' || batch === '2') {
+                    tr.append('<td style="text-align: center;"><input id="' + item.TODO_ID + '"  type="checkbox"></td>');
+                }
                 tr.append('<td style="text-align: center;">' + (i + 1) + '</td>');
 
                 var td = jQuery('<td></td>');
                 var a = jQuery('<a id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>');
-
-
 
                 if (item.TYPE === '0') {
                     a.unbind('click').bind('click', function () {
@@ -348,9 +440,10 @@
                 tr.append('<td>' + typeNameMap[item.TYPE] + '</td>');
                 tr.append('<td>' + item.SEND_NAME + '</td>');
                 tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
-                tr.append('<td>' + ((item.SEND_TIME&&item.SEND_TIME.length>=16) ? item.SEND_TIME.substring(0,16) : '') + '</td>');
+                tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');
                 rhGridTBody.append(tr);
             }
+            Utils.addTableCheckboxChangeEvent("todo-table");
         };
         /*构建主体内容（表格和分页）*/
         ListPage.prototype.bldBody = function (num) {
@@ -556,6 +649,38 @@
         var listPage = new ListPage(jQuery('.content-main1'));
         listPage.bldBody();
 
+        function mttijiao() {
+            var param = {};
+            var radiovalue = $('#tiJiao').find('input:radio:checked').val();
+            var liyou = document.getElementById("liyou").value;
+            param["shstatus"] = radiovalue;
+            param["shreason"] = liyou;
+            if (radiovalue == 1) {
+                param["isRetreat"] = "false";
+            } else {
+                param["isRetreat"] = "true";
+            }
+            var ids = "";
+            var $checkedItems = $('#todo-table tbody').find('input[type="checkbox"]:checked');
+            if ($checkedItems.length <= 0) {
+                alert('请选择要审批的待办！');
+            } else {
+                $checkedItems.each(function () {
+                    ids = ids + $(this).attr("id") + ',';
+                });
+                ids = ids.substring(0, ids.length - 1);
+                param["todoId"] = ids;
+                debugger;
+            }
+            listPage.search();
+            if (batch === '1') {
+                FireFly.doAct("TS_QJLB_QJ", "updateData", param);
+            } else if (batch === '2') {
+                FireFly.doAct("TS_JKLB_JK", "updateData", param);
+            }
+            $("#tiJiao").modal("hide");
+        }
+
         //已处理待办列表
         var listPage2 = new ListPage(jQuery('.content-main2'));
         listPage2.getListData = function (num) {
@@ -603,20 +728,71 @@
                 }
 
 
-
                 td.append(a);
 
                 tr.append(td);
                 tr.append('<td>' + typeNameMap[item.TYPE] + '</td>');
                 tr.append('<td>' + item.SEND_NAME + '</td>');
                 tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
-                tr.append('<td>' + ((item.SEND_TIME&&item.SEND_TIME.length>=16) ? item.SEND_TIME.substring(0,16) : '')  + '</td>');
+                tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');
                 rhGridTBody.append(tr);
             }
         };
         listPage2.bldBody();
 
     });
+
+    var Utils = {
+        /**
+         * 表格添加全选/全不选功能（复选框）
+         * @param tableId table id
+         */
+        addTableCheckboxChangeEvent: function (tableId) {
+            var $table = $('#' + tableId);
+            var $thCheckbox = $table.find('th input[type="checkbox"]');
+            if ($thCheckbox.length >= 0) {
+                //th checkbox 全选/全不选 事件
+                $($thCheckbox[0]).unbind('change').bind('change', function () {
+                    var $tdCheckboxs = $table.find('td input[type="checkbox"]');
+                    for (var i = 0; i < $tdCheckboxs.length; i++) {
+                        var tdCheckbox = $tdCheckboxs[i];
+                        tdCheckbox.checked = this.checked;
+                    }
+                });
+                //td checkbox td中checkbox变更，改变th checkbox
+                var tdCheckboxs = $table.find('td input[type="checkbox"]');
+                tdCheckboxs.unbind('change').bind('change', function () {
+                    if ($thCheckbox[0].checked && !this.checked) {
+                        $thCheckbox[0].checked = false;
+                    } else {
+                        var allChecked = true;
+                        for (var i = 0; i < tdCheckboxs.length; i++) {
+                            var tdCheckbox = tdCheckboxs[i];
+                            if (!tdCheckbox.checked) {
+                                allChecked = false;
+                            }
+                        }
+                        $thCheckbox[0].checked = allChecked;
+                    }
+                });
+            }
+        },
+
+        getTableTbodyCheckedTrs: function (tableId) {
+            var result = [];
+            var $table = $('#' + tableId);
+            var $trs = $table.find('tbody tr');
+
+            for (var i = 0; i < $trs.length; i++) {
+                var $tr = jQuery($trs[i]);
+                var $checkBox = $tr.find('td input[type="checkbox"]');
+                if ($checkBox[0].checked) {
+                    result.push($tr);
+                }
+            }
+            return result;
+        }
+    };
 
 </script>
 
