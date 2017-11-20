@@ -1134,6 +1134,11 @@ public class BmlbServ extends CommonServ {
 	 * 点击查看 展示报名信息
 	 */
 	public OutBean getShowData(Bean paramBean) {
+		UserBean userBean = Context.getUserBean();
+		String user_code = userBean.getCode();
+		paramBean.set("user_code", user_code);
+		OutBean phone = getPhone(paramBean);
+		String phontnum = phone.getStr("phone");
 		OutBean out = new OutBean();
 		String bmid = paramBean.getStr("bmids");
 		Bean bmbean = ServDao.find("TS_BMLB_BM", bmid);
@@ -1156,6 +1161,7 @@ public class BmlbServ extends CommonServ {
 		out.set("bmglbean", bmglbean);
 		out.set("bmbean", bmbean);
 		out.set("xmname", xmbean.getStr("XM_NAME"));
+		out.set("phone", phontnum);
 		return out;
 	}
 
