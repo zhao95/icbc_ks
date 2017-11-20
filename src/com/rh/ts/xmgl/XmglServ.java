@@ -12,6 +12,7 @@ import java.util.List;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.icbc.ctp.utility.StringUtil;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
@@ -279,10 +280,11 @@ public class XmglServ extends CommonServ {
 		String qz = act.getStr("qzcodes");
 
 		// 如果查询本人所在机构 是否 在 某个群组下
-		String whereqz = "AND G_TYPE=2";
-		List<Bean> finds = ServDao.finds("TS_BM_GROUP_DEPT", whereqz);
+		/*String whereqz = "AND G_TYPE=2";
+		List<Bean> finds = ServDao.finds("TS_BM_GROUP_DEPT", whereqz);*/
 		// 所有机构
-		for (Bean bean : finds) {
+		String sql = "SELECT g_id FROM ts_group_user_v a WHERE '"+odeptcode+"' IN(SELECT dept_code FROM sy_org_dept WHERE code_path LIKE a.`code_path`)";
+		/*for (Bean bean : finds) {
 			String str = bean.getStr("USER_DEPT_CODE");// 机构编码
 			if("".equals(str)){
 				continue;
@@ -296,6 +298,10 @@ public class XmglServ extends CommonServ {
 				qz += "," + bean.getStr("G_ID");
 				continue;
 			}
+			//存 Code_path  和  g_id  的表
+			select a.g_id,b.code_path from TS_BM_GROUP_USER_DEPT  a left join sy_org_dept b on a.user_dept_code = a.dept_code;
+			"select distinct code_path from sy_org_dept where dept_code in(select user_dept_code from a where g_type='2') "
+			String sql1 = "select g_id from TS_BM_GROUP_USER_DEPT  a where exists(select '' from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.user_dept_code=b.dept_code)";
 				List<DeptBean> listdept = OrgMgr.getChildDeptsAll(bean.getStr("S_CMPY"),str);
 				// 判断此人是否在此机构下
 				// 管理员以下的所有机构
@@ -305,9 +311,14 @@ public class XmglServ extends CommonServ {
 				for (Bean deptBean : listdept) {
 					if (deptcodelist.contains(deptBean.getStr("DEPT_CODE"))) {
 						qz += "," + bean.getStr("G_ID");
+						break;
 					}
 			}
 				
+		}*/
+		List<Bean> query = Transaction.getExecutor().query(sql);	
+		for (Bean bean : query) {
+			qz += "," + bean.getStr("G_ID");
 		}
 		if (!Strings.isBlank(qz)) {
 			// 去掉重复群组
@@ -338,9 +349,9 @@ public class XmglServ extends CommonServ {
 		Date date  = new Date();
 		SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String datestr = simp.format(date);
-		String sql = "select * from ts_xmgl where xm_id in(SELECT XM_ID FROM TS_XMGL_BMGL WHERE '"+datestr+"' BETWEEN BM_TZ_START AND BM_TZ_END)";
-		List<Bean> list = Transaction.getExecutor().query(sql);
-		String s = "";
+		String sql1 = "select * from ts_xmgl where xm_id in(SELECT XM_ID FROM TS_XMGL_BMGL WHERE '"+datestr+"' BETWEEN BM_TZ_START AND BM_TZ_END)";
+		List<Bean> list = Transaction.getExecutor().query(sql1);
+		/*String s = "";
 		for (int i = 0; i < list.size(); i++) {
 			if (i == (list.size() - 1)) {
 				s += list.get(i).getId();
@@ -349,45 +360,45 @@ public class XmglServ extends CommonServ {
 			}
 		}
 		String[] xmarray = s.split(",");
+		 * */	
 		// 将可见的 项目 ID 放到新的数组中
-		List<String> kjxm = new ArrayList<String>();
+		List<Bean> lastlist = new ArrayList<Bean>();
 		// 遍历项目ID 匹配项目和本人的 群组权限
-		for (int a = 0; a < xmarray.length; a++) {
+	for (Bean bean :list) {
 			ParamBean param = new ParamBean();
-			param.set("xmid", xmarray[a]);
+			param.set("xmid", bean.getId());
 			Bean outBeanCode = ServMgr.act("TS_XMGL_RYGL_V", "getCodes", param);
 			
 			String codes = outBeanCode.getStr("rycodes");
-			Boolean boo = false;
 			if ("".equals(codes)) {
 			} else {
 				// 本人所在的群组编码
 				String[] codeArray = codes.split(",");
 				for (int b = 0; b < qzArray1.length; b++) {
 					if (Arrays.asList(codeArray).contains(qzArray1[b])) {
-						boo = true;
+						if ("1".equals(bean.getStr("XM_STATE"))) {
+							lastlist.add(bean);
+						}
 					}
 				}
 			}
-			// 可见的项目id
+			/*// 可见的项目id
 			if (boo == true) {
 				kjxm.add(xmarray[a]);
-			}
+			}*/
 		}
 
-		// kjxm为可见项目idlist stringlist 为已报名的项目idlist
-		List<Bean> lastlist = new ArrayList<Bean>();
+	/*	// kjxm为可见项目idlist stringlist 为已报名的项目idlist
+	
 		for (int i = 0; i < list.size(); i++) {
 			Bean bean = list.get(i);
 			// 项目中已存在array的 title 数据 将展示在 已报名信息中
 			String id = bean.getStr("XM_ID");
 			if (kjxm.contains(id)) {
 				// 已报名这个考试之后 或者他不能报名这个考试 中断循环 继续开始
-				if ("1".equals(bean.getStr("XM_STATE"))) {
-					lastlist.add(bean);
-				}
+				
 			}
-		}
+		}*/
 
 	
 		outBean.set("list",lastlist);
