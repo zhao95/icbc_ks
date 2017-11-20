@@ -155,7 +155,7 @@ position: absolute;
 				<span style="margin-left: 50px; padding-top: 10px">已申请的报名</span>
 			</div>
 
-                 <div  id="jibie" style="padding-top:20px;padding-left:75%">
+                 <div  id="jibie" style="padding-top:20px;padding-left:80%">
                  <select id = "jb" onchange="jibieonchange()">
                  <option selected="selected">全部</option>
                  <option value="1">初级</option>
