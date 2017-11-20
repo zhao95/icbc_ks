@@ -52,7 +52,7 @@ if(userBean != null) {
 			 %>
 <style>
 
-	tr{cursor: pointer;}
+	/* tr{cursor: pointer;} */
 	#yiyi .modal-dialog{
 	position: absolute; 
     top: 20%; 
@@ -207,7 +207,7 @@ if(userBean != null) {
 		</div>
 		<div class="tab-pane fade"  id="tab2">
 		    <div
-				style="margin-top: -5px; margin-left: 40%; height: 5px; width: 20%; background-color: LightSeaGreen"></div>
+				style="margin-top: -6px; margin-left: 40%; height: 5px; width: 20%; background-color: LightSeaGreen"></div>
 				<div id="cuxian2"
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">审核通过人员</span>
@@ -219,16 +219,16 @@ if(userBean != null) {
 				<td style="width:10%;text-align:left"><button id="TS_BMSH_PASS" class="btn btn-success" data-toggle="modal" data-target="#excleupload" onclick="importdata(2)"  style="border:none;color:white;height:30px;width:80%;background:lightseagreen"  id = "import2">文件批量导入</button></td>
 				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="exportdata('TS_BMSH_PASS','checkboxb')" id = "export2">文件批量导出</button></td>
 				<td style="width:10%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
-				<td style="width:15%"></td>
-				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm2" type="text"></input></td>
-						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm2" type="text"></input></td>
+				<td style="width:6%"></td>
+				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm2" type="text"></input>&nbsp;&nbsp;</td>
+						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm2" type="text"></input>&nbsp;&nbsp;</td>
 						<td style="width:1%;text-align:left"><select id = "zhuangtai1">
 				            <option selected="selected">全部</option>
 				            <option value="进行中">进行中</option>
 				            <option value="已结束">已结束</option>
 				            </select>
 				        </td>
-				        <td style="width:8%;text-align:left"><button id="check2" class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise">查询</button></td>
+				        <td style="width:8%;text-align:left">&nbsp;&nbsp;<button id="check2" class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
@@ -274,7 +274,7 @@ if(userBean != null) {
 		</div>
 		<div class="tab-pane fade"  id="tab3">
 		<div
-				style="margin-top: -5px; margin-left: 73%; height: 5px; width: 20%; background-color: LightSeaGreen"></div>
+				style="margin-top: -6px; margin-left: 73%; height: 5px; width: 20%; background-color: LightSeaGreen"></div>
 				<div id="cuxian3"
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">审核不通过人员</span>
@@ -286,16 +286,16 @@ if(userBean != null) {
 				<td style="width:10%;text-align:left"><button id="TS_BMSH_NOPASS" class="btn btn-success" data-toggle="modal" data-target="#excleupload" onclick="importdata(3)"  style="border:none;color:white;height:30px;width:80%;background:lightseagreen" id = "import3">文件批量导入</button></td>
 				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="exportdata('TS_BMSH_NOPASS','checkboxc')" id = "export3">文件批量导出</button></td>
 				<td style="width:10%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
-						<td style="width:15%"></td>
-				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm3" type="text"></input></td>
-						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm3" type="text"></input></td>
+						<td style="width:6%"></td>
+				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm3" type="text"></input>&nbsp;&nbsp;</td>
+						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm3" type="text"></input>&nbsp;&nbsp;</td>
 						<td style="width:1%;text-align:left"><select id = "zhuangtai2">
 				            <option selected="selected">全部</option>
 				            <option value="进行中">进行中</option>
 				            <option value="已结束">已结束</option>
 				            </select>
 				        </td>
-				        <td style="width:8%;text-align:left"><button id="check3" class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise">查询</button></td>
+				        <td style="width:8%;text-align:left">&nbsp;&nbsp;<button id="check3" class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
