@@ -227,6 +227,10 @@ function bindCard() {
 						
 					}
 			}else if(obj2[0].type=='string'){
+				var divtishi = document.createElement("div");
+				$(divtishi).css("padding-bottom","10px");
+				$(divtishi).html("禁考提示信息");
+				formConDiv7.append(divtishi);
 				var  BUTT= document.createElement("button");
 				BUTT.id="chongzhi";
 				BUTT.innerHTML="重置";
@@ -234,6 +238,11 @@ function bindCard() {
 				input8.val(name);
 				input8.css("width","400px");
 				formConDiv7.append(input8);
+				var div = document.createElement("div");
+				$(div).css("padding-top","10px");
+				$(div).css("color","red");
+				$(div).html("#reason#禁考原因,#stime#禁考开始时间,#endtime#禁考结束时间.变量位置可换,变量不可随意更改");
+				formConDiv7.append(div);
 		}else if(obj2[0].type=='XL'){
 			//管理类序列
 			var codestr = [];
@@ -452,15 +461,18 @@ function bindelete(){
 	$("#jqlike").click(function(){
 		if($("#jqlike").html()=="精确到日"){
 			$("#jqlike").html('模糊到年');
+			var nowdate = $("input[name='yearlimit']:first").val();
 			$("input[name='yearlimit']").each(function(){
 				$(this).attr("onfocus","WdatePicker({startDate:\'%y%MM%dd\',dateFmt:\'yyyyMMdd\',alwaysUseStartDate:false})");
 				$(this).removeClass("WdateFmtErr");
 				$(this).addClass("Wdate ui-date-default").css("cursor","pointer");
-				$(this).val('20170809');
+				$(this).val(nowdate);
 			});
 		}else{
 		//模糊
 		$("#jqlike").html('精确到日');
+		var nowdate = $("input[name='yearlimit']:first").val();
+		nowdate = nowdate.substring(0,3);
 		$("input[name='yearlimit']").each(function(){
 			var inputaa = $('<input type="text" name="yearlimit" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val('1');
 			inputaa.attr("onfocus","WdatePicker({startDate:\'%y\',dateFmt:\'yyyy\',alwaysUseStartDate:false})");
@@ -468,7 +480,7 @@ function bindelete(){
 			inputaa.addClass("Wdate ui-date-default").css("cursor","pointer");
 			$(this).before(inputaa);
 			$(this).remove();
-			inputaa.val('2017');
+			inputaa.val(nowdate);
 			/*$(this).addClass("ui-text-default");*/
 		});
 		}

@@ -120,8 +120,7 @@ function setApplyContent() {
         var param1 = {};
         param1["xmid"] = xmId;
         var resultBean = FireFly.doAct("TS_XMGL_BMGL", "getBMState", param1);
-        var dataList = resultBean.list;
-        var list = JSON.parse(dataList);
+        var list = resultBean.list;
         var startTime = list[0].START_TIME;
         var endTime = list[0].END_TIME;
         var state = list[0].STATE;

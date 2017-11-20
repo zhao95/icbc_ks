@@ -7,6 +7,7 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.util.Constant;
+import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -59,7 +60,17 @@ public class RzgjServ extends CommonServ {
             String ISSUE_DATE = data.getStr("ISSUE_DATE");//发证日期
             String ISSUE_DATE_STR = ISSUE_DATE.substring(0, 4) + "年" + ISSUE_DATE.substring(4, 6) + "月";
 
-            String CERT_GRADE_CODE = data.getStr("CERT_GRADE_CODE");//名称
+            // 获取等级名称
+            String CERT_GRADE_CODE = data.getStr("CERT_GRADE_CODE");//等级编码
+            String CERT_GRADE = data.getStr("CERT_GRADE");//等级名称
+            String typeName = getTypeName(CERT_GRADE_CODE);
+            if (StringUtils.isBlank(typeName)) {
+                if (StringUtils.isNotBlank(CERT_GRADE)) {
+                    typeName = CERT_GRADE;
+                }
+            }
+            data.set("typeName", typeName);
+
             String CERT_ID = data.getStr("CERT_ID");
             Integer QUALFY_STAT = data.getInt("QUALFY_STAT");//证书状态
             //有效日期
@@ -105,9 +116,7 @@ public class RzgjServ extends CommonServ {
                     POSTION_QUALIFICATION = bean.getStr("POSTION_QUALIFICATION");
                 }
             }
-            String[] classs = {" ", "初级", "中级", "高级", "专家级"};
-            Integer i = Integer.valueOf(POSTION_QUALIFICATION);
-            POSTION_QUALIFICATION_STR = classs[i];
+            POSTION_QUALIFICATION_STR = getTypeName(POSTION_QUALIFICATION);
         }
 
         //过滤出用户当前序列的获证信息
@@ -115,7 +124,10 @@ public class RzgjServ extends CommonServ {
         Collections.reverse(copyDataList);
         for (Iterator<Bean> iterator = copyDataList.iterator(); iterator.hasNext(); ) {
             Bean copyData = iterator.next();
-            if (!STATION_NO_CODE.equals(copyData.get("STATION_NO"))) {
+            if ("A000000000000000008".equals(copyData.get("STATION_NO")) && "A000000000000000019".equals(STATION_NO_CODE)) {
+//              //财会资金（证书序列）和财会（序列） code不同特殊处理
+                //财会资金（证书序列）A000000000000000008   财会（序列）A000000000000000019
+            } else if (!STATION_NO_CODE.equals(copyData.get("STATION_NO"))) {
                 iterator.remove();
             }
         }
@@ -135,11 +147,9 @@ public class RzgjServ extends CommonServ {
             queryBean.set(Constant.PARAM_WHERE, "and STATION_NO='" + STATION_NO_CODE + "' and CERT_GRADE_CODE between '1' and '" + POSTION_QUALIFICATION + "'");
             after = ServDao.count("TS_ETI_CERT_QUAL_V", queryBean);
 
-            queryBean = new Bean();
             queryBean.set(Constant.PARAM_WHERE, "and STATION_NO='" + STATION_NO_CODE + "' and CERT_GRADE_CODE between '" + POSTION_QUALIFICATION + "' and '4'");
             pre = ServDao.count("TS_ETI_CERT_QUAL_V", queryBean);
 
-            queryBean = new Bean();
             queryBean.set(Constant.PARAM_WHERE, "and STATION_NO='" + STATION_NO_CODE + "' and CERT_GRADE_CODE = '" + POSTION_QUALIFICATION + "'");
             other = num - pre - after;
         }
@@ -161,5 +171,23 @@ public class RzgjServ extends CommonServ {
         outBean.set("after", after);//之后
 
         return outBean;
+    }
+
+    /**
+     * 获取级别编码对应的名称
+     *
+     * @return
+     */
+    private String getTypeName(String type) {
+        String[] classs = {"", "初级", "中级", "高级", "专家级"};
+        int i = 0;
+        try {
+            i = Integer.parseInt(type);
+        } catch (Exception ignored) {
+        }
+        if (i >= classs.length || i < 0) {
+            i = 0;
+        }
+        return classs[i];
     }
 }

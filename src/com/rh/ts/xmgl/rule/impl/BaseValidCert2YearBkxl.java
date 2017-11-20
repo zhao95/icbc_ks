@@ -30,7 +30,6 @@ public class BaseValidCert2YearBkxl implements IRule {
 		String xl = param.getStr("BM_XL");
 
 		// 报名结束时间
-		String bmEnd = param.getStr("BM_ENDDATE");
 
 		String jsonStr = param.getStr("MX_VALUE2");
 
@@ -39,9 +38,10 @@ public class BaseValidCert2YearBkxl implements IRule {
 		JSONArray obj;
 
 		try {
-
+			
 			obj = new JSONArray(jsonStr);
-			JSONObject jsonObject = obj.getJSONObject(0);
+			
+			JSONObject jsonObject = obj.getJSONObject(obj.length()-1);
 
 			Calendar c = Calendar.getInstance();
 
@@ -50,14 +50,18 @@ public class BaseValidCert2YearBkxl implements IRule {
 			if (val == 0) {
 				val = 2;
 			}
+			int valfu = -val;
+			String endtime = obj.getJSONObject(obj.length()-2).getString("val");
+			
+			String level =obj.getJSONObject(0).getString("code");
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-			Date endDate = format.parse(bmEnd);
+			Date endDate = format.parse(endtime);  //指定时间  不用 报名结束时间
 
 			c.setTime(endDate);
 
-			c.add(Calendar.YEAR, val);
+			c.add(Calendar.YEAR, valfu);
 
 			Date y = c.getTime();
 
@@ -71,9 +75,9 @@ public class BaseValidCert2YearBkxl implements IRule {
 
 			sql.and("STATION_NO", xl);// 序列编号
 
-			sql.and("CERT_GRADE_CODE", "1");// 证书等级编号
-
-			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
+			sql.andGTE("END_DATE", endtime);
+			
+			sql.andGTE("CERT_GRADE_CODE", level);// 证书等级编号
 
 			sql.and("S_FLAG", 1);
 

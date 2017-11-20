@@ -32,24 +32,41 @@ public class BmServ extends CommonServ {
 		String xmid = paramBean.getStr("xmid");
 		String where1 = "AND XM_ID="+"'"+xmid+"'";
 		List<Bean> listbean = ServDao.finds("TS_XMGL_BMGL",where1);
+		
+		List<Bean> finds = ServDao.finds("TS_XMGL_SZ", where1+" AND XM_SZ_NAME='报名'");
+		String state = "";
+		if(finds!=null&&finds.size()!=0){
+			 state = finds.get(0).getStr("XM_SZ_TYPE");
+		}
 		if(listbean.size()==0){
 			return new OutBean().set("list","");
 		}
 		Bean bmbean = listbean.get(0);
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		String startTime = bmbean.getStr("BM_START");
 		String endTime = bmbean.getStr("BM_END");
-		String state ="未开始";
+	
+		//通知结束时间
+		Date date = new Date();
 		if(startTime!=""&&endTime!=""){
 			Date date1 = sdf.parse(startTime);
 			Date date2 = sdf.parse(endTime);
-			Date date = new Date();
 			if(date.getTime()<date2.getTime()&&date.getTime()>date1.getTime()){
-			 state = "待报名";
+				if("进行中".equals(state)){
+					state = "待报名";
+				}else if("已结束".equals(state)){
+					state="已结束";
+				}else{
+					state="未开始";
+				}
 			}else if(date.getTime()>date2.getTime()){
-				state="已结束";
+					state="已结束";
+			}else{
+					state="未开始";
 			}
 			}
+		
+		
 		Bean newBean = new Bean();
 		newBean.set("STATE", state);
 		newBean.set("START_TIME",startTime);
@@ -57,19 +74,7 @@ public class BmServ extends CommonServ {
 		List<Bean> list = new ArrayList<Bean>();
 		list.add(newBean);
 		
-		  ObjectMapper mapper = new ObjectMapper();    
-	       StringWriter w = new StringWriter();  
-	       try {
-			mapper.writeValue(w, list);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		 catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	       outBean.set("list",w.toString());
+	       outBean.set("list",list);
 	       outBean.set("nojson", list);
 	       outBean.set("state", state);
 	       return outBean;
@@ -100,7 +105,14 @@ public class BmServ extends CommonServ {
 			 SH_TGTSY = listbean.get(0).getStr("SH_TGTSY");
 			 SH_BTGTSY = listbean.get(0).getStr("SH_BTGTSY");
 		 }
-		 shstate = listbean.get(0).getStr("SH_STATE");
+		 Bean shbean;
+		try {
+			shbean = getSHState(paramBean);
+			shstate =shbean.getStr("state");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	if(xmbean==null){
 		 outBean.set("xmname","");
@@ -152,6 +164,58 @@ public class BmServ extends CommonServ {
 		}
 		return out;
 	}
-	
+	/**
+	 * 获取报名时间报名状态
+	 * @param paramBean
+	 * @return
+	 * @throws ParseException 
+	 */
+	public Bean getSHState(Bean paramBean) throws ParseException{
+		Bean outBean = new Bean();
+		String xmid = paramBean.getStr("xmid");
+		String where1 = "AND XM_ID="+"'"+xmid+"'";
+		List<Bean> listbean = ServDao.finds("TS_XMGL_BMSH",where1);
+		List<Bean> shlistbean = ServDao.finds("TS_XMGL_SZ",where1+ "and XM_SZ_NAME='审核'");
+		if(listbean.size()==0){
+			return new OutBean().set("list","");
+		}
+		Bean bmbean = listbean.get(0);
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+		String startTime = bmbean.getStr("SH_START");
+		String endTime = bmbean.getStr("SH_END");
+		String state =shlistbean.get(0).getStr("XM_SZ_TYPE");
+		if(!"".equals(startTime)&&!"".equals(endTime)){
+			Date date1 = sdf.parse(startTime);
+			Date date2 = sdf.parse(endTime);
+			Date date = new Date();
+			if(date.getTime()<date2.getTime()&&date.getTime()>date1.getTime()){
+				if("进行中".equals(state)){
+					state = "待报名";
+				}else if("已结束".equals(state)){
+					state="已结束";
+				}else{
+					state="未开始";
+				}
+			}else if(date.getTime()>date2.getTime()){
+					state="已结束";
+			}else{
+					state="未开始";
+			}
+		}
+		
+		Bean newBean = new Bean();
+		newBean.set("STATE", state);
+		newBean.set("START_TIME",startTime);
+		newBean.set("END_TIME",endTime);
+		List<Bean> list = new ArrayList<Bean>();
+		list.add(newBean);
+		
+		
+	       outBean.set("list",list);
+	       outBean.set("nojson", list);
+	       outBean.set("state", state);
+	       return outBean;
+		
+	}
 	
 }

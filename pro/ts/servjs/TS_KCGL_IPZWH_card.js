@@ -8,3 +8,6 @@ if(_viewer.opts.act == "cardAdd"){
 	}
 }
 
+if (_viewer.opts.readOnly) {
+	_viewer.readCard();
+	}

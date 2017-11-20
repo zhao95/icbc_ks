@@ -3,15 +3,20 @@ package com.rh.ts.xmgl;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
+import com.rh.core.comm.ConfMgr;
+import com.rh.core.icbc.basedata.KSSendTipMessageServ;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.serv.bean.PageBean;
 import com.rh.core.util.Constant;
+import com.rh.core.util.DateUtils;
 import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.TsConstant;
 import org.apache.commons.lang.StringUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DapccServ extends CommonServ {
@@ -56,25 +61,43 @@ public class DapccServ extends CommonServ {
         /*拼sql并查询*/
         String searchDeptCode = paramBean.getStr("searchDeptCode");
         String searchKcId = paramBean.getStr("searchKcId");
-        Set<String> hashSet = this.getKcRelateOrgCodeList(searchKcId);
+        String searchSjId = paramBean.getStr("searchSjId");
+
+        long l;//选中的考场时长
+        try {
+            Bean sjBean = ServDao.find(TsConstant.SERV_KCAP_CCSJ, searchSjId);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String sjStart = sjBean.getStr("SJ_START");
+            String sjEnd = sjBean.getStr("SJ_END");
+            Date startDate = dateFormat.parse(sjStart);
+            Date endDate = dateFormat.parse(sjEnd);
+            l = (endDate.getTime() - startDate.getTime()) / 1000 / 60;
+        } catch (ParseException e) {
+            l = Long.MAX_VALUE;
+        }
+        paramBean.set("searchKsTime", "");
+
 //        if (hashSet.contains(searchDeptCode)) {
 //            paramBean.set("containDeptCode", searchDeptCode);
 //        } else {
 //            paramBean.set("equalDeptCode", searchDeptCode);
 //        }
 //
-        Bean dept = this.getDeptByCode(searchDeptCode, null);
-        String deptLevel = dept.getStr("DEPT_LEVEL");
-        if ("3".equals(deptLevel) || "2".equals(deptLevel) || "1".equals(deptLevel)) {
-            paramBean.set("containDeptCode", searchDeptCode);
-        } else {
-            paramBean.set("equalDeptCode", searchDeptCode);
+
+        if (StringUtils.isNotBlank(searchDeptCode) && !"jk".equals(searchDeptCode)) {
+            Bean dept = this.getDeptByCode(searchDeptCode, null);
+            String deptLevel = dept.getStr("DEPT_LEVEL");
+            if ("3".equals(deptLevel) || "2".equals(deptLevel) || "1".equals(deptLevel)) {
+                paramBean.set("containDeptCode", searchDeptCode);
+            } else {
+                paramBean.set("equalDeptCode", searchDeptCode);
+            }
         }
 
         //拼凑whereSql配置
         Map<String, String> configMap = new HashMap<String, String>();
         configMap.put("XM_ID", "XM_ID = ?");
-        configMap.put("containDeptCode", "CODE_PATH like ?");
+        configMap.put("containDeptCode", "c.CODE_PATH like ?");
 //        configMap.put("containDeptCode", "CODE_PATH like ?");
         configMap.put("equalDeptCode", "b.DEPT_CODE = ?");
         configMap.put("searchName", "USER_NAME like ?");
@@ -82,27 +105,70 @@ public class DapccServ extends CommonServ {
         configMap.put("searchBmXl", "BM_XL like ?");
         configMap.put("searchBmMk", "BM_MK like ?");
         configMap.put("searchBmJb", "BM_TYPE = ?");
-        //configMap.put("searchBmCount", " and USER_LOGIN_NAME like '%?%'"); //todo 报考数
+//        configMap.put("searchJkCodePath", " a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
+//                " and ? like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%')");
+//        configMap.put("searchKsTime", "CAST(BM_KS_TIME as SIGNED) < ?");
+//        configMap.put("searchBmCount", "count = ?");
 
         List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
-        String whereSql = (String) extWhereSqlData.get(0);
         List<Object> values = (List<Object>) extWhereSqlData.get(1);
+        String whereSql = (String) extWhereSqlData.get(0);
+
+        //查找借考考生数据
+        if ("jk".equals(searchDeptCode)) {
+            String searchJkCodePath = "";
+            String sql = "SELECT b.CODE_PATH FROM TS_KCGL a " +
+                    "LEFT JOIN sy_org_dept b ON b.DEPT_CODE = a.KC_ODEPTCODE WHERE KC_ID = ?";
+            List<Object> values1 = new LinkedList<Object>();
+            values1.add(searchKcId);
+            List<Bean> beanList = Transaction.getExecutor().query(sql, values1);
+            //substring(b.CODE_PATH , 12, 10) 获取
+            if (beanList != null && beanList.size() > 0) {
+                Bean bean = beanList.get(0);
+                searchJkCodePath = bean.getStr("CODE_PATH");
+                values.add(searchJkCodePath);
+                whereSql += " and a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
+                        " and ? like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%')";
+//                paramBean.set("searchJkCodePath", searchJkCodePath);
+            }
+        } else {
+            //获取的考生在考场关联机构本级及下级的机构
+//        whereSql += "AND EXISTS (select 'X' from TS_KCGL_GLJG g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+//        values.add(searchKcId);
+            StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
+            Set<String> hashSet = this.getKcRelateOrgCodeList(searchKcId);
+            for (String s : hashSet) {
+                values.add(s);
+                deptSql.append("INSTR(c.CODE_PATH ,?)>0 or ");
+            }
+            whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
+        }
 //        Pair<String, List<Object>> extWhereSqlData
 
-        //获取的考生在考场关联机构本级及下级的机构
-        StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
-        for (String s : hashSet) {
-            values.add("%" + s + "%");
-            deptSql.append("CODE_PATH like ? or ");
-        }
-        whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
+        //考试时长
+        whereSql += " and CAST(BM_KS_TIME as SIGNED) <= ?";
+        values.add(l);
 
-        String sql = "select a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH "
+        //默认获取未安排的人员,isArrange = 'false'  获取安排人员
+        if (!"false".equals(paramBean.getStr("isArrange"))) {
+            //默认获取未安排的人员
+            whereSql += " and not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID)";
+        }
+
+        configMap.put("isArrange", " not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) ");
+
+
+        String sql = "select a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH"
+                + ",(select COUNT(*) from TS_BMSH_PASS a2 where a2.BM_CODE=a.BM_CODE and a2.XM_ID=a.XM_ID AND a2.BM_STATUS NOT IN ('1', '3') ) as count" +
+                ",(case a.BM_STATUS when '2' then '借考' else '' end) as status "
                 + "from TS_BMSH_PASS a "
                 + "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE "
                 + "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
-                + "where not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID)"
+                + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
+                + "where a.BM_STATUS not in('1','2','3')"
                 + whereSql;
+        /*not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
+                + " and */
         //where 姓名/登录名/报考类型/报考数  bm_name /login_name?/
         List<Bean> dataList = Transaction.getExecutor().queryPage(
                 sql, page.getNowPage(), page.getShowNum(), new ArrayList<Object>(values), null);
@@ -440,8 +506,9 @@ public class DapccServ extends CommonServ {
 
         UserBean userBean = UserMgr.getUser(userCode);
         String deptCode = userBean.getDeptCode();
-        List<Object> values = new ArrayList<Object>();
-        values.add(deptCode);
+
+//        List<Object> values = new ArrayList<Object>();
+//        values.add(deptCode);
 
         Bean bean = ServDao.find("SY_ORG_DEPT", deptCode);
 //        Bean bean = Transaction.getExecutor().queryOne("select * from sy_org_dept where DEPT_CODE = ?", values);
@@ -476,4 +543,152 @@ public class DapccServ extends CommonServ {
         return result;
     }
 
+
+    /**
+     * 更改场次
+     *
+     * @param paramBean sjId sjId2
+     * @return outBean
+     */
+    public OutBean changeCc(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+
+        String sjId = paramBean.getStr("sjId");
+        String sjId2 = paramBean.getStr("sjId2");
+        Bean sjBean = ServDao.find(TsConstant.SERV_KCAP_CCSJ, sjId);
+        Bean sjBean2 = ServDao.find(TsConstant.SERV_KCAP_CCSJ, sjId2);
+        if (sjBean == null || sjBean2 == null) {
+            outBean.setError("操作失败！");
+        } else if (sjBean.getStr("CC_ID").equals(sjBean2.getStr("CC_ID"))) {
+            Transaction.begin();
+            try {
+                String tempId = "changeCCTempId";
+                String sql = "update ts_xmgl_kcap_yapzw set SJ_ID = ? where SJ_ID= ?";
+                List<Object> values = new LinkedList<Object>();
+
+                //
+                values.add(tempId);
+                values.add(sjId);
+                Transaction.getExecutor().execute(sql, values);
+                //
+                values.clear();
+                values.add(sjId);
+                values.add(sjId2);
+                Transaction.getExecutor().execute(sql, values);
+                //
+                values.clear();
+                values.add(sjId2);
+                values.add(tempId);
+                Transaction.getExecutor().execute(sql, values);
+
+                Transaction.commit();
+            } catch (Exception e) {
+                Transaction.rollback();
+                outBean.setError("操作失败！");
+            } finally {
+                Transaction.end();
+            }
+        } else {
+            outBean.setError("考场不同，请重新选择！");
+        }
+        return outBean;
+    }
+
+    /**
+     * xngs 辖内公示
+     */
+    public OutBean xngs(ParamBean paramBean) {
+        String xmId = paramBean.getStr("XM_ID");
+        String kcIdStr = paramBean.getStr("KC_ID_STR");
+        String kcIdSql = "'" + kcIdStr.replaceAll(",", "','") + "'";
+        String sql = "update ts_xmgl_kcap_yapzw set PUBLICITY = '1 ' where XM_ID = ? and KC_ID in (" + kcIdSql + ")";
+        List<Object> values = new LinkedList<Object>();
+        values.add(xmId);
+        Transaction.getExecutor().execute(sql, values);
+
+        try {
+            //考场公示提醒
+            //TS_KCGS_START_TIP	考场公示提示语
+            Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+            String xmName = xmBean.getStr("XM_NAME");
+            String whereSql = "and XM_ID = '" + xmId + "' and KC_ID in (" + kcIdSql + ")";
+            List<Bean> beanList = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, whereSql);
+
+            String zkzStartTipMsg = ConfMgr.getConf("TS_KCGS_START_TIP", "您报名的考试开始公示考场，请登录工商银行考试系统查看详情。");
+            zkzStartTipMsg = zkzStartTipMsg.replaceAll("#XM_NAME#", xmName);
+            List<Bean> kczwShowTipList = new LinkedList<Bean>();
+            for (Bean bean : beanList) {
+                String userCode = bean.getStr("U_CODE");
+                Bean kczwShowTip = new Bean();
+                kczwShowTip.set("USER_CODE", userCode);
+                kczwShowTip.set("tipMsg", zkzStartTipMsg);
+                kczwShowTipList.add(kczwShowTip);
+            }
+            new KSSendTipMessageServ().sendTipMessageListForICBC(kczwShowTipList, "kczwShow");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("考场公示提醒失败，" + "XM_ID:" + xmId + ",USER_CODE:" + Context.getUserBean().getName());
+        }
+        return new OutBean().setOk();
+    }
+
+    /**
+     * 场次发布
+     *
+     * @param paramBean XM_ID
+     * @return outBean
+     */
+    public OutBean publish(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String xmId = paramBean.getStr("XM_ID");
+        if (StringUtils.isNotBlank(xmId)) {
+            Bean updateXmBean = new Bean();
+            updateXmBean.setId(xmId);
+            updateXmBean.set("XM_ID", xmId);
+            updateXmBean.set("XM_KCAP_PUBLISH_USER_CODE", Context.getUserBean().getCode());
+            updateXmBean.set("XM_KCAP_PUBLISH_TIME", DateUtils.getDatetime());
+            ServDao.update(TsConstant.SERV_XMGL, updateXmBean);
+
+            try {
+                //准考证开始打印提醒
+                //TS_ZKZ_START_TIP 准考证开始打印提示语
+                Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+                String xmName = xmBean.getStr("XM_NAME");
+                String zkzStartTipMsg = ConfMgr.getConf("TS_ZKZ_START_TIP", "您所报名的考试，已可以打印准考证，祝考试顺利！");
+                zkzStartTipMsg = zkzStartTipMsg.replaceAll("#XM_NAME#", xmName);
+
+                List<Bean> zkzStarTipBeanList = new LinkedList<Bean>();
+                List<Bean> beanList = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and XM_ID = '" + xmId + "'");
+                for (Bean bean : beanList) {
+                    String userCode = bean.getStr("U_CODE");
+                    Bean zkzStarTipBean = new Bean();
+                    zkzStarTipBean.set("USER_CODE", userCode);
+                    zkzStarTipBean.set("tipMsg", zkzStartTipMsg);
+                    zkzStarTipBeanList.add(zkzStarTipBean);
+                }
+                new KSSendTipMessageServ().sendTipMessageListForICBC(zkzStarTipBeanList, "zkzStar");
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("准考证开始打印提醒失败，" + "XM_ID:" + xmId);
+            }
+//            outBean.setOk();
+        } else {
+            outBean.setError();
+        }
+        return outBean;
+    }
+
+    /**
+     * 获取机构下考场待安排考生数
+     *
+     * @return outBean
+     */
+    public OutBean getDeptKcCount(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String kcIdStr = paramBean.getStr("KC_ID");
+        String[] split = kcIdStr.split(",");
+//        bean
+
+        return outBean;
+    }
 }

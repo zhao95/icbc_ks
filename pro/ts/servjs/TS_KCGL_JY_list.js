@@ -14,6 +14,13 @@ $("#TS_KCGL_JY .rhGrid").find("tr").each(function(index, item) {
 	}
 });
 
+
+/*
+ * 删除前方法执行  添加验证码
+ */
+rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+	showVerify(pkArray,_viewer);
+};
 function bindCard(){
 	//当行编辑事件
 	jQuery("td [id='TS_KCGL_JY-update']").unbind("click").bind("click", function(){

@@ -37,6 +37,7 @@ public class ShServ extends CommonServ {
 	    List<Bean> gzkMxList = ServDao.finds("TS_XMGL_BMSH_SHGZK_MX", "and GZ_ID = '"+dataId+"'");
 	    for (int j = 0; j < gzkMxList.size(); j++) {
 		Bean gzkMxBean = gzkMxList.get(j);
+		String gzk_mx_id = gzkMxBean.getStr("MX_ID");
 		gzkMxBean.setId("");
 		gzkMxBean.remove("MX_ID");
 		gzkMxBean.set("GZ_ID", gzId);
@@ -49,6 +50,7 @@ public class ShServ extends CommonServ {
 		gzkMxBean.remove("S_ODEPT");
 		gzkMxBean.remove("S_MTIME");
 		gzkMxBean.remove("S_ATIME");
+		gzkMxBean.set("GZK_MX_ID", gzk_mx_id);
 		ServDao.save("TS_XMGL_BMSH_SHGZ_MX", gzkMxBean);
 	    }
 	}

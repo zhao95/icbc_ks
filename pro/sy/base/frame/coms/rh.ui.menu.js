@@ -138,17 +138,20 @@ rh.ui.menu.prototype._initLeftMenu = function(datas,topFlag) {
 					    	temp.bind("click",function() {
 						    	var opts = {"url":m.INFO + ".list.do","tTitle":m.NAME,"menuId":m.ID};
 						    	Tab.open(opts);
+						    	changeHeight();
 					    	});
 					    	n["TOPID"] = n.ID;	 
 				    	} else if (m.TYPE == 2) {//链接
 				    		temp.bind("click",function() {
 				    			Menu.linkNodeClick(m);	
+				    			changeHeight();
 					    	});	
 					    	m["TOPID"] = n.ID;	 
 				    	} else if (m.TYPE == 3) {//js
 				    		temp.bind("click",function() {
 				    			var js = m.INFO;
 				    			eval(js);
+				    			changeHeight();
 				    			return false;
 				    		});
 				    	} else if (m.TYPE == 5) {//搜索框
@@ -174,6 +177,7 @@ rh.ui.menu.prototype._initLeftMenu = function(datas,topFlag) {
 				    			event.stopPropagation();
 				    			return false;
 				    	    });
+				    		changeHeight();
 					    	h3.addClass("leftMenu-title--search");
 				    	}
 				    	h3.addClass("leftMenu-title").addClass("leftMenu-only-title").append(temp);
@@ -229,6 +233,8 @@ rh.ui.menu.prototype._bldNodeLi = function(n,topId,titId,mainUl) {
 	    	var opts = {"url":n.INFO + ".list.do","tTitle":n.NAME,"menuId":n.ID};
 	    	Tab.open(opts);
     		_self._blurSelect(topLi);
+    		changeHeight();
+    		/*$("div[class='configDiv']").css("height",hei+"px");*/
     	});
     	n["TOPID"] = topId;	 
     	topLi.attr("tip",n.TIP);
@@ -237,6 +243,7 @@ rh.ui.menu.prototype._bldNodeLi = function(n,topId,titId,mainUl) {
 	} else if (n.TYPE == 2) {//链接
 		topLi.bind("click",function() {
 			Menu.linkNodeClick(n);
+			changeHeight();
     	});	
     	n["TOPID"] = topId;	 
     	topLi.attr("tip",n.TIP);
@@ -246,6 +253,7 @@ rh.ui.menu.prototype._bldNodeLi = function(n,topId,titId,mainUl) {
 		topLi.bind("click",function() {
 			var js = n.INFO;
 			eval(js);
+			changeHeight();
 			return false;
 		});
 	} else if (n.TYPE == 4) {//节点
@@ -263,6 +271,7 @@ rh.ui.menu.prototype._bldNodeLi = function(n,topId,titId,mainUl) {
 				nodeUl.show();
 				span.addClass("leftMenu-nodeUl-hide");
 			}
+			changeHeight();
     	});	
     	if (n.CHILD) {
     		var leafUl = jQuery("<ul></ul>").addClass("leftMenu-ul").appendTo(mainUl);
@@ -353,3 +362,27 @@ rh.ui.menu.prototype._addDeskIcons = function(menuItem) {
 		}
 	}
 };
+
+function changeHeight(){
+	var i=$("#lefMenu-div").find("h3").length;//节点个数
+	$("#lefMenu-div").find("ul").each(function(){
+		if($(this).css("display")=="block"){
+			i+=$(this).find("li").length;//子节点个数
+		}
+	})
+	if(i>=18){
+		i=18;
+	}
+	i=i*20;
+	$("div[class='configDiv']").css("height","0px");
+	window.setTimeout(show,500); 
+	function show() 
+	{ 
+		var hei = document.documentElement.scrollHeight;
+		var menu = parseInt(i);
+		var menubelow = parseInt(hei);
+		
+			hei = menubelow-menu-150;
+		$("div[class='configDiv']").css("height",hei+"px");
+	} 
+}

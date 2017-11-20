@@ -339,7 +339,7 @@ public class CccsServ extends CommonServ {
 	    }
 		
 	    //2级考场
-	    List<Bean> odept3Arr = ServDao.finds("TS_ORG_ODEPT_ALL","AND DEPT_PCODE = '" + deptCode+ "'");
+	    List<Bean> odept3Arr = ServDao.finds("TS_ORG_DEPT","AND DEPT_PCODE = '" + deptCode+ "'");
 	    ArrayList<Bean> dept2List = new ArrayList<Bean>();
 	    if(odept3Arr.size() > 0){
 		for(int i=0;i<odept3Arr.size();i++){

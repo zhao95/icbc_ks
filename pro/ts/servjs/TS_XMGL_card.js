@@ -2,6 +2,7 @@
 var _viewer = this;
 //针对项目开始时间的校验与互斥
 _viewer.beforeSave = function() {
+	
 	var xmStart=_viewer.getItem("XM_START").getValue();//项目开始时间
 	var xmEnd=_viewer.getItem("XM_END").getValue();//项目截至时间
 	var xmKsStartData=_viewer.getItem("XM_KSSTARTDATA").getValue();//考试开始时间
@@ -42,6 +43,7 @@ _viewer.beforeSave = function() {
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
 		return false;
  	}
+  
 };
 //修改input时间样式
 var xmStart=_viewer.getItem("XM_START");

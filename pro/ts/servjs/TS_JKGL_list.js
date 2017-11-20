@@ -30,6 +30,6 @@ function bindCard(){
 	//当行编辑事件
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = $(this).parent().parent().attr("id");
-		rowEdit(pkCode,_viewer,[1000,600],[200,100]);
+		rowEdit(pkCode,_viewer,[1000,600],[100,100]);
 	});
 }

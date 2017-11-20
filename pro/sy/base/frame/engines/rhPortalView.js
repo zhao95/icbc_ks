@@ -799,6 +799,18 @@ rh.vi.portalView.prototype._afterLoad = function() {
 	//去掉portal-box-title的移动手势
     if (this._model == "view") {
     	jQuery(".portal-box-title").css({"cursor":"auto"});
+    	jQuery(".portal-box-title").each(function(index,item){
+    		if(index==0){
+    			jQuery(this).css({"background":"#D6F0FE"});
+    		}else if(index==1){
+    			jQuery(this).css({"background":"#F3E8DC"});
+    		}else{
+    			jQuery(this).css({"background":"#ECECEC"});
+    		}
+    		
+    	})
+    	jQuery(".portal-box-title").css({"color":"#333333"});
+    	jQuery(".portal-box-title").css({"border-bottom":"rgb(219, 255, 250)"});
     } else {
     	//this._resize();
     }

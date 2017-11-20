@@ -2613,6 +2613,3 @@ rh.vi.listView.prototype._checkUserPvlg = function() {
 	}
 };
 
-
-
-

@@ -45,7 +45,7 @@ public class KSOuttimeApproveServ extends CommonServ {
 				}
 				log.error("时间数据转换异常，表中数据无法转换为时间格式！已使用异常方案解决,错误数据 XM_ID 为："+ERRORXM_ID+"。"+e);
 //				e.printStackTrace();
-			} 
+			}
 			if (qjEndDate.before(currentDate)) {
 				qjOverList.add(qjList.get(i).getStr("XM_ID"));
 			}
@@ -56,15 +56,16 @@ public class KSOuttimeApproveServ extends CommonServ {
 				// 调用类方法，传递参数，修改请假状态
 				ParamBean SysQJParam = new ParamBean();
 				String xm_id = qjOverList.get(j);
-				String sqlForTodoId = "select a.TODO_ID from ts_comm_todo a "
+				String sqlForTodoId = "select a.TODO_ID,b.USER_CODE from ts_comm_todo a "
 						+ "left join ts_qjlb_qj b on a.DATA_ID= b.QJ_ID where b.XM_ID ='"+xm_id+"'";
 				List<Bean> todoBeanList = Transaction.getExecutor().query(sqlForTodoId);
-				if(todoBeanList.size()>0){
-					String todoid = todoBeanList.get(0).getStr("TODO_ID");
+
+				for (int m = 0; m < todoBeanList.size(); m++) {
+					String todoid = todoBeanList.get(m).getStr("TODO_ID");
 					SysQJParam.set("TODO_ID", todoid);
-					SysQJParam.set("isRetreat", true);
-					SysQJParam.set("shstatus", 2);
-					SysQJParam.set("shreason", "超时未审，系统默认不通过。");
+					SysQJParam.set("isRetreat", "true");
+					SysQJParam.set("shstatus", "2");
+					SysQJParam.set("shreason", "(超时未审，系统默认不通过)");
 					SysQJParam.set("todoId", todoid);
 					ServMgr.act("TS_QJLB_QJ", "updateDataBySystem", SysQJParam);
 				}
@@ -107,15 +108,17 @@ public class KSOuttimeApproveServ extends CommonServ {
 				// 调用类方法，传递参数，修改借考状态
 				ParamBean SysJKParam = new ParamBean();
 				String xm_id = jkOverList.get(j);
-				String sqlForTodoId = "select a.TODO_ID from ts_comm_todo a "
-						+ "left join ts_jklb_jk b on a.DATA_ID= b.JK_ID where b.XM_ID ='"+xm_id+"'";
+				String sqlForTodoId = "select a.TODO_ID,b.USER_CODE from ts_comm_todo a "
+						+ "left join ts_jklb_jk b on a.DATA_ID= b.JK_ID where b.XM_ID ='"+xm_id+"' ";
 				List<Bean> todoBeanList = Transaction.getExecutor().query(sqlForTodoId);
-				if(todoBeanList.size()>0){
-					String todoid = todoBeanList.get(0).getStr("TODO_ID");
+				for (int k = 0; k < todoBeanList.size(); k++) {
+					String todoid = todoBeanList.get(k).getStr("TODO_ID");
+					String USER_CODE = todoBeanList.get(k).getStr("USER_CODE");
 					SysJKParam.set("TODO_ID", todoid);
-					SysJKParam.set("isRetreat", true);
-					SysJKParam.set("shstatus", 2);
-					SysJKParam.set("shreason", "超时未审，系统默认不通过。");
+					SysJKParam.set("USER_CODE", USER_CODE);
+					SysJKParam.set("isRetreat", "true");
+					SysJKParam.set("shstatus", "2");
+					SysJKParam.set("shreason", "(超时未审，系统默认不通过)");
 					SysJKParam.set("todoId", todoid);
 					ServMgr.act("TS_JKLB_JK", "updateDataBySystem", SysJKParam);
 				}

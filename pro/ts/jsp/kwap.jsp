@@ -50,6 +50,18 @@
             background: transparent;
         }
 
+        #kwap-body .rh-icon {
+            height: 26px;
+        }
+
+        #kwap-body .rh-icon-inner {
+            height: 25px;
+        }
+
+        #kwap-body .rhGrid-page {
+            margin: 5px;
+        }
+
         /**/
         #allocation-rule .checkbox {
             margin-top: 0;
@@ -57,6 +69,10 @@
 
         .tip-red {
             color: red;
+        }
+
+        .tip-white {
+            color: #ffffff;
         }
 
         /*表格样式*/
@@ -138,10 +154,10 @@
 
 <body id="kwap-body">
 
-<div class="wrapper" style="height: auto;">
+<div class="wrapper" style="height: 100%;"><%--border: 2px solid rgba(67, 156, 194, 1);--%>
 
     <header class="main-header">
-        <div class="rhGrid-btnBar" style="background-color: #d9eaf4;">
+        <div class="rhGrid-btnBar" style="height: 40px;background-color: #5ab6a6;">
             <a class="rh-icon rhGrid-btnBar-a" id="zdfpcc" actcode="zdfpcc" title="">
                 <span class="rh-icon-inner">自动分配场次</span>
                 <span class="rh-icon-img btn-option"></span>
@@ -173,11 +189,15 @@
             <a style="display: none;" class="rh-icon rhGrid-btnBar-a" id="unPublish" actcode="unPublish" title="">
                 <span class="rh-icon-inner">取消发布场次安排</span><span class="rh-icon-img btn-ok"></span>
             </a>
+            <a style="cursor: pointer;float: right;padding: 7px 10px;" class="" id="maximize" actcode="maximize"
+               title="">
+                <img src="<%=CONTEXT_PATH%>/ts/image/maximize.png" alt="">
+            </a>
         </div>
     </header>
 
     <aside class="main-sidebar"
-           style="padding-top:30px; border-right: 1px solid #bfdfee;width: 250px;height:100%;">
+           style="padding-top:40px; border-right: 1px solid #bfdfee;width: 250px;height:100%;min-height: 682px;">
         <!-- sidebar: style can be found in sidebar.less -->
         <section id="left-sidebar-content" class="sidebar" style="height:100%;">
             <div class="row">
@@ -185,7 +205,7 @@
             </div>
             <div class="_scrollbar" style="height:100%;padding-top: 5px;padding-left: 5px;overflow: auto;">
                 <button id="toggle-sidebar"
-                        style="position: absolute;right: 0;top: 30px;padding:3px">
+                        style="position: absolute;right: 0;top: 40px;padding:3px">
                     <i class="fa fa-angle-left"></i>
                 </button>
                 <%--<span onclick="KcObject.setAllKcInfo()" style="cursor:pointer;">考场场次</span>--%>
@@ -214,54 +234,58 @@
                 <select id="search-bm-mk" style="width:176px;" type="text" title=""></select>
                 <select id="search-bm-jb" type="text" title=""></select>
             </div>
-            <div class="col-sm-2" style="width: 10%;min-width: 82px;max-width:90px;">
+            <%--<div class="col-sm-2" style="width: 10%;min-width: 82px;max-width:90px;">
                 报考数<input id="search-bm-count" type="text" title="" style="width: 24px;">
-            </div>
+            </div>--%>
             <div class="col-sm-2" style="width: 7%;float: right">
                 <button onclick="KsObject.search()" class="btn btn-default" value="查询"
-                        style="background: linear-gradient(180deg, rgb(123, 202, 249) 0%, rgb(136, 218, 236) 2%, rgba(148, 221, 245, 1) 3%, rgb(75, 189, 239) 93%, rgb(91, 200, 218) 96%, rgb(155, 214, 243) 100%);
-                        background-color:#5bc8da;color: #fff;padding: 2px 11px;">
+                        style="top: -3px;position: relative;height: 32px;color: #fff;background-color:#5ab6a6;padding: 3px 20px;">
                     查询
                 </button>
             </div>
         </section>
 
         <section class="content" style="padding:0;background-color: transparent;">
-            <div class="row-fluid1" style="border-top: 1px solid #bfdfee;">
+            <div id="topContent" class="row" style="border-top: 1px solid #bfdfee;margin:0;">
 
                 <div class="col-sm-3"
                      style="padding-left: 0;padding-right: 0;height: 100%;border-right: 1px solid #bfdfee;">
                     <div class="row">
                         <div class="col-sm-12">
-                            <div style="padding: 5px;background-color: #e4e8ec;">
-                                人员列表 [<span class="tip-red">10</span> (<span class="tip-red">1</span>,1) / 800]
+                            <div style="padding: 11px;background-color: #e4e8ec;">
+                                人员列表 <span id="ksOrgTip">
+                                <%--[<span class="tip-red" id="ksOrgTipKsCount"></span>
+                                /
+                                <span class="tip-red" id="ksOrgTipKsTotalCount"></span>]--%>
+                            </span><%--[<span class="tip-red">10</span> (<span class="tip-red">1</span>,1) / 800]--%>
                             </div>
                         </div>
                         <div id="ksOrgTree" class="col-sm-12">
-                            <div class="_scrollbar content-navTree" style="height: 240px;border: none;margin:0"></div>
+                            <div id="ksOrgTreeContent" class="_scrollbar content-navTree"
+                                 style="height: 255px;border: none;margin:0"></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-sm-9 "
-                     style="padding-left:3px;padding-right:0;height:270px;">
-                    <div class="_scrollbar" style="overflow: auto;height:215px;">
+                     style="padding-left:3px;padding-right:0;">
+                    <div id="ksContent" class="_scrollbar" style="overflow: auto;height:252px;">
                         <table id="ksTable" class="table table-hover table-bordered"
                                border="1"><%-- dshtablea JPadding--%>
                             <thead id="tem" class="">
                             <tr style="background-color: #e3e6ea">
                                 <th><input type="checkbox"/></th>
-                                <th>序号</th>
-                                <th>一级机构</th>
-                                <th>二级机构</th>
-                                <th>三级机构</th>
-                                <th>四级机构</th>
-                                <th>姓名</th>
-                                <th>考试名称</th>
-                                <th>级别</th>
-                                <th>报考数</th>
-                                <th>状态</th>
-                                <th>人力资源编码</th>
+                                <th style="min-width: 45px">序号</th>
+                                <th style="min-width: 90px">一级机构</th>
+                                <th style="min-width: 90px">二级机构</th>
+                                <th style="min-width: 90px">三级机构</th>
+                                <th style="min-width: 90px">四级机构</th>
+                                <th style="min-width: 90px">姓名</th>
+                                <th style="min-width: 90px">考试名称</th>
+                                <th style="min-width: 90px">级别</th>
+                                <th style="min-width: 64px">报考数</th>
+                                <%--<th>状态</th>--%>
+                                <th style="min-width: 115px">人力资源编码</th>
                             </tr>
                             </thead>
                             <tbody id="rhGrid-tbody">
@@ -271,8 +295,8 @@
 
                     <div id="ksTablePage" style="display: none;">
                         <%--每页显示条数--%>
-                        <select id="showNumSelect"
-                                style="padding:3px;height: 29px;border:#8db5d7 1px solid;border-radius: 3px;margin: 20px 10px 20px 0;float: right;"
+                        <select id="showNumSelect"<%--margin: 20px 10px 20px 0;--%>
+                                style="margin-top: 5px;margin-right: 10px;padding:3px;height: 29px;border:#8db5d7 1px solid;border-radius: 3px;float: right;"
                                 title="">
                             <option value="10">10 条/页</option>
                             <option value="20">20 条/页</option>
@@ -291,9 +315,17 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <%--<div class="row" id="dragDiv">
+                <div class="col-sm-12" id="rDown"
+                     style="height: 2px;background-color: black; cursor: n-resize;z-index: 999;">
+                </div>
+            </div>--%>
+            <div class="row" id="bottom-content" style="position: relative;">
+                <%--  <button id="toggle-bottom-sidebar" style="z-index: 999;position: absolute;top:-17px;right: 15px;padding:3px;">
+                      <i class="fa fa-angle-down"></i>
+                  </button>--%>
                 <div id="kcTip" class="col-sm-12"
-                     style="background-color: #ecedef; padding: 5px 39px 5px 5px;border-top: 1px solid #bfdfee;border-bottom: 1px solid #bfdfee;margin: 0 15px;">
+                     style="position: relative;top: 3px;color:#006600;background-color: #7ecba3;padding: 5px 39px 5px 5px;border-top: 1px solid #bfdfee;border-bottom: 1px solid #bfdfee;margin: 0 15px;">
 
                 </div>
                 <div class="col-sm-12">
@@ -377,7 +409,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
+                            <%--<tr>
                                 <td>10</td>
                                 <td>六安市分行</td>
                                 <td>已提交</td>
@@ -391,7 +423,7 @@
                                 <td>12</td>
                                 <td>六安市分行</td>
                                 <td>已提交</td>
-                            </tr>
+                            </tr>--%>
                             </tbody>
                         </table>
                     </div>
@@ -599,6 +631,10 @@
                         data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
                     确定
                 </button>
+                <%--<button type="button" class="btn btn-default" onclick="ZdfpccModal.doArrangeSeat()"
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
+                </button>--%>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -613,16 +649,20 @@
                     &times;
                 </button>
                 <h5 class="modal-title">
-                    辖内公示
+                    辖内公示确定
                 </h5>
             </div>
             <div class="modal-body" style="padding: 24px;">
-                辖内公示
+                是否辖内公示座位信息？
             </div>
             <div class="modal-footer" style="text-align: center;">
                 <button type="button" class="btn btn-success" onclick=""
                         data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
                     确定
+                </button>
+                <button type="button" class="btn btn-default" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
                 </button>
             </div>
         </div><!-- /.modal-content -->

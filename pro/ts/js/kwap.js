@@ -225,6 +225,15 @@ ListPage.prototype.bldPage = function () {
 
 
 function initData(xmId) {
+    $("#topContent").resizable({
+        animate: false,
+        autoHide: false,
+        delay: 20,
+        handles: 's',
+        maxHeight: 700,
+        minHeight: 290,
+        alsoResize: '#ksOrgTreeContent,#ksContent'
+    });
     HeaderBtn.initData(xmId);
     ZdfpccModal.initData(xmId);
     SubmissionArrangementModal.initData(xmId);
@@ -233,13 +242,16 @@ function initData(xmId) {
 }
 
 var HeaderBtn = {
+    xmId: '',
 
     initData: function (xmId) {
-        this.setTjFbBtn(xmId);
+        this.xmId = xmId;
+        this.setTjFbBtn();
         this.bindHeaderAction(xmId);
     },
     //设置提交发布按钮
-    setTjFbBtn: function (xmId) {
+    setTjFbBtn: function () {
+        var xmId = this.xmId;
         //unPublish
         var xmBean = FireFly.doAct("TS_XMGL", "byid", {"_PK_": xmId}, false);
         // xmBean.S_USER;
@@ -259,6 +271,8 @@ var HeaderBtn = {
                 } else {
                     $("#unPublish").css('display', 'block');
                 }
+
+
             } else {
                 //没有发布权限,不显示发布 取消发布按钮
                 $("#publish").css('display', 'none');
@@ -378,22 +392,24 @@ var HeaderBtn = {
 
         //发布确定按钮事件
         $("#publishModal").find('button[class="btn btn-success"]').bind('click', function () {
-            var xmBean = {
-                XM_ID: xmId,
-                _PK_: xmId,
-                XM_KCAP_PUBLISH_USER_CODE: System.getUser("USER_CODE"),
-                XM_KCAP_PUBLISH_TIME: rhDate.getTime()
-            };
-            /*= FireFly.doAct("TS_XMGL", "byid", {"_PK_": xmId}, false);*/
-            // xmBean.XM_KCAP_PUBLISH_USER_CODE = System.getUser("USER_CODE");
-            // xmBean.XM_KCAP_PUBLISH_TIME = rhDate.getTime();
-            FireFly.doAct("TS_XMGL", "save", xmBean, false, false, function () {
+            // var xmBean = {
+            //     XM_ID: xmId,
+            //     _PK_: xmId,
+            //     XM_KCAP_PUBLISH_USER_CODE: System.getUser("USER_CODE"),
+            //     XM_KCAP_PUBLISH_TIME: rhDate.getTime()
+            // };
+            // FireFly.doAct("TS_XMGL", "save", xmBean, false, false, function () {
+            //     alert("发布成功！");
+            // });
+            FireFly.doAct("TS_XMGL_KCAP_DAPCC", "publish", {XM_ID: xmId}, false, false, function () {
                 alert("发布成功！");
             });
             Utils.getCanDraggable(true);
             KcObject.reloadCCInfo();
             KsObject.setDfpKsContent();
             self.zdfpccDisableAftertjccap();
+            $("#publish").css('display', 'none');
+            $("#unPublish").css('display', 'block');
         });
 
         //取消发布确定按钮事件
@@ -414,25 +430,95 @@ var HeaderBtn = {
             KcObject.reloadCCInfo();
             KsObject.setDfpKsContent();
             self.zdfpccDisableAftertjccap();
+            $("#publish").css('display', 'block');
+            $("#unPublish").css('display', 'none');
         });
 
-        //伸缩按钮
-        $("#toggle-sidebar").click(function () {
-            var speed = 200;
+        function sidebarFunction() {
             var $mainSidebar = $('.main-sidebar');
             var $i = $(this).find('i');
-            if ($mainSidebar.width() === 15) {
+            if ($mainSidebar.width() < 20) {
                 //收缩状态
                 $('.content-wrapper').animate({marginLeft: "250px"}, speed);
                 $mainSidebar.animate({width: "250px"}, speed, function () {
                     $i.removeClass("fa-angle-right");
                     $i.addClass("fa-angle-left");
+                    $('#topContent').resize();
                 });
             } else {
                 $('.content-wrapper').animate({marginLeft: "16px"}, speed);
                 $mainSidebar.animate({width: "16px"}, speed, function () {
                     $i.removeClass("fa-angle-left");
                     $i.addClass("fa-angle-right");
+                    $('#topContent').resize();
+                });
+            }
+        }
+
+        var speed = 200;
+        //伸缩按钮
+        $("#toggle-sidebar").click(function () {
+            sidebarFunction();
+        });
+
+        $("#maximize").click(function () {
+            sidebarFunction();
+            if ($(this).find('img').attr('src').indexOf('maximize') > 0) {
+                $(this).find('img').attr('src', FireFly.getContextPath() + '/ts/image/fit-size.png');
+
+                var number = document.documentElement.clientHeight - 127;
+                if (number < 557) {
+                    number = 557;
+                }
+                $('#ksOrgTreeContent').animate({height: number + 'px'}, speed);
+                $('#ksContent').animate({height: number + 'px'}, speed, function () {
+                    $('#bottom-content').css('display', 'none');
+                });
+            } else {
+                $(this).find('img').attr('src', FireFly.getContextPath() + '/ts/image/maximize.png');
+                $('#ksOrgTreeContent').animate({height: '255px'}, speed);
+                $('#ksContent').animate({height: '255px'}, speed, function () {
+                    $('#bottom-content').css('display', 'block');
+                });
+            }
+        });
+        //底部伸缩按钮
+        $("#toggle-bottom-sidebar").click(function () {
+            var $bottomContent = $('#bottom-content');
+            $bottomContent.animate({
+                height: 'toggle'
+            });
+            // $bottomContent.slideToggle("slow");
+            // var speed = 200;
+            // var $i = $(this).find('i');
+            // if ($bottomContent.height() === 15) {
+            //     //收缩状态
+            //     // $('.content-wrapper').animate({marginLeft: "250px"}, speed);
+            //     $bottomContent.animate({height: "auto"}, speed, function () {
+            //         $i.removeClass("fa-angle-up");
+            //         $i.addClass("fa-angle-down");
+            //     });
+            // } else {
+            //     // $('.content-wrapper').animate({marginLeft: "16px"}, speed);
+            //     $bottomContent.animate({height: "16px"}, speed, function () {
+            //         $i.removeClass("fa-angle-down");
+            //         $i.addClass("fa-angle-up");
+            //     });
+            // }
+        });
+
+
+        $("#xngsModal").find('button[class="btn btn-success"]').bind('click', function () {
+            if (KcObject.kcArr !== null && KcObject.kcArr !== undefined) {
+                //考场不为空
+                var kcStr = '';
+                for (var i = 0; i < KcObject.kcArr.length; i++) {
+                    var kc = KcObject.kcArr[i];
+                    kcStr += kc.KC_ID + ',';
+                }
+                FireFly.doAct("TS_XMGL_KCAP_DAPCC", "xngs", {
+                    XM_ID: xmId,
+                    KC_ID_STR: kcStr.substring(0, kcStr.length - 1)
                 });
             }
         });
@@ -778,7 +864,7 @@ var ZdfpccModal = {
                             var child = children[j];
                             FireFly.doAct("TS_XMGL_KCAP_YAPZW", "doArrangeSeat", {
                                 XM_ID: this.xmId,
-                                ODEPT_CODE: child.ID
+                                ODEPT_CODE: child.id
                             });
                         }
                     }
@@ -848,7 +934,7 @@ var SubmissionArrangementModal = {
         $('#totalCount').html(data.totalCount);
         $('#hasCount').html(data.hasCount);
         $('#noCount').html(data.noCount);
-
+        debugger;
         for (var i = 0; i < dataList.length; i++) {
             var item = dataList[i];
             $arrangementTbody.append([
@@ -901,6 +987,7 @@ var UpdateCCModal = {
 
     /*确定按钮事件*/
     ensure: function () {
+        var self = this;
         var tree1Selected = UpdateCCModal.updateCCTree1.jstree().get_selected();
         var tree2Selected = UpdateCCModal.updateCCTree2.jstree().get_selected();
 
@@ -908,11 +995,24 @@ var UpdateCCModal = {
             alert('请选择场次');
         } else if (KcObject.getSjById(tree1Selected[0]) === null || KcObject.getSjById(tree2Selected[0]) === null) {
             alert('选中非场次，请重新选择');
+        } else if (KcObject.getSjById(tree1Selected[0]).CC_ID !== KcObject.getSjById(tree2Selected[0]).CC_ID) {
+            alert('选中考场不相同，请重新选择');
         } else if (tree1Selected[0] === tree2Selected[0]) {
             alert('两边选择的为同一场次，请重新选择');
+        } else if (
+            (Date.parse(KcObject.getSjById(tree1Selected[0]).SJ_END.replace('-', '/')) - Date.parse(KcObject.getSjById(tree1Selected[0]).SJ_START.replace('-', '/'))) / 1000 / 60
+            !== (Date.parse(KcObject.getSjById(tree2Selected[0]).SJ_END.replace('-', '/')) - Date.parse(KcObject.getSjById(tree2Selected[0]).SJ_START.replace('-', '/'))) / 1000 / 60) {
+            // var sj1BmKsTime = ;
+            // var sj2BmKsTime = ;
+            alert('场次时长不同，请重新选择');
         } else {
-            alert(tree1Selected[0] + tree2Selected[0]);
-            this.updateccModal.modal('hide');
+            FireFly.doAct("TS_XMGL_KCAP_DAPCC", "changeCc",
+                {sjId: tree1Selected[0], sjId2: tree2Selected[0]},
+                true, false, function () {
+                    KcObject.reloadCCInfo();
+                    self.updateccModal.modal('hide');
+                }
+            );
         }
     },
 
@@ -1170,15 +1270,25 @@ var KcObject = {
                 //选中考场
                 self.setKcInfo(data.node.data);
                 //显示考场关联机构人员
-                KsObject.setKcRelateOrg(data.node.data.KC_ID);
+                KsObject.setKcRelateOrg(data.node.data.KC_ID, '');
             } else if (dataType === 'cc') {
                 var parentKcNode = $.jstree.reference(jstree).get_node(data.node.parent);
                 //选中场次
                 self.setCcInfo(data.node.data, parentKcNode.data);
                 //显示考场关联机构人员
-                KsObject.setKcRelateOrg(parentKcNode.data.KC_ID);
+                KsObject.setKcRelateOrg(parentKcNode.data.KC_ID, data.node.data.SJ_ID);
             } else if (dataType === 'dept') {
-                KcObject.setOrgKcInfo(data.node.data.DEPT_CODE);
+                var parent = data.node.parent;
+                KsObject.clearData();
+                //去除currentParentKc currentCc
+                self.currentParentKc = null;
+                self.currentCc = null;
+                KsObject.reloadKsOrgTip();
+                if (parent === '#') {
+                    // self.setKcArrInfo(self.kcArr);
+                } else {
+                    self.setOrgKcInfo(data.node.data.DEPT_CODE);
+                }
 //                    var parent = data.node.parent;
 //                    if (parent !== '#') {
 //                        var deptCode = data.node.data.DEPT_CODE;
@@ -1250,6 +1360,8 @@ var KcObject = {
         }
         $kcInfoThead.append($headTr);
 
+        var yapTotalCount = 0;
+
         //tbody
         for (var i = 0; i < kcArr.length; i++) {
             var kc = kcArr[i];
@@ -1259,19 +1371,32 @@ var KcObject = {
                 var ccTime = ccTimes[j];
 
                 function hasCcTime(ccList, ccTime) {
-                    var result = false;
+                    var result = null;
                     for (var i = 0; i < ccList.length; i++) {
                         var cc = ccList[i];
                         if (cc.ccTime === ccTime) {
-                            result = true;
+                            result = cc;
                         }
                     }
                     return result;
                 }
 
-                if (hasCcTime(kc.CHILD, ccTime)) {
+                var cc;
+                if (cc = hasCcTime(kc.CHILD, ccTime)) {
                     ccCount++;
-                    $bodyTr.append('<td>' + '0 / 0' + '</td>');
+                    var kcZwInfoBean = FireFly.doAct("TS_XMGL_KCAP_YAPZW", "getKcZwInfo", {
+                        KC_ID: kc.KC_ID,
+                        SJ_ID: cc.SJ_ID
+                    });
+                    yapTotalCount += parseInt(kcZwInfoBean.yapNum);
+
+                    var yapNumStr = '';
+                    if (parseInt(kcZwInfoBean.yapNum) < parseInt(kcZwInfoBean.total)) {
+                        yapNumStr = '<span style="color:red;">' + kcZwInfoBean.yapNum + '</span>'
+                    } else {
+                        yapNumStr = kcZwInfoBean.yapNum + '';
+                    }
+                    $bodyTr.append('<td>' + yapNumStr + ' / ' + kcZwInfoBean.total + '</td>');
                 } else {
                     $bodyTr.append('<td></td>');
                 }
@@ -1279,16 +1404,23 @@ var KcObject = {
             $kcInfoTbody.append($bodyTr);
         }
 
+        var kcIdStr = '';
+        for (var i = 0; i < kcArr.length; i++) {
+            var kc = kcArr[i];
+            kcIdStr += kc.KC_ID + ',';
+        }
+        var bean = FireFly.doAct('TS_XMGL_KCAP_DAPCC', 'getDeptKcCount', {KC_ID: kcIdStr}, false, false);
+
         //kcTip
         $kcTip.append([
             '<span style="color:#12769C;">当前考场及场次：</span>',
-            '考场数:<span id="kcCount" class="tip-red">' + kcArr.length + '</span>&nbsp;',
-            '场次数数：<span id="ccCount" class="tip-red">' + ccCount + '</span>&nbsp;',
-            '考生数：<span id="ksCount" class="tip-red">800</span>&nbsp;',
-            '（借入：<span id="jieruCount" class="tip-red">3</span>&nbsp;',
-            '借出：<span id="jiechuCount" class="tip-red">2</span>&nbsp;',
-            '请假：<span id="qjCount" class="tip-red">1</span>）',
-            '已安排：<span id="yapCount" class="tip-red">790</span>'
+            '考场数:<span id="kcCount" class="tip-white">' + kcArr.length + '</span>&nbsp;',
+            '场次数：<span id="ccCount" class="tip-white">' + ccCount + '</span>&nbsp;',
+            '考生数：<span id="ksCount" class="tip-white">800</span>&nbsp;',
+            '（借入：<span id="jieruCount" class="tip-white">3</span>&nbsp;',
+            '借出：<span id="jiechuCount" class="tip-white">2</span>&nbsp;',
+            '请假：<span id="qjCount" class="tip-white">1</span>）',
+            '已安排：<span id="yapCount" class="tip-white">' + yapTotalCount + '</span>'
         ].join(''));
 
 
@@ -1298,6 +1430,9 @@ var KcObject = {
      * 单个考场的信息
      */
     setKcInfo: function (kc) {
+        this.currentCc = {};
+        this.currentParentKc = kc;
+
         var $kcTip = $('#kcTip');
         $kcTip.html('');
         var $kcInfoThead = $('#kcInfo').find('thead');
@@ -1309,6 +1444,7 @@ var KcObject = {
         $kcTip.append([
             '<span style="color:#12769C;">当前考场及场次：</span>' + kc.KC_NAME,
         ].join(''));
+        KsObject.reloadKsOrgTip();
 
         //thead
         var $headTr = jQuery('<tr style="background-color: #e3e6ea"></tr>');
@@ -1324,7 +1460,14 @@ var KcObject = {
         $bodyTr.append('<td>' + kc.KC_NAME + '</td>');
         for (var i = 0; i < kc.CHILD.length; i++) {
             var cc = kc.CHILD[i];
-            $bodyTr.append('<td>' + '0 / 0' + '</td>');
+            var kcZwInfoBean = FireFly.doAct("TS_XMGL_KCAP_YAPZW", "getKcZwInfo", {KC_ID: kc.KC_ID, SJ_ID: cc.SJ_ID});
+            var yapNumStr = '';
+            if (parseInt(kcZwInfoBean.yapNum) < parseInt(kcZwInfoBean.total)) {
+                yapNumStr = '<span style="color:red;">' + kcZwInfoBean.yapNum + '</span>'
+            } else {
+                yapNumStr = kcZwInfoBean.yapNum + '';
+            }
+            $bodyTr.append('<td>' + yapNumStr + ' / ' + kcZwInfoBean.total + '</td>');
         }
         $kcInfoTbody.append($bodyTr);
     },
@@ -1361,10 +1504,10 @@ var KcObject = {
             '<span style="color:#12769C;">当前考场及场次：</span>',
             '' + parentKc.KC_NAME,
             '&nbsp;&nbsp;' + cc.ccTime,
-            '最优数：<span class="tip-red">48</span>',
-            '已安排：<span id="cc-info-yap-count" style="color:green">' + this.currentYapzwArr.length + '</span>',
-            '借考：<span style="color:#00a7d0">1</span>，',
-            '请假：<span class="tip-red">1</span>',
+            '&nbsp;最优数：<span id="optimal-number" class="tip-white"></span>',
+            '&nbsp;已安排：<span id="cc-info-yap-count" class="tip-white">' + this.currentYapzwArr.length + '</span>',
+            '&nbsp;借考：<span id="cc-info-jk-count" class="tip-white">0</span>',
+            /*',请假：<span id="cc-info-qj-count" class="tip-white">0</span>',*/
             '<div onclick="KcObject._setCcInfoType(\'list\')" style="cursor:pointer;padding: 3px;float: right"><i class="fa fa fa-list-ul"></i></div>',
             '<div onclick="KcObject._setCcInfoType(\'view\')" style="cursor:pointer;padding: 3px;float: right"><i class="fa fa-dashboard" aria-hidden="true"></i></div>',
         ].join(''));
@@ -1377,16 +1520,24 @@ var KcObject = {
 //                }, false, false);
             //获取考场座位信息
             var zwListBean = FireFly.doAct("TS_KCGL_ZWDYB", 'query', {
+                _NOPAGE_: true,
                 _WHERE_: " and KC_ID = '" + kcId + "'",
                 _ORDER_: " ZW_ZWH_XT asc"
             }, false, false);
             var zwList = zwListBean._DATA_;
             var tData = [], trData, preLetter = null;
-            // var split = zw.ZW_ZWH_XT.split('-');
-            // try{
-            //     var split2 = split[0];
-            //     var split3 = split[1];
-            // }catch(e){
+
+            // var rows = [];
+            // var cols = [];
+            // for (var i = 0; i < zwList.length; i++) {
+            //     var split = zw.ZW_ZWH_XT.split('-');
+            //     try {
+            //         var row = split[0];
+            //         var col = split[1];
+            //         rows.push(row);
+            //         cols.push(col);
+            //     } catch (e) {
+            //     }
             // }
 
             for (var i = 0; i < zwList.length; i++) {
@@ -1456,7 +1607,7 @@ var KcObject = {
                     });
                 });
                 $kcTip.append($remove);
-                $kcTip.append('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-down" style="color:green;" aria-hidden="true"></i><span>添加</span></div>');
+                // $kcTip.append('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-down" style="color:green;" aria-hidden="true"></i><span>添加</span></div>');
                 $kcTip.append('<div style="margin-right:10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>');
             }
             // $kcTip.append([
@@ -1518,6 +1669,28 @@ var KcObject = {
             $zw.find('.userName').html(zw.BM_NAME);
             this.setZwItemForView(zw.YAPZW_ID);
         }
+        this.reloadCCTip();
+    },
+
+    /**
+     * 刷新tip信息
+     */
+    reloadCCTip: function () {
+        $('#cc-info-yap-count').html(this.currentYapzwArr.length);
+        var jkCount = 0/*, qjCount = 0*/;
+        for (var i = 0; i < this.currentYapzwArr.length; i++) {
+            var currentYapzw = this.currentYapzwArr[i];
+            if (currentYapzw.BM_STATUS === '2' || currentYapzw.BM_STATUS === '3') {
+                jkCount++;
+            }
+            /*if (currentYapzw.BM_STATUS === '1' || currentYapzw.BM_STATUS === '3') {
+             qjCount++;
+             }*/
+        }
+        // $('#cc-info-qj-count').html(qjCount);
+        $('#cc-info-jk-count').html(jkCount);
+        KsObject.reloadKsOrgTip();
+        // $('optimal-number').html();//最优数
     },
 
     /**
@@ -1540,9 +1713,9 @@ var KcObject = {
                 '   <td>' + zw.BM_NAME + '</td>',//姓名
                 '   <td>' + zw.BM_XL + '-' + zw.BM_MK + '</td>',//考试名称
                 '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), zw.BM_TYPE) + '</td>',//级别
-                '   <td>Mark</td>',//报考数
+                '   <td>' + zw.COUNT + '</td>',//报考数
                 '   <td>' + zw.IPZ_IP + '</td>',//ip
-                '   <td>Mark</td>',//备注
+                '   <td></td>',//备注
                 '</tr>'
             ].join(''));
         }
@@ -1556,8 +1729,18 @@ var KcObject = {
         var yapzw = this.getYapzwById(yapzwId);
         var zwId = yapzw.ZW_ID;
         var userName = yapzw.BM_NAME;
+        var userCode = yapzw.BM_CODE;
         var shId = yapzw.SH_ID;
         var $zw = $('#' + zwId);
+
+        var deptCode = yapzw.S_ODEPT;
+        // FireFly.get
+        var deptName = FireFly.getDictNames(FireFly.getDict("TS_ORG_DEPT_ALL"), deptCode);
+        // BM_LB BM_XL BM_MK
+
+        var typeName = FireFly.getDictNames(FireFly.getDict("TS_XMGL_BM_KSLBK_LV"), yapzw.BM_TYPE);
+        var kslbName = yapzw.BM_LB + '-' + yapzw.BM_XL + '-' + yapzw.BM_MK + "-" + typeName;
+        $zw.attr('title', userName + '\n' + kslbName + '\n' + deptName);
         // $zw.attr('yapzwId', yapzwId);
         $zw.find('.userName').html(userName);
         $zw.attr('shId', shId);
@@ -1577,10 +1760,11 @@ var KcObject = {
                         $zw.removeAttr('shId');
                         $zw.droppable("enable");
                         $zw.draggable("disable");
-//                    self.addDroppableEvent($zw);
                         $zw.find('.userName').html('');
                         $zw.find('.close').remove();
                         $zw.css('background', '');
+                        self.currentYapzwArr.splice(self.currentYapzwArr.indexOf(yapzw), 1);
+                        self.reloadCCTip();
                         KsObject.search();
                     }
                 });
@@ -1592,17 +1776,15 @@ var KcObject = {
                 cursorAt: {left: 0, top: 0},
                 containment: 'body',
                 appendTo: 'body',
-                helper: function (event) {
-                    return '<div>' + $zw.find('.userName').html() + '</div>';
-                    // var cells = event.currentTarget.cells;
-                    // return [
-                    //     '<div style="/*width:30px;height: 30px;*/border:1px solid #999999;background-color: #91BDEA;">',//
-                    //     '   <div>' + cells[6].innerText + '</div>',
-                    //     '   <div>' + cells[7].innerText + '</div>',
-                    //     '   <div>' + cells[11].innerText + '</div>',
-                    //     '</div>'
-                    // ].join('');
-                }
+                helper: function (/*event*/) {
+                    return [
+                        '<div style="/*width:30px;height: 30px;*/background-color: #FFF8DC; border:1px solid #999999;border-radius:3px;padding: 3px">',//
+                        '   <div>' + userName + '</div>',
+                        '   <div>' + kslbName + '</div>',
+                        '   <div>' + userCode + '</div>',
+                        '</div>'
+                    ].join('');
+                },
             });
             $zw.draggable("enable");
 
@@ -1653,22 +1835,23 @@ var KcObject = {
                     }, false, false, function (data) {
                         if (data._MSG_.indexOf("ERROR") >= 0) {
                             //后端错误
+                            if (data._MSG_.indexOf('IDX_DATE_CC_USER') >= 0) {
+                                alert('同一考生同一场次不能有两个座位');
+                            } else {
+                                alert('安排座位失败');
+                            }
                         } else {
                             self.currentYapzwArr.push(data);
                             self.setZwItemForView(data.YAPZW_ID);
-                            $(ui.draggable[0]);
+                            // $(ui.draggable[0]);
                             if (ui.draggable[0].tagName === 'TR') {
                                 //非列表拖拉进来的 不刷新考生列表
                                 KsObject.search();
                             }
-//                        $(_this).find(".userName").html(ui.draggable[0].cells[6].innerText);
+                            self.reloadCCTip();
                         }
                     });
 
-//                    var inventor = ui.draggable.text();
-//                    $(this).find("input").val(inventor);
-//                    $(c.tr).remove();
-//                    $(c.helper).remove();
                 }
             });
         }
@@ -1713,6 +1896,15 @@ var KsObject = {
     },
 
     /**
+     * 清除界面上的考生信息
+     */
+    clearData: function () {
+        $('#ksOrgTreeContent').html('');
+        $('#ksTable').find('tbody').html('');
+        $('#ksTablePage').css('display', 'none');
+    },
+
+    /**
      * 通过id数组获取对应的考生数据
      * @param ids
      * @returns {Array}
@@ -1735,13 +1927,17 @@ var KsObject = {
     /**
      * 根据考场id展示考场关联的机构
      * @param kcId
+     * @param sjId
      */
-    setKcRelateOrg: function (kcId) {
-        if (this.kcId !== kcId) {
+    setKcRelateOrg: function (kcId, sjId) {
+        if (this.kcId !== kcId || $('#ksOrgTreeContent').html() === '') {
             this.kcId = kcId;
             this.setKsOrgContent(kcId);
-            KsObject.searchDeptCode = ''; //初始化 机构搜索条件
-            KsObject.search();
+            this.searchDeptCode = ''; //初始化 机构搜索条件
+            this.search();
+        } else if (this.sjId !== sjId) {
+            this.sjId = sjId;
+            this.search();
         }
     },
 
@@ -1820,6 +2016,18 @@ var KsObject = {
             var childs = data.CHILD;
             putChildren(root, childs);
 
+            var treeData = [root];
+            // var jkListBean = FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getKcJk", {kcId: kcId});
+            // if (jkListBean._DATA_ && jkListBean._DATA_.length >= 0) {
+            treeData.push({
+                id: 'jk',
+                text: '借考',
+                data: {id: 'jk', text: '借考'},
+                state: {opened: true},
+                children: []
+            });
+            // }
+
             try {
                 self.ksOrgTree.jstree('destroy');//已经初始化tree，先destroy
             } catch (e) {
@@ -1827,7 +2035,7 @@ var KsObject = {
             self.ksOrgTree = $ksOrgTreeContent.jstree({
                 'core': {
                     "multiple": false,
-                    'data': [root]
+                    'data': treeData
                 }
             });
 
@@ -1850,6 +2058,57 @@ var KsObject = {
         });
 
     },
+
+    /**
+     * 刷新ksOrgTip
+     **/
+    reloadKsOrgTip: function () {
+        // var count = 0;
+        // var totalCount=0;
+        // if (KcObject.currentParentKc || KcObject.currentCc) {
+        //     count += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID));
+        //     count += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID, true));
+        //     totalCount += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID,false,true));
+        //     totalCount += parseInt(this.countKsCount(KcObject.currentParentKc.KC_ID, KcObject.currentCc.SJ_ID, true,true));
+        //     // $('#ksOrgTipKsCount').html(count);
+        // } /*else {
+        //     $('#ksOrgTipKsCount').html('');
+        // }*/
+        // $('#ksOrgTip').html('[<span class="tip-red" id="ksOrgTipKsCount">' + count + '</span>' +
+        //     '/' +
+        //     '<span class="tip-red" id="ksOrgTipKsTotalCount">'+totalCount+'</span>]');
+        // //ksOrgTipKsCount   ksOrgTipKsTotalCount
+    },
+
+    /**
+     * 统计考生数
+     */
+    countKsCount: function (kcId, sjId, isJk, totalArrange) {
+        var self = this;
+        var params1 = {};
+        params1._PAGE_ = {};
+        params1._PAGE_.NOWPAGE = 1;
+        params1._PAGE_.SHOWNUM = 1;
+        if (isJk) {
+            params1.searchDeptCode = 'jk';
+        }
+        if (totalArrange) {
+            params1.isArrange = 'false';
+        }
+        var params = {
+            _linkWhere: " and XM_ID='" + self.xmId + "' ",
+            _linkServQuery: "2",
+            XM_ID: self.xmId,
+            /**/
+            searchKcId: kcId,
+            searchSjId: sjId
+        };
+        // jQuery.extend(param, params);
+        jQuery.extend(params, params1);
+        var doAct = FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getKsContent', {data: JSON.stringify(params)}, false, false);
+        return doAct._PAGE_.ALLNUM;
+    },
+
 
     /**
      * 考生信息
@@ -1882,8 +2141,8 @@ var KsObject = {
                 '   <td>' + ks.BM_NAME + '</td>',//姓名
                 '   <td>' + ks.BM_XL + '-' + ks.BM_MK + '</td>',//考试名称
                 '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), ks.BM_TYPE) + '</td>',//级别
-                '   <td>Mark</td>',//报考数
-                '   <td>Mark</td>',//状态
+                '   <td>' + ks.COUNT + '</td>',//报考数
+                // '   <td>' + ks.STATUS + '</td>',//状态
                 '   <td>' + ks.BM_CODE + '</td>',//人力资源编码
                 '</tr>'
             ].join(''));
@@ -1906,7 +2165,7 @@ var KsObject = {
                         '<div style="/*width:30px;height: 30px;*/background-color: #FFF8DC; border:1px solid #999999;border-radius:3px;padding: 3px">',//
                         '   <div>' + cells[6].innerText + '</div>',
                         '   <div>' + cells[7].innerText + '</div>',
-                        '   <div>' + cells[11].innerText + '</div>',
+                        '   <div>' + cells[10].innerText + '</div>',
                         '</div>'
                     ].join('');
                 },
@@ -1934,6 +2193,7 @@ var KsObject = {
         return {
             searchDeptCode: this.searchDeptCode,
             searchKcId: this.kcId,
+            searchSjId: this.sjId,
             searchName: searchName,
             searchLoginName: searchLoginName,
             searchBmXl: searchBmXl,

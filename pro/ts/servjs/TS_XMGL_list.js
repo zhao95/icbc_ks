@@ -107,6 +107,7 @@ function openMyCard(dataId,readOnly,showTab){
  * 目录管理
  */
 _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
+	
 	var params = {"isHide":"true", "CTLG_MODULE":module};
 	var options = {"url":"TS_COMM_CATALOG_PROJECT.list.do?isHide=true&CTLG_MODULE="+module,"params":params,"menuFlag":3,"top":true};
 	Tab.open(options);
@@ -118,12 +119,14 @@ $(".hoverDiv").find("a").hover(function() {
 	$(this).css("color", "#666666");//鼠标移出
 }); 
 
+
 /**
  * 发布按钮的功能
  */
 _viewer.getBtn("fabu").unbind("click").bind("click",function(){
 	//点击选择框，获取数据的id；
 	var pkAarry = _viewer.grid.getSelectPKCodes();
+	
 	if(pkAarry.length==0){
 		_viewer.listBarTipError("请选择要发布的项目！");
 	}else{
@@ -133,20 +136,34 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){
 			var  data={_extWhere:where};
 			var beanFb = FireFly.doAct("TS_XMGL", "query", data);
 			if(beanFb._DATA_[0].XM_STATE==1){
-				Tip.show("已经发布！");
+				//Tip.show("已经发布！");
+				_viewer.listBarTipError("所选项目已经发布！");
 			}else if(beanFb._DATA_[0].XM_STATE==0){
 				 var  paramXm={};
-				// paramXm["pkCodes"]=pkAarry.join(',');debugger;
 				 paramXm["pkCodes"]=pkAarry[i];
-				FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
-					Tip.show("发布成功！");
-				});
-				_viewer.refresh();
+				showRelease(pkAarry,_viewer,paramXm);
+				
+//				// paramXm["pkCodes"]=pkAarry.join(',');debugger;
+				
+//				FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
+//					Tip.show("项目发布成功！");
+//				});
+//				_viewer.refresh();
 			}
 				
 		}
 	}
+	
 });
+//初次发布
+function  firRelea(paramXm){
+	 
+		FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
+			Tip.show("项目发布成功！");
+		});
+		_viewer.refresh();
+}
+
 
 
 //传给后台的数据
@@ -188,3 +205,85 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 	cardView.show();
 	
 });
+
+
+
+
+/**
+ * 列表发布 验证码
+ * @parm pkArray 主键
+ * @parm viewer 页面_viewer
+ */
+function showRelease(pkArray,viewer,paramXm){
+	var imgDate = new Date();
+	var content = '<div><table>'
+			+ '<tr id="errMsg" style="visibility: hidden;"><td><font color="red" size="5">验证码错误！</font></td></tr>'
+			+ '<tr><td>请输入验证码:<input name="vcode" style="height: 30px; width: 130px; font-size: 22px;" type="text" id="vcode"></td></tr>'
+			+ '<tr style="height:20px"><td></td></tr>'
+			+ '<tr><td>验证码：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id="codevalidate" src="/VerifyCodeServlet/'+imgDate.getMilliseconds()+'" style="height: 25px;" onclick="changeImg()"> '
+			+ '<a href="javascript:;" onclick="changeImg()"><font size="2">看不清，换一张</font></a></td></tr>'
+			+ '</table></div>'
+			+ '<script>function changeImg() {var myDate = new Date();var url = $("#codevalidate").prop("src");url = url + "/" + myDate.getMilliseconds();$("#codevalidate").prop("src", url);}</script>';
+
+	var dialog = jQuery("<div></div>").addClass("dictDialog").attr("title",
+			"验证码");
+	var container = jQuery(content).appendTo(dialog);
+	dialog.appendTo(jQuery("body"));
+	var hei = 230;
+	var wid = 300;
+    
+	var scroll = RHWindow.getScroll(parent.window);
+	var viewport = RHWindow.getViewPort(parent.window);
+	var top = scroll.top + viewport.height / 2 - hei / 2 - 88;
+	var posArray = [ "", top ];
+	dialog.dialog({
+		autoOpen : true,
+		height : hei,
+		width : wid,
+		show : "bounce",
+		hide : "puff",
+		modal : true,
+		resizable : false,
+		position : posArray,
+		buttons : {
+			"确定" : function() {
+				var vcode = $("#vcode").val();
+				if (vcode.length != 4) {
+					$("#errMsg").css("visibility", "visible");
+				} else {
+					 FireFly.doAct("TS_UTIL", "checkVerify", {
+						"vcode" : vcode
+					//}, true, false, function(data) {debugger;
+					}, true, false, function(data) {
+						if (data.res == "true") {
+							dialog.remove();
+							firRelea(paramXm);
+							//FireFly.listDelete(viewer.servId,{"_PK_":pkArray.toString()},true);
+							viewer.refresh();
+							//viewer.afterDelete();
+							
+						} else {
+							$("#errMsg").css("visibility", "visible");
+							
+						}
+					});
+				
+				}
+				
+			},
+			"关闭" : function() {
+				viewer.refresh();
+				dialog.remove();
+			}
+		}
+	});
+	dialog.parent().find(".ui-dialog-titlebar-close").hide();
+	var btns = jQuery(".ui-dialog-buttonpane button", dialog.parent()).attr(
+			"onfocus", "this.blur()");
+	btns.first().addClass("rh-small-dialog-ok");
+	btns.last().addClass("rh-small-dialog-close");
+	dialog.parent().addClass("rh-small-dialog").addClass(
+			"rh-bottom-right-radius");
+	jQuery(".ui-dialog-titlebar").last().css("display", "block");
+	
+}

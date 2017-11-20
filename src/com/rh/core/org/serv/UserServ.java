@@ -258,6 +258,7 @@ public class UserServ extends CommonServ {
      */
     private void treatJiangangUser(ParamBean paramBean, OutBean outBean) {
         String mainUserCode = paramBean.getId();
+        String compy_code = paramBean.getStr("CMPY_CODE");
         if (!UserMgr.isMainUser(mainUserCode)) {
             throw new TipException("不能修改兼岗用户信息");
         }
@@ -270,7 +271,7 @@ public class UserServ extends CommonServ {
             mainDeptCode = paramBean.getStr("DEPT_CODE");
             mainDeptName = DictMgr.getFullNames("SY_ORG_DEPT_ALL", mainDeptCode);
         }
-        List<Bean> auxUserList = UserMgr.getAuxiliaryUserBeansByMainUser(mainUserCode);
+        List<Bean> auxUserList = UserMgr.getAuxiliaryUserBeansByMainUser(mainUserCode,compy_code);
         for (Bean user : auxUserList) {
             String auxDeptCode = user.getStr("DEPT_CODE");
             if (mainDeptCode.equals(auxDeptCode)) {

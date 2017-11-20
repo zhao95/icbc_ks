@@ -3263,7 +3263,7 @@ rh.ui.File.prototype.clearFileByFileId = function(fileId) {
  * 渲染之后
  */
 rh.ui.File.prototype.afterRender = function() {
-	alert("filerender");
+	// alert("filerender");
 	this.initUpload();
 };
 /**
@@ -4577,7 +4577,7 @@ rh.ui.linkSelect.prototype._getValidateObj = function() {
  * 其中的upload就是rh.ui.File的配置，relate就是rh.ui.linkSelect的配置
  */
 rh.ui.DocBasis = function(options) {
-	alert("a");
+	// alert("a");
 	var _self = this;
 	this.type = "DocBasis";// 组件类型
 	var opts = {
@@ -4597,7 +4597,7 @@ rh.ui.DocBasis = function(options) {
  * 构造组件
  */
 rh.ui.DocBasis.prototype._build = function() {
-	alert("a");
+	// alert("a");
 	var _self = this;
 	this._obj = jQuery("<div class='" + this._opts.cls + "'>"
 //			+ "<input type='text' />"
@@ -4613,7 +4613,7 @@ rh.ui.DocBasis.prototype._build = function() {
 	});
 };
 rh.ui.DocBasis.prototype._openDialog = function() {
-	alert("a");
+	// alert("a");
 	var _self = this;
 	this.dialogId = "rh_ui_DocBasis_" + new Date().getTime(); // 随机生成Dialog id
 	jQuery("#" + this.dialogId).dialog("destroy");
@@ -4664,7 +4664,7 @@ rh.ui.DocBasis.prototype._openDialog = function() {
  * 生成dialog里的内容
  */
 rh.ui.DocBasis.prototype._initDialogContent = function() {
-	alert("dialog");
+	// alert("dialog");
 	var _self = this;
 
 	var uploadConfig = this._config.upload; // 文件上传的配置
@@ -6846,7 +6846,7 @@ rh.ui.ItemFile = function(options) {
  * 有效性校验（现在只做了必填性校验）
  */
 rh.ui.ItemFile.prototype.validate = function() {
-	alert("validate");
+	// alert("validate");
 	if(this._opts.isNotNull){
 		if(this.isNull()){
 //			this._container.showError("该项必须输入！");
@@ -6881,7 +6881,7 @@ rh.ui.ItemFile.prototype.getBlank = function() {
  * 获取文件ID
  */
 rh.ui.ItemFile.prototype.getFileId = function() {
-	alert("a");
+	// alert("a");
 	var val = this.getValue();
 	if (val && val.length > 0 && val.indexOf(";") >= 0) {
 		var id_name = val.split(";");
@@ -6893,7 +6893,7 @@ rh.ui.ItemFile.prototype.getFileId = function() {
  * 清空
  */
 rh.ui.ItemFile.prototype.clear = function() {
-	alert("clear");
+	// alert("clear");
 	this._obj.find(".fileName").first().html("");
 	this._input.val("");
 };
@@ -6956,7 +6956,7 @@ rh.ui.ItemFile.prototype.disabled = function() {
  * 显示
  */
 rh.ui.ItemFile.prototype.show = function() {
-	alert("show");
+	// alert("show");
 	this.isHidden = false;
 	this.getContainer().show();
 };

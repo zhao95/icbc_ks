@@ -35,7 +35,9 @@ public class AfterMiddleCertDue implements IRule {
 			obj = new JSONArray(jsonStr);
 			JSONObject jsonObject = obj.getJSONObject(0);
 			String val = jsonObject.getString("val"); // 变量值
-
+			//等级level  
+			String level = obj.getJSONObject(1).getString("code");
+			
 			SqlBean sql = new SqlBean();
 
 			sql.and("STU_PERSON_ID", user);// 人员编码
@@ -44,10 +46,8 @@ public class AfterMiddleCertDue implements IRule {
 
 			sql.and("STATION_NO", xl);// 序列编号
 
-			sql.andIn("CERT_GRADE_CODE", "2","3");// 证书等级编号
+			sql.andGTE("CERT_GRADE_CODE", level);// 证书等级编号
 			
-			sql.and("QUALFY_STAT", 3);// 获证状态(1-正常;2-获取中;3-过期)
-
 			sql.and("S_FLAG", 1);
 
 			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sql);

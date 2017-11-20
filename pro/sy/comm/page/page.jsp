@@ -189,6 +189,10 @@ function client_TodoCount () {
 if (window.ICBC) {
 	ICBC.openFirstTab();
 }
+var hei = document.documentElement.scrollHeight;
+hei = hei-450;
+$("div[class='configDiv']").css("height",hei+"px");
+$("div[class='configDiv']").css("height",hei+"px");
 </script>
  <script src='<%=urlPath%>/ts/js/shouye.js'></script>
 </html>

@@ -17,6 +17,9 @@ $("#TS_XMGL_BMSH-SH_LOOK_label").css("width","300px");
 $("#TS_XMGL_BMSH-SH_LOOK_div").css("padding-left","100px");
 //针对开始和结束时间的校验
 _viewer.beforeSave = function() {
+	
+	var  xmRgsh=_viewer.getItem("SH_RGSH").getValue();//人工审核
+	 var xmZdsh=_viewer.getItem("SH_ZDSH").getValue();//自动审核 
 	var beginTime=_viewer.getItem("SH_START").getValue();
 	var endTime=_viewer.getItem("SH_END").getValue();
     var beginTimes = beginTime.substring(0, 10).split('-');
@@ -29,6 +32,9 @@ _viewer.beforeSave = function() {
  		$("#TS_XMGL_BMSH-SH_END").addClass("blankError").addClass("errorbox");
 		return false;
  	}
+    if(xmRgsh==2 && xmZdsh==2){
+	alert("人工审核和自动审核都选择了'否'!");
+    }
 };
 //_viewer.getItem("SH_START").obj.unbind("click").bind("click", function() {
 //	    WdatePicker({
@@ -48,16 +54,24 @@ _viewer.beforeSave = function() {
 var flowSerTmp = _viewer.getItem("SH_RGSH").getValue(); 
 if(flowSerTmp == 1){
 	_viewer.getItem("SH_FLOW").show();
+	_viewer.getItem("SH_START").show();
+	_viewer.getItem("SH_END").show();
 }else if (flowSerTmp == 2){
 	_viewer.getItem("SH_FLOW").hide();
+	_viewer.getItem("SH_START").hide();
+	_viewer.getItem("SH_END").hide();
 }
 
 _viewer.getItem("SH_RGSH").change(function(){
 	flowSerTmp = _viewer.getItem("SH_RGSH").getValue(); 
 	if(flowSerTmp == 1){
 		_viewer.getItem("SH_FLOW").show();
+		_viewer.getItem("SH_START").show();
+		_viewer.getItem("SH_END").show();
 	}else if (flowSerTmp == 2){
 		_viewer.getItem("SH_FLOW").hide();
+		_viewer.getItem("SH_START").hide();
+		_viewer.getItem("SH_END").hide();
 	}
 });	
 	
@@ -86,10 +100,17 @@ _viewer.getItem("SH_ZDSH").change(function(){
 			_viewer.getItem("SH_TGTSY").show();
 			_viewer.getItem("SH_BTGTSY").show();
 		}
+		$("a[opercode='optOption']").each(function(){
+			$(this).css("display","block");
+			$(this).css("margin-left","40%");
+		});
 	}else if(autoTmp==2){
 		_viewer.getItem("SH_TSY").hide();
 		_viewer.getItem("SH_TGTSY").hide();
 		_viewer.getItem("SH_BTGTSY").hide();
+		$("a[opercode='optOption']").each(function(){
+			$(this).css("display","none");
+		});
 	}
 });
 

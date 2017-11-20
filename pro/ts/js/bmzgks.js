@@ -3,9 +3,23 @@ var user_name = System.getVar("@USER_NAME@");
 var user_sex = System.getVar("@USER_SEX@");
 var odept_name = System.getVar("@ODEPT_NAME@");
 var dept_code = System.getVar("@DEPT_CODE@");
-var user_office_phone = System.getVar("@USER_OFFICE_PHONE@");
+var param = {};
+param["user_code"]=user_code;
+var resultphone = FireFly.doAct("TS_BMLB_BM","getPhone",param);
+var user_office_phone=resultphone.phone;
+$("#user_mobile1").val(user_office_phone);
 var user_cmpy_date = System.getVar("@USER_CMPY_DATE@");
 var xm_id  = $("#xmidval").val();
+
+var paramstrs = {};
+paramstrs["XM_ID"]=xm_id;
+var resultcount = FireFly.doAct("TS_BMLB_BM","getShState",paramstrs);
+var countflag = resultcount.count
+if(resultcount.count==0){
+	$("#zgyzbt").attr("disabled","disabled");
+}else if(resultcount.count==2){
+	$("#zgyzbt").attr("disabled","disabled");
+}
 
 var bm_start="";//报名开始时间
 var bm_end = "";//报名结束时间
@@ -125,7 +139,7 @@ function xminfoshow(){
        				}
        				if(FLAG){
        					if(xlcode==STATION_NO_CODE){
-       						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此考试,请撤销再提交或请选择其它考试</div>');
+       						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此考试,请再提交或请选择其它考试</div>');
        						$("#"+yzjg).append("审核不通过");
        					}else{
        						$("#"+a).append('已报名此考试,请撤销再报名');
@@ -163,11 +177,15 @@ function xminfoshow(){
 						}
 						shti=dataArray[j].TISHI;
 						if(dataArray[j].VLIDATE=="false"){
+							if(countflag!=1){
 							if(shti!="TRUE"){
 								shArray=false;
 							}else{
 								truetisi="true"
 								tishiyu=dataArray[j].tishiyu;
+							}
+							}else{
+								shArray=false;
 							}
 						}
 						if(dataArray[j].othergz=="false"){
@@ -191,28 +209,50 @@ function xminfoshow(){
        						yiyistate="2";
        					}
        				}
-       				
-       				if(shArray==true&&truetisi=="true"){
-       					$("#"+a).append('<div">管理任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
-       					$("#tishiyu").html(tishiyu);
-       					$("#yzxx").modal("show");
-       				}
-       				if(shArray==false){
-       					if(""==failerinfo){
-       						$("#"+yzjg).append('审核不通过');
-       					}else{
-       						$("#"+yzjg).append(failerinfo);
+       				if(countflag==1){
+       					//无手动
+           				if(shArray==false){
+           					if(""==failerinfo){
+           						$("#"+a).append('<div></div>');
+               					$("#"+a).append('<div></div>');
+           						$("#"+yzjg).append('审核不通过');
+           					}else{
+           						$("#"+yzjg).append(failerinfo);
+           					}
+           				}if(shArray==true){
+           					$("#"+a).append('<div></div>');
+           					$("#"+a).append('<div></div>');
+           					if(""==successinfo){
+           						$("#"+yzjg).append("审核通过");
+           					}else{
+           						$("#"+yzjg).append(successinfo);
+           					}
+           					$("#"+yzjg).append('<div></div>');
+           					$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
+           				}
+       				}else{
+       					if(shArray==true&&truetisi=="true"){
+       						$("#"+a).append('<div">管理任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
+       						$("#tishiyu").html(tishiyu);
+       						$("#yzxx").modal("show");
        					}
-       				}if(shArray==true){
-       					$("#"+a).append('<div></div>');
-       					$("#"+a).append('<div></div>');
-       					if(""==successinfo){
-       						$("#"+yzjg).append("初步审核通过");
-       					}else{
-       						$("#"+yzjg).append(successinfo);
+       					if(shArray==false){
+       						if(""==failerinfo){
+       							$("#"+yzjg).append('审核不通过');
+       						}else{
+       							$("#"+yzjg).append(failerinfo);
+       						}
+       					}if(shArray==true){
+       						$("#"+a).append('<div></div>');
+       						$("#"+a).append('<div></div>');
+       						if(""==successinfo){
+       							$("#"+yzjg).append("初步审核通过");
+       						}else{
+       							$("#"+yzjg).append(successinfo);
+       						}
+       						$("#"+yzjg).append('<div></div>');
+       						$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
        					}
-       					$("#"+yzjg).append('<div></div>');
-       					$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
        				}
 	       		}
          		}
@@ -600,6 +640,10 @@ function xminfoshow(){
 	}
 	//跨序列的考试
 	function fuzhi(){
+		var divstr="";
+		if(countflag==0||countflag==2){
+			 divstr = "<div></div><div></div><div></div>"
+		}
 		var strchecked = checked.join(",");
 		paramstr={};
 		paramstr["checked"]=strchecked;
@@ -643,7 +687,7 @@ function xminfoshow(){
 			       '<td >'+kslb_mk+'</td>'+
 			       '<td >'+kslb_type_name+'</td>'+
 			       '<td class="rhGrid-td-hide"><div>cannot</div></td>'+
-			       '<td ><div id="'+kslbk_id+'"></div></td>'+
+			       '<td ><div id="'+kslbk_id+'">'+divstr+'</div></td>'+
 			       '<td ><div id="'+kslbk_id+'yzjg"></div></td>'+
 				   '<td class="rhGrid-td-hide" ><input type="text" name="zgksname" value="'+kslbk_id+'"></td>'+
 				   '<td class="rhGrid-td-hide" >'+kslbk_id+'</td>'+

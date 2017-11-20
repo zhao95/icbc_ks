@@ -3,7 +3,7 @@ package com.rh.ts.xmgl;
 import com.artofsolving.jodconverter.DocumentConverter;
 import com.artofsolving.jodconverter.openoffice.connection.OpenOfficeConnection;
 import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection;
-import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter;
+import com.artofsolving.jodconverter.openoffice.converter.StreamOpenOfficeDocumentConverter;
 import com.icbc.ctp.utility.CollectionUtil;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
@@ -19,6 +19,7 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.PageBean;
 import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.util.Constant;
+import com.rh.core.util.DateUtils;
 import com.rh.ts.util.POIExcelUtil;
 import com.rh.ts.util.TsConstant;
 import org.apache.commons.lang.StringUtils;
@@ -218,6 +219,7 @@ public class XmglAdmissionServ extends CommonServ {
                     } else {
                         //不存在admissionFileBean，创建
                         admissionFileBean.set("FILE_ID", "");
+                        admissionFileBean.set("S_ATIME", DateUtils.getDatetime());
                         admissionFileBean = ServDao.save(TsConstant.SERV_XMGL_ADMISSION_FILE, admissionFileBean);
                     }
                     String dataId = admissionFileBean.getId();
@@ -227,6 +229,7 @@ public class XmglAdmissionServ extends CommonServ {
                             xmBean.getStr("XM_NAME") + "-" + userBean.getStr("USER_NAME") + ".pdf");
                     fileId = pdfFileBean.getId();
                     admissionFileBean.set("FILE_ID", fileId);
+                    admissionFileBean.set("S_ATIME", DateUtils.getDatetime());
                     ServDao.update(TsConstant.SERV_XMGL_ADMISSION_FILE, admissionFileBean);
                 } else {
                     //excel转pdf失败
@@ -286,7 +289,7 @@ public class XmglAdmissionServ extends CommonServ {
                 "left join ts_xmgl_kcap_dapcc_ccsj d on d.SJ_ID = a.SJ_ID " +
                 "left join ts_kcgl_zwdyb e on e.ZW_ID = a.ZW_ID " +
                 "left join ts_bmlb_bm f on f.BM_ID = c.BM_ID " +
-                "where a.XM_ID =? and c.BM_CODE =?";
+                "where a.XM_ID =? and c.BM_CODE =? order by d.SJ_START";
         List<Object> values = new ArrayList<Object>();
         values.add(xmId);
         values.add(userCode);
@@ -461,6 +464,43 @@ public class XmglAdmissionServ extends CommonServ {
             kcAddressRowIndex = ksIndexMap.get("kcAddressRowIndex");
             kcAddressColIndex = ksIndexMap.get("kcAddressColIndex");
 
+            List<Integer> nums = new ArrayList<Integer>();
+            nums.add(ksDurationRowIndex);
+            nums.add(ksNameRowIndex);
+            nums.add(ksXTZWRowIndex);
+            nums.add(ksBeginTimeRowIndex);
+            nums.add(kcNameRowIndex);
+            nums.add(kcAddressRowIndex);
+
+            Integer max = Collections.max(nums);
+            Integer min = Collections.min(nums);
+            int rowMaxDistance = max - min + 1;
+
+            if (ksList != null && ksList.size() > 1) {
+                for (int ksIndex = ksList.size() - 1; ksIndex >= 1; ksIndex--) {
+                    Bean ksBean = ksList.get(ksIndex);
+                    POIExcelUtil.insertRow(sheet, max, rowMaxDistance);
+                    for (int j = 0; j < rowMaxDistance; j++) {
+                        POIExcelUtil.copyRows(workbook, 0, 0, min + j, min + j, min + j + rowMaxDistance);
+                        HSSFRow row = sheet.getRow(min + j + rowMaxDistance);
+                        for (Cell cell : row) {
+                            if (cell.getCellTypeEnum().equals(CellType.STRING)//单元格类型为String
+                                    && ksInfoFieldNameList.contains(cell.getStringCellValue())//是需要替换的考试信息字段
+                                    ) {
+                                HSSFCell nameCell = row.getCell(cell.getColumnIndex() - 1);
+                                if (nameCell != null && cell.getCellTypeEnum().equals(CellType.STRING)) {
+                                    nameCell.setCellValue(nameCell.getStringCellValue().replace("1", String.valueOf(ksIndex + 1)));
+                                }
+                                cell.setCellValue(
+                                        ksBean.getStr(cell.getStringCellValue().substring(1, cell.getStringCellValue().length() - 1))
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+
+
             if (!CollectionUtil.isEmpty(ksList)) {
                 Bean ksBean = ksList.get(0);
                 String ksName = ksBean.getStr("ksName");
@@ -519,42 +559,6 @@ public class XmglAdmissionServ extends CommonServ {
                 }
             }
 
-            List<Integer> nums = new ArrayList<Integer>();
-            nums.add(ksDurationRowIndex);
-            nums.add(ksNameRowIndex);
-            nums.add(ksXTZWRowIndex);
-            nums.add(ksBeginTimeRowIndex);
-            nums.add(kcNameRowIndex);
-            nums.add(kcAddressRowIndex);
-
-            Integer max = Collections.max(nums);
-            Integer min = Collections.min(nums);
-            int rowMaxDistance = max - min + 1;
-
-            if (ksList != null && ksList.size() > 1) {
-                for (int ksIndex = ksList.size() - 1; ksIndex >= 1; ksIndex--) {
-                    Bean ksBean = ksList.get(ksIndex);
-                    POIExcelUtil.insertRow(sheet, max, rowMaxDistance);
-                    for (int j = 0; j < rowMaxDistance; j++) {
-                        POIExcelUtil.copyRows(workbook, 0, min + j, min + j, min + j + rowMaxDistance);
-                        HSSFRow row = sheet.createRow(min + j + rowMaxDistance);
-                        for (Cell cell : row) {
-                            if (cell.getCellTypeEnum().equals(CellType.STRING)//单元格类型为String
-                                    && ksInfoFieldNameList.contains(cell.getStringCellValue())//是需要替换的考试信息字段
-                                    ) {
-                                HSSFCell nameCell = row.getCell(cell.getColumnIndex() - 1);
-                                if (nameCell != null && cell.getCellTypeEnum().equals(CellType.STRING)) {
-                                    nameCell.setCellValue(nameCell.getStringCellValue().replace("1", String.valueOf(ksIndex + 1)));
-                                }
-                                cell.setCellValue(
-                                        ksBean.getStr(cell.getStringCellValue().substring(1, cell.getStringCellValue().length() - 1))
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-
             FileOutputStream os = new FileOutputStream(temp);
             os.flush();
             //将Excel写出
@@ -604,7 +608,7 @@ public class XmglAdmissionServ extends CommonServ {
             connection.connect();
 
             // convert
-            DocumentConverter converter = new OpenOfficeDocumentConverter(
+            DocumentConverter converter = new StreamOpenOfficeDocumentConverter(
                     connection);
             converter.convert(inputFile, outputFile);
 

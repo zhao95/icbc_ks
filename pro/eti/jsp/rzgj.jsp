@@ -81,13 +81,13 @@
         <div class="row" style="background-color: #fff">
             <div class="col-sm-12" style="box-shadow: rgb(190, 190, 190) 1px 0px 6px 0px;padding: 50px 30px 37px 50px;">
                 <div class="row">
-                    <div class="col-sm-4"
-                         style="border-right: 4px solid #3a6ab3;min-width: 400px;padding: 0">
+                    <div class="col-sm-12"
+                         style="/*border-right: 4px solid #3a6ab3;*/min-width: 400px;padding: 0">
                         <div style="font-size: 36px;line-height: 60px; ">
-                            当前序列共有 <span id="xlNum" style="color:#1D69AC;font-weight: bold;">0</span> 人
+                            当前序列为 <span class="xlName" style="color:#1D69AC;font-weight: bold;">0</span>,当前序列共有 <span id="xlNum" style="color:#1D69AC;font-weight: bold;">0</span> 人
                         </div>
                     </div>
-                    <div class="col-sm-4" style="font-size: 16px;max-width: 283px;">
+                    <%--<div class="col-sm-4" style="font-size: 16px;max-width: 283px;">
                         <div><span id="before-you" style="color: #BA3830;">0</span> 人在您的前方, 待您追赶...</div>
                         <div><span id="equal-you" style="color: #DB6600;">0</span> 人与您并驾齐驱...</div>
                         <div><span id="after-you" style="color: #289C80;">0</span> 人在您身后紧追不舍...</div>
@@ -96,7 +96,7 @@
                         <div style="font-size: 36px;">
                             努力才能进步 !
                         </div>
-                    </div>
+                    </div>--%>
                 </div>
             </div>
         </div>
@@ -246,6 +246,7 @@
             $('#equal-you').html(this.info.other);
             $('#after-you').html(this.info.after);
             $('#xlName').html(this.info.STATION_NO);
+            $('.xlName').html(this.info.STATION_NO);
             $('#zgName').html(this.info.POSTION_QUALIFICATION_STR);
             $('#USER_CMPY_DATE').html(this.info.USER_CMPY_DATE);
         },
@@ -361,7 +362,7 @@
                     '       <div style="position: absolute;top:80px;left:-10px;font-size: 20px;width: 150px;">' + data.ISSUE_DATE_STR + '</div>',
                     '       <div style="height: ' + setting.height + 'px;width: 2px;background-color: #707070;position: absolute;top: -' + setting.height + 'px;left: 31px;"></div>',
                     '       <div style="text-align:center;position: absolute;top:' + (-setting.height - 43) + 'px;left:-58px;font-size: 16px;width: 185px;">',
-                    '           <div style="text-overflow: ellipsis;overflow: hidden;white-space:nowrap;">' + data.FNAME_CHN + '</div>',
+                    '           <div style="text-overflow: ellipsis;overflow: hidden;white-space:nowrap;" title="' + data.FNAME_CHN + (data.typeName ? '(' + data.typeName + ')' : '') + '">' + data.FNAME_CHN + (data.typeName ? '(' + data.typeName + ')' : '') + '</div>',
                     '           <div>(' + data.state + ')</div>',
                     '       </div>',
                     '       <div class="triangle-left" style="border-left: 33px solid ' + setting.color + ';position: absolute;top: -' + setting.height + 'px;left: 34px;"></div>',

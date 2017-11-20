@@ -31,24 +31,54 @@ public class BeforeHighCertDue implements IRule {
 		JSONArray obj;
 
 		try {
-
-			obj = new JSONArray(jsonStr);
-			JSONObject jsonObject = obj.getJSONObject(0);
-
-			String val = jsonObject.getString("val"); // 变量值
-
 			SqlBean sql = new SqlBean();
 
-			sql.and("STU_PERSON_ID", user);// 人员编码
+			obj = new JSONArray(jsonStr);
+			JSONObject jsonObject = obj.getJSONObject(1);
 
-			sql.andLTE("END_DATE", val);// 终止有效期 <= val
+			String endDate = jsonObject.getString("val"); // 变量值
+			
+			String fuhao =obj.getJSONObject(0).getString("code");
+			if(fuhao.equals("1")){
+				sql.andGT("END_DATE", endDate);// 终止有效期 >= endDate
+				
+			}else if(fuhao.equals("2")){
+				//小于
+				sql.andLT("END_DATE", endDate);// 终止有效期 >= endDate
+			}else if(fuhao.equals("3")){
+				//大于等于
+				sql.andGTE("END_DATE", endDate);// 终止有效期 >= endDate
+			}else if(fuhao.equals("4")){
+				//小于等于
+				sql.andLTE("END_DATE", endDate);// 终止有效期 >= endDate
+			}
+			
+			
+			//等级level
+			
+			String fuhao2 = obj.getJSONObject(2).getString("code");
+			String dengjicode = obj.getJSONObject(obj.length()-1).getString("code"); // 
+			if(fuhao2.equals("1")){
+				
+				sql.andGT("CERT_GRADE_CODE", dengjicode);
+			}else if(fuhao2.equals("2")){
+				//小于
+				sql.andLT("CERT_GRADE_CODE", dengjicode);
+			}else if(fuhao2.equals("3")){
+				//大于等于
+				sql.andGTE("CERT_GRADE_CODE", dengjicode);
+			}else if(fuhao2.equals("4")){
+				//小于等于
+				sql.andLTE("CERT_GRADE_CODE", dengjicode);// 证书等级编号
+			}else{
+				sql.and("CERT_GRADE_CODE", dengjicode);//等于
+			}
+			
+			sql.and("STU_PERSON_ID", user);// 人员编码
 
 			sql.and("STATION_NO", xl);// 序列编号
 
-			sql.and("CERT_GRADE_CODE", "3");// 证书等级编号
 			
-			sql.and("QUALFY_STAT", 3);// 获证状态(1-正常;2-获取中;3-过期)
-
 			sql.and("S_FLAG", 1);
 
 			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sql);

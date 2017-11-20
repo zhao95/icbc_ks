@@ -10,6 +10,23 @@ var _viewer = this;
 //		minDate : "#F{$dp.$D('" + _viewer.servId + "-SJ_START')}"
 //	});
 //});
+//针对开始和结束时间的校验
+_viewer.beforeSave = function() {
+	var beginTime=_viewer.getItem("SJ_START").getValue();
+	var endTime=_viewer.getItem("SJ_END").getValue();
+    var beginTimes = beginTime.substring(0, 10).split('-');
+    var endTimes = endTime.substring(0, 10).split('-');
+     beginTime = beginTimes[1] + '-' + beginTimes[2] + '-' + beginTimes[0] + ' ' + beginTime.substring(10, 19);
+     endTime = endTimes[1] + '-' + endTimes[2] + '-' + endTimes[0] + ' ' + endTime.substring(10, 19);
+    var a = (Date.parse(endTime) - Date.parse(beginTime)) / 3600 / 1000;
+    if(a < 0||a == 0){
+ 		$("#TS_XMGL_KCAP_DAPCC_CCSJ-SJ_START").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL_KCAP_DAPCC_CCSJ-SJ_END").addClass("blankError").addClass("errorbox");
+		return false;
+ 	}
+};
+
+
 checkShow();
 var xmId = _viewer.getParHandler().getParHandler().getParHandler().getParHandler().getPKCode()
 _viewer.getItem("XM_ID").setValue(xmId);

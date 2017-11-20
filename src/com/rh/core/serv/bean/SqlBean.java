@@ -171,7 +171,7 @@ public class SqlBean extends Bean {
     }
     
     /**
-     * 增加大于过滤项
+     * 增加小于等于过滤项
      * @param field 字段
      * @param value 值
      * @return 当前对象
@@ -181,7 +181,7 @@ public class SqlBean extends Bean {
     }
 
     /**
-     * 增加小于等于过滤项
+     * 增加大于过滤项
      * @param field 字段
      * @param value 值
      * @return 当前对象

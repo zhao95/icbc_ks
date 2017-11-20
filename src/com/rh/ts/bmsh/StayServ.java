@@ -12,6 +12,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
+import com.rh.core.base.db.Transaction;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
@@ -24,6 +25,7 @@ import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
+import com.rh.ts.util.RoleUtil;
 
 public class StayServ extends CommonServ {
 
@@ -833,7 +835,14 @@ public class StayServ extends CommonServ {
 	public Bean getBelongToList(Bean paramBean) {
 		//当前审核人
 		UserBean user = Context.getUserBean();
-		String dept_code = user.getStr("ODEPT_CODE");
+		Bean userPvlgToHT = RoleUtil.getPvlgRole(user.getCode(),"TS_BMGL_XNBM");
+		Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+		Bean str = (Bean)userPvlgToHTBean.get("XN_BM");
+		String dept_code = str.getStr("ROLE_DCODE");
+		if("".equals(dept_code)){
+			dept_code=user.getStr("ODEPT_CODE");
+		}
+		dept_code = dept_code.substring(0,10);
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		/*if("belong".equals(xianei)){
@@ -870,24 +879,31 @@ public class StayServ extends CommonServ {
 		 deptwhere = "AND S_DEPT IN ("+deptcodes+")";
 		}else{*/
 			//管理员以下的所有机构
-		if(user.getODeptCode().equals("0010100000")){
-			//所有人员
-			deptwhere="";
-		}else{
-			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
-			for (Bean bean : finds) {
-				dept_code+=","+bean.getStr("DEPT_CODE");
-			}
-			deptwhere = "AND S_DEPT IN ("+dept_code+")";
-		}
-		//根据审核  机构 匹配当前机构下的所有人
-		Bean _PAGE_ = new Bean();
-		Bean outBean = new Bean();
 		String servId = "TS_BMSH_STAY";
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where")+deptwhere;
-		List<Bean> list = ServDao.finds(servId, where1);
+		List<Bean> list;
+			if(user.getODeptCode().equals("0010100000")){
+				//所有人员
+				list = ServDao.finds(servId, where1);
+
+			}else{
+				List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
+				for (Bean bean : finds) {
+					dept_code+=","+bean.getStr("DEPT_CODE");
+				}
+				deptwhere = "AND S_DEPT IN ("+dept_code+")";
+				DeptBean dept = OrgMgr.getDept(dept_code);
+				String codepath = dept.getCodePath();
+				String sql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
+				 list = Transaction.getExecutor().query(sql);
+				
+			}
+		//根据审核  机构 匹配当前机构下的所有人
+		Bean _PAGE_ = new Bean();
+		Bean outBean = new Bean();
+		
 
 		int ALLNUM = list.size();
 		// 计算页数
@@ -939,13 +955,21 @@ public class StayServ extends CommonServ {
 	 * 获取各模块 数量
 	 */
 	public OutBean tongjinum(Bean paramBean){
+		OutBean out = new OutBean();
 		String xianei = paramBean.getStr("xianei");
 				//当前审核人
 				UserBean user = Context.getUserBean();
 				String user_code = user.getStr("USER_CODE");
 				String belongdeptcode = "";
 				String xmid = paramBean.getStr("xmid");
-				String dept_code = user.getStr("ODEPT_CODE");
+				Bean userPvlgToHT = RoleUtil.getPvlgRole(user.getCode(),"TS_BMGL_XNBM");
+				Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+				Bean str = (Bean)userPvlgToHTBean.get("XN_BM");
+				String dept_code = str.getStr("ROLE_DCODE");
+				if("".equals(dept_code)){
+					dept_code=user.getStr("ODEPT_CODE");
+				}
+				dept_code = dept_code.substring(0,10);
 				List<Bean> list =  new ArrayList<Bean>();
 				List<Bean> list1 = new ArrayList<Bean>();
 				List<Bean> list2 = new ArrayList<Bean>();
@@ -995,24 +1019,40 @@ public class StayServ extends CommonServ {
 			String deptwhere1="";
 			if(user.getODeptCode().equals("0010100000")){
 				//所有人员
-				 deptwhere1 = "AND XM_ID='"+xmid+"'";
+				 deptwhere1 = "WHERE XM_ID='"+xmid+"'";
+				 String sql = "select count(*) from TS_BMSH_STAY "+deptwhere1;
+				 List<Bean> query = Transaction.getExecutor().query(sql);
+				 int stay = Integer.parseInt(query.get(0).getId());
+				 out.set("staynum", stay);
+				 String sql1 = "select count(*) from TS_BMSH_PASS "+deptwhere1;
+				 List<Bean> query1 = Transaction.getExecutor().query(sql1);
+				 int PASS =Integer.parseInt(query1.get(0).getId());
+				 out.set("passnum", PASS);
+				 String sql2 = "select count(*) from TS_BMSH_NOPASS "+deptwhere1;
+				 List<Bean> query2 = Transaction.getExecutor().query(sql2);
+				 int nopass = Integer.parseInt(query2.get(0).getId());
+				 out.set("nopassnum", nopass);
+				 out.set("allnum", stay+nopass+PASS);
 			}else{
-				List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
-				for (Bean bean : finds) {
-					dept_code+=","+bean.getStr("DEPT_CODE");
-				}
-				deptwhere1 = "AND S_DEPT IN ("+dept_code+") AND XM_ID='"+xmid+"'";
+				DeptBean dept = OrgMgr.getDept(dept_code);
+				String codepath = dept.getCodePath();
+				String sql = "select COUNT(*) from TS_BMSH_STAY a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
+				 List<Bean> query = Transaction.getExecutor().query(sql);
+				 int stay = Integer.parseInt(query.get(0).getId());
+				out.set("staynum", query);
+				String sql1 = "select COUNT(*) from TS_BMSH_NOPASS a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
+				 List<Bean> query1 = Transaction.getExecutor().query(sql1);
+				int nopass = Integer.parseInt(query1.get(0).getId());
+				out.set("nopassnum", nopass);
+				String sql2 = "select COUNT(*) from TS_BMSH_PASS a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
+				 List<Bean> query2 = Transaction.getExecutor().query(sql2);
+				int pass = Integer.parseInt(query2.get(0).getId());
+				out.set("passnum", pass);
+				out.set("allnum", stay+nopass+pass);
 			}
-			String where2 = deptwhere1;
-			 list = ServDao.finds("TS_BMSH_STAY", where2);
-			 list1 = ServDao.finds("TS_BMSH_PASS", where2);
-			 list2 = ServDao.finds("TS_BMSH_NOPASS", where2);
+		
 		}
-		OutBean out = new OutBean();
-		out.set("staynum", list.size());
-		out.set("passnum", list1.size());
-		out.set("nopassnum", list2.size());
-		out.set("allnum", list.size()+list1.size()+list2.size());
+		
 		return out;
 	}
 	/**

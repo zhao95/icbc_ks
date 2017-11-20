@@ -179,7 +179,7 @@ public class FlowServ extends CommonServ {
 			bean.set("NODE_NAME", "三级审核级别");
 			break;
 		    case 5:
-			bean.set("NODE_NAME", "最低级审核级别");
+			bean.set("NODE_NAME", "最低审核级别");
 			break;
 		    default:
 			break;
@@ -280,6 +280,10 @@ public class FlowServ extends CommonServ {
 	}
 
 	Bean wfsBean = ServDao.find("TS_WFS_APPLY", wfsId);
+	if(wfsBean==null){
+		 outBean.setError("未绑定流程");
+		    return outBean;
+	}
 	//审核类型  1:逐级审核  2:越级审核
 	int wfsType = wfsBean.getInt("WFS_TYPE");
 	int wfsSteps = wfsBean.getInt("WFS_STEPS");

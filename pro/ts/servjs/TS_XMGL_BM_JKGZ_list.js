@@ -45,7 +45,7 @@ function bindCard(){
 _viewer.getBtn("add").unbind("click").bind("click", function(event) {
 	//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
 	var configStr = "ts_xmgl_bm_jkglgzk,{'TARGET':'','SOURCE':'GZ_ID~GZ_TYPE~GZ_NAME~GZ_INFO'," +
-			"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
+			"'HIDE':'GZ_ID~GZ_TYPE','TYPE':'multi','HTMLITEM':''}";
 	var options = {
 		"config" :configStr,
 		"parHandler":_viewer,

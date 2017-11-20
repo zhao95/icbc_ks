@@ -12,6 +12,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
+import com.rh.core.base.db.Transaction;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
@@ -24,6 +25,7 @@ import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
+import com.rh.ts.util.RoleUtil;
 
 public class PassServ extends CommonServ {
 	/** 每次获取数据条数 */
@@ -32,7 +34,7 @@ public class PassServ extends CommonServ {
 	private static final int EXCEL_MAX_NUM = 65536;
 
 	/**
-	 * /** 获取那一页的记录 返回
+	 *  获取那一页的记录 返回
 	 * 
 	 * @param paramBean
 	 * @return
@@ -640,8 +642,15 @@ public class PassServ extends CommonServ {
 		UserBean user = Context.getUserBean();
 		String compycode = user.getCmpyCode();
 		String deptwhere = "";
-		String dept_code = user.getStr("ODEPT_CODE");
 		
+		Bean userPvlgToHT = RoleUtil.getPvlgRole(user.getCode(),"TS_BMGL_XNBM");
+		Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+		Bean str = (Bean)userPvlgToHTBean.get("XN_BM");
+		String dept_code = str.getStr("ROLE_DCODE");
+		if("".equals(dept_code)){
+			dept_code=user.getStr("ODEPT_CODE");
+		}
+		dept_code = dept_code.substring(0,10);
 		/*if("belong".equals(xianei)){*/
 		//根据项目id找到流程下的所有节点
 		/*List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
@@ -675,24 +684,31 @@ public class PassServ extends CommonServ {
 		 deptwhere = "AND S_DEPT IN ("+deptcodes+")";
 		}else{*/
 			//管理员以下的所有机构
-		if(user.getODeptCode().equals("0010100000")){
-			//所有人员
-			deptwhere="";
-		}else{
-			List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
-			for (Bean bean : finds) {
-				dept_code+=","+bean.getStr("DEPT_CODE");
-			}
-			deptwhere = "AND S_DEPT IN ("+dept_code+")";
-		}
-		//根据审核  机构 匹配当前机构下的所有人
-		Bean _PAGE_ = new Bean();
-		Bean outBean = new Bean();
 		String servId = "TS_BMSH_PASS";
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where")+deptwhere;
-		List<Bean> list = ServDao.finds(servId, where1);
+		List<Bean> list;
+			if(user.getODeptCode().equals("0010100000")){
+				//所有人员
+				list = ServDao.finds(servId, where1);
+
+			}else{
+				List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
+				for (Bean bean : finds) {
+					dept_code+=","+bean.getStr("DEPT_CODE");
+				}
+				deptwhere = "AND S_DEPT IN ("+dept_code+")";
+				DeptBean dept = OrgMgr.getDept(dept_code);
+				String codepath = dept.getCodePath();
+				String sql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
+				 list = Transaction.getExecutor().query(sql);
+				
+			}
+		//根据审核  机构 匹配当前机构下的所有人
+		Bean _PAGE_ = new Bean();
+		Bean outBean = new Bean();
+		
 
 		int ALLNUM = list.size();
 		// 计算页数

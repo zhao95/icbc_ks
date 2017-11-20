@@ -5,6 +5,7 @@ import java.util.List;
 import com.rh.core.base.Bean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
+import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 /**
  * 
@@ -71,4 +72,52 @@ public class MxServ extends CommonServ {
 		}
 		return out;
 	}
+	
+	 /**
+     * 从规则库中倒入规则  注：TS_XMGL_BMSH_SHGZK中的主键GZ_ID
+     * 保存到TS_XMGL_BMSH_SHGZ的字段GZK_ID非GZ_ID
+     * @param paramBean
+     * @return
+     */
+    public OutBean impShgzMx(ParamBean paramBean) {
+	OutBean outBean =new OutBean();
+	String xmId = paramBean.getStr("xmId");
+	String ids = paramBean.getStr("ids");
+	String gz_id = paramBean.getStr("GZ_ID");
+	String ksqzId = paramBean.getStr("ksqzId");
+	for (int i = 0; i < ids.split(",").length; i++) {
+	    String dataId = ids.split(",")[i];
+	    if(dataId.equals("Y01108")){
+	    	List<Bean> GZMXLIST = ServDao.finds("TS_XMGL_BMSH_SHGZ_MX", "AND KSQZ_ID='"+ksqzId+"' AND GZK_MX_ID='Y01109'");
+	    	if(GZMXLIST!=null&&GZMXLIST.size()!=0){
+	    		
+	    	}else{
+	    		Bean bean = ServDao.find("TS_XMGL_BMSH_SHGZK_MX", "Y01109");
+	    		Bean dataBean = new Bean();
+	    		dataBean.set("XM_ID", xmId);
+	    		dataBean.set("MX_NAME", bean.getStr("MX_NAME"));
+	    		dataBean.set("MX_VALUE1", bean.getStr("MX_VALUE1"));
+	    		dataBean.set("MX_VALUE2", bean.getStr("MX_VALUE2"));
+	    		dataBean.set("MX_IMPL", bean.getStr("MX_IMPL"));
+	    		dataBean.set("KSQZ_ID", ksqzId);
+	    		dataBean.set("GZ_ID", gz_id);
+	    		dataBean.set("GZK_MX_ID", bean.getStr("MX_ID"));
+	    		ServDao.save("TS_XMGL_BMSH_SHGZ_MX", dataBean);
+	    	}
+	    }
+	    Bean bean = ServDao.find("TS_XMGL_BMSH_SHGZK_MX", dataId);
+	    Bean dataBean = new Bean();
+	    dataBean.set("XM_ID", xmId);
+	    dataBean.set("MX_NAME", bean.getStr("MX_NAME"));
+	    dataBean.set("MX_VALUE1", bean.getStr("MX_VALUE1"));
+	    dataBean.set("MX_VALUE2", bean.getStr("MX_VALUE2"));
+	    dataBean.set("MX_IMPL", bean.getStr("MX_IMPL"));
+	    dataBean.set("KSQZ_ID", ksqzId);
+	    dataBean.set("GZ_ID", gz_id);
+	    dataBean.set("GZK_MX_ID", bean.getStr("MX_ID"));
+	    ServDao.save("TS_XMGL_BMSH_SHGZ_MX", dataBean);
+	}
+	outBean.setOk();
+	return outBean;
+    }
 }
