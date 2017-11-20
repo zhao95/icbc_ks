@@ -16,7 +16,7 @@
 	</context-param>
   	<context-param>
 	    <param-name>listener</param-name>
-	    <param-value>com.rh.core.base.start.LogMgr,com.rh.core.base.start.DsMgr,com.rh.core.base.start.CacheLoader,com.rh.core.base.start.UpgradeMgr,com.rh.core.base.start.ScheduleLoader,com.rh.core.base.start.MsgLisLoader,com.rh.core.base.start.ServLisLoader</param-value>
+	    <param-value>com.rh.core.base.start.LogMgr,com.rh.core.base.start.DsMgr,com.rh.core.base.start.CacheLoader,com.rh.core.base.start.UpgradeMgr,com.rh.core.base.start.ScheduleLoader,com.rh.core.base.start.MsgLisLoader,com.rh.core.base.start.ServLisLoader,com.rh.core.org.OrgDictLoadListener</param-value>
     	<!-- com.rh.core.base.start.LogMgr log日志-->
 		<!-- com.rh.core.base.start.DsMgr 数据源-->
 		<!-- com.rh.core.base.start.CacheLoader 启动缓存处理-->

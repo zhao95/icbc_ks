@@ -218,7 +218,7 @@ public class PassServ extends CommonServ {
 		String[] ss = s.split(",");
 		String state = paramBean.getStr("radiovalue");
 		String liyou = paramBean.getStr("liyou");
-		List<String> noPassBmIdList = new ArrayList<>();//审核通过后，后又审核不通过的bmId
+		List<String> noPassBmIdList = new ArrayList<String>();//审核通过后，后又审核不通过的bmId
 		for (String id : ss) {
 			if (!"".equals(id)) {
 				// 获取当前对象

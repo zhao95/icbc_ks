@@ -33,7 +33,7 @@ public class YapzwServ extends CommonServ {
         OutBean outBean = new OutBean();
         Object sjId = paramBean.get("SJ_ID");
         String sql = yapzwInfoSql + " where a.SJ_ID = ?";
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         values.add(sjId);
         List<Bean> beanList = Transaction.getExecutor().query(sql, values);
         outBean.setData(beanList);
@@ -43,7 +43,7 @@ public class YapzwServ extends CommonServ {
     private Bean getYapZwById(String yapZwId) {
         Bean result = null;
         String sql = yapzwInfoSql + " where a.YAPZW_ID = ?";
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         values.add(yapZwId);
         List<Bean> beanList = Transaction.getExecutor().query(sql, values);
         if (beanList != null && beanList.size() > 0) {
@@ -69,7 +69,7 @@ public class YapzwServ extends CommonServ {
                 "left join TS_KCGL_IPZWH d on b.KC_ID=d.KC_ID and d.IPZ_ZWH=c.ZW_ZWH_SJ " +
                 "WHERE SJ_ID = ?";
         Object sjId = paramBean.get("SJ_ID");
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         values.add(sjId);
         List<Bean> beanList = Transaction.getExecutor().query(sql, values);
         for (Bean bean : beanList) {
@@ -208,7 +208,7 @@ public class YapzwServ extends CommonServ {
                 "left join ts_kcgl_zwdyb e on e.ZW_ID = a.ZW_ID " +
                 "left join ts_bmlb_bm f on f.BM_ID = c.BM_ID " +
                 "where f.BM_ID =? order by d.SJ_START";
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         values.add(bmId);
         List<Bean> ksDataList = Transaction.getExecutor().query(sql, values);
         if (ksDataList != null && ksDataList.size() > 0) {

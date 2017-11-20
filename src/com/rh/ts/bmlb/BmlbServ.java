@@ -701,7 +701,7 @@ public class BmlbServ extends CommonServ {
 
 		String sql="select a.*,c.PUBLICITY from TS_BMLB_BM a left join ts_bmsh_pass b on b.BM_ID = a.BM_ID " +
                 "left join ts_xmgl_kcap_yapzw c on c.SH_ID = b.SH_ID "+ whereSql;
-		List<Object> values=new LinkedList<>();
+		List<Object> values=new LinkedList<Object>();
 		List<Bean> dataList = Transaction.getExecutor().queryPage(
 				sql, page.getNowPage(), page.getShowNum(),null, null);
 //		List<Bean> list = ServDao.finds(servId, where);
@@ -1046,7 +1046,7 @@ public class BmlbServ extends CommonServ {
 	 *            文件id
 	 */
 	public OutBean getDataFromXls(Bean paramBean) throws IOException, BiffException {
-		List<Bean> result = new ArrayList<>();
+		List<Bean> result = new ArrayList<Bean>();
 		String fileId = paramBean.getStr("fileId");
 		String servid = paramBean.getStr("serv_id");
 		String where = "AND SERV_ID=" + "'" + servid + "'";

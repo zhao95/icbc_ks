@@ -1,5 +1,6 @@
 pro/WEB-INF/work/*
 .project
+.classpath
 .settings/*
 pro/WEB-INF/doc/SY_COMM_MENU/*
 resin.conf

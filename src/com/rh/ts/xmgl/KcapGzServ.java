@@ -32,7 +32,7 @@ public class KcapGzServ extends CommonServ {
         deleteBean.setServId(paramBean.getServId());
         deleteBean.put("_DEL_", true);//真删除
         deleteBean.set(Constant.PARAM_WHERE, " and XM_ID ='" + xmId + "' and S_USER ='" + currUserCode + "'");
-        OutBean outBean;
+        OutBean outBean = new OutBean();
         try {
             this.delete(deleteBean);
             StringBuilder builder = new StringBuilder();
@@ -68,7 +68,8 @@ public class KcapGzServ extends CommonServ {
             Transaction.commit();
         } catch (Exception e) {
             Transaction.rollback();
-            throw e;
+            e.printStackTrace();
+//            throw e;
         } finally {
             Transaction.end();
         }

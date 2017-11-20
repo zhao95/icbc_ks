@@ -117,7 +117,7 @@ public class MysqlExecutor extends SqlExecutor {
             columnCount = rsmd.getColumnCount();
             for (int i = 1; i <= columnCount; i++) {
                 Bean columnBean = new Bean();
-                columnBean.set("NAME", rsmd.getColumnName(i).toUpperCase());
+                columnBean.set("NAME", rsmd.getColumnLabel(i).toUpperCase());//rsmd.getColumnName(i).toUpperCase());
                 columnBean.set("TYPE", rsmd.getColumnType(i));
                 columnBean.set("SIZE", rsmd.getPrecision(i));
                 columnBean.set("SCALE", rsmd.getScale(i));

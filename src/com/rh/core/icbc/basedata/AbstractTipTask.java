@@ -27,7 +27,7 @@ public abstract class AbstractTipTask extends RhThreadTask {
 	 */
 	public List<Bean> getAllUserForBMTip(String qzCode){
 		String[] qzCodeArr = qzCode.split(",");
-		List<Bean> userListByQZId = new ArrayList<>();
+		List<Bean> userListByQZId = new ArrayList<Bean>();
 		for (String G_ID : qzCodeArr) {
 			String sqlForUser = "select GUD_ID, G_ID ,USER_DEPT_CODE AS USER_CODE,USER_DEPT_NAME,G_TYPE FROM TS_BM_GROUP_USER_DEPT WHERE G_TYPE =1 AND G_ID='" + G_ID + "'";
 			List<Bean> userListByGid = Transaction.getExecutor().query(sqlForUser);

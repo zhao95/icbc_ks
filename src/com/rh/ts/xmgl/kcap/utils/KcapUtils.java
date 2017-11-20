@@ -30,7 +30,7 @@ public class KcapUtils {
 
 				Object dstObj = rtnBan.get(key);
 
-				List<Bean> dstList = new ArrayList<>();
+				List<Bean> dstList = new ArrayList<Bean>();
 
 				if (dstObj instanceof Bean) {
 

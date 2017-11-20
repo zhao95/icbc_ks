@@ -43,25 +43,25 @@ public class ToDoService
         super(__getWsdlLocation(), TODOSERVICE_QNAME);
     }
 
-    public ToDoService(WebServiceFeature... features) {
-        super(__getWsdlLocation(), TODOSERVICE_QNAME, features);
-    }
+//    public ToDoService(WebServiceFeature... features) {
+//        super(__getWsdlLocation(), TODOSERVICE_QNAME, features);
+//    }
 
     public ToDoService(URL wsdlLocation) {
         super(wsdlLocation, TODOSERVICE_QNAME);
     }
 
-    public ToDoService(URL wsdlLocation, WebServiceFeature... features) {
-        super(wsdlLocation, TODOSERVICE_QNAME, features);
-    }
+//    public ToDoService(URL wsdlLocation, WebServiceFeature... features) {
+//        super(wsdlLocation, TODOSERVICE_QNAME, features);
+//    }
 
     public ToDoService(URL wsdlLocation, QName serviceName) {
         super(wsdlLocation, serviceName);
     }
 
-    public ToDoService(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
-        super(wsdlLocation, serviceName, features);
-    }
+//    public ToDoService(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
+//        super(wsdlLocation, serviceName, features);
+//    }
 
     /**
      * 

@@ -181,7 +181,7 @@ public class StayServ extends CommonServ {
 		String[] ss = s.split(",");
 		String state = paramBean.getStr("radiovalue");
 		String liyou = paramBean.getStr("liyou");
-		List<String> noPassBmIdList = new ArrayList<>();//审核通过后，后又审核不通过的bmId
+		List<String> noPassBmIdList = new ArrayList<String>();//审核通过后，后又审核不通过的bmId
 		// 获取当前的审核层级 如果是最高层级审核结束只留下最高级的审核人
 		for (String id : ss) {
 			if (!"".equals(id)) {

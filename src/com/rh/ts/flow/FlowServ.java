@@ -463,20 +463,21 @@ public class FlowServ extends CommonServ {
 			}
 			
 		    String sqlWhere = "";
-		    switch (ydyBm) {
-		    case "0":
+		    int ydyBm_int = Integer.parseInt(ydyBm);
+		    switch (ydyBm_int) {
+		    case 0:
 			//起草人部门
 			sqlWhere = "and dept_code = '"+deptCode+"' and DUTY_LV_CODE in ('"+shzw+"')";
 			break;
-		    case "1":
+		    case 1:
 			//起草人机构
 			sqlWhere = "and odept_code = '"+odeptCode+"' and DUTY_LV_CODE in ('"+shzw+"')";
 			break;
-		    case "2":
+		    case 2:
 			//推送人部门
 			sqlWhere = "and dept_code = '"+shrDeptCode+"' and DUTY_LV_CODE in ('"+shzw+"')";
 			break;
-		    case "3":
+		    case 3:
 			//推送人机构
 			sqlWhere = "and odept_code = '"+shrOdeptCode+"' and DUTY_LV_CODE in ('"+shzw+"')";
 			break;

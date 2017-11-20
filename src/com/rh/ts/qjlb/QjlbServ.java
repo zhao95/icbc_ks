@@ -336,7 +336,7 @@ public class QjlbServ extends CommonServ {
                 outBean.setError("没有审核人，请联系管理员！");
             }
         } else {
-            int nodeSteps = (int) shBean.get("NODE_STEPS");
+            int nodeSteps = shBean.getInt("NODE_STEPS");
             String nodeName = shBean.getStr("NODE_NAME");
             String wfsId = shBean.getStr("WFS_ID");
 
