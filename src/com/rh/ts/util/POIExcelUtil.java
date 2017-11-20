@@ -250,7 +250,7 @@ public class POIExcelUtil {
             return;
         }
 
-        List<CellRangeAddress> oldRanges = new ArrayList<>();
+        List<CellRangeAddress> oldRanges = new ArrayList<CellRangeAddress>();
         for (i = 0; i < sheet.getNumMergedRegions(); i++) {
             oldRanges.add(sheet.getMergedRegion(i));
         }

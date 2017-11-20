@@ -111,7 +111,7 @@ public class RzgjServ extends CommonServ {
         }
 
         //过滤出用户当前序列的获证信息
-        List<Bean> copyDataList = new ArrayList<>(dataList);//用户当前序列的获证信息
+        List<Bean> copyDataList = new ArrayList<Bean>(dataList);//用户当前序列的获证信息
         Collections.reverse(copyDataList);
         for (Iterator<Bean> iterator = copyDataList.iterator(); iterator.hasNext(); ) {
             Bean copyData = iterator.next();

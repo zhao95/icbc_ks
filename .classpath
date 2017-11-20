@@ -44,7 +44,6 @@
 	<classpathentry kind="lib" path="pro/WEB-INF/lib/poi-ooxml-schemas-3.17.jar"/>
 	<classpathentry kind="lib" path="pro/WEB-INF/lib/ridl-3.0.1.jar"/>
 	<classpathentry kind="lib" path="pro/WEB-INF/lib/unoil-3.0.1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="pro/WEB-INF/lib/ctp-engine.jar"/>
 	<classpathentry kind="lib" path="pro/WEB-INF/lib/ctp-framework.jar"/>
@@ -55,5 +54,6 @@
 	<classpathentry kind="lib" path="pro/WEB-INF/lib/ssic.jar"/>
 	<classpathentry kind="lib" path="pro/WEB-INF/lib/jsqlparser-0.9.3-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="pro/WEB-INF/lib/mysql-connector-java-5.1.42-bin.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 8 [1.8.0_65]"/>
 	<classpathentry kind="output" path="pro/WEB-INF/classes"/>
 </classpath>

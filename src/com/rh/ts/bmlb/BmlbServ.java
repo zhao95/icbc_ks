@@ -962,7 +962,7 @@ public class BmlbServ extends CommonServ {
 	 *            文件id
 	 */
 	public OutBean getDataFromXls(Bean paramBean) throws IOException, BiffException {
-		List<Bean> result = new ArrayList<>();
+		List<Bean> result = new ArrayList<Bean>();
 		String fileId = paramBean.getStr("fileId");
 		String servid = paramBean.getStr("serv_id");
 		String where = "AND SERV_ID=" + "'" + servid + "'";

@@ -72,7 +72,7 @@ public class DapccServ extends CommonServ {
         }
 
         //拼凑whereSql配置
-        Map<String, String> configMap = new HashMap<>();
+        Map<String, String> configMap = new HashMap<String, String>();
         configMap.put("XM_ID", "XM_ID = ?");
         configMap.put("containDeptCode", "CODE_PATH like ?");
 //        configMap.put("containDeptCode", "CODE_PATH like ?");
@@ -105,7 +105,7 @@ public class DapccServ extends CommonServ {
                 + whereSql;
         //where 姓名/登录名/报考类型/报考数  bm_name /login_name?/
         List<Bean> dataList = Transaction.getExecutor().queryPage(
-                sql, page.getNowPage(), page.getShowNum(), new ArrayList<>(values), null);
+                sql, page.getNowPage(), page.getShowNum(), new ArrayList<Object>(values), null);
 //        List<Bean> beanList = ServDao.finds("TS_XMGL_KCAP_DFPKS", paramBean);
         for (Bean bean : dataList) {
             String userCode = bean.getStr("BM_CODE");
@@ -151,7 +151,7 @@ public class DapccServ extends CommonServ {
      */
     private List getExtWhereSqlData(ParamBean paramBean, Map<String, String> configMap) {
         StringBuilder whereSql = new StringBuilder(/*"where "*/);
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         for (Map.Entry<String, String> entry : configMap.entrySet()) {
             String key = entry.getKey();
             String sql = entry.getValue();
@@ -184,7 +184,7 @@ public class DapccServ extends CommonServ {
         String DEPT_CODE = "KC_ODEPTCODE";//KC_ODEPTCODE：根据考场所属机构挂靠考场；DEPT_CODE：根据关联机构挂靠考场
         String xmId = paramBean.getStr("xmId");
         String roleDeptCode = paramBean.getStr("deptCodeStr");
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         values.add(xmId);
 
         //根据用户权限code（deptCodeStr）过滤考场
@@ -206,12 +206,12 @@ public class DapccServ extends CommonServ {
                 "LEFT JOIN SY_ORG_DEPT d on d.DEPT_CODE = c.JG_CODE " +
                 "LEFT JOIN SY_ORG_DEPT e on b.KC_ODEPTCODE = e.DEPT_CODE " +
                 "where a.XM_ID=? " + deptSql, values);
-        Set<String> hashSet = new HashSet<>();
+        Set<String> hashSet = new HashSet<String>();
         for (Bean bean : list) {
             hashSet.add(bean.getStr(DEPT_CODE));
         }
 
-        Map<String, Bean> cache = new HashMap<>();
+        Map<String, Bean> cache = new HashMap<String, Bean>();
         Bean rootDeptBean = this.getDeptList(hashSet, cache);
 
 //        List<Bean> list = ServDao.finds("TS_XMGL_KCAP_DAPCC", "and XM_ID='" + xmId + "'");
@@ -244,7 +244,7 @@ public class DapccServ extends CommonServ {
         String[] codes = deptCodeStr.split(",");
         /*Set<String> hashSet =*/
         List<String> codeStrings = Arrays.asList(codes);
-        Bean rootDeptBean = getRootDeptBean(new HashSet<>(codeStrings));
+        Bean rootDeptBean = getRootDeptBean(new HashSet<String>(codeStrings));
         outBean.putAll(rootDeptBean);
         return outBean;
     }
@@ -266,7 +266,7 @@ public class DapccServ extends CommonServ {
             String xmFqdwCode = xmBean.getStr("XM_FQDW_CODE");
             String sql = "select * from sy_org_dept where DEPT_CODE =? ";
             StringBuilder deptSql = new StringBuilder();
-            List<Object> values = new ArrayList<>();
+            List<Object> values = new ArrayList<Object>();
             values.add(xmFqdwCode);
             for (String s : userYAPPublishCode.split(",")) {
                 if (StringUtils.isNotBlank(s)) {
@@ -298,7 +298,7 @@ public class DapccServ extends CommonServ {
         Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
         String xmFqdwCode = xmBean.getStr("XM_FQDW_CODE");
         String sql = "select * from sy_org_dept where DEPT_CODE =? and CODE_PATH like ?";
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         values.add(xmFqdwCode);
         values.add("%" + deptCode + "%");
         List<Bean> beanList = Transaction.getExecutor().query(sql, values);
@@ -312,7 +312,7 @@ public class DapccServ extends CommonServ {
     }
 
     private Bean getRootDeptBean(Set<String> deptCodeList) {
-        Map<String, Bean> cache = new HashMap<>();
+        Map<String, Bean> cache = new HashMap<String, Bean>();
         Bean rootDeptBean = this.getDeptList(deptCodeList, cache);
         for (String deptCode : deptCodeList) {
             ParamBean queryBean = new ParamBean();
@@ -334,14 +334,14 @@ public class DapccServ extends CommonServ {
      * @return
      */
     private Set<String> getKcRelateOrgCodeList(String kcId) {
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         values.add(kcId);
         List<Bean> list = Transaction.getExecutor().query("select a.*, c.JG_CODE from TS_XMGL_KCAP_DAPCC a " +
 //                "INNER JOIN TS_KCGL b on b.KC_ID =a.KC_ID " +
                 "INNER JOIN TS_KCGL_GLJG c on c.KC_ID=a.KC_ID " +
 //                "LEFT JOIN SY_ORG_DEPT d on d.DEPT_CODE = c.JG_CODE " +
                 "where a.KC_ID=?", values);
-        Set<String> hashSet = new HashSet<>();
+        Set<String> hashSet = new HashSet<String>();
         for (Bean bean : list) {
             hashSet.add(bean.getStr("JG_CODE"));
         }
@@ -440,7 +440,7 @@ public class DapccServ extends CommonServ {
 
         UserBean userBean = UserMgr.getUser(userCode);
         String deptCode = userBean.getDeptCode();
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         values.add(deptCode);
 
         Bean bean = ServDao.find("SY_ORG_DEPT", deptCode);

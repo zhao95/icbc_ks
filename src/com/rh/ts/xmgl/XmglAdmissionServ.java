@@ -64,7 +64,7 @@ public class XmglAdmissionServ extends CommonServ {
         }
 
         String userCode = Context.getUserBean().getCode();
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         values.add(userCode);
 
         //BM_STATUS not in('1','3')：项目中考试全部请假不显示
@@ -75,7 +75,7 @@ public class XmglAdmissionServ extends CommonServ {
                 "order by a.XM_START";
 
         List<Bean> dataList = Transaction.getExecutor().queryPage(
-                sql, page.getNowPage(), page.getShowNum(), new ArrayList<>(values), null);
+                sql, page.getNowPage(), page.getShowNum(), new ArrayList<Object>(values), null);
 
         /*设置数据总数*/
         int count = dataList.size();
@@ -287,11 +287,11 @@ public class XmglAdmissionServ extends CommonServ {
                 "left join ts_kcgl_zwdyb e on e.ZW_ID = a.ZW_ID " +
                 "left join ts_bmlb_bm f on f.BM_ID = c.BM_ID " +
                 "where a.XM_ID =? and c.BM_CODE =?";
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         values.add(xmId);
         values.add(userCode);
 
-        List<Bean> ksbakList = new ArrayList<>();
+        List<Bean> ksbakList = new ArrayList<Bean>();
         List<Bean> ksDataList = Transaction.getExecutor().query(sql, values);
 //        ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and ");
 //        ServDao.finds();
@@ -320,9 +320,9 @@ public class XmglAdmissionServ extends CommonServ {
         dataBean.set("ksList", ksbakList);
 
         //需要替换的考试信息 rowIndex colIndex
-        Map<String, Integer> ksIndexMap = new HashMap<>();
+        Map<String, Integer> ksIndexMap = new HashMap<String, Integer>();
 
-        List<String> ksInfoFieldNameList = new ArrayList<>();
+        List<String> ksInfoFieldNameList = new ArrayList<String>();
         ksInfoFieldNameList.add("{ksName}");
         ksInfoFieldNameList.add("{ksXTZW}");
         ksInfoFieldNameList.add("{ksBeginTime}");
@@ -330,7 +330,7 @@ public class XmglAdmissionServ extends CommonServ {
         ksInfoFieldNameList.add("{kcName}");
         ksInfoFieldNameList.add("{kcAddress}");
 
-        List<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<String>();
         for (Object o : dataBean.keySet()) {
             list.add("{" + o + "}");
         }
@@ -363,23 +363,38 @@ public class XmglAdmissionServ extends CommonServ {
                                     String avatarFileId = dataBean.getStr("fileId");
                                     String pictureFileSuffix = dataBean.getStr("pictureFileSuffix");
                                     int pictureType = 0;
-                                    switch (pictureFileSuffix) {
-                                        case "png":
+                                    int tempVal = 0;
+                                    if (pictureFileSuffix.equals("png")) {
+                                	tempVal = 1;
+				    }else if(pictureFileSuffix.equals("emf")){
+					tempVal = 2;
+				    }else if(pictureFileSuffix.equals("pict")){
+					tempVal = 3;
+				    }else if(pictureFileSuffix.equals("jpg")){
+					tempVal = 4;
+				    }else if(pictureFileSuffix.equals("jpeg")){
+					tempVal = 5;
+				    }else if(pictureFileSuffix.equals("die")){
+					tempVal = 6;
+				    }
+                                    
+                                    switch (tempVal) {
+                                        case 1:
                                             pictureType = HSSFWorkbook.PICTURE_TYPE_PNG;
                                             break;
-                                        case "emf":
+                                        case 2:
                                             pictureType = HSSFWorkbook.PICTURE_TYPE_EMF;
                                             break;
-                                        case "pict":
+                                        case 3:
                                             pictureType = HSSFWorkbook.PICTURE_TYPE_PICT;
                                             break;
-                                        case "jpg":
+                                        case 4:
                                             pictureType = HSSFWorkbook.PICTURE_TYPE_JPEG;
                                             break;
-                                        case "jpeg":
+                                        case 5:
                                             pictureType = HSSFWorkbook.PICTURE_TYPE_JPEG;
                                             break;
-                                        case "die":
+                                        case 6:
                                             pictureType = HSSFWorkbook.PICTURE_TYPE_DIB;
                                             break;
                                         default:
@@ -504,7 +519,7 @@ public class XmglAdmissionServ extends CommonServ {
                 }
             }
 
-            List<Integer> nums = new ArrayList<>();
+            List<Integer> nums = new ArrayList<Integer>();
             nums.add(ksDurationRowIndex);
             nums.add(ksNameRowIndex);
             nums.add(ksXTZWRowIndex);

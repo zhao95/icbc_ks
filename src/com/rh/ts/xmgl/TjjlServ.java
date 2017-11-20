@@ -17,13 +17,13 @@ import java.util.*;
 public class TjjlServ extends CommonServ {
 
     public OutBean getKcOrgStatus(ParamBean paramBean) {
-        List<Bean> result = new ArrayList<>();
+        List<Bean> result = new ArrayList<Bean>();
 
         String xmId = paramBean.getStr("XM_ID");
         String pvlgDeptCodeStr = paramBean.getStr("pvlgDeptCodeStr");
         String[] strings = pvlgDeptCodeStr.split(",");
 
-        List<Object> values = new ArrayList<>();
+        List<Object> values = new ArrayList<Object>();
         values.add(xmId);
         //根据用户权限code（deptCodeStr）过滤考场
         String[] splitDeptCode = pvlgDeptCodeStr.split(",");
@@ -40,7 +40,7 @@ public class TjjlServ extends CommonServ {
                 " where a.XM_ID=? " + deptSql, values);
 
         //用户权限下已经提交的机构信息
-        List<Bean> hasTjBeanList = new ArrayList<>();
+        List<Bean> hasTjBeanList = new ArrayList<Bean>();
         for (String deptCode : strings) {
             if (StringUtils.isNotBlank(deptCode)) {
                 values.clear();
@@ -58,7 +58,7 @@ public class TjjlServ extends CommonServ {
 
         int hasCount = 0;//已提交数目
         int noCount = 0;//未提交数目
-        Map<String, Boolean> map = new HashMap<>();
+        Map<String, Boolean> map = new HashMap<String, Boolean>();
         for (Bean bean : hasTjBeanList) {
             hasCount++;
             map.put(bean.getStr("DEPT_CODE"), true);

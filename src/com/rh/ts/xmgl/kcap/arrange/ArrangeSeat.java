@@ -679,7 +679,7 @@ public class ArrangeSeat {
 
 				Object dstObj = dstBean.get(key);
 
-				List<Bean> dstList = new ArrayList<>();
+				List<Bean> dstList = new ArrayList<Bean>();
 
 				if (dstObj instanceof Bean) {
 

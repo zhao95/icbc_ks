@@ -74,7 +74,7 @@ public class XmztServ extends CommonServ {
 				+ "where XM_ID= ? "
 				+ "and b.SJ_END is not null "
 				+ "ORDER BY b.SJ_END desc";
-		List<Object> queryParams=new ArrayList<>();
+		List<Object> queryParams=new ArrayList<Object>();
 		queryParams.add(xm_id);
 		List<Bean> beanList = Transaction.getExecutor().query(sql,queryParams);
 		
@@ -84,7 +84,7 @@ public class XmztServ extends CommonServ {
 				+ "where XM_ID= ? "
 				+ "and b.SJ_END is not null "
 				+ "ORDER BY b.SJ_START";
-		List<Object> queryParams1=new ArrayList<>();
+		List<Object> queryParams1=new ArrayList<Object>();
 		queryParams1.add(xm_id);
 		List<Bean> beanList1 = Transaction.getExecutor().query(sql1,queryParams1);
 		Bean returnBean = new Bean();

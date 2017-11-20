@@ -56,16 +56,33 @@ public class KcapMatch {
 
 				constrainFiltBean = (Bean) filtBean.clone();
 			}
+			int tmpValue = 0;
+			if(key.toString().equals("R001")){
+			    tmpValue = 1;
+			}else if(key.toString().equals("R002")){
+			    tmpValue = 2;
+			}else if(key.toString().equals("R003")){
+			    tmpValue = 3;
+			}else if(key.toString().equals("R004")){
+			    tmpValue = 4;
+			}else if(key.toString().equals("R005")){
+			    tmpValue = 5;
+			}else if(key.toString().equals("R007")){
+			    tmpValue = 7;
+			}else if(key.toString().equals("R008")){
+			    tmpValue = 8;
+			}else if(key.toString().equals("R009")){
+			    tmpValue = 9;
+			}
+			switch (tmpValue) {
 
-			switch (key.toString()) {
-
-			case "R001":
+			case 1:
 
 				// 相同考试前后左右不相邻
 				filtR001(freeZw, busyZwBean, filtBean);
 
 				break;
-			case "R002":
+			case 2:
 
 				// 同一考生同一场场次连排 (同一考生 同一天 同一考场 同一座位 上一场次)
 				boolean isRtn = filtR002(freeZw, busyZwBean, filtBean);
@@ -75,37 +92,37 @@ public class KcapMatch {
 				}
 
 				break;
-			case "R003":
+			case 3:
 
 				// 距离远近规则
 				filtR003(freeZw, res.getFarKsBean(), filtBean);
 
 				break;
-			case "R004":
+			case 4:
 
 				// 同一网点级机构考生均分安排
 				filtR004(freeZw, res, filtBean);
 
 				break;
-			case "R005":
+			case 5:
 
 				// 来自同一机构考生不连排
 				filtR005(freeZw, busyZwBean, filtBean);
 
 				break;
-			case "R007":
+			case 7:
 
 				// 领导职务考生座位靠前安排
 				filtR007(freeZw, res.getLeaderBean(), filtBean);
 
 				break;
-			case "R008":
+			case 8:
 
 				// 特定机构考生场次先后安排
 				filtR008(freeZw, res, filtBean);
 
 				break;
-			case "R009":
+			case 9:
 
 				// 特定考试仅限于省分行安排
 				filtR009(freeZw, rule.getBean(key), filtBean);
@@ -123,7 +140,7 @@ public class KcapMatch {
 
 		if (!filtBean.isEmpty()) {
 
-			ArrayList<Bean> list = new ArrayList<>();
+			ArrayList<Bean> list = new ArrayList<Bean>();
 
 			for (Object time : filtBean.keySet()) { // 遍历考试时长
 
@@ -737,7 +754,7 @@ public class KcapMatch {
 
 									if (uTemp.containsKey(user)) {
 
-										List<Bean> l = new ArrayList<>();
+										List<Bean> l = new ArrayList<Bean>();
 
 										if (uTemp.get(user) instanceof Bean) {
 

@@ -450,7 +450,7 @@ public class JklbServ extends CommonServ {
      */
     public OutBean cancelFlow(ParamBean paramBean) throws ParseException {
         OutBean outBean = new OutBean();
-        List<String> successIdList = new ArrayList<>();
+        List<String> successIdList = new ArrayList<String>();
 
         List<String> bmIdList = paramBean.getList("bmIdList");//通过后 又被审批为不通过的报名Id
         for (String bmId : bmIdList) {

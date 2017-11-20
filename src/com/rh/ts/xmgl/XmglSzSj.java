@@ -64,7 +64,7 @@ public class XmglSzSj extends CommonServ {
      * @param fileId 文件id
      */
     private List<Bean> getDataFromXls(String fileId) throws IOException, BiffException {
-        List<Bean> result = new ArrayList<>();
+        List<Bean> result = new ArrayList<Bean>();
         Bean fileBean = FileMgr.getFile(fileId);
         InputStream in = FileMgr.download(fileBean);
         Workbook workbook = Workbook.getWorkbook(in);
