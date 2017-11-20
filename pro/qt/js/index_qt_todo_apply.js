@@ -98,7 +98,7 @@ function showTodoContent() {
 function setApplyContent() {
     var userCode = System.getVar("@USER_CODE@");//当前登录用户code
     var userXmListBean = FireFly.doAct('TS_XMGL', 'getUserXm', {user_code: userCode});
-    var userXmList = JSON.parse(userXmListBean.list);
+    var userXmList = userXmListBean.list;
 
     $('#keshenqingbaomingSum').html(userXmList.length);//可申请报名数目
 

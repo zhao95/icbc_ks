@@ -432,11 +432,7 @@ function ksqxm() {
     var param = {};
     param["user_code"] = user_code;
     var result = FireFly.doAct("TS_XMGL", "getUserXm", param);
-    var data = result.list;
-    if (data == null) {
-        return;
-    }
-    var pageEntity = JSON.parse(data);
+    var pageEntity = result.list;
     for (var i = 0; i < pageEntity.length; i++) {
         var name = pageEntity[i].XM_NAME;
         //项目中已存在array的  title  数据  将展示在  已报名信息中

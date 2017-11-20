@@ -296,7 +296,6 @@ public class XmglServ extends CommonServ {
 				qz += "," + bean.getStr("G_ID");
 				continue;
 			}
-			
 				List<DeptBean> listdept = OrgMgr.getChildDeptsAll(bean.getStr("S_CMPY"),str);
 				// 判断此人是否在此机构下
 				// 管理员以下的所有机构
@@ -390,19 +389,8 @@ public class XmglServ extends CommonServ {
 			}
 		}
 
-		// 将lastlist转换为 json字符串传给前台
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter w = new StringWriter();
-		try {
-			mapper.writeValue(w, lastlist);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		outBean.set("list", w.toString());
+	
+		outBean.set("list",lastlist);
 		return outBean;
 	}
 

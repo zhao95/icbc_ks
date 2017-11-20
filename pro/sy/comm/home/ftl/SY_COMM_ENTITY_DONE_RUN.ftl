@@ -43,7 +43,7 @@ $("#jksy").click(function(){
 <input id="jkid" name ="jkid" />
 <input id="hidden" name ="hidden" />
 </form>
-<form id="bachform" target="_blank" style="display:none" method="post" action="/ts/jsp/jkbachsh.jsp">
+<form id="bachform" target="_blank" style="display:none" method="post" action="/qt/jsp/todo.jsp">
 <input name = "bach" id="bach2">
 </form>
 </div>

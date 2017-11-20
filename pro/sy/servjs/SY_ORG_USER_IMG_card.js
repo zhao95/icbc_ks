@@ -1,35 +1,41 @@
 var _viewer = this;
 var con = _viewer.getItem("USER_IMG_SRC").getContainer().find(".right");
+var filepath = _viewer.getItem("USER_IMG_SRC").getValue();
+if(filepath!=""){
+	filepath = filepath.split(",")[0];
+}
 var orImg;
 var srcImgObj, text100, obj100, text50, obj50;
-
 var setImg = function() {
 	var rand = Math.random();//增加随机数，用于跳过浏览器缓存图片
-	if(text100 && obj100 && text50 && obj50){
-		text100.remove();
+	if($("#imgObj100").length!=0){
+		/*text100.remove();
 		obj100.remove();
 		text50.remove();
-		obj50.remove();
+		obj50.remove();*/
+		$("iframe").css("display","none")
+	}else{
+		orImg = con.find("img").attr("src") || "";
+		var arrayFile = orImg.split("/");
+		arrayFile[arrayFile.length - 1] = "ICON_" + arrayFile[arrayFile.length - 1];
+		srcImgObj = con.children().first();
+		srcImgObj.css({"float":"left"});
+		text100 = jQuery("<span style='padding-left:50px;display:inline-block;margin:5px auto auto 20px;float:left;'>大尺寸</span>");
+		text100.insertAfter(srcImgObj);
+		obj100 = jQuery("<div class='frame' style='margin:10px;margin-top:5px;margin-left:20px;width:100px;height:100px;float:left;border:1px #91BDEA solid;'>" + 
+				"<div style='width:100px; height: 100px; overflow: hidden;'>"+
+				"<img id='imgObj100' class='img100' src='/file/"+filepath+"' style='width:100px;height:100px;' />"+
+		"</div><div style='margin-top:5px;width:100px;text-align:center;'>100 x 100</div></div>");
+		obj100.insertAfter(text100);
+		text50 = jQuery("<span style='display:inline-block;margin:5px auto auto 20px;float:left;'>小尺寸</span>");
+		text50.insertAfter(obj100);
+		obj50 = jQuery("<div class='frame' style='margin:10px;margin-top:5px;margin-left:20px;width:40px;height:60px;float:left;'>" + 
+				"<div style='width: 40px; height: 40px; overflow: hidden;border:1px #91BDEA solid;'>"+
+				"<img id='imgObj50' class='img40' src='/file/"+filepath+"' style='width: 40px; height: 40px;' />"+
+		"</div><div style='margin-top:5px;width:100%;text-align:center;'>40x40</div></div>");
+		obj50.insertAfter(text50);
+		$("iframe").css("display","none")
 	}
-	orImg = con.find("img").attr("src") || "";
-	var arrayFile = orImg.split("/");
-	arrayFile[arrayFile.length - 1] = "ICON_" + arrayFile[arrayFile.length - 1];
-	srcImgObj = con.children().first();
-	srcImgObj.css({"float":"left"});
-	text100 = jQuery("<span style='display:inline-block;margin:5px auto auto 20px;float:left;'>大尺寸</span>");
-	text100.insertAfter(srcImgObj);
-	obj100 = jQuery("<div class='frame' style='margin:10px;margin-top:5px;margin-left:20px;width:100px;height:100px;float:left;border:1px #91BDEA solid;'>" + 
-	    "<div style='width:100px; height: 100px; overflow: hidden;'>"+
-	    "<img id='imgObj100' class='img100' src='" + arrayFile.join("/") + "?size=100x100&" + rand + "' style='width:100px;height:100px;' />"+
-	    "</div><div style='margin-top:5px;width:100px;text-align:center;'>100 x 100</div></div>");
-	obj100.insertAfter(text100);
-	text50 = jQuery("<span style='display:inline-block;margin:5px auto auto 20px;float:left;'>小尺寸</span>");
-	text50.insertAfter(obj100);
-	obj50 = jQuery("<div class='frame' style='margin:10px;margin-top:5px;margin-left:20px;width:40px;height:60px;float:left;'>" + 
-			"<div style='width: 40px; height: 40px; overflow: hidden;border:1px #91BDEA solid;'>"+
-			"<img id='imgObj50' class='img40' src='" + arrayFile.join("/") + "?size=40x40&" + rand + "' style='width: 40px; height: 40px;' />"+
-	"</div><div style='margin-top:5px;width:100%;text-align:center;'>40x40</div></div>");
-	obj50.insertAfter(text50);
 };
 
 jQuery("#SY_ORG_USER_IMG-USER_IMG_SRC_cancel").bind("click",function(){
@@ -39,6 +45,7 @@ jQuery("#SY_ORG_USER_IMG-USER_IMG_SRC_cancel").bind("click",function(){
 		text50.remove();
 		obj50.remove();
 	}
+	$("iframe").css("display","block");
 	_viewer.getItem("USER_IMG_SRC").setValue("");
 });
 
@@ -47,6 +54,7 @@ var zoomHei = 300;
 var zoomRate = 1;//缩放比例，小于300的话为默认值1，大于300的话取最大值和300的比
 //缩略图根据原始图的选择状态来展示其对应的图片
 function preview(img, selection) {
+	flag==3;
     if (!selection.width || !selection.height) {
     	return;
     }
