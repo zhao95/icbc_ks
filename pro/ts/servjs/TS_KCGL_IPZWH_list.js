@@ -24,12 +24,12 @@ function bindCard(){
 	});
 		
 	//当行编辑事件
-	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
+	jQuery("td [id='TS_KCGL_IPZWH_edit']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		rowEdit(pkCode,_viewer,[1000,500],[200,100]);
 	});
 	//查看
-	jQuery("td [operCode='optLookBtn']").unbind("click").bind("click", function(){
+	jQuery("td [id='TS_KCGL_IPZWH_look']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		//$(".hoverDiv").css('display','none');
 		openMyCard(pkCode,true);

@@ -5,7 +5,7 @@ $("#TS_XMGL_CCCS_ARRANGE_COND-save").css("right",300);
 var xmId = _viewer.getParHandler().getParHandler().getPKCode();
 
 _viewer.getBtn("ok").click(function(){
-	var sum=_viewer.getItem("CONF_SUM").getValue();//场次总数
+	var sum=_viewer.getItem("CONF_SUM").getValue();debugger;//场次总数
 	var date = _viewer.getItem("CONF_DATE").getValue();//日期
 	var am_time = _viewer.getItem("CONF_AM_TIME").getValue();//开始时间（上午）
 	var am_inter = _viewer.getItem("CONF_AM_INTER").getValue();//间隔（分钟）
@@ -53,18 +53,18 @@ _viewer.getBtn("close").click(function(){
 	_viewer.backA.mousedown();
 });
 
-function js(date,time,inter,num,info){
-	//info = info.replace(/，/g, ",");
-	var info_num = info.split(",").length;//永远是1
+function js(date,time,inter,num,info){debugger;
+	info = info.replace(/，/g, ",");
+	var info_num = info.split(",").length;//
 	var start = date + " " +time;
 	var end = "";
 	if(num == info_num || num > info_num){
 		for(var i=0;i<num;i++){
-			end = addMin(start,info);
+			end = addMin(start,info.split(",")[i]);
 			var param = {};
 			param["ARR_START"]=start;//开始时间
 			param["ARR_END"]=end;//结束时间
-			param["ARR_TIME"]=info;//考试时长
+			param["ARR_TIME"]=info.split(",")[i];;//考试时长
 			param["XM_ID"]=xmId;
 			param["ARR_CC"]= getCc();//场次
 			param["ARR_STATE"]= 0;
@@ -97,7 +97,7 @@ function js(date,time,inter,num,info){
 //	alert("条件输入不正确");
 //}
 //}
-function getCc(){
+function getCc(){debugger;
 	var resData = FireFly.doAct("TS_XMGL_CCCS_ARRANGE", "finds", {"_SELECT_":"max(ARR_CC) ARR_CC","_WHERE_":"and xm_id='"+xmId+"'"}, false);	
 	if(resData._DATA_.length != 0){
 		var max = resData._DATA_[0].ARR_CC - 0 + 1;
@@ -112,7 +112,7 @@ function getCc(){
  * @param b 分钟
  * @returns
  */
-function addMin(a,b){
+function addMin(a,b){debugger;
 	
 	b = parseInt(b);
 	var atime = a.replace(/-/g, "/");
@@ -120,5 +120,5 @@ function addMin(a,b){
 	
 	date.setMinutes(date.getMinutes()+b);
     
-	return rhDate.patternData("yyyy-MM-dd hh:mm",date);
+	return rhDate.patternData("yyyy-MM-dd HH:mm",date);
 }

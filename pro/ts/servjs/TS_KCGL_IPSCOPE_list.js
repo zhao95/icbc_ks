@@ -27,6 +27,7 @@ $("#TS_KCGL_IPSCOPE .rhGrid").find("tr").each(function(index, item) {
 });	
 
 function bindCard(){
+	//编辑
 	jQuery("td [id='TS_KCGL_IPSCOPE_edit']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		openMyCard(pkCode);

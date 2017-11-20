@@ -6,3 +6,7 @@ if(_viewer.opts.act == "cardAdd"){
 		_viewer.getItem("KC_ID").setValue(extWhere.split("'")[1]);
 	}
 }
+
+if (_viewer.opts.readOnly) {
+	_viewer.readCard();
+	}

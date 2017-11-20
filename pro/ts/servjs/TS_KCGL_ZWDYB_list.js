@@ -19,17 +19,26 @@ $("#TS_KCGL_ZWDYB .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
 		$(item).find("td[icode='BUTTONS']").prepend(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optEditBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
+				'<a class="rhGrid-td-rowBtnObj rh-icon"  id="TS_KCGL_ZWDYB_look" operCode="optLookBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_ZWDYB_edit"  operCode="optEditBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
 		);
 		bindCard();
 	}
 });	
 
 function bindCard(){
-	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
+	jQuery("td [id='TS_KCGL_ZWDYB_edit']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		openMyCard(pkCode);
 	});
+	
+
+	 //查看
+	jQuery("td [id='TS_KCGL_ZWDYB_look']").unbind("click").bind("click", function(){
+		var pkCode = jQuery(this).attr("rowpk");
+		//$(".hoverDiv").css('display','none');
+		openMyCard(pkCode,true);
+	 });
 }
 
 //列表操作按钮 弹dialog

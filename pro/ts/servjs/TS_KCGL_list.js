@@ -82,7 +82,7 @@ function bindCard(){
 	});	
 	
 	//当行查看事件
-	jQuery(".hoverDiv [operCode='optLookBtn']").unbind("click").bind("click", function(){
+	jQuery(".hoverDiv [operCode='optLookBtn']").unbind("click").bind("click", function(){debugger;
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
 		openMyCard(pkCode,true);
