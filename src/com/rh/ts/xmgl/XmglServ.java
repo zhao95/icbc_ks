@@ -283,7 +283,10 @@ public class XmglServ extends CommonServ {
 		/*String whereqz = "AND G_TYPE=2";
 		List<Bean> finds = ServDao.finds("TS_BM_GROUP_DEPT", whereqz);*/
 		// 所有机构
-		String sql = "SELECT g_id FROM ts_group_user_v a WHERE '"+odeptcode+"' IN(SELECT dept_code FROM sy_org_dept WHERE code_path LIKE a.`code_path`)";
+		String sql = "SELECT g_id FROM (SELECT DISTINCT`t`.`G_ID`"+
+		"AS `g_id`,`b`.`CODE_PATH` AS `code_path` "
+		+ "FROM `ts_bm_group_user_dept` `t` LEFT JOIN `sy_org_dept` `b` ON `t`.`USER_DEPT_CODE` = `b`.`DEPT_CODE`"
+          +"AND `t`.`G_TYPE` = 2) a WHERE '"+odeptcode+"' IN(SELECT dept_code FROM sy_org_dept WHERE code_path LIKE concat(a.`code_path`,'%'))";
 		/*for (Bean bean : finds) {
 			String str = bean.getStr("USER_DEPT_CODE");// 机构编码
 			if("".equals(str)){
