@@ -652,9 +652,19 @@ rh.vi.cardView.prototype._bldWin = function() {
     this.winDialog.dialog("open");
     this.winDialog.parent().addClass("rh-ui-dialog").addClass("bodyBack"); 
     //定位
-    this.winDialog.parent().css("position","fixed");
-    this.winDialog.parent().css("top","30px");
-    this.winDialog.parent().css("right","30px");
+   /* this.winDialog.parent().css("position","fixed");*/
+    
+    var dialoglen = jQuery("a[class='rhCard-close']").length-1;
+    var toplen=  dialoglen*20+10;
+    this.winDialog.parent().css("top",toplen+"px");
+    
+    if(dialoglen>0){
+    	var leftlen = jQuery("div[role='dialog']").eq(jQuery("div[role='dialog']").length-2).css("left");
+    	
+    	leftlen=parseInt(leftlen.substring(0,leftlen.length-2))+10;
+    	
+    	 this.winDialog.parent().css("left",leftlen+"px");
+    }
     if (this.miniCard) {//小卡片设置区分边框
     	this.winDialog.addClass("rh-ui-dialog-mini-border");
     	this.winDialog.parent().addClass("rh-ui-dialog-mini");
