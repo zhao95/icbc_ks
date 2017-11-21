@@ -195,7 +195,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
    var winDialogCss = {"overflow":"hidden"};
    var miniDialogCss = "";
    if (this.miniCard) {//小卡片
-	   winDialogCss = {"overflow-y":"auto","overflow-x":"hidden"};
+	   winDialogCss = {"overflow-x":"hidden"};
 	   miniDialogCss = "cardDialogMini";
    }
    //tempTODO 临时增加边框阴影
@@ -651,6 +651,7 @@ rh.vi.cardView.prototype._bldWin = function() {
     this.mainLi.click();
     this.winDialog.dialog("open");
     this.winDialog.parent().addClass("rh-ui-dialog").addClass("bodyBack"); 
+    
     //定位
    /* this.winDialog.parent().css("position","fixed");*/
     
@@ -665,6 +666,8 @@ rh.vi.cardView.prototype._bldWin = function() {
     	
     	 this.winDialog.parent().css("left",leftlen+"px");
     }
+    this.winDialog.parent().css("overflow-y","");
+    this.winDialog.css("height","");
     if (this.miniCard) {//小卡片设置区分边框
     	this.winDialog.addClass("rh-ui-dialog-mini-border");
     	this.winDialog.parent().addClass("rh-ui-dialog-mini");
@@ -1153,7 +1156,9 @@ rh.vi.cardView.prototype.refreshFormData = function() {
 rh.vi.cardView.prototype._bldForm = function() {
     var _self = this;
     //构造Form
-    _self.formCon = jQuery("<div class='form-container'></div>");
+    _self.formCon = jQuery("<div class='form-container' style='overflow-y:auto;'></div>");
+    var flowhei = this.winDialog.css("height");
+    _self.formCon.css({"height":flowhei});
     if (_self.miniCard) { //小卡片
     	_self.formCon.css({"margin-bottom":"0"});
     }
