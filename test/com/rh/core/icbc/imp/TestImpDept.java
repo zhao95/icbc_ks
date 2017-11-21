@@ -3,13 +3,12 @@ package com.rh.core.icbc.imp;
 import org.junit.Test;
 
 import com.rh.core.TestEnv;
-import com.rh.core.icbc.imp.target.ImpDept;
 
 public class TestImpDept extends TestEnv {
 
 	@Test
     public void test() {
-		ImpDept impDept = new ImpDept();
+	/*	ImpDept impDept = new ImpDept();*/
 		
 		// 同步组织机构总方法
 //		impDept.recuDept();

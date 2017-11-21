@@ -34,7 +34,6 @@ public class ObtainCert implements IRule {
 		// 报名序列
 		String xl = param.getStr("BM_XL");
 
-		String[] xlArg = null;
 
 		// 报名类别
 //		String lb = param.getStr("BM_LB");
@@ -63,8 +62,6 @@ public class ObtainCert implements IRule {
 			if (thgwCode.equals(xl)) {
 
 				postSql.and("POSTION_QUALIFICATION", "1").andIn("POSTION_SEQUENCE_ID", yxCode, dgCode, xdCode);
-
-				xlArg = new String[] { yxCode, dgCode, xdCode };
 
 			} else {
 
@@ -114,6 +111,7 @@ public class ObtainCert implements IRule {
 	 * @param xl
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private List<Bean> getCertInfo(String lb, String xl) {
 
 		SqlBean sql = new SqlBean();
@@ -128,6 +126,7 @@ public class ObtainCert implements IRule {
 	 * @param xl
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String[] getMkCodes(String lv, String... xl) {
 		String[] mkCodes = new String[100];
 

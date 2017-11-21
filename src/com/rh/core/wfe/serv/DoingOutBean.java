@@ -3,7 +3,9 @@ package com.rh.core.wfe.serv;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
+
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
@@ -487,7 +489,8 @@ public class DoingOutBean extends WfOut {
 	/**
 	 * 增加固定意见定义
 	 */
-    private void addMindRegular() {
+    @SuppressWarnings("unused")
+	private void addMindRegular() {
         Bean regularMind = null;
         
         // 执行意见类型过滤脚本
@@ -551,6 +554,7 @@ public class DoingOutBean extends WfOut {
 	/**
 	 * 添加最终意见编码Bean
 	 */
+	@SuppressWarnings("unused")
 	private void addMindTerminal() {
 	    final String mindCode = wfAct.getNodeDef().getStr("MIND_TERMINAL");
 	    // 意见类型过滤脚本
@@ -619,6 +623,7 @@ public class DoingOutBean extends WfOut {
 	/**
 	 * 添加开始处理文件 按钮
 	 */
+	@SuppressWarnings("unused")
 	private void addDuZhanBtn() {
 		Bean duzhanBtn = this.getProcServDefAct(WfBtnConstant.BUTTON_DUZHAN);
 		this.addBtnBean(duzhanBtn);

@@ -2,18 +2,13 @@ package com.rh.core.base.start.impl;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.sql.DataSource;
 
-import com.rh.core.base.Bean;
 import com.rh.core.base.BaseContext;
-import com.rh.core.base.BaseContext.DB_TYPE;
-import com.rh.core.base.BaseContext.DS;
 
 
 

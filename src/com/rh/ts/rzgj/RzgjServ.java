@@ -71,8 +71,6 @@ public class RzgjServ extends CommonServ {
             }
             data.set("typeName", typeName);
 
-            String CERT_ID = data.getStr("CERT_ID");
-            Integer QUALFY_STAT = data.getInt("QUALFY_STAT");//证书状态
             //有效日期
             String BGN_DATE = data.getStr("BGN_DATE");//起始有效日期
             String END_DATE = data.getStr("END_DATE");//结束有效日期

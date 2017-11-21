@@ -17,13 +17,11 @@ import com.rh.core.base.BaseContext.DS;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.comm.FileMgr;
 import com.rh.core.comm.FileStorage;
-import com.rh.core.serv.ServDao;
 import com.rh.core.util.scheduler.RhJobContext;
 import com.rh.core.util.scheduler.RhLocalJob;
 
 public class SystemMonitor extends RhLocalJob {
 	private static Logger log = Logger.getLogger(SystemMonitor.class);
-	private static String serv_Id = "CC_SYSTEM_MONITOR_RECORD";
 	private List<Bean> lbeans = new ArrayList<Bean>();
 	/**
 	 * Quartz requires a public empty constructor so that the scheduler can

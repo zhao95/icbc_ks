@@ -40,7 +40,7 @@ public class UserMgr {
     /** 用户菜单缓存类型 */
     private static final String CACHE_TYPE_USER_MENU = "SY_ORG_USER__MENU";
     /** 用户变量缓存类型 */
-    private static final String CACHE_TYPE_USER_VAR = "SY_ORG_USER__VAR";
+    /*private static final String CACHE_TYPE_USER_VAR = "SY_ORG_USER__VAR";*/
 
     private static final String TBL_SY_ORG_USER_RELATION = "SY_ORG_USER_RELATION";
 

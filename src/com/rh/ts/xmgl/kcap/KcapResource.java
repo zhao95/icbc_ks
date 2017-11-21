@@ -475,6 +475,7 @@ public class KcapResource {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void loadBranch() {
 
 		for (Object key : kcBean.keySet()) { // 所有机构下的考场bean

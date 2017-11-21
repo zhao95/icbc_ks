@@ -1,19 +1,7 @@
 package com.rh.core.icbc.basedata.task;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.rh.core.base.Bean;
-import com.rh.core.base.db.Transaction;
-import com.rh.core.comm.ConfMgr;
 import com.rh.core.icbc.basedata.AbstractTipTask;
-import com.rh.core.serv.ParamBean;
-import com.rh.core.serv.ServDao;
 
 public class KSTipZKZTask extends AbstractTipTask {
 

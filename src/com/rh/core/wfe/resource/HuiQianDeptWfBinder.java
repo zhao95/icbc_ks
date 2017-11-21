@@ -6,7 +6,6 @@ import java.util.List;
 import com.rh.core.base.Bean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.RoleMgr;
-import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;

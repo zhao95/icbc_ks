@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,6 +20,7 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+
 import com.rh.core.base.Bean;
 import com.rh.core.util.JsonUtils;
 import com.rh.core.util.i18n.Language;
@@ -121,6 +123,7 @@ public class WfeFigure {
 	/**
 	 * 生成可以用于显示流程跟踪的XML文件
 	 */
+	@SuppressWarnings("deprecation")
 	public void doParseXML() {
 		ByteArrayInputStream inputStream;
 		try {
@@ -172,6 +175,7 @@ public class WfeFigure {
 
 			// 遍历节点，设置中英文
 			if (Language.isEn()) {
+				@SuppressWarnings("unchecked")
 				List<Element> FigureList = doc.selectNodes("//ADDFLOW/Figure");
 				if (FigureList != null && FigureList.size() > 0) {
 					for (Element figure : FigureList) {

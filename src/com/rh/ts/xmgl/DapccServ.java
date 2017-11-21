@@ -13,6 +13,7 @@ import com.rh.core.util.Constant;
 import com.rh.core.util.DateUtils;
 import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.TsConstant;
+
 import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
@@ -110,8 +111,10 @@ public class DapccServ extends CommonServ {
 //        configMap.put("searchKsTime", "CAST(BM_KS_TIME as SIGNED) < ?");
 //        configMap.put("searchBmCount", "count = ?");
 
-        List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
-        List<Object> values = (List<Object>) extWhereSqlData.get(1);
+        @SuppressWarnings("rawtypes")
+		List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
+        @SuppressWarnings("unchecked")
+		List<Object> values = (List<Object>) extWhereSqlData.get(1);
         String whereSql = (String) extWhereSqlData.get(0);
 
         //查找借考考生数据
@@ -215,7 +218,7 @@ public class DapccServ extends CommonServ {
      * @param configMap :{"XM_ID", "XM_ID = ?","searchName", "USER_NAME like ?"}
      * @return List  0;whereSql 1:values
      */
-    private List getExtWhereSqlData(ParamBean paramBean, Map<String, String> configMap) {
+    private List<Object> getExtWhereSqlData(ParamBean paramBean, Map<String, String> configMap) {
         StringBuilder whereSql = new StringBuilder(/*"where "*/);
         List<Object> values = new ArrayList<Object>();
         for (Map.Entry<String, String> entry : configMap.entrySet()) {
@@ -233,7 +236,7 @@ public class DapccServ extends CommonServ {
                 values.add(value);
             }
         }
-        List result = new ArrayList();
+        List<Object> result = new ArrayList<Object>();
         result.add(whereSql.toString());
         result.add(values);
         return result;
@@ -712,10 +715,10 @@ public class DapccServ extends CommonServ {
      */
     public OutBean getDeptKcCount(ParamBean paramBean) {
         OutBean outBean = new OutBean();
-        String kcIdStr = paramBean.getStr("KC_ID");
+      /*  String kcIdStr = paramBean.getStr("KC_ID");
         String[] split = kcIdStr.split(",");
 //        bean
-
+*/
         return outBean;
     }
 }

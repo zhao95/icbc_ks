@@ -1,13 +1,9 @@
 package com.rh.core.comm;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import org.junit.Test;
 
 import com.rh.core.TestEnv;
-import com.rh.core.base.Bean;
 
 public class TestFileMgr extends TestEnv {
 	

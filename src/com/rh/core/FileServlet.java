@@ -751,7 +751,6 @@ public class FileServlet extends HttpServlet {
      * @throws IOException
      */
     private Bean cropImg(HttpServletRequest request, Bean paramBean, Bean fileBean) throws IOException {
-        String imgType = fileBean.getStr("FILE_MTYPE");
         int x1 = paramBean.getInt("x1");
         int y1 = paramBean.getInt("y1");
         int width = paramBean.getInt("width");

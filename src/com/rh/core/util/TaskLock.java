@@ -111,7 +111,8 @@ public class TaskLock {
      * @param path 文件路径
      * @return 是否可以移除锁文件
      */
-    private boolean canRemove(String path) {
+    @SuppressWarnings("unused")
+	private boolean canRemove(String path) {
         String time = System.getProperty(BEGIN_TIME, "");
         long jvmLastModified = 0;
         if (time.length() == 0) {

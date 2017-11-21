@@ -26,7 +26,6 @@ import com.rh.core.util.scheduler.SchedulerMgr;
 public class SchedTriggerServ extends SchedBaseServ {
 
 	/** current servid **/
-	private static final String CURRENT_SERVICE = "SY_COMM_SCHED_TRIGGER";
 
 	private static IScheduler scheduler = SchedulerMgr.getGlobalScheduler();
 

@@ -108,6 +108,7 @@ public class OrderOptServ extends CommonServ{
 	 * @param standLen 标准长度
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String handleNumLen(int num, int standLen){
 		StringBuffer buffer = new StringBuffer("");
 		String numStr = String.valueOf(num);

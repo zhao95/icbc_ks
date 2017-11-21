@@ -970,9 +970,6 @@ public class StayServ extends CommonServ {
 					dept_code=user.getStr("ODEPT_CODE");
 				}
 				dept_code = dept_code.substring(0,10);
-				List<Bean> list =  new ArrayList<Bean>();
-				List<Bean> list1 = new ArrayList<Bean>();
-				List<Bean> list2 = new ArrayList<Bean>();
 				String compycode = user.getCmpyCode();
 				if("belong".equals(xianei)){
 					
@@ -1007,12 +1004,7 @@ public class StayServ extends CommonServ {
 				if(!"".equals(deptcodes)){
 					deptcodes=deptcodes.substring(0, deptcodes.length()-1)+"";
 				}
-		String deptwhere = "AND S_DEPT IN ("+deptcodes+") AND XM_ID='"+xmid+"'";
 		//根据审核  机构 匹配当前机构下的所有人
-		String where1 = deptwhere;
-		 list = ServDao.finds("TS_BMSH_STAY", where1);
-		 list1 = ServDao.finds("TS_BMSH_PASS", where1);
-		 list2 = ServDao.finds("TS_BMSH_NOPASS", where1);
 		}else{
 			//自己所在机构以下的所有数据
 			//管理员以下的所有机构
