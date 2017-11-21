@@ -12,7 +12,6 @@ import java.util.List;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.icbc.ctp.utility.StringUtil;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
@@ -279,6 +278,9 @@ public class XmglServ extends CommonServ {
 		OutBean act = ServMgr.act("TS_BM_GROUP_USER", "getBmGroupCodes", param1);
 		String qz = act.getStr("qzcodes");
 
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String datestr = sdf.format(date);
 		// 如果查询本人所在机构 是否 在 某个群组下
 		/*String whereqz = "AND G_TYPE=2";
 		List<Bean> finds = ServDao.finds("TS_BM_GROUP_DEPT", whereqz);*/
@@ -286,7 +288,7 @@ public class XmglServ extends CommonServ {
 		String sql = "SELECT g_id FROM (SELECT DISTINCT`t`.`G_ID`"+
 		"AS `g_id`,`b`.`CODE_PATH` AS `code_path` "
 		+ "FROM `ts_bm_group_user_dept` `t` LEFT JOIN `sy_org_dept` `b` ON `t`.`USER_DEPT_CODE` = `b`.`DEPT_CODE`"
-          +"AND `t`.`G_TYPE` = 2) a WHERE '"+odeptcode+"' IN(SELECT dept_code FROM sy_org_dept WHERE code_path LIKE concat(a.`code_path`,'%'))";
+          +"AND `t`.`G_TYPE` = 2) a WHERE '"+odeptcode+"' IN(SELECT dept_code FROM sy_org_dept WHERE code_path LIKE concat(a.`code_path`,'%')) AND G_ID IN(SELECT G_ID FROM TS_BM_GROUP WHERE '"+datestr+"' between G_DEAD_BEGIN and G_DEAD_END)";
 		/*for (Bean bean : finds) {
 			String str = bean.getStr("USER_DEPT_CODE");// 机构编码
 			if("".equals(str)){
@@ -328,7 +330,7 @@ public class XmglServ extends CommonServ {
 			qz = Strings.removeSame(qz);
 		}
 		String[] qzArray1 = qz.split(",");
-		for (String string : qzArray1) {
+		/*for (String string : qzArray1) {
 			if (!"".equals(string)) {
 				Bean find = ServDao.find("TS_BM_GROUP", string);
 				if (find != null) {
@@ -348,10 +350,7 @@ public class XmglServ extends CommonServ {
 
 				}
 			}
-		}
-		Date date  = new Date();
-		SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String datestr = simp.format(date);
+		}*/
 		String sql1 = "select * from ts_xmgl where xm_id in(SELECT XM_ID FROM TS_XMGL_BMGL WHERE '"+datestr+"' BETWEEN BM_TZ_START AND BM_TZ_END)";
 		List<Bean> list = Transaction.getExecutor().query(sql1);
 		/*String s = "";
@@ -381,6 +380,7 @@ public class XmglServ extends CommonServ {
 					if (Arrays.asList(codeArray).contains(qzArray1[b])) {
 						if ("1".equals(bean.getStr("XM_STATE"))) {
 							lastlist.add(bean);
+							break;
 						}
 					}
 				}

@@ -237,16 +237,9 @@
 		</div>
 		</div>
     </div>	
-	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
-	<!-- FastClick -->
-	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
-	<!-- AdminLTE App -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>
-	<!-- AdminLTE for demo purposes -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
 	<script type="text/javascript">
 		function fanhui(){
 			window.history.go(-1);

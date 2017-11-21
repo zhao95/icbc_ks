@@ -52,15 +52,14 @@ function xminfoshow(){
 	function checky(){
 		//加载状态为complete时移除loading效果
 		var param = {};
-		var bminfo={};
+		var bminfo={};//将bminfo放入param中  
 		bminfo['XM_ID'] = xm_id;
 		bminfo['BM_CODE'] = user_code;
 		bminfo['BM_STARTDATE'] = bm_start;
 		bminfo['BM_ENDDATE'] = bm_end;
-// 		xkArg.push(yk);
 		var neAry=xkArg;
 		if(yk.ID){
-			neAry=xkArg.concat(yk);	
+			neAry=xkArg.concat(yk);	//yk为考试参数   放入数组中
 		}
 		//数组去重
 		for(var i=0; i < neAry.length; i++) {
@@ -76,7 +75,7 @@ function xminfoshow(){
 			return;
 		}
 		var checkeddata = [];
-		for(var m=0;m<checkArray.length;m++){
+		for(var m=0;m<checkArray.length;m++){//匹配选中的考试
 			for(var n=0;n<neAry.length;n++){
 			var length= $($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("div").length;
 			if(length<2){
@@ -87,13 +86,14 @@ function xminfoshow(){
 			}
 			}
 		}
+		
 		if(checkeddata.length==0){
 			return;
 		}
 			param['BM_INFO'] = JSON.stringify(bminfo);
 			param['BM_LIST'] = JSON.stringify(checkeddata);
-			//已报名的考试
-			var parambm = {};
+		
+			var parambm = {};	//已报名的考试
 			parambm["user_code"]=user_code;
 			parambm["xmid"]=xm_id;
 			var results = FireFly.doAct("TS_BMLB_BM","getBmData",parambm);
@@ -101,38 +101,38 @@ function xminfoshow(){
     		yzgz=data;
     		//获取后台传过来的key
          	for(var i=0;i<checkeddata.length;i++){
-         		var a=checkeddata[i].ID;
-         		var b = checkeddata[i].BM_XL;
-         		if(data.none=="true"){
+         		
+         		var a=checkeddata[i].ID;//当前报考考试id
+         		var bm_xl = checkeddata[i].BM_XL;//序列互斥
+         		
+         		if(data.none=="true"){//如果没有引用规则的话 直接通过
+         			
          			$("#"+a).append('<div style="height:5px;"></div>');
          			$("#"+a).append('<div style="height:5px;"></div>');
          			$("#"+a).append('<div style="height:5px;"></div>');
          			var yzjg=a+"yzjg";
          			$("#"+yzjg).append("审核通过");
+         			
          		}else{
-             	//获取验证规则div的id
-       			//获取验证结果div的id
-             	var yzjg=a+"yzjg";
-       			var dataArray =data[a];
-            	//获取div对应的数组
-       			//append内容之前判断是否有内容
-       			var divtext1 = $("#"+a).html();
-       			if(divtext1==null||divtext1.length==0){
+         			
+             	var yzjg=a+"yzjg";//获取验证规则div的id
+       			var dataArray =data[a];	//获取验证结果div的id
+       			var divtext1 = $("#"+a).html();//获取div对应的数组
+       			
+       			if(divtext1==null||divtext1.length==0){//append内容之前判断是否有内容
        				var shArray=true;
        				var shs = true;
-       				//判断此考试是否已报名  如果已报名审核通过 必须删除 才能提交\
-//       				debugger;
-       					var resdata = results.list;
-       					var FLAG = false;
-       					var xlflag=false; 
-       					var xlcode = "";
+       				var FLAG = false;//相同考试标志
+       				var xlflag = false; //相同序列互斥标志
+       				var xlcode = "";	//记录当前考试的序列编码
+       				var resdata = results.list;//已报名的数据
        				for(var z=0;z<resdata.length;z++){
        					if(resdata[z].KSLBK_ID==a){
+       						//判断此考试是否已报名  如果已报名审核通过 必须删除 才能提交
        						xlcode=resdata[z].BM_XL_CODE;
        						FLAG = true;
-       						
        					}
-       					if(resdata[z].BM_XL_CODE==b){
+       					if(resdata[z].BM_XL_CODE==bm_xl){
        						//本序列 只能报名一个
        						xlflag = true;
        					}
@@ -149,7 +149,7 @@ function xminfoshow(){
        					continue;
        				}
        				if(xlflag){
-       					if(b==STATION_NO_CODE){
+       					if(bm_xl==STATION_NO_CODE){
        						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">本序列只能报考一个,请撤销再提交或请选择其它考试</div>');
        						$("#"+yzjg).append("审核不通过");
        					}else{

@@ -549,13 +549,6 @@ if(userBean != null) {
 	<script src="<%=CONTEXT_PATH%>/ts/js/jquery.iframe-transport.js"></script> 
 	<script src="<%=CONTEXT_PATH%>/ts/js/jquery.ui.widget.js"></script> 
 	<script src="<%=CONTEXT_PATH%>/ts/js/jquery.fileupload.js"></script>
-	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
-	<!-- FastClick -->
-	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
-	<!-- AdminLTE App -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>
-	<!-- AdminLTE for demo purposes -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
 
 </body>
 </html>
