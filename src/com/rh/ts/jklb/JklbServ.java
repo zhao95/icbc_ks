@@ -227,6 +227,8 @@ public class JklbServ extends CommonServ {
                     //借考已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
                     String jkKsname = jkbean.getStr("JK_KSNAME");
                     String[] bmIds = jkKsname.split(",");
+                    StringBuilder shIdStr = new StringBuilder();
+                    List<Object> values = new ArrayList<Object>();
                     for (String bmId : bmIds) {
                         ParamBean queryParamBean = new ParamBean();
                         queryParamBean.set("BM_ID", bmId);
@@ -241,7 +243,17 @@ public class JklbServ extends CommonServ {
                         }
                         bean.set("JK_ODEPT", jkbean.getStr("JK_YJFH"));
                         ServDao.update(TS_BMSH_PASS_SERVID, bean);
+                        //shIdStr
+                        String shId = bean.getStr("SH_ID");
+                        shIdStr.append("?,");
+                        values.add(shId);
                     }
+
+                    //借考通过，删除已安排的座位信息
+                    Bean whereBean = new Bean();
+                    whereBean.set(Constant.PARAM_WHERE, " and SH_ID in(" + shIdStr.substring(0, shIdStr.length() - 1) + ")");
+                    whereBean.set(Constant.PARAM_PRE_VALUES, values);
+                    ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean);
                 }
 
                 if ("1".equals(jk_status)) {
