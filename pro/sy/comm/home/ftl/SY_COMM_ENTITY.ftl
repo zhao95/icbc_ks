@@ -39,7 +39,7 @@ $("#qjbach").click(function(){
 <tr style="background:f4fbff;height:30px;color:#999999"><td width="5%" align="center">序号</td><td width="35%" align="center">名称</td><td width="15%" align="center">审核开始时间</td><td width="15%" align="center">审核截止日期</td><td width="15%" align="center">状态</td><td width="15%" align="center">操作</td></tr>
 
 </table>
-<form id="tiaozhuanform" target="_blank" style="display:none" method="post" action="/qt/jsp/todo.jsp">
+<form id="tiaozhuanform" target="_blank" style="display:none" method="post" action="/ts/jsp/qjlb_qj2.jsp">
 <input id="todoId" name ="todoId" />
 <input id="qjid" name ="qjid" />
 <input id="hidden" name ="hidden" />

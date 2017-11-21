@@ -163,6 +163,10 @@ public class XmglszServ extends CommonServ {
 				}
 			}
 			}
+			if(flag==true){
+				flag = false;
+				break;
+			}
 			//部门
 			List<Bean> deptList = ServDao.finds("TS_BM_GROUP_USER", "AND G_ID='"+groupId+"' AND G_TYPE='2' GROUP BY USER_DEPT_CODE");
 			for (Bean bean4 : deptList) {
