@@ -56,3 +56,11 @@ function openMyCard(dataId,readOnly,showTab){
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
 }
+
+//如果父页面是只读的，则隐藏编辑行按钮
+if(_viewer.getParHandler().opts.readOnly){
+	$("a#TS_KCGL_IPSCOPE_edit").hide();
+}
+
+
+
