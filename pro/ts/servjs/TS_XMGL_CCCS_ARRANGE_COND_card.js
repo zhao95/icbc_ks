@@ -5,7 +5,7 @@ $("#TS_XMGL_CCCS_ARRANGE_COND-save").css("right",300);
 var xmId = _viewer.getParHandler().getParHandler().getPKCode();
 
 _viewer.getBtn("ok").click(function(){
-	var sum=_viewer.getItem("CONF_SUM").getValue();debugger;//场次总数
+	var sum=_viewer.getItem("CONF_SUM").getValue();//场次总数
 	var date = _viewer.getItem("CONF_DATE").getValue();//日期
 	var am_time = _viewer.getItem("CONF_AM_TIME").getValue();//开始时间（上午）
 	var am_inter = _viewer.getItem("CONF_AM_INTER").getValue();//间隔（分钟）
@@ -34,6 +34,51 @@ _viewer.getBtn("ok").click(function(){
 		alert("场次数不匹配");
 		return false;
 	}
+	//上午判断如果开始时间有，场次有，时长为空
+	var amTimes = am_info.replace(/，/g, ",");
+	if(am_time != "" &&  am_num !="" && amTimes=="" ){
+	
+			alert("请正确匹配场次数和时长段");
+			return false;
+		
+	}
+	if(am_time != "" &&  am_num !="" && amTimes!=""){
+	var amTimesNum = amTimes.split(",").length;
+	if(am_num !=amTimesNum){
+		alert("请正确匹配场次数和时长段");
+		return false;
+	}
+	}
+	//中午判断如果开始时间有，场次有，时长为空
+	var pmTimes = pm_info.replace(/，/g, ",");
+	if(pm_time != "" &&  pm_num !="" && pmTimes=="" ){
+	
+			alert("请正确匹配场次数和时长段");
+			return false;
+		
+	}
+	if(pm_time != "" &&  pm_num !="" && pmTimes!=""){
+	var pmTimesNum = pmTimes.split(",").length;
+	if(pm_num !=pmTimesNum){
+		alert("请正确匹配场次数和时长段");
+		return false;
+	}
+	}
+	//晚上判断如果开始时间有，场次有，时长为空
+	var nmTimes = nm_info.replace(/，/g, ",");
+	if(nm_time != "" &&  nm_num !="" && nmTimes=="" ){
+	
+			alert("请正确匹配场次数和时长段");
+			return false;
+		
+	}
+	if(nm_time != "" &&  nm_num !="" && nmTimes!=""){
+	var nmTimesNum = nmTimes.split(",").length;
+	if(nm_num !=nmTimesNum){
+		alert("请正确匹配场次数和时长段");
+		return false;
+	}
+	}
 	if(am_time != "" && am_inter != "" &&  am_num!= "" && am_info != ""){//am_inter != "" &&
 		am_info = am_info.replace(/，/g, ",");
 		js(date,am_time,am_inter,am_num,am_info);//	日期、开始时间、间隔、场次数、时长
@@ -53,7 +98,7 @@ _viewer.getBtn("close").click(function(){
 	_viewer.backA.mousedown();
 });
 
-function js(date,time,inter,num,info){debugger;
+function js(date,time,inter,num,info){
 	info = info.replace(/，/g, ",");
 	var info_num = info.split(",").length;//
 	var start = date + " " +time;
@@ -97,7 +142,7 @@ function js(date,time,inter,num,info){debugger;
 //	alert("条件输入不正确");
 //}
 //}
-function getCc(){debugger;
+function getCc(){
 	var resData = FireFly.doAct("TS_XMGL_CCCS_ARRANGE", "finds", {"_SELECT_":"max(ARR_CC) ARR_CC","_WHERE_":"and xm_id='"+xmId+"'"}, false);	
 	if(resData._DATA_.length != 0){
 		var max = resData._DATA_[0].ARR_CC - 0 + 1;
@@ -112,7 +157,7 @@ function getCc(){debugger;
  * @param b 分钟
  * @returns
  */
-function addMin(a,b){debugger;
+function addMin(a,b){
 	
 	b = parseInt(b);
 	var atime = a.replace(/-/g, "/");
