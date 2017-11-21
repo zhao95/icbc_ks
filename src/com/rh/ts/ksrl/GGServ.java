@@ -31,26 +31,28 @@ public class GGServ  extends CommonServ{
 	}
 	/**
 	 * 前台按钮根据用户的信息判断是否可见方法
-	 * 
+	 * 返回值为 1 可见  2 不可见 
 	 * @return
 	 */
 	public OutBean btnRoleFun(){
 		OutBean outBean = new OutBean();
 		UserBean userBean = Context.getUserBean();
 		String userCode = userBean.getCode();
+		String userLoginName = userBean.getLoginName();
 		Bean userPvlgToHT = RoleUtil.getPvlgRole(userCode,"TS_QT_HT");
 		Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_QT_HT_PVLG");
 		String userPvlgToHT_Flag = userPvlgToHTBean.getStr("show");
 		if(userPvlgToHT_Flag!=""){
-			if(userPvlgToHTBean.getStr("show").equals("0")){
-				outBean.set("hasRole", "2");
-			}else{
+			if(userCode.equals("admin")|| userLoginName.equals("admin")){
 				outBean.set("hasRole", "1");
+			}else{
+				if(userPvlgToHTBean.getStr("show").equals("0")){
+					outBean.set("hasRole", "2");
+				}else{
+					outBean.set("hasRole", "1");
+				}
 			}
 		}
 		return outBean;
-		
 	}
-	
-	
 }
