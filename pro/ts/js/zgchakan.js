@@ -7,12 +7,10 @@ function init(){
 	var result = FireFly.doAct("TS_BMLB_BM","getShowData",param);
 	var result1 = FireFly.doAct("TS_BMLB_BM","getZdYzxx",param);
 	var dataArray = result1.yzxx;
-	
 	if(dataArray!=""){
 		dataArray=dataArray.replace(/'/g, '"');  
 		dataArray=JSON.parse(dataArray);
 	}
-	
 	//项目名称
 	var xmname = result.xmname;
 	//开始结束时间
@@ -23,7 +21,7 @@ function init(){
 	$("#xmname").html(xmname);
 	$("#bmtime").html("报名时间："+xm_state+"~~"+xm_end);
 	$("#ksxzs").html(ksxz);
-	$("#user_mobile1").html(result.bmbean.BM_PHONE);
+	$("#user_mobile1").html(result.phone);
 		 var jb = "";
 		 var lbname = result.bmbean.BM_LB;
 		 var  xlname= result.bmbean.BM_XL

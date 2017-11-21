@@ -209,7 +209,7 @@ if(userBean != null) {
 		</div>
 		<div class="tab-pane fade"  id="tab2">
 		    <div
-				style="margin-top: -5px; margin-left: 40%; height: 5px; width: 20%; background-color: LightSeaGreen"></div>
+				style="margin-top: -6px; margin-left: 40%; height: 5px; width: 20%; background-color: LightSeaGreen"></div>
 				<div id="cuxian2"
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">审核通过人员</span>
@@ -228,14 +228,14 @@ if(userBean != null) {
 				            <option value="全部" selected="selected">全部</option>
 				            <option value="1">自动</option>
 				            <option value="2">手动</option>
-				            </select></td>
+				            </select>&nbsp;&nbsp;</td>
 						<td style="width:1%;text-align:left"><select id = "zhuangtai1">
 				            <option selected="selected">全部</option>
 				            <option value="进行中">进行中</option>
 				            <option value="已结束">已结束</option>
 				            </select>
 				        </td>
-				        <td style="width:8%;text-align:left"><button id="check2" class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(2)"id = "chaxun">查询</button></td>
+				        <td style="width:8%;text-align:left">&nbsp;&nbsp;<button id="check2" class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(2)"id = "chaxun">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
@@ -281,7 +281,7 @@ if(userBean != null) {
 		</div>
 		<div class="tab-pane fade"  id="tab3">
 		<div
-				style="margin-top: -5px; margin-left: 73%; height: 5px; width: 20%; background-color: LightSeaGreen"></div>
+				style="margin-top: -6px; margin-left: 73%; height: 5px; width: 20%; background-color: LightSeaGreen"></div>
 				<div id="cuxian3"
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">审核不通过人员</span>
@@ -299,14 +299,14 @@ if(userBean != null) {
 				            <option value="全部" selected="selected">全部</option>
 				            <option value="1">自动</option>
 				            <option value="2">手动</option>
-				            </select></td>
+				            </select>&nbsp;&nbsp;</td>
 						<td style="width:1%;text-align:left"><select id = "zhuangtai2">
 				            <option selected="selected">全部</option>
 				            <option value="进行中">进行中</option>
 				            <option value="已结束">已结束</option>
 				            </select>
 				        </td>
-				        <td style="width:8%;text-align:left"><button id="check3" class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(3)"id = "chaxun">查询</button></td>
+				        <td style="width:8%;text-align:left">&nbsp;&nbsp;<button id="check3" class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(3)"id = "chaxun">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">

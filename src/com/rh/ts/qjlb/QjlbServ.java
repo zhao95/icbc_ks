@@ -233,7 +233,7 @@ public class QjlbServ extends CommonServ {
                         //TS_QJ_RESULT_TIP 请假结果提醒语
                         String qjResultMsg = ConfMgr.getConf("TS_QJ_RESULT_TIP", "您的请假申请，有了审批结果，可登录工商银行考试查看。");
                         String qjTitle = qjbean.getStr("QJ_TITLE");
-                        String qjResult = (Objects.equals(qj_status, "2")) ? "通过" : "不通过";
+                        String qjResult = ("2".equals(qj_status)) ? "通过" : "不通过";
                         qjResultMsg = qjResultMsg
                                 .replaceAll("#QJ_TITLE#", qjTitle)
                                 .replaceAll("#QJ_RESULT#", qjResult);

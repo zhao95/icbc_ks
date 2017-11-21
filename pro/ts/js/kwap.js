@@ -232,7 +232,11 @@ function initData(xmId) {
         handles: 's',
         maxHeight: 700,
         minHeight: 290,
-        alsoResize: '#ksOrgTreeContent,#ksContent'
+        alsoResize: '#ksOrgTreeContent,#ksContent',
+        stop: function (/*event, ui*/) {
+            $("#topContent").css("width", "");
+            $("#ksContent").css("width", "");
+        }
     });
     HeaderBtn.initData(xmId);
     ZdfpccModal.initData(xmId);
@@ -319,6 +323,7 @@ var HeaderBtn = {
         $("#updatecc").removeClass('rh-icon-disable').addClass('rh-icon');
         $("#tjccap").removeClass('rh-icon-disable').addClass('rh-icon');
         $("#publish").removeClass('rh-icon-disable').addClass('rh-icon');
+        $("#clearYapzw").removeClass('rh-icon-disable').addClass('rh-icon');
 
         $("#zdfpcc").click(function () {
             $('#zdfpccModal').modal({backdrop: false, show: true});
@@ -456,7 +461,7 @@ var HeaderBtn = {
 
         function sidebarFunction() {
             var $mainSidebar = $('.main-sidebar');
-            var $i = $(this).find('i');
+            var $i = $('#toggle-sidebar').find('i');
             if ($mainSidebar.width() < 20) {
                 //收缩状态
                 $('.content-wrapper').animate({marginLeft: "250px"}, speed);
@@ -482,8 +487,12 @@ var HeaderBtn = {
         });
 
         $("#maximize").click(function () {
-            sidebarFunction();
+            var $mainSidebar = $('.main-sidebar');
             if ($(this).find('img').attr('src').indexOf('maximize') > 0) {
+                if ($mainSidebar.width() >= 20) {
+                    sidebarFunction();
+                }
+
                 $(this).find('img').attr('src', FireFly.getContextPath() + '/ts/image/fit-size.png');
 
                 var number = document.documentElement.clientHeight - 127;
@@ -495,9 +504,13 @@ var HeaderBtn = {
                     $('#bottom-content').css('display', 'none');
                 });
             } else {
+                if ($mainSidebar.width() < 20) {
+                    sidebarFunction();
+                }
+                var topHeight = $('#topContent').height() - 45;
                 $(this).find('img').attr('src', FireFly.getContextPath() + '/ts/image/maximize.png');
-                $('#ksOrgTreeContent').animate({height: '255px'}, speed);
-                $('#ksContent').animate({height: '255px'}, speed, function () {
+                $('#ksOrgTreeContent').animate({height: topHeight + 'px'}, speed);
+                $('#ksContent').animate({height: topHeight + 'px'}, speed, function () {
                     $('#bottom-content').css('display', 'block');
                 });
             }
@@ -954,7 +967,6 @@ var SubmissionArrangementModal = {
         $('#totalCount').html(data.totalCount);
         $('#hasCount').html(data.hasCount);
         $('#noCount').html(data.noCount);
-        debugger;
         for (var i = 0; i < dataList.length; i++) {
             var item = dataList[i];
             $arrangementTbody.append([
@@ -1305,6 +1317,7 @@ var KcObject = {
                 self.currentCc = null;
                 KsObject.reloadKsOrgTip();
                 if (parent === '#') {
+                    self.setOrgKcInfo(data.node.data.DEPT_CODE);
                     // self.setKcArrInfo(self.kcArr);
                 } else {
                     self.setOrgKcInfo(data.node.data.DEPT_CODE);
@@ -1436,13 +1449,13 @@ var KcObject = {
             '<span style="color:#12769C;">当前考场及场次：</span>',
             '考场数:<span id="kcCount" class="tip-white">' + kcArr.length + '</span>&nbsp;',
             '场次数：<span id="ccCount" class="tip-white">' + ccCount + '</span>&nbsp;',
-            '考生数：<span id="ksCount" class="tip-white">800</span>&nbsp;',
-            '（借入：<span id="jieruCount" class="tip-white">3</span>&nbsp;',
-            '借出：<span id="jiechuCount" class="tip-white">2</span>&nbsp;',
-            '请假：<span id="qjCount" class="tip-white">1</span>）',
             '已安排：<span id="yapCount" class="tip-white">' + yapTotalCount + '</span>'
         ].join(''));
-
+        /*
+         '考生数：<span id="ksCount" class="tip-white">800</span>&nbsp;',
+         '（借入：<span id="jieruCount" class="tip-white">3</span>&nbsp;',
+         '借出：<span id="jiechuCount" class="tip-white">2</span>&nbsp;',
+         '请假：<span id="qjCount" class="tip-white">1</span>）',*/
 
     },
 
@@ -2119,10 +2132,15 @@ var KsObject = {
         /*else {
          $('#ksOrgTipKsCount').html('');
          }*/
-        this.ksOrgTipInfo = {kcId: kcId, sjId: sjId, count: count, totalCount: totalCount};
-        $('#ksOrgTip').html('[<span class="tip-red" id="ksOrgTipKsCount">' + count + '</span>' +
-            '/' +
-            '<span class="tip-red" id="ksOrgTipKsTotalCount">' + totalCount + '</span>]');
+        if (totalCount === 0) {
+            //考生数为0，不显示
+            $('#ksOrgTip').html('');
+        } else {
+            this.ksOrgTipInfo = {kcId: kcId, sjId: sjId, count: count, totalCount: totalCount};
+            $('#ksOrgTip').html('[<span class="tip-red" id="ksOrgTipKsCount">' + count + '</span>' +
+                '/' +
+                '<span class="tip-red" id="ksOrgTipKsTotalCount">' + totalCount + '</span>]');
+        }
         //ksOrgTipKsCount   ksOrgTipKsTotalCount
     },
 

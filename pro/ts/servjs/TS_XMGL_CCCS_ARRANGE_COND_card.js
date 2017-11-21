@@ -34,15 +34,15 @@ _viewer.getBtn("ok").click(function(){
 		alert("场次数不匹配");
 		return false;
 	}
-	if(am_time != "" &&  am_num!= "" && am_info != ""){//am_inter != "" &&
+	if(am_time != "" && am_inter != "" &&  am_num!= "" && am_info != ""){//am_inter != "" &&
 		am_info = am_info.replace(/，/g, ",");
 		js(date,am_time,am_inter,am_num,am_info);//	日期、开始时间、间隔、场次数、时长
 	}
-	if(pm_time != "" &&  pm_num!= "" && pm_info != ""){//pm_inter != "" &&
+	if(pm_time != "" && am_inter != "" &&  pm_num!= "" && pm_info != ""){//pm_inter != "" &&
 		pm_info = pm_info.replace(/，/g, ",");
 		js(date,pm_time,pm_inter,pm_num,pm_info);
 	}
-	if(nm_time != "" &&  nm_num!= "" && nm_info != ""){//nm_inter != "" &&
+	if(nm_time != "" && am_inter != "" &&  nm_num!= "" && nm_info != ""){//nm_inter != "" &&
 		nm_info = nm_info.replace(/，/g, ",");
 		js(date,nm_time,nm_inter,nm_num,nm_info);
 	}

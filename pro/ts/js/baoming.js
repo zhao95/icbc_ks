@@ -31,7 +31,7 @@ function chexiao(i) {
             param = {};
             param["id"] = id;
             var servId = "TS_BMLB_BM";
-            FireFly.doAct(servId, "deletesingle", param);
+          var cxresult =   FireFly.doAct(servId, "cxupdate", param);
             //刷新
             document.getElementById(aid).innerHTML = "已撤销";
         } else {

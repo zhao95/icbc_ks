@@ -249,7 +249,7 @@
         </section>
 
         <section class="content" style="padding:0;background-color: transparent;">
-            <div id="topContent" class="row" style="border-top: 1px solid #bfdfee;margin:0;">
+            <div id="topContent" class="row" style="border-top: 1px solid #bfdfee;margin:0;height: 298px;">
 
                 <div class="col-sm-3"
                      style="padding-left: 0;padding-right: 0;height: 100%;border-right: 1px solid #bfdfee;">
@@ -382,7 +382,7 @@
     </div><!-- /.modal -->
 </div>
 
-<%--查看借考人员  lookJkModal--%>
+<%--各单位场次安排情况  submissionArrangementModal--%>
 <div class="modal" id="submissionArrangementModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
