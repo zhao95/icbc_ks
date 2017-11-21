@@ -135,16 +135,23 @@ public class DapccServ extends CommonServ {
 //                paramBean.set("searchJkCodePath", searchJkCodePath);
             }
         } else {
-            //获取的考生在考场关联机构本级及下级的机构
-//        whereSql += "AND EXISTS (select 'X' from TS_KCGL_GLJG g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
-//        values.add(searchKcId);
-            StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
-            Set<String> hashSet = this.getKcRelateOrgCodeList(searchKcId);
-            for (String s : hashSet) {
-                values.add(s);
-                deptSql.append("INSTR(c.CODE_PATH ,?)>0 or ");
-            }
-            whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
+            //获取的考生 在考场关联机构本级及下级的机构
+            //*EXISTS
+            whereSql += " AND EXISTS (select '' from TS_KCGL_GLJG g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+            values.add(searchKcId);
+
+            //*in
+//            whereSql += " and c.CODE_PATH in(select c.CODE_PATH from TS_KCGL_GLJG g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+//            values.add(searchKcId);
+
+            //*deptSql
+//            StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
+//            Set<String> hashSet = this.getKcRelateOrgCodeList(searchKcId);
+//            for (String s : hashSet) {
+//                values.add(s);
+//                deptSql.append("INSTR(c.CODE_PATH ,?)>0 or ");
+//            }
+//            whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
         }
 //        Pair<String, List<Object>> extWhereSqlData
 

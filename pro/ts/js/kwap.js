@@ -1446,7 +1446,7 @@ var KcObject = {
 
         //kcTip
         $kcTip.append([
-            '<span style="color:#12769C;">当前考场及场次：</span>',
+            '<span style="color:#000;">当前考场及场次：</span>',
             '考场数:<span id="kcCount" class="tip-white">' + kcArr.length + '</span>&nbsp;',
             '场次数：<span id="ccCount" class="tip-white">' + ccCount + '</span>&nbsp;',
             '已安排：<span id="yapCount" class="tip-white">' + yapTotalCount + '</span>'
@@ -1475,7 +1475,7 @@ var KcObject = {
 
         //kcTip
         $kcTip.append([
-            '<span style="color:#12769C;">当前考场及场次：</span>' + kc.KC_NAME,
+            '<span style="color:#000;">当前考场及场次：</span>' + kc.KC_NAME,
         ].join(''));
         KsObject.reloadKsOrgTip();
 
@@ -1534,7 +1534,7 @@ var KcObject = {
 
         //kcTip
         $kcTip.append([
-            '<span style="color:#12769C;">当前考场及场次：</span>',
+            '<span style="color:#000;">当前考场及场次：</span>',
             '' + parentKc.KC_NAME,
             '&nbsp;&nbsp;' + cc.ccTime,
             '&nbsp;最优数：<span id="optimal-number" class="tip-white"></span>',
@@ -1969,13 +1969,15 @@ var KsObject = {
     setKcRelateOrg: function (kcId, sjId) {
         if (this.kcId !== kcId || $('#ksOrgTreeContent').html() === '') {
             this.kcId = kcId;
+            this.sjId = sjId;
             this.setKsOrgContent(kcId);
             this.searchDeptCode = ''; //初始化 机构搜索条件
-            this.search();
         } else if (this.sjId !== sjId) {
+            this.kcId = kcId;
             this.sjId = sjId;
-            this.search();
         }
+        this.search();
+
     },
 
 //     setInitData: function (deptCode) {
@@ -2238,7 +2240,7 @@ var KsObject = {
     },
 
     search: function () {
-        var self = this;
+        // var self = this;
         this.listPage.search();
         //条件  请求  渲染
         // this.getKsArr(null, function () {

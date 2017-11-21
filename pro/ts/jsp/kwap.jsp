@@ -328,7 +328,7 @@
                       <i class="fa fa-angle-down"></i>
                   </button>--%>
                 <div id="kcTip" class="col-sm-12"
-                     style="position: relative;top: 3px;color:#006600;background-color: #7ecba3;padding: 5px 39px 5px 5px;border-top: 1px solid #bfdfee;border-bottom: 1px solid #bfdfee;margin: 0 15px;">
+                     style="position: relative;top: 3px;color:#006600;background-color: #7ec7ba;padding: 5px 39px 5px 5px;border-top: 1px solid #bfdfee;border-bottom: 1px solid #bfdfee;margin: 0 15px;">
 
                 </div>
                 <div class="col-sm-12">
