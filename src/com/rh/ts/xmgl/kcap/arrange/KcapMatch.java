@@ -35,12 +35,12 @@ public class KcapMatch {
 	 * @return Bean 报名考生信息
 	 */
 	public static Bean matchUser(Bean freeZw, Bean ksBean, KcapResource res, boolean isConstrain) {
-		
+
 		if (ksBean == null || ksBean.isEmpty()) {
 
 			return new Bean();
 		}
-		
+
 		Bean busyZwBean = res.getBusyZwBean();
 
 		Bean filtBean = (Bean) ksBean.clone();
@@ -58,22 +58,22 @@ public class KcapMatch {
 				constrainFiltBean = new Bean(filtBean);
 			}
 			int tmpValue = 0;
-			if(key.toString().equals("R001")){
-			    tmpValue = 1;
-			}else if(key.toString().equals("R002")){
-			    tmpValue = 2;
-			}else if(key.toString().equals("R003")){
-			    tmpValue = 3;
-			}else if(key.toString().equals("R004")){
-			    tmpValue = 4;
-			}else if(key.toString().equals("R005")){
-			    tmpValue = 5;
-			}else if(key.toString().equals("R007")){
-			    tmpValue = 7;
-			}else if(key.toString().equals("R008")){
-			    tmpValue = 8;
-			}else if(key.toString().equals("R009")){
-			    tmpValue = 9;
+			if (key.toString().equals("R001")) {
+				tmpValue = 1;
+			} else if (key.toString().equals("R002")) {
+				tmpValue = 2;
+			} else if (key.toString().equals("R003")) {
+				tmpValue = 3;
+			} else if (key.toString().equals("R004")) {
+				tmpValue = 4;
+			} else if (key.toString().equals("R005")) {
+				tmpValue = 5;
+			} else if (key.toString().equals("R007")) {
+				tmpValue = 7;
+			} else if (key.toString().equals("R008")) {
+				tmpValue = 8;
+			} else if (key.toString().equals("R009")) {
+				tmpValue = 9;
 			}
 			switch (tmpValue) {
 
@@ -85,10 +85,26 @@ public class KcapMatch {
 				break;
 			case 2:
 
-				// 同一考生同一场场次连排 (同一考生 同一天 同一考场 同一座位 上一场次)
-				boolean isRtn = filtR002(freeZw, busyZwBean, filtBean);
+				Bean clone = (Bean) filtBean.clone();
 
-				if (isRtn) {
+				// 同一考生同一场场次连排 (同一考生 同一天 同一考场 同一座位 上一场次)
+				Bean rtnBean = filtR002(freeZw, busyZwBean, filtBean);
+
+				if (!rtnBean.isEmpty()) {
+
+					filtBean = (Bean) rtnBean.clone();
+
+					for (Object times : clone.keySet()) {
+
+						log.error("-----场次连排前----------------time:" + times.toString() + ":"
+								+ clone.getBean(times).size());
+					}
+
+					for (Object times : filtBean.keySet()) {
+
+						log.error("-----场次连排后----------------time:" + times.toString() + ":"
+								+ filtBean.getBean(times).size());
+					}
 					break rtnLoop;
 				}
 
@@ -182,7 +198,7 @@ public class KcapMatch {
 
 			if (busyZwKc.containsKey(front)) {
 
-//				log.error("---------前-冲突座位号:" + front + " 当前座位号：" + zwh);
+				// log.error("---------前-冲突座位号:" + front + " 当前座位号：" + zwh);
 				filtR001Ks(filtBean, busyZwKc.getBean(front));
 			}
 
@@ -190,7 +206,7 @@ public class KcapMatch {
 
 			if (busyZwKc.containsKey(back)) {
 
-//				log.error("---------后-冲突座位号:" + back + " 当前座位号：" + zwh);
+				// log.error("---------后-冲突座位号:" + back + " 当前座位号：" + zwh);
 				filtR001Ks(filtBean, busyZwKc.getBean(back));
 			}
 
@@ -198,7 +214,7 @@ public class KcapMatch {
 
 			if (busyZwKc.containsKey(left)) {
 
-//				log.error("---------左-冲突座位号:" + left + " 当前座位号：" + zwh);
+				// log.error("---------左-冲突座位号:" + left + " 当前座位号：" + zwh);
 				filtR001Ks(filtBean, busyZwKc.getBean(left));
 			}
 
@@ -206,7 +222,7 @@ public class KcapMatch {
 
 			if (busyZwKc.containsKey(right)) {
 
-//				log.error("---------右-冲突座位号:" + right + " 当前座位号：" + zwh);
+				// log.error("---------右-冲突座位号:" + right + " 当前座位号：" + zwh);
 				filtR001Ks(filtBean, busyZwKc.getBean(right));
 			}
 
@@ -271,7 +287,8 @@ public class KcapMatch {
 
 						List<Bean> tempkslist = new ArrayList<Bean>();
 
-//						log.error("-----------------开始处理List--共:" + kslist.size() + " 人");
+						// log.error("-----------------开始处理List--共:" +
+						// kslist.size() + " 人");
 
 						for (Bean ks : kslist) {
 
@@ -283,9 +300,10 @@ public class KcapMatch {
 
 							if (xl.equals(xlCode) && mk.equals(mKCode) && lv.equals(lvCode)) {
 
-//								log.error("-----------------移除List--考生:" + ks.getStr("BM_CODE") + "-序列：" + xlCode
-//										+ " 模块：" + mKCode + " 级别：" + lvCode);
-								
+								// log.error("-----------------移除List--考生:" +
+								// ks.getStr("BM_CODE") + "-序列：" + xlCode
+								// + " 模块：" + mKCode + " 级别：" + lvCode);
+
 								isdel = true;
 
 							} else {
@@ -310,11 +328,12 @@ public class KcapMatch {
 
 								filtBean.getBean(time).set(ucode, tempkslist);
 							}
-							
-//							log.error("-----------------结束处理List--保留：" + tempkslist.size());
+
+							// log.error("-----------------结束处理List--保留：" +
+							// tempkslist.size());
 
 						} else {
-//							log.error("-----------------结束处理List--未处理");
+							// log.error("-----------------结束处理List--未处理");
 						}
 
 					}
@@ -324,17 +343,17 @@ public class KcapMatch {
 	}
 
 	/**
-	 * 筛选 同一天 同一考场 上一场次考试的考生 (如果有值)
+	 * 筛选 同一天 同一考场 上一场次考试的考生。 移除 同一天 不同考场 上一场次考试的考生。
 	 * 
 	 * @param freeZw
 	 * @param busyZwBean
 	 * @param filtBean
 	 *            报名考生信息Bean
 	 */
-	private static boolean filtR002(Bean freeZw, Bean busyZwBean, Bean filtBean) {
+	private static Bean filtR002(Bean freeZw, Bean busyZwBean, Bean filtBean) {
 
 		if (filtBean == null || filtBean.isEmpty()) {
-			return false;
+			return new Bean();
 		}
 
 		try {
@@ -345,66 +364,81 @@ public class KcapMatch {
 
 			String date = freeZw.getStr("SJ_DATE"); // 考试日期
 
-			// String zwh = freeZw.getStr("ZW_ZWH_XT"); // 座位号 (行-列)
+			String beforeCcDate = (cc - 1) + "^" + date;
 
-			String beforeKey = kcId + "^" + (cc - 1) + "^" + date;
+			String beforeKcCcDate = kcId + "^" + (cc - 1) + "^" + date;
 
 			Bean filtTemp = new Bean();
 
-			for (Object key : busyZwBean.keySet()) {
+			Bean userBean = new Bean();
 
-				if (beforeKey.equals(key.toString())) { // 同一天 同一考场 上一场次的安排
+			if (busyZwBean.containsKey(beforeKcCcDate)) {
 
-					try {
+				Bean busyZw = busyZwBean.getBean(beforeKcCcDate);
 
-						Bean busy = busyZwBean.getBean(key);
+				for (Object zwh : busyZw.keySet()) { // 遍历场次座位
 
-						String ucode = busy.getStr("U_CODE"); // 考生编码
+					String ucode = busyZw.getBean(zwh).getStr("U_CODE"); // 考生编码
 
-						for (Object key1 : filtBean.keySet()) { // 遍历考试时长
-
-							Object obj = filtBean.getBean(key1).get(ucode);
-
-							if (obj != null) {
-
-								Bean filtUser = new Bean();
-
-								if (obj instanceof Bean) {
-
-									Bean temp = filtBean.getBean(key1).getBean(ucode);
-
-									if (temp != null && !temp.isEmpty()) {
-
-										filtUser.set(ucode, temp);
-
-										filtTemp.set(key1, filtUser);
-									}
-
-								} else if (obj instanceof List) {
-
-									List<Bean> temp = filtBean.getBean(key1).getList(ucode);
-
-									if (temp != null && !temp.isEmpty()) {
-
-										filtUser.set(ucode, temp);
-
-										filtTemp.set(key1, filtUser);
-									}
-								}
-							}
-						}
-					} catch (Exception e) {
-
-						log.error(e);
-					}
+					userBean.set(ucode, ucode);
 				}
+
+				filtR002Ks(filtBean, filtTemp, userBean);
+
 			}
 
-			if (!filtTemp.isEmpty()) {
+			// for (Object kcCcDate : busyZwBean.keySet()) { // 遍历已安排场次
+			//
+			// Bean busyZw = busyZwBean.getBean(kcCcDate);
+			//
+			// for (Object zwh : busyZw.keySet()) { // 遍历场次座位
+			//
+			// String ucode = busyZw.getBean(zwh).getStr("U_CODE"); // 考生编码
+			//
+			// Bean cloneFiltBean = (Bean) filtBean.clone();
+			//
+			// for (Object time : cloneFiltBean.keySet()) { // 遍历考试时长
+			//
+			// Bean timeFiltBean = cloneFiltBean.getBean(time);
+			//
+			// if (beforeKcCcDate.equals(kcCcDate.toString())) { //
+			// 同一天,同一考场,上一场次的安排
+			//
+			// if (timeFiltBean.containsKey(ucode)) {
+			//
+			// Object obj = timeFiltBean.get(ucode);
+			//
+			// if (userBean.containsKey(ucode)) {
+			//
+			// if (filtTemp.containsKey(time)) {
+			//
+			// filtTemp.getBean(time).set(ucode, obj);
+			//
+			// } else {
+			// Bean add = new Bean();
+			//
+			// add.set(ucode, obj);
+			//
+			// filtTemp.set(time, add);
+			// }
+			// }
+			// }
+			//
+			// } else if (kcCcDate.toString().endsWith(beforeCcDate)) { //
+			// 同一天,不同考场,上一场次的安排(清除考生，保证场次联排规则准确)
+			//
+			// if (timeFiltBean.containsKey(ucode)) {
+			//
+			// filtBean.getBean(time).remove(ucode);
+			// }
+			// }
+			// }
+			// }
+			// }
 
-				filtBean = new Bean(filtTemp);
+			if (!filtTemp.isEmpty()) { // 本场连排上一场次
 
-				return true;
+				return filtTemp;
 			}
 
 		} catch (Exception e) {
@@ -412,7 +446,37 @@ public class KcapMatch {
 			log.error(e);
 		}
 
-		return false;
+		return new Bean();
+	}
+
+	private static void filtR002Ks(Bean filtBean, Bean filtTemp, Bean userBean) {
+
+		Bean cloneFiltBean = (Bean) filtBean.clone();
+
+		for (Object time : cloneFiltBean.keySet()) { // 遍历考试时长
+
+			Bean timeFiltBean = cloneFiltBean.getBean(time);
+
+			for (Object u : timeFiltBean.keySet()) {
+
+				String ucode = u.toString();
+
+				Object obj = timeFiltBean.get(u);
+
+				if (userBean.containsKey(ucode)) {
+
+					if (filtTemp.containsKey(time)) {
+
+						filtTemp.getBean(time).set(u, obj);
+
+					} else {
+						Bean add = new Bean();
+						add.set(u, obj);
+						filtTemp.set(time, add);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -745,8 +809,8 @@ public class KcapMatch {
 					xlArray[i] = xlCode;
 				}
 
-				Arrays.sort(xlArray); // 使用 Arrays.binarySearch
-										// 方法前必须调用Arrays.sort
+				Arrays.sort(xlArray); // 使用
+										// Arrays.binarySearch,方法前必须调用Arrays.sort
 
 				Bean temp = new Bean();
 
@@ -876,9 +940,10 @@ public class KcapMatch {
 
 		return new Bean();
 	}
-	
+
 	/**
-	 * 根据考试时长 筛选考生  60、90分钟考试混排;120分钟混排;150分钟混排
+	 * 根据考试时长 筛选考生 60、90分钟考试混排;120分钟混排;150分钟混排
+	 * 
 	 * @param freeZw
 	 * @param filtBean
 	 */
@@ -887,9 +952,9 @@ public class KcapMatch {
 		if (filtBean == null || filtBean.isEmpty()) {
 			return;
 		}
-		
+
 		String ksTime = freeZw.getStr("SJ_TIME");
-		
+
 		if (ksTime.contains("60") && !ksTime.contains("90")) { // 考试时长只60分钟
 
 			filtBean.remove("90");
@@ -912,7 +977,7 @@ public class KcapMatch {
 			filtBean.remove("60");
 			filtBean.remove("90");
 			filtBean.remove("120");
-		}	
+		}
 	}
 
 	/**
@@ -965,7 +1030,7 @@ public class KcapMatch {
 
 							filtBean.getBean(time).remove(ucode);
 
-//							log.error("移除相同日期，相同场次考生：" + time + ":" + ucode);
+							// log.error("移除相同日期，相同场次考生：" + time + ":" + ucode);
 						}
 					}
 

@@ -30,7 +30,7 @@ public class KcapResource {
 
 	private static Log log = LogFactory.getLog(KcapResource.class);
 
-	private String xmId = "";
+	private String currentXmId = "";
 
 	/**
 	 * 领导职务考生
@@ -108,7 +108,7 @@ public class KcapResource {
 
 	public KcapResource(String xmId) {
 
-		this.xmId = xmId;
+		this.currentXmId = xmId;
 
 		// 加载规则
 		loadRule(xmId);
@@ -127,7 +127,7 @@ public class KcapResource {
 
 	public KcapResource(String xmId, String odept) {
 
-		this.xmId = xmId;
+		this.currentXmId = xmId;
 
 		// 加载规则
 		loadRule(xmId);
@@ -1217,7 +1217,7 @@ public class KcapResource {
 	}
 
 	public String getXmId() {
-		return xmId;
+		return currentXmId;
 	}
 
 	public Bean getKcOrgBean() {
