@@ -5,7 +5,7 @@ $("#TS_KCGL_JY .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;		
 		$(item).find("td[icode='BUTTONS']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_JY-update" actcode="update" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_JY-update" actcode="update" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+
 				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_JY-stop" actcode="stop" rowpk="'+dataId+'"><span class="rh-icon-inner">禁用</span><span class="rh-icon-img btn-edit"></span></a>'+
 				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_JY-open" actcode="open" rowpk="'+dataId+'"><span class="rh-icon-inner">解禁</span><span class="rh-icon-img btn-edit"></span></a>'
 		);
@@ -27,7 +27,8 @@ function bindCard(){
 		var pkCode = jQuery(this).attr("rowpk");
 		var height = jQuery(window).height()-50;
 		var width = jQuery(window).width()-100;
-		rowEdit(pkCode,_viewer,[width,height],[50,50]);
+//		rowEdit(pkCode,_viewer,[width,height],[50,50]);
+		openMyCard(pkCode,true);
 	});
 	//禁用考场
 	jQuery("td [id='TS_KCGL_JY-stop']").unbind("click").bind("click",function() {
@@ -67,4 +68,18 @@ function bindCard(){
 			});
 		}
 	});
+}
+
+//列表操作按钮 弹dialog
+function openMyCard(dataId,readOnly,showTab){
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+    temp[UIConst.PK_KEY] = dataId;
+    if(readOnly != ""){
+    	temp["readOnly"] = readOnly;
+    }
+    if(showTab != ""){
+    	temp["showTab"] = showTab;
+    }
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
 }
