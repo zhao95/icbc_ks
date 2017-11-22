@@ -72,7 +72,7 @@ function bindCard(){
 
 //列表操作按钮 弹dialog
 function openMyCard(dataId,readOnly,showTab){
-	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[1000,600],"xyArray":[100,50]};
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[900,600],"xyArray":[100,50]};
     temp[UIConst.PK_KEY] = dataId;
     if(readOnly != ""){
     	temp["readOnly"] = readOnly;

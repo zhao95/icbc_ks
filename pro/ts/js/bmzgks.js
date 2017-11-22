@@ -146,7 +146,9 @@ function xminfoshow(){
        						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
        						$("#"+yzjg).append("审核不通过");
        					}
+       					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
        					continue;
+       					
        				}
        				if(xlflag){
        					if(bm_xl==STATION_NO_CODE){
@@ -157,6 +159,7 @@ function xminfoshow(){
        						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
        						$("#"+yzjg).append("审核不通过");
        					}
+       					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
        					continue;
        				}
        				var shti = "";
@@ -219,6 +222,7 @@ function xminfoshow(){
            					}else{
            						$("#"+yzjg).append(failerinfo);
            					}
+           					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
            				}if(shArray==true){
            					$("#"+a).append('<div></div>');
            					$("#"+a).append('<div></div>');
@@ -242,6 +246,7 @@ function xminfoshow(){
        						}else{
        							$("#"+yzjg).append(failerinfo);
        						}
+       						$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
        					}if(shArray==true){
        						$("#"+a).append('<div></div>');
        						$("#"+a).append('<div></div>');
