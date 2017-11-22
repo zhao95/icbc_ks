@@ -257,22 +257,21 @@ _viewer.grid._table.find("tr").each(function(index, item) {
 		}
 	}
 });
-//var oldStyle="";
-//$(".rh-advSearch-val").parent().parent().unbind("click").bind("click",function() {debugger;
-////_viewer.grid.unbind("click").bind("click",function() {
-//oldStyle=$(this).parent().parent().find("option:selected").html();
-//	
-//});
+var oldStyle="";
+var  name="";
+$(".rh-advSearch-val").unbind("click").bind("click",function() {
+//_viewer.grid.unbind("click").bind("click",function() {
+oldStyle=$(this).find("option:selected").html();
+name =$(this).parent().parent().find("td[icode='XM_SZ_NAME']").html();
+});
 //获取状态值放入数据库对应的位置
-$(".rh-advSearch-val").on("change", function() {debugger;
-  
-	var options=$(this).find("option:selected").val();//改变后的状态
-	alert("确定要改成'"+options+"'状态吗？");
-//	if(!confirm("确定要改成'"+options+"'状态吗？")){
-//		options=oldStyle;
-//		_viewer.refresh();
-//		return  false;
-//	}
+$(".rh-advSearch-val").on("change", function() {
+  	var options=$(this).find("option:selected").val();//改变后的状态
+		if(!confirm(name+"设置确定要改成'"+options+"'状态吗？")){
+		options=oldStyle;
+		_viewer.refresh();
+		return  false;
+	}
 	var sz_id=$(this).parent().parent().find("td[icode='XM_SZ_ID']").html();
 	var xm_id=$(this).parent().parent().find("td[icode='XM_ID']").html();
 	var param={};
