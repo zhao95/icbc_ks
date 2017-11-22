@@ -51,8 +51,10 @@ if(userBean != null) {
 			 String xmid = request.getParameter("zgtz");
 			 %>
 <style>
-
-	/* tr{cursor: pointer;} */
+	.btn-default{
+	color: WHITE;
+	border-color:#245580;
+	}
 	#yiyi .modal-dialog{
 	position: absolute; 
     top: 20%; 
@@ -369,7 +371,7 @@ if(userBean != null) {
 				</form>
 				<div class="modal-footer" style="text-align:center;height:60px">
 					<button type="button" class="btn btn-primary" style="height:35px;background:lightseagreen;width:80px" onclick="mttijiao()">审核</button>
-					<button type="button" class="btn btn-default" style="background:lightseagreen;margin-left:100px;color:white;height:35px;width:80px" data-dismiss="modal">关闭
+					<button type="button" class="btn btn-default" style="background:lightseagreen;margin-left:100px;border-color:#245580;color:white;height:35px;width:80px" data-dismiss="modal">关闭
 					</button>
 				</div>
 			</div><!-- /.modal-content -->
@@ -429,7 +431,7 @@ if(userBean != null) {
 				    </div>
 				<div  class="modal-footer" style="position:relative;top:-510px;text-align:center;height:32px">
 					<button type="button" class="btn btn-primary" style="font-size:16px;height:35px;background:lightseagreen;width:80px" onclick="savePX()">保存</button>
-					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;font-size:16px;margin-left:100px;height:35px;width:80px" data-dismiss="modal">关闭
+					<button type="button" class="btn btn-default" style="border-color:#245580;color:white;color:white;background:lightseagreen;font-size:16px;margin-left:100px;height:35px;width:80px" data-dismiss="modal">关闭
 					</button>
 				</div>
 			</div>
@@ -461,7 +463,7 @@ if(userBean != null) {
 				
 				</div>
 				<div class="modal-footer" style="text-align:center;height:50px">
-					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;margin-top:-10px;font-size:16px;height:35px;width:80px" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-default" style="border-color:#245580;color:white;background:lightseagreen;margin-top:-10px;font-size:16px;height:35px;width:80px" data-dismiss="modal">关闭</button>
 				</div>
 				
 			</div><!-- /.modal-content -->
@@ -477,7 +479,7 @@ if(userBean != null) {
 				<div id="uploadfile"  style="width:200px;position:relative;top:60px;color:lightseagreen;font-size:20px"><form action="/file" name="formup" id="excleupload11" class="form form-horizontal" style="width:200%"></form></div>
 				<div class="modal-footer" style="text-align:center;width:400px;">
 					<button id="excelimp" type="button" class="btn btn-primary" style="height:35px;background:lightseagreen;width:80px">导入</button>
-					<button type="button" onclick = "closemot()" class="btn btn-default" style="color:white;background:lightseagreen;margin-left:100px;height:35px;width:80px;font-size:16px;" data-dismiss="modal">取消</button>
+					<button type="button" onclick = "closemot()" class="btn btn-default" style="border-color:#245580;color:white;background:lightseagreen;margin-left:100px;height:35px;width:80px;font-size:16px;" data-dismiss="modal">取消</button>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
@@ -510,7 +512,7 @@ if(userBean != null) {
 				</table>
 				</div>
 				<div class="modal-footer" style="text-align:center;height:50px">
-					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;height:35px;margin-top:-10px;width:80px;font-size:16px;"data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-default" style="border-color:#245580;color:white;background:lightseagreen;height:35px;margin-top:-10px;width:80px;font-size:16px;"data-dismiss="modal">关闭</button>
 				</div>
 				
 			</div><!-- /.modal-content -->

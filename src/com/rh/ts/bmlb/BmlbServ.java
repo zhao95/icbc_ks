@@ -1003,8 +1003,8 @@ public class BmlbServ extends CommonServ {
 		String id = paramBean.getStr("bmid");
 		String where = "AND BM_ID=" + "'" + id + "'";
 		List<Bean> list = ServDao.finds("TS_BMLB_BM", where);
-		if (list.size() == 0) {
-			return new OutBean().setError("数据错误，数据不存在");
+		if (list==null||list.size() == 0) {
+			return new OutBean().setError("数据错误，数据不存在").set("list", list);
 		}
 		Bean outBean = new Bean();
 

@@ -43,6 +43,12 @@
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 <body class="hold-transition skin-black sidebar-mini">
 <style>
+
+	.btn-default{
+	color: WHITE;
+	border-color:#245580;
+	}
+	
 	 .trcss{
 		width:16%;
 		text-align:right;

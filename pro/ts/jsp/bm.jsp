@@ -46,6 +46,11 @@
 <script src="<%=CONTEXT_PATH%>/ts/js/jquery.fileupload.js"></script>
 <body class="hold-transition skin-black sidebar-mini" id="bmbody">
 <style>
+
+.btn-default{
+	color: WHITE;
+	border-color:#245580;
+	}
 #appeal .modal-dialog{
 	position: absolute;
     top: 10%;

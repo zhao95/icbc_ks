@@ -437,7 +437,6 @@ function firall(){
 				function formsubmit(obj){
 					var bmids = obj.parentNode.id;
 					 doPost('bmshmx.jsp', {bmidmx: bmids});
-					 
 				}
 				//导出
 				//定义一个公共变量  当进行条件查询时  将 数据ID放入数组中
@@ -500,7 +499,7 @@ function form2submit(obj){
 		param["bmid"]=bmid;
 	var result = FireFly.doAct("TS_BMLB_BM","getSingle",param);
 	var pageEntity = result.list;
-	if(pageEntity.length!=2){
+	if(pageEntity.length!=0){
 	$(obj).attr("data-target","#userbminfo");
 	 $("#ks_title").text(pageEntity[0].BM_TITLE);
 	 $("#bm_name").text(pageEntity[0].BM_NAME);
@@ -514,6 +513,7 @@ function form2submit(obj){
 	 }
 	 $("#belongto").text(pageEntity[0].ODEPT_NAME);
 	}else{
+		alert("报名信息不存在");
 		 $(obj).attr("data-target","");
 	}
 }
@@ -1091,24 +1091,24 @@ var listPage = function () {
 	     	if(shlevel>nodeid){
 	     	//审核level 审核层级大于当前审核层级的人没有审核权限  （TS_BMSH_PASS,TS_BMSH_NOPSS中的数据）
 	     	if(yiyi==""){
-	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: right"><a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: right"><a href="#" onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 	     	}else{
-	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: right"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+	     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: right"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a href="#" onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 	     		
 	     	}
 	     	}else{
 	     		if(yiyi==""){
-		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" style="disabled:true" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: right"><a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" style="disabled:true" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: right"><a href="#" onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 		     	}else{
-		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" style="disabled:true" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: right"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" style="disabled:true" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: right"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a href="#" onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 		     		
 		     	}
 	     	}
 	     	}else{
 	     		if(yiyi==""){
-		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: right"><a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+bmid+'" style="text-align: right"><a href="#" onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal"  onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 		     	}else{
-		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: right"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
+		     		$("#"+table+" tbody").append('<tr style="height: 50px"><td style="text-align:center"><input style ="display:none" type="checkbox" name="checkbox'+checkbox+'" value="'+id+'"></td><td style="text-align: center">'+xuhao+'</td><td id="'+yiyi+'" style="text-align: right"><a  onclick="yiyi(this)" data-toggle="modal" data-target="#yiyi" href="#"><image title="异议详细信息" src="/ts/image/u205.png"></image></a>&nbsp;&nbsp;<a href="#" onclick = "formsubmit(this)"><image title="审核详细信息" src="/ts/image/u2055.png"></image></a>&nbsp;&nbsp;<a data-toggle="modal" onclick="form2submit(this)" href="#"><image title="报名详细信息" src="/ts/image/u1755.png"></image></a></td>');
 		     		
 		     	}
 	     	}

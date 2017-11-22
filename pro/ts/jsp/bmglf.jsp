@@ -35,7 +35,12 @@
 <link rel="stylesheet"
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 <body class="hold-transition skin-black sidebar-mini">
-	<style>.a table tr{height:50px;padding-left: 10px;}</style>
+	<style>.a table tr{height:50px;padding-left: 10px;}
+	.btn-default{
+	color: WHITE;
+	border-color:#245580;
+	}
+	</style>
 	<style>.a table td{padding-left: 20px;}</style>
 		<% 
 		//获取项目id
