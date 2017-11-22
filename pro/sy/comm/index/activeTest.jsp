@@ -122,8 +122,8 @@ if (testBrower()) {
 	if (fls.f && parseInt(fls.v) >= 9) {
 		jQuery("#rh_test_flash").append("<div align=center><p class='greenCon'>您已安装了Flash，当前Flash版本为: "+fls.v+".x</p></div>");
 	} else {
-		var flashObj = '<object id="testObj" width="1" height="1" type="application/x-shockwave-flash" codebase="' + FireFly.getContextPath() + '/sy/comm/index/file/flash.exe#version=9,0,0,0"><param name="movie" value="/sy/base/frame/coms/file/swfupload.swf?preventswfcaching=1372215021895" /></object>';
-		jQuery("#rh_test_flash").append("<div align=center><p class='yellowCon'>未安装Flash或者版本为9.0以下，正在给您安装flash,请稍候... <a href='" + FireFly.getContextPath() + "/sy/comm/index/file/flash.exe' class='rh_test_a'>手动下载安装</a><div style='width:1px;height:1px;display:inline-block;' id='flashObj'>" + flashObj + "</div></p></div>");
+		/* var flashObj = '<object id="testObj" width="1" height="1" type="application/x-shockwave-flash" codebase="' + FireFly.getContextPath() + '/sy/comm/index/file/flash.exe#version=9,0,0,0"><param name="movie" value="/sy/base/frame/coms/file/swfupload.swf?preventswfcaching=1372215021895" /></object>';
+		jQuery("#rh_test_flash").append("<div align=center><p class='yellowCon'>未安装Flash或者版本为9.0以下，正在给您安装flash,请稍候... <a href='" + FireFly.getContextPath() + "/sy/comm/index/file/flash.exe' class='rh_test_a'>手动下载安装</a><div style='width:1px;height:1px;display:inline-block;' id='flashObj'>" + flashObj + "</div></p></div>"); */
 	}
 	
 }
