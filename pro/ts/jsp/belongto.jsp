@@ -389,7 +389,7 @@ if(userBean != null) {
 	
 	<div class="modal fade" id="paixu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true">
 		<div class="modal-dialog" style="width:50%;">
-			<div class="modal-content" style="height:650px;width:100%">
+			<div class="modal-content" style="height:500px;width:100%">
 				<div class="modal-header" style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
 						
 					自定义显示列
@@ -404,22 +404,22 @@ if(userBean != null) {
 				      </thead>
 				      </table>
 				</div>
-				<div id ="pxtablediv" style="height:500px;overflow-y:auto;width:45%;">
+				<div id ="pxtablediv" style="height:350px;overflow-y:auto;width:45%;">
 				<table id="pxtable" style="width:100%;">
 				      <tbody>
 				      </tbody>
 				    </table>
 				</div>
-				    <div style="position:relative;left:48.5%;top:-400px">
+				    <div style="position:relative;left:48.5%;top:-250px">
 				   <a onclick="removeleft()" href="#"><image id="imageleft" src="/ts/image/1124.png"></image></a>
 				    </div>
-				    <div style="position:relative;left:48.5%;top:-370px">
+				    <div style="position:relative;left:48.5%;top:-220px">
 				    <a onclick="removeright()" href="#"><image id="imageright" src="/ts/image/1348.png"></image> </a>
 				    </div>
-				     <div style="position:relative;left:48.5%;top:-350px">
+				     <div style="position:relative;left:48.5%;top:-200px">
 				   <a id="leftalla" onclick="leftall()" href="#"><image id="leftall" src="/ts/image/1440.png"></image></a>
 				    </div>
-				     <div style="position:relative;left:48.5%;top:-330px">
+				     <div style="position:relative;left:48.5%;top:-180px">
 				   <a id="rightalla" onclick="rightall()" href="#"><image id="rightall" src="/ts/image/1552.png"></image></a>
 				    </div>
 				    <div style="position:relative;left:55.4%;top:-102.4%;width:44.6%;">
@@ -431,14 +431,14 @@ if(userBean != null) {
 				      </thead>
 				      </table>
 				    </div>
-				      <div id="pxtable2div" style="width:44.6%;height:500px;overflow-y:auto;position:relative;left:55.4%;top:-664px">
+				      <div id="pxtable2div" style="width:44.6%;height:350px;overflow-y:auto;position:relative;left:55.4%;top:-514px">
 				   <table id="pxtable2" style="width:100%;">
 				      <tbody>
 				    
 				      </tbody>
 				    </table>
 				    </div>
-				<div  class="modal-footer" style="position:relative;top:-660px;text-align:center;height:32px">
+				<div  class="modal-footer" style="position:relative;top:-510px;text-align:center;height:32px">
 					<button type="button" class="btn btn-primary" style="font-size:16px;height:35px;background:lightseagreen;width:80px" onclick="savePX()">保存</button>
 					<button type="button" class="btn btn-default" style="color:white;background:lightseagreen;font-size:16px;margin-left:100px;height:35px;width:80px" data-dismiss="modal">关闭
 					</button>
