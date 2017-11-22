@@ -404,7 +404,7 @@ public class Bean extends HashMap<Object, Object> {
     * @return 复制出来的数据内容，
     */
    public Bean copyOf()  {
-       return copyOf((Object)null);
+       return copyOf(null);
    }
     
     /**
@@ -428,7 +428,7 @@ public class Bean extends HashMap<Object, Object> {
     * @param bean 将指定对象的数据复制到本对象中
     */
    public void copyFrom(Bean bean) {
-       copyFrom(bean, (Object)null);
+       copyFrom(bean, null);
    }
    
    /**
