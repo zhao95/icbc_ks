@@ -1,6 +1,6 @@
 var _viewer = this;
 var height = jQuery(window).height()-50;
-var width = jQuery(window).width()-100;
+var width = jQuery(window).width()-200;
 //取消行点击事件
 $(".rhGrid").find("tr").unbind("dblclick");
 //每一行添加编辑和删除
