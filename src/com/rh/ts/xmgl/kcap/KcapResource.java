@@ -38,7 +38,7 @@ public class KcapResource {
 	private Bean leaderBean = null;
 
 	/**
-	 * 考场距离远的考生
+	 * 考场距离远的机构
 	 */
 	private Bean farKsBean = null;
 
@@ -761,6 +761,8 @@ public class KcapResource {
 
 			String kcId = item.getStr("KC_ID");
 
+			String kcName = item.getStr("KC_NAME");
+
 			String kcOdept = item.getStr("KC_ODEPTCODE");
 
 			// 场次
@@ -782,6 +784,8 @@ public class KcapResource {
 
 				String dName = jg.getStr("JG_NAME");
 
+				String jgFar = jg.getStr("JG_FAR");
+
 				if (jg.getInt("JG_TYPE") == OrgConstant.DEPT_TYPE_DEPT) { // 关联部门
 
 					DeptBean odeptBean = OrgMgr.getOdept(dCode);// 获取机构
@@ -794,6 +798,8 @@ public class KcapResource {
 
 					temp.set("JG_NAME", dName);
 
+					temp.set("JG_FAR", jgFar);
+
 					gljg.set(dCode, temp.clone());
 
 				} else {
@@ -804,7 +810,7 @@ public class KcapResource {
 
 					String cmpyCode = user.getCmpyCode();
 
-					String codePath = OrgMgr.getOdept(dCode).getCodePath();
+					String codePath = OrgMgr.getDept(dCode).getCodePath();
 
 					SqlBean sql = new SqlBean();
 					sql.andLikeRT("CODE_PATH", codePath);
@@ -825,6 +831,8 @@ public class KcapResource {
 						childTemp.set("JG_CODE", childCode);
 
 						childTemp.set("JG_NAME", childName);
+
+						childTemp.set("JG_FAR", jgFar);
 
 						gljg.set(childCode, childTemp);
 					}
@@ -896,6 +904,7 @@ public class KcapResource {
 	 * 组装考场远近 farKsBean
 	 */
 	private void fitFarKsBean() {
+
 		farKsBean = new Bean();
 
 		for (Object key : kcBean.keySet()) { // 所有机构下的考场bean
@@ -904,32 +913,89 @@ public class KcapResource {
 
 			for (Bean kcInfo : kcinfoList) {
 
-				// Bean farksBeanVal = new Bean();
-
 				String kcId = kcInfo.getBean("INFO").getStr("KC_ID");
 
+				String kcName = kcInfo.getBean("INFO").getStr("KC_NAME");
+
 				Bean jgBean = kcInfo.getBean("GLJG"); // 考场的关联机构Bean
+
+				Bean farKs = new Bean();
 
 				for (Object jgkey : jgBean.keySet()) {
 
 					Bean jg = jgBean.getBean(jgkey);
 
-					String dCode = jg.getStr("JG_CODE");
-
-					// List<Bean> jgksList = null;
-
 					if (jg.getInt("JG_FAR") == 1) { // 关联考场距离远的机构
 
-						Bean dCodeKs = ksBean.getBean(dCode);// 机构下考生list
+						log.error("-----" + kcName + "|" + jg.getStr("JG_NAME") + " JG_FAR:" + jg.getInt("JG_FAR"));
 
-						// farksBeanVal = commList2Bean(jgksList, "BM_CODE");
+						String dCode = jg.getStr("JG_CODE");
 
-						farKsBean.set(kcId, dCodeKs);
+						if (jg.getInt("JG_TYPE") == OrgConstant.DEPT_TYPE_DEPT) { // 关联部门
+
+							dCode = OrgMgr.getOdept(dCode).getODeptCode(); // 获取机构
+
+							Bean farUcodes = getFarKsCode(ksBean.getBean(dCode));
+
+							if (!farUcodes.isEmpty()) {
+
+								log.error("-----------code:" + farUcodes.size());
+
+								farKs.putAll(farUcodes);
+							}
+
+						} else {
+
+							String codePath = OrgMgr.getDept(dCode).getCodePath();
+
+							SqlBean sql = new SqlBean();
+
+							sql.andLikeRT("CODE_PATH", codePath);
+
+							sql.and("DEPT_TYPE", OrgConstant.DEPT_TYPE_ORG);
+
+							sql.and("S_FLAG", 1);
+
+							List<Bean> odeptList = ServDao.finds(ServMgr.SY_ORG_DEPT, sql);
+
+							for (Bean odeptBean : odeptList) {
+
+								String oDeptCode = odeptBean.getStr("DEPT_CODE");
+
+								Bean childFarUcodes = getFarKsCode(ksBean.getBean(oDeptCode));
+
+								if (!childFarUcodes.isEmpty()) {
+
+									log.error("-----------code:" + childFarUcodes.size());
+
+									farKs.putAll(childFarUcodes);
+								}
+							}
+						}
 					}
 				}
-				// farKsBean.set(kcId, farksBeanVal);
+
+				if (!farKs.isEmpty()) {
+
+					farKsBean.set(kcId, farKs);
+				}
 			}
 		}
+	}
+
+	private static Bean getFarKsCode(Bean ksBean) {
+
+		Bean user = new Bean();
+
+		for (Object time : ksBean.keySet()) {
+
+			for (Object ucode : ksBean.getBean(time).keySet()) {
+
+				user.set(ucode, ucode);
+			}
+		}
+
+		return user;
 	}
 
 	/**
@@ -1048,13 +1114,11 @@ public class KcapResource {
 	 */
 	public Bean getGljg(String kcId) {
 
-		Bean gljg = new Bean();
-
-		for (Object key : kcBean.keySet()) {
+		for (Object key : kcBean.keySet()) { // 遍历所属机构
 
 			List<Bean> kcList = kcBean.getList(key);
 
-			for (Bean kc : kcList) {
+			for (Bean kc : kcList) { // 遍历所属机构下考场
 
 				if (kcId.equals(kc.getBean("INFO").getStr("KC_ID"))) {
 
@@ -1063,7 +1127,7 @@ public class KcapResource {
 			}
 		}
 
-		return gljg;
+		return new Bean();
 	}
 
 	/**
@@ -1210,7 +1274,7 @@ public class KcapResource {
 	/**
 	 * 距离考场远的考生
 	 * 
-	 * @return Bean{考场ID：Bean{用户id: 考生Bean/考生List}}
+	 * @return Bean{考场ID：Bean{用户id: 用户id}}
 	 */
 	public Bean getFarKsBean() {
 		return farKsBean;
@@ -1222,53 +1286,5 @@ public class KcapResource {
 
 	public Bean getKcOrgBean() {
 		return kcOrgBean;
-	}
-
-	public void showResLog() {
-
-		if (this.getRuleBean() != null) {
-			log.error("------------------ruleBean-------------------");
-			log.error(this.getRuleBean().toString());
-		}
-
-		if (this.getKcBean() != null) {
-			log.error("------------------kcBean-------------------");
-			log.error(this.getKcBean().toString());
-		}
-
-		if (this.getFreeKsBean() != null) {
-			log.error("------------------freeKsBean-------------------");
-			log.error(this.getFreeKsBean().toString());
-		}
-
-		if (this.getJkKsBean() != null) {
-			log.error("------------------JkKsBean-------------------");
-			log.error(this.getJkKsBean().toString());
-		}
-
-		if (this.getBusyZwBean() != null) {
-			log.error("------------------busyBean-------------------");
-			log.error(this.getBusyZwBean().toString());
-		}
-
-		if (this.getFreeCcZwBean() != null) {
-			log.error("------------------freeCcZwBean-------------------");
-			log.error(this.getFreeCcZwBean().toString());
-		}
-
-		if (this.getFreeKcZwBean() != null) {
-			log.error("------------------freeKcZwBean-------------------");
-			log.error(this.getFreeKcZwBean().toString());
-		}
-
-		if (this.getLeaderBean() != null) {
-			log.error("------------------leaderBean-------------------");
-			log.error(this.getLeaderBean().toString());
-		}
-
-		if (this.getFarKsBean() != null) {
-			log.error("------------------farKsBean-------------------");
-			log.error(this.getFarKsBean().toString());
-		}
 	}
 }

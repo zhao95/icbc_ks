@@ -148,7 +148,7 @@ public class ArrangeSeat {
 							// 过滤 相同日期,相同场次的考生
 							KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
 
-							log.error("----------安排考场--|" + kcName + "|" + date + "|" + sjCC + "|"
+							log.error("------------|" + kcName + "|" + date + "|" + sjCC + "|"
 									+ freeZw.getStr("ZW_ZWH_XT"));
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
@@ -242,7 +242,7 @@ public class ArrangeSeat {
 							// 过滤 相同日期,相同场次的考生
 							KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
 
-							log.error("----------安排考场--|" + kcName + "|" + date + "|" + sjCC + "|"
+							log.error("------------|" + kcName + "|" + date + "|" + sjCC + "|"
 									+ freeZw.getStr("ZW_ZWH_XT"));
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
