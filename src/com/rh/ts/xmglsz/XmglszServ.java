@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
+import com.rh.core.base.db.Transaction;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
@@ -146,7 +148,8 @@ public class XmglszServ extends CommonServ {
 			//遍历所有群组
 			String groupId =  bean2.getId();
 			//用户
-			List<Bean> userList = ServDao.finds("TS_BM_GROUP_USER", "AND G_ID='"+groupId+"' AND G_TYPE='1' GROUP BY USER_DEPT_CODE");
+			String sql = "SELECT USER_DEPT_CODE FROM TS_BM_GROUP_USER_DEPT WHERE G_ID='"+groupId+"' AND G_TYPE='1' GROUP BY USER_DEPT_CODE";
+			List<Bean> userList = Transaction.getExecutor().query(sql);
 			for (Bean bean3 : userList) {
 			UserBean user = UserMgr.getUser(bean3.getStr("USER_DEPT_CODE"));
 			String odept_code = user.getODeptCode();
