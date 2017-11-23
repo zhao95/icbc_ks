@@ -222,7 +222,7 @@ if(userBean != null) {
 				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="exportdata('TS_BMSH_PASS','checkboxb')" id = "export2">文件批量导出</button></td>
 				<td style="width:10%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
 				<td style="width:6%"></td>
-				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm2" type="text"></input>&nbsp;&nbsp;</td>
+				<td style="width:18%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm2" type="text"></input>&nbsp;&nbsp;</td>
 						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm2" type="text"></input>&nbsp;&nbsp;</td>
 						<td style="width:1%;text-align:left"><select id = "zhuangtai1">
 				            <option selected="selected">全部</option>
@@ -289,7 +289,7 @@ if(userBean != null) {
 				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:70%;background:lightseagreen" onclick="exportdata('TS_BMSH_NOPASS','checkboxc')" id = "export3">文件批量导出</button></td>
 				<td style="width:10%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
 						<td style="width:6%"></td>
-				<td style="width:12%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm3" type="text"></input>&nbsp;&nbsp;</td>
+				<td style="width:18%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm3" type="text"></input>&nbsp;&nbsp;</td>
 						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm3" type="text"></input>&nbsp;&nbsp;</td>
 						<td style="width:1%;text-align:left"><select id = "zhuangtai2">
 				            <option selected="selected">全部</option>
