@@ -807,8 +807,8 @@ var ZdfpccModal = {
                                 '<tr id="' + item.KSLB_XL_CODE + '">',
                                 '   <td><input type="checkbox" code="' + item.KSLB_XL_CODE + '"></td>',
                                 '   <td>' + (j + 1) + '</td>',
-                                '   <td>' + item.KSLB_NAME__NAME + '</td>',
-                                '   <td>' + item.KSLB_XL__NAME + '</td>',
+                                '   <td>' + item.KSLB_NAME + '</td>',
+                                '   <td>' + item.KSLB_XL + '</td>',
                                 '</tr>'
                             ].join(''));
                             if (settingXL.GZ_VALUE2 === undefined) {
@@ -1647,7 +1647,7 @@ var KcObject = {
                 for (var j = 0; j < trData.length; j++) {
                     var tdData = trData[j];
                     var $td;
-                    if (tdData.ZW_ID) {
+                    if (tdData && tdData.ZW_ID) {
                         if (tdData.ZW_KY === '1') {
                             $td = jQuery('<td id="' + tdData.ZW_ID + '" style="width:10%;" class="can-arrange">' +
                                 '   <span style="font-size: 12px;position: relative;top: -8px;left: -6px;">' + tdData.ZW_ZWH_SJ + '</span>' +
@@ -2043,6 +2043,7 @@ var KsObject = {
         } else if (this.sjId !== sjId) {
             this.kcId = kcId;
             this.sjId = sjId;
+            this.reloadKsOrgKsCount();
         }
         this.search();
 
@@ -2107,7 +2108,7 @@ var KsObject = {
                 childs = childs ? childs : [];
                 for (var i = 0; i < childs.length; i++) {
                     var child = childs[i];
-                    var id = child.DEPT_CODE ? child.DEPT_CODE : child.id;
+                    var id = child.DEPT_CODE ? child.DEPT_CODE : child.ID;
                     var text = child.DEPT_NAME ? child.DEPT_NAME : child.NAME;
                     var item = {
                         id: id,
@@ -2161,9 +2162,46 @@ var KsObject = {
 //                    self.setCcInfo(data.node.data, parentKcNode.data);
 //                }
             });
-
+            // debugger;
+            // $ksOrgTreeContent.on("ready.jstree", function (/*e, data*/) {
+            //     debugger;
+            //     self.reloadKsOrgKsCount();
+            // });
         });
 
+    },
+
+    reloadKsOrgKsCount: function () {
+        var setTreeText = function (orgJsonObject, kcId, sjId) {
+            debugger;
+            for (var i = 0; i < orgJsonObject.children.length; i++) {
+                var childOrg = orgJsonObject.children[i];
+                var treeNodeId = childOrg.id;
+                var text = childOrg.data.DEPT_NAME ? childOrg.data.DEPT_NAME : childOrg.data.NAME;
+                var count = KsObject.countKsCount({kcId: kcId, sjId: sjId, searchDeptCode: treeNodeId});
+                var node = KsObject.ksOrgTree.jstree(true).get_node(treeNodeId);
+                KsObject.ksOrgTree.jstree(true).set_text(node, text + '(<span style="color: red">' + count + '</span>)');
+                console.log(count);
+                // setTreeText(childOrg, kcId, sjId);
+            }
+        };
+
+        // jQuery.ajax({
+        //     type: "POST",
+        //     async: true,
+        //     success: function (/*data*/) {
+        //         var kcId = '';
+        //         var sjId = '';
+        //         if (KcObject.currentParentKc || KcObject.currentCc) {
+        //             kcId = KcObject.currentParentKc.KC_ID;
+        //             sjId = KcObject.currentCc.SJ_ID;
+        //             console.log(kcId + ':' + sjId);
+        //             var orgJsonObject = KsObject.ksOrgTree.jstree(true).get_json('#', {flat: false})[0];
+        //             setTreeText(orgJsonObject, kcId, sjId);
+        //             // KsObject.ksOrgTree.jstree().getNode();
+        //         }
+        //     }
+        // });
     },
 
     reloadKsOrgTipFlag: true,
@@ -2191,10 +2229,10 @@ var KsObject = {
                 count = this.ksOrgTipInfo.count + noReloadCount;
                 totalCount = this.ksOrgTipInfo.totalCount;
             } else {
-                count += parseInt(this.countKsCount(kcId, sjId));
-                count += parseInt(this.countKsCount(kcId, sjId, true));
-                totalCount += parseInt(this.countKsCount(kcId, sjId, false, true));
-                totalCount += parseInt(this.countKsCount(kcId, sjId, true, true));
+                count += parseInt(this.countKsCount({kcId: kcId, sjId: sjId}));
+                count += parseInt(this.countKsCount({kcId: kcId, sjId: sjId, isJk: true}));
+                totalCount += parseInt(this.countKsCount({kcId: kcId, sjId: sjId, isJk: false, totalArrange: true}));
+                totalCount += parseInt(this.countKsCount({kcId: kcId, sjId: sjId, isJk: true, totalArrange: true}));
             }
 
             // $('#ksOrgTipKsCount').html(count);
@@ -2216,8 +2254,19 @@ var KsObject = {
 
     /**
      * 统计考生数
+     * {kcId:kcId,
+     * sjId:sjId,
+     * isJk:isJk,
+     * totalArrange:false}
+     * kcId必需项
+     *
      */
-    countKsCount: function (kcId, sjId, isJk, totalArrange) {
+    countKsCount: function (ksParams) {
+        var kcId = ksParams.kcId,
+            sjId = ksParams.sjId,
+            isJk = ksParams.isJk,
+            totalArrange = ksParams.totalArrange,
+            searchDeptCode = ksParams.searchDeptCode;
         var self = this;
         var params1 = {};
         params1._PAGE_ = {};
@@ -2234,6 +2283,7 @@ var KsObject = {
             _linkServQuery: "2",
             XM_ID: self.xmId,
             /**/
+            searchDeptCode: searchDeptCode,
             searchKcId: kcId,
             searchSjId: sjId
         };
