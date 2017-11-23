@@ -21,7 +21,19 @@ public class YapzwServ extends CommonServ {
     /**
      * 返回前端的已安排座位信息（包含姓名等其他信息）
      */
-    private final static String yapzwInfoSql = "select * from TS_XMGL_KCAP_YAPZW a left join TS_BMSH_PASS b on a.SH_ID = b.SH_ID ";
+//    private final static String yapzwInfoSql = "select * from TS_XMGL_KCAP_YAPZW a " +
+//            "left join TS_BMSH_PASS b on a.SH_ID = b.SH_ID ";
+
+    // jkflag 1 一般 2 已经申请借考 3 借入状态
+    private final static String yapzwInfoSql = "SELECT *, " +
+            "( CASE WHEN (" +
+            " EXISTS ( SELECT 'X' FROM ts_jklb_jk c WHERE INSTR(c.JK_KSNAME, b.BM_ID) > 0 )" +
+            " AND b.BM_STATUS IN ('2', '3') " +
+            ") THEN '3'" +
+            " WHEN  EXISTS ( SELECT 'X' FROM ts_jklb_jk c WHERE INSTR(c.JK_KSNAME, b.BM_ID) > 0 and c.JK_STATUS ='1')  THEN '2'" +
+            " ELSE '1' END ) AS jk_flag " +
+            "FROM TS_XMGL_KCAP_YAPZW a LEFT JOIN TS_BMSH_PASS b ON a.SH_ID = b.SH_ID";
+    //座位显示 已借入/已经申请借考 标识
 
     /**
      * 根据SJ_ID获取已安排的考生信息
