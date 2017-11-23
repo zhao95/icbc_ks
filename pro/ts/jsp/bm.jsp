@@ -138,9 +138,9 @@ position: absolute;
 								<th id="BM_NAME" class="" style="width: 29.1%;">名称</th>
 								<th   style="text-align: center;width: 15%;">组织单位</th>
 								<th   style="text-align: center;width: 35%;">报名时间</th>
-								 <th id="BM_STATE__NAME" class="" style="width: 5%;">状态</th>
+								 <th id="BM_STATE__NAME" class="" style="width: 8%;">状态</th>
 								<th id="BM_OPTIONS" class=""
-									style="width: 10%; text-align: center">操作</th>
+									style="width: 12%; text-align: center">操作</th>
 							</tr>
 						</thead>
 						<tbody class="">
@@ -172,7 +172,7 @@ position: absolute;
 
 			<div id ="qihuan" style="margin-top:10px">
 
-              <div id="sanjiliandong" class="panel-body" style=":15px;width:800px;margin-left:200px">
+              <div id="sanjiliandong" class="panel-body" style=":15px;width:70%;margin-left:10%">
                  <form action="#" id="formContainer" class="form form-horizontal"></form>
 
              </div>
