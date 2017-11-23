@@ -273,7 +273,7 @@ position: absolute;
 					</h4>
 				</div>
 				<div align="center">
-				<textarea style="background-color:white;display:table-cell;vertical-align:middle;width:400px;height:80px" id = 'jkxxinfo'></textarea>
+				<textarea style="background-color:white;display:table-cell;vertical-align:middle;width:90%;height:80px" id = 'jkxxinfo'></textarea>
 				</div>
 				<div class="modal-footer" style="text-align:center;height:50px">
 					<button type="button" onclick = "closemotai()" class="btn btn-default" style="margin-top:-6px;background:lightseagreen;color:white;height:30px;width:75px;" data-dismiss="modal">确定</button>
