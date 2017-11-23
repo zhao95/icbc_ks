@@ -1171,6 +1171,7 @@ var KcObject = {
     currentParentKc: '',//当前显示的考场
     currentYapzwArr: [],//当前场次已安排好的座位信息
     currentType: 'view',//当前场次展示方式 list view
+    isRefreshKsContent: true,//是否刷新考生列表
 
     /*初始化界面数据*/
     initData: function (xmId) {
@@ -1869,7 +1870,9 @@ var KcObject = {
                         self.currentYapzwArr.splice(self.currentYapzwArr.indexOf(yapzw), 1);
                         self.reloadCCTip();
                         KsObject.reloadKsOrgTip(1);
-                        KsObject.search();
+                        if (self.isRefreshKsContent) {
+                            KsObject.search();
+                        }
                     }
                 });
             });
@@ -1924,8 +1927,12 @@ var KcObject = {
                     var zwId = $(this).attr('id');
                     // var userCode = ui.draggable[0].cells[11].innerText.trim();
 
-                    //从座位移动到座位 删除原来的
+                    //从座位移动到座位 删除原来的座位  不刷新考生列表
+                    if (ui.draggable[0].tagName !== 'TR') {
+                        self.isRefreshKsContent = false;
+                    }
                     $(ui.draggable[0]).find('.close').click();
+                    self.isRefreshKsContent = true;
                     // var _this = this;
                     FireFly.doAct("TS_XMGL_KCAP_YAPZW", 'saveBean', {
                         ZW_ID: zwId,
@@ -2108,7 +2115,7 @@ var KsObject = {
                 childs = childs ? childs : [];
                 for (var i = 0; i < childs.length; i++) {
                     var child = childs[i];
-                    var id = child.DEPT_CODE ? child.DEPT_CODE : child.ID;
+                    var id = child.DEPT_CODE ? child.DEPT_CODE : child.id;
                     var text = child.DEPT_NAME ? child.DEPT_NAME : child.NAME;
                     var item = {
                         id: id,
@@ -2173,7 +2180,7 @@ var KsObject = {
 
     reloadKsOrgKsCount: function () {
         var setTreeText = function (orgJsonObject, kcId, sjId) {
-            debugger;
+            // debugger;
             for (var i = 0; i < orgJsonObject.children.length; i++) {
                 var childOrg = orgJsonObject.children[i];
                 var treeNodeId = childOrg.id;
