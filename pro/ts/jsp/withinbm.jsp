@@ -203,7 +203,7 @@
 		action="bmshfzg.jsp">
 		<input id="fzgtz" name="fzgtz"></input>
 	</form>
-	<form id="form3" style="display: none" method="post"
+	<form id="form3" target="blank" style="display: none" method="post"
 		action="belongto.jsp">
 		<input id="zgtzzz" name="zgtz"></input>
 		<input id="xianei" name="xianei"></input>

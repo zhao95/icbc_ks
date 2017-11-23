@@ -1015,12 +1015,26 @@ public class BmlbServ extends CommonServ {
 	 * 获取单条 根据id
 	 */
 	public Bean getSingle(Bean paramBean) {
+		UserBean userBean = Context.getUserBean();
+		String user_code = userBean.getCode(); 
+		String phone_num = userBean.getStr("USER_OFFICE_PHONE");
+		String compy_date = userBean.getStr("USER_CMPY_DATE");
+		//获取融易联
+		String rylphone = "";
+		List<Bean> finds = ServDao.finds("TS_OBJECT",
+				"AND SERV_ID='ts_bmlb_bm' AND DATA_ID = '" + user_code + "'");
+		if (finds != null && finds.size() != 0) {
+			rylphone = finds.get(0).getStr("STR1");
+		}
 		String id = paramBean.getStr("bmid");
 		String where = "AND BM_ID=" + "'" + id + "'";
 		List<Bean> list = ServDao.finds("TS_BMLB_BM", where);
 		if (list==null||list.size() == 0) {
 			return new OutBean().setError("数据错误，数据不存在").set("list", list);
 		}
+		list.get(0).set("rylphone", rylphone);
+		list.get(0).set("phone_num", phone_num);
+		list.get(0).set("compy_date", compy_date);
 		Bean outBean = new Bean();
 
 		outBean.set("list", list);

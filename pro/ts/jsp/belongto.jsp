@@ -504,7 +504,7 @@ if(userBean != null) {
 				</div>
 				<div class="row">
 				<div style="padding-top:20px;">
-				<div class="col-md-6" style="width:30%;text-align:right;font-size:20px;vertical-align:bottom">考试标题：&nbsp;</div><div class="col-md-6"  style="font-size:18px;color:gray;width:65%" id="ks_title"></div>
+				<div class="col-md-6" style="color:#00C2C2;width:30%;text-align:right;font-size:16px;vertical-align:bottom">考试标题：&nbsp;</div><div class="col-md-6"  style="font-size:18px;color:gray;width:65%" id="ks_title"></div>
 				</div>
 				<table style="width:90%;font-size:15px;color:black">
 				<!-- <thead>
@@ -513,14 +513,23 @@ if(userBean != null) {
 				<td style="width:20%"></td><td style="width:30%"></td>
 				</tr>
 				</thead> -->
-				<tr height="40px">
-				<td style="color:gray;width:20%;text-align:right;vertical-align:bottom">报名人：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;height:20px;color:gray;width:30%;border-bottom:solid 1px lightgray;" id="bm_name"></td><td style="color:gray;vertical-align:bottom;width:20%;text-align:right;">人力编码：&nbsp;</td><td style="border-bottom:solid 1px lightgray;vertical-align:bottom;font-size:14px;color:gray;text-align:left;width:30%" id="work_num"></td>
+				<tr height="25px">
+				<td style="font-size:11px;color:#00C2C2;width:20%;text-align:right;vertical-align:bottom">报名人：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;height:20px;color:gray;width:30%;border-bottom:solid 1px lightgray;" id="bm_name"></td><td style="font-size:11px;color:#00C2C2;vertical-align:bottom;width:20%;text-align:right;">人力编码：&nbsp;</td><td style="border-bottom:solid 1px lightgray;vertical-align:bottom;font-size:14px;color:gray;text-align:left;width:30%" id="work_num"></td>
 				</tr>
-				<tr height="50px">
-				<td style="color:gray;width:20%;text-align:right;vertical-align:bottom">性别：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="gender"></td><td style="color:gray;vertical-align:bottom;width:20%;text-align:right;">电话：&nbsp;</td><td style="border-bottom:solid 1px lightgray;vertical-align:bottom;font-size:14px;color:gray;text-align:left;width:50%" id="phone_num"></td>
+				<tr height="25px">
+				<td style="font-size:11px;color:#00C2C2;width:20%;text-align:right;vertical-align:bottom">性别：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="gender"></td><td style="font-size:11px;color:#00C2C2;vertical-align:bottom;width:20%;text-align:right;">融易联电话：&nbsp;</td><td style="border-bottom:solid 1px lightgray;vertical-align:bottom;font-size:14px;color:gray;text-align:left;width:50%" id="rylphone"></td>
 				</tr>
-				<tr height="50px">
-				<td style="color:gray;width:20%;text-align:right;vertical-align:bottom">报名时间：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="starttime"></td><td style="color:gray;vertical-align:bottom;width:20%;text-align:right;">所属机构：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:50%;border-bottom:solid 1px lightgray;" id="belongto"></td>
+				<tr height="25px">
+				<td style="font-size:11px;color:#00C2C2;width:20%;text-align:right;vertical-align:bottom">报名时间：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="starttime"></td><td style="font-size:11px;color:#00C2C2;vertical-align:bottom;width:20%;text-align:right;">所属机构：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:50%;border-bottom:solid 1px lightgray;" id="belongto"></td>
+				</tr>
+				<tr height="25px">
+				<td style="font-size:11px;color:#00C2C2;width:20%;text-align:right;vertical-align:bottom">岗位类别：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="positiontype"></td><td style="font-size:11px;color:#00C2C2;vertical-align:bottom;width:20%;text-align:right;">岗位序列：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:50%;border-bottom:solid 1px lightgray;" id="positionxl"></td>
+				</tr>
+				<tr height="25px">
+				<td style="font-size:11px;color:#00C2C2;width:20%;text-align:right;vertical-align:bottom">职务层级：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="positionlevel"></td><td style="font-size:11px;color:#00C2C2;vertical-align:bottom;width:20%;text-align:right;">入行时间：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:50%;border-bottom:solid 1px lightgray;" id="rhdate"></td>
+				</tr>
+				<tr height="25px">
+				<td style="font-size:11px;color:#00C2C2;width:20%;text-align:right;vertical-align:bottom">办公电话：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="phone_num"></td>
 				</tr>
 				</table>
 				</div>

@@ -48,16 +48,16 @@
 	border-color:#245580;
 	}
 	 .trcss{
-		width:16%;
+		width:20%;
 		text-align:right;
 		vertical-align:bottom;
 		font-size:14px;
-		color:black;
+		color:#00C2C2;
 	}
 	.secss{
 	font-size:14px;
 	color:gray;
-	width:34%;
+	width:30%;
 	border-bottom:solid 1px lightgray;
 	vertical-align:bottom;
 	}
@@ -146,48 +146,51 @@
 		</div>
 	</div>
 	<div class="modal fade" id="bminfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
-		<div class="modal-dialog" style="width:50%">
+		<div class="modal-dialog" style="width:60%">
 			<div class="modal-content">
-				<div class="modal-header" style="background-color: #00c2c2;color: white">
+				<div class="modal-header" style="height:45px;background-color: #00c2c2;color: white">
 						
-					<h4 class="modal-title">
+					<h5 class="modal-title">
 						报名详细信息
-					</h4>
+					</h5>
 					
 				</div>
-				<div style="padding-left:10px;">
+				<div style="padding-top:20px;">
 				<table id="xminfotable" style="width:95%;font-size:20px;color:lightseagreen">
-				<tr height="50px">
+				<tr height="30px">
 				<td class="trcss" >报名编号：&nbsp;</td><td class="secss" id="bmcode"></td><td class="trcss">报名名称：&nbsp;</td><td class="secss" id="bmname" ></td>
 				</tr>
-				<tr height="50px">
+				<tr height="5px"></tr>
+				<tr height="30px">
 				<td class="trcss">创建人：&nbsp;</td><td  class="secss" id="creator"></td><td class="trcss">组织单位：&nbsp;</td><td class="secss" id="oragnize"></td>
 				</tr>
-				<tr height="50px">
+				<tr height="5px"></tr>
+				<tr height="30px">
 				<td class="trcss">报名开始时间：&nbsp;</td><td class="secss" id="starttime"></td><td class="trcss">报名结束时间：&nbsp;</td><td class="secss" id="endtime"></td>
 				</tr>
-				<tr height="50px">
-				<td class="trcss">状态：&nbsp;</td><td class="secss" id="status"></td><td class="trcss"></td><td style="font-size:14px;color:red;text-align:left;width:40%" ></td>
+				<tr height="5px"></tr>
+				<tr height="30px">
+				<td class="trcss">状态：&nbsp;</td><td class="secss" id="status"></td>
 				</tr>
 				</table>
 				</div>
-				<div style="padding-top:25px;width:23%;font-size:16px;text-align:center;color:lightseagreen">
+				<div style="padding-top:25px;width:23%;font-size:13px;text-align:center;color:lightseagreen">
 				描述：
 				</div>
 				<table style="width:95%">
 				<tr>
-				<td style="width:15%"></td><td style="disabled:disabled;height:100px;vertical-align:top"><textarea id="describe" style="background-color:white;border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="disabled:disabled;height:20%;vertical-align:top"><textarea id="describe" style="background-color:white;border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table >
-				<div style="padding-top:10px;width:23%;font-size:16px;text-align:center;color:lightseagreen">
+				<div style="padding-top:10px;width:23%;font-size:13px;text-align:center;color:lightseagreen">
 				考试须知：
 				</div>
 				<table style="width:95%">
 				<tr>
-				<td style="width:15%"></td><td style="height:100px;vertical-align:top"><textarea id="mustknow" style="background-color:white;border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="height:20%;vertical-align:top"><textarea id="mustknow" style="background-color:white;border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
-				<div class="modal-footer" style="text-align:center;height:50px">
+				<div class="modal-footer" style="text-align:center;height:45px">
 					<button type="button" class="btn btn-default" style="margin-top:-10px;color:white;background:lightseagreen;height:35px;width:80px" data-dismiss="modal">关闭</button>
 				</div>
 				
@@ -202,7 +205,7 @@
 		action="bmshfzg.jsp">
 		<input id="fzgtz" name="fzgtz"></input>
 	</form>
-	<form id="form3" style="display: none" method="post"
+	<form target="blank" id="form3" style="display: none" method="post"
 		action="belongto.jsp">
 		<input id="zgtzzz" name="zgtz"></input>
 		<input id="xianei" name="xianei"></input>
