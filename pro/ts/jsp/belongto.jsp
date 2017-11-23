@@ -147,7 +147,7 @@ if(userBean != null) {
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">待审核人员</span>
 			</div>
-			<table id="cxkuang" style="margin-top:20px">
+			<table id="cxkuang" style="margin-top:10px">
 				<tbody>
 					<tr style="height:20px">
 						<td style="width:18%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:50%" id="xm1" type="text"></input></td>
