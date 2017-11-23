@@ -156,11 +156,12 @@ position: absolute;
 			<div
 				style="margin-top: -6px; margin-left: 68%; height: 5px; width: 190px; background-color: LightSeaGreen"></div>
 			<div id="cuxian2"
-				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
+				style="position:absolute;margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">已申请的报名</span>
 			</div>
 
-                 <div  id="jibie" style="padding-top:20px;padding-left:80%">
+                 <div  id="jibie" style="position:relative;top:58px;padding-top:20px;padding-left:80%">
+               <label> 层级&nbsp;&nbsp;</label>
                  <select id = "jb" onchange="jibieonchange()">
                  <option selected="selected">全部</option>
                  <option value="1">初级</option>
@@ -169,7 +170,7 @@ position: absolute;
                  </select>
                  </div>
 
-			<div id ="qihuan" style="margin-top:-40px">
+			<div id ="qihuan" style="margin-top:10px">
 
               <div id="sanjiliandong" class="panel-body" style=":15px;width:800px;margin-left:200px">
                  <form action="#" id="formContainer" class="form form-horizontal"></form>
@@ -182,7 +183,8 @@ position: absolute;
 							<tr style="backGround-color: WhiteSmoke; height: 30px">
 							<th id="BM_XUHAO" class=""
 									style="width: 6.6%; text-align: center">序号</th>
-								<th style="width: 25%; text-align: center">名称</th>
+									<th style="width: 10%;text-align: left">提交时间</th>
+								<th style="width: 20%; text-align: left">名称</th>
 								<th style="width: 5%; text-align: center">类型</th>
 								<th style="text-align: center; width: 14%;">审核状态</th>
 							 	<th style="width: 10%; text-align: center">状态</th>

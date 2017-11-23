@@ -189,7 +189,7 @@ function selectcreate() {
     var ele = {};
     ele.type = 'select';
     ele.name = 'gangwei';
-    ele.title = '类型';
+    ele.title = '类别';
     ele.withNull = true;
     var elsPar = {};
     ele.items = items;
@@ -199,7 +199,7 @@ function selectcreate() {
     var ele = {};
     ele.type = 'select';
     ele.name = 'xulie';
-    ele.title = '';
+    ele.title = '序列';
     ele.withNull = true;
     ele.items = items1;
     var elsPar2 = {};
@@ -208,7 +208,7 @@ function selectcreate() {
     var ele = {};
     ele.type = 'select';
     ele.name = 'mokuai';
-    ele.title = '';
+    ele.title = '模块';
     ele.withNull = true;
     ele.items = items2;
 
@@ -616,6 +616,7 @@ listPage.prototype.bldTable = function (listData) {
         var BM_ENDDATE = pageEntity[i].BM_ENDDATE;
         var BM_ID = pageEntity[i].BM_ID;
         var XM_ID = pageEntity[i].XM_ID;
+        var bm_time = pageEntity[i].S_ATIME;//提交时间
         // firint = firint+i;
         //资格非资格
         var type = "";
@@ -711,7 +712,8 @@ listPage.prototype.bldTable = function (listData) {
         var $operTd = jQuery('<td style="text-align:left "></td>');//操作栏td
         $tr.append(
             '<td class="indexTD" style="text-align: center">' + (i + 1) + '</td>' +
-            '<td class="indexTD" style="text-align: center">' + leixng + '</td>' +
+            '<td class="indexTD" style="text-align: left">' + bm_time + '</td>' +
+            '<td class="indexTD" style="text-align: left">' + leixng + '</td>' +
             '<td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">' + type + '</td>');
         var flagstate = '审核进行中';
         if (shstate == "已结束") {
