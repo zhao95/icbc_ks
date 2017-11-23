@@ -85,28 +85,51 @@ public class KcapMatch {
 				break;
 			case 2:
 
-				Bean clone = (Bean) filtBean.clone();
+				// Bean clone = (Bean) filtBean.clone();
 
 				// 同一考生同一场场次连排 (同一考生 同一天 同一考场 同一座位 上一场次)
 				Bean rtnBean = filtR002(freeZw, busyZwBean, filtBean);
 
-				if (!rtnBean.isEmpty()) {
+				if (!rtnBean.isEmpty() && rtnBean.getBoolean("IS_TRUE")) {
+
+					rtnBean.remove("IS_TRUE");
 
 					filtBean = (Bean) rtnBean.clone();
 
-					for (Object times : clone.keySet()) {
-
-						log.error("-----场次连排前----------------time:" + times.toString() + ":"
-								+ clone.getBean(times).size());
-					}
-
-					for (Object times : filtBean.keySet()) {
-
-						log.error("-----场次连排后----------------time:" + times.toString() + ":"
-								+ filtBean.getBean(times).size());
-					}
+					// for (Object times : clone.keySet()) {
+					//
+					// log.error("-----keepR002前----------------time:" +
+					// times.toString() + ":"
+					// + clone.getBean(times).size());
+					// }
+					//
+					// for (Object times : filtBean.keySet()) {
+					//
+					// log.error("-----keepR002后----------------time:" +
+					// times.toString() + ":"
+					// + filtBean.getBean(times).size());
+					// }
 					break rtnLoop;
 				}
+
+				// else {
+				//
+				// filtBean = (Bean) rtnBean.clone();
+				//
+				// for (Object times : clone.keySet()) {
+				//
+				// log.error("-----removeR002前----------------time:" +
+				// times.toString() + ":"
+				// + clone.getBean(times).size());
+				// }
+				//
+				// for (Object times : filtBean.keySet()) {
+				//
+				// log.error("-----removeR002后----------------time:" +
+				// times.toString() + ":"
+				// + filtBean.getBean(times).size());
+				// }
+				// }
 
 				break;
 			case 3:
@@ -353,6 +376,7 @@ public class KcapMatch {
 	private static Bean filtR002(Bean freeZw, Bean busyZwBean, Bean filtBean) {
 
 		if (filtBean == null || filtBean.isEmpty()) {
+
 			return new Bean();
 		}
 
@@ -370,73 +394,18 @@ public class KcapMatch {
 
 			Bean filtTemp = new Bean();
 
-			Bean userBean = new Bean();
-
 			if (busyZwBean.containsKey(beforeKcCcDate)) {
 
-				Bean busyZw = busyZwBean.getBean(beforeKcCcDate);
+				filtR002Keep(filtBean, filtTemp, busyZwBean, beforeKcCcDate);// 保留同一考场,上一场次,同一天的安排
 
-				for (Object zwh : busyZw.keySet()) { // 遍历场次座位
+			} else {
 
-					String ucode = busyZw.getBean(zwh).getStr("U_CODE"); // 考生编码
-
-					userBean.set(ucode, ucode);
-				}
-
-				filtR002Ks(filtBean, filtTemp, userBean);
-
+				filtR002Remove(filtBean, busyZwBean, beforeCcDate); // 清除不同考场,上一场次,同一天的安排考生
 			}
 
-			// for (Object kcCcDate : busyZwBean.keySet()) { // 遍历已安排场次
-			//
-			// Bean busyZw = busyZwBean.getBean(kcCcDate);
-			//
-			// for (Object zwh : busyZw.keySet()) { // 遍历场次座位
-			//
-			// String ucode = busyZw.getBean(zwh).getStr("U_CODE"); // 考生编码
-			//
-			// Bean cloneFiltBean = (Bean) filtBean.clone();
-			//
-			// for (Object time : cloneFiltBean.keySet()) { // 遍历考试时长
-			//
-			// Bean timeFiltBean = cloneFiltBean.getBean(time);
-			//
-			// if (beforeKcCcDate.equals(kcCcDate.toString())) { //
-			// 同一天,同一考场,上一场次的安排
-			//
-			// if (timeFiltBean.containsKey(ucode)) {
-			//
-			// Object obj = timeFiltBean.get(ucode);
-			//
-			// if (userBean.containsKey(ucode)) {
-			//
-			// if (filtTemp.containsKey(time)) {
-			//
-			// filtTemp.getBean(time).set(ucode, obj);
-			//
-			// } else {
-			// Bean add = new Bean();
-			//
-			// add.set(ucode, obj);
-			//
-			// filtTemp.set(time, add);
-			// }
-			// }
-			// }
-			//
-			// } else if (kcCcDate.toString().endsWith(beforeCcDate)) { //
-			// 同一天,不同考场,上一场次的安排(清除考生，保证场次联排规则准确)
-			//
-			// if (timeFiltBean.containsKey(ucode)) {
-			//
-			// filtBean.getBean(time).remove(ucode);
-			// }
-			// }
-			// }
-			// }
-			// }
-
 			if (!filtTemp.isEmpty()) { // 本场连排上一场次
+
+				filtTemp.set("IS_TRUE", true);
 
 				return filtTemp;
 			}
@@ -446,10 +415,28 @@ public class KcapMatch {
 			log.error(e);
 		}
 
-		return new Bean();
+		return filtBean;
 	}
 
-	private static void filtR002Ks(Bean filtBean, Bean filtTemp, Bean userBean) {
+	/**
+	 * 筛选同一考场,上一场次,同一天的安排考生
+	 * 
+	 * @param filtBean
+	 * @param filtTemp
+	 * @param userBean
+	 */
+	private static void filtR002Keep(Bean filtBean, Bean filtTemp, Bean busyZwBean, String beforeKcCcDate) {
+
+		Bean userBean = new Bean();
+
+		Bean busyZw = busyZwBean.getBean(beforeKcCcDate);
+
+		for (Object zwh : busyZw.keySet()) { // 遍历场次座位
+
+			String ucode = busyZw.getBean(zwh).getStr("U_CODE"); // 考生编码
+
+			userBean.set(ucode, ucode);
+		}
 
 		Bean cloneFiltBean = (Bean) filtBean.clone();
 
@@ -471,7 +458,9 @@ public class KcapMatch {
 
 					} else {
 						Bean add = new Bean();
+
 						add.set(u, obj);
+
 						filtTemp.set(time, add);
 					}
 				}
@@ -480,7 +469,54 @@ public class KcapMatch {
 	}
 
 	/**
-	 * 筛选 距离近的考生
+	 * 清除不同考场,上一场次,同一天的安排考生
+	 * 
+	 * @param filtBean
+	 * @param filtTemp
+	 * @param userBean
+	 */
+	private static void filtR002Remove(Bean filtBean, Bean busyZwBean, String beforeCcDate) {
+
+		Bean userBean = new Bean();
+
+		for (Object kcCcDate : busyZwBean.keySet()) {
+
+			if (kcCcDate.toString().endsWith(beforeCcDate)) { // 不同考场,上一场次,同一天的安排(清除考生，保证场次联排规则准确)
+
+				Bean busyZw = busyZwBean.getBean(kcCcDate);
+
+				for (Object zwh : busyZw.keySet()) { // 遍历场次座位
+
+					String ucode = busyZw.getBean(zwh).getStr("U_CODE"); // 考生编码
+
+					userBean.set(ucode, ucode);
+				}
+			}
+		}
+
+		if (!userBean.isEmpty()) {
+
+			Bean cloneFiltBean = (Bean) filtBean.clone();
+
+			for (Object time : cloneFiltBean.keySet()) { // 遍历考试时长
+
+				Bean timeFiltBean = cloneFiltBean.getBean(time);
+
+				for (Object u : timeFiltBean.keySet()) {
+
+					String ucode = u.toString();
+
+					if (userBean.containsKey(ucode)) {
+
+						filtBean.getBean(time).remove(ucode);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 筛选 距离近的考生，移除距离远的考生
 	 * 
 	 * @param freeZw
 	 * @param farBean
@@ -493,13 +529,17 @@ public class KcapMatch {
 			return;
 		}
 
-		String kcId = freeZw.getStr("KC_ID"); // 考场id
-
-		Bean farKsBean = farBean.getBean(kcId);
-
 		Bean cloneBean = (Bean) filtBean.clone();
 
-		for (Object ukey : farKsBean.keySet()) {
+//		for (Object timeKey : cloneBean.keySet()) {
+//			log.error("---------前farKs--time:" + timeKey + "|filtBean.size():" + cloneBean.getBean(timeKey).size());
+//		}
+
+		String kcId = freeZw.getStr("KC_ID"); // 考场id
+
+		Bean farKsBean = farBean.getBean(kcId); // 当前考场 距离远的考生
+
+		for (Object ukey : farKsBean.keySet()) { // 遍历 远距离考生机构
 
 			for (Object timeKey : cloneBean.keySet()) { // 遍历考试时长
 
@@ -512,6 +552,9 @@ public class KcapMatch {
 			}
 		}
 
+//		for (Object timeKey : filtBean.keySet()) {
+//			log.error("---------后farKs--time:" + timeKey + "|filtBean.size():" + filtBean.getBean(timeKey).size());
+//		}
 	}
 
 	/**
