@@ -232,7 +232,7 @@ function xminfoshow(){
            						$("#"+yzjg).append(successinfo);
            					}
            					$("#"+yzjg).append('<div></div>');
-           					$("#"+yzjg).append('<div><a target="_blank" href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
+           					$("#"+yzjg).append('<div><a window.open("/qt/jsp/examref.jsp") href="#">相关学习材料</a></div>');
            				}
        				}else{
        					if(shArray==true&&truetisi=="true"){
