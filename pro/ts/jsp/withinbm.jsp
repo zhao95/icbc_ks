@@ -87,7 +87,7 @@
 				<td id="mingcheng" style="width: 25%; text-align: right">名称&nbsp;&nbsp;<input
 					style="height: 30px; width: 70%" id="mc" type="text"></input></td>
 				<td style="width: 5%"></td>
-				<td id="zuzhidanwei" style="width: 20%">组织单位&nbsp;&nbsp;<input
+				<td id="zuzhidanwei" style="width: 25%">组织单位&nbsp;&nbsp;<input
 					style="height: 30px; width: 70%" id="zzdw" type="text"></input></td>
 				<td style="width: 5%"></td>
 				<td style="width: 15%"><select id="zhuangtai" onchange="ztcx()">
@@ -97,7 +97,7 @@
 				</select></td>
 				<td style="width: 5%"></td>
 				<td><button id="search"
-						style="color: white; height: 30px; width: 25%; background: DarkTurquoise" class="btn"
+						style="color: white; height: 30px; width: 30%; background: DarkTurquoise" class="btn"
 						onclick="xzcu()">查询</button></td>
 			</tr>
 		</tbody>
@@ -115,7 +115,7 @@
 					<th id="BM_ODEPT__NAME" class=""
 						style="width: 20%; text-align: left">组织单位</th>
 					<th id="S_ATIME" class="" style="width: 20%; text-align: left">创建时间</th>
-					<th id="BM_STATE__NAME" class="" style="width: 5%;">状态</th>
+					<th id="BM_STATE__NAME" class="" style="width: 8%;">状态</th>
 					<th id="BM_OPTIONS" class="" style="width: 15%; text-align: center">操作</th>
 				</tr>
 			</thead>

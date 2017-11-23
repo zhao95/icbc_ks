@@ -268,6 +268,9 @@ position: absolute;
 		<div class="modal-dialog" style="width:30%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
 					<h4 class="modal-title">
 					禁考提示
 					</h4>
@@ -290,7 +293,9 @@ position: absolute;
 				<div id="mask" class="mask"></div>
 				<div class="modal-header"
 					style="background-color: #00c2c2; color: white">
-
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
 					<h6 class="modal-title">信息验证</h6>
 				</div>
 				<div style="padding-top:4%;padding-bottom:6%;margin-left:27%;font-size:16px;">请输入您已入职满&nbsp;<input style="width:20%" id="yzinput"/>&nbsp;年</div>

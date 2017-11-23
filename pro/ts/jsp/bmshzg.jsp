@@ -349,17 +349,17 @@ if(userBean != null) {
 				<div>
 				<table style="height:125px;font-size:14px;">
 				<tr style="height:25%">
-				<td style="text-align:left;width:20%">审核人姓名&nbp;&nbp;</td><td><input style="height:30px" type="text" value="<%=username%>" name="shren"/></td>
+				<td style="text-align:left;width:20%">审核人姓名&nbp;&nbp;</td><td><input style="width:90%;height:30px" type="text" value="<%=username%>" name="shren"/></td>
 				<td style="width:3%"></td>
-				<td style="text-align:left">审核人登录名&nbp;&nbp;</td><td><input style="height:30px" type="text" value="<%=loginname %>" name="shdlming"/></td>
+				<td style="text-align:left">审核人登录名&nbp;&nbp;</td><td><input style="width:90%;height:30px" type="text" value="<%=loginname %>" name="shdlming"/></td>
 				</tr>
 				<tr style="height:25%">
-				<td style="text-align:right">审核状态&nbp;&nbp;</td><td><span id="radiospan1"><input style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1" checked>审核通过&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<td style="text-align:right">审核状态&nbp;&nbp;</td><td colspan="4"><span id="radiospan1"><input style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1" checked>审核通过&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 													<span id="radiospan2"><input name="state" style="vertical-align:text-bottom; margin-bottom:-4;" type="radio" value="2">审核不通过</span>
 				</td>
 				</tr>
 				</table>
-				<table  style="height:100px;width:700px">
+				<table  style="height:100px;width:100%">
 				<tr>
 				<td style="text-align:right;width:17.5%;vertical-align:top">审核理由</td><td style="width:4%"></td><td style="width:75%;vertical-align:top"><textarea id="liyou" style="border:solid 1px lightseagreen;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
