@@ -121,7 +121,7 @@ position: absolute;
 	<div id="myTabContent" class="tab-content">
 		<div class="tab-pane fade in active" id="home">
 			<div
-				style="margin-top: -5px; margin-left: 19%; height: 5px; width: 190px; background-color: LightSeaGreen"></div>
+				style="margin-top: -5px; margin-left: 16%; height: 5px; width: 220px; background-color: LightSeaGreen"></div>
 			<div id="cuxian1"
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">可申请的报名</span>
@@ -154,7 +154,7 @@ position: absolute;
 		</div>
 		<div class="tab-pane fade"  id="tab2">
 			<div
-				style="margin-top: -6px; margin-left: 68%; height: 5px; width: 190px; background-color: LightSeaGreen"></div>
+				style="margin-top: -6px; margin-left: 65%; height: 5px; width: 220px; background-color: LightSeaGreen"></div>
 			<div id="cuxian2"
 				style="position:absolute;margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">已申请的报名</span>
