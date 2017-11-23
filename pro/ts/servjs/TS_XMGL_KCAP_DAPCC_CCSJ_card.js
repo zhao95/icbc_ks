@@ -42,13 +42,13 @@ _viewer.beforeSave = function() {
 //_viewer.afterSave = function() {
 //_viewer.getParHandler().refresh();
 //}
-function addMin(a,b){
-	b = parseInt(b);
-	var atime = a.replace(/-/g, "/");
-	var date = new Date(atime);
-	date.setMinutes(date.getMinutes()+b);
-   	return rhDate.patternData("yyyy-MM-dd HH:mm",date);
-}
+//function addMin(a,b){
+//	b = parseInt(b);
+//	var atime = a.replace(/-/g, "/");
+//	var date = new Date(atime);
+//	date.setMinutes(date.getMinutes()+b);
+//   	return rhDate.patternData("yyyy-MM-dd HH:mm",date);
+//}
 checkShow();
 var xmId = _viewer.getParHandler().getParHandler().getParHandler().getParHandler().getPKCode()
 _viewer.getItem("XM_ID").setValue(xmId);
