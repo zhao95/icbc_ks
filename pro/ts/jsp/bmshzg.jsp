@@ -492,16 +492,19 @@ if(userBean != null) {
 						
 						报名详细信息
 				</div>
-				<div style="padding-left:30px;padding-top:20px;">
-				<table style="width:650px;font-size:15px;color:black">
-				<thead>
+				<div class="row">
+				<div style="padding-top:20px;">
+				<div class="col-md-6" style="width:30%;text-align:right;font-size:20px;vertical-align:bottom">考试标题：&nbsp;</div><div class="col-md-6"  style="font-size:18px;color:gray;width:35%" id="ks_title"></div>
+				</div>
+				<table style="width:600px;font-size:15px;color:black">
+				<!-- <thead>
 				<tr>
 				<td style="width:20%;text-align:right;font-size:20px;vertical-align:bottom">考试标题：&nbsp;</td><td style="font-size:18px;color:gray;width:30%" id="ks_title"></td>
 				<td style="width:20%"></td><td style="width:30%"></td>
 				</tr>
-				</thead>
+				</thead> -->
 				<tr height="40px">
-				<td style="color:gray;width:20%;text-align:right;vertical-align:bottom">报名人：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;height:20px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="bm_name"></td><td style="color:gray;vertical-align:bottom;width:20%;text-align:right;">人力编码：&nbsp;</td><td style="border-bottom:solid 1px lightgray;vertical-align:bottom;font-size:14px;color:gray;text-align:left;width:50%" id="work_num"></td>
+				<td style="color:gray;width:20%;text-align:right;vertical-align:bottom">报名人：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;height:20px;color:gray;width:30%;border-bottom:solid 1px lightgray;" id="bm_name"></td><td style="color:gray;vertical-align:bottom;width:20%;text-align:right;">人力编码：&nbsp;</td><td style="border-bottom:solid 1px lightgray;vertical-align:bottom;font-size:14px;color:gray;text-align:left;width:30%" id="work_num"></td>
 				</tr>
 				<tr height="50px">
 				<td style="color:gray;width:20%;text-align:right;vertical-align:bottom">性别：&nbsp;</td><td style="vertical-align:bottom;font-size:14px;color:gray;width:15%;border-bottom:solid 1px lightgray;" id="gender"></td><td style="color:gray;vertical-align:bottom;width:20%;text-align:right;">电话：&nbsp;</td><td style="border-bottom:solid 1px lightgray;vertical-align:bottom;font-size:14px;color:gray;text-align:left;width:50%" id="phone_num"></td>
