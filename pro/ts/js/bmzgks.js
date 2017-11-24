@@ -232,7 +232,8 @@ function xminfoshow(){
            						$("#"+yzjg).append(successinfo);
            					}
            					$("#"+yzjg).append('<div></div>');
-           					$("#"+yzjg).append('<div><a window.open("/qt/jsp/examref.jsp") href="#">相关学习材料</a></div>');
+           					var examurl = '/qt/jsp/examref.jsp'
+           					$("#"+yzjg).append("<div><a window.open("+examurl+") href='#'>相关学习材料</a></div>");
            				}
        				}else{
        					if(shArray==true&&truetisi=="true"){
@@ -256,7 +257,8 @@ function xminfoshow(){
        							$("#"+yzjg).append(successinfo);
        						}
        						$("#"+yzjg).append('<div></div>');
-       						$("#"+yzjg).append('<div><a href="/qt/jsp/examref.jsp">相关学习材料</a></div>');
+       						var examurl = '/qt/jsp/examref.jsp'
+       						$("#"+yzjg).append('<div><a window.open('+examurl+') href="#">相关学习材料</a></div>');
        					}
        				}
 	       		}

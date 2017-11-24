@@ -411,7 +411,7 @@ if(userBean != null) {
 				     <div style="position:relative;left:48.5%;top:-180px">
 				   <a id="rightalla" onclick="rightall()" href="#"><image id="rightall" src="/ts/image/1552.png"></image></a>
 				    </div>
-				    <div style="position:relative;left:55.4%;top:-102.4%;width:44.6%;">
+				    <div style="position:relative;left:55.4%;top:-102.8%;width:44.6%;">
 				     <table style="width:100%;">
 				     <thead style="background-color:lightgray;border-bottom:solid 1px lightgray">
 				      <tr style="height:35px;">
