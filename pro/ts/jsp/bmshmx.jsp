@@ -54,13 +54,13 @@
 						
 		<tr style="backGround-color:WhiteSmoke; height: 30px">
 			<th style="width: 5%; text-align: center">序号</th>
-			<th style="width: 13%;text-align: center">审核时间</th>
-			<th style="width: 13%;text-align: center">审核人姓名</th>
-			<th style="width: 13%; text-align: center">审核人登录名</th>
-			<th style="width: 13%; text-align: center">审核级别</th>
-			<th style="width: 13%; text-align: center">审核状态</th>
-			<th style="width: 13%; text-align: center">审核理由</th>
-			<th style="width: 13%; text-align: center">审核地址</th>
+			<th style="width: 19%;text-align: left">审核时间</th>
+			<th style="width: 10%;text-align: center">审核人姓名</th>
+			<th style="width: 10%; text-align: center">审核人登录名</th>
+			<th style="width: 10%; text-align: center">审核级别</th>
+			<th style="width: 10%; text-align: center">审核状态</th>
+			<th style="width: 18%; text-align: center">审核理由</th>
+			<th style="width: 16%; text-align: center">审核地址</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -87,7 +87,7 @@
 		}else if("2".equals(state)){
 			status="审核未通过";
 		}
-		if("自动审核".equals(shr)){
+		if("自动审核".equals(jibie)){
 			asign=String.valueOf(i);
 			reasonstr=bean.getStr("SH_MIND");
 		}else{

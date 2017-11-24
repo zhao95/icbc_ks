@@ -111,7 +111,7 @@ function xminfoshow(){
          			$("#"+a).append('<div style="height:5px;"></div>');
          			$("#"+a).append('<div style="height:5px;"></div>');
          			var yzjg=a+"yzjg";
-         			$("#"+yzjg).append("审核通过");
+         			$("#"+yzjg).append("验证通过");
          			
          		}else{
          			
@@ -140,11 +140,11 @@ function xminfoshow(){
        				if(FLAG){
        					if(xlcode==STATION_NO_CODE){
        						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此考试,请再提交或请选择其它考试</div>');
-       						$("#"+yzjg).append("审核不通过");
+       						$("#"+yzjg).append("验证不通过");
        					}else{
        						$("#"+a).append('已报名此考试,请撤销再报名');
        						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
-       						$("#"+yzjg).append("审核不通过");
+       						$("#"+yzjg).append("验证不通过");
        					}
        					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
        					continue;
@@ -153,11 +153,11 @@ function xminfoshow(){
        				if(xlflag){
        					if(bm_xl==STATION_NO_CODE){
        						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">本序列只能报考一个,请撤销再提交或请选择其它考试</div>');
-       						$("#"+yzjg).append("审核不通过");
+       						$("#"+yzjg).append("验证不通过");
        					}else{
        						$("#"+a).append('已报名此序列,请撤销再报名');
        						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
-       						$("#"+yzjg).append("审核不通过");
+       						$("#"+yzjg).append("验证不通过");
        					}
        					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
        					continue;
@@ -218,7 +218,7 @@ function xminfoshow(){
            					if(""==failerinfo){
            						$("#"+a).append('<div></div>');
                					$("#"+a).append('<div></div>');
-           						$("#"+yzjg).append('审核不通过');
+           						$("#"+yzjg).append('验证不通过');
            					}else{
            						$("#"+yzjg).append(failerinfo);
            					}
@@ -227,7 +227,7 @@ function xminfoshow(){
            					$("#"+a).append('<div></div>');
            					$("#"+a).append('<div></div>');
            					if(""==successinfo){
-           						$("#"+yzjg).append("审核通过");
+           						$("#"+yzjg).append("验证通过");
            					}else{
            						$("#"+yzjg).append(successinfo);
            					}
@@ -245,7 +245,7 @@ function xminfoshow(){
        					}
        					if(shArray==false){
        						if(""==failerinfo){
-       							$("#"+yzjg).append('审核不通过');
+       							$("#"+yzjg).append('验证不通过');
        						}else{
        							$("#"+yzjg).append(failerinfo);
        						}
@@ -254,7 +254,7 @@ function xminfoshow(){
        						$("#"+a).append('<div></div>');
        						$("#"+a).append('<div></div>');
        						if(""==successinfo){
-       							$("#"+yzjg).append("初步审核通过");
+       							$("#"+yzjg).append("验证通过");
        						}else{
        							$("#"+yzjg).append(successinfo);
        						}
@@ -273,6 +273,7 @@ function xminfoshow(){
 	}
 	//提交所有数据
 	function mttijiao(){
+		is_confirm=false;
 		//获取手机号码
 		var ryl_mobile = document.getElementById("user_mobile2").value
 		//获取到资格考试类型主键id
@@ -624,6 +625,7 @@ function xminfoshow(){
 	}
 
 	function goBack(){
+		is_confirm=false;
 		window.history.go(-1);
 	}
 	//模态页面 取消按钮 删除之前append的tr
@@ -1334,3 +1336,4 @@ $("#slaveselect").change(function(){
 	
 })
 */
+//页面关闭时提示 是否要离开页面
