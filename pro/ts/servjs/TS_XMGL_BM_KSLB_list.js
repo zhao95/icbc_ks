@@ -165,5 +165,7 @@ function mkLength(MKcodes){
 		
 		return  mkstr+=addZero.substr(0,addZeroNum);
 		
+	}else {
+		return   mkstr;
 	}
 }
