@@ -52,7 +52,7 @@ public class KSNImpDataServ extends CommonServ {
 	public OutBean impDatafromTable(ParamBean param) {
 		log.info("-------------- impDatafromTable ---------------");
 		//
-		TABLES_NUMBER = Context.getSyConf("SY_DATA_TABLE_NUM", TABLES_NUMBER);
+		TABLES_NUMBER = Context.getSyConf("TS_DATA_TABLE_NUM", TABLES_NUMBER);
 		// 获取同步数据的时间,SMTIME
 		String smtime = "";
 		if (param.isNotEmpty("S_MTIME")) {
@@ -76,18 +76,16 @@ public class KSNImpDataServ extends CommonServ {
 		// 将接口表中数据导入至全量数据表
 		log.info("------------------ import interface data ------------------");
 		RhThreadPool threadPool = new RhThreadPool(2, 5, 20);
-		//ok
+		//OK
 		if ("".equals(tables) || tables.indexOf("SY_BOM_ZDPSTRUINFO") > -1) {
 			KSBomInfoTableTask bomInfoTask = new KSBomInfoTableTask(smtime, incrementFlag);
 			threadPool.execute(bomInfoTask);
 		}
-		
 		//OK
 		if ("".equals(tables) || tables.indexOf("SY_HRM_ZDSTAFFBINFO") > -1) {
 			KSHrmBinfoTableTask hrmBinfoTask = new KSHrmBinfoTableTask(smtime, incrementFlag);
 			threadPool.execute(hrmBinfoTask);
 		}
-
 		//OK
 		if ("".equals(tables) || tables.indexOf("SY_HRM_ZDSTAFFADMIN") > -1) {
 			KSHrmAdminTask adTask = new KSHrmAdminTask(smtime, incrementFlag);
@@ -108,7 +106,6 @@ public class KSNImpDataServ extends CommonServ {
 			KSHrmNotesTask hrmnotesTask = new KSHrmNotesTask(smtime, incrementFlag);
 			threadPool.execute(hrmnotesTask);
 		}
-		
 		//OK
 		if ("".equals(tables) || tables.indexOf("SY_HRM_ZDSTAFFPOSITION") > -1) {
 			KSHrmPositionTask hrmpositionTask = new KSHrmPositionTask(smtime, incrementFlag);
@@ -124,7 +121,6 @@ public class KSNImpDataServ extends CommonServ {
 			KSHrmStruTask hrmstruTask = new KSHrmStruTask(smtime, incrementFlag);
 			threadPool.execute(hrmstruTask);
 		}
-//		
 		//OK
 		if("".equals(tables) || tables.indexOf("SY_HRM_ZDSTAFFPHOTO") > -1){
 			KSHrmStaffPhoto hrmStaffPhoto = new KSHrmStaffPhoto(smtime, incrementFlag);

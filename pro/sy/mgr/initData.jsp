@@ -1,4 +1,4 @@
-<%@page import="com.rh.core.icbc.basedata.serv.NImpDataServ"%>
+<%@page import="com.rh.core.icbc.basedata.serv.KSNImpDataServ"%>
 <%@page import="com.rh.core.util.threadpool.RhThreadTask"%>
 <%@page import="com.rh.core.util.threadpool.RhThreadPool"%>
 <%@page import="com.rh.core.serv.ParamBean"%>
@@ -58,7 +58,7 @@
 			if(adminUser != null){
 				param.set("userSSICIDs", adminUser);
 			}
-			new NImpDataServ().impDatafromTable(param);
+			new KSNImpDataServ().impDatafromTable(param);
 			out.print("<h5>导入全量数据完成！</h5>");
 		}
 		

@@ -2,6 +2,7 @@ package com.rh.core.icbc.basedata.serv;
 
 import org.apache.commons.lang.time.StopWatch;
 
+import com.rh.core.icbc.basedata.task.KSKCGSTask;
 import com.rh.core.icbc.basedata.task.KSTipBMTask;
 import com.rh.core.icbc.basedata.task.KSTipQJ_JKTask;
 import com.rh.core.icbc.basedata.task.KSTipZKZTask;
@@ -24,31 +25,22 @@ public class KSTipMessageServ extends CommonServ {
 		//开始计时
 		StopWatch sw = new StopWatch();
 		sw.start();
+		
 		//报名相关提醒线程任务
 		KSTipBMTask bmTask = new KSTipBMTask();
 		tipThreadPoll.execute(bmTask);
 		
-		KSTipQJ_JKTask name = new KSTipQJ_JKTask();
-		tipThreadPoll.execute(name);
+		//请假/借考开始提醒相关任务
+		KSTipQJ_JKTask qj_jkTask = new KSTipQJ_JKTask();
+		tipThreadPoll.execute(qj_jkTask);
 		
-		KSTipZKZTask name1 = new KSTipZKZTask();
-		tipThreadPoll.execute(name1);
+		//考场公示开始提醒
+		KSKCGSTask kcgsTask = new KSKCGSTask();
+		tipThreadPoll.execute(kcgsTask);
 		
-		// 请假/借考相关提醒线程任务
-		log.error("-------------开始通知参考人员可以开始请假。----------------");
-		//请假开始提醒
-		log.error("-------------完成通知参考人员可以开始请假。----------------");
-		
-		log.error("-------------开始通知参考人员请假结果。----------------");
-		//请假结果提醒
-		log.error("-------------完成通知参考人员请假结果。----------------");
-		
-		log.error("-------------开始通知参考人员可以开始借考。----------------");
-		//借考开始提醒
-		log.error("-------------完成通知参考人员开始借考。----------------");
-		
-		log.error("-------------开始通知参考人员借考结果。----------------");
-		//借考结果提醒
+		//准考证打印提醒相关任务
+		KSTipZKZTask zkzTask = new KSTipZKZTask();
+		tipThreadPoll.execute(zkzTask);
 		
 		//准考证打印提醒
 		//考场座位安排公示提醒

@@ -68,10 +68,10 @@ public class DIIOPMailSender implements IMailSender {
 	 * 构造函数
 	 */
 	public DIIOPMailSender() {
-		server = Context.getSyConf("CC_SPECIAL_MAIL_IP", "122.18.141.52");
-		nsfPath = Context.getSyConf("CC_SPECIAL_MAIL_DB", "mail/测试用户4000.nsf");
-		loginName = Context.getSyConf("CC_SPECIAL_MAIL_NAME", "000045859");
-		password = Context.getSyConf("CC_SPECIAL_MAIL_PSW", "pass1234");
+		server = Context.getSyConf("TS_SPECIAL_MAIL_IP", "122.18.173.78");
+		nsfPath = Context.getSyConf("TS_SPECIAL_MAIL_DB", "mail/测试应用1.nsf");
+		loginName = Context.getSyConf("TS_SPECIAL_MAIL_NAME", "test1");
+		password = Context.getSyConf("TS_SPECIAL_MAIL_PSW", "password");
 	}
 	
 	private String content;

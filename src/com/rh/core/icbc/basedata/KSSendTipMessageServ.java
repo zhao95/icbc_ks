@@ -3,74 +3,131 @@ package com.rh.core.icbc.basedata;
 import java.util.List;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
+import com.rh.core.comm.ConfMgr;
+import com.rh.core.comm.msg.DIIOPMailSender;
+import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.OutBean;
+import com.rh.core.util.freemarker.FreeMarkerUtils;
 /**
  * 提醒信息发送接口
  * @author leader
- *
  */
 public class KSSendTipMessageServ {
 	/**
-	 * 发送提醒消息接口类，对接工行发送提醒的类型（融易联短信，邮件，腾讯通）
+	 * 发送提醒消息接口类，对接工行发送提醒的类型（本系统只做邮件，别的提醒方式在e办公系统体现）
 	 * @param tipBean 参数为信息数据bean，包含发送消息提醒语tipMsg，人员编码USER_CODE等详情参照该方法内对照字段
 	 * @param tipFlag 提醒类型区分（qjStar 请假开始，qjResult 请假结果，jkStar 借考开始，jkResult 借考结果，bmStar 报名开始，bmEnd 报名截止，kczwShow 考场座位公示，zkzStar 准考证开始打印）
 	 * @return
 	 */
 		public OutBean sendTipMessageBeanForICBC(Bean tipBean , String tipFlag){
-			//请假开始
+			final String  USER_CODE = tipBean.getStr("USER_CODE");
+			final String tipMsg = tipBean.getStr("tipMsg");
+			//发送请假开始提醒消息
 			if(tipFlag.equals("qjStar")){
-				String USER_CODE = tipBean.getStr("USER_CODE");
-				String tipMsg = tipBean.getStr("tipMsg");
-				System.out.println("---发送请假开始提醒消息--》"+USER_CODE+tipMsg);
+				//创建bean存储网页模板生成所需要的数据。
+				Bean pBean = new Bean();
+				pBean.set("tipMsg", tipMsg);
+				//String confTipType = ConfMgr.getConf("TS_TIP_QJ_START_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
+				String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+				if(confTipType.equals("EMAIL")){
+					//发送邮件包含的网页页面
+					String html = FreeMarkerUtils.parseText(Context.appStr(Context.APP.SYSPATH)+"sy/comm/home/ftl/SY_EMAIL_NEWS.ftl", pBean);
+					DIIOPMailSender.sendMail("请假开始提醒", html,UserMgr.getUser(USER_CODE).getStr("USER_EMAIL"));
+				}
+				//融E联方式发送
+				else if(confTipType.equals("ELINK")){
+					//暂未处理
+				}
 			}
-			//请假结果
+			//发送请假结果提醒消息
 			if(tipFlag.equals("qjResult")){
-				String USER_CODE = tipBean.getStr("USER_CODE");
-				String tipMsg = tipBean.getStr("tipMsg");
-				System.out.println("---发送请假结果提醒消息--》"+USER_CODE+tipMsg);
+				//创建bean存储网页模板生成所需要的数据。
+				Bean pBean = new Bean();
+				pBean.set("tipMsg", tipMsg);
+				String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+				if(confTipType.equals("EMAIL")){
+					//发送邮件包含的网页页面
+					String html = FreeMarkerUtils.parseText(Context.appStr(Context.APP.SYSPATH)+"sy/comm/home/ftl/SY_EMAIL_NEWS.ftl", pBean);
+					DIIOPMailSender.sendMail("请假结果提醒", html,UserMgr.getUser(USER_CODE).getStr("USER_EMAIL"));
+				}
 			}
-			//借考开始
+			//发送借考开始提醒消息
 			if(tipFlag.equals("jkStar")){
-				String USER_CODE = tipBean.getStr("USER_CODE");
-				String tipMsg = tipBean.getStr("tipMsg");
-				System.out.println("---发送借考开始提醒消息--》"+USER_CODE+tipMsg);
+				//创建bean存储网页模板生成所需要的数据。
+				Bean pBean = new Bean();
+				pBean.set("tipMsg", tipMsg);
+				String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+				if(confTipType.equals("EMAIL")){
+					//发送邮件包含的网页页面
+					String html = FreeMarkerUtils.parseText(Context.appStr(Context.APP.SYSPATH)+"sy/comm/home/ftl/SY_EMAIL_NEWS.ftl", pBean);
+					DIIOPMailSender.sendMail("借考开始提醒", html,UserMgr.getUser(USER_CODE).getStr("USER_EMAIL"));
+				}
 			}
-			//借考结果
+			//发送借考结果提醒消息
 			if(tipFlag.equals("jkResult")){
-				String USER_CODE = tipBean.getStr("USER_CODE");
-				String tipMsg = tipBean.getStr("tipMsg");
-				System.out.println("---发送借考结果提醒消息--》"+USER_CODE+tipMsg);
+				//创建bean存储网页模板生成所需要的数据。
+				Bean pBean = new Bean();
+				pBean.set("tipMsg", tipMsg);
+				String confTipType ="EMAIL";//获取系统配置的提醒方式，缺省为邮件
+				if(confTipType.equals("EMAIL")){
+					//发送邮件包含的网页页面
+					String html = FreeMarkerUtils.parseText(Context.appStr(Context.APP.SYSPATH)+"sy/comm/home/ftl/SY_EMAIL_NEWS.ftl", pBean);
+					DIIOPMailSender.sendMail("借考结果提醒", html,UserMgr.getUser(USER_CODE).getStr("USER_EMAIL"));
+				}
 			}
-			//报名开始
+			//发送报名开始提醒消息
 			if(tipFlag.equals("bmStar")){
-				String USER_CODE = tipBean.getStr("USER_CODE");
-				String tipMsg = tipBean.getStr("tipMsg");
-				System.out.println("---发送报名开始提醒消息--》"+USER_CODE+tipMsg);
+				//创建bean存储网页模板生成所需要的数据。
+				Bean pBean = new Bean();
+				pBean.set("tipMsg", tipMsg);
+				String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+				if(confTipType.equals("EMAIL")){
+					//发送邮件包含的网页页面
+					String html = FreeMarkerUtils.parseText(Context.appStr(Context.APP.SYSPATH)+"sy/comm/home/ftl/SY_EMAIL_NEWS.ftl", pBean);
+					DIIOPMailSender.sendMail("报名开始提醒", html,UserMgr.getUser(USER_CODE).getStr("USER_EMAIL"));
+				}
 			}
-			//报名截止
+			//发送报名截止提醒消息
 			if(tipFlag.equals("bmEnd")){
-				String USER_CODE = tipBean.getStr("USER_CODE");
-				String tipMsg = tipBean.getStr("tipMsg");
-				System.out.println("---发送报名截止提醒消息--》"+USER_CODE+tipMsg);
+				//创建bean存储网页模板生成所需要的数据。
+				Bean pBean = new Bean();
+				pBean.set("tipMsg", tipMsg);
+				String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+				if(confTipType.equals("EMAIL")){
+					//发送邮件包含的网页页面
+					String html = FreeMarkerUtils.parseText(Context.appStr(Context.APP.SYSPATH)+"sy/comm/home/ftl/SY_EMAIL_NEWS.ftl", pBean);
+					DIIOPMailSender.sendMail("报名截止提醒", html,UserMgr.getUser(USER_CODE).getStr("USER_EMAIL"));
+				}
 			}
 			//考场座位公示
 			if(tipFlag.equals("kczwShow")){
-				String USER_CODE = tipBean.getStr("USER_CODE");
-				String tipMsg = tipBean.getStr("tipMsg");
-				System.out.println("---发送考场座位公示提醒消息--》"+USER_CODE+tipMsg);
+				//创建bean存储网页模板生成所需要的数据。
+				Bean pBean = new Bean();
+				pBean.set("tipMsg", tipMsg);
+				String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+				if(confTipType.equals("EMAIL")){
+					//发送邮件包含的网页页面
+					String html = FreeMarkerUtils.parseText(Context.appStr(Context.APP.SYSPATH)+"sy/comm/home/ftl/SY_EMAIL_NEWS.ftl", pBean);
+					DIIOPMailSender.sendMail("考场座位公示提醒", html,UserMgr.getUser(USER_CODE).getStr("USER_EMAIL"));
+				}
 			}
-			//准考证开始打印
+			//发送准考证开始打印提醒消息
 			if(tipFlag.equals("zkzStar")){
-				String USER_CODE = tipBean.getStr("USER_CODE");
-				String tipMsg = tipBean.getStr("tipMsg");
-				System.out.println("---发送准考证开始打印提醒消息--》"+USER_CODE+tipMsg);
+				//创建bean存储网页模板生成所需要的数据。
+				Bean pBean = new Bean();
+				pBean.set("tipMsg", tipMsg);
+				String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+				if(confTipType.equals("EMAIL")){
+					//发送邮件包含的网页页面
+					String html = FreeMarkerUtils.parseText(Context.appStr(Context.APP.SYSPATH)+"sy/comm/home/ftl/SY_EMAIL_NEWS.ftl", pBean);
+					DIIOPMailSender.sendMail("准考证开始打印提醒", html,UserMgr.getUser(USER_CODE).getStr("USER_EMAIL"));
+				}
 			}
-			
 			return new OutBean().set("OK","消息提醒发送成功");
-			
 		}
 		/**
-		 * 发送提醒消息接口，对接工行发送提醒的接口（融易联短信，邮件，腾讯通）
+		 * 发送提醒消息接口，对接工行发送提醒的接口（融E联短信，邮件）
 		 * @param tipList 参数为信息数据集，集合中的bean包含发送消息提醒语tipMsg，人员编码USER_CODE其余字段要在该方法内寻找匹配键值
 		 * @param tipFlag 提醒类型区分（qjStar 请假开始，qjResult 请假结果，jkStar 借考开始，jkResult 借考结果，bmStar 报名开始，bmEnd 报名截止，kczwShow 考场座位公示，zkzStar 准考证开始打印）
 		 */
