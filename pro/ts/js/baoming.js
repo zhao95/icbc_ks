@@ -98,7 +98,9 @@ function lookSeat(i) {
 function jibieonchange() {
     new listPage().gotoPage(1);
 }
-
+$("#cxbut").click(function(){
+	new listPage().gotoPage(1);
+})
 //每页多少条 添加onchange事件
 function fenyeselect() {
     //跟 级别 按钮 的onchange时间一样都要 筛选所有条件下的数据
@@ -520,7 +522,8 @@ listPage.prototype.getListData = function (num) {
     param._PAGE_ = {};
     param._PAGE_.NOWPAGE = num;
     param._PAGE_.SHOWNUM = showNum;
-
+    
+    param["ppname"]=$("#ksnameselect").val();
     param["user_code"] = user_code;
     // //每页条数
     // var select = document.getElementById("yema");
