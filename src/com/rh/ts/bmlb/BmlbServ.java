@@ -697,9 +697,10 @@ public class BmlbServ extends CommonServ {
 		// String NOWPAGE = paramBean.getStr("nowpage");
 		// String SHOWNUM = paramBean.getStr("shownum");
 		String user_code = paramBean.getStr("user_code");
+		String ppname = paramBean.getStr("ppname");
 		String where1 = paramBean.getStr("where");
 		where1 = where1.replaceAll("AND ", "AND a.");
-		String whereSql = " where a.BM_CODE=" + "'" + user_code + "' " + where1
+		String whereSql = " where a.BM_TITLE LIKE '%"+ppname+"%' AND a.BM_CODE=" + "'" + user_code + "' " + where1
 				+ " order by s_atime desc";
 
 		String sql = "select a.*,c.PUBLICITY from TS_BMLB_BM a left join ts_bmsh_pass b on b.BM_ID = a.BM_ID "
