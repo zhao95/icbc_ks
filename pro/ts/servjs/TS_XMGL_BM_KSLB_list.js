@@ -96,7 +96,7 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	   				param["KSLB_TYPE"] = types[i]; 
 	   				param["KSLBK_ID"]=ids[i];
 	   				param["KSQZ_ID"] = qzId;
-	   				param["XM_SZ_ID"] = XM_SZ_ID;
+	   				param["XM_SZ_ID"] = XM_SZ_ID;debugger;
 	   				param["BM_ID"] = BM_ID;
 	   				param["XM_ID"] = XM_ID;
 	   				param["KSLB_CODE"]=LBcodes[i];
@@ -108,8 +108,9 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	   				+LBcodes[i].toString().substr(LBcodes[i].toString().length-1,1)
 	   				+XLcodes[i].toString().substr(0,1)
 	   				+XLcodes[i].toString().substr(XLcodes[i].toString().length-4,4)
-	   				+MKcodes[i].toString()
-	   				+(types[i]=='无'? "":types[i]);
+	   				//+MKcodes[i].toString()
+	   				+mkLength(MKcodes[i])
+	   				+(types[i]=='无'? "0":types[i]);
 	   				param["KSLB_KSNAME"]=names[i]+xls[i]+(mks[i]=='无模块'? "":mks[i])+typename[i]+'试卷';
 	   				paramlist.push(param);
 	   				console.log(param);
@@ -155,4 +156,14 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 //	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
 //});
 
-
+function mkLength(MKcodes){
+	var mkstr=MKcodes.toString();
+	var  mkCode=mkstr.length;//获取字符串的长度
+	if(mkCode<8){
+		var addZeroNum=8-mkCode;//5
+		var addZero="00000000";
+		
+		return  mkstr+=addZero.substr(0,addZeroNum);
+		
+	}
+}
