@@ -467,12 +467,12 @@ public class BmlbServ extends CommonServ {
 					}
 					// 自动审核保存到 报名明细中
 					Bean mindbean = new Bean();
-					mindbean.set("SH_LEVEL", 0);
+					mindbean.set("SH_LEVEL", "自动审核");
 					mindbean.set("SH_MIND", mind);
 					mindbean.set("DATA_ID", bm_id);
 					mindbean.set("SH_STATUS", ad_result);
-					mindbean.set("SH_ULOGIN", "自动审核");
-					mindbean.set("SH_UNAME", "自动审核");
+					mindbean.set("SH_ULOGIN", "");
+					mindbean.set("SH_UNAME", "");
 					mindbean.set("SH_UCODE", "");
 					mindbean.set("SH_TYPE", 1);
 					mindbean.set("SH_NODE", 0);
