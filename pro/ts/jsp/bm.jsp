@@ -168,7 +168,7 @@ position: absolute;
                  <option value="3">高级</option>
                  </select>
                   &nbsp;&nbsp;名称 &nbsp;<input id="ksnameselect" style="height:25px;width:30%"></input>
-                 &nbsp; <button id="cxbut" style="width:20%;height:30px;background-color:lightseagreen">查询</button>
+                 &nbsp; <button class="btn btn-success" id="cxbut" style="width:20%;height:30px;background-color:lightseagreen">查询</button>
                  </div>
 
 			<div id ="qihuan" style="margin-top:10px">
