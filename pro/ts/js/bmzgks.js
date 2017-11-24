@@ -232,7 +232,7 @@ function xminfoshow(){
            						$("#"+yzjg).append(successinfo);
            					}
            					$("#"+yzjg).append('<div></div>');
-           					var examurl = '/qt/jsp/examref.jsp'
+           					var examurl = "\qt\jsp\examref.jsp";
            					$("#"+yzjg).append("<div><a window.open("+examurl+") href='#'>相关学习材料</a></div>");
            				}
        				}else{
@@ -257,7 +257,7 @@ function xminfoshow(){
        							$("#"+yzjg).append(successinfo);
        						}
        						$("#"+yzjg).append('<div></div>');
-       						var examurl = '/qt/jsp/examref.jsp'
+       						var examurl = "\\qt\\jsp\\examref.jsp";
        						$("#"+yzjg).append('<div><a window.open('+examurl+') href="#">相关学习材料</a></div>');
        					}
        				}
