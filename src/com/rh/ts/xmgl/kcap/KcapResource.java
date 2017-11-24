@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
+import com.rh.core.base.TipException;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.comm.ConfMgr;
 import com.rh.core.org.DeptBean;
@@ -30,7 +31,7 @@ public class KcapResource {
 
 	private static Log log = LogFactory.getLog(KcapResource.class);
 
-	private String xmId = "";
+	private String currentXmId = "";
 
 	/**
 	 * 领导职务考生
@@ -38,7 +39,7 @@ public class KcapResource {
 	private Bean leaderBean = null;
 
 	/**
-	 * 考场距离远的考生
+	 * 考场距离远的机构
 	 */
 	private Bean farKsBean = null;
 
@@ -108,7 +109,7 @@ public class KcapResource {
 
 	public KcapResource(String xmId) {
 
-		this.xmId = xmId;
+		this.currentXmId = xmId;
 
 		// 加载规则
 		loadRule(xmId);
@@ -127,7 +128,7 @@ public class KcapResource {
 
 	public KcapResource(String xmId, String odept) {
 
-		this.xmId = xmId;
+		this.currentXmId = xmId;
 
 		// 加载规则
 		loadRule(xmId);
@@ -179,36 +180,43 @@ public class KcapResource {
 	 */
 	private void loadKc(String xmId, String odept) {
 
-		List<Object> values = new ArrayList<Object>();
+		try {
 
-		values.add(xmId);
+			List<Object> values = new ArrayList<Object>();
 
-		String sql = "select k.KC_ID,k.KC_NAME,k.KC_CODE,K.KC_ODEPTCODE,K.KC_ODEPTNAME,k.KC_SCORE,k.KC_STATE,k.KC_MAX,k.KC_GOOD,k.KC_LEVEL,c.CC_ID,c.XM_ID "
-				+ "from TS_XMGL_KCAP_DAPCC c LEFT JOIN ts_kcgl k on k.kc_id = c.kc_id where c.XM_ID=? ";
+			values.add(xmId);
 
-		if (!Strings.isBlank(odept)) {
+			String sql = "select k.KC_ID,k.KC_NAME,k.KC_CODE,K.KC_ODEPTCODE,K.KC_ODEPTNAME,k.KC_SCORE,k.KC_STATE,k.KC_MAX,k.KC_GOOD,k.KC_LEVEL,c.CC_ID,c.XM_ID "
+					+ "from TS_XMGL_KCAP_DAPCC c LEFT JOIN ts_kcgl k on k.kc_id = c.kc_id where c.XM_ID=? ";
 
-			UserBean user = Context.getUserBean();
-			String cmpyCode = user.getCmpyCode();
-			String codePath = OrgMgr.getOdept(odept).getCodePath();
+			if (!Strings.isBlank(odept)) {
 
-			String sql1 = " select DEPT_CODE FROM SY_ORG_DEPT where ";
+				UserBean user = Context.getUserBean();
+				String cmpyCode = user.getCmpyCode();
+				String codePath = OrgMgr.getOdept(odept).getCodePath();
 
-			sql1 += " SY_ORG_DEPT.CODE_PATH like CONCAT('" + codePath + "','%') ";
+				String sql1 = " select DEPT_CODE FROM SY_ORG_DEPT where ";
 
-			sql1 += " AND SY_ORG_DEPT.DEPT_TYPE = 2";
+				sql1 += " SY_ORG_DEPT.CODE_PATH like CONCAT('" + codePath + "','%') ";
 
-			sql1 += " AND SY_ORG_DEPT.CMPY_CODE =  '" + cmpyCode + "'";
+				sql1 += " AND SY_ORG_DEPT.DEPT_TYPE = 2";
 
-			sql1 += " AND SY_ORG_DEPT.S_FLAG = 1";
+				sql1 += " AND SY_ORG_DEPT.CMPY_CODE =  '" + cmpyCode + "'";
 
-			sql += " and k.KC_ODEPTCODE in (" + sql1 + ")";
+				sql1 += " AND SY_ORG_DEPT.S_FLAG = 1";
+
+				sql += " and k.KC_ODEPTCODE in (" + sql1 + ")";
+			}
+
+			// 所有考场
+			List<Bean> kcList = Transaction.getExecutor().query(sql, values);
+
+			kcList2Bean(kcList);
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new TipException(e.getMessage());
 		}
-
-		// 所有考场
-		List<Bean> kcList = Transaction.getExecutor().query(sql, values);
-
-		kcList2Bean(kcList);
 
 	}
 
@@ -217,15 +225,21 @@ public class KcapResource {
 	 */
 	private void loadZw(String xmId, String odept) {
 
-		loadBusyZw(xmId, odept);
+		try {
 
-		if (ksPriority == 1) { // 最少场次
+			loadBusyZw(xmId, odept);
 
-			fitCcZwBean();
+			if (ksPriority == 1) { // 最少场次
 
-		} else { // 最少考场
+				fitCcZwBean();
 
-			fitKcZwBean();
+			} else { // 最少考场
+
+				fitKcZwBean();
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new TipException(e.getMessage());
 		}
 	}
 
@@ -238,50 +252,57 @@ public class KcapResource {
 	 */
 	private void loadBusyZw(String xmId, String odept) {
 
-		busyZwBean = new Bean();
+		try {
 
-		SqlBean sql = new SqlBean().and("XM_ID", xmId);
+			busyZwBean = new Bean();
 
-		if (!Strings.isBlank(odept)) {
+			SqlBean sql = new SqlBean().and("XM_ID", xmId);
 
-			String codePath = OrgMgr.getOdept(odept).getCodePath();
+			if (!Strings.isBlank(odept)) {
 
-			StringBuffer sb = new StringBuffer();
-			sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE ");
-			sb.append(" SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
-			sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
-			sb.append(" AND SY_ORG_DEPT.DEPT_CODE = " + TsConstant.SERV_KCAP_YAPZW + ".U_ODEPT");
-			sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath + "','%') )");
-			sql.appendWhere(sb.toString());
-		}
+				String codePath = OrgMgr.getOdept(odept).getCodePath();
 
-		List<Bean> busyZwList = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, sql);
-
-		for (Bean zw : busyZwList) {
-
-			String kcId = zw.getStr("KC_ID"); // 考场
-			String sjCc = zw.getStr("SJ_CC"); // 场次
-			String date = zw.getStr("SJ_DATE").substring(0, 10);// 考试日期
-			String key = kcId + "^" + sjCc + "^" + date;
-
-			String zwh = zw.getStr("ZW_XT"); // 座位号
-
-			Bean zwBean = null;
-
-			if (busyZwBean.containsKey(key)) {
-
-				zwBean = busyZwBean.getBean(key);
-
-				zwBean.set(zwh, zw);
-
-			} else {
-
-				zwBean = new Bean();
-
-				zwBean.set(zwh, zw);
+				StringBuffer sb = new StringBuffer();
+				sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE ");
+				sb.append(" SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
+				sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
+				sb.append(" AND SY_ORG_DEPT.DEPT_CODE = " + TsConstant.SERV_KCAP_YAPZW + ".U_ODEPT");
+				sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath + "','%') )");
+				sql.appendWhere(sb.toString());
 			}
 
-			busyZwBean.set(key, zwBean);
+			List<Bean> busyZwList = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, sql);
+
+			for (Bean zw : busyZwList) {
+
+				String kcId = zw.getStr("KC_ID"); // 考场
+				String sjCc = zw.getStr("SJ_CC"); // 场次
+				String date = zw.getStr("SJ_DATE").substring(0, 10);// 考试日期
+				String key = kcId + "^" + sjCc + "^" + date;
+
+				String zwh = zw.getStr("ZW_XT"); // 座位号
+
+				Bean zwBean = null;
+
+				if (busyZwBean.containsKey(key)) {
+
+					zwBean = busyZwBean.getBean(key);
+
+					zwBean.set(zwh, zw);
+
+				} else {
+
+					zwBean = new Bean();
+
+					zwBean.set(zwh, zw);
+				}
+
+				busyZwBean.set(key, zwBean);
+			}
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new TipException(e.getMessage());
 		}
 	}
 
@@ -289,85 +310,124 @@ public class KcapResource {
 	 * 装载考场安排规则
 	 * 
 	 * @param xmId
+	 * @throws Exception
 	 */
 
-	private void loadRule(String xmId) {
+	private void loadRule(String xmId) throws TipException {
 
-		ruleBean = new Bean();
+		try {
 
-		UserBean user = Context.getUserBean();
+			ruleBean = new Bean();
 
-		SqlBean sql = new SqlBean().and("XM_ID", xmId).and("S_USER", user.getCode()).and("S_FLAG", 1);
+			UserBean user = Context.getUserBean();
 
-		sql.asc("GZ_VER_SORT");
+			SqlBean sql = new SqlBean().and("XM_ID", xmId).and("S_USER", user.getCode()).and("S_FLAG", 1);
 
-		List<Bean> ruleList = ServDao.finds(TsConstant.SERV_KCAP_GZ, sql);
+			sql.asc("GZ_VER_SORT");
 
-		for (Bean rule : ruleList) {
+			List<Bean> ruleList = ServDao.finds(TsConstant.SERV_KCAP_GZ, sql);
 
-			String ruleCode = rule.getStr("GZ_CODE");
+			for (Bean rule : ruleList) {
 
-			ruleBean.set(ruleCode, rule);
+				String ruleCode = rule.getStr("GZ_CODE");
 
-			if (KcapRuleEnum.S001.getCode().equals(ruleCode)) { // 最少考场，最少场次
+				ruleBean.set(ruleCode, rule);
 
-				String val = rule.getStr("GZ_VALUE2");
+				if (KcapRuleEnum.S001.getCode().equals(ruleCode)) { // 最少考场，最少场次
 
-				if ("1".equals(val)) { // 0最少考场，1最少场次
+					String val = rule.getStr("GZ_VALUE2");
 
-					ksPriority = 1;
+					if ("1".equals(val)) { // 0最少考场，1最少场次
+
+						ksPriority = 1;
+					}
+
+				} else if (KcapRuleEnum.S002.getCode().equals(ruleCode)) { // 无符合规则考生
+																			// 是否强制安排
+					ksConstrain = 1; // 1 强制安排
 				}
-
-			} else if (KcapRuleEnum.S002.getCode().equals(ruleCode)) { // 无符合规则考生
-																		// 是否强制安排
-				ksConstrain = 1; // 1 强制安排
 			}
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new TipException(e.getMessage());
 		}
 	}
 
 	private void loadOther() {
 
-		for (Object ruleKey : ruleBean.keySet()) {
+		try {
 
-			Bean rule = ruleBean.getBean(ruleKey);
+			for (Object ruleKey : ruleBean.keySet()) {
 
-			String ruleCode = rule.getStr("GZ_CODE");
+				Bean rule = ruleBean.getBean(ruleKey);
 
-			if (KcapRuleEnum.R003.getCode().equals(ruleCode)) { // 距离远近规则
+				String ruleCode = rule.getStr("GZ_CODE");
 
-				fitFarKsBean();
+				if (KcapRuleEnum.R003.getCode().equals(ruleCode)) { // 距离远近规则
 
-			} else if (KcapRuleEnum.R007.getCode().equals(ruleCode)) { // 领导职务考生座位靠前安排
+					fitFarKsBean();
 
-				leaderBean = new Bean();
+				} else if (KcapRuleEnum.R007.getCode().equals(ruleCode)) { // 领导职务考生座位靠前安排
 
-				String leaderCodes = ConfMgr.getConf("TS_KCAP_LEADER_LB", "023001");// 默认管理类视为领导职务
+					leaderBean = new Bean();
 
-				for (Object odept : ksBean.keySet()) { // 遍历考生机构
+					String leaderCodes = ConfMgr.getConf("TS_KCAP_LEADER_LB", "023001");// 默认管理类视为领导职务
 
-					Bean dateBean = ksBean.getBean(odept);
+					for (Object odept : ksBean.keySet()) { // 遍历考生机构
 
-					for (Object date : dateBean.keySet()) { // 遍历考试时长
+						Bean dateBean = ksBean.getBean(odept);
 
-						Bean fksBean = dateBean.getBean(date);
+						for (Object date : dateBean.keySet()) { // 遍历考试时长
 
-						for (Object key : fksBean.keySet()) { // 遍历所有考生
+							Bean fksBean = dateBean.getBean(date);
 
-							Object obj = fksBean.get(key);
+							for (Object key : fksBean.keySet()) { // 遍历所有考生
 
-							if (obj instanceof List) {
+								Object obj = fksBean.get(key);
 
-								List<Bean> kslist = ksBean.getList(key);
+								if (obj instanceof List) {
 
-								for (Bean bean : kslist) {
+									List<Bean> kslist = fksBean.getList(key);
+
+									for (Bean bean : kslist) {
+
+										for (String lbCode : leaderCodes.split(",")) {
+
+											if (lbCode.equals(bean.getStr("STATION_TYPE_CODE"))) {
+
+												String shId = bean.getStr("SH_ID");
+
+												String userCode = bean.getStr("BM_CODE");
+
+												if (leaderBean.containsKey(userCode)) { // 考生已存在
+
+													String shIds = leaderBean.getStr(userCode);
+
+													shIds += "," + shId;
+
+													leaderBean.set(userCode, shIds);
+
+												} else {
+
+													leaderBean.set(userCode, shId);
+												}
+
+												break;
+											}
+										}
+									}
+								} else if (obj instanceof Bean) {
+
+									Bean ks = fksBean.getBean(key);
 
 									for (String lbCode : leaderCodes.split(",")) {
 
-										if (lbCode.equals(bean.getStr("STATION_TYPE_CODE"))) {
+										if (lbCode.equals(ks.getStr("STATION_TYPE_CODE"))) {
 
-											String shId = bean.getStr("SH_ID");
+											String shId = ks.getStr("SH_ID");
 
-											String userCode = bean.getStr("BM_CODE");
+											String userCode = ks.getStr("BM_CODE");
 
 											if (leaderBean.containsKey(userCode)) { // 考生已存在
 
@@ -386,95 +446,71 @@ public class KcapResource {
 										}
 									}
 								}
-							} else if (obj instanceof Bean) {
-
-								Bean ks = fksBean.getBean(key);
-
-								for (String lbCode : leaderCodes.split(",")) {
-
-									if (lbCode.equals(ks.getStr("STATION_TYPE_CODE"))) {
-
-										String shId = ks.getStr("SH_ID");
-
-										String userCode = ks.getStr("BM_CODE");
-
-										if (leaderBean.containsKey(userCode)) { // 考生已存在
-
-											String shIds = leaderBean.getStr(userCode);
-
-											shIds += "," + shId;
-
-											leaderBean.set(userCode, shIds);
-
-										} else {
-
-											leaderBean.set(userCode, shId);
-										}
-
-										break;
-									}
-								}
 							}
 						}
 					}
-				}
 
-			} else if (KcapRuleEnum.R008.getCode().equals(ruleCode)) { // 特定机构考生场次先后安排
+				} else if (KcapRuleEnum.R008.getCode().equals(ruleCode)) { // 特定机构考生场次先后安排
 
-				String jsonStr = rule.getStr("GZ_VALUE2");
+					String jsonStr = rule.getStr("GZ_VALUE2");
 
-				JSONArray objArray;
+					JSONArray objArray;
 
-				try {
-					objArray = new JSONArray(jsonStr);
+					try {
+						objArray = new JSONArray(jsonStr);
 
-					JSONObject jsonObj = objArray.getJSONObject(0);
+						JSONObject jsonObj = objArray.getJSONObject(0);
 
-					String val = jsonObj.getString("val"); // 场次先后 1先 2后
+						String val = jsonObj.getString("val"); // 场次先后 1先 2后
 
-					if ("1".equals(val)) {
+						if ("1".equals(val)) {
 
-						ccOrder = 1;
+							ccOrder = 1;
 
-					} else if ("2".equals(val)) {
+						} else if ("2".equals(val)) {
 
-						ccOrder = 2;
-					}
-				} catch (JSONException e) {
+							ccOrder = 2;
+						}
+					} catch (JSONException e) {
 
-					e.printStackTrace();
-				}
-
-			} else if (KcapRuleEnum.R009.getCode().equals(ruleCode)) { // 特定考试仅限于省分行安排
-
-				spExamBean = new Bean();
-
-				String jsonStr = rule.getStr("GZ_VALUE2");
-
-				JSONArray objArray;
-
-				try {
-					objArray = new JSONArray(jsonStr);
-
-					JSONObject jsonObj = objArray.getJSONObject(0);
-
-					String val = jsonObj.getString("val"); // 选择的考试
-
-					for (String kslb : val.split(",")) {
-
-						String[] array = kslb.split("\\^"); // array[0]序列，array[1]模块，array[2]等级
-
-						spExamBean.set(kslb, array);
+						log.error(e.getMessage(), e);
 					}
 
-				} catch (JSONException e) {
+				} else if (KcapRuleEnum.R009.getCode().equals(ruleCode)) { // 特定考试仅限于省分行安排
 
-					e.printStackTrace();
+					spExamBean = new Bean();
+
+					String jsonStr = rule.getStr("GZ_VALUE2");
+
+					JSONArray objArray;
+
+					try {
+						objArray = new JSONArray(jsonStr);
+
+						JSONObject jsonObj = objArray.getJSONObject(0);
+
+						String val = jsonObj.getString("val"); // 选择的考试
+
+						for (String kslb : val.split(",")) {
+
+							String[] array = kslb.split("\\^"); // array[0]序列，array[1]模块，array[2]等级
+
+							spExamBean.set(kslb, array);
+						}
+
+					} catch (JSONException e) {
+
+						log.error(e.getMessage(), e);
+					}
 				}
 			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new TipException(e.getMessage());
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void loadBranch() {
 
 		for (Object key : kcBean.keySet()) { // 所有机构下的考场bean
@@ -760,6 +796,8 @@ public class KcapResource {
 
 			String kcId = item.getStr("KC_ID");
 
+			String kcName = item.getStr("KC_NAME");
+
 			String kcOdept = item.getStr("KC_ODEPTCODE");
 
 			// 场次
@@ -781,6 +819,8 @@ public class KcapResource {
 
 				String dName = jg.getStr("JG_NAME");
 
+				String jgFar = jg.getStr("JG_FAR");
+
 				if (jg.getInt("JG_TYPE") == OrgConstant.DEPT_TYPE_DEPT) { // 关联部门
 
 					DeptBean odeptBean = OrgMgr.getOdept(dCode);// 获取机构
@@ -793,6 +833,8 @@ public class KcapResource {
 
 					temp.set("JG_NAME", dName);
 
+					temp.set("JG_FAR", jgFar);
+
 					gljg.set(dCode, temp.clone());
 
 				} else {
@@ -803,7 +845,7 @@ public class KcapResource {
 
 					String cmpyCode = user.getCmpyCode();
 
-					String codePath = OrgMgr.getOdept(dCode).getCodePath();
+					String codePath = OrgMgr.getDept(dCode).getCodePath();
 
 					SqlBean sql = new SqlBean();
 					sql.andLikeRT("CODE_PATH", codePath);
@@ -824,6 +866,8 @@ public class KcapResource {
 						childTemp.set("JG_CODE", childCode);
 
 						childTemp.set("JG_NAME", childName);
+
+						childTemp.set("JG_FAR", jgFar);
 
 						gljg.set(childCode, childTemp);
 					}
@@ -895,6 +939,7 @@ public class KcapResource {
 	 * 组装考场远近 farKsBean
 	 */
 	private void fitFarKsBean() {
+
 		farKsBean = new Bean();
 
 		for (Object key : kcBean.keySet()) { // 所有机构下的考场bean
@@ -903,32 +948,89 @@ public class KcapResource {
 
 			for (Bean kcInfo : kcinfoList) {
 
-				// Bean farksBeanVal = new Bean();
-
 				String kcId = kcInfo.getBean("INFO").getStr("KC_ID");
 
+				String kcName = kcInfo.getBean("INFO").getStr("KC_NAME");
+
 				Bean jgBean = kcInfo.getBean("GLJG"); // 考场的关联机构Bean
+
+				Bean farKs = new Bean();
 
 				for (Object jgkey : jgBean.keySet()) {
 
 					Bean jg = jgBean.getBean(jgkey);
 
-					String dCode = jg.getStr("JG_CODE");
-
-					// List<Bean> jgksList = null;
-
 					if (jg.getInt("JG_FAR") == 1) { // 关联考场距离远的机构
 
-						Bean dCodeKs = ksBean.getBean(dCode);// 机构下考生list
+						log.error("-----" + kcName + "|" + jg.getStr("JG_NAME") + " JG_FAR:" + jg.getInt("JG_FAR"));
 
-						// farksBeanVal = commList2Bean(jgksList, "BM_CODE");
+						String dCode = jg.getStr("JG_CODE");
 
-						farKsBean.set(kcId, dCodeKs);
+						if (jg.getInt("JG_TYPE") == OrgConstant.DEPT_TYPE_DEPT) { // 关联部门
+
+							dCode = OrgMgr.getOdept(dCode).getODeptCode(); // 获取机构
+
+							Bean farUcodes = getFarKsCode(ksBean.getBean(dCode));
+
+							if (!farUcodes.isEmpty()) {
+
+								log.error("-----------code:" + farUcodes.size());
+
+								farKs.putAll(farUcodes);
+							}
+
+						} else {
+
+							String codePath = OrgMgr.getDept(dCode).getCodePath();
+
+							SqlBean sql = new SqlBean();
+
+							sql.andLikeRT("CODE_PATH", codePath);
+
+							sql.and("DEPT_TYPE", OrgConstant.DEPT_TYPE_ORG);
+
+							sql.and("S_FLAG", 1);
+
+							List<Bean> odeptList = ServDao.finds(ServMgr.SY_ORG_DEPT, sql);
+
+							for (Bean odeptBean : odeptList) {
+
+								String oDeptCode = odeptBean.getStr("DEPT_CODE");
+
+								Bean childFarUcodes = getFarKsCode(ksBean.getBean(oDeptCode));
+
+								if (!childFarUcodes.isEmpty()) {
+
+									log.error("-----------code:" + childFarUcodes.size());
+
+									farKs.putAll(childFarUcodes);
+								}
+							}
+						}
 					}
 				}
-				// farKsBean.set(kcId, farksBeanVal);
+
+				if (!farKs.isEmpty()) {
+
+					farKsBean.set(kcId, farKs);
+				}
 			}
 		}
+	}
+
+	private static Bean getFarKsCode(Bean ksBean) {
+
+		Bean user = new Bean();
+
+		for (Object time : ksBean.keySet()) {
+
+			for (Object ucode : ksBean.getBean(time).keySet()) {
+
+				user.set(ucode, ucode);
+			}
+		}
+
+		return user;
 	}
 
 	/**
@@ -1047,13 +1149,11 @@ public class KcapResource {
 	 */
 	public Bean getGljg(String kcId) {
 
-		Bean gljg = new Bean();
-
-		for (Object key : kcBean.keySet()) {
+		for (Object key : kcBean.keySet()) { // 遍历所属机构
 
 			List<Bean> kcList = kcBean.getList(key);
 
-			for (Bean kc : kcList) {
+			for (Bean kc : kcList) { // 遍历所属机构下考场
 
 				if (kcId.equals(kc.getBean("INFO").getStr("KC_ID"))) {
 
@@ -1062,7 +1162,7 @@ public class KcapResource {
 			}
 		}
 
-		return gljg;
+		return new Bean();
 	}
 
 	/**
@@ -1209,65 +1309,17 @@ public class KcapResource {
 	/**
 	 * 距离考场远的考生
 	 * 
-	 * @return Bean{考场ID：Bean{用户id: 考生Bean/考生List}}
+	 * @return Bean{考场ID：Bean{用户id: 用户id}}
 	 */
 	public Bean getFarKsBean() {
 		return farKsBean;
 	}
 
 	public String getXmId() {
-		return xmId;
+		return currentXmId;
 	}
 
 	public Bean getKcOrgBean() {
 		return kcOrgBean;
-	}
-
-	public void showResLog() {
-
-		if (this.getRuleBean() != null) {
-			log.error("------------------ruleBean-------------------");
-			log.error(this.getRuleBean().toString());
-		}
-
-		if (this.getKcBean() != null) {
-			log.error("------------------kcBean-------------------");
-			log.error(this.getKcBean().toString());
-		}
-
-		if (this.getFreeKsBean() != null) {
-			log.error("------------------freeKsBean-------------------");
-			log.error(this.getFreeKsBean().toString());
-		}
-
-		if (this.getJkKsBean() != null) {
-			log.error("------------------JkKsBean-------------------");
-			log.error(this.getJkKsBean().toString());
-		}
-
-		if (this.getBusyZwBean() != null) {
-			log.error("------------------busyBean-------------------");
-			log.error(this.getBusyZwBean().toString());
-		}
-
-		if (this.getFreeCcZwBean() != null) {
-			log.error("------------------freeCcZwBean-------------------");
-			log.error(this.getFreeCcZwBean().toString());
-		}
-
-		if (this.getFreeKcZwBean() != null) {
-			log.error("------------------freeKcZwBean-------------------");
-			log.error(this.getFreeKcZwBean().toString());
-		}
-
-		if (this.getLeaderBean() != null) {
-			log.error("------------------leaderBean-------------------");
-			log.error(this.getLeaderBean().toString());
-		}
-
-		if (this.getFarKsBean() != null) {
-			log.error("------------------farKsBean-------------------");
-			log.error(this.getFarKsBean().toString());
-		}
 	}
 }

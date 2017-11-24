@@ -1,6 +1,6 @@
 var _viewer = this;
 var height = jQuery(window).height()-50;
-var width = jQuery(window).width()-100;
+var width = jQuery(window).width()-200;
 //取消行点击事件
 $(".rhGrid").find("tr").unbind("dblclick");
 //每一行添加编辑和删除
@@ -97,7 +97,7 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function(event) {
 _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
 //	debugger;
 	var configStr = "TS_ORG_DEPT,{'TARGET':'DEPT_CODE~DEPT_NAME','SOURCE':'DEPT_CODE~DEPT_NAME'," +
-	"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
+	"'HIDE':'DEPT_CODE','TYPE':'multi','HTMLITEM':''}";
 	var options = {
 			"config" :configStr,
 //			"params" : {"_TABLE_":"SY_ORG_USER"},

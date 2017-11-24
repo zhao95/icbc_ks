@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
+import com.rh.core.base.db.Transaction;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
@@ -15,6 +16,7 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
+import com.rh.core.util.Constant;
 import com.rh.ts.util.TsConstant;
 
 /**
@@ -146,7 +148,8 @@ public class XmglszServ extends CommonServ {
 			//遍历所有群组
 			String groupId =  bean2.getId();
 			//用户
-			List<Bean> userList = ServDao.finds("TS_BM_GROUP_USER", "AND G_ID='"+groupId+"' AND G_TYPE='1' GROUP BY USER_DEPT_CODE");
+			String sql = "SELECT USER_DEPT_CODE FROM TS_BM_GROUP_USER_DEPT WHERE G_ID='"+groupId+"' AND G_TYPE='1' GROUP BY USER_DEPT_CODE";
+			List<Bean> userList = Transaction.getExecutor().query(sql);
 			for (Bean bean3 : userList) {
 			UserBean user = UserMgr.getUser(bean3.getStr("USER_DEPT_CODE"));
 			String odept_code = user.getODeptCode();
@@ -163,8 +166,16 @@ public class XmglszServ extends CommonServ {
 				}
 			}
 			}
+			if(flag==true){
+				flag = false;
+				break;
+			}
 			//部门
-			List<Bean> deptList = ServDao.finds("TS_BM_GROUP_USER", "AND G_ID='"+groupId+"' AND G_TYPE='2' GROUP BY USER_DEPT_CODE");
+			Bean whereBean = new Bean();
+			whereBean.set(Constant.PARAM_SELECT, "USER_DEPT_CODE");
+			whereBean.set(Constant.PARAM_WHERE, "AND G_ID='"+groupId+"' AND G_TYPE='2'");
+			whereBean.set(Constant.PARAM_GROUP, "USER_DEPT_CODE");
+			List<Bean> deptList = ServDao.finds("TS_BM_GROUP_USER", whereBean);
 			for (Bean bean4 : deptList) {
 				if(bean4.getStr("USER_DEPT_CODE").equals("0010100000")){
 					//总行不用判断

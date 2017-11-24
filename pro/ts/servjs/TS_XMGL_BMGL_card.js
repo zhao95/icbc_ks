@@ -3,6 +3,8 @@ var _viewer = this;
 var XM_SZ_ID = _viewer.opts.XM_SZ_ID;
 //var XM_ID=_viewer.opts.XM_ID;
 var XM_ID=_viewer.opts.XM_ID;
+
+
 if(_viewer.opts.act == "cardAdd"){
 	XM_SZ_ID = _viewer.opts.XM_SZ_ID;
 	if(typeof(XM_SZ_ID)!="undefined" &&typeof(XM_ID)!="undefined" ){ 
@@ -70,11 +72,14 @@ $('#'+bmEnd._opts.id+"_div").css('min-height','32px');
 
 FireFly.doAct("TS_XMGL","finds",{"_WHERE_":" and XM_ID=(select XM_ID from TS_XMGL_SZ where XM_SZ_ID='"+XM_SZ_ID+"')"},true,false,function(data){
 		var datas = data._DATA_[0].XM_TYPE;
+		var xmName=data._DATA_[0].XM_NAME;
+		_viewer.getItem("BM_NAME").setValue(xmName);
 		if(datas=="资格类考试"){
 			$("li.rhCard-tabs-topLi[sid='TS_XMGL_BM_FZGKS']").hide();
 		}else if(datas=="其他类考试"){
 			$("li.rhCard-tabs-topLi[sid='TS_XMGL_BM_KSQZ']").hide();
 		}
+		
 }); 
 
 

@@ -125,13 +125,13 @@ function  jk(pk,xmglId){
 }
 
 //试卷
-function sj(pk,xmglId){debugger;
+function sj(pk,xmglId){
 	var width = jQuery(window).width()-200;
 	var height = jQuery(window).height()-100;
 	var conf={};
 	//var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_BMGL","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,40]};
 	FireFly.doAct("TS_XMGL","finds",{"_WHERE_":" and XM_ID='"+xmglId+"'"},true,false,function(data){
-		var datas = data._DATA_[0].XM_TYPE;debugger;
+		var datas = data._DATA_[0].XM_TYPE;
 		if(datas=="资格类考试"){
     //创建弹出框
 //    var popPrompt = new rh.ui.popPrompt({title:'项目设置试卷'});
@@ -209,8 +209,9 @@ function ap(pk){
 //	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
 //});
 //通过名称绑定字典
+
 _viewer.grid._table.find("tr").each(function(index, item) {
-	 var  XM_SZ_NAME = $('td[icode="XM_SZ_NAME"]',item).text();
+	var   XM_SZ_NAME = $('td[icode="XM_SZ_NAME"]',item).text();
 	 var  XM_SZ_ID = $('td[icode="XM_SZ_ID"]',item).text();
 	 var  XM_SZ_TYPE =_viewer.grid.getRowItemValue(XM_SZ_ID,"XM_SZ_TYPE");
 		if(index>0 && XM_SZ_ID!=''){
@@ -256,17 +257,28 @@ _viewer.grid._table.find("tr").each(function(index, item) {
 		}
 	}
 });
-
+var oldStyle="";
+var  name="";
+$(".rh-advSearch-val").unbind("click").bind("click",function() {
+//_viewer.grid.unbind("click").bind("click",function() {
+oldStyle=$(this).find("option:selected").html();
+name =$(this).parent().parent().find("td[icode='XM_SZ_NAME']").html();
+});
 //获取状态值放入数据库对应的位置
 $(".rh-advSearch-val").on("change", function() {
-	var options=$(this).find("option:selected").val();
+  	var options=$(this).find("option:selected").val();//改变后的状态
+		if(!confirm(name+"设置确定要改成'"+options+"'状态吗？")){
+		options=oldStyle;
+		_viewer.refresh();
+		return  false;
+	}
 	var sz_id=$(this).parent().parent().find("td[icode='XM_SZ_ID']").html();
 	var xm_id=$(this).parent().parent().find("td[icode='XM_ID']").html();
 	var param={};
 	param["_PK_"]=sz_id;
 	param["XM_SZ_TYPE"]=options;
 	FireFly.doAct(_viewer.servId,"save",param,true);
-
+	
 });
  
 

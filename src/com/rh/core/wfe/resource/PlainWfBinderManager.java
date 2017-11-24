@@ -408,6 +408,7 @@ public class PlainWfBinderManager extends WfBinderManager {
 	 * @param deptSql 按部门查询的SQL
 	 * @return 符合条件的数据
 	 */
+	@SuppressWarnings("unused")
 	private List<Bean> findUserListByDeptRoleOld(String roleCodeStr, String deptSql) {
 		if (!roleCodeStr.isEmpty()) {
 			StringBuilder sql = new StringBuilder();

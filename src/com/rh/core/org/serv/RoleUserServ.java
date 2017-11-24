@@ -110,7 +110,6 @@ public class RoleUserServ extends CommonServ {
     	
     	String sysCode = Context.getSyConf("PE_SYS_CODE", "RA");
 
-    	String servId = paramBean.getServId();
     	OutBean outBean = new OutBean();
     	
     	// 清除老数据

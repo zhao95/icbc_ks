@@ -11,7 +11,6 @@ import com.rh.core.base.TipException;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.icbc.basedata.AbstractTableTask;
 import com.rh.core.icbc.imp.log.OrgLogMgr;
-import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.util.Constant;

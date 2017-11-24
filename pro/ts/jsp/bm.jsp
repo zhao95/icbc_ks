@@ -46,6 +46,11 @@
 <script src="<%=CONTEXT_PATH%>/ts/js/jquery.fileupload.js"></script>
 <body class="hold-transition skin-black sidebar-mini" id="bmbody">
 <style>
+
+.btn-default{
+	color: WHITE;
+	border-color:#245580;
+	}
 #appeal .modal-dialog{
 	position: absolute;
     top: 10%;
@@ -116,7 +121,7 @@ position: absolute;
 	<div id="myTabContent" class="tab-content">
 		<div class="tab-pane fade in active" id="home">
 			<div
-				style="margin-top: -5px; margin-left: 19%; height: 5px; width: 190px; background-color: LightSeaGreen"></div>
+				style="margin-top: -5px; margin-left: 16%; height: 5px; width: 220px; background-color: LightSeaGreen"></div>
 			<div id="cuxian1"
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">可申请的报名</span>
@@ -133,9 +138,9 @@ position: absolute;
 								<th id="BM_NAME" class="" style="width: 29.1%;">名称</th>
 								<th   style="text-align: center;width: 15%;">组织单位</th>
 								<th   style="text-align: center;width: 35%;">报名时间</th>
-								 <th id="BM_STATE__NAME" class="" style="width: 5%;">状态</th>
+								 <th id="BM_STATE__NAME" class="" style="width: 8%;">状态</th>
 								<th id="BM_OPTIONS" class=""
-									style="width: 10%; text-align: center">操作</th>
+									style="width: 12%; text-align: center">操作</th>
 							</tr>
 						</thead>
 						<tbody class="">
@@ -149,13 +154,14 @@ position: absolute;
 		</div>
 		<div class="tab-pane fade"  id="tab2">
 			<div
-				style="margin-top: -6px; margin-left: 68%; height: 5px; width: 190px; background-color: LightSeaGreen"></div>
+				style="margin-top: -6px; margin-left: 65%; height: 5px; width: 220px; background-color: LightSeaGreen"></div>
 			<div id="cuxian2"
-				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
+				style="position:absolute;margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">已申请的报名</span>
 			</div>
 
-                 <div  id="jibie" style="padding-top:20px;padding-left:80%">
+                 <div  id="jibie" style="position:relative;top:58px;padding-top:20px;padding-left:80%">
+               <label> 层级&nbsp;&nbsp;</label>
                  <select id = "jb" onchange="jibieonchange()">
                  <option selected="selected">全部</option>
                  <option value="1">初级</option>
@@ -164,9 +170,9 @@ position: absolute;
                  </select>
                  </div>
 
-			<div id ="qihuan" style="margin-top:-40px">
+			<div id ="qihuan" style="margin-top:10px">
 
-              <div id="sanjiliandong" class="panel-body" style=":15px;width:800px;margin-left:200px">
+              <div id="sanjiliandong" class="panel-body" style=":15px;width:70%;margin-left:10%">
                  <form action="#" id="formContainer" class="form form-horizontal"></form>
 
              </div>
@@ -177,7 +183,8 @@ position: absolute;
 							<tr style="backGround-color: WhiteSmoke; height: 30px">
 							<th id="BM_XUHAO" class=""
 									style="width: 6.6%; text-align: center">序号</th>
-								<th style="width: 25%; text-align: center">名称</th>
+									<th style="width: 10%;text-align: left">提交时间</th>
+								<th style="width: 20%; text-align: left">名称</th>
 								<th style="width: 5%; text-align: center">类型</th>
 								<th style="text-align: center; width: 14%;">审核状态</th>
 							 	<th style="width: 10%; text-align: center">状态</th>
@@ -261,12 +268,15 @@ position: absolute;
 		<div class="modal-dialog" style="width:30%">
 			<div class="modal-content">
 				<div class="modal-header" style="background-color: #00c2c2;color: white">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
 					<h4 class="modal-title">
 					禁考提示
 					</h4>
 				</div>
 				<div align="center">
-				<textarea style="background-color:white;display:table-cell;vertical-align:middle;width:400px;height:80px" id = 'jkxxinfo'></textarea>
+				<textarea style="background-color:white;display:table-cell;vertical-align:middle;width:90%;height:80px" id = 'jkxxinfo'></textarea>
 				</div>
 				<div class="modal-footer" style="text-align:center;height:50px">
 					<button type="button" onclick = "closemotai()" class="btn btn-default" style="margin-top:-6px;background:lightseagreen;color:white;height:30px;width:75px;" data-dismiss="modal">确定</button>
@@ -283,7 +293,9 @@ position: absolute;
 				<div id="mask" class="mask"></div>
 				<div class="modal-header"
 					style="background-color: #00c2c2; color: white">
-
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
 					<h6 class="modal-title">信息验证</h6>
 				</div>
 				<div style="padding-top:4%;padding-bottom:6%;margin-left:27%;font-size:16px;">请输入您已入职满&nbsp;<input style="width:20%" id="yzinput"/>&nbsp;年</div>
@@ -348,14 +360,7 @@ position: absolute;
 		<input type="hidden" id="user_code" value="<%=user_code %>">
 	</div>
 
-	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
-	<script src="<%=CONTEXT_PATH%>/ts/js/spin.js"></script>
-	<!-- FastClick -->
 	<script src="<%=CONTEXT_PATH%>/ts/js/baoming.js"></script>
-	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
-	<!-- AdminLTE App -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>
-	<!-- AdminLTE for demo purposes -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
+	
 </body>
 </html>

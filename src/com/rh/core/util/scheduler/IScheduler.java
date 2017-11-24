@@ -3,10 +3,8 @@
  */
 package com.rh.core.util.scheduler;
 
-import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
-import com.rh.core.serv.ServMgr;
 
 /**
  * @author liwei

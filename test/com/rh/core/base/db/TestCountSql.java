@@ -5,12 +5,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.Statements;
 import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;

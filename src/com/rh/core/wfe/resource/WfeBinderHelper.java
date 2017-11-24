@@ -54,6 +54,7 @@ public class WfeBinderHelper {
 	 * 
 	 * @return 创建一个WfBinderManager对象
 	 */
+	@SuppressWarnings("unchecked")
 	public static WfBinderManager createWfBinderManager(WfNodeDef aWfNodeDef, WfAct aWfAct, UserBean aDoUser) {
 		String cls = Context.getSyConf(CONF_WFE_BINDER_MGR_CLS, "com.rh.core.wfe.resource.PlainWfBinderManager");
 

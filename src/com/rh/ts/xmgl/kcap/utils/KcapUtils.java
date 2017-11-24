@@ -2,7 +2,10 @@ package com.rh.ts.xmgl.kcap.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.rh.core.base.Bean;
 import com.rh.core.org.mgr.OrgMgr;
@@ -10,7 +13,7 @@ import com.rh.core.util.Strings;
 import com.rh.ts.xmgl.kcap.KcapResource;
 
 public class KcapUtils {
-	
+
 	/**
 	 * 合并bean。key重复，value合并List
 	 * 
@@ -70,7 +73,7 @@ public class KcapUtils {
 
 		return rtnBan;
 	}
-	
+
 	public static String[] sortStr(Bean bean) {
 
 		String sort[] = new String[bean.keySet().size()];
@@ -124,7 +127,7 @@ public class KcapUtils {
 	 * @param res
 	 * @return
 	 */
-	public static String[] sortKcId(Bean bean, KcapResource res) {
+	public static String[] sortKcIdold(Bean bean, KcapResource res) {
 
 		Bean kcBean = res.getKcBean();
 
@@ -182,15 +185,89 @@ public class KcapUtils {
 
 		String[] sort = new String[codeSort.length];
 
-		Arrays.sort(codeSort);
+		// Arrays.sort(codeSort);
 
 		for (int j = 0; j < codeSort.length; j++) {
-			
+
 			String code = codeSort[j];
-			
+
 			String[] codeArray = code.split("##");
 
 			sort[j] = codeArray[1];
+		}
+
+		return sort;
+	}
+
+	public static String[] sortKcId(Bean bean, KcapResource res) {
+
+		int count = 0;
+
+		Bean kcBean = res.getKcBean();
+
+		TreeMap<String, Map<String, String>> sortMap = new TreeMap<String, Map<String, String>>(
+				new Comparator<String>() {
+					public int compare(String o1, String o2) {
+						return o2.compareTo(o1);
+					}
+				});
+
+		for (Object key : bean.keySet()) { // 考场
+
+			outloop:
+
+			if (!Strings.isBlank(key.toString())) {
+
+				for (Object ssjg : kcBean.keySet()) {// 所属机构
+
+					List<Bean> list = kcBean.getList(ssjg.toString());
+
+					for (Bean kc : list) {// 考场
+
+						Bean info = kc.getBean("INFO");
+
+						if (info.getStr("KC_ID").equals(key.toString())) {
+
+							String kcCode = info.getStr("KC_CODE");
+
+							int lv = OrgMgr.getDept(ssjg.toString()).getLevel();
+
+							TreeMap<String, String> codeMap = new TreeMap<String, String>();
+
+							if (sortMap.containsKey(String.valueOf(lv))) {
+
+								codeMap = (TreeMap<String, String>) sortMap.get(String.valueOf(lv));
+							}
+
+							codeMap.put(kcCode, key.toString());
+
+							sortMap.put(String.valueOf(lv), codeMap);
+
+							count++;
+
+							break outloop;
+						}
+					}
+				}
+			}
+		}
+
+		int index = 0;
+
+		String[] sort = new String[count];
+
+		for (Object lv : sortMap.keySet()) {
+
+			TreeMap<String, String> codeMap = (TreeMap<String, String>) sortMap.get(lv);
+
+			for (Object code : codeMap.keySet()) {
+
+				String kcId = codeMap.get(code);
+
+				sort[index] = kcId;
+
+				index++;
+			}
 		}
 
 		return sort;

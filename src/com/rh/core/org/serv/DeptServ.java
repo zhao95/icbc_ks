@@ -19,7 +19,6 @@ import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.Constant;
-import com.rh.core.util.PinyinUtils;
 import com.rh.core.util.UserName2PinyinUtils;
 
 /**
@@ -195,7 +194,8 @@ public class DeptServ extends CommonServ {
      * @param paramBean 无
      * @return outBean 更新数量
      */
-    public OutBean rebuild(ParamBean paramBean) {
+    @SuppressWarnings("deprecation")
+	public OutBean rebuild(ParamBean paramBean) {
         OutBean outBean = new OutBean();
         List<Bean> deptList = new ArrayList<Bean>(200000);
         buildSubList(deptList, new Bean());

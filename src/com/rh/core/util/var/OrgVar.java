@@ -62,7 +62,6 @@ public class OrgVar implements Var {
         Map<String, String> vars;
         UserBean userBean = Context.getUserBean();
         if (userBean != null) {
-            String userCode = userBean.getCode();
 //            vars = UserMgr.getCacheVarMap(userCode);
 //            if (vars != null) {
 //                return vars;
@@ -153,7 +152,8 @@ public class OrgVar implements Var {
      * @param vars  用户变量
      * @param userBean  用户信息
      */
-    private void initUserPortalTempl(Map<String, String> vars, UserBean userBean) {
+    @SuppressWarnings("unused")
+	private void initUserPortalTempl(Map<String, String> vars, UserBean userBean) {
         List<Bean> itemList = DictMgr.getItemList("SY_COMM_TEMPL");
         String pt = userBean.getCmpyPt(); //公司模版
         if (pt.isEmpty()) {

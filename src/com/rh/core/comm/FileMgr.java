@@ -928,6 +928,7 @@ public class FileMgr {
 	 *            -size example: 100x100
 	 * @return file bean
 	 */
+	@SuppressWarnings("unused")
 	private static Bean getTargetSizeFile(Bean file, String sizePatten) {
 		String sourceExpre = file.getStr("FILE_PATH");
 		String suffix = getSuffix(sourceExpre);

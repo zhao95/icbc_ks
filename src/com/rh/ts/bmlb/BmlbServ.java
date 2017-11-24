@@ -3,6 +3,7 @@ package com.rh.ts.bmlb;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
+
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -698,7 +700,7 @@ public class BmlbServ extends CommonServ {
 		String where1 = paramBean.getStr("where");
 		where1 = where1.replaceAll("AND ", "AND a.");
 		String whereSql = " where a.BM_CODE=" + "'" + user_code + "' " + where1
-				+ " order by BM_STATE";
+				+ " order by s_atime desc";
 
 		String sql = "select a.*,c.PUBLICITY from TS_BMLB_BM a left join ts_bmsh_pass b on b.BM_ID = a.BM_ID "
 				+ "left join ts_xmgl_kcap_yapzw c on c.SH_ID = b.SH_ID "
@@ -728,6 +730,19 @@ public class BmlbServ extends CommonServ {
 			outBean.setCount(page.getAllNum()); // 设置为总记录数
 		} else {
 			outBean.setCount(dataList.size());
+		}
+		for (Bean bean : dataList) {
+			String createdate =  bean.getStr("S_ATIME");
+			SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			try {
+				Date newdate = simp.parse(createdate);
+				String date = simp.format(newdate);
+				bean.set("S_ATIME", date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		outBean.setData(dataList);
 		outBean.setPage(page);
@@ -1000,12 +1015,26 @@ public class BmlbServ extends CommonServ {
 	 * 获取单条 根据id
 	 */
 	public Bean getSingle(Bean paramBean) {
+		UserBean userBean = Context.getUserBean();
+		String user_code = userBean.getCode(); 
+		String phone_num = userBean.getStr("USER_OFFICE_PHONE");
+		String compy_date = userBean.getStr("USER_CMPY_DATE");
+		//获取融易联
+		String rylphone = "";
+		List<Bean> finds = ServDao.finds("TS_OBJECT",
+				"AND SERV_ID='ts_bmlb_bm' AND DATA_ID = '" + user_code + "'");
+		if (finds != null && finds.size() != 0) {
+			rylphone = finds.get(0).getStr("STR1");
+		}
 		String id = paramBean.getStr("bmid");
 		String where = "AND BM_ID=" + "'" + id + "'";
 		List<Bean> list = ServDao.finds("TS_BMLB_BM", where);
-		if (list.size() == 0) {
-			return new OutBean().setError("数据错误，数据不存在");
+		if (list==null||list.size() == 0) {
+			return new OutBean().setError("数据错误，数据不存在").set("list", list);
 		}
+		list.get(0).set("rylphone", rylphone);
+		list.get(0).set("phone_num", phone_num);
+		list.get(0).set("compy_date", compy_date);
 		Bean outBean = new Bean();
 
 		outBean.set("list", list);

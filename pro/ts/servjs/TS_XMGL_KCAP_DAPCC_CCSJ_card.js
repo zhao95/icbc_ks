@@ -26,7 +26,29 @@ _viewer.beforeSave = function() {
  	}
 };
 
-
+//_viewer.beforeSave = function() {
+//var SJCC=_viewer.getItem("SJ_CC").getValue();//场次
+//var sjDate=_viewer.getItem("SJ_DATE").getValue();//日期
+//var sjKsTime=_viewer.getItem("SJ_KSTIME").getValue();//起始时间
+//var sjsc=_viewer.getItem("SJ_SC").getValue();//时长
+//var start = sjDate + " " +sjKsTime;//
+//var end=addMin(start,sjsc);
+//
+//_viewer.getItem("SJ_START").setValue(start);
+//_viewer.getItem("SJ_END").setValue(end);
+////_viewer.getParHandler().refresh();
+////_viewer.backA.mousedown();
+//}
+//_viewer.afterSave = function() {
+//_viewer.getParHandler().refresh();
+//}
+//function addMin(a,b){
+//	b = parseInt(b);
+//	var atime = a.replace(/-/g, "/");
+//	var date = new Date(atime);
+//	date.setMinutes(date.getMinutes()+b);
+//   	return rhDate.patternData("yyyy-MM-dd HH:mm",date);
+//}
 checkShow();
 var xmId = _viewer.getParHandler().getParHandler().getParHandler().getParHandler().getPKCode()
 _viewer.getItem("XM_ID").setValue(xmId);

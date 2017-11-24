@@ -136,7 +136,7 @@ position: absolute;
 				</table>
 				<table align="center" style="border-radius:5px;width: 90%; background-color: #fed1d1;">
 					<tr>
-						<td><span style="color: #ff0000;">！</span> 温馨提示：</td>
+						<td style="width:14%"><span style="color: #ff0000;">！</span> 温馨提示：</td>
 						<td height="50px" align="left">1.您当前在 <span id="odptnspan"
 							style="color: #ff0000;"><%=odept_name%></span>
 							，将视您办公所在地统一安排考场。如果您发现下面的信息不符，请于借考申请开放期间提交借考申请！
@@ -152,38 +152,38 @@ position: absolute;
 					<table border="1" align="center" id="baseinfo"
 						style="width: 90%; padding-top: 10px;">
 						<tr style="background-color: #f2f2f2;">
-							<td colspan="6">个人基本信息</td>
+							<td colspan="6" style="color:#666666"><B>个人基本信息</B></td>
 						</tr>
 						<tr>
-							<td width="16.5%">人力资源编码</td>
-							<td width="16.5%"><%=user_code %></td>
-							<td width="16.5%">姓名</td>
-							<td width="16.5%"><%=user_name%></td>
-							<td width="16.5%">性别</td>
-							<td width="17.5%">
+							<td width="16.5%" style="color:#00C2C2">人力资源编码</td>
+							<td width="16.5%" ><%=user_code %></td>
+							<td width="16.5%" style="color:#00C2C2">姓名</td>
+							<td width="16.5%" ><%=user_name%></td>
+							<td width="16.5%" style="color:#00C2C2">性别</td>
+							<td width="17.5%" >
 								<% if (user_sex == "1") { %>女<% } else { %>男<% } %>
 							</td>
 						</tr>
 						<tr style="background-color: #f7fdff;">
-							<td>所属机构</td>
+							<td style="color:#00C2C2">所属机构</td>
 							<td colspan="5"><span id="deptspan"><%=odept_name %></span></td>
 							<%-- <span id="selectdeptspan" style="display:none"><input id="radio1" style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1">主机构身份报名(<%=odept_name %>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 													<input id="radio2" name="state" style="vertical-align:text-bottom; margin-bottom:-4;" type="radio" value="2">次机构身份报名&nbsp;&nbsp;&nbsp;&nbsp;<select style="margin-left:35%;margin-top:-2.2%;display:none" id="slaveselect"></select><span id="tsspan" style="fontWeight:bold;color:red">请选择您的所属机构</span></span> --%>
 						</tr>
 						<tr>
-							<td width="16.5%">岗位类别</td>
+							<td width="16.5%" style="color:#00C2C2">岗位类别</td>
 							<td width="16.5%" id='gwlb'></td>
-							<td width="16.5%">岗位序列</td>
+							<td width="16.5%" style="color:#00C2C2">岗位序列</td>
 							<td width="16.5%" id='gwxl'></td>
-							<td width="16.5%">职务层级</td>
+							<td width="16.5%" style="color:#00C2C2">职务层级</td>
 							<td width="17.5%" id='zwcj'></td>
 						</tr>
 						<tr style="background-color: #f7fdff;">
-							<td width="16.5%">入行时间</td>
+							<td width="16.5%" style="color:#00C2C2">入行时间</td>
 							<td width="16.5%"><%=user_cmpy_date%></td>
-							<td width="16.5%">办公电话</td>
+							<td width="16.5%" style="color:#00C2C2">办公电话</td>
 							<td width="16.5%"><%=user_office_phone %></td>
-							<td width="16.5%">手机号码(<span style="color: red;">融e联绑定的手机号</span>)
+							<td width="16.5%" style="color:#00C2C2">手机号码(<span style="color: red;">融e联绑定的手机号</span>)
 							</td>
 							<td width="17.5%"><input type="text" id="user_mobile1"
 								value=""></td>
@@ -382,190 +382,10 @@ position: absolute;
 		</div>
 	<div id = 'chufa'></div>
 	<input type="hidden" id='xmidval' value="<%=xm_id %>">
-	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
-	<!-- FastClick -->
-	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
-	<!-- AdminLTE App -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>
-	<!-- AdminLTE for demo purposes -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
 	<script src="<%=CONTEXT_PATH%>/sy/base/frame/coms/tree/jquery.tree.js"></script>
-	
-	
-	<%-- //模块改变事件
-	function typeId(obj){
-		var tab = document.getElementById("tableid");
-	    //表格行数
-	    var rows = tab.rows.length;
-	    if(rows>1){
-		var mkvalue= document.getElementById("mkid").value;
-		var param = {};
-		param["MK"]=mkvalue;
-		param["lbname"]="<%=lbname%>";
-		param["xlname"]="<%=xlname%>";
-		param["xm_id"]="<%=xm_id%>";
-		var ww= FireFly.doAct("TS_BMLB_BM", "getMkvalue", param,true,false);
-		hh= ww.list;
-		var tyArray = hh.split(",");
-		var select = document.getElementById("lxid");
-		jQuery("#lxid").empty();          //把select对象的所有option清除掉
-		for(var i=0;i<tyArray.length;i++){
-			select.options[i]=new Option((tyArray[i]=="1")?"初级":(tyArray[i]=="2")?"中级":(tyArray[i]=="3")?"高级":"无",tyArray[i]);
-		}
-		var tab = document.getElementById("tableid");
-	    //表格行数
-	    var rows = tab.rows.length;
-	    if(rows>1){
-			yk["BM_LB"]="<%=lbcode%>";
-			yk["BM_XL"]="<%=xlcode%>";
-			yk["ID"]=document.getElementById("zglbid").value;
-			yk["BM_MK"]=mkvalue;
-			var sel = document.getElementById("lxid");
-			var selected_val = sel.options[sel.selectedIndex].value;
-			yk["BM_TYPE"]=selected_val;
-	       }
-		}
-	}
-	 --%>
-	
-	
-	
-	
-	<%-- //进行资格验证
-	function checky(){
-		var param = {};
-		var bminfo={};
-		bminfo['XM_ID'] = '<%=xm_id%>';
-		bminfo['BM_CODE'] = '<%=user_code%>';
-		bminfo['BM_STARTDATE'] = '<%=bm_start%>';
-		bminfo['BM_ENDDATE'] = '<%=bm_end%>';
-// 		xkArg.push(yk);
-		var neAry=xkArg;
-		if(yk.ID){
-			neAry=xkArg.concat(yk);	
-		}
-		//数组去重
-		for(var i=0; i < neAry.length; i++) {
-		    for(var j=i+1;j< neAry.length; j++) {
-		        if(neAry[i].ID == neAry[j].ID) {
-		        	neAry.splice(neAry[j],1);
-		        }
-		    }
-		}
-		param['BM_INFO'] = JSON.stringify(bminfo);
-		param['BM_LIST'] = JSON.stringify(neAry);
-		console.log(JSON.stringify(param));
-		FireFly.doAct("TS_XMGL_BMSH", "vlidates", param, true,false,function(data){
-    		console.log(data);
-    		yzgz=data;
-    		//获取后台传过来的key
-    		var zgArray = document.getElementsByName("zgksname");
-         	for(var i=0;i<zgArray.length;i++){
-             	//获取验证规则div的id
-       			var a=zgArray[i].value;
-       			//获取验证结果div的id
-             	var yzjg=a+"yzjg";
-       			var dataArray =data[a];
-            	//获取div对应的数组
-       			//append内容之前判断是否有内容
-       			var divtext1 = $("#"+a).html();
-       			if(divtext1==null||divtext1.length==0){
-       				var shArray=true;
-       				for(var j=0;j<dataArray.length;j++){
-       					
-       					if(dataArray[j].VLIDATE=="true"){
-	       					$("#"+a).append('<div><img src="<%=CONTEXT_PATH%>/ts/image/u4719.png">'+dataArray[j].NAME+'</div>');
-	       					
-						}if(dataArray[j].VLIDATE=="false"){
-							$("#"+a).append('<div style="color:red;"><img src="<%=CONTEXT_PATH%>/ts/image/u4721.png">'+dataArray[j].NAME+'</div>');
-						}
-						if(dataArray[j].VLIDATE=="false"){
-							shArray=false;
-						}
-					 }
-       				if(shArray==false){
-       					$("#"+yzjg).append('审核不通过');
-       				
-       				}if(shArray==true){
-       					$("#"+yzjg).append('审核通过');
-       				}
-	       		}
-       			
-       		}
-    	});	
-	} --%>
-	<%-- //提交所有数据
-	function mttijiao(){
-		checky();
-		//获取手机号码
-		var ryl_mobile = document.getElementById("user_mobile2").value
-		//获取到资格考试类型主键id
-		var zgArray = document.getElementsByName("zgksname");
-		var zglb="";
-     	for(var i=0;i<zgArray.length;i++){
-   			if(i==0){
-   				zglb = zgArray[i].value;
-   			}else{
-   				zglb +="," + zgArray[i].value;
-   			}
-   		}
-     	var param = {};
-// 		xkArg.push(yk);
-		var neAry;
-		var neAry=xkArg;
-		if(yk.ID){
-			neAry=xkArg.concat(yk);	
-		}
-		
-		for(var i=0; i < neAry.length; i++) {
-		    for(var j=i+1;j< neAry.length; j++) {
-		        if(neAry[i].ID == neAry[j].ID) {
-		        	neAry.splice(neAry[j],1);
-		        }
-		    }
-		}
-		param["USER_CODE"] = "<%=user_code%>";
-		param["USER_NAME"] = "<%=user_name%>";
-		param["USER_SEX"] = "<%=user_sex%>";
-		param["ODEPT_NAME"] = "<%=odept_name%>";
-		param["USER_OFFICE_PHONE"] = "<%=user_office_phone%>";
-		param["USER_MOBILE"] = ryl_mobile;
-		param["USER_CMPY_DATE"] = "<%=user_cmpy_date%>";
-		param["XM_ID"] = "<%=xm_id%>";
-		param["BM_START"] = "<%=bm_start%>";
-		param["BM_END"] = "<%=bm_end%>";
-		param["XM_NAME"] = "<%=xm_name%>";
-			param['BM_LIST'] = JSON.stringify(neAry);
-			param["YZGZ_LIST"] = JSON.stringify(yzgz);
-			//本序列表格行数
-			var bxltabObj = document.getElementById("tableid");
-			var bxlrows = bxltabObj.rows.length;
-			//跨序列表格行数
-			var kxlObj = document.getElementById("tablehang");
-			var kxlrows = kxlObj.rows.length;
-			if (bxlrows < 2 && kxlrows < 2) {
-				alert("您没有选择考试")
-			}
-			if (bxlrows != 1 || kxlrows != 1) {
-				if (ryl_mobile == "") {
-					alert("手机号码不能为空");
-				}
-				if (ryl_mobile != "" && ryl_mobile != null) {
-					var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param,
-							true, false);
-					showMask();
-					console.log(JSON.stringify(BM_ID.strresult));
-					if (BM_ID.strresult != null || BM_ID.strresult != "") {
-						hideMask();
-					}
-					window.location.href = "bm.jsp";
-				}
-			}
-		} --%>
 	<script src="<%=CONTEXT_PATH%>/ts/js/bmzgks.js"></script>
-	<script src="<%=CONTEXT_PATH%>/ts/js/spin.js"></script>
 </body>
 </html>

@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import com.rh.core.base.Bean;
 
@@ -15,8 +13,6 @@ import com.rh.core.base.Bean;
  * 
  */
 public class BinderBeanSort {
-	private static Log log = LogFactory.getLog(BinderBeanSort.class);
-
 	/**
 	 * 对同一level 的Bean排序
 	 * 

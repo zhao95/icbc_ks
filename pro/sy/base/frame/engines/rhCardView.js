@@ -136,7 +136,7 @@ rh.vi.cardView = function(options) {
    
    this._cancelSave = false; //取消保存
 };
-
+var inadd=0;
 /**
  * 重设空方法，避免重载空方法的对象被销毁之后出现“不能执行已释放 Script 的代码”错误。
  */
@@ -459,7 +459,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
 				   }
 			   }
 		   }
-		   
+           inadd-=10;
            _self.destroyUI();
 		   if (_self._pCon) {//有设定容器
 			   _self._pCon.empty();
@@ -652,9 +652,19 @@ rh.vi.cardView.prototype._bldWin = function() {
     this.winDialog.dialog("open");
     this.winDialog.parent().addClass("rh-ui-dialog").addClass("bodyBack"); 
     //定位
-    this.winDialog.parent().css("position","fixed");
-    this.winDialog.parent().css("top","30px");
-    this.winDialog.parent().css("right","30px");
+   /* this.winDialog.parent().css("position","fixed");*/
+    
+    var dialoglen = jQuery("a[class='rhCard-close']").length-1;
+    var toplen=  dialoglen*20+10;
+    this.winDialog.parent().css("top",toplen+"px");
+  /*  
+    if(dialoglen>0){
+    	var leftlen = jQuery("div[role='dialog']").eq(jQuery("div[role='dialog']").length-2).css("left");
+    }*/
+    var leftlen = this.winDialog.parent().css("left");
+    leftlen=parseInt(leftlen.substring(0,leftlen.length-2))+inadd;
+    inadd+=10;
+    this.winDialog.parent().css("left",leftlen+"px");
     if (this.miniCard) {//小卡片设置区分边框
     	this.winDialog.addClass("rh-ui-dialog-mini-border");
     	this.winDialog.parent().addClass("rh-ui-dialog-mini");
@@ -1144,6 +1154,8 @@ rh.vi.cardView.prototype._bldForm = function() {
     var _self = this;
     //构造Form
     _self.formCon = jQuery("<div class='form-container'></div>");
+   /* var flowhei = this.winDialog.css("height");
+    _self.formCon.css({"height":flowhei});*/
     if (_self.miniCard) { //小卡片
     	_self.formCon.css({"margin-bottom":"0"});
     }
@@ -1343,6 +1355,7 @@ rh.vi.cardView.prototype._saveForm = function() {
     if (this._actVar == UIConst.ACT_CARD_MODIFY) {//修改
     	return _self.modifySave(changeData);
     } else if (this._actVar == UIConst.ACT_CARD_ADD) {//添加
+    	inadd-=10;
     	changeData["_ADD_"] = true;//增加标志
     	changeData[UIConst.PK_KEY] = _self.byIdData[this.servKeys];//增加主键
     	changeData[this.servKeys] = _self.getItem(this.servKeys).getValue();

@@ -65,3 +65,8 @@ rh.vi.listView.prototype.beforeDelete = function(pkArray) {
 //    var cardView = new rh.vi.cardView(temp);
 //    cardView.show();
 //});
+
+//如果父页面是只读的，则隐藏编辑行按钮
+if(_viewer.getParHandler().opts.readOnly){
+	$("a#TS_KCGL_IPZWH_edit").hide();
+}

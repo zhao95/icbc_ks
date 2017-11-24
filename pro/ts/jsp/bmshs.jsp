@@ -43,17 +43,21 @@
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 <body class="hold-transition skin-black sidebar-mini">
 <style>
+.btn-default{
+	color: WHITE;
+	border-color:#245580;
+	}
 	 .trcss{
-		width:16%;
+		width:20%;
 		text-align:right;
 		vertical-align:bottom;
 		font-size:14px;
-		color:black;
+		color:#00C2C2;
 	}
 	.secss{
 	font-size:14px;
 	color:gray;
-	width:34%;
+	width:30%;
 	border-bottom:solid 1px lightgray;
 	vertical-align:bottom;
 	}
@@ -81,7 +85,7 @@
 				<td id="mingcheng" style="width: 25%; text-align: right">名称&nbsp;&nbsp;<input
 					style="height: 30px; width: 70%" id="mc" type="text"></input></td>
 				<td style="width: 5%"></td>
-				<td id="zuzhidanwei" style="width: 20%">组织单位&nbsp;&nbsp;<input
+				<td id="zuzhidanwei" style="width: 30%">组织单位&nbsp;&nbsp;<input
 					style="height: 30px; width: 70%" id="zzdw" type="text"></input></td>
 				<td style="width: 5%"></td>
 				<td style="width: 15%"><select id="zhuangtai" onchange="ztcx()">
@@ -91,7 +95,7 @@
 				</select></td>
 				<td style="width: 5%"></td>
 				<td><button id="search"
-						style="color: white; height: 30px; width: 25%; background: DarkTurquoise" class="btn"
+						style="color: white; height: 30px; width: 60%; background: DarkTurquoise" class="btn"
 						onclick="xzcu()">查询</button></td>
 			</tr>
 		</tbody>
@@ -108,10 +112,10 @@
 					<th id="BM_NAME" class="" style="width: 20%; text-align: left">名称</th>
 					<th id="BM_ODEPT__NAME" class=""
 						style="width: 20%; text-align: left">组织单位</th>
-					<th id="S_ATIME" class="" style="width: 15%; text-align: left">创建时间</th>
+					<th id="S_ATIME" class="" style="width: 20%; text-align: left">创建时间</th>
 					<th id="BM_STATE__NAME" class="" style="width: 10%;text-align: center">状态</th>
 					<th id="BM_STATE__NUM" class="" style="width: 5%;text-align: center">待审核</th>
-					<th id="BM_OPTIONS" class="" style="width: 20%; text-align: center">操作</th>
+					<th id="BM_OPTIONS" class="" style="width: 15%; text-align: center">操作</th>
 				</tr>
 			</thead>
 			<tbody class="">
@@ -142,48 +146,51 @@
 		</div>
 	</div>
 	<div class="modal fade" id="bminfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
-		<div class="modal-dialog" style="width:50%">
+		<div class="modal-dialog" style="width:65%">
 			<div class="modal-content">
-				<div class="modal-header" style="background-color: #00c2c2;color: white">
+				<div class="modal-header" style="height:45px;background-color: #00c2c2;color: white">
 						
-					<h4 class="modal-title">
+					<h5 class="modal-title">
 						报名详细信息
-					</h4>
+					</h5>
 					
 				</div>
-				<div style="padding-left:10px;">
+				<div style="padding-top:20px;">
 				<table id="xminfotable" style="width:95%;font-size:20px;color:lightseagreen">
-				<tr height="50px">
+				<tr height="30px">
 				<td class="trcss" >报名编号：&nbsp;</td><td class="secss" id="bmcode"></td><td class="trcss">报名名称：&nbsp;</td><td class="secss" id="bmname" ></td>
 				</tr>
-				<tr height="50px">
+				<tr height="5px"></tr>
+				<tr height="30px">
 				<td class="trcss">创建人：&nbsp;</td><td  class="secss" id="creator"></td><td class="trcss">组织单位：&nbsp;</td><td class="secss" id="oragnize"></td>
 				</tr>
-				<tr height="50px">
+				<tr height="5px"></tr>
+				<tr height="30px">
 				<td class="trcss">报名开始时间：&nbsp;</td><td class="secss" id="starttime"></td><td class="trcss">报名结束时间：&nbsp;</td><td class="secss" id="endtime"></td>
 				</tr>
-				<tr height="50px">
-				<td class="trcss">状态：&nbsp;</td><td class="secss" id="status"></td><td class="trcss"></td><td style="font-size:14px;color:red;text-align:left;width:40%" ></td>
+				<tr height="5px"></tr>
+				<tr height="30px">
+				<td class="trcss">状态：&nbsp;</td><td class="secss" id="status"></td>
 				</tr>
 				</table>
 				</div>
-				<div style="padding-top:25px;width:23%;font-size:16px;text-align:center;color:lightseagreen">
+				<div style="padding-top:25px;width:23%;font-size:13px;text-align:center;color:lightseagreen">
 				描述：
 				</div>
 				<table style="width:95%">
 				<tr>
-				<td style="width:15%"></td><td style="disabled:disabled;height:100px;vertical-align:top"><textarea id="describe" style="background-color:white;border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="disabled:disabled;height:20%;vertical-align:top"><textarea id="describe" style="background-color:white;border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table >
-				<div style="padding-top:10px;width:23%;font-size:16px;text-align:center;color:lightseagreen">
+				<div style="padding-top:10px;width:23%;font-size:13px;text-align:center;color:lightseagreen">
 				考试须知：
 				</div>
 				<table style="width:95%">
 				<tr>
-				<td style="width:15%"></td><td style="height:100px;vertical-align:top"><textarea id="mustknow" style="background-color:white;border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="height:20%;vertical-align:top"><textarea id="mustknow" style="background-color:white;border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
-				<div class="modal-footer" style="text-align:center;height:50px">
+				<div class="modal-footer" style="text-align:center;height:45px">
 					<button type="button" class="btn btn-default" style="margin-top:-10px;color:white;background:lightseagreen;height:35px;width:80px" data-dismiss="modal">关闭</button>
 				</div>
 				
@@ -198,7 +205,7 @@
 		action="bmshfzg.jsp">
 		<input id="fzgtz" name="fzgtz"></input>
 	</form>
-	<form id="form3" style="display: none" method="post"
+	<form target="blank" id="form3" style="display: none" method="post"
 		action="belongto.jsp">
 		<input id="zgtzzz" name="zgtz"></input>
 		<input id="xianei" name="xianei"></input>
@@ -272,13 +279,6 @@
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
-	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/ts/js/fenye.js"></script>
-	<!-- FastClick -->
-	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
-	<!-- AdminLTE  -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>
-	<!-- AdminLTE for demo purposes -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
 </body>
 </html>

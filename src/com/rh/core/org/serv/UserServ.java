@@ -212,7 +212,8 @@ public class UserServ extends CommonServ {
      * @param shortPinyinField
      * @return
      */
-    private int buildPinyin(String servId,String nameField, String pinyinField, String shortPinyinField){
+    @SuppressWarnings("deprecation")
+	private int buildPinyin(String servId,String nameField, String pinyinField, String shortPinyinField){
         System.out.println(" start build pinyin for service:" + servId);
         int successful = 0;
         ParamBean query = new ParamBean();

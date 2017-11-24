@@ -110,7 +110,9 @@ public class DapccServ extends CommonServ {
 //        configMap.put("searchKsTime", "CAST(BM_KS_TIME as SIGNED) < ?");
 //        configMap.put("searchBmCount", "count = ?");
 
+        @SuppressWarnings("rawtypes")
         List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
+        @SuppressWarnings("unchecked")
         List<Object> values = (List<Object>) extWhereSqlData.get(1);
         String whereSql = (String) extWhereSqlData.get(0);
 
@@ -129,19 +131,27 @@ public class DapccServ extends CommonServ {
                 values.add(searchJkCodePath);
                 whereSql += " and a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
                         " and ? like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%')";
+                //select CODE_PATH,substring(CODE_PATH , LOCATE('^',CODE_PATH,1)+1, LOCATE('^',CODE_PATH,LOCATE('^',CODE_PATH,1)+1)-LOCATE('^',CODE_PATH,1)-1) from sy_org_dept where CODE_PATH is not null;
 //                paramBean.set("searchJkCodePath", searchJkCodePath);
             }
         } else {
-            //获取的考生在考场关联机构本级及下级的机构
-//        whereSql += "AND EXISTS (select 'X' from TS_KCGL_GLJG g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
-//        values.add(searchKcId);
-            StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
-            Set<String> hashSet = this.getKcRelateOrgCodeList(searchKcId);
-            for (String s : hashSet) {
-                values.add(s);
-                deptSql.append("INSTR(c.CODE_PATH ,?)>0 or ");
-            }
-            whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
+            //获取的考生 在考场关联机构本级及下级的机构
+            //*EXISTS
+            whereSql += " AND EXISTS (select '' from TS_KCGL_GLJG g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+            values.add(searchKcId);
+
+            //*in
+//            whereSql += " and c.CODE_PATH in(select c.CODE_PATH from TS_KCGL_GLJG g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+//            values.add(searchKcId);
+
+            //*deptSql
+//            StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
+//            Set<String> hashSet = this.getKcRelateOrgCodeList(searchKcId);
+//            for (String s : hashSet) {
+//                values.add(s);
+//                deptSql.append("INSTR(c.CODE_PATH ,?)>0 or ");
+//            }
+//            whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
         }
 //        Pair<String, List<Object>> extWhereSqlData
 
@@ -215,7 +225,7 @@ public class DapccServ extends CommonServ {
      * @param configMap :{"XM_ID", "XM_ID = ?","searchName", "USER_NAME like ?"}
      * @return List  0;whereSql 1:values
      */
-    private List getExtWhereSqlData(ParamBean paramBean, Map<String, String> configMap) {
+    private List<Object> getExtWhereSqlData(ParamBean paramBean, Map<String, String> configMap) {
         StringBuilder whereSql = new StringBuilder(/*"where "*/);
         List<Object> values = new ArrayList<Object>();
         for (Map.Entry<String, String> entry : configMap.entrySet()) {
@@ -233,7 +243,7 @@ public class DapccServ extends CommonServ {
                 values.add(value);
             }
         }
-        List result = new ArrayList();
+        List<Object> result = new ArrayList<Object>();
         result.add(whereSql.toString());
         result.add(values);
         return result;
@@ -242,7 +252,7 @@ public class DapccServ extends CommonServ {
     /**
      * 获取考场和场次
      *
-     * @param paramBean paramBean xmId
+     * @param paramBean paramBean xmId deptCodeStr
      * @return
      */
     public OutBean getKcAndCc(ParamBean paramBean) {
@@ -712,10 +722,110 @@ public class DapccServ extends CommonServ {
      */
     public OutBean getDeptKcCount(ParamBean paramBean) {
         OutBean outBean = new OutBean();
-        String kcIdStr = paramBean.getStr("KC_ID");
+      /*  String kcIdStr = paramBean.getStr("KC_ID");
         String[] split = kcIdStr.split(",");
 //        bean
-
+*/
         return outBean;
     }
+
+    /**
+     * 查看借考人员
+     *
+     * @param paramBean deptCodeStr(userPvlgCode)  xmId
+     * @return
+     */
+    public OutBean getJkKsContent(ParamBean paramBean) {
+        final String roleDeptCode = paramBean.getStr("deptCodeStr");
+        final String xmId = paramBean.getStr("xmId");
+        final String[] split = roleDeptCode.split(",");
+
+        //借出（）
+//      table  bmshpass
+//      user dept-codepath like roleDeptCode
+        String outJkSql = "select b.USER_NAME,c.DEPT_NAME,d.DEPT_NAME as jk_dept_name from ts_bmsh_pass a " +
+                " left join sy_org_user b on b.USER_CODE = a.BM_CODE " +
+                " left join sy_org_dept c on c.DEPT_CODE = b.DEPT_CODE " +
+                " left join sy_org_dept d on d.DEPT_CODE = a.JK_ODEPT " +
+                " where a.XM_ID =? " +
+                "and a.BM_STATUS in ('2','3') ";
+        String outJkhereSql = "";
+        List<Object> values = new ArrayList<Object>();
+        values.add(xmId);
+
+        //outJkDeptSql
+        StringBuilder outJkDeptSql = new StringBuilder();//" or CODE_PATH like ?";
+        for (String s : split) {
+            if (StringUtils.isNotBlank(s)) {
+                values.add(s);
+                outJkDeptSql.append("INSTR(c.CODE_PATH ,?)>0 or ");
+            }
+        }
+        outJkhereSql = " and (" + outJkDeptSql.toString().substring(0, outJkDeptSql.toString().length() - 3) + ")";
+        outJkSql += outJkhereSql;
+        List<Bean> outJkKsList = Transaction.getExecutor().query(outJkSql, values);
+
+        //借入
+        List<Bean> inJkKsList;
+
+        String inJkSql = "SELECT b.USER_NAME,d.DEPT_NAME,c.DEPT_NAME as jk_dept_name FROM ts_bmsh_pass a " +
+                "LEFT JOIN sy_org_user b ON b.USER_CODE = a.BM_CODE " +
+                "LEFT JOIN sy_org_dept c ON c.DEPT_CODE = a.JK_ODEPT " +
+                "LEFT JOIN sy_org_dept d ON d.DEPT_CODE = b.DEPT_CODE " +
+
+                "where c.CODE_PATH is not null " +
+                "and a.XM_ID = ? " +
+                "and a.BM_STATUS in ('2','3') ";
+
+        List<Object> inJkValues = new ArrayList<Object>();
+        inJkValues.add(xmId);
+
+        //获取当前用户权限的所有一级分行
+        List<String> yifenhangList = new ArrayList<String>();
+        //是否是总行
+        boolean isRootDept = false;
+        for (String deptCode : split) {
+            Bean deptBean = ServDao.find("SY_ORG_DEPT", deptCode);
+            String codePath = deptBean.getStr("CODE_PATH");
+            int i1 = codePath.indexOf("^");
+            int i2 = codePath.indexOf("^", (i1 + 1));
+
+            if (StringUtils.isNotBlank(codePath)) {
+                if (i1 >= 0 && i2 < 0) {
+                    //codePath 不为空，且只有一个 ^  -> 为总行
+                    isRootDept = true;
+                }
+            }
+            String substring = null;
+            if (i2 >= 0) {
+                substring = codePath.substring(i1 + 1, i2);
+            }
+            if (StringUtils.isNotBlank(substring)) {
+                yifenhangList.add(substring);
+            }
+        }
+
+        if (!isRootDept) {
+            //该项目的借入人员 （总行）
+//        } else {
+            //对应一级分行下面的借入人员
+            StringBuilder inJkdDeptSql = new StringBuilder();//" or CODE_PATH like ?";
+            for (String s : yifenhangList) {
+                if (StringUtils.isNotBlank(s)) {
+                    inJkValues.add(s);
+                    inJkdDeptSql.append("INSTR(c.CODE_PATH ,?)>0 or ");
+                }
+            }
+            String inJkWhereSql = " and (" + inJkdDeptSql.toString().substring(0, inJkdDeptSql.toString().length() - 3) + ")";
+            inJkSql += inJkWhereSql;
+            inJkValues.add(xmId);
+        }
+        inJkKsList = Transaction.getExecutor().query(inJkSql, inJkValues);
+
+        OutBean outBean = new OutBean();
+        outBean.set("inJkKsContent", inJkKsList);
+        outBean.set("outJkKsContent", outJkKsList);
+        return outBean;
+    }
+
 }

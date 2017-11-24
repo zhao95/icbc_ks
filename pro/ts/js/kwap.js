@@ -807,8 +807,8 @@ var ZdfpccModal = {
                                 '<tr id="' + item.KSLB_XL_CODE + '">',
                                 '   <td><input type="checkbox" code="' + item.KSLB_XL_CODE + '"></td>',
                                 '   <td>' + (j + 1) + '</td>',
-                                '   <td>' + item.KSLB_NAME__NAME + '</td>',
-                                '   <td>' + item.KSLB_XL__NAME + '</td>',
+                                '   <td>' + item.KSLB_NAME + '</td>',
+                                '   <td>' + item.KSLB_XL + '</td>',
                                 '</tr>'
                             ].join(''));
                             if (settingXL.GZ_VALUE2 === undefined) {
@@ -994,9 +994,49 @@ var SubmissionArrangementModal = {
 
 var LookJkModal = {
     lookJkModal: '',
+    $inJkKsTable: '',
+    $outJkKsTable: '',
+
     initData: function () {
         this.lookJkModal = $('#lookJkModal');
+        this.$inJkKsTable = $('#in-jkKs-table');
+        this.$outJkKsTable = $('#out-jkKs-table');
 
+        var $inTbody = this.$inJkKsTable.find('tbody');
+        var $outTbody = this.$outJkKsTable.find('tbody');
+
+        var data = this.getData();
+        var inJkKsContent = data.inJkKsContent;
+        var outJkKsContent = data.outJkKsContent;
+        for (var i = 0; i < inJkKsContent.length; i++) {
+            var inJkKs = inJkKsContent[i];
+            $inTbody.append([
+                '<tr>',
+                '<td>' + inJkKs.USER_NAME + '</td>',//姓名
+                '<td>' + inJkKs.DEPT_NAME + '</td>',//所属机构
+                '<td>' + inJkKs.JK_DEPT_NAME + '</td>',//借考分行
+
+                '</tr>'
+            ].join(''));
+        }
+
+        for (var i = 0; i < outJkKsContent.length; i++) {
+            var outJkKs = outJkKsContent[i];
+            $outTbody.append([
+                '<tr>',
+                '<td>' + outJkKs.USER_NAME + '</td>',//姓名
+                '<td>' + outJkKs.DEPT_NAME + '</td>',//所属机构
+                '<td>' + outJkKs.JK_DEPT_NAME + '</td>',//借考分行
+                '</tr>'
+            ].join(''));
+        }
+    },
+
+    getData: function () {
+        return FireFly.doAct('TS_XMGL_KCAP_DAPCC', 'getJkKsContent', {
+            xmId: this.xmId,
+            deptCodeStr: Utils.getUserYAPAutoCode()
+        });
     },
     show: function () {
         if (this.lookJkModal === '') {
@@ -1131,6 +1171,7 @@ var KcObject = {
     currentParentKc: '',//当前显示的考场
     currentYapzwArr: [],//当前场次已安排好的座位信息
     currentType: 'view',//当前场次展示方式 list view
+    isRefreshKsContent: true,//是否刷新考生列表
 
     /*初始化界面数据*/
     initData: function (xmId) {
@@ -1446,7 +1487,7 @@ var KcObject = {
 
         //kcTip
         $kcTip.append([
-            '<span style="color:#12769C;">当前考场及场次：</span>',
+            '<span style="color:#000;">当前考场及场次：</span>',
             '考场数:<span id="kcCount" class="tip-white">' + kcArr.length + '</span>&nbsp;',
             '场次数：<span id="ccCount" class="tip-white">' + ccCount + '</span>&nbsp;',
             '已安排：<span id="yapCount" class="tip-white">' + yapTotalCount + '</span>'
@@ -1475,7 +1516,7 @@ var KcObject = {
 
         //kcTip
         $kcTip.append([
-            '<span style="color:#12769C;">当前考场及场次：</span>' + kc.KC_NAME,
+            '<span style="color:#000;">当前考场及场次：</span>' + kc.KC_NAME,
         ].join(''));
         KsObject.reloadKsOrgTip();
 
@@ -1534,7 +1575,7 @@ var KcObject = {
 
         //kcTip
         $kcTip.append([
-            '<span style="color:#12769C;">当前考场及场次：</span>',
+            '<span style="color:#000;">当前考场及场次：</span>',
             '' + parentKc.KC_NAME,
             '&nbsp;&nbsp;' + cc.ccTime,
             '&nbsp;最优数：<span id="optimal-number" class="tip-white"></span>',
@@ -1560,33 +1601,46 @@ var KcObject = {
             var zwList = zwListBean._DATA_;
             var tData = [], trData, preLetter = null;
 
-            // var rows = [];
-            // var cols = [];
-            // for (var i = 0; i < zwList.length; i++) {
-            //     var split = zw.ZW_ZWH_XT.split('-');
-            //     try {
-            //         var row = split[0];
-            //         var col = split[1];
-            //         rows.push(row);
-            //         cols.push(col);
-            //     } catch (e) {
-            //     }
-            // }
-
+            var rows = [];
+            var cols = [];
+            var zwObject = {};
             for (var i = 0; i < zwList.length; i++) {
                 var zw = zwList[i];
-                if (preLetter !== zw.ZW_ZWH_XT.substring(0, 1)) {
-                    if (trData !== undefined) {
-                        tData.push(trData);
-                    }
-                    trData = [];
-                    preLetter = zw.ZW_ZWH_XT.substring(0, 1);
+                var split = zw.ZW_ZWH_XT.split('-');
+                try {
+                    var row = split[0];
+                    var col = split[1];
+                    rows.push(row);
+                    cols.push(col);
+                    zwObject['' + row + '-' + col] = zw;
+                } catch (e) {
                 }
-                trData.push(zw);
             }
-            if (trData !== undefined) {
+            var max_row = Math.max.apply(null, rows);
+            var max_col = Math.max.apply(null, cols);
+
+            for (var i = 1; i <= max_row; i++) {
+                trData = [];
+                for (var j = 1; j <= max_col; j++) {
+                    trData.push(zwObject['' + i + '-' + j])
+                }
                 tData.push(trData);
             }
+
+            // for (var i = 0; i < zwList.length; i++) {
+            //     var zw = zwList[i];
+            //     if (preLetter !== zw.ZW_ZWH_XT.substring(0, 1)) {
+            //         if (trData !== undefined) {
+            //             tData.push(trData);
+            //         }
+            //         trData = [];
+            //         preLetter = zw.ZW_ZWH_XT.substring(0, 1);
+            //     }
+            //     trData.push(zw);
+            // }
+            // if (trData !== undefined) {
+            //     tData.push(trData);
+            // }
 
             for (var i = 0; i < tData.length; i++) {
                 trData = tData[i];
@@ -1594,14 +1648,22 @@ var KcObject = {
                 for (var j = 0; j < trData.length; j++) {
                     var tdData = trData[j];
                     var $td;
-                    if (tdData.ZW_ID) {
-                        $td = jQuery('<td id="' + tdData.ZW_ID + '" style="width:10%;" class="can-arrange">' +
-                            '   <span style="font-size: 12px;position: relative;top: -8px;left: -6px;">' + tdData.ZW_ZWH_SJ + '</span>' +
-                            '   <span class="userName"></span>' +
+                    if (tdData && tdData.ZW_ID) {
+                        if (tdData.ZW_KY === '1') {
+                            $td = jQuery('<td id="' + tdData.ZW_ID + '" style="width:10%;" class="can-arrange">' +
+                                '   <span style="font-size: 12px;position: relative;top: -8px;left: -6px;">' + tdData.ZW_ZWH_SJ + '</span>' +
+                                '   <span class="userName"></span>' +
 //                            '   <span class="close">x</span>' +
-                            '</td>');
+                                '</td>');
+                        } else {
+                            $td = jQuery('<td id="' + tdData.ZW_ID + '" style="width:10%;background-color: #efcaba;" ' +
+                                '   <span style="font-size: 12px;position: relative;top: -8px;left: -6px;">' + tdData.ZW_ZWH_SJ + '</span>' +
+                                '   <span class="userName"></span>' +
+//                            '   <span class="close">x</span>' +
+                                '</td>');
+                        }
                     } else {
-                        $td = jQuery('<td id="" style="width:10%;" >' +
+                        $td = jQuery('<td id="" style="width:10%;background-color: #efcaba;" >' +
                             '   <span style="font-size: 12px;position: relative;top: -8px;left: -6px;"></span>' +
                             '   <span class="userName"></span>' +
 //                            '   <span class="close">x</span>' +
@@ -1779,7 +1841,14 @@ var KcObject = {
         // $zw.attr('yapzwId', yapzwId);
         $zw.find('.userName').html(userName);
         $zw.attr('shId', shId);
-        $zw.css('background', '#c4ffb3');
+
+        if (yapzw.JK_FLAG === '3') {//借入
+            $zw.css('background', '#66CCFF');
+        } else if (yapzw.JK_FLAG === '2') {//借考审批中
+            $zw.css('background', '#f8eeba');
+        } else {
+            $zw.css('background', '#c4ffb3');//普通状态
+        }
 
         if (Utils.getCanDraggable()) {
             //允许拖拉设置拖拉事件
@@ -1801,7 +1870,9 @@ var KcObject = {
                         self.currentYapzwArr.splice(self.currentYapzwArr.indexOf(yapzw), 1);
                         self.reloadCCTip();
                         KsObject.reloadKsOrgTip(1);
-                        KsObject.search();
+                        if (self.isRefreshKsContent) {
+                            KsObject.search();
+                        }
                     }
                 });
             });
@@ -1856,8 +1927,12 @@ var KcObject = {
                     var zwId = $(this).attr('id');
                     // var userCode = ui.draggable[0].cells[11].innerText.trim();
 
-                    //从座位移动到座位 删除原来的
+                    //从座位移动到座位 删除原来的座位  不刷新考生列表
+                    if (ui.draggable[0].tagName !== 'TR') {
+                        self.isRefreshKsContent = false;
+                    }
                     $(ui.draggable[0]).find('.close').click();
+                    self.isRefreshKsContent = true;
                     // var _this = this;
                     FireFly.doAct("TS_XMGL_KCAP_YAPZW", 'saveBean', {
                         ZW_ID: zwId,
@@ -1969,13 +2044,16 @@ var KsObject = {
     setKcRelateOrg: function (kcId, sjId) {
         if (this.kcId !== kcId || $('#ksOrgTreeContent').html() === '') {
             this.kcId = kcId;
+            this.sjId = sjId;
             this.setKsOrgContent(kcId);
             this.searchDeptCode = ''; //初始化 机构搜索条件
-            this.search();
         } else if (this.sjId !== sjId) {
+            this.kcId = kcId;
             this.sjId = sjId;
-            this.search();
+            this.reloadKsOrgKsCount();
         }
+        this.search();
+
     },
 
 //     setInitData: function (deptCode) {
@@ -2091,9 +2169,46 @@ var KsObject = {
 //                    self.setCcInfo(data.node.data, parentKcNode.data);
 //                }
             });
-
+            // debugger;
+            // $ksOrgTreeContent.on("ready.jstree", function (/*e, data*/) {
+            //     debugger;
+            //     self.reloadKsOrgKsCount();
+            // });
         });
 
+    },
+
+    reloadKsOrgKsCount: function () {
+        var setTreeText = function (orgJsonObject, kcId, sjId) {
+            // debugger;
+            for (var i = 0; i < orgJsonObject.children.length; i++) {
+                var childOrg = orgJsonObject.children[i];
+                var treeNodeId = childOrg.id;
+                var text = childOrg.data.DEPT_NAME ? childOrg.data.DEPT_NAME : childOrg.data.NAME;
+                var count = KsObject.countKsCount({kcId: kcId, sjId: sjId, searchDeptCode: treeNodeId});
+                var node = KsObject.ksOrgTree.jstree(true).get_node(treeNodeId);
+                KsObject.ksOrgTree.jstree(true).set_text(node, text + '(<span style="color: red">' + count + '</span>)');
+                console.log(count);
+                // setTreeText(childOrg, kcId, sjId);
+            }
+        };
+
+        // jQuery.ajax({
+        //     type: "POST",
+        //     async: true,
+        //     success: function (/*data*/) {
+        //         var kcId = '';
+        //         var sjId = '';
+        //         if (KcObject.currentParentKc || KcObject.currentCc) {
+        //             kcId = KcObject.currentParentKc.KC_ID;
+        //             sjId = KcObject.currentCc.SJ_ID;
+        //             console.log(kcId + ':' + sjId);
+        //             var orgJsonObject = KsObject.ksOrgTree.jstree(true).get_json('#', {flat: false})[0];
+        //             setTreeText(orgJsonObject, kcId, sjId);
+        //             // KsObject.ksOrgTree.jstree().getNode();
+        //         }
+        //     }
+        // });
     },
 
     reloadKsOrgTipFlag: true,
@@ -2121,10 +2236,10 @@ var KsObject = {
                 count = this.ksOrgTipInfo.count + noReloadCount;
                 totalCount = this.ksOrgTipInfo.totalCount;
             } else {
-                count += parseInt(this.countKsCount(kcId, sjId));
-                count += parseInt(this.countKsCount(kcId, sjId, true));
-                totalCount += parseInt(this.countKsCount(kcId, sjId, false, true));
-                totalCount += parseInt(this.countKsCount(kcId, sjId, true, true));
+                count += parseInt(this.countKsCount({kcId: kcId, sjId: sjId}));
+                count += parseInt(this.countKsCount({kcId: kcId, sjId: sjId, isJk: true}));
+                totalCount += parseInt(this.countKsCount({kcId: kcId, sjId: sjId, isJk: false, totalArrange: true}));
+                totalCount += parseInt(this.countKsCount({kcId: kcId, sjId: sjId, isJk: true, totalArrange: true}));
             }
 
             // $('#ksOrgTipKsCount').html(count);
@@ -2146,8 +2261,19 @@ var KsObject = {
 
     /**
      * 统计考生数
+     * {kcId:kcId,
+     * sjId:sjId,
+     * isJk:isJk,
+     * totalArrange:false}
+     * kcId必需项
+     *
      */
-    countKsCount: function (kcId, sjId, isJk, totalArrange) {
+    countKsCount: function (ksParams) {
+        var kcId = ksParams.kcId,
+            sjId = ksParams.sjId,
+            isJk = ksParams.isJk,
+            totalArrange = ksParams.totalArrange,
+            searchDeptCode = ksParams.searchDeptCode;
         var self = this;
         var params1 = {};
         params1._PAGE_ = {};
@@ -2164,6 +2290,7 @@ var KsObject = {
             _linkServQuery: "2",
             XM_ID: self.xmId,
             /**/
+            searchDeptCode: searchDeptCode,
             searchKcId: kcId,
             searchSjId: sjId
         };
@@ -2238,7 +2365,7 @@ var KsObject = {
     },
 
     search: function () {
-        var self = this;
+        // var self = this;
         this.listPage.search();
         //条件  请求  渲染
         // this.getKsArr(null, function () {

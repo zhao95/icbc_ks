@@ -396,7 +396,7 @@ public class RequestUtils {
     public static ParamBean transParam(HttpServletRequest request) {
         ParamBean paramBean = new ParamBean();
         
-        Map pMap = request.getParameterMap();
+        Map<?, ?> pMap = request.getParameterMap();
         if (pMap != null) {
             for (Object key : pMap.keySet()) {
                 paramBean.set(key, pMap.get(key));

@@ -11,8 +11,6 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.quartz.CronTrigger;
 import org.quartz.DateBuilder.IntervalUnit;

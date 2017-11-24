@@ -79,6 +79,18 @@ _viewer.getBtn("ok").click(function(){
 		return false;
 	}
 	}
+	if(am_time == "" && am_inter != "" &&  am_num!= "" && am_info != ""){
+		alert("请填写开始时间");
+		return false;
+	}
+	if(pm_time == "" && pm_inter != "" &&  pm_num!= "" && pm_info != ""){
+		alert("请填写开始时间");
+		return false;
+	}
+	if(nm_time == "" && nm_inter != "" &&  nm_num!= "" && nm_info != ""){
+		alert("请填写开始时间");
+		return false;
+	}
 	if(am_time != "" && am_inter != "" &&  am_num!= "" && am_info != ""){//am_inter != "" &&
 		am_info = am_info.replace(/，/g, ",");
 		js(date,am_time,am_inter,am_num,am_info);//	日期、开始时间、间隔、场次数、时长

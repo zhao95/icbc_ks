@@ -12,10 +12,6 @@ import org.quartz.JobExecutionException;
 import com.rh.core.base.Bean;
 import com.rh.core.comm.ScheduleHelper;
 import com.rh.core.org.mgr.OrgMgr;
-import com.rh.core.serv.CommonServ;
-import com.rh.core.serv.OutBean;
-import com.rh.core.serv.ParamBean;
-import com.rh.core.serv.ServMgr;
 
 /**
  * @author liwei 计划任务job

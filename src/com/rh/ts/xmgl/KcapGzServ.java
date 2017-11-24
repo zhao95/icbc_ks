@@ -3,13 +3,11 @@ package com.rh.ts.xmgl;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
-import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.util.Constant;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

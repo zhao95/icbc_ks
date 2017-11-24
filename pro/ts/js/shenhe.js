@@ -574,13 +574,25 @@ function form2submit(obj){
 	 $("#ks_title").text(pageEntity[0].BM_TITLE);
 	 $("#bm_name").text(pageEntity[0].BM_NAME);
 	 $("#work_num").text(pageEntity[0].BM_CODE);
-	 $("#phone_num").text(pageEntity[0].BM_PHONE);
+	 $("#phone_num").text(pageEntity[0].phone_num);
 	 $("#starttime").text(pageEntity[0].S_MTIME);
+	 $("#rylphone").text(pageEntity[0].rylphone);
+	 $("#rhdate").text(pageEntity[0].compy_date);
 	 if(pageEntity[0].BM_SEX==0){
 		 $("#gender").text("女");
 	 }else{
 		 $("#gender").text("男");
 	 }
+	 var result =  FireFly.byId("SY_HRM_ZDSTAFFPOSITION", user_code);
+		if(result!=null){
+			 STATION_TYPE = result.STATION_TYPE;
+			 STATION_NO = result.STATION_NO;
+			 ADMIN_DUTY = result.ADMIN_DUTY;
+			 DUTY_LEVEL_CODE = result.DUTY_LV_CODE;
+			 $("#positiontype").html(STATION_TYPE);
+			 $("#positionxl").html(STATION_NO);
+			 $("#positionlevel").html(ADMIN_DUTY);
+		}
 	 $("#belongto").text(pageEntity[0].ODEPT_NAME);
 	}else{
 		 $(obj).attr("data-target","");

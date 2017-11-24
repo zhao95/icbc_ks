@@ -36,18 +36,18 @@ body {background-color:#f5fafd;line-height:28px;font-size:14px;}
 	    <div id="rh_test_flash"></div>
 	</div>
 	<div id="rh_test_container_ntko" class="rh_test_container" style="display:none;">
-	    <div class="rh_test_title">4. NTKO测试和ZotnClient测试</div>
+	   <!--  <div class="rh_test_title">4. NTKO测试和ZotnClient测试</div>
 	    <div id="rh_test_ntko" style="width:100%;text-align:center;">
 	       <iframe id="rh_test_ntko_iframe" src="ntkoTest.jsp" width="600px" height="40px" border='0' frameborder='0' style="border:1px blue solid;padding:0px;background-color:yellow;" allowtransparency=true scrolling=no></iframe>
-	    </div>
+	    </div> -->
 	    <div class="rh_test_title">&nbsp;</div>
-	    <div id="rh_test_word" style="width:100%;text-align:center;">
+	    <!-- <div id="rh_test_word" style="width:100%;text-align:center;">
 	       <iframe id="rh_test_word_iframe" src="wordTest.jsp" width="600px" height="40px" border='0' frameborder='0' scrolling=no style="border:1px blue solid;background-color:yellow;" allowtransparency=true></iframe>
 	    </div>
 	    <div class="rh_test_title">&nbsp;</div>
 	    <div id="rh_test_zotnClient" style="width:100%;text-align:center;">
 	       <iframe id="rh_test_zotnClient_iframe" src="zotnClientTest.jsp" width="600px" height="40px" border='0' frameborder='0' scrolling=no style="border:1px blue solid;background-color:yellow;" allowtransparency=true></iframe>
-	    </div>
+	    </div> -->
 	    <div id="rh_test_zotnClient" style="width:100%;text-align:center;">
 	       <div>如果系统没有自动下载安装文件，可以点此链接手动下载安装<a href='/sy/comm/index/file/ruahoClient.exe'>系统插件</a>(打包NTKO和ZotnClient的安装文件)</div>
 	    </div>

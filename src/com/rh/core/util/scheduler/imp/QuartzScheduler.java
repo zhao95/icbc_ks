@@ -622,7 +622,6 @@ public abstract class QuartzScheduler extends IScheduler {
      * @param state <CODE>TriggerState</CODE>
      * @return <CODE>Trigger</CODE> CODE>
      */
-    @SuppressWarnings("static-access")
     protected RhTrigger valueOfBean(Trigger trig, TriggerStatus state) {
         RhTrigger trigBean = new RhTrigger();
         trigBean.setCode(trig.getKey().getName());

@@ -10,7 +10,6 @@ import com.rh.core.base.Bean;
 import com.rh.core.base.TipException;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.CommonServ;
-import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.ts.util.TsConstant;

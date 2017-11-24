@@ -43,6 +43,12 @@
 	href="<%=CONTEXT_PATH%>/qt/dist/css/skins/_all-skins.min.css">
 <body class="hold-transition skin-black sidebar-mini">
 <style>
+
+	.btn-default{
+	color: WHITE;
+	border-color:#245580;
+	}
+	
 	 .trcss{
 		width:16%;
 		text-align:right;
@@ -81,7 +87,7 @@
 				<td id="mingcheng" style="width: 25%; text-align: right">名称&nbsp;&nbsp;<input
 					style="height: 30px; width: 70%" id="mc" type="text"></input></td>
 				<td style="width: 5%"></td>
-				<td id="zuzhidanwei" style="width: 20%">组织单位&nbsp;&nbsp;<input
+				<td id="zuzhidanwei" style="width: 25%">组织单位&nbsp;&nbsp;<input
 					style="height: 30px; width: 70%" id="zzdw" type="text"></input></td>
 				<td style="width: 5%"></td>
 				<td style="width: 15%"><select id="zhuangtai" onchange="ztcx()">
@@ -91,7 +97,7 @@
 				</select></td>
 				<td style="width: 5%"></td>
 				<td><button id="search"
-						style="color: white; height: 30px; width: 25%; background: DarkTurquoise" class="btn"
+						style="color: white; height: 30px; width: 30%; background: DarkTurquoise" class="btn"
 						onclick="xzcu()">查询</button></td>
 			</tr>
 		</tbody>
@@ -109,7 +115,7 @@
 					<th id="BM_ODEPT__NAME" class=""
 						style="width: 20%; text-align: left">组织单位</th>
 					<th id="S_ATIME" class="" style="width: 20%; text-align: left">创建时间</th>
-					<th id="BM_STATE__NAME" class="" style="width: 5%;">状态</th>
+					<th id="BM_STATE__NAME" class="" style="width: 8%;">状态</th>
 					<th id="BM_OPTIONS" class="" style="width: 15%; text-align: center">操作</th>
 				</tr>
 			</thead>
@@ -197,7 +203,7 @@
 		action="bmshfzg.jsp">
 		<input id="fzgtz" name="fzgtz"></input>
 	</form>
-	<form id="form3" style="display: none" method="post"
+	<form id="form3" target="blank" style="display: none" method="post"
 		action="belongto.jsp">
 		<input id="zgtzzz" name="zgtz"></input>
 		<input id="xianei" name="xianei"></input>
@@ -271,13 +277,6 @@
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
-	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
 	<script src="<%=CONTEXT_PATH%>/ts/js/withinbm.js"></script>
-	<!-- FastClick -->
-	<script src="<%=CONTEXT_PATH%>/qt/plugins/fastclick/fastclick.js"></script>
-	<!-- AdminLTE  -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/app.min.js"></script>
-	<!-- AdminLTE for demo purposes -->
-	<script src="<%=CONTEXT_PATH%>/qt/dist/js/demo.js"></script>
 </body>
 </html>

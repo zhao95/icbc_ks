@@ -17,7 +17,6 @@ public class ImpDataTask extends RhThreadTask {
 
 	private static final String FULLDATA = "FULLDATA";
 	private static final String ERROR = "ERROR";
-	private static final String INCREMENT = "INCREMENT";
 	private ParamBean param = null;
 	
 	public ImpDataTask(ParamBean param) {

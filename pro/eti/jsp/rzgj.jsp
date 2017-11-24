@@ -83,8 +83,9 @@
                 <div class="row">
                     <div class="col-sm-12"
                          style="/*border-right: 4px solid #3a6ab3;*/min-width: 400px;padding: 0">
-                        <div style="font-size: 36px;line-height: 60px; ">
-                            当前序列为 <span class="xlName" style="color:#1D69AC;font-weight: bold;">0</span>,当前序列共有 <span id="xlNum" style="color:#1D69AC;font-weight: bold;">0</span> 人
+                        <div id="titleTip" style="font-size: 36px;line-height: 60px; ">
+                            当前序列为 <span class="xlName" style="color:#1D69AC;font-weight: bold;">0</span>,当前序列共有 <span
+                                id="xlNum" style="color:#1D69AC;font-weight: bold;">0</span> 人
                         </div>
                     </div>
                     <%--<div class="col-sm-4" style="font-size: 16px;max-width: 283px;">
@@ -170,22 +171,24 @@
                                             <span style="color: red;position: relative;top: 3px;left: -33px;">!</span>
                                             您还没有获得该序列有效相关资格证书
                                         </div>
-                                        <div class="col-sm-12"
-                                             style="font-size: 20px;margin-left: 220px;padding: 19px;">
+                                        <div id="no-cert-user-lx-info">
+                                            <div class="col-sm-12"
+                                                 style="font-size: 20px;margin-left: 220px;padding: 19px;">
                                               <span style="color: #289C80">
                                                   您的岗位序列：
                                               </span>
-                                            <span id="xlName"></span>
-                                            序列
-                                        </div>
-                                        <div class="col-sm-12"
-                                             style="font-size: 20px;margin-left: 220px;padding: 19px;">
+                                                <span id="xlName"></span>
+                                                序列
+                                            </div>
+                                            <div class="col-sm-12"
+                                                 style="font-size: 20px;margin-left: 220px;padding: 19px;">
                                             <span style="color: #289C80">
                                                 您要获取的资格：
                                             </span>
-                                            <span id="zgName"></span>序列
-                                            （
-                                            <a onclick="toExamRef()" href="#">相关学习资料下载</a> >工银大学）
+                                                <span id="zgName"></span>序列
+                                                （
+                                                <a onclick="toExamRef()" href="#">相关学习资料下载</a> >工银大学）
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -241,10 +244,30 @@
             return FireFly.doAct("TS_ETI_CERT_QUAL", "getInfo");
         },
         setValues: function () {
-            $('#xlNum').html(this.info.num);
             $('#before-you').html(this.info.pre);
             $('#equal-you').html(this.info.other);
             $('#after-you').html(this.info.after);
+            var str = '';
+            if (this.info.STATION_NO === '') {
+                //当前无序列
+                str = '当前无序列';
+
+                var $noCertUserLxInfo = $('no-cert-user-lx-info');
+                $noCertUserLxInfo.html('');
+                $noCertUserLxInfo.append(['<div class="col-sm-12"',
+                    'style="font-size: 20px;margin-left: 220px;padding: 19px;">',
+                    '    <span style="color: #289C80">',
+                    '    您当前无序列：',
+                    '</span>',
+                    '    </div>'].join(''));
+            } else {
+                str = '当前序列为 <span class="xlName" style="color:#1D69AC;font-weight: bold;">' + this.info.STATION_NO + '</span>,当前序列共有 <span id="xlNum" style="color:#1D69AC;font-weight: bold;">' + this.info.num + '</span> 人';
+            }
+            var $titleTip = $('#titleTip');
+            $titleTip.html('');
+            $titleTip.append(str);
+
+            $('#xlNum').html(this.info.num);
             $('#xlName').html(this.info.STATION_NO);
             $('.xlName').html(this.info.STATION_NO);
             $('#zgName').html(this.info.POSTION_QUALIFICATION_STR);

@@ -189,7 +189,8 @@
             <a style="display: none;" class="rh-icon rhGrid-btnBar-a" id="unPublish" actcode="unPublish" title="">
                 <span class="rh-icon-inner">取消发布场次安排</span><span class="rh-icon-img btn-ok"></span>
             </a>
-            <a <%--style="display: none;"--%> class="rh-icon rhGrid-btnBar-a" id="clearYapzw" actcode="clearYapzw" title="">
+            <a <%--style="display: none;"--%> class="rh-icon rhGrid-btnBar-a" id="clearYapzw" actcode="clearYapzw"
+                                              title="">
                 <span class="rh-icon-inner">清除座位安排</span><span class="rh-icon-img btn-clear"></span>
             </a>
             <a style="cursor: pointer;float: right;padding: 7px 10px;" class="" id="maximize" actcode="maximize"
@@ -328,11 +329,11 @@
                       <i class="fa fa-angle-down"></i>
                   </button>--%>
                 <div id="kcTip" class="col-sm-12"
-                     style="position: relative;top: 3px;color:#006600;background-color: #7ecba3;padding: 5px 39px 5px 5px;border-top: 1px solid #bfdfee;border-bottom: 1px solid #bfdfee;margin: 0 15px;">
+                     style="position: relative;top: 3px;color:#006600;background-color: #7ec7ba;padding: 5px 39px 5px 5px;border-top: 1px solid #bfdfee;border-bottom: 1px solid #bfdfee;margin: 0 15px;">
 
                 </div>
                 <div class="col-sm-12">
-                    <div style="margin-top: 3px;">
+                    <div style="overflow: auto; max-height: 300px;margin-top: 3px;" class="_scrollbar">
                         <table id="kcInfo" class="table table-hover table-bordered">
                             <thead>
                             </thead>
@@ -567,7 +568,42 @@
             <div class="modal-body" style="padding: 24px;">
                 <div class="row">
                     <div class="col-sm-12">
-
+                        借入人员：
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 _scrollbar" style="overflow: auto;height:150px;">
+                        <table id="in-jkKs-table" class="table table-border">
+                            <thead>
+                            <tr style="backGround-color:WhiteSmoke; height: 30px;font-weight: bold">
+                                <th>姓名</th>
+                                <th>所属机构</th>
+                                <th>借考机构</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        借出人员：
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 _scrollbar" style="overflow: auto;height:150px;">
+                        <table id="out-jkKs-table" class="table table-border">
+                            <thead>
+                            <tr style="backGround-color:WhiteSmoke; height: 30px;font-weight: bold">
+                                <th>姓名</th>
+                                <th>所属机构</th>
+                                <th>借考机构</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
