@@ -1171,6 +1171,7 @@ var KcObject = {
     currentParentKc: '',//当前显示的考场
     currentYapzwArr: [],//当前场次已安排好的座位信息
     currentType: 'view',//当前场次展示方式 list view
+    isRefreshKsContent: true,//是否刷新考生列表
 
     /*初始化界面数据*/
     initData: function (xmId) {
@@ -1869,7 +1870,9 @@ var KcObject = {
                         self.currentYapzwArr.splice(self.currentYapzwArr.indexOf(yapzw), 1);
                         self.reloadCCTip();
                         KsObject.reloadKsOrgTip(1);
-                        KsObject.search();
+                        if (self.isRefreshKsContent) {
+                            KsObject.search();
+                        }
                     }
                 });
             });
@@ -1924,8 +1927,12 @@ var KcObject = {
                     var zwId = $(this).attr('id');
                     // var userCode = ui.draggable[0].cells[11].innerText.trim();
 
-                    //从座位移动到座位 删除原来的
+                    //从座位移动到座位 删除原来的座位  不刷新考生列表
+                    if (ui.draggable[0].tagName !== 'TR') {
+                        self.isRefreshKsContent = false;
+                    }
                     $(ui.draggable[0]).find('.close').click();
+                    self.isRefreshKsContent = true;
                     // var _this = this;
                     FireFly.doAct("TS_XMGL_KCAP_YAPZW", 'saveBean', {
                         ZW_ID: zwId,
@@ -2043,7 +2050,7 @@ var KsObject = {
         } else if (this.sjId !== sjId) {
             this.kcId = kcId;
             this.sjId = sjId;
-            this.reloadKsOrgKsCount();
+            // this.reloadKsOrgKsCount();
         }
         this.search();
 
@@ -2108,7 +2115,7 @@ var KsObject = {
                 childs = childs ? childs : [];
                 for (var i = 0; i < childs.length; i++) {
                     var child = childs[i];
-                    var id = child.DEPT_CODE ? child.DEPT_CODE : child.ID;
+                    var id = child.DEPT_CODE ? child.DEPT_CODE : child.ID + ' ';
                     var text = child.DEPT_NAME ? child.DEPT_NAME : child.NAME;
                     var item = {
                         id: id,
@@ -2148,61 +2155,71 @@ var KsObject = {
             });
 
             $ksOrgTreeContent.on("changed.jstree", function (e, data) {
-                var id = data.node.data.id ? data.node.data.id : data.node.data.ID;
-                id = id ? id : data.node.data.DEPT_CODE;
-                self.searchDeptCode = id;
+                // id = id ? id : data.node.data.DEPT_CODE;
+                self.searchDeptCode = data.node.id.trim();
                 self.search();
-
-//                if (data.node.data.KC_ID) {
-//                    //选中考场
-//                    self.setKcInfo(data.node.data);
-//                } else {
-//                    var parentKcNode = $.jstree.reference(jstree).get_node(data.node.parent);
-//                    //选中场次
-//                    self.setCcInfo(data.node.data, parentKcNode.data);
-//                }
             });
             // debugger;
             // $ksOrgTreeContent.on("ready.jstree", function (/*e, data*/) {
-            //     debugger;
             //     self.reloadKsOrgKsCount();
             // });
+
+            $ksOrgTreeContent.on("after_open.jstree", function (e, node) {
+                var kcId = '';
+                var sjId = '';
+                if (KcObject.currentParentKc || KcObject.currentCc) {
+                    kcId = KcObject.currentParentKc.KC_ID;
+                    sjId = KcObject.currentCc.SJ_ID;
+                    KsObject.setTreeText(node.node, kcId, sjId);
+                }
+            });
+
         });
 
     },
 
-    reloadKsOrgKsCount: function () {
-        var setTreeText = function (orgJsonObject, kcId, sjId) {
-            debugger;
-            for (var i = 0; i < orgJsonObject.children.length; i++) {
-                var childOrg = orgJsonObject.children[i];
-                var treeNodeId = childOrg.id;
-                var text = childOrg.data.DEPT_NAME ? childOrg.data.DEPT_NAME : childOrg.data.NAME;
-                var count = KsObject.countKsCount({kcId: kcId, sjId: sjId, searchDeptCode: treeNodeId});
-                var node = KsObject.ksOrgTree.jstree(true).get_node(treeNodeId);
-                KsObject.ksOrgTree.jstree(true).set_text(node, text + '(<span style="color: red">' + count + '</span>)');
-                console.log(count);
-                // setTreeText(childOrg, kcId, sjId);
-            }
-        };
+    w: undefined,
 
-        // jQuery.ajax({
-        //     type: "POST",
-        //     async: true,
-        //     success: function (/*data*/) {
-        //         var kcId = '';
-        //         var sjId = '';
-        //         if (KcObject.currentParentKc || KcObject.currentCc) {
-        //             kcId = KcObject.currentParentKc.KC_ID;
-        //             sjId = KcObject.currentCc.SJ_ID;
-        //             console.log(kcId + ':' + sjId);
-        //             var orgJsonObject = KsObject.ksOrgTree.jstree(true).get_json('#', {flat: false})[0];
-        //             setTreeText(orgJsonObject, kcId, sjId);
-        //             // KsObject.ksOrgTree.jstree().getNode();
-        //         }
-        //     }
-        // });
+    // reloadKsOrgKsCount: function () {
+    //     jQuery.ajax({
+    //         type: "POST",
+    //         async: true,
+    //         success: function (/*data*/) {
+    //             setTimeout('KsObject.testTime()', 2000);
+    //         }
+    //     });
+    // },
+
+    setTreeText: function (orgJsonObject, kcId, sjId) {
+        // debugger;
+        for (var i = 0; i < orgJsonObject.children.length; i++) {
+            var treeNodeId = orgJsonObject.children[i].trim();
+            /*var childOrg*/
+            // = childOrg.id;
+            // var text = childOrg.data.DEPT_NAME ? childOrg.data.DEPT_NAME : childOrg.data.NAME;
+            var node = KsObject.ksOrgTree.jstree(true).get_node(treeNodeId);
+            var text = KsObject.ksOrgTree.jstree(true).get_text(node);
+            text = text.split('(')[0];
+            var count = KsObject.countKsCount({kcId: kcId, sjId: sjId, searchDeptCode: treeNodeId});
+            KsObject.ksOrgTree.jstree(true).set_text(node, text + '(<span style="color: red">' + count + '</span>)');
+            console.log(count);
+            // KsObject.setTreeText(childOrg, kcId, sjId);
+        }
     },
+
+    // testTime: function () {
+    //     var kcId = '';
+    //     var sjId = '';
+    //     if (KcObject.currentParentKc || KcObject.currentCc) {
+    //         kcId = KcObject.currentParentKc.KC_ID;
+    //         sjId = KcObject.currentCc.SJ_ID;
+    //         console.log(kcId + ':' + sjId);
+    //         var orgJsonObject = KsObject.ksOrgTree.jstree(true).get_json('#', {flat: false})[0];
+    //         // setTimeout('', 3000);
+    //         KsObject.setTreeText(orgJsonObject, kcId, sjId)
+    //         // KsObject.ksOrgTree.jstree().getNode();
+    //     }
+    // },
 
     reloadKsOrgTipFlag: true,
     reloadKsOrgTipCount: 0,

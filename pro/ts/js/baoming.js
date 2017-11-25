@@ -98,7 +98,9 @@ function lookSeat(i) {
 function jibieonchange() {
     new listPage().gotoPage(1);
 }
-
+$("#cxbut").click(function(){
+	new listPage().gotoPage(1);
+})
 //每页多少条 添加onchange事件
 function fenyeselect() {
     //跟 级别 按钮 的onchange时间一样都要 筛选所有条件下的数据
@@ -455,7 +457,7 @@ function ksqxm() {
         }
         //append数据
         var j = i + 1;
-        $("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">' + j + '</td><td class="rhGrid-td-hide" id="BM_TYPE' + i + '" >' + type + '</td><td class="rhGrid-td-hide" id="BM_ID' + i + '" >' + id + '</td><td class="rhGrid-td-left " id="BM_NAME' + i + '" style="text-align: left">' + name + '</td><td class="rhGrid-td-left " id="BM_ODEPT__NAME" style="text-align: center">' + dept + '</td><td class="rhGrid-td-left " id="S_ATIME" style="text-align: center" >' + startTime + '</td><td  id="BM_STATE__NAME" style="text-align: left">' + state + '</td><td id="BM_OPTIONS"><button class="btn btn-success" type="button" onclick="tiaozhuan(' + i + ')" style="margin-left:30px;display:' + display + ';color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px">报名</button></td></tr>');
+        $("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">' + j + '</td><td class="rhGrid-td-hide" id="BM_TYPE' + i + '" >' + type + '</td><td class="rhGrid-td-hide" id="BM_ID' + i + '" >' + id + '</td><td class="rhGrid-td-left " id="BM_NAME' + i + '" style="text-align: left">' + name + '</td><td class="rhGrid-td-left " id="BM_ODEPT__NAME" style="text-align: center">' + dept + '</td><td class="rhGrid-td-left " id="S_ATIME" style="text-align: center" >' + startTime + '</td><td  id="BM_STATE__NAME" style="text-align: left">' + state + '</td><td id="BM_OPTIONS"><button class="btn btn-success" type="button" onclick="tiaozhuan(' + i + ')" style="margin-left:30px;display:' + display + ';color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:70px">报名</button></td></tr>');
     }
     var table = document.getElementById("table");
     rowscolor(table);
@@ -520,7 +522,8 @@ listPage.prototype.getListData = function (num) {
     param._PAGE_ = {};
     param._PAGE_.NOWPAGE = num;
     param._PAGE_.SHOWNUM = showNum;
-
+    
+    param["ppname"]=$("#ksnameselect").val();
     param["user_code"] = user_code;
     // //每页条数
     // var select = document.getElementById("yema");

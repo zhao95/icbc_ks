@@ -69,7 +69,7 @@ function showMenu() {
 					  //有待审核的数据
 					  $(".sidebar-menu")
 						.append(
-								'<li><a href="#" onclick="window.open('+MENU_URL+')" target="blank"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
+								'<li><a href="#" onclick="window.open('+MENU_URL+')"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
 										+ data.menuList[i].MENU_NAME
 										+ '</span></a></li>');
 				  }else{
@@ -77,7 +77,7 @@ function showMenu() {
 					  //有需要 审核的数据  <span class="label label-warning" id="tipSum">0</span>
 					  $(".sidebar-menu")
 						.append(
-								'<li><a href="#" onclick="window.open('+MENU_URL+')" target="blank"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
+								'<li><a href="#" onclick="window.open('+MENU_URL+')"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
 										+ data.menuList[i].MENU_NAME
 										+ '</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-warning" id="tipSum">'+num+'</span></a></li>');
 				  }
@@ -93,7 +93,7 @@ function showMenu() {
 			  }else{
 				  $(".sidebar-menu")
 				  .append(
-						  '<li><a href="#" onclick="window.open('+MENU_URL+')" target="blank"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
+						  '<li><a href="#" onclick="window.open('+MENU_URL+')"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
 						  + data.menuList[i].MENU_NAME
 						  + '</span></a></li>');
 			  }

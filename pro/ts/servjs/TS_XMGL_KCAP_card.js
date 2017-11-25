@@ -15,3 +15,6 @@ var hdtitle = $("<div>").text("考场安排");
 hdtitle.css({"width":"90%","font-family":"华文中宋,宋体","color":"black","font-size":"25px","text-align":"center","vertical-align":"text-top"});
 
 $(".rhCard-btnBar").append(hdtitle).css({"padding":"0px 0px 2px 8px"});
+
+$("#TS_XMGL_KCAP-winTabs").find("a").eq(2).trigger("click")
+$("#TS_XMGL_KCAP-winTabs").find("li").eq(1).css("display","none");

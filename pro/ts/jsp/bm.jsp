@@ -159,8 +159,7 @@ position: absolute;
 				style="position:absolute;margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">已申请的报名</span>
 			</div>
-
-                 <div  id="jibie" style="position:relative;top:58px;padding-top:20px;padding-left:80%">
+                 <div  id="jibie" style="position:relative;top:58px;padding-top:20px;padding-left:70%">
                <label> 层级&nbsp;&nbsp;</label>
                  <select id = "jb" onchange="jibieonchange()">
                  <option selected="selected">全部</option>
@@ -168,11 +167,13 @@ position: absolute;
                  <option value="2">中级</option>
                  <option value="3">高级</option>
                  </select>
+                  &nbsp;&nbsp;名称 &nbsp;<input id="ksnameselect" style="height:25px;width:30%"></input>
+                 &nbsp; <button class="btn btn-success" id="cxbut" style="width:20%;height:30px;background-color:lightseagreen">查询</button>
                  </div>
 
 			<div id ="qihuan" style="margin-top:10px">
 
-              <div id="sanjiliandong" class="panel-body" style=":15px;width:70%;margin-left:10%">
+              <div id="sanjiliandong" class="panel-body" style=":15px;width:70%;">
                  <form action="#" id="formContainer" class="form form-horizontal"></form>
 
              </div>
@@ -361,6 +362,5 @@ position: absolute;
 	</div>
 
 	<script src="<%=CONTEXT_PATH%>/ts/js/baoming.js"></script>
-	
 </body>
 </html>

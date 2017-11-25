@@ -68,13 +68,13 @@
 		<div class="tab-pane fade active in" style="position:relative;" id="home">
 			<div style="margin-top: -5px; margin-left: 100%; height: 5px; width: 20%; background-color: LightSeaGreen"></div>
 				<div id="cuxian1" style="margin-left: 10px; margin-top: 0px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
-				<span style="margin-left: 50px; padding-top: 10px">考试相关安排</span>
+				<span style="margin-left: 50px; padding-top: 10px" id="initData">考试相关安排</span>
 			</div>
 			<!-- 查询框 -->
 			<table id="cxkuang" style="margin-top:20px">
 				<tbody>
 					<tr style="height:20px">
-						<td style="width:30;text-align:center">考试名称&nbsp;&nbsp;<input style="height:30px;width:50%" id="ks_name" type="text"></td>
+						<td style="width:30px;text-align:center">考试名称&nbsp;&nbsp;<input style="height:30px;width:50%" id="ks_name" type="text"></td>
 						<td style="width:20%;text-align:center">考试年份&nbsp;&nbsp;<input style="height:30px;width:50%" id="ks_year" type="text"></td>
 				        <td style="width:12%;"><button style="border:none;color:white;height:30px;width:35%;background:DarkTurquoise"  id="search">查询</button></td>
 					</tr>

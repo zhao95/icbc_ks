@@ -13,7 +13,7 @@ import com.rh.core.util.scheduler.RhJobContext;
  * 轮询数据同步状态表，触发同步数据方法
  * 
  * @author leader
- *
+ *com.rh.core.icbc.basedata.job.KSNImpStateJob
  */
 public class KSNImpStateJob extends RhJob {
 
@@ -22,10 +22,9 @@ public class KSNImpStateJob extends RhJob {
 	@Override
 	protected void executeJob(RhJobContext context) {
 		// 是否手动进行导入数据；手动导入，则返回
-//		if (!Context.getSyConf("CC_DATA_IMP_AUTO", false)) {
-//			return;
-//		}
-		Context.getSyConf("CC_DATA_IMP_AUTO", false);
+		if (!Context.getSyConf("CC_DATA_IMP_AUTO", false)) {
+			return;
+		}
 		// step1,检测CC_IMP_STATE
 		SqlBean sqlBean = new SqlBean();
 		sqlBean.desc("IMP_DATE");

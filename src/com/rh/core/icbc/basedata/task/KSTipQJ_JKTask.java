@@ -148,11 +148,6 @@ public class KSTipQJ_JKTask extends AbstractTipTask {
 			}
 		}
 		log.error("-------------完成通知参考人员借考相关信息（开始借考）----------------");
-		
-		
-		
-		
-		
 		return true;
 	}
 

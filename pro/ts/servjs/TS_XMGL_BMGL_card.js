@@ -70,7 +70,7 @@ $('#'+bmEnd._opts.id+"_div").css('min-height','32px');
 //	 window.location.href ="stdListView.jsp?frameId=TS_XMGL-tabFrame&sId=TS_XMGL&paramsFlag=false&title=项目管理";
 //});
 
-FireFly.doAct("TS_XMGL","finds",{"_WHERE_":" and XM_ID=(select XM_ID from TS_XMGL_SZ where XM_SZ_ID='"+XM_SZ_ID+"')"},true,false,function(data){debugger;
+FireFly.doAct("TS_XMGL","finds",{"_WHERE_":" and XM_ID=(select XM_ID from TS_XMGL_SZ where XM_SZ_ID='"+XM_SZ_ID+"')"},true,false,function(data){
 		var datas = data._DATA_[0].XM_TYPE;
 		var xmName=data._DATA_[0].XM_NAME;
 		_viewer.getItem("BM_NAME").setValue(xmName);

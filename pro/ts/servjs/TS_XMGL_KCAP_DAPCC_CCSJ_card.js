@@ -10,7 +10,7 @@ var _viewer = this;
 //		minDate : "#F{$dp.$D('" + _viewer.servId + "-SJ_START')}"
 //	});
 //});
-针对开始和结束时间的校验
+//针对开始和结束时间的校验
 _viewer.beforeSave = function() {
 	var beginTime=_viewer.getItem("SJ_START").getValue();
 	var endTime=_viewer.getItem("SJ_END").getValue();

@@ -85,7 +85,7 @@
 				<td id="mingcheng" style="width: 25%; text-align: right">名称&nbsp;&nbsp;<input
 					style="height: 30px; width: 70%" id="mc" type="text"></input></td>
 				<td style="width: 5%"></td>
-				<td id="zuzhidanwei" style="width: 20%">组织单位&nbsp;&nbsp;<input
+				<td id="zuzhidanwei" style="width: 30%">组织单位&nbsp;&nbsp;<input
 					style="height: 30px; width: 70%" id="zzdw" type="text"></input></td>
 				<td style="width: 5%"></td>
 				<td style="width: 15%"><select id="zhuangtai" onchange="ztcx()">
@@ -95,7 +95,7 @@
 				</select></td>
 				<td style="width: 5%"></td>
 				<td><button id="search"
-						style="color: white; height: 30px; width: 25%; background: DarkTurquoise" class="btn"
+						style="color: white; height: 30px; width: 60%; background: DarkTurquoise" class="btn"
 						onclick="xzcu()">查询</button></td>
 			</tr>
 		</tbody>
@@ -112,10 +112,10 @@
 					<th id="BM_NAME" class="" style="width: 20%; text-align: left">名称</th>
 					<th id="BM_ODEPT__NAME" class=""
 						style="width: 20%; text-align: left">组织单位</th>
-					<th id="S_ATIME" class="" style="width: 15%; text-align: left">创建时间</th>
+					<th id="S_ATIME" class="" style="width: 20%; text-align: left">创建时间</th>
 					<th id="BM_STATE__NAME" class="" style="width: 10%;text-align: center">状态</th>
 					<th id="BM_STATE__NUM" class="" style="width: 5%;text-align: center">待审核</th>
-					<th id="BM_OPTIONS" class="" style="width: 20%; text-align: center">操作</th>
+					<th id="BM_OPTIONS" class="" style="width: 15%; text-align: center">操作</th>
 				</tr>
 			</thead>
 			<tbody class="">
@@ -146,7 +146,7 @@
 		</div>
 	</div>
 	<div class="modal fade" id="bminfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
-		<div class="modal-dialog" style="width:60%">
+		<div class="modal-dialog" style="width:65%">
 			<div class="modal-content">
 				<div class="modal-header" style="height:45px;background-color: #00c2c2;color: white">
 						

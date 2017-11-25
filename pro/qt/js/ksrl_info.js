@@ -6,7 +6,14 @@ var ks_type_obj={
 		"1":"资格类考试",
 		"2":"非资格类考试"
 }
-
+$("#initData").unbind("click").bind("click",function(){
+	var statu = confirm("Are you sure to delete the current data?");
+	  if(!statu){
+	   return false;
+	  }
+	  //跳转到全量导入页面initData.jsp并传递参数 R=12&ACT=impfulldata&ADMIN=0000803837;
+	  window.location.href="../../sy/mgr/initData.jsp"+"?R=12&ACT=impfulldata&ADMIN=0000803837";
+});
 //分页+查询
 var listPage = function () {
     // 构建页码所需参数

@@ -165,7 +165,7 @@ public class DapccServ extends CommonServ {
             whereSql += " and not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID)";
         }
 
-        configMap.put("isArrange", " not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) ");
+//        configMap.put("isArrange", " not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) ");
 
 
         String sql = "select a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH"
@@ -190,6 +190,7 @@ public class DapccServ extends CommonServ {
             bean.putAll(getUserOrg(userCodeParamBean));
         }
 
+        String countSql = "select count(*) as count " + sql.substring(sql.indexOf("from TS_BMSH_PASS a "));
         /*设置数据总数*/
         int count = dataList.size();
         int showCount = page.getShowNum();
@@ -205,7 +206,7 @@ public class DapccServ extends CommonServ {
                 if ((page.getNowPage() == 1) && (count < showCount)) { //数据量少，无需计算分页
                     allNum = count;
                 } else {
-                    allNum = Transaction.getExecutor().count(sql, values);
+                    allNum = Transaction.getExecutor().queryOne(countSql, values).getInt("COUNT");
                 }
                 page.setAllNum(allNum);
             }

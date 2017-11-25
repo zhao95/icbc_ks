@@ -136,7 +136,7 @@ position: absolute;
 				</table>
 				<table align="center" style="border-radius:5px;width: 90%; background-color: #fed1d1;">
 					<tr>
-						<td style="width:11%"><span style="color: #ff0000;">！</span> 温馨提示：</td>
+						<td style="width:14%"><span style="color: #ff0000;">！</span> 温馨提示：</td>
 						<td height="50px" align="left">1.您当前在 <span id="odptnspan"
 							style="color: #ff0000;"><%=odept_name%></span>
 							，将视您办公所在地统一安排考场。如果您发现下面的信息不符，请于借考申请开放期间提交借考申请！
@@ -152,7 +152,7 @@ position: absolute;
 					<table border="1" align="center" id="baseinfo"
 						style="width: 90%; padding-top: 10px;">
 						<tr style="background-color: #f2f2f2;">
-							<td colspan="6" style="color:#00C2C2">个人基本信息</td>
+							<td colspan="6" style="color:#666666"><B>个人基本信息</B></td>
 						</tr>
 						<tr>
 							<td width="16.5%" style="color:#00C2C2">人力资源编码</td>
@@ -382,6 +382,36 @@ position: absolute;
 		</div>
 	<div id = 'chufa'></div>
 	<input type="hidden" id='xmidval' value="<%=xm_id %>">
+	<script>
+	
+	$(window).bind('beforeunload', function(){
+
+		    // 只有在标识变量is_confirm不为false时，才弹出确认提示
+
+		    if(window.is_confirm !== false){
+		    var  leng = $("input[name='checkboxaa']").length;
+			if(leng>0){
+	    	return '还有考试没有提交 您确定离开页面吗？'; 
+				
+			}
+		    }
+
+
+		});
+
+	/* function checkLeave(){
+		//判断是否有考试没有提交
+		var  leng = $("input[name='checkboxaa']").length;
+		if(leng>0){
+			var sureconfir = confirm("还有考试没有提交是否要离开页面");
+			if(sureconfir){
+				//确定关闭页面
+			}else{
+				 return '您可能有数据没有保存'; 
+			}
+		}
+	} */
+	</script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>

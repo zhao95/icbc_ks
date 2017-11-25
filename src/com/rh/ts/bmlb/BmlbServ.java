@@ -467,12 +467,12 @@ public class BmlbServ extends CommonServ {
 					}
 					// 自动审核保存到 报名明细中
 					Bean mindbean = new Bean();
-					mindbean.set("SH_LEVEL", 0);
+					mindbean.set("SH_LEVEL", "自动审核");
 					mindbean.set("SH_MIND", mind);
 					mindbean.set("DATA_ID", bm_id);
 					mindbean.set("SH_STATUS", ad_result);
-					mindbean.set("SH_ULOGIN", "自动审核");
-					mindbean.set("SH_UNAME", "自动审核");
+					mindbean.set("SH_ULOGIN", "");
+					mindbean.set("SH_UNAME", "");
 					mindbean.set("SH_UCODE", "");
 					mindbean.set("SH_TYPE", 1);
 					mindbean.set("SH_NODE", 0);
@@ -697,10 +697,11 @@ public class BmlbServ extends CommonServ {
 		// String NOWPAGE = paramBean.getStr("nowpage");
 		// String SHOWNUM = paramBean.getStr("shownum");
 		String user_code = paramBean.getStr("user_code");
+		String ppname = paramBean.getStr("ppname");
 		String where1 = paramBean.getStr("where");
 		where1 = where1.replaceAll("AND ", "AND a.");
-		String whereSql = " where a.BM_CODE=" + "'" + user_code + "' " + where1
-				+ " order by s_atime,bm_name";
+		String whereSql = " where a.BM_TITLE LIKE '%"+ppname+"%' AND a.BM_CODE=" + "'" + user_code + "' " + where1
+				+ " order by s_atime desc";
 
 		String sql = "select a.*,c.PUBLICITY from TS_BMLB_BM a left join ts_bmsh_pass b on b.BM_ID = a.BM_ID "
 				+ "left join ts_xmgl_kcap_yapzw c on c.SH_ID = b.SH_ID "
