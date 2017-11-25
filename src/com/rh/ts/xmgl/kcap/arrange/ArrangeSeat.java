@@ -46,6 +46,8 @@ public class ArrangeSeat {
 		int ksConstrain = res.getKsConstrain(); // 不符合规则考试 是否强制安排
 
 		if (ksConstrain == 1) { // 强制安排
+			
+			log.error("||||||||||||||||||||||||||||||||||||||||||||--强制安排分隔线--||||||||||||||||||||||||||||||||||");
 
 			try {
 				// Transaction.begin();
@@ -117,6 +119,8 @@ public class ArrangeSeat {
 					String kcName = freeKc.getStr("KC_NAME");
 
 					String ksTime = freeKc.getStr("SJ_TIME");
+					
+					String kcLv = freeKc.getStr("KC_LV");
 
 					String zwsort[] = KcapUtils.sortStr(freeKc); // 座位排序
 
@@ -139,6 +143,8 @@ public class ArrangeSeat {
 							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
 							freeZw.set("SJ_TIME", ksTime);
+							
+							freeZw.set("KC_LV", kcLv);
 
 							Bean odeptKs = res.getGljgKs(kcId);
 
@@ -209,6 +215,8 @@ public class ArrangeSeat {
 					String ksTime = freeDayCc.getStr("SJ_TIME");
 
 					String kcName = freeDayCc.getStr("KC_NAME");
+					
+					String kcLv = freeKc.getStr("KC_LV");
 
 					String date = day.toString();
 
@@ -233,6 +241,8 @@ public class ArrangeSeat {
 							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
 							freeZw.set("SJ_TIME", ksTime);
+							
+							freeZw.set("KC_LV", kcLv);
 
 							Bean odeptKs = res.getGljgKs(kcId);
 

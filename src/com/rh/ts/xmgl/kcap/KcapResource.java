@@ -950,7 +950,7 @@ public class KcapResource {
 
 				String kcId = kcInfo.getBean("INFO").getStr("KC_ID");
 
-				String kcName = kcInfo.getBean("INFO").getStr("KC_NAME");
+//				String kcName = kcInfo.getBean("INFO").getStr("KC_NAME");
 
 				Bean jgBean = kcInfo.getBean("GLJG"); // 考场的关联机构Bean
 
@@ -962,7 +962,7 @@ public class KcapResource {
 
 					if (jg.getInt("JG_FAR") == 1) { // 关联考场距离远的机构
 
-						log.error("-----" + kcName + "|" + jg.getStr("JG_NAME") + " JG_FAR:" + jg.getInt("JG_FAR"));
+//						log.error("-----" + kcName + "|" + jg.getStr("JG_NAME") + " JG_FAR:" + jg.getInt("JG_FAR"));
 
 						String dCode = jg.getStr("JG_CODE");
 
@@ -974,7 +974,7 @@ public class KcapResource {
 
 							if (!farUcodes.isEmpty()) {
 
-								log.error("-----------code:" + farUcodes.size());
+//								log.error("-----------code:" + farUcodes.size());
 
 								farKs.putAll(farUcodes);
 							}
@@ -1001,7 +1001,7 @@ public class KcapResource {
 
 								if (!childFarUcodes.isEmpty()) {
 
-									log.error("-----------code:" + childFarUcodes.size());
+//									log.error("-----------code:" + childFarUcodes.size());
 
 									farKs.putAll(childFarUcodes);
 								}

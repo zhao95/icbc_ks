@@ -97,40 +97,8 @@ public class KcapMatch {
 
 					filtBean = (Bean) rtnBean.clone();
 
-					// for (Object times : clone.keySet()) {
-					//
-					// log.error("-----keepR002前----------------time:" +
-					// times.toString() + ":"
-					// + clone.getBean(times).size());
-					// }
-					//
-					// for (Object times : filtBean.keySet()) {
-					//
-					// log.error("-----keepR002后----------------time:" +
-					// times.toString() + ":"
-					// + filtBean.getBean(times).size());
-					// }
 					break rtnLoop;
 				}
-
-				// else {
-				//
-				// filtBean = (Bean) rtnBean.clone();
-				//
-				// for (Object times : clone.keySet()) {
-				//
-				// log.error("-----removeR002前----------------time:" +
-				// times.toString() + ":"
-				// + clone.getBean(times).size());
-				// }
-				//
-				// for (Object times : filtBean.keySet()) {
-				//
-				// log.error("-----removeR002后----------------time:" +
-				// times.toString() + ":"
-				// + filtBean.getBean(times).size());
-				// }
-				// }
 
 				break;
 			case 3:
@@ -173,8 +141,30 @@ public class KcapMatch {
 				break;
 			}
 
-			if (isConstrain && (filtBean.isEmpty() || filtBean == null)) {
-				filtBean = new Bean(constrainFiltBean);
+			if (isConstrain) {
+
+				boolean isEmpty = true;
+
+				if (filtBean.isEmpty() || filtBean == null) {
+
+					isEmpty = true;
+
+				} else {
+
+					for (Object time : filtBean.keySet()) {
+
+						if (!filtBean.getBean(time).isEmpty()) {
+
+							isEmpty = false;
+						}
+					}
+				}
+
+				if (isEmpty) {
+
+					filtBean = new Bean(constrainFiltBean);
+				}
+
 				break;
 			}
 		}
@@ -883,29 +873,15 @@ public class KcapMatch {
 
 		String kcLv = freeZw.getStr("KC_LV"); // 考场层级 一级考场 二级考场
 
-		String jsonStr = rule.getStr("MX_VALUE2");
-
-		JSONArray obj;
+		String jsonStr = rule.getStr("GZ_VALUE2");
 
 		try {
 
-			if (kcLv.equals("一级")) { // 一级考场
+			if (kcLv.equals("一级") && !Strings.isBlank(jsonStr)) { // 一级考场
 
-				String[] xlArray = {};
+				JSONObject obj = new JSONObject(jsonStr);
 
-				obj = new JSONArray(jsonStr);
-
-				for (int i = 0; i < obj.length() - 1; i++) {
-
-					JSONObject json = obj.getJSONObject(i);
-
-					String xlCode = json.getString("val");
-
-					xlArray[i] = xlCode;
-				}
-
-				Arrays.sort(xlArray); // 使用
-										// Arrays.binarySearch,方法前必须调用Arrays.sort
+				String xlCode = obj.getString("values");
 
 				Bean temp = new Bean();
 
@@ -923,7 +899,9 @@ public class KcapMatch {
 
 							Bean ks = timeBean.getBean(user);
 
-							if (Arrays.binarySearch(xlArray, ks.getStr("BM_XL")) >= 0) {
+							String bmxl = ks.getStr("BM_XL_CODE");
+
+							if (bmxl.equals(xlCode)) {
 
 								uTemp.put(user, ks);
 							}
@@ -934,7 +912,9 @@ public class KcapMatch {
 
 							for (Bean ks : kslist) {
 
-								if (Arrays.binarySearch(xlArray, ks.getStr("BM_XL")) >= 0) {
+								String bmxl = ks.getStr("BM_XL_CODE");
+
+								if (bmxl.equals(xlCode)) {
 
 									if (uTemp.containsKey(user)) {
 
@@ -964,7 +944,11 @@ public class KcapMatch {
 							}
 						}
 					}
-					temp.set(time, uTemp);
+
+					if (!uTemp.isEmpty()) {
+
+						temp.set(time, uTemp);
+					}
 				}
 
 				if (!temp.isEmpty()) {
