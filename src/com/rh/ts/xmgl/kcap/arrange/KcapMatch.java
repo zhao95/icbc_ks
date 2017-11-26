@@ -7,13 +7,13 @@ import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
+import com.rh.core.util.DateUtils;
 import com.rh.core.util.Strings;
 import com.rh.ts.xmgl.kcap.KcapResource;
 
@@ -128,7 +128,7 @@ public class KcapMatch {
 			case 8:
 
 				// 特定机构考生场次先后安排
-				filtBean = filtR008(freeZw, res, filtBean);
+				filtBean = filtR008(freeZw, res, rule.getBean(key), filtBean);
 
 				break;
 			case 9:
@@ -849,13 +849,145 @@ public class KcapMatch {
 	 * @param res
 	 * @param filtBean
 	 */
-	private static Bean filtR008(Bean freeZw, KcapResource res, Bean filtBean) {
+	private static Bean filtR008(Bean freeZw, KcapResource res, Bean rule, Bean filtBean) {
 
 		if (filtBean == null || filtBean.isEmpty()) {
 			return filtBean;
 		}
 
+		Bean filt = new Bean();
+
+		String jsonStr = rule.getStr("GZ_VALUE2");
+
+		try {
+
+			if (!Strings.isBlank(jsonStr)) {
+
+				JSONObject obj = new JSONObject(jsonStr);
+
+				String type = obj.getString("direction");
+
+				if (!Strings.isBlank(type) && !res.getSpOrgKsBean().isEmpty()) {
+
+					filt = filtR008Ks(freeZw, res, filtBean.copyOf(), type);
+				}
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		if (!filt.isEmpty()) {
+			return filt;
+		}
+
 		return filtBean;
+	}
+
+	/**
+	 * 过滤考生
+	 * 
+	 * @param filtBean
+	 * @param freeZw
+	 * @param dCode
+	 * @param type
+	 * @return
+	 */
+	private static Bean filtR008Ks(Bean freeZw, KcapResource res, Bean filtBean, String type) {
+
+		Bean kcBean = res.getKcBean();
+
+		Bean ccBean = new Bean();
+
+		for (Object key : kcBean.keySet()) { // 所有机构下的考场bean
+
+			List<Bean> kcinfoList = kcBean.getList(key); // 某所属机构下的考场list
+
+			for (Bean kcInfo : kcinfoList) {
+
+				Bean info = kcInfo.getBean("INFO");
+
+				if (info.getStr("KC_ID").equals(freeZw.getStr("KC_ID"))) {
+
+					List<Bean> cclist = kcInfo.getList("CC");
+
+					for (Bean cc : cclist) {
+
+						String date = cc.getStr("SJ_START").substring(0, 10); // 考试日期
+
+						ccBean.set(date, date);
+					}
+					break;
+				}
+			}
+		}
+
+		Bean temp = new Bean();
+
+		Bean spOrgKsBean = res.getSpOrgKsBean();
+
+		for (Object time : filtBean.copyOf().keySet()) { // 遍历考试时长
+
+			Bean timeBean = filtBean.getBean(time).copyOf();
+
+			Bean uTemp = new Bean();
+
+			for (Object user : timeBean.keySet()) { // 遍历考生
+
+				if (spOrgKsBean.containsKey(user)) {
+
+					String date = freeZw.getStr("SJ_DATE"); // 考试日期
+
+					if ("forward".equals(type)) { // forward靠前
+
+						String before = DateUtils.getCertainDate(date, 1); // 明天日期
+
+						if (ccBean.containsKey(before)) { // 判断今天是否靠前
+
+							uTemp.set(user, timeBean.get(user));
+						}
+
+					} else if ("back".equals(type)) { // back靠后
+
+						String after = DateUtils.getCertainDate(date, -1); // 昨天日期
+
+						if (ccBean.containsKey(after)) { // 判断今天是否靠后
+
+							uTemp.set(user, timeBean.get(user));
+						}
+					}
+				} else {
+					uTemp.set(user, timeBean.get(user));
+				}
+			}
+
+			if (!uTemp.isEmpty()) {
+
+				temp.set(time, uTemp);
+			}
+		}
+
+		boolean isEmpty = true;
+
+		if (!temp.isEmpty()) {
+
+			for (Object time : temp.keySet()) {
+
+				if (!temp.getBean(time).isEmpty()) {
+
+					isEmpty = false;
+				}
+			}
+		}
+
+		if (isEmpty) {
+
+			return filtBean;
+
+		} else {
+
+			return temp;
+		}
 	}
 
 	/**
@@ -938,9 +1070,7 @@ public class KcapMatch {
 									} else {
 										uTemp.put(user, ks);
 									}
-
 								}
-
 							}
 						}
 					}
