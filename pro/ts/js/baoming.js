@@ -655,15 +655,6 @@ listPage.prototype.bldTable = function (listData) {
         var shstate = "审核中";
         var flagstate = '审核进行中';
         var conresu = FireFly.doAct("TS_BMLB_BM", "getShState", {"XM_ID": XM_ID});
-        if (conresu.count == 0) {
-            flagstate = "无需审核";
-            sh_state_str = "审核通过";
-            shstate="已结束";
-        }else if (conresu.count==1) {
-        	//判断是否有手动审核
-            flagstate = "无手动审核,审核结束";
-            shstate="已结束";
-        }else{
         	  FireFly.doAct("TS_XMGL_BMGL", "getXmInfo", paramSH, true, false, function (data) {
                   successinfo = data.SH_TGTSY;
                   failerinfo = data.SH_BTGTSY;
@@ -689,7 +680,6 @@ listPage.prototype.bldTable = function (listData) {
         }
         if (shstate == "未开始") {
             flagstate = "手动审核未开始"
-        }
         }
         if (shstate == "") {
             shstate = "审核中";
@@ -726,7 +716,36 @@ listPage.prototype.bldTable = function (listData) {
             }
         } else if (shstate == "未开始") {
         }
-        if (flagstate == '审核进行中' || flagstate == "无需审核") {
+        
+        
+        if (conresu.count == 0) {
+            flagstate = "无需审核";
+            shstate="已结束";
+            if (sh_state == 0) {
+                //审核中
+                sh_state_str = "审核未通过"
+            } else if (sh_state == 2 || sh_state == 3) {
+                sh_state_str = "审核未通过"
+            } else if (sh_state == 1) {
+                sh_state_str = "审核通过"
+
+            }
+        }else if (conresu.count==1) {
+        	//判断是否有手动审核
+            flagstate = "无手动审核,审核结束";
+            shstate="已结束";
+            if (sh_state == 0) {
+                //审核中
+                sh_state_str = "审核未通过"
+            } else if (sh_state == 2 || sh_state == 3) {
+                sh_state_str = "审核未通过"
+            } else if (sh_state == 1) {
+                sh_state_str = "审核通过"
+
+            }
+        }
+        
+        if (flagstate == '审核进行中' || flagstate == "无需审核"|| flagstate == "无手动审核,审核结束") {
             //为table重新appendtr
             //已提交异议
             //没有提交异议  且没有撤销
