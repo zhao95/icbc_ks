@@ -7,7 +7,6 @@ $(".rhGrid").find("tr").unbind("dblclick");
 $("#TS_BM_GROUP_USER .rhGrid").find("tr").each(function (index, item) {
     if (index != 0) {
         var dataId = item.id;
-
         $(item).find("td[icode='BUTTONS']").append(
             '<a class="rhGrid-td-rowBtnObj rh-icon"  id="TS_BM_GROUP_USER_look" operCode="optLookBtn" rowpk="' + dataId + '"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>' +
             '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_BM_GROUP_USER_delete" actcode="delete" rowpk="' + dataId + '"><span class="rh-icon-inner-notext">删除</span><span class="rh-icon-img btn-delete"></span></a>'
@@ -25,10 +24,10 @@ rh.vi.listView.prototype.beforeDelete = function(pkArray) {
 //绑定的事件     
 function bindCard() {
     //当行删除事件
-    jQuery("td [id='TS_BM_GROUP_USER_delete']").unbind("click").bind("click", function () {
-        var pkCode = jQuery(this).attr("rowpk");
-        rowDelete(pkCode, _viewer);
-    });
+    jQuery("td [id='TS_BM_GROUP_USER_delete']").unbind("click").bind("click", function() {
+		var pkCode = jQuery(this).attr("rowpk");
+		rowDelete(pkCode,_viewer);
+	});
     //查看
     jQuery("td [id='TS_BM_GROUP_USER_look']").unbind("click").bind("click", function () {
         var pkCode = jQuery(this).attr("rowpk");
