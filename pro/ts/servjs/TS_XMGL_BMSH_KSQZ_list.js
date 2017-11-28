@@ -4,9 +4,16 @@ $(".rhGrid").find("tr").unbind("dblclick");
 var  parent= _viewer.getParHandler();
 $("#TS_XMGL_BMSH_KSQZ .rhGrid").find("tr").each(function(index,item) {
 	if(index!=0 ){
-		$(item).find("td[icode='BUTTONS']").append(				
-				'<a class="rhGrid-td-rowBtnObj rh-icon"  operCode="optOption"><span class="rh-icon-inner">设置</span><span class="rh-icon-img btn-option"></span></a>'
-		)
+		var val = $("input[name='TS_XMGL_BMSH-SH_ZDSH']:checked").val();
+		if(val==2){
+			$(item).find("td[icode='BUTTONS']").append(				
+					'<a class="rhGrid-td-rowBtnObj rh-icon" style="display:none" operCode="optOption"><span class="rh-icon-inner">设置</span><span class="rh-icon-img btn-option"></span></a>'
+			)
+		}else{
+			$(item).find("td[icode='BUTTONS']").append(				
+					'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optOption"><span class="rh-icon-inner">设置</span><span class="rh-icon-img btn-option"></span></a>'
+			)	
+		}
 		// 为每个按钮绑定卡片
 		bindCard();
 	}

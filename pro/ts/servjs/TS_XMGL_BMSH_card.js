@@ -16,7 +16,7 @@ if(_viewer.opts.act == "cardAdd"){
 $("#TS_XMGL_BMSH-SH_LOOK_label").css("width","300px");
 $("#TS_XMGL_BMSH-SH_LOOK_div").css("padding-left","100px");
 //针对开始和结束时间的校验
-_viewer.beforeSave = function() {debugger;
+_viewer.beforeSave = function() {
 	
 	var  xmRgsh=_viewer.getItem("SH_RGSH").getValue();//人工审核2否
 	 var xmZdsh=_viewer.getItem("SH_ZDSH").getValue();//自动审核 
@@ -87,7 +87,6 @@ if(autoTmp==1){
 		_viewer.getItem("SH_TGTSY").show();
 		_viewer.getItem("SH_BTGTSY").show();
 	}
-	
 }else if(autoTmp==2){
 	_viewer.getItem("SH_TSY").hide();
 	_viewer.getItem("SH_TGTSY").hide();
