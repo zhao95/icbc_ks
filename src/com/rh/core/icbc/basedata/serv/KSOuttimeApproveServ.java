@@ -14,6 +14,7 @@ import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
+import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 
 public class KSOuttimeApproveServ extends CommonServ {
@@ -27,7 +28,7 @@ public class KSOuttimeApproveServ extends CommonServ {
 		log.error("---------------系统开始处理请假超时未审批数据！---------------");
 		Date currentDate = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String qjglSql = "select sz.XM_ID,qj.QJ_ENDDATE from ts_xmgl_sz sz RIGHT JOIN ts_xmgl_qjgl qj on sz.xm_id=qj.XM_ID "
+		String qjglSql = "select sz.XM_ID,sz.XM_SZ_ID,qj.QJ_ENDDATE from ts_xmgl_sz sz RIGHT JOIN ts_xmgl_qjgl qj on sz.xm_id=qj.XM_ID "
 				+ "where 1=1 and sz.XM_NAME_NUM=3; ";
 		List<Bean> qjList = Transaction.getExecutor().query(qjglSql);
 		List<String> qjOverList = new ArrayList<String>();
@@ -48,6 +49,8 @@ public class KSOuttimeApproveServ extends CommonServ {
 			}
 			if (qjEndDate.before(currentDate)) {
 				qjOverList.add(qjList.get(i).getStr("XM_ID"));
+				changeTypeForQJ(qjList.get(i).getStr("XM_SZ_ID"));
+				countProcess(qjList.get(i).getStr("XM_ID"),qjList.get(i).getStr("XM_SZ_ID"));
 			}
 		}
 		if (qjOverList.size() > 0) {
@@ -79,7 +82,7 @@ public class KSOuttimeApproveServ extends CommonServ {
 		log.error("---------------系统开始处理借考超时未审批数据！---------------");
 		Date currentDate1 = new Date();
 //		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String jkglSql = "select sz.XM_ID,jk.YDJK_ENDDATE from ts_xmgl_sz sz RIGHT JOIN ts_xmgl_ydjk jk on sz.xm_id=jk.XM_ID "
+		String jkglSql = "select sz.XM_ID,sz.XM_SZ_ID,jk.YDJK_ENDDATE from ts_xmgl_sz sz RIGHT JOIN ts_xmgl_ydjk jk on sz.xm_id=jk.XM_ID "
 				+ "where 1=1 and sz.XM_NAME_NUM=4; ";
 		List<Bean> jkList = Transaction.getExecutor().query(jkglSql);
 		List<String> jkOverList = new ArrayList<String>();
@@ -100,6 +103,8 @@ public class KSOuttimeApproveServ extends CommonServ {
 			} 
 			if (jkEndDate.before(currentDate1)) {
 				jkOverList.add(jkList.get(i).getStr("XM_ID"));
+				changeTypeForQJ(qjList.get(i).getStr("XM_SZ_ID"));
+				countProcess(qjList.get(i).getStr("XM_ID"),qjList.get(i).getStr("XM_SZ_ID"));
 			}
 		}
 		if (jkOverList.size() > 0) {
@@ -125,6 +130,61 @@ public class KSOuttimeApproveServ extends CommonServ {
 			}
 		}
 		log.error("---------------系统处理借考超时未审批数据结束！---------------");
+		changTypeForBM();
+		changTypeForSH();
+		changTypeForSJ();
+		changTypeForCCCS();
+		changTypeForKCAP();
+		
 		return new OutBean().setOk("超时未审批请假/借考处理结束!");
+	}	
+	private void changTypeForKCAP() {
+		// TODO Auto-generated method stub
+		
+	}
+	private void changTypeForCCCS() {
+		// TODO Auto-generated method stub
+		
+	}
+	private void changTypeForSJ() {
+		// TODO Auto-generated method stub
+		
+	}
+	private void changTypeForSH() {
+		// TODO Auto-generated method stub
+		
+	}
+	private void changTypeForBM() {
+		// TODO Auto-generated method stub
+		
+	}
+	/**
+	 * 计算项目进度,更新项目进度
+	 * @param xmId
+	 * @param xmSzId
+	 */
+	public void countProcess(String xmId, String xmSzId) {
+		Bean xmIdBean = new Bean();
+		xmIdBean.set("_WHERE_", "AND XM_ID='"+xmId+"'");
+		int allSZNum = ServDao.count("TS_XM_SZ", xmIdBean);
+		Bean xmIdFinishBean = new Bean();
+		xmIdFinishBean.set("_WHERE_", "AND XM_SZ_TYPE like '%已结束' and XM_ID='"+xmId+"'");
+		int endSZNum = ServDao.count("TS_XMGL_SZ", xmIdFinishBean);
+		int processNum = endSZNum%allSZNum;
+		Bean newNumBean = new Bean();
+		newNumBean.set("XM_JD",processNum);
+		ServDao.updates("TS_XMGL_SZ", newNumBean, xmIdBean);
+	}
+	/**
+	 * 更改项目模块状态
+	 * @param xmSzId
+	 */
+	public void changeTypeForQJ(String xmSzId) {
+		Bean xmBean = new Bean();
+		xmBean.set("XM_SZ_ID", xmSzId);
+		Bean updateFields = new Bean();
+		updateFields.set("XM_SZ_TYPE", "已结束");
+		int i = ServDao.updates("TS_XMGL_SZ", updateFields, xmBean);
+//		log.error("-----------成功更新状态记录"+i+"条。-----------");
 	}
 }

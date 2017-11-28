@@ -68,7 +68,7 @@
 		<div class="tab-pane fade active in" style="position:relative;" id="home">
 			<div style="margin-top: -5px; margin-left: 100%; height: 5px; width: 20%; background-color: LightSeaGreen"></div>
 				<div id="cuxian1" style="margin-left: 10px; margin-top: 0px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
-				<span style="margin-left: 50px; padding-top: 10px" id="initData">考试相关安排</span>
+				<span style="margin-left: 50px; padding-top: 10px" id="initData222">考试相关安排</span>
 			</div>
 			<!-- 查询框 -->
 			<table id="cxkuang" style="margin-top:20px">

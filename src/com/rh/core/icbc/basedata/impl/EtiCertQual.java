@@ -40,7 +40,7 @@ public class EtiCertQual extends AbstractTableTask{
 			if (updateFlag.equals("1") || updateFlag.equals("2")) {
 				// 暂时不做处理
 				data.set("S_FLAG", Constant.YES_INT);
-			} else if (updateFlag.equals("3") || updateFlag.equals("F") ) {
+			} else if (updateFlag.equals("3") || updateFlag.equals("F")|| updateFlag.equals("0") || updateFlag.equals("")) {
 				data.set("S_FLAG", Constant.NO_INT);
 			} else {
 				log.error("处理特殊数据错误,服务为:"+ETI_CERTQUAL+"数据为:"+data );

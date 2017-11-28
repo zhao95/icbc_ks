@@ -50,7 +50,7 @@ public class KSHrmNotesTask extends AbstractTableTask {
 			// 根据updateFlag将数据整理为删除和非删除
 			if (updateFlag.equals("0") || updateFlag.equals("1")) {
 				// 暂时不做处理
-			} else if (updateFlag.equals("2")|| updateFlag.equals("F")) {
+			} else if (updateFlag.equals("2") || updateFlag.equals("F")) {
 				data.set("S_FLAG", Constant.NO_INT);
 			} else {
 				throw new TipException("【数据更新标志未知】！data : " + data + ", updateFlag : " + updateFlag);
