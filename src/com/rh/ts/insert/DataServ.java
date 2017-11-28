@@ -2,10 +2,14 @@ package com.rh.ts.insert;
 
 import java.util.List;
 
+import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.rh.core.base.Bean;
+import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
+import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.core.serv.ServMgr;
 
 public class DataServ extends CommonServ {
 
@@ -42,13 +46,40 @@ public class DataServ extends CommonServ {
 		int i=0;
 		int j=0;
 		int a = 0;
-		List<Bean> DEPTLIST = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE '%0130100000%' and DEPT_LEVEL =3");
+		String sql = "SELECT DISTINCT DEPT_CODE WHERE DEPT_LEVEL = '2'";
+		List<Bean> odeptlist = Transaction.getExecutor().query(sql);
+		for (Bean ODEPTBEAN : odeptlist) {
+			String deptcode = ODEPTBEAN.getStr("DEPT_CODE");
+		
+		List<Bean> DEPTLIST = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE CONCAT('"+deptcode+"','%') and DEPT_LEVEL =3");
 		for (Bean bean : DEPTLIST) {
-			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,10" );
+			String odept_code = bean.getStr("DEPT_CODE");
+			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,150" );
 			if(finds2!=null&&finds2.size()!=0){
 				
 				//向报名列表中插数据
 				for (Bean userBean : finds2) {
+					String user_code = userBean.getStr("USER_CODE");
+					String dept_code = userBean.getStr("dept_code");
+					ParamBean param = new ParamBean();
+					param.set("examerUserCode", user_code);
+					param.set("level", 0);
+					param.set("deptCode", dept_code);
+					param.set("odeptCode", odept_code);
+					param.set("xmId", xmid);
+					param.set("flowName", 1);
+					param.set("shrUserCode", user_code);
+					OutBean out = ServMgr
+							.act("TS_WFS_APPLY", "backFlow", param);
+					String blist = out.getStr("result");
+					String allman = "";
+					String node_name = "";
+					int SH_LEVEL = 0;
+					if (!"".equals(blist)) {
+						allman = blist.substring(0, blist.length() - 1);
+						node_name = out.getStr("NODE_NAME");
+						SH_LEVEL = out.getInt("SH_LEVEL");
+					}
 					
 					String STATION_TYPE_CODE=userBean.getStr("STATION_TYPE_CODE");
 					String STATION_NO=userBean.getStr("STATION_NO_CODE");
@@ -116,6 +147,48 @@ public class DataServ extends CommonServ {
 						Bean create = ServDao.create("TS_BMLB_BM", beans);
 						
 						
+						/*Bean shBean = new Bean();
+						shBean.set("RZ_YEAR", "");
+						shBean.set("XM_ID", xmid);
+						shBean.set("ODEPT_CODE", userBean.getStr("ODEPT_CODE"));
+						shBean.set("BM_ID", create.getId());
+						shBean.set("BM_NAME", userBean.getStr("USER_NAME"));
+						shBean.set("BM_CODE", userBean.getStr("USER_CODE"));
+						shBean.set("KSLBK_ID", kslbkbean.getId());
+						shBean.set("BM_LB", kslbkbean.getStr("KSLB_NAME"));
+						shBean.set("BM_XL", kslbkbean.getStr("KSLB_XL"));
+						shBean.set("BM_MK", kslbkbean.getStr("KSLB_MK"));
+						shBean.set("BM_TYPE", kslbkbean.getStr("KSLB_TYPE"));
+						shBean.set("BM_LB_CODE", kslbkbean.getStr("KSLB_CODE"));
+						shBean.set("BM_XL_CODE", kslbkbean.getStr("KSLB_XL_CODE"));
+						shBean.set("BM_MK_CODE", kslbkbean.getStr("KSLB_MK_CODE"));
+						shBean.set("BM_TYPE_NAME", kslbkbean.getStr("KSLB_TYPE_NAME"));
+						shBean.set("SH_NODE", "一级审核级别");// 目前审核节点
+						  shBean.set("SH_USER", "0000001111");// 当前办理人
+						  shBean.set("SH_OTHER", "0000001111");// 其他办理人	
+						shBean.set("S_ODEPT",userBean.getStr("ODEPT_CODE"));
+						shBean.set("S_TDEPT",userBean.getStr("TDEPT_CODE"));
+						shBean.set("S_DEPT",userBean.getStr("DEPT_CODE"));
+						shBean.set("BM_KS_TIME", ks_time);
+						shBean.set("BM_STATUS", 0);
+						ServDao.save("TS_BMSH_PASS", shBean);
+						*/
+						/*Bean mindbean = new Bean();
+						mindbean.set("SH_LEVEL", 0);
+						mindbean.set("SH_MIND", "");
+						mindbean.set("DATA_ID",create.getId());
+						mindbean.set("SH_STATUS", "审核通过");
+						mindbean.set("SH_ULOGIN", "自动审核");
+						mindbean.set("SH_UNAME", "自动审核");
+						mindbean.set("SH_UCODE", "");
+						mindbean.set("SH_TYPE", 1);
+						mindbean.set("SH_NODE", 0);
+						mindbean.set("S_ODEPT",userBean.getStr("ODEPT_CODE"));
+						mindbean.set("S_DNAME",userBean.getStr("DEPT_NAME"));
+						mindbean.set("S_DEPT",userBean.getStr("DEPT_CODE"));
+						ServDao.save("TS_COMM_MIND", mindbean);*/
+						//待审核数据
+						
 						Bean shBean = new Bean();
 						shBean.set("RZ_YEAR", "");
 						shBean.set("XM_ID", xmid);
@@ -132,44 +205,51 @@ public class DataServ extends CommonServ {
 						shBean.set("BM_XL_CODE", kslbkbean.getStr("KSLB_XL_CODE"));
 						shBean.set("BM_MK_CODE", kslbkbean.getStr("KSLB_MK_CODE"));
 						shBean.set("BM_TYPE_NAME", kslbkbean.getStr("KSLB_TYPE_NAME"));
-						/*shBean.set("SH_NODE", "一级审核级别");// 目前审核节点
-						  shBean.set("SH_USER", "0000001111");// 当前办理人
-						  shBean.set("SH_OTHER", "0000001111");// 其他办理人*/	
+						shBean.set("SH_NODE", node_name);// 目前审核节点
+						shBean.set("SH_USER", "");// 当前办理人
+						shBean.set("SH_OTHER", allman);// 其他办理人
 						shBean.set("S_ODEPT",userBean.getStr("ODEPT_CODE"));
 						shBean.set("S_TDEPT",userBean.getStr("TDEPT_CODE"));
 						shBean.set("S_DEPT",userBean.getStr("DEPT_CODE"));
 						shBean.set("BM_KS_TIME", ks_time);
 						shBean.set("BM_STATUS", 0);
-						ServDao.save("TS_BMSH_PASS", shBean);
+						ServDao.save("TS_BMSH_STAY", shBean);
 						
-						Bean mindbean = new Bean();
-						mindbean.set("SH_LEVEL", 0);
-						mindbean.set("SH_MIND", "");
-						mindbean.set("DATA_ID",create.getId());
-						mindbean.set("SH_STATUS", "审核通过");
-						mindbean.set("SH_ULOGIN", "自动审核");
-						mindbean.set("SH_UNAME", "自动审核");
-						mindbean.set("SH_UCODE", "");
-						mindbean.set("SH_TYPE", 1);
-						mindbean.set("SH_NODE", 0);
-						mindbean.set("S_ODEPT",userBean.getStr("ODEPT_CODE"));
-						mindbean.set("S_DNAME",userBean.getStr("DEPT_NAME"));
-						mindbean.set("S_DEPT",userBean.getStr("DEPT_CODE"));
-						ServDao.save("TS_COMM_MIND", mindbean);
 					}
 				}
 			}
 			
 		}
 			
-		List<Bean> DEPTLIST1 = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE '%0020000000%' AND DEPT_LEVEL =3");
+		/*List<Bean> DEPTLIST1 = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE '%0020000000%' AND DEPT_LEVEL =3");
 		for (Bean bean : DEPTLIST1) {
-			List<Bean> finds3 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,10" );
+			String odept_code = bean.getStr("dept_codee");
+			List<Bean> finds3 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' limit 0,15000" );
 			if(finds3!=null&&finds3.size()!=0){
 				
 				//向报名列表中插数据
 				for (Bean userBean : finds3) {
-					
+					String user_code = userBean.getStr("USER_CODE");
+					String dept_code = userBean.getStr("dept_code");
+					ParamBean param = new ParamBean();
+					param.set("examerUserCode", user_code);
+					param.set("level", 0);
+					param.set("deptCode", dept_code);
+					param.set("odeptCode", odept_code);
+					param.set("xmId", xmid);
+					param.set("flowName", 1);
+					param.set("shrUserCode", user_code);
+					OutBean out = ServMgr
+							.act("TS_WFS_APPLY", "backFlow", param);
+					String blist = out.getStr("result");
+					String allman = "";
+					String node_name = "";
+					int SH_LEVEL = 0;
+					if (!"".equals(blist)) {
+						allman = blist.substring(0, blist.length() - 1);
+						node_name = out.getStr("NODE_NAME");
+						SH_LEVEL = out.getInt("SH_LEVEL");
+					}
 					String STATION_TYPE_CODE=userBean.getStr("STATION_TYPE_CODE");
 					String STATION_NO=userBean.getStr("STATION_NO_CODE");
 					String DUTY_LEVEL_CODE=userBean.getStr("DUTY_LV_CODE");
@@ -276,9 +356,36 @@ public class DataServ extends CommonServ {
 						mindbean.set("S_DNAME",userBean.getStr("DEPT_NAME"));
 						mindbean.set("S_DEPT",userBean.getStr("DEPT_CODE"));
 						ServDao.save("TS_COMM_MIND", mindbean);
+						
+						Bean shBean = new Bean();
+						shBean.set("RZ_YEAR", "");
+						shBean.set("XM_ID", xmid);
+						shBean.set("ODEPT_CODE", userBean.getStr("ODEPT_CODE"));
+						shBean.set("BM_ID", create.getId());
+						shBean.set("BM_NAME", userBean.getStr("USER_NAME"));
+						shBean.set("BM_CODE", userBean.getStr("USER_CODE"));
+						shBean.set("KSLBK_ID", kslbkbean.getId());
+						shBean.set("BM_LB", kslbkbean.getStr("KSLB_NAME"));
+						shBean.set("BM_XL", kslbkbean.getStr("KSLB_XL"));
+						shBean.set("BM_MK", kslbkbean.getStr("KSLB_MK"));
+						shBean.set("BM_TYPE", kslbkbean.getStr("KSLB_TYPE"));
+						shBean.set("BM_LB_CODE", kslbkbean.getStr("KSLB_CODE"));
+						shBean.set("BM_XL_CODE", kslbkbean.getStr("KSLB_XL_CODE"));
+						shBean.set("BM_MK_CODE", kslbkbean.getStr("KSLB_MK_CODE"));
+						shBean.set("BM_TYPE_NAME", kslbkbean.getStr("KSLB_TYPE_NAME"));
+						shBean.set("SH_NODE", node_name);// 目前审核节点
+						shBean.set("SH_USER", "");// 当前办理人
+						shBean.set("SH_OTHER", allman);// 其他办理人
+						shBean.set("S_ODEPT",userBean.getStr("ODEPT_CODE"));
+						shBean.set("S_TDEPT",userBean.getStr("TDEPT_CODE"));
+						shBean.set("S_DEPT",userBean.getStr("DEPT_CODE"));
+						shBean.set("BM_KS_TIME", ks_time);
+						shBean.set("BM_STATUS", 0);
+						ServDao.save("TS_BMSH_STAY", shBean);
 					}
 			}
 		}
+		}*/
 		}
 			return new OutBean().setOk();
 	}

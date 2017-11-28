@@ -137,7 +137,7 @@ position: absolute;
 									style="width: 6.6%; text-align: center">序号</th>
 								<th id="BM_NAME" class="" style="width: 29.1%;">名称</th>
 								<th   style="text-align: center;width: 15%;">组织单位</th>
-								<th   style="text-align: center;width: 35%;">报名时间</th>
+								<th   style="text-align: center;width: 35%;">报名结束时间</th>
 								 <th id="BM_STATE__NAME" class="" style="width: 8%;">状态</th>
 								<th id="BM_OPTIONS" class=""
 									style="width: 12%; text-align: center">操作</th>

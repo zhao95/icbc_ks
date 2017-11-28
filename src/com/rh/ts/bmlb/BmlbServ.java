@@ -198,6 +198,9 @@ public class BmlbServ extends CommonServ {
 		String xm_name = paramBean.getStr("XM_NAME");
 		String liststr = paramBean.getStr("BM_LIST");
 		String yzgzstr = paramBean.getStr("YZGZ_LIST");
+		if("".equals(yzgzstr)){
+			yzgzstr="{'none':'true'}";
+		}
 		String dept_code = paramBean.getStr("DEPT_CODE");
 		DeptBean deptbean = OrgMgr.getDept(dept_code);
 		String odept_code = deptbean.getODeptCode();
@@ -258,9 +261,9 @@ public class BmlbServ extends CommonServ {
 					int count = XmglMgr.existSh(xm_id);
 					String ad_rule = "";
 					String ad_result = "";
-
+					
 					if ("true".equals(yzgzstrjson.get("none"))) {
-
+						ad_result = "1";
 					} else {
 						JSONArray yzgzArg = (JSONArray) yzgzstrjson
 								.get(kslb_id);

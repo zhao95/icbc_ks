@@ -87,6 +87,7 @@ public class BmServ extends CommonServ {
 	 * @throws ParseException 
 	 */
 	public Bean getXmInfo(Bean paramBean){
+		
 		Bean outBean = new Bean();
 	String xmid = paramBean.getStr("xmid");
 	String where1 = "AND XM_ID="+"'"+xmid+"'";
