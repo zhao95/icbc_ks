@@ -25,8 +25,8 @@ _viewer.beforeSave = function() {
     if(a < 0||a == 0){
  		//$("#TS_JHGL-JH_CREATEDATE").addClass("blankError").addClass("errorbox");
  		//$("#TS_JHGL-JH_ENDDATE").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL-JH_CREATEDATE").parent().showError("开始时间应早于结束时间");
- 		$("#TS_XMGL-JH_ENDDATE").parent().showError("结束时间应晚于开始时间");
+ 		$("#TS_JHGL-JH_CREATEDATE").parent().showError("开始时间应早于结束时间");
+ 		$("#TS_JHGL-JH_ENDDATE").parent().showError("结束时间应晚于开始时间");
 		return false;
  	}
 };
