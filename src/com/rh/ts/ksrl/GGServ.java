@@ -2,6 +2,7 @@ package com.rh.ts.ksrl;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
+import com.rh.core.icbc.basedata.KSSendTipMessageServ;
 import com.rh.core.org.UserBean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
@@ -53,6 +54,12 @@ public class GGServ  extends CommonServ{
 				}
 			}
 		}
+		//测试邮件发送
+		/*Bean tipBean = new Bean();
+		tipBean.set("USER_CODE", "admin");
+		tipBean.set("tipMsg", "qingjiattip");
+		new KSSendTipMessageServ().sendTipMessageBeanForICBC(tipBean,"qjStar");*/
+		
 		return outBean;
 	}
 }

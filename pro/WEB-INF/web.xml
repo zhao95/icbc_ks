@@ -138,6 +138,11 @@
 	    <param-value></param-value>
 		<!-- 任务调度实现类(本地任务)：com.rh.core.util.scheduler.imp.LocalQuartzScheduler(缺省)-->
 	</context-param>
+  <context-param>
+	    <param-name>rh.mail</param-name>
+	    <param-value>com.rh.core.comm.msg.DIIOPMailSender</param-value>
+		<!-- 邮件服务接口类：com.rh.core.comm.msg.DIIOPMailSender -->
+	</context-param>
   	
   <context-param>
 	    <param-name>rh.im</param-name>

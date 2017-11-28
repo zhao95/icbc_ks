@@ -38,7 +38,7 @@ import com.rh.core.util.threadpool.RhThreadPool;
 public class NImpDataServ extends CommonServ {
 	
 	//上游数据表的数量
-	private static int TABLES_NUMBER = 15;
+	private static int TABLES_NUMBER = 12;
 
 	/** log. */
 	private static Log log = LogFactory.getLog(NImpDataServ.class);

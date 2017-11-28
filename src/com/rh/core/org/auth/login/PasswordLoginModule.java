@@ -57,6 +57,7 @@ public class PasswordLoginModule extends AbstractLoginModule {
         //验证公司信息
         DictMgr.clearCache("SY_ORG_CMPY");
         Bean cmpy = DictMgr.getItem("SY_ORG_CMPY", cmpyCode);
+//        Bean cmpy1 = DictMgr.getItem("SY_YESNO", "1");
         if (cmpy == null) {
             throw new TipException(Context.getSyMsg("SY_CMPY_NOT_FOUND", cmpyCode));
         } else if (cmpy.getInt("FLAG") != Constant.YES_INT) { //公司被禁用
