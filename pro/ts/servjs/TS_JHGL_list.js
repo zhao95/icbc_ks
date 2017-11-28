@@ -91,7 +91,7 @@ _viewer.getBtn("fabu").unbind("click").bind("click", function() {
 		_viewer.listBarTipError("请选择相应记录！");
 	} else {
 		//遍历所选的所有大计划，依次进行判断执行。
-		for (var i = 0; i < pkAarry.length; i++) {debugger;
+		for (var i = 0; i < pkAarry.length; i++) {;
 			var paramfb = {};
 			paramfb["_extWhere"] = "and JH_ID ='"+pkAarry[i]+"'";
 			var beanFb = FireFly.doAct(_viewer.servId, "query", paramfb);
@@ -117,7 +117,7 @@ _viewer.getBtn("fabu").unbind("click").bind("click", function() {
 })
 
 //初次发布
-function  firRelea(paramXm){debugger;
+function  firRelea(paramXm){;
 	 
 		FireFly.doAct("TS_JHGL", "UpdateStatusStart", paramXm,false,false,function(){
 			Tip.show("计划发布成功！");
@@ -249,7 +249,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
  * @parm pkArray 主键
  * @parm viewer 页面_viewer
  */
-function showRelease(pkArray,viewer,paramXm){debugger;
+function showRelease(pkArray,viewer,paramXm){;
 	var imgDate = new Date();
 	var content = '<div><table>'
 			+ '<tr id="errMsg" style="visibility: hidden;"><td><font color="red" size="5">验证码错误！</font></td></tr>'
@@ -288,7 +288,7 @@ function showRelease(pkArray,viewer,paramXm){debugger;
 				} else {
 					 FireFly.doAct("TS_UTIL", "checkVerify", {
 						"vcode" : vcode
-					//}, true, false, function(data) {debugger;
+					//}, true, false, function(data) {;
 					}, true, false, function(data) {
 						if (data.res == "true") {
 							dialog.remove();
