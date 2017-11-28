@@ -113,6 +113,7 @@ _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
 	var options = {
 			"config" :configStr,
 //			"params" : {"_TABLE_":"SY_ORG_USER"},
+			"params" : {"USE_SERV_ID":"TS_ORG_DEPT"},
 			"parHandler":_viewer,
 			"formHandler":_viewer.form,
 			"replaceCallBack":function(idArray,nameArray) {//回调，idArray为选中记录的相应字段的数组集合
