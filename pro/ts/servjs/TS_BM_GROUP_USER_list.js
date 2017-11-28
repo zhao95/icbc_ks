@@ -18,7 +18,7 @@ $("#TS_BM_GROUP_USER .rhGrid").find("tr").each(function (index, item) {
 /*
 * 删除前方法执行
 */
-rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+_viewer.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 }
 //绑定的事件     

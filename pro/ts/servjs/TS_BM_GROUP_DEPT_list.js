@@ -36,7 +36,7 @@ function bindCard() {
 /*
 * 删除前方法执行
 */
-rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+_viewer.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 }
 //列表操作按钮 弹dialog
