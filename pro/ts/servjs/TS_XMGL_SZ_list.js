@@ -8,7 +8,7 @@ $(".checkTD").hide();
 $(".rowIndex").hide();
 $(".rhGrid-thead-checkbox").hide();
 $(".rhGrid-thead-orderSpan").hide();
-$(".rhGrid-thead-orderSpan").unbind("click");
+$(".rhGrid-thead-th").unbind("click");
 //列表后增加功能
 _viewer.grid.getBtn("set").unbind("click").bind("click",function() {
 	var pk = jQuery(this).attr("rowpk");//获取主键信息
