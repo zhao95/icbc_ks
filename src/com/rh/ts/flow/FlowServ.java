@@ -1,8 +1,5 @@
 package com.rh.ts.flow;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.rh.core.base.Bean;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
@@ -15,6 +12,10 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Strings;
 import com.rh.ts.pvlg.PvlgUtils;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FlowServ extends CommonServ {
@@ -272,7 +273,7 @@ public class FlowServ extends CommonServ {
 
 	String wfsId = "";
 	List<Bean> list = ServDao.finds("TS_XMGL_FLOW_UTIL_V", "and xm_id ='"+xmId+"' and FLOW_TYPE = " + flowName);
-	if(list.size() > 0){
+	if(list.size() > 0 && StringUtils.isNotBlank(list.get(0).getStr("WFS_ID"))){
 	    wfsId = list.get(0).getStr("WFS_ID");
 	}else{
 	    outBean.setError("未绑定流程");

@@ -398,6 +398,12 @@
                                 String shsDeptName = shbean.getStr("S_DNAME");
                                 String sh_node = shbean.getStr("SH_NODE");
                                 String shUcode = shbean.getStr("SH_UCODE");
+                                UserBean user;
+                                try {
+                                    user = UserMgr.getUser(shUcode);
+                                }catch (Exception e){
+                                    user = new UserBean(new Bean());
+                                }
                         %>
                         <li style="">
                             <b></b>
@@ -408,7 +414,7 @@
                                 <div style="padding-bottom: 20px;">
                                     <%--FireFly.getContextPath() + System.getUser("USER_IMG")--%>
                                     <img style="position: absolute;margin-left: 11px;width: 55px;height:55px;"
-                                         src="<%=CONTEXT_PATH%><%=UserMgr.getUser(shUcode).getStr("USER_IMG")%>"
+                                         src="<%=CONTEXT_PATH%><%=user.getStr("USER_IMG")%>"
                                          onerror="this.src='<%=CONTEXT_PATH%>/sy/theme/default/images/common/user1.png'"><%----%>
                                     <div style="margin-left:78px;">
                                         <div style="font-size: 14px;">
