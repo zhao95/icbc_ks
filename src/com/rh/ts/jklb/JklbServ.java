@@ -170,7 +170,7 @@ public class JklbServ extends CommonServ {
                 shyjBean.set("SH_LEVEL", nodeSteps);//审核层级
 
                 shyjBean.set("SH_STATUS", sh_status);//审核状态// 同意 不同意
-                shyjBean.set("SH_UCODE", currentUser.getWorkNum());//审核人UID(人力资源编码)
+                shyjBean.set("SH_UCODE", currentUser.getCode());//审核人UID(人力资源编码)
                 shyjBean.set("SH_ULOGIN", currentUser.getLoginName());//审核人登陆名
                 shyjBean.set("SH_UNAME", currentUser.getName());//审核人姓名
                 shyjBean.set("S_DNAME", currentUser.getDeptName());//审核人部门名称
