@@ -29,29 +29,37 @@ _viewer.beforeSave = function() {
   //通知开始时间和通知结束时间互斥
     var bmTzEndBmTzStart = (Date.parse(bmTzEndStr) - Date.parse(bmTzStartStr)) / 3600 / 1000;
     if(bmTzEndBmTzStart< 0||bmTzEndBmTzStart== 0){
- 		$("#TS_XMGL_BMGL-BM_TZ_START").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL_BMGL-BM_TZ_END").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_XMGL_BMGL-BM_TZ_START").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_XMGL_BMGL-BM_TZ_END").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL_BMGL-BM_TZ_START").parent().showError("通知开始时间应早于通知结束时间");
+ 		$("#TS_XMGL_BMGL-BM_TZ_END").parent().showError("通知结束时间应晚于通知开始时间");
 		return false;
  	}
     //报名开始时间和报名结束时间互斥
     var bmEndBmStart = (Date.parse(bmEndStr) - Date.parse(bmStartStr)) / 3600 / 1000;
     if(bmEndBmStart< 0||bmEndBmStart== 0){
- 		$("#TS_XMGL_BMGL-BM_START").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL_BMGL-BM_END").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_XMGL_BMGL-BM_START").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_XMGL_BMGL-BM_END").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL_BMGL-BM_START").parent().showError("报名开始时间应早于报名结束时间");
+ 		$("#TS_XMGL_BMGL-BM_END").parent().showError("报名结束时间应晚于报名开始时间");
 		return false;
  	}
     //报名开始时间和通知时间互斥
     var bmStartBmTzStart = (Date.parse(bmStartStr) - Date.parse(bmTzStartStr)) / 3600 / 1000;
     if(bmStartBmTzStart< 0||bmStartBmTzStart== 0){
- 		$("#TS_XMGL_BMGL-BM_START").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL_BMGL-BM_TZ_START").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_XMGL_BMGL-BM_START").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_XMGL_BMGL-BM_TZ_START").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL_BMGL-BM_START").parent().showError("报名开始时间应早于通知开始时间");
+ 		$("#TS_XMGL_BMGL-BM_TZ_START").parent().showError("通知开始时间应晚于报名开始时间");
 		return false;
  	}
-    //考试结束时间与项目结束时间互斥
+    //报名结束时间和通知结束时间互斥
     var bmTzEndBmEnd = (Date.parse(bmTzEndStr) - Date.parse(bmEndStr)) / 3600 / 1000;
      if(bmTzEndBmEnd < 0||bmTzEndBmEnd == 0){
- 		$("#TS_XMGL_BMGL-BM_END").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL_BMGL-BM_TZ_END").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_XMGL_BMGL-BM_END").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_XMGL_BMGL-BM_TZ_END").addClass("blankError").addClass("errorbox");
+ 		$("#TS_XMGL_BMGL-BM_END").parent().showError("报名结束时间应早于通知结束时间");
+ 		$("#TS_XMGL_BMGL-BM_TZ_END").parent().showError("通知结束时间应晚于报名结束时间");
 		return false;
  	}
 };
