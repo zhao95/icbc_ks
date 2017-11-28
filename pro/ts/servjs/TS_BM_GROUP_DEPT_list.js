@@ -59,17 +59,20 @@ function openMyCard(dataId, readOnly, showTab) {
     cardView.show();
 }
 _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
-//	debugger;
-	var configStr = "TS_ORG_DEPT,{'TARGET':'DEPT_CODE~DEPT_NAME','SOURCE':'DEPT_CODE~DEPT_NAME'," +
-	"'HIDE':'DEPT_CODE','TYPE':'multi','HTMLITEM':''}";
+//	var configStr = "TS_ORG_DEPT,{'TARGET':'DEPT_CODE~DEPT_NAME','SOURCE':'DEPT_CODE~DEPT_NAME'," +
+//	"'HIDE':'DEPT_CODE','TYPE':'multi','HTMLITEM':''}";
+
+	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'multi'}";
+
 	var options = {
 			"config" :configStr,
 //			"params" : {"_TABLE_":"SY_ORG_USER"},
 			"parHandler":_viewer,
 			"formHandler":_viewer.form,
-			"replaceCallBack":function(idArray) {//回调，idArray为选中记录的相应字段的数组集合
-				var codes = idArray.DEPT_CODE.split(",");
-				var names = idArray.DEPT_NAME.split(",");
+			"replaceCallBack":function(idArray,nameArray) {//回调，idArray为选中记录的相应字段的数组集合
+
+				var codes = idArray;
+				var names = nameArray;
 				
 				var paramArray = [];
 
@@ -95,6 +98,7 @@ _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
 			}
 	};
 	//2.用系统的查询选择组件 rh.vi.rhSelectListView()
-	var queryView = new rh.vi.rhSelectListView(options);
+//	var queryView = new rh.vi.rhSelectListView(options);
+	var queryView = new rh.vi.rhDictTreeView(options);
 	queryView.show(event,[],[0,495]);
 });
