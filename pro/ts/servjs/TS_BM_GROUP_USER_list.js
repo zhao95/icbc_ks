@@ -16,7 +16,12 @@ $("#TS_BM_GROUP_USER .rhGrid").find("tr").each(function(index, item) {
 		bindCard();
 	}
 });
-
+/*
+* 删除前方法执行
+*/
+rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+	showVerify(pkArray,_viewer);
+}
 //绑定的事件     
 function bindCard() {
 	//当行删除事件

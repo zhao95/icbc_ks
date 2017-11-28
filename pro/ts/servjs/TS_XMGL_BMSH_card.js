@@ -16,9 +16,9 @@ if(_viewer.opts.act == "cardAdd"){
 $("#TS_XMGL_BMSH-SH_LOOK_label").css("width","300px");
 $("#TS_XMGL_BMSH-SH_LOOK_div").css("padding-left","100px");
 //针对开始和结束时间的校验
-_viewer.beforeSave = function() {
+_viewer.beforeSave = function() {debugger;
 	
-	var  xmRgsh=_viewer.getItem("SH_RGSH").getValue();//人工审核
+	var  xmRgsh=_viewer.getItem("SH_RGSH").getValue();//人工审核2否
 	 var xmZdsh=_viewer.getItem("SH_ZDSH").getValue();//自动审核 
 	var beginTime=_viewer.getItem("SH_START").getValue();
 	var endTime=_viewer.getItem("SH_END").getValue();
@@ -27,11 +27,13 @@ _viewer.beforeSave = function() {
      beginTime = beginTimes[1] + '-' + beginTimes[2] + '-' + beginTimes[0] + ' ' + beginTime.substring(10, 19);
      endTime = endTimes[1] + '-' + endTimes[2] + '-' + endTimes[0] + ' ' + endTime.substring(10, 19);
     var a = (Date.parse(endTime) - Date.parse(beginTime)) / 3600 / 1000;
+    if(xmRgsh==1){
     if(a < 0||a == 0||isNaN(a)){
  		$("#TS_XMGL_BMSH-SH_START").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL_BMSH-SH_END").addClass("blankError").addClass("errorbox");
 		return false;
  	}
+    }
     if(xmRgsh==2 && xmZdsh==2){
 	alert("人工审核和自动审核都选择了'否'!");
     }
