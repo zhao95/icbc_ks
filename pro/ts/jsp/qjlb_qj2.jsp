@@ -147,7 +147,7 @@
                      font-family: 'Arial Negreta', 'Arial Normal', 'Arial',serif;
                      font-weight: 700;font-style: normal;font-size: 16px;color: #FFFFFF;">1</span>
                         <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5520.png">
-                        <span style="position: relative;font-size: 25px;top: 5px;">&nbsp;&nbsp;填写申请单&nbsp;&nbsp;</span>
+                        <span style="position: relative;font-size: 21px;top: 5px;">&nbsp;&nbsp;填写申请单&nbsp;&nbsp;</span>
                     </div>
 
                     <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">
@@ -157,7 +157,7 @@
                      font-family: 'Arial Negreta', 'Arial Normal', 'Arial',serif;
                      font-weight: 700;font-style: normal;font-size: 16px;">2</span>
                         <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5522.png">
-                        <span style="position: relative;font-size: 25px;top: 5px;">&nbsp;&nbsp;部门领导审批&nbsp;&nbsp;</span>
+                        <span style="position: relative;font-size: 21px;top: 5px;">&nbsp;&nbsp;部门领导审批&nbsp;&nbsp;</span>
                     </div>
 
                     <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5532.png">
@@ -167,7 +167,7 @@
                      font-family: 'Arial Negreta', 'Arial Normal', 'Arial',serif;
                      font-weight: 700;font-style: normal;font-size: 16px;">3</span>
                         <img alt="" src="<%=CONTEXT_PATH %>/ts/image/u5524.png">
-                        <span style="position: relative;font-size: 25px;top: 5px;">&nbsp;&nbsp;考务管理人员审批</span>
+                        <span style="position: relative;font-size: 21px;top: 5px;">&nbsp;&nbsp;考务管理人员审批</span>
                     </div>
 
                 </div>
