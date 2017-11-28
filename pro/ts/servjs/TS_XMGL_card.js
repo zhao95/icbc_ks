@@ -24,7 +24,7 @@ _viewer.beforeSave = function() {
  	}
     //考试开始时间和考试结束时间互斥
     var ksEndKsStart = (Date.parse(xmKsEndDataStr) - Date.parse(xmKsStartDataStr)) / 3600 / 1000;
-    if(ksEndKsStart< 0){
+    if(ksEndKsStart< 0){debugger;
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
 		return false;
@@ -167,7 +167,7 @@ function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){
  	}
     //考试开始时间和考试结束时间互斥
     var ksEndKsStart = (Date.parse(xmKsEndDataStr) - Date.parse(xmKsStartDataStr)) / 3600 / 1000;
-    if(ksEndKsStart< 0 || ksEndKsStart== 0|| isNaN(ksEndKsStart)){
+    if(ksEndKsStart< 0 || isNaN(ksEndKsStart)){
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
 		return false;
@@ -186,7 +186,7 @@ function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
 		return false;
  	}
-	 if(xmEndXmStart > 0 && ksEndKsStart > 0 && ksStartXmStart > 0 && xmEndKsEnd > 0){
+	 if(xmEndXmStart > 0 && ksEndKsStart >= 0 && ksStartXmStart > 0 && xmEndKsEnd > 0){
 		 return true;
 	 }  
 }
