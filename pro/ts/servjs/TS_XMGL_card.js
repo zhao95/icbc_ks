@@ -24,21 +24,21 @@ _viewer.beforeSave = function() {
  	}
     //考试开始时间和考试结束时间互斥
     var ksEndKsStart = (Date.parse(xmKsEndDataStr) - Date.parse(xmKsStartDataStr)) / 3600 / 1000;
-    if(ksEndKsStart< 0){debugger;
+    if(ksEndKsStart< 0){
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
 		return false;
  	}
     //项目开始时间和考试考试时间互斥
     var ksStartXmStart = (Date.parse(xmKsStartDataStr) - Date.parse(xmStartStr)) / 3600 / 1000;
-    if(ksStartXmStart< 0||ksStartXmStart== 0){
+    if(ksStartXmStart< 0){
  		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
 		return false;
  	}
     //考试结束时间与项目结束时间互斥
     var xmEndKsEnd = (Date.parse(xmEndStr) - Date.parse(xmKsEndDataStr)) / 3600 / 1000;
-     if(xmEndKsEnd < 0||xmEndKsEnd == 0){
+     if(xmEndKsEnd < 0){
  		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
 		return false;
@@ -174,19 +174,19 @@ function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){
  	}
     //项目开始时间和考试考试时间互斥
     var ksStartXmStart = (Date.parse(xmKsStartDataStr) - Date.parse(xmStartStr)) / 3600 / 1000;
-    if(ksStartXmStart< 0 || ksStartXmStart== 0 || isNaN(ksStartXmStart)){
+    if(ksStartXmStart< 0 ||  isNaN(ksStartXmStart)){
  		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
 		return false;
  	}
     //考试结束时间与项目结束时间互斥
     var xmEndKsEnd = (Date.parse(xmEndStr) - Date.parse(xmKsEndDataStr)) / 3600 / 1000;
-     if(xmEndKsEnd < 0 || xmEndKsEnd == 0 || isNaN(ksStartXmStart)){
+     if(xmEndKsEnd < 0 ||  isNaN(ksStartXmStart)){
  		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
 		return false;
  	}
-	 if(xmEndXmStart > 0 && ksEndKsStart >= 0 && ksStartXmStart > 0 && xmEndKsEnd > 0){
+	 if(xmEndXmStart > 0 && ksEndKsStart >= 0 && ksStartXmStart >= 0 && xmEndKsEnd >= 0){
 		 return true;
 	 }  
 }
