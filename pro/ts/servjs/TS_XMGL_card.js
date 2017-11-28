@@ -24,7 +24,7 @@ _viewer.beforeSave = function() {
  	}
     //考试开始时间和考试结束时间互斥
     var ksEndKsStart = (Date.parse(xmKsEndDataStr) - Date.parse(xmKsStartDataStr)) / 3600 / 1000;
-    if(ksEndKsStart< 0||ksEndKsStart== 0){
+    if(ksEndKsStart< 0){
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
 		return false;

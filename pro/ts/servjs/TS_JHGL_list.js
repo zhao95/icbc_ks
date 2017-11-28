@@ -20,7 +20,7 @@ _viewer.grid._table.find("tr").each(function(index, item) {
 /*
  * 删除前方法执行
  */
-rh.vi.listView.prototype.beforeDelete = function(pkArray) {debugger;
+rh.vi.listView.prototype.beforeDelete = function(pkArray) {
 	showVerify(pkArray, _viewer);
 };
 
