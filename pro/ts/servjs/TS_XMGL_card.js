@@ -1,8 +1,7 @@
 /** 服务卡片使用的js方法定义：开始fromTable */
 var _viewer = this;
 //针对项目开始时间的校验与互斥
-_viewer.beforeSave = function() {
-	
+_viewer.beforeSave = function() {debugger;
 	var xmStart=_viewer.getItem("XM_START").getValue();//项目开始时间
 	var xmEnd=_viewer.getItem("XM_END").getValue();//项目截至时间
 	var xmKsStartData=_viewer.getItem("XM_KSSTARTDATA").getValue();//考试开始时间
@@ -20,6 +19,7 @@ _viewer.beforeSave = function() {
     if(xmEndXmStart< 0||xmEndXmStart== 0){
  		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
+ 		alert("项目开始时间应早于项目结束时间");
 		return false;
  	}
     //考试开始时间和考试结束时间互斥
@@ -27,6 +27,7 @@ _viewer.beforeSave = function() {
     if(ksEndKsStart< 0){
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
+ 		alert("考试开始时间应早于考试结束时间");
 		return false;
  	}
     //项目开始时间和考试考试时间互斥
@@ -34,6 +35,7 @@ _viewer.beforeSave = function() {
     if(ksStartXmStart< 0){
  		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
+ 		alert("项目开始时间应不能晚于考试考试时间");
 		return false;
  	}
     //考试结束时间与项目结束时间互斥
@@ -41,6 +43,7 @@ _viewer.beforeSave = function() {
      if(xmEndKsEnd < 0){
  		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
+ 		alert("项目结束时间不能早于考试结束时间");
 		return false;
  	}
   
@@ -150,6 +153,7 @@ _viewer.getItem("XM_TYPE").change(function(){
 });	
 
 function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){
+	_viewer.refresh();
 	var xmStarts = xmStart.split('-');
     var xmEnds = xmEnd.split('-');
     var xmKsStartDatas = xmKsStartData.split('-');
@@ -163,6 +167,7 @@ function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){
     if(xmEndXmStart< 0 || xmEndXmStart== 0 || isNaN(xmEndXmStart)){
  		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
+ 		alert("项目开始时间应早于项目结束时间");
 		return false;
  	}
     //考试开始时间和考试结束时间互斥
@@ -170,6 +175,7 @@ function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){
     if(ksEndKsStart< 0 || isNaN(ksEndKsStart)){
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
+ 		alert("考试开始时间应早于考试结束时间");
 		return false;
  	}
     //项目开始时间和考试考试时间互斥
@@ -177,6 +183,7 @@ function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){
     if(ksStartXmStart< 0 ||  isNaN(ksStartXmStart)){
  		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
+ 		alert("项目开始时间应不能晚于考试开始时间");
 		return false;
  	}
     //考试结束时间与项目结束时间互斥
@@ -184,9 +191,11 @@ function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){
      if(xmEndKsEnd < 0 ||  isNaN(ksStartXmStart)){
  		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
  		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
+ 		alert("项目结束时间不能早于考试结束时间");
 		return false;
  	}
 	 if(xmEndXmStart > 0 && ksEndKsStart >= 0 && ksStartXmStart >= 0 && xmEndKsEnd >= 0){
 		 return true;
 	 }  
+	 
 }

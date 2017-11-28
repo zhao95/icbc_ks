@@ -84,7 +84,7 @@ function bindCard() {
 	});**/
 }
 // 点击时进行发布
-_viewer.getBtn("fabu").unbind("click").bind("click", function() {debugger;
+_viewer.getBtn("fabu").unbind("click").bind("click", function() {
 	var pkAarry = _viewer.grid.getSelectPKCodes();
 	
 	if (pkAarry.length == 0) {
@@ -127,7 +127,7 @@ function  firRelea(paramXm){
 
 
 // 点击时取消发布
-_viewer.getBtn("qxfb").unbind("click").bind("click", function() {debugger;
+_viewer.getBtn("qxfb").unbind("click").bind("click", function() { 
 	var pkAarry = _viewer.grid.getSelectPKCodes();
 	if (pkAarry.length == 0) {
 		_viewer.listBarTipError("请选择相应记录！");

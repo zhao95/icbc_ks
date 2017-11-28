@@ -2,6 +2,13 @@ var _viewer = this;
 //每列添加操作按钮
 $(".rhGrid").find("th[icode='set']").html("操作");
 $(".rhGrid").find("tr").unbind("dblclick");
+//隐藏多选框
+$(".rhGrid-thead-box").hide();
+$(".checkTD").hide();
+$(".rowIndex").hide();
+$(".rhGrid-thead-checkbox").hide();
+$(".rhGrid-thead-orderSpan").hide();
+$(".rhGrid-thead-orderSpan").unbind("click");
 //列表后增加功能
 _viewer.grid.getBtn("set").unbind("click").bind("click",function() {
 	var pk = jQuery(this).attr("rowpk");//获取主键信息
