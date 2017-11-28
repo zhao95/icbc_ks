@@ -112,7 +112,10 @@ $(".rh-advSearch-table").find("label[value='ROLE_DCODE']").text("机构");
 $("#TS_PVLG_ROLE_UPDATE .rh-advSearch-btn").unbind("click").bind("click",function(event) {
 	var value1_1  = "";
 	var value1_2  = "";
-	var value2  = checked;
+	var value2  = "";
+	if($("input[type='checkbox'][name='ROLE_PID']:checkbox:checked").length > 0){
+		value2  = checked;
+	}
 	var value3  = "";
 	if($("#rh-advanceSearch-TS_PVLG_ROLE_UPDATEROLE_DCODE__NAME").val() != ""){
 		value3  = deptCodes;
