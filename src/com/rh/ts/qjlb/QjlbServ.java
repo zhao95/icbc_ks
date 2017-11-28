@@ -11,6 +11,7 @@ import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.util.Constant;
+import com.rh.core.util.i18n.Language;
 import com.rh.ts.util.TsConstant;
 import org.apache.commons.lang.StringUtils;
 
@@ -224,65 +225,8 @@ public class QjlbServ extends CommonServ {
                 } else {
                     qj_status = "1";
                 }
-                qjbean.set("QJ_STATUS", qj_status);
-                ServDao.update(TSQJ_SERVID, qjbean);
 
-                try {
-                    if ("2".equals(qj_status) || "3".equals(qj_status)) {
-                        //流程结束 发送消息
-                        //TS_QJ_RESULT_TIP 请假结果提醒语
-                        String qjResultMsg = ConfMgr.getConf("TS_QJ_RESULT_TIP", "您的请假申请，有了审批结果，可登录工商银行考试查看。");
-                        String qjTitle = qjbean.getStr("QJ_TITLE");
-                        String qjResult = ("2".equals(qj_status)) ? "通过" : "不通过";
-                        qjResultMsg = qjResultMsg
-                                .replaceAll("#QJ_TITLE#", qjTitle)
-                                .replaceAll("#QJ_RESULT#", qjResult);
-                        Bean qjResultTipBean = new Bean();
-                        qjResultTipBean.set("USER_CODE", qjbean.getStr("USER_CODE"));
-                        qjResultTipBean.set("tipMsg", qjResultMsg);
-                        new KSSendTipMessageServ().sendTipMessageBeanForICBC(qjResultTipBean, "qjResult");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    log.error("请假结果提醒失败，" + "QJ_ID:" + qjId + ",USER_CODE:" + qjbean.getStr("USER_CODE"));
-                }
-
-                if ("2".equals(qj_status)) {
-                    //请假已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
-                    String qjKsname = qjbean.getStr("QJ_KSNAME");
-                    String[] bmIds = qjKsname.split(",");
-                    for (String bmId : bmIds) {
-                        ParamBean queryParamBean = new ParamBean();
-                        queryParamBean.set("BM_ID", bmId);
-                        Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
-                        if (bean == null) {
-                            continue;
-                        }
-                        if ("2".equals(bean.getStr("BM_STATUS"))) {
-                            bean.set("BM_STATUS", "3");
-                        } else {
-                            bean.set("BM_STATUS", "1");
-                        }
-                        ServDao.update(TS_BMSH_PASS_SERVID, bean);
-                    }
-                    //请假通过 修改请假次数和请假周数
-                    ParamBean getQxBean = new ParamBean();
-                    getQxBean.put("bmids", qjKsname);
-                    getQxBean.put("user_code", qjbean.getStr("USER_CODE"));
-                    getQxBean.put("cishu", ConfMgr.getConf("TS_KSQJ_SETCONUTS", "0"));
-                    getQxBean.put("zhoushu", ConfMgr.getConf("TS_KSQJ_WEEK_MAXNUM", "0"));
-                    try {
-                        Bean result = ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
-                        if (!"true".equals(result.getStr("yes"))) {
-                            Transaction.rollback();
-                            outBean.setError((String) result.get(Constant.RTN_MSG));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Transaction.rollback();
-                        outBean.setError("审批失败");
-                    }
-                }
+                afterApply(outBean, qjbean, qj_status);
 
                 if ("1".equals(qj_status)) {
                     int nodeSteps1 = Integer.parseInt((String) todoBean.get("NODE_STEPS"));
@@ -301,6 +245,75 @@ public class QjlbServ extends CommonServ {
             }
         }
         return outBean;
+    }
+
+    /**
+     * 流程结束 进行相关操作
+     *
+     * @param outBean
+     * @param qjbean
+     * @param qj_status
+     */
+    private void afterApply(OutBean outBean, Bean qjbean, String qj_status) {
+        String qjId = qjbean.getStr("QJ_ID");
+        qjbean.set("QJ_STATUS", qj_status);
+        ServDao.update(TSQJ_SERVID, qjbean);
+        try {
+            if ("2".equals(qj_status) || "3".equals(qj_status)) {
+                //流程结束 发送消息
+                //TS_QJ_RESULT_TIP 请假结果提醒语
+                String qjResultMsg = ConfMgr.getConf("TS_QJ_RESULT_TIP", "您的请假申请，有了审批结果，可登录工商银行考试查看。");
+                String qjTitle = qjbean.getStr("QJ_TITLE");
+                String qjResult = ("2".equals(qj_status)) ? "通过" : "不通过";
+                qjResultMsg = qjResultMsg
+                        .replaceAll("#QJ_TITLE#", qjTitle)
+                        .replaceAll("#QJ_RESULT#", qjResult);
+                Bean qjResultTipBean = new Bean();
+                qjResultTipBean.set("USER_CODE", qjbean.getStr("USER_CODE"));
+                qjResultTipBean.set("tipMsg", qjResultMsg);
+                new KSSendTipMessageServ().sendTipMessageBeanForICBC(qjResultTipBean, "qjResult");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("请假结果提醒失败，" + "QJ_ID:" + qjId + ",USER_CODE:" + qjbean.getStr("USER_CODE"));
+        }
+
+        if ("2".equals(qj_status)) {
+            //请假已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
+            String qjKsname = qjbean.getStr("QJ_KSNAME");
+            String[] bmIds = qjKsname.split(",");
+            for (String bmId : bmIds) {
+                ParamBean queryParamBean = new ParamBean();
+                queryParamBean.set("BM_ID", bmId);
+                Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
+                if (bean == null) {
+                    continue;
+                }
+                if ("2".equals(bean.getStr("BM_STATUS"))) {
+                    bean.set("BM_STATUS", "3");
+                } else {
+                    bean.set("BM_STATUS", "1");
+                }
+                ServDao.update(TS_BMSH_PASS_SERVID, bean);
+            }
+            //请假通过 修改请假次数和请假周数
+            ParamBean getQxBean = new ParamBean();
+            getQxBean.put("bmids", qjKsname);
+            getQxBean.put("user_code", qjbean.getStr("USER_CODE"));
+            getQxBean.put("cishu", ConfMgr.getConf("TS_KSQJ_SETCONUTS", "0"));
+            getQxBean.put("zhoushu", ConfMgr.getConf("TS_KSQJ_WEEK_MAXNUM", "0"));
+            try {
+                Bean result = ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
+                if (!"true".equals(result.getStr("yes"))) {
+                    Transaction.rollback();
+                    outBean.setError((String) result.get(Constant.RTN_MSG));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Transaction.rollback();
+                outBean.setError("发起人请假次数已超出规定，审批失败");
+            }
+        }
     }
 
     /**
@@ -331,7 +344,28 @@ public class QjlbServ extends CommonServ {
 //        new FlowServ().backFlow(flowParamBean);
         List<Bean> shList = shBean.getList("result");
         outBean.putAll(shBean);
-        if (CollectionUtil.isEmpty(shList)) {
+        if (shBean.getMsg().contains(Language.trans("未绑定流程"))) {
+            //未绑定流程，默认审批通过
+            outBean.set("shrNames", "系统");
+            outBean.setMsg("");
+            //添加审批意见（TS_COMM_MIND）
+            Bean shyjBean = new Bean();
+            shyjBean.set("DATA_ID", qjId);
+            shyjBean.set("SH_TYPE", "1");//审核类别 1 意见 2 审核记录
+            shyjBean.set("SH_MIND", "系统默认通过");//意见内容
+
+            shyjBean.set("SH_NODE", "系统环节");//审核层级名称
+            shyjBean.set("SH_LEVEL", "1");//审核层级
+
+            shyjBean.set("SH_STATUS", "1");//审核状态// 同意 不同意
+            shyjBean.set("SH_UCODE", "");//审核人UID(人力资源编码)
+            shyjBean.set("SH_ULOGIN", "");//审核人登陆名
+            shyjBean.set("SH_UNAME", "系统");//审核人姓名
+            shyjBean.set("S_DNAME", "");//审核人部门名称
+            ServDao.save(COMM_MIND_SERVID, shyjBean);
+
+            afterApply(outBean, qjbean, "2");//2 审批通过
+        } else if (CollectionUtil.isEmpty(shList)) {
             if (shList != null && shList.size() == 0) {
                 outBean.setError("没有审核人，请联系管理员！");
             }
