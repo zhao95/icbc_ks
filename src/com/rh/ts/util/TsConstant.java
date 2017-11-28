@@ -50,6 +50,12 @@ public class TsConstant {
 	/** 报名 - 考试类别群组 */
 	public static final String SERV_BM_KSQZ = "TS_XMGL_BM_KSQZ";
 
+	/** 报名群组管理*/
+	public static final String SERV_BM_GROUP = "TS_BM_GROUP";
+
+	/** 报名群组 用户/部门管理*/
+	public static final String SERV_BM_GROUP_USER = "TS_BM_GROUP_USER";
+
 	/** 报名 - 报名考试 */
 	public static final String SERV_BM = "TS_BMLB_BM";
 
