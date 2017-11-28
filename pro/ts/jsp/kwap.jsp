@@ -75,6 +75,10 @@
             color: #ffffff;
         }
 
+        .tip-green {
+            color: green;
+        }
+
         /*表格样式*/
         #submissionArrangement-table > tbody > tr:nth-of-type(even) {
             background-color: Azure;
@@ -157,7 +161,7 @@
 <div class="wrapper" style="height: 100%;"><%--border: 2px solid rgba(67, 156, 194, 1);--%>
 
     <header class="main-header">
-        <div class="rhGrid-btnBar" style="height: 40px;background-color: #5ab6a6;">
+        <div class="rhGrid-btnBar" style="height: 40px;background-color: #2398de;">
             <a class="rh-icon rhGrid-btnBar-a" id="zdfpcc" actcode="zdfpcc" title="">
                 <span class="rh-icon-inner">自动分配场次</span>
                 <span class="rh-icon-img btn-option"></span>
@@ -329,7 +333,7 @@
                       <i class="fa fa-angle-down"></i>
                   </button>--%>
                 <div id="kcTip" class="col-sm-12"
-                     style="position: relative;top: 3px;color:#006600;background-color: #7ec7ba;padding: 5px 39px 5px 5px;border-top: 1px solid #bfdfee;border-bottom: 1px solid #bfdfee;margin: 0 15px;">
+                     style="position: relative;top: 3px;color:#fff;background-color: #3ca4e1;padding: 5px 39px 5px 5px;border-top: 1px solid #bfdfee;border-bottom: 1px solid #bfdfee;margin: 0 15px;">
 
                 </div>
                 <div class="col-sm-12">

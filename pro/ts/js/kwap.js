@@ -1487,16 +1487,16 @@ var KcObject = {
 
         //kcTip
         $kcTip.append([
-            '<span style="color:#000;">当前考场及场次：</span>',
-            '考场数:<span id="kcCount" class="tip-white">' + kcArr.length + '</span>&nbsp;',
-            '场次数：<span id="ccCount" class="tip-white">' + ccCount + '</span>&nbsp;',
-            '已安排：<span id="yapCount" class="tip-white">' + yapTotalCount + '</span>'
+            '<span style="color:#fff;">当前考场及场次：</span>',
+            '考场数:<span id="kcCount" class="tip-green">' + kcArr.length + '</span>&nbsp;',
+            '场次数：<span id="ccCount" class="tip-green">' + ccCount + '</span>&nbsp;',
+            '已安排：<span id="yapCount" class="tip-green">' + yapTotalCount + '</span>'
         ].join(''));
         /*
-         '考生数：<span id="ksCount" class="tip-white">800</span>&nbsp;',
-         '（借入：<span id="jieruCount" class="tip-white">3</span>&nbsp;',
-         '借出：<span id="jiechuCount" class="tip-white">2</span>&nbsp;',
-         '请假：<span id="qjCount" class="tip-white">1</span>）',*/
+         '考生数：<span id="ksCount" class="tip-green">800</span>&nbsp;',
+         '（借入：<span id="jieruCount" class="tip-green">3</span>&nbsp;',
+         '借出：<span id="jiechuCount" class="tip-green">2</span>&nbsp;',
+         '请假：<span id="qjCount" class="tip-green">1</span>）',*/
 
     },
 
@@ -1516,7 +1516,7 @@ var KcObject = {
 
         //kcTip
         $kcTip.append([
-            '<span style="color:#000;">当前考场及场次：</span>' + kc.KC_NAME,
+            '<span style="color:#fff;">当前考场及场次：</span>' + kc.KC_NAME,
         ].join(''));
         KsObject.reloadKsOrgTip();
 
@@ -1575,13 +1575,13 @@ var KcObject = {
 
         //kcTip
         $kcTip.append([
-            '<span style="color:#000;">当前考场及场次：</span>',
+            '<span style="color:#fff;">当前考场及场次：</span>',
             '' + parentKc.KC_NAME,
             '&nbsp;&nbsp;' + cc.ccTime,
-            '&nbsp;最优数：<span id="optimal-number" class="tip-white"></span>',
-            '&nbsp;已安排：<span id="cc-info-yap-count" class="tip-white">' + this.currentYapzwArr.length + '</span>',
-            '&nbsp;借考：<span id="cc-info-jk-count" class="tip-white">0</span>',
-            /*',请假：<span id="cc-info-qj-count" class="tip-white">0</span>',*/
+            '&nbsp;最优数：<span id="optimal-number" class="tip-green"></span>',
+            '&nbsp;已安排：<span id="cc-info-yap-count" class="tip-green">' + this.currentYapzwArr.length + '</span>',
+            '&nbsp;借考：<span id="cc-info-jk-count" class="tip-green">0</span>',
+            /*',请假：<span id="cc-info-qj-count" class="tip-green">0</span>',*/
             '<div onclick="KcObject._setCcInfoType(\'list\')" style="cursor:pointer;padding: 3px;float: right"><i class="fa fa fa-list-ul"></i></div>',
             '<div onclick="KcObject._setCcInfoType(\'view\')" style="cursor:pointer;padding: 3px;float: right"><i class="fa fa-dashboard" aria-hidden="true"></i></div>',
         ].join(''));
@@ -2097,7 +2097,6 @@ var KsObject = {
         kcId = kcId ? kcId : '';
         var param = {kcId: kcId};
         FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'getKsOrgTree', param, false, false, function (data) {
-            // console.log(data);
             var root = {
                 id: data.DEPT_CODE,
                 text: data.DEPT_NAME,
@@ -2202,7 +2201,6 @@ var KsObject = {
             text = text.split('(')[0];
             var count = KsObject.countKsCount({kcId: kcId, sjId: sjId, searchDeptCode: treeNodeId});
             KsObject.ksOrgTree.jstree(true).set_text(node, text + '(<span style="color: red">' + count + '</span>)');
-            console.log(count);
             // KsObject.setTreeText(childOrg, kcId, sjId);
         }
     },
@@ -2213,7 +2211,6 @@ var KsObject = {
     //     if (KcObject.currentParentKc || KcObject.currentCc) {
     //         kcId = KcObject.currentParentKc.KC_ID;
     //         sjId = KcObject.currentCc.SJ_ID;
-    //         console.log(kcId + ':' + sjId);
     //         var orgJsonObject = KsObject.ksOrgTree.jstree(true).get_json('#', {flat: false})[0];
     //         // setTimeout('', 3000);
     //         KsObject.setTreeText(orgJsonObject, kcId, sjId)
