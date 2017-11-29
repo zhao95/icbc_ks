@@ -28,6 +28,7 @@ import com.rh.core.serv.util.ServUtils;
 import com.rh.ts.util.RoleUtil;
 
 public class PassServ extends CommonServ {
+	
 	/** 每次获取数据条数 */
 	private static final int ONETIME_EXP_NUM = 5000;
 	/** excel最大行数 */
@@ -645,11 +646,14 @@ public class PassServ extends CommonServ {
 		
 		Bean userPvlgToHT = RoleUtil.getPvlgRole(user.getCode(),"TS_BMGL_XNBM");
 		Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+		log.error(userPvlgToHTBean);
 		Bean str = (Bean)userPvlgToHTBean.get("XN_BM");
+		log.error(str);
 		String dept_code = str.getStr("ROLE_DCODE");
 		if("".equals(dept_code)){
 			dept_code=user.getStr("ODEPT_CODE");
 		}
+		log.error(dept_code);
 		dept_code = dept_code.substring(0,10);
 		/*if("belong".equals(xianei)){*/
 		//根据项目id找到流程下的所有节点
@@ -698,6 +702,7 @@ public class PassServ extends CommonServ {
 				for (Bean bean : finds) {
 					dept_code+=","+bean.getStr("DEPT_CODE");
 				}
+				log.error(dept_code);
 				deptwhere = "AND S_DEPT IN ("+dept_code+")";
 				DeptBean dept = OrgMgr.getDept(dept_code);
 				String codepath = dept.getCodePath();
