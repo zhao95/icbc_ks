@@ -1,14 +1,11 @@
 var _viewer = this;
-var params = _viewer.getParams();
-var projectId = params.JH_ID;
-var projectTitle = params.JH_TITLE;
-var projectYear=params.JH_YEAR;
+var jhId = _viewer.getParHandler().getPKCode();
 var height = jQuery(window).height()-200;
 var width = jQuery(window).width()-200;
 $(".rhGrid").find("tr").unbind("dblclick");
 _viewer.getBtn("add").unbind("click").bind("click",function() {
 	var paramDelete = {};
-	paramDelete["_extWhere"] = "and JH_ID ='"+projectId+"'";
+	paramDelete["_extWhere"] = "and JH_ID ='"+jhId+"'";
 	var resultDe = FireFly.doAct("TS_JHGL","query",paramDelete);
 	if(resultDe._DATA_[0]!=null){
 		if(resultDe._DATA_[0].JH_STATUS =="2"){
@@ -28,8 +25,8 @@ _viewer.grid._table.find("tr").each(function(index, item) {
 	if (index != 0) {
 		var dataId = item.id;
 		$(item).find("td[icode='BUTTONS']").append(
-			'<a class="rh-icon rhGrid-btnBar-a" operCode="optEditBtn"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
-			'<a class="rh-icon rhGrid-btnBar-a" operCode="optDeleteBtn"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+			'<a class="rh-icon rhGrid-btnBar-a" operCode="optEditBtn"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
+			//+'<a class="rh-icon rhGrid-btnBar-a" operCode="optDeleteBtn"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
 		);
 		// 为每个按钮绑定卡片
 		bindCard();
@@ -40,14 +37,13 @@ _viewer.grid._table.find("tr").each(function(index, item) {
  * 删除前方法执行
  */
 rh.vi.listView.prototype.beforeDelete = function(pkArray) {
-	var paramDelete = {};
-	paramDelete["_extWhere"] = "and JH_ID ='"+projectId+"'";
-	var resultDe = FireFly.doAct("TS_JHGL","query",paramDelete);
-	if(resultDe._DATA_[0].JH_STATUS =="2"){
-		Tip.show("请取消发布后再进行删除！");
-		return false;
-	}
-	showVerify(pkArray,_viewer);
+	FireFly.doAct("TS_JHGL","finds",{"_PK_":jhId},true,false,function(data){
+        if(data._DATA_[0].JH_STATUS =="2"){
+            Tip.show("请取消发布后再进行删除！");
+            return false;
+        }
+        showVerify(pkArray,_viewer);
+	});
 };
 
 //绑定的事件     

@@ -20,8 +20,20 @@ _viewer.grid._table.find("tr").each(function(index, item) {
 /*
  * 删除前方法执行
  */
-rh.vi.listView.prototype.beforeDelete = function(pkArray) {
-	showVerify(pkArray, _viewer);
+_viewer.beforeDelete = function(pkArray) {
+	var flag=true;
+    for(var k =0;k<pkArray.length;k++){
+        FireFly.doAct("TS_JHGL","finds",{"_PK_":pkArray[k]},true,false,function(data){
+            if(data._DATA_[0].JH_STATUS =="2"){
+               flag=false;
+            }
+        });
+	}
+	if(flag){
+            showVerify(pkArray,_viewer);
+	}else{
+        Tip.show("请取消发布后再进行删除！");
+    }
 };
 
 // 绑定的事件
