@@ -324,11 +324,11 @@ position: absolute;
 		<div class="modal" style="z-index: 999999;background: transparent;" id="showSeatModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="modal-header">
+					<div class="modal-header" style="background-color: #00c2c2;">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;
 						</button>
-						<h5 class="modal-title">
+						<h5 class="modal-title" style="font-size: 16px;font-weight: bold;">
 							预安排座位
 						</h5>
 					</div>
