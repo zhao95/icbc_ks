@@ -323,7 +323,7 @@
 
 .TS_KS_CAL .item {
     margin-top: 5px;
-	width: 48px;
+	width: 20%;
 	height: 25px;
 	line-height: 25px;
 	float: right;
@@ -335,7 +335,7 @@
 .TS_KS_CAL .item_select {
 	background: #dfdfdf;
     margin-top: 5px;
-	width: 48px;
+	width: 20%;
     height: 25px;
     line-height: 25px;
 	float: right;
@@ -405,9 +405,9 @@
 
 .TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-title {
 	position: relative;
-	right: 35px;
-	margin-left: 85px;
-	margin-right: 0;
+	right: 0px;
+	margin-left: 15%;
+	margin-right: 12%;
 	text-align: left;
 	height: 33px;
 	line-height: 33px;

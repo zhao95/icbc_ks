@@ -141,7 +141,7 @@ jQuery(document).ready(function(){
 				time = n.CAL_MONTH.substring(5)+"月" || "";
 			}
 			//css样式,控制div内的字超出范围的省略号代替  overflow: hidden; text-overflow: ellipsis;
-			liebiaoArr.push("<tr><td style='width:120px;border:0;text-align:center;padding-right:10px;'>"+time+"</td><td style='border:0;text-align:left;padding-right:4px;overflow: hidden; text-overflow: ellipsis;'>"+name+"</td></tr>");
+			liebiaoArr.push("<tr><td style='width:30%;border:0;text-align:center;padding-right:10px;'>"+time+"</td><td style='border:0;text-align:left;padding-right:4px;overflow: hidden; text-overflow: ellipsis;'>"+name+"</td></tr>");
 //			liebiaoArr.push("<tr><td style='width:120px;border:0;text-align:center;padding-right:10px;'>"+time+"</td><td style='border:0;text-align:left;padding-right:4px;'>"+name+"</td></tr>");
 		});
 		if (eventArr.length == 0) {
