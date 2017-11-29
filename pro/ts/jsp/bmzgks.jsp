@@ -136,7 +136,7 @@ position: absolute;
 				</table>
 				<table align="center" style="border-radius:5px;width: 90%; background-color: #fed1d1;">
 					<tr>
-						<td style="width:14%"><span style="color: #ff0000;">！</span> 温馨提示：</td>
+						<td style="width:14%">温馨提示：</td>
 						<td height="50px" align="left">1.您当前在 <span id="odptnspan"
 							style="color: #ff0000;"><%=odept_name%></span>
 							，将视您办公所在地统一安排考场。如果您发现下面的信息不符，请于借考申请开放期间提交借考申请！
