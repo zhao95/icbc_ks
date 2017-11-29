@@ -1793,4 +1793,20 @@ public class BmlbServ extends CommonServ {
 		}
 		return out;
 	}
+	
+	/**
+	 * 判断除了本序列 外是否 还有其它考试
+	 */
+	
+	public OutBean checkXl(Bean paramBean){
+		String xm_id = paramBean.getStr("xm_id");
+		String STATION_NO_CODE =paramBean.getStr("STATION_NO_CODE");
+		String STATION_TYPE_CODE =paramBean.getStr("STATION_TYPE_CODE");
+		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", "AND (KSLB_XL_CODE<>'"+STATION_NO_CODE+"') AND KSLB_CODE='"+STATION_TYPE_CODE+"' AND XM_ID='"+xm_id+"'");
+		if(list ==null||list.size()==0){
+			return new OutBean().set("flag", "true");
+		}
+		
+		return new OutBean().set("flag", "false");
+	}
 }
