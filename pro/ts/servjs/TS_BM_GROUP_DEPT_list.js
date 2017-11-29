@@ -62,7 +62,7 @@ _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
 //	var configStr = "TS_ORG_DEPT,{'TARGET':'DEPT_CODE~DEPT_NAME','SOURCE':'DEPT_CODE~DEPT_NAME'," +
 //	"'HIDE':'DEPT_CODE','TYPE':'multi','HTMLITEM':''}";
 
-	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'multi','sId':'TS_ORG_DEPT','pvlg':'CODE_PATH'}";
+    var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'multi','sId':'TS_ORG_DEPT','pvlg':'CODE_PATH'}";
 
 	var options = {
 			"config" :configStr,
@@ -76,8 +76,21 @@ _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
 				var names = nameArray;
 				
 				var paramArray = [];
-
+				
+				var codestr = "";
+				
 				for(var i=0;i<codes.length;i++){
+					if(i==0){
+						codestr="'"+codes[i]+"'";
+					}else{
+						codestr+=",'"+codes[i]+"'";
+					}
+				}
+				var paramstr = {};
+				paramstr["codes"]=codestr;
+				paramstr["G_ID"]=_viewer.getParHandler()._pkCode;
+				var resultstr = FireFly.doAct("TS_BMLB_BM","getMaxDept",paramstr);
+				/*for(var i=0;i<codes.length;i++){
 					var param = {};
 					//群组ID
 					param.G_ID = _viewer.getParHandler()._pkCode;
@@ -89,11 +102,11 @@ _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
 					param.G_TYPE = 2;
 					
 					paramArray.push(param);
-				}
-				 var batchData = {};
+				}*/
+				/* var batchData = {};
 				 batchData.BATCHDATAS = paramArray;
 				//批量保存
-				var rtn = FireFly.batchSave(_viewer.servId,batchData,null,2,false);
+				var rtn = FireFly.batchSave(_viewer.servId,batchData,null,2,false);*/
 				
 				_viewer.refresh();
 			}

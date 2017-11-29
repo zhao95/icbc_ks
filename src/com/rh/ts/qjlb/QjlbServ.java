@@ -29,6 +29,7 @@ public class QjlbServ extends CommonServ {
     private final static String TS_BMSH_PASS_SERVID = "TS_BMSH_PASS";
     private final static String TS_BM_QJ_NUM_SERVID = "TS_BM_QJ_NUM";
     private final static String dateFormatString = "yyyy-MM-dd HH:mm:ss";
+    private final static String dateFormatString2 = "yyyy-MM-dd";
 
     /**
      * 发起请假申请
@@ -529,13 +530,31 @@ public class QjlbServ extends CommonServ {
                     //在申请时间内
                     if (StringUtils.isBlank(qjStadate) || StringUtils.isBlank(qjEnddate)) {
                         result = false;
-                    } else if (new Date().getTime() > sdf.parse(qjStadate).getTime() && new Date().getTime() < sdf.parse(qjEnddate).getTime()) {
+                    } else if (new Date().getTime() > getTime(qjStadate) && new Date().getTime() < getTime(qjEnddate)) {
                         result = true;
                     }
                 }
             }
         }
         return result;
+    }
+
+    public long getTime(String dateStr) throws ParseException {
+        long time;
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormatString);
+        try {
+            time = sdf.parse(dateStr).getTime();
+            return time;
+        } catch (ParseException e) {
+            sdf = new SimpleDateFormat(dateFormatString2);
+            try {
+                time = sdf.parse(dateStr).getTime();
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+                throw e1;
+            }
+        }
+        return time;
     }
 
     /**

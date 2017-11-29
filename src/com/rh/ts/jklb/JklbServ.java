@@ -28,6 +28,8 @@ public class JklbServ extends CommonServ {
 
     private final static String dateFormatString = "yyyy-MM-dd HH:mm:ss";
 
+    private final static String dateFormatString2 = "yyyy-MM-dd";
+
     /**
      * 发起借考申请
      *
@@ -466,13 +468,34 @@ public class JklbServ extends CommonServ {
                     //在申请时间内
                     if (StringUtils.isBlank(qjStadate) || StringUtils.isBlank(qjEnddate)) {
                         result = false;
-                    } else if (new Date().getTime() > sdf.parse(qjStadate).getTime() && new Date().getTime() < sdf.parse(qjEnddate).getTime()) {
-                        result = true;
+                    } else {
+                        long nowTime = new Date().getTime();
+                        if (nowTime > getTime(qjStadate) && nowTime < getTime(qjEnddate)) {
+                            result = true;
+                        }
                     }
                 }
             }
         }
         return result;
+    }
+
+    public long getTime(String dateStr) throws ParseException {
+        long time;
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormatString);
+        try {
+             time = sdf.parse(dateStr).getTime();
+            return time;
+        } catch (ParseException e) {
+             sdf = new SimpleDateFormat(dateFormatString2);
+            try {
+                time = sdf.parse(dateStr).getTime();
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+                throw e1;
+            }
+        }
+        return time;
     }
 
     /**

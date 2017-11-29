@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
 
@@ -1808,5 +1809,33 @@ public class BmlbServ extends CommonServ {
 		}
 		
 		return new OutBean().set("flag", "false");
+	}
+	/**
+	 * 获取几个部门的最大部门
+	 */
+	public OutBean getMaxDept(Bean paramBean){
+		String codes = paramBean.getStr("codes");
+		String G_ID = paramBean.getStr("G_ID");
+		//查找此群组下的所有 部门   重新计算
+		List<Bean> list = ServDao.finds("TS_BM_GROUP_USER", "AND G_ID='"+G_ID+"' AND G_TYPE='2'");
+		String dept_code = "";
+		for (Bean bean : list) {
+			 dept_code += ",'"+bean.getStr("USER_DEPT_CODE")+"'";
+		}
+		codes+=dept_code;
+		
+		String sql = "SELECT dept_code,dept_name FROM sy_org_dept WHERE dept_level =(SELECT Min(dept_level) FROM sy_org_dept WHERE dept_code IN ("+codes+"))AND dept_code IN("+codes+")";
+		List<Bean> list2 = Transaction.getExecutor().query(sql);
+		String sql1 = "DELETE FROM TS_BM_GROUP_USER_DEPT WHERE G_ID='"+G_ID+"' AND G_TYPE='2'";
+		Transaction.getExecutor().execute(sql1);
+		for (Bean bean : list2) {
+			Bean newBean = new Bean();
+			newBean.set("USER_DEPT_CODE", bean.getStr("DEPT_CODE"));
+			newBean.set("USER_DEPT_NAME", bean.getStr("DEPT_NAME"));
+			newBean.set("G_ID", G_ID);
+			newBean.set("G_TYPE", 2);
+			ServDao.save("TS_BM_GROUP_DEPT", newBean);
+		}
+		return new OutBean().setOk("添加成功");
 	}
 }

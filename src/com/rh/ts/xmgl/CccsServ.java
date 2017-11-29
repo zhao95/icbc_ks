@@ -10,6 +10,7 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServDefBean;
+import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
 
@@ -267,7 +268,7 @@ public class CccsServ extends CommonServ {
 	    int kcNum = kcList.size();
 	    bean.set("CC_KC_NUM", kcNum);
 	    if(kcNum > 0){
-		Bean result = getResult(kcList,cjVal,sjVal);
+		Bean result = getResult(xmId,kcList,cjVal,sjVal);
 		bean.set("CC_COMPUTER_GOODNUM", result.getInt("CC_COMPUTER_GOODNUM"));
 		bean.set("CC_COMPUTER_MAXNUM", result.getInt("CC_COMPUTER_MAXNUM"));
 		bean.set("CC_PEOPLE_NUM", result.getInt("CC_PEOPLE_NUM"));
@@ -312,7 +313,7 @@ public class CccsServ extends CommonServ {
 	    dept1Bean.set("CC_KC_NUM", kcList.size());
 	    if(kcList.size() > 0){
 		kcNumSum += kcList.size();
-		Bean result = getResult(kcList,cjVal,sjVal);
+		Bean result = getResult(xmId,kcList,cjVal,sjVal);
 		peopleNumSum += result.getInt("CC_PEOPLE_NUM");
 		computerGoodNumSum += result.getInt("CC_COMPUTER_GOODNUM");
 		goodSyNumSum += result.getInt("CC_GOOD_SYNUM");
@@ -351,7 +352,7 @@ public class CccsServ extends CommonServ {
 		    tmpBean.set("CC_KC_NUM", kcArrTemp.size());
 		    if(kcArrTemp.size() > 0){
 			kcNumSum += kcArrTemp.size();
-			Bean result = getResult(kcArrTemp,cjVal,sjVal);
+			Bean result = getResult(xmId,kcArrTemp,cjVal,sjVal);
 			peopleNumSum += result.getInt("CC_PEOPLE_NUM");
 			computerGoodNumSum += result.getInt("CC_COMPUTER_GOODNUM");
 			goodSyNumSum += result.getInt("CC_GOOD_SYNUM");
@@ -396,12 +397,17 @@ public class CccsServ extends CommonServ {
 	return list;
     }
 
-    private Bean getResult(List<Bean> kcList, String cjVal, String sjVal) {
+    private Bean getResult(String xmId,List<Bean> kcList, String cjVal, String sjVal) {
 	//返回结果
 	Bean res = new Bean();
 	int goodSumNum = 0;
 	int maxSumNum = 0;
 	String jgSum = "";
+	int goodCCNum = 0;
+	int maxCCNum = 0;
+	int goodSyNum = 0;
+	int maxSyNum = 0;
+	int peopleNum = 0;
 	for (int i = 0; i < kcList.size(); i++) {
 	    int goodNum = kcList.get(i).getInt("KC_GOOD");
 	    int maxNum = kcList.get(i).getInt("KC_MAX");
@@ -417,7 +423,33 @@ public class CccsServ extends CommonServ {
 	    jgSum = jgSum.substring(1);
 	    jgSum = jgSum.replaceAll(",", "','");
 	}
-	sjVal = sjVal.replaceAll(",", "','");
+//	sjVal = sjVal.replaceAll(",", "','");
+	
+	List<Bean> kcTypesArr = ServDao.finds("TS_XMGL_CCCS_UTIL_TYPE_V","and xm_id = '"+xmId+"'");
+	for (int i = 0; i < kcTypesArr.size(); i++) {
+	    String tmpBmXlCode = kcTypesArr.get(i).getStr("BM_XL_CODE");
+	    String tmpBmMkCode = kcTypesArr.get(i).getStr("BM_MK_CODE");;
+	    String tmpBmType = kcTypesArr.get(i).getStr("BM_TYPE");;
+		String whereSql = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and S_ODEPT in ('"+jgSum+"') and BM_XL_CODE = '"
+			+tmpBmXlCode+"' and BM_MK_CODE = '"+tmpBmMkCode+"' and BM_TYPE = '"+tmpBmType+"'";
+		int tmpPoepleNum = ServDao.count("TS_XMGL_CCCS_KSGL", new ParamBean().setWhere(whereSql));
+		if (tmpPoepleNum != 0 && goodSumNum != 0 && maxSumNum !=0) { //最优场次数 
+			peopleNum += tmpPoepleNum;
+			maxSyNum += maxSumNum-tmpPoepleNum;
+			goodSyNum += goodSumNum-tmpPoepleNum;
+			goodCCNum += (int)Math.ceil((double)tmpPoepleNum/goodSumNum); //最大场次数 
+			maxCCNum += (int)Math.ceil((double)tmpPoepleNum/maxSumNum); //最优剩余机器数 
+		}
+	}
+	res.set("CC_PEOPLE_NUM", peopleNum);
+	res.set("CC_COMPUTER_GOODNUM", goodSumNum);
+	res.set("CC_COMPUTER_MAXNUM", maxSumNum);
+	res.set("CC_GOOD_NUM", goodCCNum);
+	res.set("CC_GOOD_SYNUM", goodSyNum);
+	res.set("CC_MAX_NUM", maxCCNum);
+	res.set("CC_MAX_SYNUM", maxSyNum);
+	
+	/**
 	int poepleNum = ServDao.count("TS_XMGL_CCCS_KSGL", new ParamBean().setWhere("and BM_KS_TIME in ('"+sjVal+"') and S_ODEPT in ('"+jgSum+"')"));
 	
 	res.set("CC_PEOPLE_NUM", poepleNum);
@@ -442,6 +474,7 @@ public class CccsServ extends CommonServ {
 	    res.set("CC_MAX_NUM", 0);
 	    res.set("CC_MAX_SYNUM", 0);
 	}
+	**/
 	return res;
     }
 }
