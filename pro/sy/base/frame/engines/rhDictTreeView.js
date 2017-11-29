@@ -834,21 +834,24 @@ rh.vi.rhDictTreeView.prototype._checkClick = function(item,s,id) {
  * 
  */
 rh.vi.rhDictTreeView.prototype._checkUserPvlg = function(item) {
-	
-	if(this._confJson.sId.indexOf('TS_ORG_DEPT')>=0 || this._confJson.sId.indexOf('TS_CTLG_TREE')>=0) {
-		
-		var _self = this;
-		
-		var params = {};
-		
-		var user_pvlg=_self._userPvlg[_self._confJson.sId+"_PVLG"];
-		
-		var flag = getListPvlg(item,user_pvlg,_self._confJson.pvlg);
-		
-		return flag;
-		
-	} else {
-		
+	try{
+		if(this._confJson.sId.indexOf('TS_ORG_DEPT')>=0 || this._confJson.sId.indexOf('TS_CTLG_TREE')>=0) {
+			
+			var _self = this;
+			
+			var params = {};
+			
+			var user_pvlg=_self._userPvlg[_self._confJson.sId+"_PVLG"];
+			
+			var flag = getListPvlg(item,user_pvlg,_self._confJson.pvlg);
+			
+			return flag;
+			
+		} else {
+			
+			return true;
+		}
+	}catch(e){
 		return true;
 	}
 };
