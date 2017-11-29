@@ -47,9 +47,10 @@ public class BmServ extends CommonServ {
 		String endTime = bmbean.getStr("BM_END");
 		if(startTime.length() < 18 ){
 			startTime += ":00";
+		}
+		if(endTime.length()<18){
 			endTime += ":00";
 		}
-	
 		//通知结束时间
 		Date date = new Date();
 		if(startTime!=""&&endTime!=""){
