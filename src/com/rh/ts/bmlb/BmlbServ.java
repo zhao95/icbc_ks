@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
 
@@ -20,6 +19,8 @@ import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
@@ -44,6 +45,7 @@ import com.rh.ts.util.RoleUtil;
 import com.rh.ts.xmgl.XmglMgr;
 
 public class BmlbServ extends CommonServ {
+	 protected Log log = LogFactory.getLog(this.getClass());
 	/**
 	 * 非资格考试的新增
 	 *
@@ -1735,14 +1737,19 @@ public class BmlbServ extends CommonServ {
 		if (userPvlgToHTBean == null) {
 			return new OutBean().set("look", "false");
 		}
+		log.error("辖内报名。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
+		log.error(userPvlgToHTBean);
 		if ("0".equals(userPvlgToHTBean.getStr("XN_BM"))) {
+			log.error(userPvlgToHTBean.getStr("XN_BM"));
 			return new OutBean().set("look", "false");
 		} else {
 			Bean str = (Bean) userPvlgToHTBean.get("XN_BM");
 			if (str == null) {
 				return new OutBean().set("look", "false");
 			}
+			log.error(str);
 			String dept_code = str.getStr("ROLE_DCODE");
+			log.error("dept_code....."+dept_code);
 			if ("".equals(dept_code)) {
 				return new OutBean().set("look", "false");
 			}
