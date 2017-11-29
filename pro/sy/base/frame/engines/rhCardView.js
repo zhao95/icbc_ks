@@ -1342,24 +1342,45 @@ rh.vi.cardView.prototype._saveForm = function() {
 		if(!this.form.validate()) {
 //	    	_self.cardBarTipError("校验未通过");
 //	    	_self.cardBarTipError(Language.transStatic("rhWfCardViewNodeExtends_string1"));
+			_self.cardClearTipLoad();
 	    	return false;
 	    }
 	}
     var changeData = this.getChangeData();
     if (jQuery.isEmptyObject(changeData)) {
 //   		_self.cardBarTipError("没有修改数据，未做提交！");
-   		_self.cardBarTipError(Language.transStatic("rhCardView_string8"));
+//   		_self.cardBarTipError(Language.transStatic("rhCardView_string8"));
+//    	_self.cardClearTipLoad();
+    	_self.cardBarTip("保存成功！");
     	return true;
     }
     
     if (this._actVar == UIConst.ACT_CARD_MODIFY) {//修改
-    	return _self.modifySave(changeData);
+    	var saveflag = _self.modifySave(changeData);
+    	if(saveflag){
+    		console.log("保存成功！");
+    		_self.cardBarTip("保存成功！");
+    	}else{
+    		console.log("保存失败！");
+    		_self.cardBarTipError("保存失败！");
+    	}
+    	return saveflag
     } else if (this._actVar == UIConst.ACT_CARD_ADD) {//添加
     	inadd-=10;
     	changeData["_ADD_"] = true;//增加标志
     	changeData[UIConst.PK_KEY] = _self.byIdData[this.servKeys];//增加主键
     	changeData[this.servKeys] = _self.getItem(this.servKeys).getValue();
-        return _self.addSave(changeData);
+        var saveflag = _self.addSave(changeData);
+        
+        if(saveflag){
+        	console.log("保存成功！");
+    		_self.cardBarTip("保存成功！");
+    	} else {
+    		console.log("保存失败！");
+    		_self.cardBarTipError("保存失败！");
+    	}
+        
+        return saveflag
     }
 };
 /*

@@ -209,3 +209,29 @@ function  setTime(xmStart,xmEnd,xmKsStartData,xmKsEndData){
 	 }  
 	 
 }
+
+$("#TS_XMGL-XM_FQDW_CODE__NAME").unbind("click").bind("click", function(event) {
+
+	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'single','sId':'TS_ORG_DEPT','pvlg':'CODE_PATH'}";
+
+	var options = {
+			"config" :configStr,
+			"params" : {"USE_SERV_ID":"TS_ORG_DEPT"},
+			"parHandler":_viewer,
+			"formHandler":_viewer.form,
+			"replaceCallBack":function(idArray,nameArray) {//回调，idArray为选中记录的相应字段的数组集合
+				
+				var codes = idArray;
+				var names = nameArray;
+				$("#TS_XMGL-XM_FQDW_CODE__NAME").val(names);
+				$("#TS_XMGL-XM_FQDW_CODE").val(codes);
+				$("#TS_XMGL-XM_FQDW_NAME").val(names);
+				console.log($("#TS_XMGL-XM_FQDW_CODE").val());
+				console.log($("#TS_XMGL-XM_FQDW_NAME").val());
+			}
+	};
+	
+	var queryView = new rh.vi.rhDictTreeView(options);
+	queryView.show(event,[],[0,495]);
+});
+
