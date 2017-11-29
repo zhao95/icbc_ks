@@ -74,7 +74,7 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
         "replaceCallBack": function (idArray) {//回调，idArray为选中记录的相应字段的数组集合
             var codes = idArray.USER_CODE.split(",");
             var names = idArray.USER_NAME.split(",");
-
+            
             var paramArray = [];
 
             for (var i = 0; i < codes.length; i++) {
@@ -87,8 +87,15 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
                 param.USER_DEPT_NAME = names[i];
                 //选取类型 1人员
                 param.G_TYPE = 1;
-
-                paramArray.push(param);
+                
+                
+                var result =  FireFly.byId("SY_HRM_ZDSTAFFPOSITION", codes[i]);
+        		if(result!=null){
+        			param.GW_LB = result.STATION_TYPE;
+        			param.GW_XL= result.STATION_NO;
+        		}
+        		paramArray.push(param);
+        		
             }
             var batchData = {};
             batchData.BATCHDATAS = paramArray;
