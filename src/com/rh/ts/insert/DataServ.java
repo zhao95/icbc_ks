@@ -24,9 +24,9 @@ public class DataServ extends CommonServ {
 		String end = bmgllist.get(0).getStr("BM_END");
 		//项目ID下的  包含的考试类别  
 		//高级考试
-		List<Bean> kslbklist1 = ServDao.finds("TS_XMGL_BM_KSLB"," AND KSLB_TYPE = '3' AND XM_ID='"+xmid+"'  group by KSLB_XL_CODE");
+		List<Bean> kslbklist1 = ServDao.finds("TS_XMGL_BM_KSLB"," AND KSLB_TYPE = '3' AND XM_ID='"+xmid+"'");
 		//中级考试
-		List<Bean> kslbklist2 = ServDao.finds("TS_XMGL_BM_KSLB"," AND  (KSLB_TYPE = '2' or KSLB_TYPE=1) AND XM_ID='"+xmid+"'  group by KSLB_XL_CODE");
+		List<Bean> kslbklist2 = ServDao.finds("TS_XMGL_BM_KSLB"," AND  (KSLB_TYPE = '2' or KSLB_TYPE=1) AND XM_ID='"+xmid+"'");
 		
 				List<Bean> KSLBLIST = ServDao.finds("TS_XMGL_BM_KSLB", "AND XM_ID='"+xmid+"'");
 				String lb_code ="";
@@ -54,7 +54,7 @@ public class DataServ extends CommonServ {
 		List<Bean> DEPTLIST = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE CONCAT('%','"+deptcode+"','%') and DEPT_LEVEL =3");
 		for (Bean bean : DEPTLIST) {
 			String odept_code = bean.getStr("DEPT_CODE");
-			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,300" );
+			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' limit 0,300" );
 			if(finds2!=null&&finds2.size()!=0){
 				
 				//向报名列表中插数据
@@ -103,13 +103,13 @@ public class DataServ extends CommonServ {
 						}
 						a=j;
 					}
-					List<Bean> kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' group by KSLB_XL_CODE limit "+a+","+2);
+					List<Bean> kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' limit "+a+","+2);
 					if(cengji>=3&&kslbklist.size()==0){
 						wherestr = " AND  (KSLB_TYPE = '2' or KSLB_TYPE=1) ";
 						if(a>kslbklist2.size()-3){
 							a=0;
 						}
-						kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' group by KSLB_XL_CODE limit "+a+","+2);
+						kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' limit "+a+","+2);
 					}
 					
 					for (Bean kslbkbean : kslbklist) {
