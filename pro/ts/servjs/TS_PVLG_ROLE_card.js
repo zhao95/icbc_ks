@@ -243,7 +243,10 @@ _viewer.beforeSave = function() {
 		 _viewer.cancelSave(true);
 		 
 		 _viewer.cardClearTipLoad();
+		 
+		 _viewer.cardBarTip("保存成功！");
 	 }
+	 
 };
 
 //保存后刷新tree和列表
