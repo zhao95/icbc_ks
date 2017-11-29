@@ -15,23 +15,30 @@ _viewer.beforeSave = function() {
     KsEndData= KsEndDatas[1] + '-' + KsEndDatas[2] + '-' + KsEndDatas[0] ;
     //报名开始时间和报名结束时间互斥
     var bmEndbmStart = (Date.parse(bmEnd) - Date.parse(bmStart)) / 3600 / 1000;
-    if(bmEndbmStart< 0||bmEndbmStart== 0||isNaN(bmEndbmStart)){
- 		$("#TS_JHGL_XX-JH_BM_STARTDATE").addClass("blankError").addClass("errorbox");
- 		$("#TS_JHGL_XX-JH_BM_ENDDATE").addClass("blankError").addClass("errorbox");
+    if(bmEndbmStart< 0||bmEndbmStart== 0){
+ 		//$("#TS_JHGL_XX-JH_BM_STARTDATE").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_JHGL_XX-JH_BM_ENDDATE").addClass("blankError").addClass("errorbox");
+ 		$("#TS_JHGL_XX-JH_BM_STARTDATE").parent().showError("报名开始时间应早于报名结束时间");
+ 		$("#TS_JHGL_XX-JH_BM_ENDDATE").parent().showError("报名结束时间应晚于报名开始时间");
 		return false;
  	}
     //考试开始时间和考试结束时间互斥
     var ksEndKsStart = (Date.parse(KsEndData) - Date.parse(KsStartData)) / 3600 / 1000;
-    if(ksEndKsStart< 0||ksEndKsStart== 0||isNaN(ksEndKsStart)){
- 		$("#TS_JHGL_XX-JH_CREATEDATE").addClass("blankError").addClass("errorbox");
- 		$("#TS_JHGL_XX-JH_ENDDATE").addClass("blankError").addClass("errorbox");
+    if(ksEndKsStart< 0||ksEndKsStart== 0){
+ 		//$("#TS_JHGL_XX-JH_CREATEDATE").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_JHGL_XX-JH_ENDDATE").addClass("blankError").addClass("errorbox");
+ 		$("#TS_JHGL_XX-JH_CREATEDATE").parent().showError("考试开始时间应早于考试结束时间");
+ 		$("#TS_JHGL_XX-JH_ENDDATE").parent().showError("考试结束时间应晚于考试开始时间");
 		return false;
  	}
     //报名结束时间和考试开始时间互斥
     var ksStartbmEnd = (Date.parse(KsStartData) - Date.parse(bmEnd)) / 3600 / 1000;
-    if(ksStartbmEnd< 0||ksStartbmEnd== 0||isNaN(ksStartbmEnd)){
- 		$("#TS_JHGL_XX-JH_CREATEDATE").addClass("blankError").addClass("errorbox");
- 		$("#TS_JHGL_XX-JH_BM_ENDDATE").addClass("blankError").addClass("errorbox");
+    if(ksStartbmEnd< 0){
+ 		//$("#TS_JHGL_XX-JH_CREATEDATE").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_JHGL_XX-JH_BM_ENDDATE").addClass("blankError").addClass("errorbox");
+    	$("#TS_JHGL_XX-JH_CREATEDATE").parent().showError("考试开始时间不应早于报名结束时间");
+    	$("#TS_JHGL_XX-JH_BM_ENDDATE").parent().showError("报名结束时间不应晚于考试开始时间");
 		return false;
  	}
+   
 };

@@ -38,8 +38,8 @@ _viewer.beforeSave = function() {
     if(ksStartXmStart< 0){
  		//$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
  		//$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL-XM_START").parent().showError("项目开始时间应早于考试开始时间");
- 		$("#TS_XMGL-XM_KSSTARTDATA").parent().showError("考试开始时间应晚于项目开始时间");
+ 		$("#TS_XMGL-XM_START").parent().showError("项目开始时间不应晚于考试开始时间");
+ 		$("#TS_XMGL-XM_KSSTARTDATA").parent().showError("考试开始时间不应早于项目开始时间");
  		
 		return false;
  	}
@@ -48,8 +48,8 @@ _viewer.beforeSave = function() {
      if(xmEndKsEnd < 0){
  		//$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
  		//$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL-XM_END").parent().showError("项目结束时间应晚于考试结束时间");
- 		$("#TS_XMGL-XM_KSENDDATA").parent().showError("考试结束时间应早于项目结束时间");
+ 		$("#TS_XMGL-XM_END").parent().showError("项目结束时间不应早于考试结束时间");
+ 		$("#TS_XMGL-XM_KSENDDATA").parent().showError("考试结束时间不应晚于项目结束时间");
 		return false;
  	}
   
