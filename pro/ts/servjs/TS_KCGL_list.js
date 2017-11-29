@@ -82,7 +82,7 @@ function bindCard(){
 	});	
 	
 	//当行查看事件
-	jQuery(".hoverDiv [operCode='optLookBtn']").unbind("click").bind("click", function(){debugger;
+	jQuery(".hoverDiv [operCode='optLookBtn']").unbind("click").bind("click", function(){;
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
 		openMyCard(pkCode,true);
@@ -96,11 +96,11 @@ function bindCard(){
 	});
 	
 	//复制
-	jQuery(".hoverDiv [operCode='optCopyBtn']").unbind("click").bind("click", function(){debugger;
+	jQuery(".hoverDiv [operCode='optCopyBtn']").unbind("click").bind("click", function(){;
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
 		var a=FireFly.doAct("TS_UTIL","copy",{"servId":_viewer.servId,"pkCode":pkCode,"primaryColCode":"KC_ID"},true,false,function(data){
-			if(data._MSG_.indexOf("OK")!= -1){debugger;
+			if(data._MSG_.indexOf("OK")!= -1){;
 				window.location.reload();
 			}
 		});
