@@ -244,7 +244,9 @@ _viewer.beforeSave = function() {
 		 
 		 _viewer.cardClearTipLoad();
 		 
-		 _viewer.cardBarTip("保存成功！");
+//		 _viewer.cardBarTip("保存成功！");
+		 
+		 _viewer.cardListBarTip("保存成功！");
 	 }
 	 
 };

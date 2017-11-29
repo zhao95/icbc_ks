@@ -1351,18 +1351,17 @@ rh.vi.cardView.prototype._saveForm = function() {
 //   		_self.cardBarTipError("没有修改数据，未做提交！");
 //   		_self.cardBarTipError(Language.transStatic("rhCardView_string8"));
 //    	_self.cardClearTipLoad();
-    	_self.cardBarTip("保存成功！");
+//    	_self.cardBarTip("保存成功！");
+    	_self.cardListBarTip("保存成功！");
     	return true;
     }
     
     if (this._actVar == UIConst.ACT_CARD_MODIFY) {//修改
     	var saveflag = _self.modifySave(changeData);
     	if(saveflag){
-    		console.log("保存成功！");
-    		_self.cardBarTip("保存成功！");
-    	}else{
-    		console.log("保存失败！");
-    		_self.cardBarTipError("保存失败！");
+//    		console.log("保存成功！");
+//    		_self.cardBarTip("保存成功！");
+    		_self.cardListBarTip("保存成功！");
     	}
     	return saveflag
     } else if (this._actVar == UIConst.ACT_CARD_ADD) {//添加
@@ -1373,11 +1372,9 @@ rh.vi.cardView.prototype._saveForm = function() {
         var saveflag = _self.addSave(changeData);
         
         if(saveflag){
-        	console.log("保存成功！");
-    		_self.cardBarTip("保存成功！");
-    	} else {
-    		console.log("保存失败！");
-    		_self.cardBarTipError("保存失败！");
+//        	console.log("保存成功！");
+//    		_self.cardBarTip("保存成功！");
+        	_self.cardListBarTip("保存成功！");
     	}
         
         return saveflag
@@ -1911,6 +1908,18 @@ rh.vi.cardView.prototype.cardBarTipLoad = function(msg) {
  */
 rh.vi.cardView.prototype.cardBarTip = function(msg) {
 	Tip.show(msg,true,this.getNowDom());
+};
+
+/*
+ * 成功的提示信息
+ * @param msg 提示内容
+ */
+rh.vi.cardView.prototype.cardListBarTip = function(msg,areaFlag) {
+	var flag = true;
+ 	if (areaFlag) {
+ 		flag = areaFlag;
+ 	}
+	Tip.show(msg,flag);
 };
 /*
  * 错误的提示信息

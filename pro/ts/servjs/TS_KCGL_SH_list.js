@@ -53,7 +53,10 @@ rh.vi.listView.prototype.beforeDelete = function(pkArray) {
 
 //列表操作按钮 弹dialog
 function openMyCard(dataId,readOnly,showTab){
-	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[900,600],"xyArray":[100,50]};
+	var height = jQuery(window).height()-200;
+	var width = jQuery(window).width()-200;
+	
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
     temp[UIConst.PK_KEY] = dataId;
     if(readOnly != ""){
     	temp["readOnly"] = readOnly;
