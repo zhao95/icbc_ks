@@ -9,16 +9,19 @@ $("#TS_KCZGL .rhGrid").find("tr").each(function(index, item) {
 		
 		$(item).find("td[icode='BUTTONS']").append("<div operCode='option' rowpk='"+dataId+"'><font size='3'>···</font></div>");
 		
-		var abtns ='<a class="rhGrid-td-rowBtnObj" operCode="optLookBtn" rowpk="'+dataId+'" style="cursor:pointer">&nbsp查看&nbsp</a>'+	
-		'<a class="rhGrid-td-rowBtnObj" operCode="optZBtn" rowpk="'+dataId+'" style="cursor:pointer">组管理&nbsp</a>'+
-		'<a class="rhGrid-td-rowBtnObj" operCode="optEditBtn" rowpk="'+dataId+'" style="cursor:pointer">编辑&nbsp</a>'+
+		var abtns =''+	
+		'<a class="rhGrid-td-rowBtnObj" operCode="optZBtn" rowpk="'+dataId+'" style="cursor:pointer">&nbsp组管理&nbsp</a>'+
 //		'<a class="rhGrid-td-rowBtnObj" operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>'+
 		'<a class="rhGrid-td-rowBtnObj" operCode="optCopyBtn" rowpk="'+dataId+'" style="cursor:pointer">复制&nbsp</a>';
 		if(state < 5){
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">垃圾箱&nbsp</a>';
 		}else{
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optBackTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">撤销&nbsp</a>';
-		}	
+		}
+		
+		abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optEditBtn" rowpk="'+dataId+'" style="cursor:pointer">编辑&nbsp</a>';
+		abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optLookBtn" rowpk="'+dataId+'" style="cursor:pointer">查看&nbsp</a>';
+		
 		var divHeight = $(item).get(0).offsetHeight;
 		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;color:#666666;'>"+abtns+"</div>";
 		$(".content-main").find("table").before(hoverDiv);	
