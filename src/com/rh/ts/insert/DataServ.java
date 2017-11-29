@@ -2,7 +2,6 @@ package com.rh.ts.insert;
 
 import java.util.List;
 
-import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.rh.core.base.Bean;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.CommonServ;
@@ -46,15 +45,16 @@ public class DataServ extends CommonServ {
 		int i=0;
 		int j=0;
 		int a = 0;
-		String sql = "SELECT DISTINCT DEPT_CODE WHERE DEPT_LEVEL = '2'";
+		String sql = "SELECT DISTINCT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_LEVEL = '2'";
 		List<Bean> odeptlist = Transaction.getExecutor().query(sql);
 		for (Bean ODEPTBEAN : odeptlist) {
+			Transaction.begin();
 			String deptcode = ODEPTBEAN.getStr("DEPT_CODE");
 		
-		List<Bean> DEPTLIST = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE CONCAT('"+deptcode+"','%') and DEPT_LEVEL =3");
+		List<Bean> DEPTLIST = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE CONCAT('%','"+deptcode+"','%') and DEPT_LEVEL =3");
 		for (Bean bean : DEPTLIST) {
 			String odept_code = bean.getStr("DEPT_CODE");
-			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,150" );
+			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' group by user_code limit 0,300" );
 			if(finds2!=null&&finds2.size()!=0){
 				
 				//向报名列表中插数据
@@ -74,11 +74,9 @@ public class DataServ extends CommonServ {
 					String blist = out.getStr("result");
 					String allman = "";
 					String node_name = "";
-					int SH_LEVEL = 0;
 					if (!"".equals(blist)) {
 						allman = blist.substring(0, blist.length() - 1);
 						node_name = out.getStr("NODE_NAME");
-						SH_LEVEL = out.getInt("SH_LEVEL");
 					}
 					
 					String STATION_TYPE_CODE=userBean.getStr("STATION_TYPE_CODE");
@@ -143,7 +141,7 @@ public class DataServ extends CommonServ {
 						beans.set("S_ODEPT",userBean.getStr("ODEPT_CODE"));
 						beans.set("S_DEPT", userBean.getStr("DEPT_CODE"));
 						beans.set("S_TDEPT", userBean.getStr("TDEPT_CODE"));
-						beans.set("BM_SH_STATE", 1);
+						beans.set("BM_SH_STATE", 0);
 						Bean create = ServDao.create("TS_BMLB_BM", beans);
 						
 						
@@ -386,6 +384,8 @@ public class DataServ extends CommonServ {
 			}
 		}
 		}*/
+		Transaction.commit();
+		Transaction.end();
 		}
 			return new OutBean().setOk();
 	}
