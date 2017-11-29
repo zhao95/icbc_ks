@@ -151,16 +151,7 @@ $(function() {
 											+ xm_jd
 											+ '0.0%</td>'
 											+ '<td class="rhGrid-td-left " id="xm_currentState" style="text-align: center">已结束</td>'
-											+
-											// '<td id="BM_OPTIONS"
-											// style="text-align: center;">'+
-											// '<input type="button"
-											// class="opera_btn" style="margin:0
-											// auto;display:block;color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:80px"
-											// value="'+ xm_opera +
-											// '"></input>'+
-											// '</td>'+
-											'</tr>');
+											+'</tr>');
 					xm_rowNum2++;
 				}
 			}

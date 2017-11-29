@@ -27,11 +27,11 @@ public class XmztServ extends CommonServ {
 	 */
 	public Bean modifyShowType(ParamBean paramBean) {
 		//获取当前登录用户的人力资源编码
-		String user_work_num = paramBean.getStr("USER_WORK_NUM");
+		String user_code = paramBean.getStr("USER_CODE");
 		String xm_id = paramBean.getStr("XM_ID");
 		//查询到当前用户所有的进行中的和进行过的项目，将状态设置为首页不显示
 		ParamBean param = new ParamBean();
-		param.set("STR1", user_work_num);
+		param.set("STR1", user_code);
 		List<Bean> list = ServDao.finds("TS_XMZT", param);
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).set("OBJ_INT1", 0);
@@ -39,7 +39,7 @@ public class XmztServ extends CommonServ {
 		}
 		//通过编码查询到TS_OBJECT表中的记录，获取到用户对应表的ID
 		ParamBean param1 = new ParamBean();
-		param1.set("STR1", user_work_num);
+		param1.set("STR1", user_code);
 		Bean result1 = ServDao.find("TS_XMZT", param1);
 		Object TR_ID = result1.get("ID");
 		

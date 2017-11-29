@@ -1,4 +1,17 @@
 _viewer=this;
+//查看只读
+if(_viewer.opts.readOnly == true){
+	_viewer.readCard();
+}
+
+//打开自服务列表
+if(typeof(_viewer.opts.showTab) !="undefined"){ 
+	var sid = _viewer.opts.showTab;
+	if(sid != ""){
+		var topObj = jQuery("li.rhCard-tabs-topLi[sid='" + sid + "']",_viewer.tabs);
+		topObj.find("a").click();
+	}
+}
 
 ////针对时间的校验
 //_viewer.getItem("JH_CREATEDATE").obj.unbind("click").bind("click", function() {

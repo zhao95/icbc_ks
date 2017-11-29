@@ -8,9 +8,9 @@ _viewer.grid._table.find("tr").each(function(index, item) {
 	if (index != 0) {
 		var dataId = item.id;
 		$(item).find("td[icode='BUTTONS']").append(
-			'<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optEditBtn" operCode="optEditBtn"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
+			'<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optViewBtn" operCode="optViewBtn"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-view"></span></a>'
+		 +  '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optEditBtn" operCode="optEditBtn"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
 //			+ '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_delete" operCode="delete"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
-//			+ '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optViewBtn" operCode="optViewBtn"><span class="rh-icon-inner">详细</span><span class="rh-icon-img btn-view"></span></a>'
 			);
 			// 为每个按钮绑定卡片
 			bindCard();
@@ -49,6 +49,16 @@ function bindCard() {
 		}
 		
 	});
+	
+/*	jQuery("td [id='"+servId+"_group']").unbind("click").bind("click", function(){
+		var pk = jQuery(this).attr("rowpk");
+		var extWhere = "and USER_CODE = '" + pk + "'";
+		var params = {"_extWhere" : extWhere};
+		var url = "TS_PVLG_GROUP_USER_V_SY_ORG_USER.list.do?&_extWhere=" + extWhere;
+		var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
+		Tab.open(options);
+	 });*/
+	
 
 	// 当行编辑事件
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click",function() {
@@ -71,8 +81,10 @@ function bindCard() {
 	});
 
 	// 当行详细计划事件
-	/*jQuery("td [operCode='optViewBtn']").unbind("click").bind("click",function() {
+	jQuery("td [operCode='optViewBtn']").unbind("click").bind("click",function() {
 		var pkCode = $(this).parent().parent().attr("id");
+		openMyCard(pkCode,true);
+		/*var pkCode = $(this).parent().parent().attr("id");
 		var jhTitle = _viewer.grid.getRowItemValue(pkCode, "JH_TITLE");
 		var jhYear=_viewer.grid.getRowItemValue(pkCode, "JH_YEAR");
 		// 定义一个对象
@@ -80,8 +92,8 @@ function bindCard() {
 		var params = {"JH_ID" : pkCode,"JH_TITLE" : jhTitle,"JH_YEAR" : jhYear,"_extWhere" : strwhere};
 		var url = "TS_JHGL_XX.list.do?&_extWhere=" + strwhere;
 		var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
-		Tab.open(options);
-	});**/
+		Tab.open(options);*/
+	});
 }
 // 点击时进行发布
 _viewer.getBtn("fabu").unbind("click").bind("click", function() {
@@ -218,7 +230,7 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click", function(event) {
 
 //列表操作按钮 弹dialog
 function openMyCard(dataId,readOnly,showTab){
-	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray": [ width,height ],"xyArray":[50,50]};
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
     temp[UIConst.PK_KEY] = dataId;
     if(readOnly != ""){
     	temp["readOnly"] = readOnly;
@@ -228,7 +240,7 @@ function openMyCard(dataId,readOnly,showTab){
     }
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
-};
+}
 
 
 //传给后台的数据
