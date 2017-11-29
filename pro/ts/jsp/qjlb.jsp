@@ -94,13 +94,13 @@
         <div id="cuxian1"
              style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
             <span style="margin-left: 50px; padding-top: 10px">可申请的请假</span>
-            <div style="float:right;">
+            <%--<div style="float:right;">
                 <a onclick="qingjia()"
                    style="color:white;font-size:20px;background-color:LightSeaGreen;height:45px;width:140px;margin:15px;cursor: pointer;">
                     <i class="fa fa-plus-circle" aria-hidden="true"></i>
                     我要请假
                 </a>
-            </div>
+            </div>--%>
         </div>
         <div style="margin-left: 10px; background-color: white; height: 20px; width: 98%"></div>
         <div id="table1" class="" style="margin-left: 10px; width: 98%">
@@ -121,6 +121,10 @@
 
                     </tbody>
                 </table>
+                <button id="wyqj" class="btn btn-success"
+                        style="top: 20px;position: relative;font-size:16px;width: 120px;height:35px;background-color: #00c2c2;left: 43%;"
+                        data-toggle="modal" data-target="#wyqj" onclick="qingjia()">我要请假
+                </button>
             </div>
         </div>
     </div>
@@ -186,6 +190,10 @@
         //获取可申请的请假数据
         var data = {USER_CODE: currentUserCode};
         var userCanLeaveList = FireFly.doAct('TS_QJLB_QJ', 'getUserCanLeaveList', data);
+        //没有可请假的考试，我要请假 置灰
+        if (userCanLeaveList._DATA_.length <= 0) {
+            $('#wyqj').attr('disabled', 'disabled');
+        }
         for (var i = 0; i < userCanLeaveList._DATA_.length; i++) {
             var userCanLeave = userCanLeaveList._DATA_[i];
 
