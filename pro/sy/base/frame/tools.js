@@ -4257,7 +4257,7 @@ function getDialog(dialogId,title,wid,hei) {
 
 function getListPvlg(item,user_pvlg,filed) {
 	var flag = false;
-	if(filed == undefined) {
+	if(filed == undefined || filed == '') {
 		filed = "CTLG_PATH"
 	}
 	//点击树之前，判断是否在权限范围内，否则不能点击
