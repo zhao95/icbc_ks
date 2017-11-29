@@ -86,43 +86,71 @@ function bindCard() {
 // 点击时进行发布
 _viewer.getBtn("fabu").unbind("click").bind("click", function() {
 	var pkAarry = _viewer.grid.getSelectPKCodes();
-	
-	if (pkAarry.length == 0) {
-		_viewer.listBarTipError("请选择相应记录！");
-	} else {
-		//遍历所选的所有大计划，依次进行判断执行。
-		for (var i = 0; i < pkAarry.length; i++) {;
-			var paramfb = {};
-			paramfb["_extWhere"] = "and JH_ID ='"+pkAarry[i]+"'";
-			var beanFb = FireFly.doAct(_viewer.servId, "query", paramfb);
-			//判断是否已发布，否则提示已经发布 
-			if(beanFb._DATA_ != 0){
-				if(beanFb._DATA_[0].JH_STATUS=="2"){
-					_viewer.listBarTipError("所选计划已发布！");
-				}else if(beanFb._DATA_[0].JH_STATUS=="1"){
-					var paramXm = {};
-					paramXm["pkCodes"] = pkAarry[i];
-					showRelease(pkAarry,_viewer,paramXm);
-					//FireFly.doAct(_viewer.servId, "UpdateStatusStart", param,false,false,function(){
-						//Tip.show("计划发布成功！");
-					//});
-					//_viewer.refresh();
-				}
-			}else if(beanFb._DATA_  == 0){
-				Tip.show("当前用户无权限发布！");
-			}
-				
-		}
-	}
+	showRelease(pkAarry,_viewer);
+//	if (pkAarry.length == 0) {
+//		_viewer.listBarTipError("请选择相应记录！");
+//	} else {
+//		//遍历所选的所有大计划，依次进行判断执行。
+//		for (var i = 0; i < pkAarry.length; i++) {;
+//			var paramfb = {};
+//			paramfb["_extWhere"] = "and JH_ID ='"+pkAarry[i]+"'";
+//			var beanFb = FireFly.doAct(_viewer.servId, "query", paramfb);
+//			//判断是否已发布，否则提示已经发布 
+//			if(beanFb._DATA_ != 0){
+//				if(beanFb._DATA_[0].JH_STATUS=="2"){
+//					_viewer.listBarTipError("所选计划已发布！");
+//				}else if(beanFb._DATA_[0].JH_STATUS=="1"){
+//					var paramXm = {};
+//					paramXm["pkCodes"] = pkAarry[i];
+//					//showRelease(pkAarry,_viewer,paramXm);
+//					//FireFly.doAct(_viewer.servId, "UpdateStatusStart", param,false,false,function(){
+//						//Tip.show("计划发布成功！");
+//					//});
+//					//_viewer.refresh();
+//				}
+//			}else if(beanFb._DATA_  == 0){
+//				Tip.show("当前用户无权限发布！");
+//			}
+//				
+//		}
+//	}
 })
 
 //初次发布
-function  firRelea(paramXm){;
-	 
-		FireFly.doAct("TS_JHGL", "UpdateStatusStart", paramXm,false,false,function(){
-			Tip.show("计划发布成功！");
-		});
-		_viewer.refresh();
+function  firRelea(pkAarry,_viewer){
+if (pkAarry.length == 0) {
+	_viewer.listBarTipError("请选择相应记录！");
+} else {
+	//遍历所选的所有大计划，依次进行判断执行。
+	for (var i = 0; i < pkAarry.length; i++) {
+		var paramfb = {};
+		paramfb["_extWhere"] = "and JH_ID ='"+pkAarry[i]+"'";
+		var beanFb = FireFly.doAct(_viewer.servId, "query", paramfb);
+		//判断是否已发布，否则提示已经发布 
+		if(beanFb._DATA_ != 0){
+			if(beanFb._DATA_[0].JH_STATUS=="2"){
+				_viewer.listBarTipError("所选计划已发布！");
+			}else if(beanFb._DATA_[0].JH_STATUS=="1"){
+				var paramXm = {};
+				paramXm["pkCodes"] = pkAarry[i];
+				//showRelease(pkAarry,_viewer,paramXm);
+				FireFly.doAct(_viewer.servId, "UpdateStatusStart", paramXm,false,false,function(){
+					Tip.show("计划发布成功！");
+				});
+				_viewer.refresh();
+			}
+		}else if(beanFb._DATA_  == 0){
+			Tip.show("当前用户无权限发布！");
+		}
+			
+	}
+}	 
+
+
+//		FireFly.doAct("TS_JHGL", "UpdateStatusStart", paramXm,false,false,function(){
+//			Tip.show("计划发布成功！");
+//		});
+//		_viewer.refresh();
 }
 
 
@@ -249,7 +277,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
  * @parm pkArray 主键
  * @parm viewer 页面_viewer
  */
-function showRelease(pkArray,viewer,paramXm){;
+function showRelease(pkAarry,_viewer){
 	var imgDate = new Date();
 	var content = '<div><table>'
 			+ '<tr id="errMsg" style="visibility: hidden;"><td><font color="red" size="5">验证码错误！</font></td></tr>'
@@ -292,9 +320,9 @@ function showRelease(pkArray,viewer,paramXm){;
 					}, true, false, function(data) {
 						if (data.res == "true") {
 							dialog.remove();
-							firRelea(paramXm);
+							firRelea(pkAarry,_viewer);
 							//FireFly.listDelete(viewer.servId,{"_PK_":pkArray.toString()},true);
-							viewer.refresh();
+							_viewer.refresh();
 							//viewer.afterDelete();
 							
 						} else {
@@ -307,7 +335,7 @@ function showRelease(pkArray,viewer,paramXm){;
 				
 			},
 			"关闭" : function() {
-				viewer.refresh();
+				_viewer.refresh();
 				dialog.remove();
 			}
 		}

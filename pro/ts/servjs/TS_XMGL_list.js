@@ -126,7 +126,37 @@ $(".hoverDiv").find("a").hover(function() {
 _viewer.getBtn("fabu").unbind("click").bind("click",function(){
 	//点击选择框，获取数据的id；
 	var pkAarry = _viewer.grid.getSelectPKCodes();
+	showRelease(pkAarry,_viewer);
+//	if(pkAarry.length==0){
+//		_viewer.listBarTipError("请选择要发布的项目！");
+//	}else{
+//		//判断数据库是否已经发布
+//		for (var i = 0; i < pkAarry.length; i++) {
+//			var  where="and XM_ID='"+pkAarry[i]+"'";
+//			var  data={_extWhere:where};
+//			var beanFb = FireFly.doAct("TS_XMGL", "query", data);
+//			if(beanFb._DATA_[0].XM_STATE==1){
+//				//Tip.show("已经发布！");
+//				_viewer.listBarTipError("所选项目已经发布！");
+//			}else if(beanFb._DATA_[0].XM_STATE==0){
+//				 var  paramXm={};
+//				 paramXm["pkCodes"]=pkAarry[i];
+//				showRelease(pkAarry,_viewer,paramXm);
+//				
+////				// paramXm["pkCodes"]=pkAarry.join(',');debugger;
+//				
+////				FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
+////					Tip.show("项目发布成功！");
+////				});
+////				_viewer.refresh();
+//			}
+//				
+//		}
+//	}
 	
+});
+//初次发布
+function  firRelea(pkAarry,_viewer){
 	if(pkAarry.length==0){
 		_viewer.listBarTipError("请选择要发布的项目！");
 	}else{
@@ -141,27 +171,21 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){
 			}else if(beanFb._DATA_[0].XM_STATE==0){
 				 var  paramXm={};
 				 paramXm["pkCodes"]=pkAarry[i];
-				showRelease(pkAarry,_viewer,paramXm);
-				
-//				// paramXm["pkCodes"]=pkAarry.join(',');debugger;
-				
-//				FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
-//					Tip.show("项目发布成功！");
-//				});
-//				_viewer.refresh();
+				// paramXm["pkCodes"]=pkAarry.join(',');debugger;
+				FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
+					Tip.show("项目发布成功！");
+				});
+				_viewer.refresh();
 			}
 				
 		}
 	}
 	
-});
-//初次发布
-function  firRelea(paramXm){
 	 
-		FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
-			Tip.show("项目发布成功！");
-		});
-		_viewer.refresh();
+//		FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
+//			Tip.show("项目发布成功！");
+//		});
+//		_viewer.refresh();
 }
 
 
@@ -214,7 +238,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
  * @parm pkArray 主键
  * @parm viewer 页面_viewer
  */
-function showRelease(pkArray,viewer,paramXm){
+function showRelease(pkAarry,_viewer){
 	var imgDate = new Date();
 	var content = '<div><table>'
 			+ '<tr id="errMsg" style="visibility: hidden;"><td><font color="red" size="5">验证码错误！</font></td></tr>'
@@ -257,9 +281,9 @@ function showRelease(pkArray,viewer,paramXm){
 					}, true, false, function(data) {
 						if (data.res == "true") {
 							dialog.remove();
-							firRelea(paramXm);
+							firRelea(pkAarry,_viewer);
 							//FireFly.listDelete(viewer.servId,{"_PK_":pkArray.toString()},true);
-							viewer.refresh();
+							_viewer.refresh();
 							//viewer.afterDelete();
 							
 						} else {
@@ -272,7 +296,7 @@ function showRelease(pkArray,viewer,paramXm){
 				
 			},
 			"关闭" : function() {
-				viewer.refresh();
+				_viewer.refresh();
 				dialog.remove();
 			}
 		}
