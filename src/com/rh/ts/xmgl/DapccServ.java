@@ -371,13 +371,25 @@ public class DapccServ extends CommonServ {
     public OutBean getTjOrPublish(ParamBean paramBean) {
         OutBean outBean = new OutBean();
         String xmId = paramBean.getStr("XM_ID");
-        String deptCode = Context.getUserBean().getDeptCode();
+        String deptCodeStr = paramBean.getStr("deptCodeStr");//用户场次安排权限
+//        String deptCode = Context.getUserBean().getODeptCode();
         Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
-        String xmFqdwCode = xmBean.getStr("XM_FQDW_CODE");
-        String sql = "select * from sy_org_dept where DEPT_CODE =? and CODE_PATH like ?";
+        String xmFqdwCode = xmBean.getStr("XM_FQDW_CODE");//项目所属机构
+        String sql = "select * from sy_org_dept where DEPT_CODE =? ";
         List<Object> values = new ArrayList<Object>();
         values.add(xmFqdwCode);
-        values.add("%" + deptCode + "%");
+
+        //deptSql
+        String[] split = deptCodeStr.split(",");
+        StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
+        for (String s : split) {
+            if (StringUtils.isNotBlank(s)) {
+                values.add(s);
+                deptSql.append("INSTR(CODE_PATH ,?)>0 or ");
+            }
+        }
+        sql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
+
         List<Bean> beanList = Transaction.getExecutor().query(sql, values);
         if (beanList != null && beanList.size() > 0) {
             //用户机构 属于 项目所属机构及以上机构，则用户显示发布按钮

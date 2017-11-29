@@ -256,10 +256,11 @@ var HeaderBtn = {
     //设置提交发布按钮
     setTjFbBtn: function () {
         var xmId = this.xmId;
+        var deptCodeStr = Utils.getUserYAPAutoCode();
         //unPublish
         var xmBean = FireFly.doAct("TS_XMGL", "byid", {"_PK_": xmId}, false);
         // xmBean.S_USER;
-        var typeBean = FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getTjOrPublish", {XM_ID: xmId}, false);
+        var typeBean = FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getTjOrPublish", {XM_ID: xmId,deptCodeStr:deptCodeStr}, false);
 
         if (typeBean.type === 'publish') {
             $("#tjccap").css('display', 'none');
