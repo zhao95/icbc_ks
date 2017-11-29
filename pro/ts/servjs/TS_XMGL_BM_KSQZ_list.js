@@ -13,7 +13,7 @@ $("#TS_XMGL_BM_KSQZ .rhGrid").find("tr").each(function(index,item) {
 });
 function bindCard(){
 	var height = jQuery(window).height();
-	var width = jQuery(window).width();
+	var width = jQuery(window).width()-150;
 	//设置
 	jQuery("td [operCode='optOption']").unbind("click").bind("click", function(){
 		var KSQZ_ID=$(this).parent().parent().attr("id");
