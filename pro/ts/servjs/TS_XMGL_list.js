@@ -185,7 +185,7 @@ function  firRelea(pkAarry,_viewer){
 //		FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
 //			Tip.show("项目发布成功！");
 //		});
-//		_viewer.refresh();
+//		_viewer.refresh();请选择相应记录
 }
 
 

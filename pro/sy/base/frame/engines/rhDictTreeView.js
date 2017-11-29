@@ -107,6 +107,18 @@ rh.vi.rhDictTreeView = function(options) {
 	}
 	this._autoMatch = this._confJson && (this._confJson.MATCH) ? this._confJson.MATCH:false;//扩展条件
 	this._closeSubstr = this._confJson && (this._confJson.CLOSESUBSTR) ? this._confJson.CLOSESUBSTR:false;//是否关闭处理ID模式
+	
+	this._userPvlg = null; //用户权限缓存
+	
+	if(this._userPvlg) {
+		
+		FireFly.setCache(this._confJson.sId,FireFly.servMainData,this._userPvlg);
+	} else {
+		var userCode = System.getVar("@USER_CODE@");
+		if (userCode) {
+			this._userPvlg = FireFly.getCache(userCode,FireFly.userPvlg);
+		}
+	}
 };
 /*
  * 渲染页面主方法
@@ -235,10 +247,22 @@ rh.vi.rhDictTreeView.prototype._layout = function(event,replacePosArray) {
 				var curNode = null;
 				if (_self._model == "default") {
 					if (_self._treeType == "multi") {
-						curNode = _self.tree.getCheckedNodes();
+						curNode = [];
+						
+						for(var node in _self.tree.getCheckedNodes()){
+							if(_self._checkUserPvlg(node)) {
+								curNode.push(node);
+							}
+						}
+						
 					} else {
 						curNode = [];
-						curNode.push(_self.tree.getCurrentNode());
+						
+						if(_self._checkUserPvlg(_self.tree.getCurrentNode())) {
+							curNode.push(_self.tree.getCurrentNode());
+						}
+						
+//						curNode.push(_self.tree.getCurrentNode());
 						//单选的时候，只选叶子节点，
 						if (_self.rtnLeaf && _self.tree.hasChild(_self.tree.getCurrentNode()) || !_self.tree.getCurrentNode()) {
 //							alert("请选择具体的" + _self.dialogName + "！");
@@ -317,54 +341,92 @@ rh.vi.rhDictTreeView.prototype._bldDictTree = function() {
 		dictUrl += "?" + jQuery.param(_self.params);
 	}
 	var setting = {
-		rhexpand: false,
-    	showcheck: false,   
-    	url: dictUrl, 
-    	dictId : this.dictId,
-        theme: "bbit-tree-no-lines", //bbit-tree-lines ,bbit-tree-no-lines,bbit-tree-arrows
-        rhItemCode:this.opts.itemCode,
-        handler: this, //本实例句柄需要传递  add by wangchen
-        onBeforeNodeclick: function(item) { // add by wangchen
-		 	if (item.ERR_MSG) {
-		 		top.Tip.addTip(item.ERR_MSG, "warn");
-		 		return false;
-		 	}
-		 	return true;
-		},
-        onnodeclick: function(item) {
-			/*modify by wangchen-begin*/
-			if (!_self._multiCheckBox) {
-	        	if (_self.opts.replaceNodeClick != null) {//增加单击覆盖 2013-03-14 jinkai
-	        		        var backFunc = _self.opts.replaceNodeClick;
-	                        backFunc.call(_self.opts.parHandler,item);
-	        	}
-	        	//设置右侧显示
-	        	_self._setRightSelect(item);
-		    	return false;
-			}
-			/*modify by wangchen-end*/
-		},
-		onnodedblclick : function(item) {
-			if (_self._model == "default") {
-				var str = [];
-				str.push(item);
-				//单选的时候，只选叶子节点，
-				if (_self.rtnLeaf && _self.tree.hasChild(item)) {
-//					alert("请选择具体的" + _self.dialogName + "！");
-					alert(Language.transStatic('rhDictTreeView_string2') + _self.dialogName + "！");
+			rhexpand: false,
+	    	showcheck: false,   
+	    	url: dictUrl, 
+	    	dictId : this.dictId,
+	        theme: "bbit-tree-no-lines", //bbit-tree-lines ,bbit-tree-no-lines,bbit-tree-arrows
+	        rhItemCode:this.opts.itemCode,
+	        handler: this, //本实例句柄需要传递  add by wangchen
+	        onBeforeNodeclick: function(item) { // add by wangchen
+			 	if (item.ERR_MSG) {
+			 		top.Tip.addTip(item.ERR_MSG, "warn");
+			 		return false;
+			 	}
+			 	return true;
+			},
+	        onnodeclick: function(item,id) {
+	        	
+	        	if(_self._checkUserPvlg(item)) {
+	        		
+					/*modify by wangchen-begin*/
+					if (!_self._multiCheckBox) {
+			        	if (_self.opts.replaceNodeClick != null) {//增加单击覆盖 2013-03-14 jinkai
+			        		        var backFunc = _self.opts.replaceNodeClick;
+			                        backFunc.call(_self.opts.parHandler,item);
+			        	}
+			        	//设置右侧显示
+			        	_self._setRightSelect(item);
+				    	return false;
+					}
+					/*modify by wangchen-end*/
+	        	} else {
+//	        		debugger;
+	        		
+	        		var nodeObj = jQuery("#" + id + "_" + item.ID);
+	        		
+	        		if (nodeObj.hasClass("bbit-tree-selected")) {//节点取消选中
+		        		nodeObj.removeClass("bbit-tree-selected");
+		        		nodeObj.removeClass("rh-bbit-tree-selected");
+		        	}
+	        		
 					return false;
 				}
-				_self.backWriteItem(str);
+			},
+			onnodedblclick : function(item,id) {
+				if(_self._checkUserPvlg(item)) {
+					
+					if (_self._model == "default") {
+						var str = [];
+						str.push(item);
+						//单选的时候，只选叶子节点，
+						if (_self.rtnLeaf && _self.tree.hasChild(item)) {
+		//					alert("请选择具体的" + _self.dialogName + "！");
+							alert(Language.transStatic('rhDictTreeView_string2') + _self.dialogName + "！");
+							return false;
+						}
+						_self.backWriteItem(str);
+					}
+				} else {
+					
+					var nodeObj = jQuery("#" + id + "_" + item.ID);
+	        		
+	        		if (nodeObj.hasClass("bbit-tree-selected")) {//节点取消选中
+		        		nodeObj.removeClass("bbit-tree-selected");
+		        		nodeObj.removeClass("rh-bbit-tree-selected");
+		        	}
+					return false;
+				}
+			},
+			oncheckboxclick : function(item,s,id) {
+				if(_self._checkUserPvlg(item)) {
+					/*modify by wangchen-begin*/
+					if (this._multiCheckBox) {
+						_self._checkClick(item,s,id);//多选框的点击绑定
+					}
+					/*modify by wangchen-end*/
+				} else {
+					
+					var nodeObj = jQuery("#" + id + "_" + item.ID);
+	        		
+	        		if (nodeObj.hasClass("bbit-tree-selected")) {//节点取消选中
+		        		nodeObj.removeClass("bbit-tree-selected");
+		        		nodeObj.removeClass("rh-bbit-tree-selected");
+		        	}
+					return false;
+				}
 			}
-		},
-		oncheckboxclick : function(item,s,id) {
-			/*modify by wangchen-begin*/
-			if (this._multiCheckBox) {
-				_self._checkClick(item,s,id);//多选框的点击绑定
-			}
-			/*modify by wangchen-end*/
-		}
-    };
+	    };
     setting.rhLeafIcon = Tools.getTreeLeafClass(this.dictId);//系统默认提供
     if (this._treeType == "multi") {
     	setting["showcheck"] = true;
@@ -765,5 +827,28 @@ rh.vi.rhDictTreeView.prototype._checkClick = function(item,s,id) {
 		} else if (s == 0) {
 			this._setRightSelect(item,true);
 		}
+	}
+};
+
+/**
+ * 
+ */
+rh.vi.rhDictTreeView.prototype._checkUserPvlg = function(item) {
+	
+	if(this._confJson.sId.indexOf('TS_ORG_DEPT')>=0 || this._confJson.sId.indexOf('TS_CTLG_TREE')>=0) {
+		
+		var _self = this;
+		
+		var params = {};
+		
+		var user_pvlg=_self._userPvlg[_self._confJson.sId+"_PVLG"];
+		
+		var flag = getListPvlg(item,user_pvlg,_self._confJson.pvlg);
+		
+		return flag;
+		
+	} else {
+		
+		return true;
 	}
 };

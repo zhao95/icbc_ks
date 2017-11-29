@@ -187,6 +187,7 @@
                             <th class="" style="width: 10%;">送交人</th>
                             <th class="" style="width: 20%;">送交人所在单位</th>
                             <th class="" style="width: 20%;">送交时间</th>
+                            <th class="" style="width: 10%;">处理结果</th>
                         </tr>
                         </thead>
                         <tbody class="grid-tbody">
@@ -412,7 +413,7 @@
             rhGridTBody.html('');
             for (var i = 0; i < listData._DATA_.length; i++) {
                 var item = listData._DATA_[i];
-                var tr = jQuery('<tr></tr>');
+                var tr = jQuery('<tr style="height:50px;"></tr>');
                 if (batch === '1' || batch === '2') {
                     tr.append('<td style="text-align: center;"><input id="' + item.TODO_ID + '"  type="checkbox"></td>');
                 }
@@ -694,7 +695,7 @@
             var data = {};
             data["_PAGE_"] = {"NOWPAGE": num, "SHOWNUM": showNum};
             data["_extWhere"] = this.getExtWhere();
-            return FireFly.doAct("TS_COMM_TODO_DONE", 'query', data, false);
+            return FireFly.doAct("TS_COMM_TODO_DONE", 'getDoneList', data, false);
         };
         listPage2.bldTable = function (listData) {
             var rhGridTBody;
@@ -709,7 +710,7 @@
                 var item = listData._DATA_[i];
                 var tr = jQuery('<tr></tr>');
 
-                tr.append('<td style="text-align: center;">' + (i + 1) + '</td>');
+                tr.append('<td style="text-align: center;height:50px;">' + (i + 1) + '</td>');
 
                 var td = jQuery('<td></td>');
                 var a = jQuery('<a  id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>')
@@ -735,6 +736,7 @@
                 tr.append('<td>' + item.SEND_NAME + '</td>');
                 tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
                 tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');
+                tr.append('<td>' + ( item.SH_STATUS === '2' ? '不同意' : '同意' ) + '</td>');
                 rhGridTBody.append(tr);
             }
         };

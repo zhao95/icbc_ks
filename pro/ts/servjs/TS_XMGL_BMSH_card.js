@@ -28,9 +28,11 @@ _viewer.beforeSave = function() {
      endTime = endTimes[1] + '-' + endTimes[2] + '-' + endTimes[0] + ' ' + endTime.substring(10, 19);
     var a = (Date.parse(endTime) - Date.parse(beginTime)) / 3600 / 1000;
     if(xmRgsh==1){
-    if(a < 0||a == 0||isNaN(a)){
- 		$("#TS_XMGL_BMSH-SH_START").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL_BMSH-SH_END").addClass("blankError").addClass("errorbox");
+    if(a < 0||a == 0){
+ 		//$("#TS_XMGL_BMSH-SH_START").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_XMGL_BMSH-SH_END").addClass("blankError").addClass("errorbox");
+    	$("#TS_XMGL_BMSH-SH_START").parent().showError("审核开始时间应早于审核结束时间");
+ 		$("#TS_XMGL_BMSH-SH_END").parent().showError("审核结束时间应晚于审核开始时间");
 		return false;
  	}
     }

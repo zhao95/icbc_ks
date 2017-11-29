@@ -691,9 +691,9 @@ rh.vi.cardView.prototype._bldWin = function() {
     	}
     	this.winDialog.find("a[class='rhCard-close']").css("display","none");
     	
-    	div.find("span:last").unbind("click").bind("click",function(){
+    /*	div.find("span:last").unbind("click").bind("click",function(){
     		jQuery("a[class='rhCard-close']:last").trigger("mousedown");
-    	})
+    	})*/
     	
     } else {
     	Tools.rhSetBodyBack();//设置背景

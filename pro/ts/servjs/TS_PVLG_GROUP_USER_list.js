@@ -82,7 +82,7 @@ const IMPORT_FILE_ID = "TS_PVLG_GROUP_USER-impUserByExcel";
 if (jQuery('#' + IMPORT_FILE_ID).length === 0) {
     var config = {
         "SERV_ID": _viewer.servId,
-        "TEXT": "批量添加用户",
+        "TEXT": "导入用户",
         "FILE_CAT": "",
         "FILENUMBER": 1,
         "BTN_IMAGE": "btn-imp",
@@ -116,3 +116,4 @@ if (jQuery('#' + IMPORT_FILE_ID).length === 0) {
         file.clear();
     };
 }
+$('#'+IMPORT_FILE_ID).attr('title','导入文件为excel格式文件，内容为无标题的单列数据，一行数据为一个用户，数据为人力资源编码、统一认证号、身份证号');

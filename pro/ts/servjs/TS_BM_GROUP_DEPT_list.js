@@ -62,7 +62,7 @@ _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
 //	var configStr = "TS_ORG_DEPT,{'TARGET':'DEPT_CODE~DEPT_NAME','SOURCE':'DEPT_CODE~DEPT_NAME'," +
 //	"'HIDE':'DEPT_CODE','TYPE':'multi','HTMLITEM':''}";
 
-	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'multi'}";
+	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'multi','sId':'TS_ORG_DEPT','pvlg':'CODE_PATH'}";
 
 	var options = {
 			"config" :configStr,

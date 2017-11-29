@@ -74,7 +74,7 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
         "replaceCallBack": function (idArray) {//回调，idArray为选中记录的相应字段的数组集合
             var codes = idArray.USER_CODE.split(",");
             var names = idArray.USER_NAME.split(",");
-
+            
             var paramArray = [];
 
             for (var i = 0; i < codes.length; i++) {
@@ -87,8 +87,15 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
                 param.USER_DEPT_NAME = names[i];
                 //选取类型 1人员
                 param.G_TYPE = 1;
-
-                paramArray.push(param);
+                
+                
+                var result =  FireFly.byId("SY_HRM_ZDSTAFFPOSITION", codes[i]);
+        		if(result!=null){
+        			param.GW_LB = result.STATION_TYPE;
+        			param.GW_XL= result.STATION_NO;
+        		}
+        		paramArray.push(param);
+        		
             }
             var batchData = {};
             batchData.BATCHDATAS = paramArray;
@@ -157,7 +164,7 @@ const IMPORT_FILE_ID = "TS_BM_GROUP_USER-impUserByExcel";
 if (jQuery('#' + IMPORT_FILE_ID).length === 0) {
     var config = {
         "SERV_ID": _viewer.servId,
-        "TEXT": "批量添加用户",
+        "TEXT": "导入用户",
         "FILE_CAT": "",
         "FILENUMBER": 1,
         "BTN_IMAGE": "btn-imp",
@@ -191,3 +198,4 @@ if (jQuery('#' + IMPORT_FILE_ID).length === 0) {
         file.clear();
     };
 }
+$('#'+IMPORT_FILE_ID).attr('title','导入文件为excel格式文件，内容为无标题的单列数据，一行数据为一个用户，数据为人力资源编码、统一认证号、身份证号');

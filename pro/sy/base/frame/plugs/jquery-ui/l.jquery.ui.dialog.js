@@ -134,11 +134,18 @@ $.widget("ui.dialog", {
 				.addClass( "ui-dialog-titlebar-close  ui-corner-all" )
 				.attr( "role", "button" )
 				.click(function( event ) {
-						if($(this.parentNode.parentNode).find("li[class='rhCard-backLi']").length==0){
+					event.preventDefault();
+					that.close( event );
+					/*var res = confirm("是否关闭");
+					if(res){
+					}else{
+						
+					}*/
+						/*if($(this.parentNode.parentNode).find("li[class='rhCard-backLi']").length==0){
 							event.preventDefault();
 							that.close( event );
 						}else{
-						}
+						}*/
 				})
 				.appendTo( uiDialogTitlebar );
 
