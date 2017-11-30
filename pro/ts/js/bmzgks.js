@@ -69,11 +69,8 @@ function xminfoshow(){
 		        }
 		    }
 		}
-		var checkArray = $("input[name=checkboxaa]:checked");
-		if(checkArray.length==0){
-			alert("请点选考试");
-			return;
-		}
+		var checkArray = $("input[name=checkboxaa]");
+		
 		var checkeddata = [];
 		for(var m=0;m<checkArray.length;m++){//匹配选中的考试
 			for(var n=0;n<neAry.length;n++){
@@ -119,16 +116,19 @@ function xminfoshow(){
    						xlflag = true;
    					}
    				}
+         		var divtext1 = $("#"+a).html();//获取div对应的数组
+       			
+       			if(divtext1==null||divtext1.length==0){//append内容之前判断是否有内容
    				if(FLAG){
    					if(xlcode==STATION_NO_CODE){
-   						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此考试,请再提交或请选择其它考试</div>');
+   						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此考试,请撤销再提交或请选择其它考试</div>');
    						$("#"+yzjg).append("验证不通过");
    					}else{
    						$("#"+a).append('已报名此考试,请撤销再报名');
    						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
    						$("#"+yzjg).append("验证不通过");
    					}
-   					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
+   					/*$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);*/
    					continue;
    					
    				}
@@ -141,9 +141,10 @@ function xminfoshow(){
    						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
    						$("#"+yzjg).append("验证不通过");
    					}
-   					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
+   					/*$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);*/
    					continue;
    				}
+       			}
          		if(data.none=="true"){//如果没有引用规则的话 直接通过
          			
          			$("#"+a).append('<div style="height:5px;"></div>');
@@ -218,7 +219,7 @@ function xminfoshow(){
            					}else{
            						$("#"+yzjg).append(failerinfo);
            					}
-           					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
+           					/*$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);*/
            				}if(shArray==true){
            					$("#"+a).append('<div></div>');
            					$("#"+a).append('<div></div>');
@@ -245,8 +246,8 @@ function xminfoshow(){
        						}else{
        							$("#"+yzjg).append(failerinfo);
        						}
-       						$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
-       					}if(shArray==true){
+/*       						$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
+*/       					}if(shArray==true){
        						$("#"+a).append('<div></div>');
        						$("#"+a).append('<div></div>');
        						if(""==successinfo){
@@ -703,7 +704,7 @@ function xminfoshow(){
 			       tbody=document.getElementById("goods");
 			       var ntr = tbody.insertRow();
 			       ntr.innerHTML=
-			       '<td ><input type="checkbox" name="checkboxaa" checked></td>'+
+			       '<td ><input type="checkbox" name="checkboxaa"></td>'+
 			       '<td >'+kslb_name+'</td>'+
 			       '<td >'+kslb_xl+'</td>'+
 			       '<td >'+kslb_mk+'</td>'+
@@ -918,7 +919,7 @@ function xminfoshow(){
 						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
 						$("#"+yzjg).append("验证不通过");
 					}
-					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
+					/*$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);*/
 	       			}
 					continue;
 					
@@ -936,7 +937,7 @@ function xminfoshow(){
 						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
 						$("#"+yzjg).append("验证不通过");
 					}
-					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
+					/*$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);*/
 					continue;
 	       			}
 				}
@@ -1230,14 +1231,8 @@ var highnum=0;
 		$(obj.parentNode.parentNode.parentNode).remove();
 	}
 function yanzheng(){
-	var checkboxss = $('input[name=checkboxaa]:checked');
-	if(checkboxss.length==0){
-		alert("请先选择考试");
-		$("#zgyzbt").attr("data-target","");
-		return;
-	}
 	var yanzhengflag = false;
-	$('input[name=checkboxaa]:checked').each(function(){
+	$('input[name=checkboxaa]').each(function(){
 		
 		var divlength = $($(this.parentNode.parentNode).find("td").eq(6)).find("div").length;
 		
