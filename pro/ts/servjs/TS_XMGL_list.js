@@ -5,9 +5,10 @@ var width = jQuery(window).width()-100;
 //取消行点击事件
 $(".rhGrid").find("tr").unbind("dblclick");
  //创建自定义字段，增加按钮
+
 $(".rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
-		var XM_ID = item.id;
+		var	 XM_ID = item.id;
 
 		$(item).find("td[icode='buttons']").append("<div operCode='option' rowpk='"+XM_ID+"'><font size='3'>···</font></div>"); 
 		var btns ='<a style="cursor:pointer" id="TS_XMGL_look" actcode="look" rowpk="'+XM_ID+'">&nbsp&nbsp查看&nbsp</a>'+
@@ -120,13 +121,44 @@ $(".hoverDiv").find("a").hover(function() {
 }); 
 
 
+
+function  findBmshAuto(pkAarry,_viewer){
+	for (var i = 0; i < pkAarry.length; i++) {
+		var paramfb = {};
+		paramfb["_WHERE_"] = "and XM_ID ='"+pkAarry[i]+"'";
+		var beanBmsh = FireFly.doAct("TS_XMGL_BMSH", "finds", paramfb);
+//		var  where="and XM_ID='"+pkAarry[i]+"'";
+//		var  data={_extWhere:where};
+//		var beanBmsh = FireFly.doAct("TS_XMGL_BMSH", "query", data);
+		if(beanBmsh._DATA_.length==0){
+			return  false;
+		}else{
+		if(beanBmsh._DATA_[0].SH_RGSH==0 && beanBmsh._DATA_[0].SH_ZDSH==0){
+	            return  false;
+		}else{
+			return  true;
+		}
+	 }
+	}
+}
+
+
 /**
  * 发布按钮的功能
  */
-_viewer.getBtn("fabu").unbind("click").bind("click",function(){
+_viewer.getBtn("fabu").unbind("click").bind("click",function(){debugger;
 	//点击选择框，获取数据的id；
 	var pkAarry = _viewer.grid.getSelectPKCodes();
+	if(pkAarry.length==0){
+		_viewer.listBarTipError("请选择要发布的项目！");
+	}else{
+     var result= findBmshAuto(pkAarry,_viewer);
+     if(result){
 	showRelease(pkAarry,_viewer);
+     }else{
+    	 _viewer.listBarTipError("项目的报名审核没有设置！"); 
+     }
+	}
 //	if(pkAarry.length==0){
 //		_viewer.listBarTipError("请选择要发布的项目！");
 //	}else{
@@ -157,9 +189,9 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){
 });
 //初次发布
 function  firRelea(pkAarry,_viewer){
-	if(pkAarry.length==0){
-		_viewer.listBarTipError("请选择要发布的项目！");
-	}else{
+	//if(pkAarry.length==0){
+		//_viewer.listBarTipError("请选择要发布的项目！");
+	//}else{
 		//判断数据库是否已经发布
 		for (var i = 0; i < pkAarry.length; i++) {
 			var  where="and XM_ID='"+pkAarry[i]+"'";
@@ -179,7 +211,7 @@ function  firRelea(pkAarry,_viewer){
 			}
 				
 		}
-	}
+	//}
 	
 	 
 //		FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){

@@ -8,8 +8,10 @@ _viewer.beforeSave = function() {
      endTime = endTimes[1] + '-' + endTimes[2] + '-' + endTimes[0] ;
     var a = (Date.parse(endTime) - Date.parse(beginTime)) / 3600 / 1000;
     if(a < 0||a == 0){
- 		$("#TS_JKGL-JKGL_START_DATE").addClass("blankError").addClass("errorbox");
- 		$("#TS_JKGL-JKGL_END_DATE").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_JKGL-JKGL_START_DATE").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_JKGL-JKGL_END_DATE").addClass("blankError").addClass("errorbox");
+ 		$("#TS_JKGL-JKGL_START_DATE").parent().showError("开始时间应早于结束时间");
+ 		$("#TS_JKGL-JKGL_END_DATE").parent().showError("结束时间应晚于开始时间");
 		return false;
  	}
 };

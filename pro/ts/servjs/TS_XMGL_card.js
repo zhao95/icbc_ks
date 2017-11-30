@@ -11,8 +11,9 @@ var $allSelect=jQuery('<input type="checkbox" style="position:relative;top:4px" 
 //	}
 //});prependTo
 $allSelect.insertBefore($("#TS_XMGL-XM_GJ"));
+
 //th checkbox 全选/全不选 事件
-$($allSelect).unbind('change').bind('change', function () {debugger;
+$($allSelect).unbind('change').bind('change', function () {
 var $tdCheckboxs=$('input[name="TS_XMGL-XM_GJ"]');
     for (var i = 0; i < $tdCheckboxs.length; i++) {
         var tdCheckbox = $tdCheckboxs[i];
