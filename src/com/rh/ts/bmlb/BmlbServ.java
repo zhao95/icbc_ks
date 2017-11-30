@@ -1737,8 +1737,6 @@ public class BmlbServ extends CommonServ {
 		if (userPvlgToHTBean == null) {
 			return new OutBean().set("look", "false");
 		}
-		log.error("辖内报名。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
-		log.error(userPvlgToHTBean);
 		if ("0".equals(userPvlgToHTBean.getStr("XN_BM"))) {
 			log.error(userPvlgToHTBean.getStr("XN_BM"));
 			return new OutBean().set("look", "false");
@@ -1747,9 +1745,7 @@ public class BmlbServ extends CommonServ {
 			if (str == null) {
 				return new OutBean().set("look", "false");
 			}
-			log.error(str);
 			String dept_code = str.getStr("ROLE_DCODE");
-			log.error("dept_code....."+dept_code);
 			if ("".equals(dept_code)) {
 				return new OutBean().set("look", "false");
 			}
