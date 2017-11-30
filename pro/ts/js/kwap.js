@@ -260,7 +260,10 @@ var HeaderBtn = {
         //unPublish
         var xmBean = FireFly.doAct("TS_XMGL", "byid", {"_PK_": xmId}, false);
         // xmBean.S_USER;
-        var typeBean = FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getTjOrPublish", {XM_ID: xmId,deptCodeStr:deptCodeStr}, false);
+        var typeBean = FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getTjOrPublish", {
+            XM_ID: xmId,
+            deptCodeStr: deptCodeStr
+        }, false);
 
         if (typeBean.type === 'publish') {
             $("#tjccap").css('display', 'none');
@@ -1837,7 +1840,7 @@ var KcObject = {
         // BM_LB BM_XL BM_MK
 
         var typeName = FireFly.getDictNames(FireFly.getDict("TS_XMGL_BM_KSLBK_LV"), yapzw.BM_TYPE);
-        var kslbName = yapzw.BM_LB + '-' + yapzw.BM_XL + '-' + yapzw.BM_MK + "-" + typeName;
+        var kslbName = yapzw.BM_LB + '-' + yapzw.BM_XL + (yapzw.BM_MK === '无模块' ? '' : ('-' + yapzw.BM_MK )) + "-" + typeName;
         $zw.attr('title', userName + '\n' + kslbName + '\n' + deptName);
         // $zw.attr('yapzwId', yapzwId);
         $zw.find('.userName').html(userName);
@@ -1886,7 +1889,7 @@ var KcObject = {
                 appendTo: 'body',
                 helper: function (/*event*/) {
                     return [
-                        '<div style="/*width:30px;height: 30px;*/background-color: #FFF8DC; border:1px solid #999999;border-radius:3px;padding: 3px">',//
+                        '<div style="/*width:30px;height: 30px;*/background-color: #FFF8DC; border:1px solid #999999;border-radius:3px;padding: 3px;opacity: 0.7;">',//
                         '   <div>' + userName + '</div>',
                         '   <div>' + kslbName + '</div>',
                         '   <div>' + userCode + '</div>',
@@ -2338,7 +2341,7 @@ var KsObject = {
                 '   <td>' + ks.org3 + '</td>',//三级机构
                 '   <td>' + ks.org4 + '</td>',//四级机构
                 '   <td>' + ks.BM_NAME + '</td>',//姓名
-                '   <td>' + ks.BM_XL + '-' + ks.BM_MK + '</td>',//考试名称
+                '   <td>' + ks.BM_XL + (ks.BM_MK === '无模块' ? '' : ('-' + ks.BM_MK)) + '</td>',//考试名称
                 '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), ks.BM_TYPE) + '</td>',//级别
                 '   <td>' + ks.COUNT + '</td>',//报考数
                 // '   <td>' + ks.STATUS + '</td>',//状态
@@ -2361,7 +2364,7 @@ var KsObject = {
                 helper: function (event) {
                     var cells = event.currentTarget.cells;
                     return [
-                        '<div style="/*width:30px;height: 30px;*/background-color: #FFF8DC; border:1px solid #999999;border-radius:3px;padding: 3px">',//
+                        '<div style="/*width:30px;height: 30px;*/background-color: #FFF8DC; border:1px solid #999999;border-radius:3px;padding: 3px;opacity: 0.7;">',//
                         '   <div>' + cells[6].innerText + '</div>',
                         '   <div>' + cells[7].innerText + '</div>',
                         '   <div>' + cells[10].innerText + '</div>',

@@ -9,14 +9,17 @@ import com.rh.core.icbc.basedata.KSSendTipMessageServ;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
-import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.util.Constant;
+import com.rh.ts.util.BMUtil;
 import com.rh.ts.util.TsConstant;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class JklbServ extends CommonServ {
@@ -376,7 +379,7 @@ public class JklbServ extends CommonServ {
             String bmMk = bmBean.getStr("BM_MK");
             String bmType = bmBean.getStr("BM_TYPE");
             String lbDate = bmBean.getStr("LB_DATE");
-            String bm_bt = bmType + "-" + bmXl + "-" + bmMk;
+            String bm_bt = BMUtil.getExaminationName(bmType, bmXl, bmMk);
             String title = "";
             if (!"".equals(bmMk)) {
                 title = bm_bt;
@@ -421,7 +424,7 @@ public class JklbServ extends CommonServ {
                 String bmMk = (String) bmBean.get("BM_MK");
                 String bmType = (String) bmBean.get("BM_TYPE");
                 String lbDate = (String) bmBean.get("LB_DATE");
-                String bm_bt = DictMgr.getName("TS_XMGL_BM_KSLBK_LV", bmType) + "-" + bmXl + "-" + bmMk;
+                String bm_bt = BMUtil.getExaminationName(bmType, bmXl, bmMk);
                 String title = "";
                 if (!"".equals(bmMk)) {
                     title = bm_bt;

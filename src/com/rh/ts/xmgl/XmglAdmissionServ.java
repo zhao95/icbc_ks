@@ -17,9 +17,9 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.PageBean;
-import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.util.Constant;
 import com.rh.core.util.DateUtils;
+import com.rh.ts.util.BMUtil;
 import com.rh.ts.util.POIExcelUtil;
 import com.rh.ts.util.TsConstant;
 import org.apache.commons.lang.StringUtils;
@@ -282,7 +282,7 @@ public class XmglAdmissionServ extends CommonServ {
         }
 
         //ksList
-        String sql = "select f.BM_TYPE,f.BM_MK,f.BM_XL,f.BM_TITLE,b.KC_NAME,b.KC_ADDRESS,e.ZW_ZWH_SJ,d.SJ_START,c.BM_KS_TIME  " +
+        String sql = "select c.BM_TYPE,c.BM_MK,c.BM_XL,f.BM_TITLE,b.KC_NAME,b.KC_ADDRESS,e.ZW_ZWH_SJ,d.SJ_START,c.BM_KS_TIME  " +
                 "from ts_xmgl_kcap_yapzw a " +
                 "left join ts_kcgl b on b.KC_ID = a.KC_ID " +
                 "left join ts_bmsh_pass c on c.SH_ID = a.SH_ID " +
@@ -304,7 +304,7 @@ public class XmglAdmissionServ extends CommonServ {
             String bmXl = (String) ksDataBean.get("BM_XL");
             String bmMk = (String) ksDataBean.get("BM_MK");
             String bmType = (String) ksDataBean.get("BM_TYPE");
-            String bm_bt = DictMgr.getName("TS_XMGL_BM_KSLBK_LV", bmType) + "-" + bmXl + "-" + bmMk;
+            String bm_bt = BMUtil.getExaminationName(bmType, bmXl, bmMk);
             String title;
             if (!"".equals(bmMk)) {
                 title = bm_bt;
@@ -368,19 +368,19 @@ public class XmglAdmissionServ extends CommonServ {
                                     int pictureType = 0;
                                     int tempVal = 0;
                                     if (pictureFileSuffix.equals("png")) {
-                                	tempVal = 1;
-				    }else if(pictureFileSuffix.equals("emf")){
-					tempVal = 2;
-				    }else if(pictureFileSuffix.equals("pict")){
-					tempVal = 3;
-				    }else if(pictureFileSuffix.equals("jpg")){
-					tempVal = 4;
-				    }else if(pictureFileSuffix.equals("jpeg")){
-					tempVal = 5;
-				    }else if(pictureFileSuffix.equals("die")){
-					tempVal = 6;
-				    }
-                                    
+                                        tempVal = 1;
+                                    } else if (pictureFileSuffix.equals("emf")) {
+                                        tempVal = 2;
+                                    } else if (pictureFileSuffix.equals("pict")) {
+                                        tempVal = 3;
+                                    } else if (pictureFileSuffix.equals("jpg")) {
+                                        tempVal = 4;
+                                    } else if (pictureFileSuffix.equals("jpeg")) {
+                                        tempVal = 5;
+                                    } else if (pictureFileSuffix.equals("die")) {
+                                        tempVal = 6;
+                                    }
+
                                     switch (tempVal) {
                                         case 1:
                                             pictureType = HSSFWorkbook.PICTURE_TYPE_PNG;

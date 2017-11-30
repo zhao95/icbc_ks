@@ -71,9 +71,9 @@ function lookSeat(i) {
         '           <td>' + ksBean.title + '</td>',
         '        </tr>',
         '        <tr>',
-        '           <td style="color: #00c2c2;" scope="row">座位号</td>',
+        /*'           <td style="color: #00c2c2;" scope="row">座位号</td>',
         '           <td>' + ksBean.ZW_ZWH_SJ + '</td>',
-        '        </tr>',
+        '        </tr>',*/
         '        <tr>',
         '           <td style="color: #00c2c2;" scope="row">考试开始时间</td>',
         '           <td>' + ksBean.SJ_START + '</td>',
