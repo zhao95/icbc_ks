@@ -115,3 +115,14 @@ $("#TS_XMGL_BMGL-BM_ODEPTCODE__NAME").unbind("click").bind("click", function(eve
 	queryView.show(event,[],[0,495]);
 });
 
+
+
+_viewer.afterSave=function(){
+	var bmStartTime=_viewer.getItem("BM_START").getValue();
+	var bmEndTime=_viewer.getItem("BM_END").getValue();
+	var bmTime=bmStartTime+"至"+bmEndTime;
+	
+}
+
+
+

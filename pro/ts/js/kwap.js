@@ -370,7 +370,7 @@ var HeaderBtn = {
             SubmissionArrangementModal.show();
         });
         $("#lookJk").click(function () {
-            LookJkModal.show();
+            LookJkModal.show(xmId);
         });
         $("#xngs").click(function () {
             $('#xngsModal').modal({backdrop: false, show: true});
@@ -415,15 +415,18 @@ var HeaderBtn = {
             // FireFly.doAct("TS_XMGL", "save", xmBean, false, false, function () {
             //     alert("发布成功！");
             // });
-            FireFly.doAct("TS_XMGL_KCAP_DAPCC", "publish", {XM_ID: xmId}, false, false, function () {
-                alert("发布成功！");
+            showVerifyCallback(function () {
+                FireFly.doAct("TS_XMGL_KCAP_DAPCC", "publish", {XM_ID: xmId}, false, false, function () {
+                    alert("发布成功！");
+                });
+                Utils.getCanDraggable(true);
+                KcObject.reloadCCInfo();
+                KsObject.setDfpKsContent();
+                self.zdfpccDisableAftertjccap();
+                $("#publish").css('display', 'none');
+                $("#unPublish").css('display', 'block');
             });
-            Utils.getCanDraggable(true);
-            KcObject.reloadCCInfo();
-            KsObject.setDfpKsContent();
-            self.zdfpccDisableAftertjccap();
-            $("#publish").css('display', 'none');
-            $("#unPublish").css('display', 'block');
+
         });
 
         //取消发布确定按钮事件
@@ -1001,7 +1004,8 @@ var LookJkModal = {
     $inJkKsTable: '',
     $outJkKsTable: '',
 
-    initData: function () {
+    initData: function (xmId) {
+        this.xmId = xmId;
         this.lookJkModal = $('#lookJkModal');
         this.$inJkKsTable = $('#in-jkKs-table');
         this.$outJkKsTable = $('#out-jkKs-table');
@@ -1017,6 +1021,7 @@ var LookJkModal = {
             $inTbody.append([
                 '<tr>',
                 '<td>' + inJkKs.USER_NAME + '</td>',//姓名
+                '<td>' + inJkKs.USER_CODE + '</td>',//人力资源编码
                 '<td>' + inJkKs.DEPT_NAME + '</td>',//所属机构
                 '<td>' + inJkKs.JK_DEPT_NAME + '</td>',//借考分行
 
@@ -1029,6 +1034,7 @@ var LookJkModal = {
             $outTbody.append([
                 '<tr>',
                 '<td>' + outJkKs.USER_NAME + '</td>',//姓名
+                '<td>' + outJkKs.USER_CODE + '</td>',//人力资源编码
                 '<td>' + outJkKs.DEPT_NAME + '</td>',//所属机构
                 '<td>' + outJkKs.JK_DEPT_NAME + '</td>',//借考分行
                 '</tr>'
@@ -1042,9 +1048,9 @@ var LookJkModal = {
             deptCodeStr: Utils.getUserYAPAutoCode()
         });
     },
-    show: function () {
+    show: function (xmId) {
         if (this.lookJkModal === '') {
-            this.initData();
+            this.initData(xmId);
         }
         this.lookJkModal.modal({backdrop: false, show: true});
     }
@@ -1492,15 +1498,15 @@ var KcObject = {
         //kcTip
         $kcTip.append([
             '<span style="color:#fff;">当前考场及场次：</span>',
-            '考场数:<span id="kcCount" class="tip-green">' + kcArr.length + '</span>&nbsp;',
-            '场次数：<span id="ccCount" class="tip-green">' + ccCount + '</span>&nbsp;',
-            '已安排：<span id="yapCount" class="tip-green">' + yapTotalCount + '</span>'
+            '考场数:<span id="kcCount" class="tip-yellow">' + kcArr.length + '</span>&nbsp;',
+            '场次数：<span id="ccCount" class="tip-yellow">' + ccCount + '</span>&nbsp;',
+            '已安排：<span id="yapCount" class="tip-yellow">' + yapTotalCount + '</span>'
         ].join(''));
         /*
-         '考生数：<span id="ksCount" class="tip-green">800</span>&nbsp;',
-         '（借入：<span id="jieruCount" class="tip-green">3</span>&nbsp;',
-         '借出：<span id="jiechuCount" class="tip-green">2</span>&nbsp;',
-         '请假：<span id="qjCount" class="tip-green">1</span>）',*/
+         '考生数：<span id="ksCount" class="tip-yellow">800</span>&nbsp;',
+         '（借入：<span id="jieruCount" class="tip-yellow">3</span>&nbsp;',
+         '借出：<span id="jiechuCount" class="tip-yellow">2</span>&nbsp;',
+         '请假：<span id="qjCount" class="tip-yellow">1</span>）',*/
 
     },
 
@@ -1582,10 +1588,10 @@ var KcObject = {
             '<span style="color:#fff;">当前考场及场次：</span>',
             '' + parentKc.KC_NAME,
             '&nbsp;&nbsp;' + cc.ccTime,
-            '&nbsp;最优数：<span id="optimal-number" class="tip-green"></span>',
-            '&nbsp;已安排：<span id="cc-info-yap-count" class="tip-green">' + this.currentYapzwArr.length + '</span>',
-            '&nbsp;借考：<span id="cc-info-jk-count" class="tip-green">0</span>',
-            /*',请假：<span id="cc-info-qj-count" class="tip-green">0</span>',*/
+            '&nbsp;最优数：<span id="optimal-number" class="tip-yellow"></span>',
+            '&nbsp;已安排：<span id="cc-info-yap-count" class="tip-yellow">' + this.currentYapzwArr.length + '</span>',
+            '&nbsp;借考：<span id="cc-info-jk-count" class="tip-yellow">0</span>',
+            /*',请假：<span id="cc-info-qj-count" class="tip-yellow">0</span>',*/
             '<div onclick="KcObject._setCcInfoType(\'list\')" style="cursor:pointer;padding: 3px;float: right"><i class="fa fa fa-list-ul"></i></div>',
             '<div onclick="KcObject._setCcInfoType(\'view\')" style="cursor:pointer;padding: 3px;float: right"><i class="fa fa-dashboard" aria-hidden="true"></i></div>',
         ].join(''));
