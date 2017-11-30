@@ -314,12 +314,12 @@ $(function() {
 			$("#jdtName").html("您暂时未参加任何考试！");
 		} else {
 			//循环遍历报名审核通过的表，若存在垃圾数据，立即删除该数据（垃圾数据即为此表中有数据指向项目ID，则项目管理表中无该项目）
-			for (var k = 0; k < resultSH._DATA_.length; k++) {
-				var DeleteMenuXM_ID = resultSH._DATA_[k].XM_ID;
-				var paramDD = {};
-				paramDD["XM_ID"] = DeleteMenuXM_ID;
-				FireFly.doAct("TS_BMSH_PASS", "GarbageDeleteData", paramDD);
-			}
+//			for (var k = 0; k < resultSH._DATA_.length; k++) {
+//				var DeleteMenuXM_ID = resultSH._DATA_[k].XM_ID;
+//				var paramDD = {};
+//				paramDD["XM_ID"] = DeleteMenuXM_ID;
+//				FireFly.doAct("TS_BMSH_PASS", "GarbageDeleteData", paramDD);
+//			}
 			resultSH = FireFly.doAct("TS_BMSH_PASS", "query", paramSH);
 			var menuXM_ID = resultSH._DATA_[0].XM_ID;
 			// 使用字符串的方法，将去除逗号的BM_GJ 模块合并成一条字符串， 并将字符串根据，进行分割， 得到分割后的数组。
