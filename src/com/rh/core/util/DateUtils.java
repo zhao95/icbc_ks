@@ -506,7 +506,7 @@ public class DateUtils extends Object {
         Calendar calendar = Calendar.getInstance();
         return getStringFromDate(calendar.getTime(), FORMAT_DATETIME);
     }
-    
+
     /**
      * 得到当前的日期时间字符串.<br>
      * <br>
@@ -517,7 +517,7 @@ public class DateUtils extends Object {
         return getStringFromDate(new Date(millTimes), FORMAT_DATETIME);
     }
 
-    
+
     /**
      * 得到当前的日期时间字符串.<br>
      * <br>
@@ -527,7 +527,7 @@ public class DateUtils extends Object {
     public static String getDatetime(Date time) {
         return getStringFromDate(time, FORMAT_DATETIME);
     }
-    
+
     /**
      * 得到当前的日期时间字符串,到小时分钟.<br>
      * <br>
@@ -546,9 +546,9 @@ public class DateUtils extends Object {
     public static String getDatetimeW3C() {
         return getDate() + "T" + getTime();
     }
-    
+
     /**
-     * 
+     *
      * @param format 指定时间格式
      * @return 指定格式当前时间
      */
@@ -1031,9 +1031,14 @@ public class DateUtils extends Object {
     static {
         DEFAULT_DATE_FORMATS.add("yyyy-MM-dd'T'HH:mm:ss'Z'");
         DEFAULT_DATE_FORMATS.add("yyyy-MM-dd'T'HH:mm:ss");
-        DEFAULT_DATE_FORMATS.add("yyyy-MM-dd");
         DEFAULT_DATE_FORMATS.add("yyyy-MM-dd hh:mm:ss");
         DEFAULT_DATE_FORMATS.add("yyyy-MM-dd HH:mm:ss");
+        DEFAULT_DATE_FORMATS.add("yyyy-MM-dd HH:mm");
+        DEFAULT_DATE_FORMATS.add("yyyy-MM-dd");
+        DEFAULT_DATE_FORMATS.add("yyyy/MM/dd hh:mm:ss");
+        DEFAULT_DATE_FORMATS.add("yyyy/MM/dd HH:mm:ss");
+        DEFAULT_DATE_FORMATS.add("yyyy/MM/dd HH:mm");
+        DEFAULT_DATE_FORMATS.add("yyyy/MM/dd");
         DEFAULT_DATE_FORMATS.add("EEE MMM d hh:mm:ss z yyyy");
         DEFAULT_DATE_FORMATS.addAll(DEFAULT_HTTP_CLIENT_PATTERNS);
     }
@@ -1041,7 +1046,7 @@ public class DateUtils extends Object {
     /**
      * Returns a formatter that can be use by the current thread if needed to convert Date objects to the Internal
      * representation.
-     * 
+     *
      * @param d The input date to parse
      * @return The parsed {@link java.util.Date}
      * @throws java.text.ParseException If the input can't be parsed
@@ -1093,7 +1098,7 @@ public class DateUtils extends Object {
      * Slightly modified from org.apache.commons.httpclient.util.DateUtil.parseDate
      * <p/>
      * Parses the date value using the given date formats.
-     * 
+     *
      * @param dateValue the date value to parse
      * @param dateFormats the date formats to use
      * @param startDate During parsing, two digit years will be placed in the range <code>startDate</code> to
@@ -1122,27 +1127,35 @@ public class DateUtils extends Object {
 
         SimpleDateFormat dateParser = null;
         Iterator<String> formatIter = dateFormats.iterator();
-
+        Date parse =null;
         while (formatIter.hasNext()) {
             String format = formatIter.next();
             if (dateParser == null) {
                 dateParser = new SimpleDateFormat(format, Locale.US);
-                dateParser.setTimeZone(GMT);
+//                dateParser.setTimeZone(GMT);
                 dateParser.set2DigitYearStart(startDate);
             } else {
                 dateParser.applyPattern(format);
             }
-            return dateParser.parse(dateValue);
+            try {
+                 parse = dateParser.parse(dateValue);
+                 break;
+            }catch (Exception e){
+                System.out.println(format);
+            }
         }
-
+        if (parse ==null){
+            throw new ParseException("Unable to parse the date " + dateValue, 0);
+        }else{
+            return parse;
+        }
         // we were unable to parse the date
-        throw new ParseException("Unable to parse the date " + dateValue, 0);
     }
 
     /**
      * Returns a formatter that can be use by the current thread if needed to convert Date objects to the Internal
      * representation.
-     * 
+     *
      * @return The {@link java.text.DateFormat} for the current thread
      */
     public static DateFormat getThreadLocalDateFormat() {
@@ -1156,13 +1169,13 @@ public class DateUtils extends Object {
 
     /**
      * @author liwei
-     * 
+     *
      */
     private static class ThreadLocalDateFormat extends ThreadLocal<DateFormat> {
         private DateFormat proto;
 
         /**
-		 * 
+		 *
 		 */
         public ThreadLocalDateFormat() {
             super();
@@ -1264,7 +1277,7 @@ public class DateUtils extends Object {
     }
 
     /**
-     * 
+     *
      * @return 取得当前时间的date对象
      */
     public static Date createDate() {
@@ -1349,7 +1362,7 @@ public class DateUtils extends Object {
     }
 
     /**
-     * 
+     *
      * @param month 月
      * @param year 年
      * @return 给定年 对应 月的 天数
@@ -1437,7 +1450,7 @@ public class DateUtils extends Object {
 
         String timeAgo = timeAgo(new Date());
         System.out.println(timeAgo);
-        
+
         Date d = getDateFromString("2013-10-30 21:40:40:256");
         System.out.println(d);
 
