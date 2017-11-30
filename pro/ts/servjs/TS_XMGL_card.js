@@ -1,5 +1,43 @@
 /** 服务卡片使用的js方法定义：开始fromTable */
 var _viewer = this;
+//增加全选按钮
+//<label>报名</label>
+var $allSelect=jQuery('<input type="checkbox" style="position:relative;top:4px" value="全选" name="ts_xmgl-xm_gj_all" ><label>全选</label>');
+//点击'<div position="absolute"><input type="checkbox" style="position:relative;top:4px" value="全选" name="ts_xmgl-xm_gj_all" ><label>全选</label></div>'
+//$allSelect.unbind('click').bind('click',function(){checked="checked"
+//	var xmgjCheckBoxs=$('input[name="TS_XMGL-XM_GJ"]');
+//	for(int i=0;){
+//		xmgjCheckBoxs[0].batchSave
+//	}
+//});prependTo
+$allSelect.insertBefore($("#TS_XMGL-XM_GJ"));
+//th checkbox 全选/全不选 事件
+$($allSelect).unbind('change').bind('change', function () {debugger;
+var $tdCheckboxs=$('input[name="TS_XMGL-XM_GJ"]');
+    for (var i = 0; i < $tdCheckboxs.length; i++) {
+        var tdCheckbox = $tdCheckboxs[i];
+      tdCheckbox.checked = this.checked;
+    }
+});
+
+//td checkbox td中checkbox变更，改变th checkbox
+//var tdCheckboxs = $('input[name="TS_XMGL-XM_GJ"]');
+//tdCheckboxs.unbind('change').bind('change', function () {debugger;
+//    if ($allSelect.checked && !this.checked) {
+//    	$allSelect.checked = false;
+//    } else {
+//        var allChecked = true;
+//        for (var i = 0; i < tdCheckboxs.length; i++) {
+//            var tdCheckbox = tdCheckboxs[i];
+//            if (!tdCheckbox.checked) {
+//                allChecked = false;
+//            }
+//        }
+//        $allSelect.checked = allChecked;
+//    }
+//});
+
+
 
 //针对项目开始时间的校验与互斥
 _viewer.beforeSave = function() {

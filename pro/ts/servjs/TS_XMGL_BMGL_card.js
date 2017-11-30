@@ -58,8 +58,8 @@ _viewer.beforeSave = function() {
      if(bmTzEndBmEnd < 0){
  		//$("#TS_XMGL_BMGL-BM_END").addClass("blankError").addClass("errorbox");
  		//$("#TS_XMGL_BMGL-BM_TZ_END").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL_BMGL-BM_END").parent().showError("报名结束时间不应早于通知结束时间");
- 		$("#TS_XMGL_BMGL-BM_TZ_END").parent().showError("通知结束时间不应晚于报名结束时间");
+ 		$("#TS_XMGL_BMGL-BM_END").parent().showError("报名结束时间不应晚于通知结束时间");
+ 		$("#TS_XMGL_BMGL-BM_TZ_END").parent().showError("通知结束时间不应早于报名结束时间");
 		return false;
  	}
 };

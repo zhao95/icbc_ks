@@ -907,7 +907,8 @@ rh.vi.listView.prototype._act = function(aId,aObj) {
 		    	  var datas = _self.grid.getModifyTrDatas();     
 	              if (datas == null) {
 //	              	   _self.listBarTipError("请选择相应记录！");
-	              	   _self.listBarTipError(Language.transStatic("rhListView_string6"));
+	              	  // _self.listBarTipError(Language.transStatic("rhListView_string6"));
+	            	  Tip.show("保存成功！");
 	              } else {
 	            	  //判断列表如果需要校验，对列表进行校验
 	            	  if(_self.grid.needValidate() && !_self.grid.validate()) {
