@@ -617,8 +617,9 @@ public class StayServ extends CommonServ {
 	public String getusercodes(DeptBean oneodeptcode1, String codes) {
 		DeptBean newBean = oneodeptcode1.getParentDeptBean();
 		if (newBean != null) {
-			codes += newBean.getName() + ",";
-			return codes += getusercodes(newBean, codes);
+			String name = newBean.getName() + ",";
+			codes+=getusercodes(newBean, name);
+			return codes;
 		} else {
 
 			return "";
@@ -737,14 +738,15 @@ public class StayServ extends CommonServ {
 				}
 				String BM_TYPE = "";
 				if ("BM_TYPE".equals(namecol)) {
-					if ("1".equals(aa)) {
+					if ("1".equals(bean.getStr("BM_TYPE"))) {
 						BM_TYPE = "初级";
-					} else if ("2".equals(aa)) {
+					} else if ("2".equals(bean.getStr("BM_TYPE"))) {
 						BM_TYPE = "中级";
 					} else {
 						BM_TYPE = "高级";
 					}
 					name = BM_TYPE;
+
 				}
 				newBean.set(namecol, name);
 				newBean.set("_ROWNUM_", "");
@@ -843,7 +845,6 @@ public class StayServ extends CommonServ {
 			dept_code=user.getStr("ODEPT_CODE");
 		}
 		dept_code = dept_code.substring(0,10);
-		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		/*if("belong".equals(xianei)){
 		//根据项目id找到流程下的所有节点    审核人审核的机构

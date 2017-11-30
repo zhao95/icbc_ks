@@ -513,14 +513,15 @@ public class NoPassServ extends CommonServ {
 				}
 				String BM_TYPE = "";
 				if ("BM_TYPE".equals(namecol)) {
-					if ("1".equals(aa)) {
+					if ("1".equals(bean.getStr("BM_TYPE"))) {
 						BM_TYPE = "初级";
-					} else if ("2".equals(aa)) {
+					} else if ("2".equals(bean.getStr("BM_TYPE"))) {
 						BM_TYPE = "中级";
 					} else {
 						BM_TYPE = "高级";
 					}
 					name = BM_TYPE;
+
 				}
 				newBean.set(namecol, name);
 				newBean.set("_ROWNUM_", "");
