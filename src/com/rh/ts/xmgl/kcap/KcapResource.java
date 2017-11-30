@@ -254,18 +254,34 @@ public class KcapResource {
 
 			SqlBean sql = new SqlBean().and("XM_ID", xmId);
 
-			if (!Strings.isBlank(odept)) {
-
-				String codePath = OrgMgr.getOdept(odept).getCodePath();
-
-				StringBuffer sb = new StringBuffer();
-				sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE ");
-				sb.append(" SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
-				sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
-				sb.append(" AND SY_ORG_DEPT.DEPT_CODE = " + TsConstant.SERV_KCAP_YAPZW + ".U_ODEPT");
-				sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath + "','%') )");
-				sql.appendWhere(sb.toString());
-			}
+//			if (!Strings.isBlank(odept)) {
+//
+//				String codePath = OrgMgr.getOdept(odept).getCodePath();
+//				
+//				String allOdept = "'0'";
+//				
+//				for(Object kcid:kcOrgBean.keySet()) {
+//					
+//					Bean kcjg = kcOrgBean.getBean(kcid);
+//					
+//					for(Object jg:kcjg.keySet()) {
+//						
+//						allOdept += ",'"+jg+"'";
+//					}
+//				}
+//
+//				StringBuffer sb = new StringBuffer();
+//				sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE ");
+//				sb.append(" SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
+//				sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
+//				sb.append(" AND SY_ORG_DEPT.DEPT_CODE = " + TsConstant.SERV_KCAP_YAPZW + ".U_ODEPT");
+//				
+////				sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath + "','%') )");
+//				
+//				sb.append(" AND SY_ORG_DEPT.DEPT_CODE in ("+allOdept+") )");
+//				
+//				sql.appendWhere(sb.toString());
+//			}
 
 			List<Bean> busyZwList = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, sql);
 
@@ -865,7 +881,7 @@ public class KcapResource {
 			List<Bean> ccList = ServDao.finds(TsConstant.SERV_KCAP_CCSJ, ccsql);
 
 			// 关联机构
-			SqlBean jgsql = new SqlBean().and("KC_ID", kcId).and("S_FLAG", 1).selects("KC_ID,JG_CODE,JG_NAME,JG_FAR");
+			SqlBean jgsql = new SqlBean().and("KC_ID", kcId).and("S_FLAG", 1).selects("KC_ID,JG_CODE,JG_NAME,JG_FAR,JG_TYPE");
 			List<Bean> jgList = ServDao.finds(TsConstant.SERV_KCGL_GLJG, jgsql);
 
 			Bean gljg = new Bean();
@@ -1175,18 +1191,33 @@ public class KcapResource {
 
 		sql.appendWhere(" AND a.BM_CODE = p.PERSON_ID");
 
-		if (!Strings.isBlank(odept)) {
+//		if (!Strings.isBlank(odept)) {
 
-			String codePath = OrgMgr.getOdept(odept).getCodePath();
+//			String codePath = OrgMgr.getOdept(odept).getCodePath();
+			
+			String allOdept = "'0'";
+			
+			for(Object kcid:kcOrgBean.keySet()) {
+				
+				Bean kcjg = kcOrgBean.getBean(kcid);
+				
+				for(Object jg:kcjg.keySet()) {
+					
+					allOdept += ",'"+jg+"'";
+				}
+			}
 
 			StringBuffer sb = new StringBuffer();
 			sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE ");
 			sb.append(" SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
 			sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
 			sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a." + odeptField);
-			sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath + "','%') )");
+//			sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath + "','%') )");
+			sb.append(" AND SY_ORG_DEPT.DEPT_CODE in ("+allOdept+") )");
 			sql.appendWhere(sb.toString());
-		}
+//		}
+		
+		
 
 		sql.tables(TsConstant.SERV_BMSH_PASS + " a, SY_HRM_ZDSTAFFPOSITION p");
 
