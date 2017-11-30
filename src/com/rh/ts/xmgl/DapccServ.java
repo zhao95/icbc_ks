@@ -733,7 +733,7 @@ public class DapccServ extends CommonServ {
     }
 
     /**
-     * 获取机构下考场待安排考生数
+     * 根据考场获取未安排人员数
      *
      * @return outBean
      */
@@ -760,7 +760,7 @@ public class DapccServ extends CommonServ {
         //借出（）
 //      table  bmshpass
 //      user dept-codepath like roleDeptCode
-        String outJkSql = "select b.USER_NAME,c.DEPT_NAME,d.DEPT_NAME as jk_dept_name from ts_bmsh_pass a " +
+        String outJkSql = "select b.USER_CODE,b.USER_NAME,c.DEPT_NAME,d.DEPT_NAME as jk_dept_name from ts_bmsh_pass a " +
                 " left join sy_org_user b on b.USER_CODE = a.BM_CODE " +
                 " left join sy_org_dept c on c.DEPT_CODE = b.DEPT_CODE " +
                 " left join sy_org_dept d on d.DEPT_CODE = a.JK_ODEPT " +
@@ -785,7 +785,7 @@ public class DapccServ extends CommonServ {
         //借入
         List<Bean> inJkKsList;
 
-        String inJkSql = "SELECT b.USER_NAME,d.DEPT_NAME,c.DEPT_NAME as jk_dept_name FROM ts_bmsh_pass a " +
+        String inJkSql = "SELECT b.USER_CODE,b.USER_NAME,d.DEPT_NAME,c.DEPT_NAME as jk_dept_name FROM ts_bmsh_pass a " +
                 "LEFT JOIN sy_org_user b ON b.USER_CODE = a.BM_CODE " +
                 "LEFT JOIN sy_org_dept c ON c.DEPT_CODE = a.JK_ODEPT " +
                 "LEFT JOIN sy_org_dept d ON d.DEPT_CODE = b.DEPT_CODE " +

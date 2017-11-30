@@ -79,6 +79,10 @@
             color: green;
         }
 
+        .tip-yellow {
+            color: yellow;
+        }
+
         /*表格样式*/
         #submissionArrangement-table > tbody > tr:nth-of-type(even) {
             background-color: Azure;
@@ -211,7 +215,8 @@
             <div class="row">
                 <div class="col-sm-12" style="border-top: 1px solid #bfdfee;"></div>
             </div>
-            <div class="_scrollbar" style="height:100%;padding-top: 5px;padding-left: 5px;overflow: auto;">
+            <div class="_scrollbar"
+                 style="height:100%;padding-top: 5px;padding-left: 5px;overflow: auto;background-color: rgb(234,240,250);">
                 <button id="toggle-sidebar"
                         style="position: absolute;right: 0;top: 40px;padding:3px">
                     <i class="fa fa-angle-left"></i>
@@ -581,6 +586,7 @@
                             <thead>
                             <tr style="backGround-color:WhiteSmoke; height: 30px;font-weight: bold">
                                 <th>姓名</th>
+                                <th>人力资源编码</th>
                                 <th>所属机构</th>
                                 <th>借考机构</th>
                             </tr>
@@ -601,6 +607,7 @@
                             <thead>
                             <tr style="backGround-color:WhiteSmoke; height: 30px;font-weight: bold">
                                 <th>姓名</th>
+                                <th>人力资源编码</th>
                                 <th>所属机构</th>
                                 <th>借考机构</th>
                             </tr>
