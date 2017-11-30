@@ -22,7 +22,9 @@ public class KcglShServ extends CommonServ {
 //	有总行考场审核人员权限和一级分行考场审核人员权限
 //	extParams={USER_PVLG={upd={ROLE_DCODE=, ROLE_ORG_LV=2,3}}}
 	String roleOrgLv = paramBean.getBean("extParams").getBean("USER_PVLG").getBean("upd").getStr("ROLE_ORG_LV");
-	if (roleOrgLv.indexOf("2") != -1) {
+	if(roleOrgLv.indexOf("2") != -1 && roleOrgLv.indexOf("3") != -1){
+	    //看全部
+	}else if (roleOrgLv.indexOf("2") != -1) {
 	    paramBean.setQueryExtWhere(" and (odept_level < 3 or KC_STATE2 = 1)");
 	}else if(roleOrgLv.equals("3")){
 	    UserBean userBean = Context.getUserBean();
