@@ -1,4 +1,40 @@
 var _viewer = this;
+
+var updateId = _viewer.getParHandler().getPKCode();
+var kcId = _viewer.getParHandler().getItem("KC_ID").getValue();
+_viewer.getBtn("impData").unbind("click").bind("click", function(event) {
+	var param = {};
+	param["SOURCE"] = "JKIP_NAME~JKIP_IP~JKIP_ID";
+	param["TYPE"] = "multi";
+	param["HIDE"] = "JKIP_ID";
+	param["EXTWHERE"] = "and kc_id = '"+kcId+"'";
+	var configStr = "TS_KCGL_JKIP,"+JsonToStr(param);
+	var options = {
+		"config" :configStr,
+		"parHandler":_viewer,
+		"formHandler":_viewer.form,
+	    "replaceCallBack":function(idArray) {
+	    	var jkIds = idArray.JKIP_ID;
+	    	var jkNums = jkIds.split(",").length;
+	    	for(var i = 0;i < jkNums;i++){
+	    		var jkId = jkIds.split(",")[i];
+	    		FireFly.doAct("TS_KCGL_JKIP","byid",{"_PK_":jkId},true,false,function(data){
+	    			var bean = {};
+	    			bean["UPDATE_ID"] = updateId;
+	    			bean["JKIP_ACTION"] = "update";//引入数据默认为修改
+	    			bean["JKIP_IP"] = data.JKIP_IP;
+	    			bean["IPS_DESC"] = data.IPS_DESC;
+	    			bean["JKIP_ID"] = data.JKIP_ID;
+	    			FireFly.doAct("TS_KCGL_UPDATE_JKIP","save",bean);
+	    		});
+	    	}
+		}
+	};
+	//2.用系统的查询选择组件 rh.vi.rhSelectListView()
+	var queryView = new rh.vi.rhSelectListView(options);
+	queryView.show(event);
+});
+
 $("#TS_KCGL_UPDATE_JKIP .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;

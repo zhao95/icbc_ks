@@ -43,7 +43,7 @@ public class KcglShServ extends CommonServ {
      */
     public OutBean updateShInfo(ParamBean paramBean) {
 	String kcId = paramBean.getStr("kcId");
-	String pkCode = paramBean.getStr("pkCode");
+	String pkCode = paramBean.getStr("updateId");
 	// 主单
 	List<Bean> list = ServDao.finds("TS_KCGL_UPDATE_MX", "and UPDATE_ID = '" + pkCode + "'");
 	if (list.size() > 0) {

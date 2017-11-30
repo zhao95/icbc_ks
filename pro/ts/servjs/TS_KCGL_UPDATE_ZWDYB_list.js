@@ -13,11 +13,11 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 		"parHandler":_viewer,
 		"formHandler":_viewer.form,
 	    "replaceCallBack":function(idArray) {
-	    	var glyIds = idArray.GLY_ID;
-	    	var glyNums = glyIds.split(",").length;
-	    	for(var i = 0;i < glyNums;i++){
-	    		var glyId = glyIds.split(",")[i];
-	    		FireFly.doAct("TS_KCGL_ZWDYB","byid",{"_PK_":glyId},true,false,function(data){
+	    	var zwIds = idArray.ZW_ID;
+	    	var zwNums = zwIds.split(",").length;
+	    	for(var i = 0;i < zwNums;i++){
+	    		var zwId = zwIds.split(",")[i];
+	    		FireFly.doAct("TS_KCGL_ZWDYB","byid",{"_PK_":zwId},true,false,function(data){
 	    			var bean = {};
 	    			bean["UPDATE_ID"] = updateId;
 	    			bean["ZW_ACTION"] = "update";//引入数据默认为修改

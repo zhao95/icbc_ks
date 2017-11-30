@@ -14,11 +14,11 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 		"parHandler":_viewer,
 		"formHandler":_viewer.form,
 	    "replaceCallBack":function(idArray) {
-	    	var glyIds = idArray.GLY_ID;
-	    	var glyNums = glyIds.split(",").length;
-	    	for(var i = 0;i < glyNums;i++){
-	    		var glyId = glyIds.split(",")[i];
-	    		FireFly.doAct("TS_KCGL_IPZWH","byid",{"_PK_":glyId},true,false,function(data){
+	    	var ipzIds = idArray.IPZ_ID;
+	    	var ipzNums = ipzIds.split(",").length;
+	    	for(var i = 0;i < ipzNums;i++){
+	    		var ipzId = ipzIds.split(",")[i];
+	    		FireFly.doAct("TS_KCGL_IPZWH","byid",{"_PK_":ipzId},true,false,function(data){
 	    			var bean = {};
 	    			bean["UPDATE_ID"] = updateId;
 	    			bean["IPZ_ACTION"] = "update";//引入数据默认为修改
