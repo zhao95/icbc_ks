@@ -36,7 +36,7 @@ $(function() {
 
 			if (resultXM._DATA_.length != 0) {
 				// 判断项目进度是否小于100%
-				if (resultXM._DATA_[0].XM_JD < 10) {
+				if (resultXM._DATA_[0].XM_JD !="100%") {
 					var xm_rowNum = resultBM._DATA_[i].ROWNUM_;
 					// 获取项目相关的数据， 用于拼接到状态更多页面 xmzt_info.jsp
 					var xm_name = resultXM._DATA_[0].XM_NAME;

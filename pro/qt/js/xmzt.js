@@ -131,7 +131,9 @@ $(function() {
 					kcMsg = "未启用";
 				}
 			}else if(kccs_state_msg== undefined && kcap_state_msg == undefined){
-				kcMsg = "未启用该模块";
+				kcMsg = "未启用";
+			}else{
+				kcMsg = "未启用";
 			}
 			divOverColor = $("#jdtDivInner3").css("background-color");
 			$("#jdtDivInner3").css("background-color", "#fad09e");
