@@ -1,7 +1,6 @@
 package com.rh.ts.xmgl;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +11,7 @@ import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.core.util.DateUtils;
 import com.rh.ts.util.TsConstant;
 
 /**
@@ -93,15 +93,21 @@ public class XmztServ extends CommonServ {
 			String SJ_START_TIME = beanList1.get(0).getStr("SJ_START");
 			String SJ_END_TIME = beanList.get(0).getStr("SJ_END");
 			Date currentTime = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			Date sj_start_Date = null;
 			Date sj_end_Date = null;
 			Boolean start_flag=true;
 			Boolean end_flag=true;
 			String divState="";
 			try {
-				sj_start_Date = sdf.parse(SJ_START_TIME);
-				sj_end_Date = sdf.parse(SJ_END_TIME);
+				sj_start_Date = DateUtils.parseDate(SJ_START_TIME);
+			} catch (ParseException e) {
+				throw new TipException("后台转换开始时间失败！错误时间数据为："+SJ_START_TIME);
+			}
+			try {
+				sj_end_Date = DateUtils.parseDate(SJ_END_TIME);
+			} catch (ParseException e) {
+				throw new TipException("后台转换结束时间失败！错误时间数据为："+SJ_END_TIME);
+			}
 				start_flag = currentTime.before(sj_start_Date);
 				end_flag = currentTime.before(sj_end_Date);
 				if(start_flag){
@@ -116,11 +122,10 @@ public class XmztServ extends CommonServ {
 						returnBean.set("divState", divState);
 					}
 				}
-			} catch (ParseException e) {
-				throw new TipException("服务器异常，获取动态失败！");
-			}
+
 		}else{
-			returnBean.set("divState", "未启用");
+//			returnBean.set("divState", "未启用");
+			returnBean.set("divState", "未开启");
 			return returnBean;
 		}
 		return returnBean;
