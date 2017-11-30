@@ -78,10 +78,12 @@ public class BmServ extends CommonServ {
 		newBean.set("END_TIME",endTime);
 		List<Bean> list = new ArrayList<Bean>();
 		list.add(newBean);
-		
+			
 	       outBean.set("list",list);
 	       outBean.set("nojson", list);
 	       outBean.set("state", state);
+	       outBean.set("START_TIME",startTime);
+	       outBean.set("END_TIME",endTime);
 	       return outBean;
 		
 	}

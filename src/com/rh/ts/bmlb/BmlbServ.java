@@ -739,6 +739,15 @@ public class BmlbServ extends CommonServ {
 			outBean.setCount(dataList.size());
 		}
 		for (Bean bean : dataList) {
+			String xmid = bean.getStr("XM_ID");
+			int countstr = XmglMgr.existSh(xmid);
+			bean.set("countstr", countstr);
+			ParamBean paramb = new ParamBean();
+			paramb.set("xmid", xmid);
+			OutBean act = ServMgr.act("TS_XMGL_BMGL", "getXmInfo", paramb);
+			bean.set("SH_TGTSY", act.getStr("SH_TGTSY"));
+			bean.set("SH_BTGTSY", act.getStr("SH_BTGTSY"));
+			bean.set("shstate", act.getStr("shstate"));
 			String createdate =  bean.getStr("S_ATIME");
 			SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			try {

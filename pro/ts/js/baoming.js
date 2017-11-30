@@ -445,13 +445,13 @@ function ksqxm() {
         var display = "none";
 
         //获取报名时间判断  报名状态
-        var param1 = {};
+       /* var param1 = {};
         param1["xmid"] = id;
         var result1 = FireFly.doAct("TS_XMGL_BMGL", "getBMState", param1);
-        var pageEntity1 = result1.list;
-        var startTime = pageEntity1[0].START_TIME;
-        var endTime = pageEntity1[0].END_TIME;
-        var state = pageEntity1[0].STATE;
+        var pageEntity1 = result1.list;*/
+        var startTime = pageEntity[i].START_TIME_BM;
+        var endTime = pageEntity[i].END_TIME_BM;
+        var state = pageEntity[i].STATE_BM;
         if (state == "待报名") {
             display = "block";
         }
@@ -650,16 +650,17 @@ listPage.prototype.bldTable = function (listData) {
             '<td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: center">' + type + '</td>');
         var paramSH = {};
         paramSH["xmid"] = XM_ID;
-        var successinfo = "";
-        var failerinfo = "";
-        var shstate = "审核中";
+        var successinfo =  pageEntity[i].SH_TGTSY;
+        var failerinfo =  pageEntity[i].SH_BTGTSY;
+        
+        var shstate =  pageEntity[i].shstate;
         var flagstate = '审核进行中';
-        var conresu = FireFly.doAct("TS_BMLB_BM", "getShState", {"XM_ID": XM_ID});
-        	  FireFly.doAct("TS_XMGL_BMGL", "getXmInfo", paramSH, true, false, function (data) {
+        var conresu = pageEntity[i].countstr;
+        /*	  FireFly.doAct("TS_XMGL_BMGL", "getXmInfo", paramSH, true, false, function (data) {
                   successinfo = data.SH_TGTSY;
                   failerinfo = data.SH_BTGTSY;
                   shstate = data.shstate;
-              });
+              });*/
         
         //此处查的是 报名时间应该查  审核时间
         /* var param1={};
@@ -694,6 +695,7 @@ listPage.prototype.bldTable = function (listData) {
                 sh_state_str = "审核通过"
 
             }
+            flagstate = "审核结束";
         } else if (shstate == "待报名") {
             param = {};
             param["xmid"] = XM_ID;
@@ -716,9 +718,7 @@ listPage.prototype.bldTable = function (listData) {
             }
         } else if (shstate == "未开始") {
         }
-        
-        
-        if (conresu.count == 0) {
+        if (conresu == 0) {
             flagstate = "无需审核";
             shstate="已结束";
             if (sh_state == 0) {
@@ -730,7 +730,7 @@ listPage.prototype.bldTable = function (listData) {
                 sh_state_str = "审核通过"
 
             }
-        }else if (conresu.count==1) {
+        }else if (conresu==1) {
         	//判断是否有手动审核
             flagstate = "无手动审核,审核结束";
             shstate="已结束";
@@ -755,7 +755,7 @@ listPage.prototype.bldTable = function (listData) {
                     //审核未通过 没有手动审核
                     if (sh_state == 2) {
                         $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="yanzheng(' + i + ')" style="color:lightseagreen" id="yiyi' + i + '">验证</a>');
-                        $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
+                        $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:red">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
                     } else if (sh_state == 1) {
                         //审核通过 没有异议  没有撤销
                         $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
@@ -763,7 +763,7 @@ listPage.prototype.bldTable = function (listData) {
                     } else if (sh_state == 3) {
                         //审核未通过  手动审核
                         $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="tjyiyi(' + i + ')" style="color:red" id="yiyi' + i + '">异议</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="yanzheng(' + i + ')" style="color:lightseagreen">验证</a>');
-                        $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="color:red;text-align: center">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
+                        $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="color:red;text-align: center;color:red">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
                     } else if (sh_state == 0) {
                         //审核中  只有手动审核
                         $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
@@ -790,7 +790,7 @@ listPage.prototype.bldTable = function (listData) {
                 } else if (yiyistate == 0) {
                     if (sh_state == 2) {
                         $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>&nbsp;&nbsp;<a href="#" data-toggle="modal" onclick="yanzheng(' + i + ')" style="color:lightseagreen" id="yiyi' + i + '">验证</a>');
-                        $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
+                        $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center;color:red">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
                     } else if (sh_state == 1) {
                         //审核通过 没有异议  没有撤销
                         $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
@@ -809,16 +809,22 @@ listPage.prototype.bldTable = function (listData) {
                 $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a style=" id="chexiao">已撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
                 $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME"style="color:red;text-align: center">已撤销</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">' + flagstate + '</td>');
             }
-        } else if (flagstate == "已结束") {
+        } else if (flagstate == "审核结束") {
             $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
-            $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
+            if (sh_state == 1) {
+                //审核通过 没有异议  没有撤销
+            	 $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:lightseagreen">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
+            }else{
+            	
+            	$tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:red">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
+            }
         } else {
             //审核未开始
             $operTd.append(
                 '<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>' +
                 '&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>' +
                 '&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
-            $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
+            $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
         }
         if (pageEntity[i].PUBLICITY === '1') {
             $operTd.append('&nbsp&nbsp<a onclick="lookSeat(' + i + ')" href="#" style="color:lightseagreen" >查看预安排</a>');

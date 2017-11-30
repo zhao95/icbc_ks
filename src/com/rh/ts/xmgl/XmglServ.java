@@ -381,6 +381,10 @@ public class XmglServ extends CommonServ {
 				for (int b = 0; b < qzArray1.length; b++) {
 					if (Arrays.asList(codeArray).contains(qzArray1[b])) {
 						if ("1".equals(bean.getStr("XM_STATE"))) {
+							OutBean act2 = ServMgr.act("TS_XMGL_BMGL", "getBMState", param);
+							bean.set("START_TIME_BM", act2.getStr("START_TIME"));
+							bean.set("END_TIME_BM", act2.getStr("END_TIME"));
+							bean.set("STATE_BM", act2.getStr("state"));
 							lastlist.add(bean);
 							break;
 						}

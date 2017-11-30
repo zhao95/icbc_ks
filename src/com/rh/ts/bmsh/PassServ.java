@@ -641,7 +641,6 @@ public class PassServ extends CommonServ {
 	/*	String xianei = paramBean.getStr("xianei");*/
 		//当前审核人
 		UserBean user = Context.getUserBean();
-		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		
 		Bean userPvlgToHT = RoleUtil.getPvlgRole(user.getCode(),"TS_BMGL_XNBM");
@@ -759,5 +758,35 @@ public class PassServ extends CommonServ {
 		 outBean.set("first", first);
 		return outBean;
 		
+	}
+	//获取一二级机构
+	public OutBean getDept(Bean paramBean){
+		OutBean out = new OutBean();
+		String user_code = paramBean.getStr("user_code");
+		UserBean userBean = UserMgr.getUser(user_code);
+		String ss = userBean.getODeptName() + ",";
+		// 获取当前机构;
+		DeptBean oneodeptcode1 = userBean.getODeptBean();
+		String codes = "";
+		if (oneodeptcode1 != null) {
+			// 获取所有逗号分隔的字符串
+			codes = getusercodes(oneodeptcode1, ss);
+		}
+		if("".equals(codes)){
+			codes=ss;
+		}
+		String[] codesarr = codes.split(",");
+		
+		for (int i =0;i< codesarr.length; i++) {
+			// 最后一个 deptcodename
+			if(i==0){
+				String evname = codesarr[i];
+				out.set("LEVEL0", evname);
+			}else if(i==1){
+				String evname = codesarr[i];
+				out.set("LEVEL1", evname);
+			}
+		}
+		return out;
 	}
 }

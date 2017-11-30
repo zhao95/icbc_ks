@@ -88,12 +88,18 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
                 //选取类型 1人员
                 param.G_TYPE = 1;
                 
-                
+                //岗位类别 序列 
                 var result =  FireFly.byId("SY_HRM_ZDSTAFFPOSITION", codes[i]);
         		if(result!=null){
         			param.GW_LB = result.STATION_TYPE;
         			param.GW_XL= result.STATION_NO;
         		}
+        		// 一二机构
+        		var paramstr = {};
+        		paramstr["user_code"]=codes[i];
+        		var resultstr = FireFly.doAct("TS_BMSH_PASS","getDept",paramstr);
+        		 param.FIR_LEVEL =resultstr.LEVEL0;
+        		 param.SEN_LEVEL =resultstr.LEVEL1;
         		paramArray.push(param);
         		
             }
