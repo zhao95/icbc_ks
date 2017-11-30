@@ -8,6 +8,8 @@
 	<context-param>
 	    <param-name>jndi_prefix</param-name>
 	    <param-value>java:comp/env</param-value>
+	    <!-- was配置文件 -->
+	    <!-- <param-value></param-value> -->
 	</context-param>
   	<context-param>
 	    <param-name>datasource_prefix</param-name>
