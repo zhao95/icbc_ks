@@ -54,7 +54,7 @@ public class DataServ extends CommonServ {
 		List<Bean> DEPTLIST = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE CONCAT('%','"+deptcode+"','%') and DEPT_LEVEL =3");
 		for (Bean bean : DEPTLIST) {
 			String odept_code = bean.getStr("DEPT_CODE");
-			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' limit 0,300" );
+			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' limit 0,1200" );
 			if(finds2!=null&&finds2.size()!=0){
 				
 				//向报名列表中插数据
