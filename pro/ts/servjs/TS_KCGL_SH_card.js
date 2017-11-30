@@ -9,6 +9,17 @@ if(odeptLevel != 1){
 	_viewer.tabHide("TS_KCGL_UPDATE");
 }
 
+var kcState = _viewer.getItem("KC_STATE").getValue();
+
+if(kcState==2) { //无效
+	_viewer.getBtn("noBtn").hide();
+} else if(kcState==5){ //有效
+	_viewer.getBtn("yesBtn").hide();
+}
+
+var kcState2 = _viewer.getItem("KC_STATE2").getValue();
+
+console.log("KC_STATE2",_viewer.getItem("KC_STATE2").getValue());
 //状态 0:新增未保存1:无效(待审核) 2:无效(审核未通过) 3:无效(审核中) 4:无效(扣分超过上限)5:有效
 _viewer.getBtn("yesBtn").unbind("click").bind("click", function(event) {
 	var param = {"_PK_":pkCode};
@@ -21,6 +32,8 @@ _viewer.getBtn("yesBtn").unbind("click").bind("click", function(event) {
 		alert("审核成功");
 		_viewer.refresh();
 		_viewer.getParHandler().refresh();
+		_viewer.getBtn("yesBtn").hide();
+		_viewer.getBtn("noBtn").show();
 	});
 });
 
@@ -30,6 +43,8 @@ _viewer.getBtn("noBtn").unbind("click").bind("click", function(event) {
 		alert("审核成功");
 		_viewer.refresh();
 		_viewer.getParHandler().refresh();
+		_viewer.getBtn("noBtn").hide();
+		_viewer.getBtn("yesBtn").show();
 	});
 });
 
