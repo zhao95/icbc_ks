@@ -67,3 +67,29 @@ _viewer.beforeSave = function() {
 if(_viewer.getItem("KC_STATE").getValue() < 4 || _viewer.getItem("KC_STATE").getValue() > 5){
 	_viewer.tabHide("TS_KCGL_UPDATE");
 }
+
+
+$("#TS_KCGL-KC_ODEPTCODE__NAME").unbind("click").bind("click", function(event) {
+
+	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'single','sId':'TS_ORG_DEPT','pvlg':'CODE_PATH'}";
+
+	var options = {
+			"config" :configStr,
+			"params" : {"USE_SERV_ID":"TS_ORG_DEPT"},
+			"parHandler":_viewer,
+			"formHandler":_viewer.form,
+			"replaceCallBack":function(idArray,nameArray) {//回调，idArray为选中记录的相应字段的数组集合
+				
+				var codes = idArray;
+				var names = nameArray;
+				$("#TS_KCGL-KC_ODEPTCODE__NAME").val(names);
+				$("#TS_KCGL-KC_ODEPTCODE").val(codes);
+				$("#TS_KCGL-KC_ODEPTNAME").val(names);
+				console.log($("#TS_KCGL-KC_ODEPTCODE").val());
+				console.log($("#TS_KCGL-KC_ODEPTNAME").val());
+			}
+	};
+	
+	var queryView = new rh.vi.rhDictTreeView(options);
+	queryView.show(event,[],[0,495]);
+});
