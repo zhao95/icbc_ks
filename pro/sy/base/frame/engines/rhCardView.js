@@ -440,7 +440,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
 		   }
 		   
 		   
-		   //如果用户修改数据，提示用户保存
+		 /*  //如果用户修改数据，提示用户保存
 		  
            if (_self._actVar == UIConst.ACT_CARD_MODIFY) {
 			   if (jQuery.isEmptyObject(_self.getChangeData())||flagclose==1) {
@@ -458,7 +458,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
 						   
 				   }
 			   }
-		   }
+		   }*/
            inadd-=10;
            _self.destroyUI();
 		   if (_self._pCon) {//有设定容器
@@ -691,9 +691,9 @@ rh.vi.cardView.prototype._bldWin = function() {
     	}
     	this.winDialog.find("a[class='rhCard-close']").css("display","none");
     	
-    /*	div.find("span:last").unbind("click").bind("click",function(){
+    	div.find("span:last").unbind("click").bind("click",function(){
     		jQuery("a[class='rhCard-close']:last").trigger("mousedown");
-    	})*/
+    	})
     	
     } else {
     	Tools.rhSetBodyBack();//设置背景
