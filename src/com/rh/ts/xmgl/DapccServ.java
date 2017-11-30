@@ -63,15 +63,17 @@ public class DapccServ extends CommonServ {
         String searchKcId = paramBean.getStr("searchKcId");
         String searchSjId = paramBean.getStr("searchSjId");
 
-        long l;//选中的考场时长
+        long l = Long.MAX_VALUE;;//选中的考场时长
         try {
-            Bean sjBean = ServDao.find(TsConstant.SERV_KCAP_CCSJ, searchSjId);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            String sjStart = sjBean.getStr("SJ_START");
-            String sjEnd = sjBean.getStr("SJ_END");
-            Date startDate = dateFormat.parse(sjStart);
-            Date endDate = dateFormat.parse(sjEnd);
-            l = (endDate.getTime() - startDate.getTime()) / 1000 / 60;
+            if(StringUtils.isNotBlank(searchSjId)){
+                Bean sjBean = ServDao.find(TsConstant.SERV_KCAP_CCSJ, searchSjId);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                String sjStart = sjBean.getStr("SJ_START");
+                String sjEnd = sjBean.getStr("SJ_END");
+                Date startDate = dateFormat.parse(sjStart);
+                Date endDate = dateFormat.parse(sjEnd);
+                l = (endDate.getTime() - startDate.getTime()) / 1000 / 60;
+            }
         } catch (ParseException e) {
             l = Long.MAX_VALUE;
         }
