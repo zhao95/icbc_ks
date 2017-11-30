@@ -2,15 +2,15 @@ var _viewer = this;
 var module = 'PLAN';
 var height = jQuery(window).height()-50;
 var width = jQuery(window).width()-100;
-$(".rhGrid").find("tr").unbind("dblclick");
+$("#TS_JHGL .rhGrid").find("tr").unbind("dblclick");
 // 每一行添加编辑和删除
-_viewer.grid._table.find("tr").each(function(index, item) {
+$("#TS_JHGL .rhGrid").find("tr").each(function(index, item) {
 	if (index != 0) {
 		var dataId = item.id;
+		var status = $(item).find("td[icode='JH_STATUS']").html();
 		$(item).find("td[icode='BUTTONS']").append(
-			'<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optViewBtn" operCode="optViewBtn"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-view"></span></a>'
-		 +  '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optEditBtn" operCode="optEditBtn"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
-//			+ '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_delete" operCode="delete"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+			'<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optViewBtn" operCode="optViewBtn" status="'+status+'" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-view"></span></a>'
+		 +  '<a class="rh-icon rhGrid-btnBar-a" id="TS_JHGL_optEditBtn" operCode="optEditBtn" status="'+status+'" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
 			);
 			// 为每个按钮绑定卡片
 			bindCard();
@@ -38,106 +38,31 @@ _viewer.beforeDelete = function(pkArray) {
 
 // 绑定的事件
 function bindCard() {
-	// 当行删除事件
-	jQuery("td [operCode='delete']").unbind("click").bind("click", function() {
-		var pkCode = $(this).parent().parent().attr("id");
-		//删除前判断是否已发布
-		var paramfb = {};
-		paramfb["_extWhere"] = "and JH_ID ='"+pkCode+"'";
-		var beanFb = FireFly.doAct(_viewer.servId, "query", paramfb);
-		//判断是否已发布，否则提示已经发布 
-		if(beanFb._DATA_ != 0){
-			if(beanFb._DATA_[0].JH_STATUS=="2"){
-				_viewer.listBarTipError("请取消发布后再删除！");
-			}else if(beanFb._DATA_[0].JH_STATUS=="1"){
-				var paramDele = {};
-				paramDele['_extWhere'] = "and JH_ID ='"+pkCode+"'";
-				var result1 = FireFly.doAct("TS_JHGL","query",paramDele);
-				rowDelete(pkCode, _viewer);
-				Tip.show("删除计划成功！");
-			}
-		}else if(beanFb._DATA_ == 0){
-			Tip.show("当前用户无权限发布！");
-		}
-		
-	});
-	
-/*	jQuery("td [id='"+servId+"_group']").unbind("click").bind("click", function(){
-		var pk = jQuery(this).attr("rowpk");
-		var extWhere = "and USER_CODE = '" + pk + "'";
-		var params = {"_extWhere" : extWhere};
-		var url = "TS_PVLG_GROUP_USER_V_SY_ORG_USER.list.do?&_extWhere=" + extWhere;
-		var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
-		Tab.open(options);
-	 });*/
-	
-
 	// 当行编辑事件
-	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click",function() {
-		var pkCode = $(this).parent().parent().attr("id");
+	jQuery("#TS_JHGL").find("td [id='TS_JHGL_optEditBtn']").unbind("click").bind("click",function() {
+		var pkCode = jQuery(this).attr("rowpk");
+		var status = jQuery(this).attr("status");
 		//编辑修改前判断是否已发布
-		var paramModify = {};
-		paramModify["_extWhere"] = "and JH_ID ='"+pkCode+"'";
-		var beanFb = FireFly.doAct(_viewer.servId, "query", paramModify);
-		//判断是否已发布，否则提示已经发布，不能修改 
-		if(beanFb._DATA_ != 0){
-			if(beanFb._DATA_[0].JH_STATUS=="2"){
-				Tip.show("请取消发布后再编辑！");
-			}else if(beanFb._DATA_[0].JH_STATUS=="1"){
-				openMyCard(pkCode);
-			}
-		}else if(beanFb._DATA_ == 0){
-			Tip.show("当前用户无权限发布！");
+		if(status=="2"){
+			console.log(2);
+			Tip.show("请取消发布后再编辑！");
+		}else if(status=="1"){
+			console.log(status);
+			openMyCard(pkCode);
 		}
 
 	});
 
-	// 当行详细计划事件
-	jQuery("td [operCode='optViewBtn']").unbind("click").bind("click",function() {
-		var pkCode = $(this).parent().parent().attr("id");
+	// 点击查看
+	jQuery("td [id='TS_JHGL_optViewBtn']").unbind("click").bind("click",function() {
+		var pkCode = jQuery(this).attr("rowpk");
 		openMyCard(pkCode,true);
-		/*var pkCode = $(this).parent().parent().attr("id");
-		var jhTitle = _viewer.grid.getRowItemValue(pkCode, "JH_TITLE");
-		var jhYear=_viewer.grid.getRowItemValue(pkCode, "JH_YEAR");
-		// 定义一个对象
-		var strwhere = " and JH_PTITLE ='" + pkCode + "' ";
-		var params = {"JH_ID" : pkCode,"JH_TITLE" : jhTitle,"JH_YEAR" : jhYear,"_extWhere" : strwhere};
-		var url = "TS_JHGL_XX.list.do?&_extWhere=" + strwhere;
-		var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
-		Tab.open(options);*/
 	});
 }
 // 点击时进行发布
 _viewer.getBtn("fabu").unbind("click").bind("click", function() {
 	var pkAarry = _viewer.grid.getSelectPKCodes();
 	showRelease(pkAarry,_viewer);
-//	if (pkAarry.length == 0) {
-//		_viewer.listBarTipError("请选择相应记录！");
-//	} else {
-//		//遍历所选的所有大计划，依次进行判断执行。
-//		for (var i = 0; i < pkAarry.length; i++) {;
-//			var paramfb = {};
-//			paramfb["_extWhere"] = "and JH_ID ='"+pkAarry[i]+"'";
-//			var beanFb = FireFly.doAct(_viewer.servId, "query", paramfb);
-//			//判断是否已发布，否则提示已经发布 
-//			if(beanFb._DATA_ != 0){
-//				if(beanFb._DATA_[0].JH_STATUS=="2"){
-//					_viewer.listBarTipError("所选计划已发布！");
-//				}else if(beanFb._DATA_[0].JH_STATUS=="1"){
-//					var paramXm = {};
-//					paramXm["pkCodes"] = pkAarry[i];
-//					//showRelease(pkAarry,_viewer,paramXm);
-//					//FireFly.doAct(_viewer.servId, "UpdateStatusStart", param,false,false,function(){
-//						//Tip.show("计划发布成功！");
-//					//});
-//					//_viewer.refresh();
-//				}
-//			}else if(beanFb._DATA_  == 0){
-//				Tip.show("当前用户无权限发布！");
-//			}
-//				
-//		}
-//	}
 })
 
 //初次发布
@@ -171,10 +96,6 @@ if (pkAarry.length == 0) {
 }	 
 
 
-//		FireFly.doAct("TS_JHGL", "UpdateStatusStart", paramXm,false,false,function(){
-//			Tip.show("计划发布成功！");
-//		});
-//		_viewer.refresh();
 }
 
 
@@ -205,11 +126,6 @@ _viewer.getBtn("qxfb").unbind("click").bind("click", function() {
 			}
 		}
 	}
-//		var param = {};
-//		param["pkCodes"] = pkAarry.join(",");
-//		FireFly.doAct(_viewer.servId, "UpdateStatusStop", param);
-//		Tip.show("计划已取消发布！");
-//		_viewer.refresh();
 })
 
 /**
@@ -227,18 +143,6 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click", function(event) {
 	Tab.open(options);
 });
 
-
-//_viewer.getBtn("add").unbind("click").bind("click", function() {
-//	var temp = {
-//		"act" : UIConst.ACT_CARD_ADD,
-//		"sId" : "TS_JHGL",
-//		"parHandler" : _viewer,
-//		"widHeiArray" : [ width,height ],
-//		"xyArray" : [ 100, 100 ]
-//	};
-//	var cardView = new rh.vi.cardView(temp);
-//	cardView.show();
-//});
 
 //列表操作按钮 弹dialog
 function openMyCard(dataId,readOnly,showTab){
@@ -275,9 +179,6 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 		alert("请选择添加目录的层级 !");
 		return false;
 	}
-	
-	//var width = jQuery(window).width()-200;
-	//var height = jQuery(window).height()-200;
 	
 	var temp = {"act":UIConst.ACT_CARD_ADD,
 			"sId":_viewer.servId,
