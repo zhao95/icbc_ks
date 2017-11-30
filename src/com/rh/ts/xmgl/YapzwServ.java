@@ -5,7 +5,7 @@ import com.rh.core.base.db.Transaction;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
-import com.rh.core.serv.dict.DictMgr;
+import com.rh.ts.util.BMUtil;
 import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.kcap.KcapResource;
 import com.rh.ts.xmgl.kcap.arrange.ArrangeSeat;
@@ -212,7 +212,7 @@ public class YapzwServ extends CommonServ {
         OutBean outBean = new OutBean();
         String bmId = paramBean.getStr("BM_ID");
 
-        String sql = "select f.BM_TYPE,f.BM_MK,f.BM_XL,f.BM_TITLE,b.KC_NAME,b.KC_ADDRESS,e.ZW_ZWH_SJ,d.SJ_START,c.BM_KS_TIME  " +
+        String sql = "select c.BM_TYPE,c.BM_MK,c.BM_XL,f.BM_TITLE,b.KC_NAME,b.KC_ADDRESS,d.SJ_START,c.BM_KS_TIME  " +/*e.ZW_ZWH_SJ,*/
                 "from ts_xmgl_kcap_yapzw a " +
                 "left join ts_kcgl b on b.KC_ID = a.KC_ID " +
                 "left join ts_bmsh_pass c on c.SH_ID = a.SH_ID " +
@@ -230,7 +230,7 @@ public class YapzwServ extends CommonServ {
             String bmXl = (String) ksDataBean.get("BM_XL");
             String bmMk = (String) ksDataBean.get("BM_MK");
             String bmType = (String) ksDataBean.get("BM_TYPE");
-            String bm_bt = DictMgr.getName("TS_XMGL_BM_KSLBK_LV", bmType) + "-" + bmXl + "-" + bmMk;
+            String bm_bt = BMUtil.getExaminationName(bmType, bmXl, bmMk);
             String title;
             if (!"".equals(bmMk)) {
                 title = bm_bt;
