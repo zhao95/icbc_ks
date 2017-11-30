@@ -1,5 +1,8 @@
 var _viewer = this;
-var jhId = _viewer.getParHandler().getPKCode();
+var jhId = "";
+if(typeof(_viewer.getParHandler().servId)!="undefined"){
+	jhId = _viewer.getParHandler().getPKCode();
+}
 var height = jQuery(window).height()-200;
 var width = jQuery(window).width()-200;
 
