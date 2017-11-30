@@ -116,9 +116,7 @@ function xminfoshow(){
    						xlflag = true;
    					}
    				}
-         		var divtext1 = $("#"+a).html();//获取div对应的数组
        			
-       			if(divtext1==null||divtext1.length==0){//append内容之前判断是否有内容
    				if(FLAG){
    					if(xlcode==STATION_NO_CODE){
    						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此考试,请撤销再提交或请选择其它考试</div>');
@@ -144,7 +142,6 @@ function xminfoshow(){
    					/*$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);*/
    					continue;
    				}
-       			}
          		if(data.none=="true"){//如果没有引用规则的话 直接通过
          			
          			$("#"+a).append('<div style="height:5px;"></div>');
@@ -1228,6 +1225,13 @@ var highnum=0;
 }
 	//删除已报名的考试
 	function deleterow(obj){
+		for(var i=0;i<xkArg.length;i++){
+			if(xkArg[i].ID==$(obj).parent().attr('id')){
+				xkArg.splice(xkArg[i],1);
+				
+			}
+		}
+		$(obj).parent().attr('id');
 		$(obj.parentNode.parentNode.parentNode).remove();
 	}
 function yanzheng(){

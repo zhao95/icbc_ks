@@ -148,6 +148,8 @@ $('#akeshen').click(function () {
     document.getElementById("keshenimage").src = "/ts/image/u975.png";
     document.getElementById("yishenimage").src = "/ts/image/u984.png";
     document.getElementById("yishen").style.color = "black";
+    $("#table tbody").html("");
+    ksqxm();
     var table = document.getElementById("table");
     rowscolor(table);
 });
@@ -156,6 +158,7 @@ $('#ayishen').click(function () {
     document.getElementById("yishenimage").src = "/ts/image/u7733.png";
     document.getElementById("keshenimage").src = "/ts/image/u1131.png";
     document.getElementById("yishen").style.color = "LightSeaGreen";
+    new listPage().gotoPage(1);
     /*selectdata(user_code,1);*/
 
 
@@ -169,7 +172,6 @@ $(function () {
     //对每一行 进行  渲染 颜色
     ksqxm();
     selectcreate();
-    new listPage().gotoPage(1);
 });
 //---------------------下拉框生成
 function selectcreate() {

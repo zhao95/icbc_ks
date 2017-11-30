@@ -1,15 +1,15 @@
 
 // 给数组不支持indexOf的浏览器增加indexOf方法
-if (!Array.prototype.indexOf) { 
-    Array.prototype.indexOf = function(obj){ 
-        for(var i = 0; i < this.length; i++){ 
-            if(this[i] == obj){ 
-                return i; 
-            } 
-        } 
-        return -1; 
-    } 
-} 
+if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function(obj){
+        for(var i = 0; i < this.length; i++){
+            if(this[i] == obj){
+                return i;
+            }
+        }
+        return -1;
+    }
+}
 
 /**平台级工具类，工具类方法，方法目录
  * -----------------$-----------------------
@@ -26,7 +26,7 @@ if (!Array.prototype.indexOf) {
  * StrToJson(str);//将字符串转化成对象，不推荐使用
  * "字符串".format(); //替换字符串中含{}的字符
  * -----------------rhDate------------------
- * rhDate.getCurentTime(); //获取系统当前时间，返回结果：2013-01-23 16:28    
+ * rhDate.getCurentTime(); //获取系统当前时间，返回结果：2013-01-23 16:28
  * rhDate.stringToDate();//将时间格式的字符串转化成时间
  * rhDate.getDateTime(); //获取系统当前时间
  * rhDate.getAreaDate(); //根据小时获取当前系统的中文区块时间
@@ -41,12 +41,12 @@ if (!Array.prototype.indexOf) {
  * rhDate.compareTwoDate(beforeDate, endDate, dateFormat)参数说明：beforeDate, endDate两个具有日期空间的jQuery对象(没有也行)；
  *dateFormat 日期格式，目前支持：yyyy-MM-dd、yyyy-MM-dd HH:mm、yyyy-MM-dd HH:mm:ss，
  *三种方式，默认为yyyy-MM-dd
- *方法作用：两个日期之间大小联动，比如开始时间需小于结束时间 
+ *方法作用：两个日期之间大小联动，比如开始时间需小于结束时间
  * -----------------Cookie------------------
  * Cookie.get(cookName);//读cookie操作,参数：cookie名称 返回值：字符串
  * Cookie.set(sName, sValue, oExpires, sPath, sDomain, bSecure);//写cookie操作 sName：cookie名称.sValue：cookie值,oExpires：过期时间
  * Cookie.del(sName);//删除cookie操作sName ：cookie名称
- 
+
  * -----------------Tip---------------------
  * Tip.show(msg, parentFlag, scopeObj);//提示信息条，定时会隐藏, msg显示顶部提示信息,parentFlag 父层对象的标识
  * Tip.showAttention(msg, parentFlag, scopeObj);//提示信息条，定时会隐藏,msg 显示顶部提示信息,parentFlag 父层对象的标识
@@ -55,7 +55,7 @@ if (!Array.prototype.indexOf) {
  * Tip.clear();//外层清除提示信息
  * Tip.clearLoad();//删除加载提示信息条
  * Tip.addTip();//添加浮动式提示,最新添加的方式，调用时最好写成top.Tip.addTip()
- 
+
  * ------------------Format------------------
  * Format.formatNum(str);//系统数据格式化方法
  * Format.clearNum(strNum);//去除逗号
@@ -65,11 +65,11 @@ if (!Array.prototype.indexOf) {
  * Format.replaceDblQuotes(str);// 双引号替换为空串
  * Format.replaceSinQuotes(str);//// 单引号替换为空串
  * Format.RMBCapital(number);//人民币大写转换,numberValue 人民币小写
- 
+
  * -----------------Load--------------------
  * Load.js(pathUrl, viewer);//动态加载js，并执行,pathUrl js的路径viewer 列表/卡片js 中的 viewer 对象
  * Load.scriptJS(pathUrl);//动态加载js,放入骑到<script>标签，判断重复加载
- 
+
  *------------------Tools-------------------
  * Tools.getFileSuffix(fileName);//取出文件扩展名
  * Tools.redirect(url);//重定位url
@@ -88,24 +88,24 @@ if (!Array.prototype.indexOf) {
  * Tools.isNotEmpty(obj);//判断某个变量不为空，不为空返回true，否则返回false；空包括(undefined、null、""、NaN)
  * Tools.isEmpty(obj);//判断某个变量是为空，为空返回true，否则返回false；空包括(undefined、null、""、NaN)
  * Tools.getDecimalNum(decimal);//返回小数位数，证整数返回为0
- 
+
  *------------------Debug-------------------
  * Debug.add(text, event);//-----
  * Debug.clear();//------
- 
+
  *------------------RHFile--------------=---
  * RHFile.uploadUrl //ueditor所用上传路径
  * RHFile.bldDestroyBase(viewObj);//存储cardview对象
  * RHFile.destroyFileFlashBug();//调用文件组件的destroy方法
  * RHFile.parProSon(frameId);//调用文件组件的destroy方法
- 
+
  *------------------Browser-----------------
  * Browser.versions();//rh封装的判断浏览器类别,Browser.versions.iPad
- 
+
  *------------------Select------------------
  * Select.usualContent(opts,viewer,positionArray,dialogSizeArray);//系统公用，弹出查询选择的常用语，可添加、修改、删除;viewer 页面上下文
  * Select.openSendSchem(target);//系统共用，分发方案查询选择框,target 接受选择值的dom对象名称，如：id~name
- 
+
  *------------------Mouse-------------------
  * Mouse.getMousePoint(event);//获取鼠标在页面上的位置
  * Mouse.dialogCoordinate(x,y,width,height);//width 弹出框宽度，height 弹出框高度，x 鼠标x坐标，y鼠标y坐标
@@ -113,7 +113,7 @@ if (!Array.prototype.indexOf) {
  															//x1,y1弹出框的宽高,x2,y2鼠标和最外边框组成的最大区域坐标
  * Mouse.getScrollTop();//获取当前窗口滚动条高度
  * Mouse.dialogPosition(event,width,height)//获取子页面的弹出框位置坐标，返回 position{"x":x,"y":y}
- 
+
  *------------------Todo--------------------
  * Todo.dbClickGrid(viewer,grid);//响应双击Grid事件，打开待办,viewer 包含grid的Viewer对象,grid 被双击的grid对象
  * Todo.open(sId, title, url, con, todoId, objectID1);//打开待办
@@ -121,12 +121,12 @@ if (!Array.prototype.indexOf) {
  * Todo.get(num,rowNum);//代办的获取，系统顶部下拉面板内数据的获取
  * Todo.getData(rowNum);//代办的获取，系统顶部下拉面板内数据的获取
  * Todo.openEntity(_viewer);//对列表上选中行双击查看绑定事件,双击打开该选中行的服务卡片页面
- 
+
  *------------------Window------------------
  * RHWindow.getViewPort(target);//获取指定window的可视区域尺寸
  * RHWindow.getScroll(target);//获取指定window的滚动条的信息
  * RHWindow.searchScrollBegin();//搜索部分启用外部滚动条的监听事件
- 
+
  * -----------------RHWF------------------
  * RHWF.showLeaderMind(grid);//判断列表页中是否存在“S_HAS_PS_MIND”列，如果存在列并有值，则展示“对钩”的小图片。当鼠标放到小图片上后，显示领导意见。
  * RHWF.loadWfUserState(userStateCells, tableObj, colCode);//处理列表（平台或自定义table）数据中工作流活动节点用户状态字段S_WF_USER_STATE的值（本人的行增加属性变色、已看过的数据变色）。
@@ -148,7 +148,7 @@ if (!Array.prototype.indexOf) {
  *Hex._utf8_encode(utftext);把字符串转成UTF-8编码
  *Hex._utf8_decode(utftext);把UTF-8转成本地字符串
  *
- */       
+ */
 //window.onerror = function(errorMessage, scriptURL, lineNumber) {
 //　　alert("", scriptURL, lineNumber)
 //};
@@ -166,12 +166,12 @@ if (!Array.prototype.indexOf) {
 		'"' : '\\"',
 		'\\' : '\\\\'
 	};
-	
+
 	// jQuery.browser增加mobile判断
 	(function(n){
 		jQuery.browser.mobile = /android.+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(n);
 	})(navigator.userAgent||navigator.vendor||window.opera)
-	
+
 	// IE8下的内置方法JSON.stringify有bug
 	if (typeof JSON === 'object' && JSON.stringify && !($.browser.msie && ($.browser.version == "8.0"))) {
 		$.toJSON = JSON.stringify;
@@ -302,14 +302,14 @@ if (!Array.prototype.indexOf) {
             var m = menu('<ul class="simple-contextmenu shadow127"></ul>').appendTo(document.body);
             menu.each(opt.items, function(i, item) {
                 if (item) {
-                    if(item.type == "split"){ 
+                    if(item.type == "split"){
                         menu("<div class='m-split'></div>").appendTo(m);
                         return;
                     }
                     var row   = menu('<li><a href="javascript:void(0)"><span></span></a></li>').appendTo(m);
                     item.icon ? menu('<img src="' + item.icon + '">').insertBefore(row.find('span')) : '';
                     item.text ? row.find('span').text(item.text) : '';
-                    
+
                     if (item.action) {
                         row.find('a').click(function() {
                             item.action(e.target,obj);
@@ -338,9 +338,9 @@ if (!Array.prototype.indexOf) {
             $(document.body).live('contextmenu click', function() {
                 m.hide("fast",function(){
                     m.remove();
-                });        
+                });
             });
-            
+
             return false;
         });
         return this;
@@ -453,30 +453,30 @@ if (!Array.prototype.indexOf) {
 					sets.callback();
 				});
 	};
-	
+
 	/**
 	 * 延时触发postpaste事件，使得其它事件能够坚听该事件获取粘贴内容
 	 */
-	$.fn.pasteEvents = function(delay) { 
-	    if (delay == undefined) delay = 20; 
-	    return $(this).each(function() { 
-	        var $el = $(this); 
-	        $el.on("paste", function() { 
-	            $el.trigger("prepaste"); 
+	$.fn.pasteEvents = function(delay) {
+	    if (delay == undefined) delay = 20;
+	    return $(this).each(function() {
+	        var $el = $(this);
+	        $el.on("paste", function() {
+	            $el.trigger("prepaste");
 	            setTimeout(function() {
 	            	$el.trigger("postpaste");
 	            }, delay);
 	        });
 	    });
 	};
-	
+
 	/**
 	 * 使得textarea具有控制输入行数的功能
 	 * 这个功能依赖rows属性，检测是否具有滚动条来检测是否超出指定行数，如果超出指定行数则循环减字符直到滚动条消失
 	 * 该插件会移除height属性，由rows决定高度
 	 * @param lineNum 指定行数
 	 */
-	$.fn.checkLine = function(lineNum) { 
+	$.fn.checkLine = function(lineNum) {
 	    var $this = $(this);
 	    $this.css({"height":"auto"}).attr("rows", lineNum);
 	    return $this.on("keyup", function(){
@@ -486,7 +486,7 @@ if (!Array.prototype.indexOf) {
 		}).on("postpaste", function(){
 			removeScroll();
 		}).pasteEvents();
-	    
+
 	    /**
 		 * [去掉滚动条]
 		 */
@@ -512,7 +512,7 @@ if (!Array.prototype.indexOf) {
 
 /**
  * 根据给定时间，返回与给定时间的字面显示，如返回“刚刚”，“2分钟前”，“昨天”等
- * jQuery.timeago(timeago)：参数timeago 
+ * jQuery.timeago(timeago)：参数timeago
  * 可以是Date类型；
  * 可以是能转换成Date类型的字符串（如2012-12-26 11:33:27）；
  * 可以是数字（时间毫秒数）
@@ -670,13 +670,13 @@ if (!Array.prototype.indexOf) {
  * 扩展string方法，增加format方法，
  * alert("各种{1}啊{0}木{0}".format("有", "拼串"));
  */
-String.prototype.format = function () { 
-	var arr = arguments; 
-	try { 
-		return this.replace(/\{(\d+)\}/g, function (x, i) { return arr[i]; }); 
-	} catch (e) { 
-		return this; 
-	} 
+String.prototype.format = function () {
+	var arr = arguments;
+	try {
+		return this.replace(/\{(\d+)\}/g, function (x, i) { return arr[i]; });
+	} catch (e) {
+		return this;
+	}
 };
 
 /**
@@ -809,7 +809,7 @@ var rhDate = {
 		var hh = now.getHours(); // 时
 		var mm = now.getMinutes(); // 分
 		var ss = now.getSeconds(); // 秒
-		
+
 		//填位
 		if (month < 10) {
 			month = "0" + month;
@@ -826,11 +826,11 @@ var rhDate = {
 		if (ss < 10) {
 			ss = "0" + ss;
 		}
-		
+
 		if (!type) { //默认到秒
 			type = "ss";
 		}
-		
+
 		var result = year;
 		if (type == "yyyy") { //年
 			return result;
@@ -974,7 +974,7 @@ var rhDate = {
 		}
 		return (old.getFullYear() + "-" + formitM + "-" + formitD);
 	},
-	
+
 	/**
 	 * 将时间字符串转化成date类型，字符串类型为 yyyy*MM*dd [HH]*[mm]*[ss]
 	 */
@@ -998,7 +998,7 @@ var rhDate = {
 			return new Date(dateFtmStr);
 		}
 	},
-	
+
 	/**
 	 * 取得格式化事件
 	 * @return 2012-03-01 07:06:02
@@ -1072,7 +1072,7 @@ var rhDate = {
 		return fmt;
 	},
 	patternData : function(fmt,date) {
-		
+
 		var date = date || new Date();
 		var o = {
 			"M+" : date.getMonth() + 1, // 月份
@@ -1180,7 +1180,7 @@ var rhDate = {
 		//如果存在时间，即是 yyyy-MM-dd HH:mm
 		} else if (myDateFormat == "yyyy-MM-dd HH:mm") {
 			thisDateVal = rhDate.getCurentTime();
-		//如果存在时间，即是 yyyy-MM-dd HH:mm:ss	
+		//如果存在时间，即是 yyyy-MM-dd HH:mm:ss
 		} else if (myDateFormat == "yyyy-MM-dd HH:mm:ss") {
 			thisDateVal = rhDate.getTime();
 		}
@@ -1655,7 +1655,7 @@ var Tip = {
 				tipObj.empty();
 				tipObj.remove();
 			});
-			
+
 			var clearTime = 5000;
 			if (System.getMB("mobile")) {
 				clearTime = 2000
@@ -1707,7 +1707,7 @@ var Tip = {
 	    	} else {
 	    		result = msg.substring(5);
 	    	}
-	    } 
+	    }
 
 		return result;
 	}
@@ -1726,9 +1726,9 @@ function listBatchDate(config, node) {
 		}
 	}
 	recall_func += " try {_viewer.change();}catch(e){}";
-	
+
 	var langtype = Language.transStatic("languagetype");
-	
+
 	if (dateType == "DATETIME") {
 		onClickStr = "WdatePicker({lang:'"+langtype+"',startDate:'%y-%MM-%dd %H:%m:%ss',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:false,onpicked:function(){"
 				+ recall_func + "}";
@@ -2210,7 +2210,7 @@ var Tools = {
             } else if(typeof actResult === "object"){
             	resultObj = actResult;
             }
-            
+
         	if (resultObj[UIConst.RTN_MSG]) { //存在返回值
         		var rtnMsg = resultObj[UIConst.RTN_MSG];
         		if(StringUtils.startWith(rtnMsg, "ERROR,")){ //返回值为ERROR
@@ -2273,7 +2273,7 @@ var Tools = {
 		}
 		return 0;
 	},
-	
+
 	getLanguageFromCookie:function() {
 		var rhLanguage = Cookie.get("RhLanguage") || "zh";
 		return rhLanguage;
@@ -2285,8 +2285,8 @@ var Tools = {
 	 */
 	extend : function (B, A) {
 		var F = function(){};
-		F.prototype = A.prototype;  
-		B.prototype = new F();  
+		F.prototype = A.prototype;
+		B.prototype = new F();
 		B.prototype.constructor = B;
 		return B;
 	},
@@ -2310,7 +2310,7 @@ var Tools = {
 	getDialogPosition : function(width, height) {
 		var scroll = RHWindow.getScroll(window.top);
 	    var viewport = RHWindow.getViewPort(window.top);
-	    
+
 	    // 可视高度，如果本卡片的高度大于可视区域的高度则取可视区域的高度，否则取卡片的高度减去卷去的高度
 	    var cardHeight;
 	    try {
@@ -2322,14 +2322,14 @@ var Tools = {
 	    } catch (e) {
 	    	cardHeight = jQuery(".cardDialog", document).first().height();
 	    }
-	    
+
 	    var viewportHeight = cardHeight - (scroll.top > 45 ? scroll.top - 45 : 0);
-	    
+
 		// 如果可视区域高度小于等于dialog高度则改变dialog高度
 		if (viewportHeight < height) {
 			height = viewportHeight;
 		}
-		
+
 		// 如果可视区域放下dialog之后
 		if (viewportHeight - height < 100) {
 			// 计算出差值
@@ -2340,10 +2340,10 @@ var Tools = {
 					jQuery(window.top.document).scrollTop(scrollTop);
 					scroll = RHWindow.getScroll(window.top);
 				} catch (e) {}
-				
+
 			}
 		}
-		
+
 	    // 居中显示，对于关联服务为iframe的tab，由于它的父有45像素的头，所以弹出框往上移动45像素
 	    var top = scroll.top;
 	    try {
@@ -2359,8 +2359,8 @@ var Tools = {
 				}
 			}
 	    } catch (e) {}
-	    
-	    
+
+
 	    var left = scroll.left + viewport.width / 2 - width / 2;
 	    // 排除左侧菜单的宽度之后居中
 	    try {
@@ -2372,7 +2372,7 @@ var Tools = {
 				}
 		    }
 	    } catch(e) {}
-	    
+
 	    return [left, top];
 	},
 	/**
@@ -2415,14 +2415,14 @@ var Tools = {
 
 
 function getServListDialog(event,dialogId,title,wid,hei,posArray) {
-	
+
 	var winDialog = jQuery("<div></div>").addClass("selectDialog").attr("id",dialogId).attr("title",title);
 	winDialog.appendTo(jQuery("body"));
 	if(hei == null || wid == null || hei == "" || wid == "") {
 		wid = 800;
 		hei = 600;
 	}
-  
+
 	jQuery("#" + dialogId).dialog({
 		autoOpen: false,
 		height: hei,
@@ -2438,7 +2438,7 @@ function getServListDialog(event,dialogId,title,wid,hei,posArray) {
 			//_viewer.refresh();
 		}
 	});
-	
+
 	//手动打开dialog
 	var dialogObj = jQuery("#" + dialogId);
 	dialogObj.dialog("open");
@@ -2517,7 +2517,7 @@ function showRHDialog(title, content, func, handler, widHeiArray, event, areaId,
 	var btns = jQuery(".ui-dialog-buttonpane button",dialogObj.parent()).attr("onfocus","this.blur()");
 	btns.first().addClass("rh-small-dialog-ok");
 	dialogObj.parent().addClass("rh-small-dialog").addClass("rh-bottom-right-radius");
-	dialogObj.css({"background-color":"#FFF"});	
+	dialogObj.css({"background-color":"#FFF"});
 };
 /**
  * 系统前端调试对象
@@ -2551,7 +2551,7 @@ var RHFile = {
 	/**
 	 * ueditor所用上传路径
 	 */
-  //TODO: url = FireFly.getContextPath() + url 
+  //TODO: url = FireFly.getContextPath() + url
 	uploadUrl : {
 		imageUrl: "/sy/base/frame/coms/ueditor/jsp/imageUp.jsp",           		// 图片上传提交地址
 	    scrawlUrl: "/sy/base/frame/coms/ueditor/jsp/scrawlUp.jsp",           	// 涂鸦上传地址
@@ -2594,7 +2594,7 @@ var RHFile = {
 		} else {
 			if (Browser.systems().windows) { // windows平台下载
 				RHWindow.openWindow(url);
-			} else { 
+			} else {
 				if (this.isSupportConvert(fileName)) { // 否则如果是支持文档转换
 					//var docConversion = FireFly.getConfig("DOCUMENT_CONVERSION");//因为截至2013-12-05系统配置服务都是服务全县会报错所以改成前台获取
 					var docConversion = System.getVar("@C_DOCUMENT_CONVERSION@") || "false";
@@ -2607,7 +2607,7 @@ var RHFile = {
 					RHWindow.openWindow(url);
 				}
 			}
-		}		
+		}
 	},
 	/**
 	 * 查看指定文件
@@ -2803,7 +2803,7 @@ var Mouse = {
 			// 返回鼠标在视窗中的位置
 			return point;
 	},
-	
+
 	/**
 	 * 返回弹出框确定区域后的x，y坐标
 	 * width 弹出框宽度
@@ -2816,20 +2816,20 @@ var Mouse = {
 		var position = {};
 		if ((rtnVal == 0) || (rtnVal == 1)) {
 			position.x = xVal + 15;
-			position.y = yVal + 15; 
+			position.y = yVal + 15;
 		} else if (rtnVal == 2) {
 			position.x = xVal - width - 15;
-			position.y = yVal + 15; 
+			position.y = yVal + 15;
 		} else if (rtnVal == 3) {
 			position.x = xVal - width - 15;
-			position.y = yVal - height - 15; 
+			position.y = yVal - height - 15;
 		} else if (rtnVal == 4) {
 			position.x = xVal + 15;
-			position.y = yVal - height - 15; 
+			position.y = yVal - height - 15;
 		}
 		return position;
 	},
-	
+
 	/**
 	 * 确定弹出框位置
 	 * width 弹出框宽度，height 弹出框高度，x 鼠标x坐标，y鼠标y坐标
@@ -2879,7 +2879,7 @@ var Mouse = {
 			}
 			return false;
 	},
-	
+
 	/**
 	 * 获取当前窗口滚动条高度
 	 */
@@ -2912,10 +2912,10 @@ var Mouse = {
 		var bodyScrollWidth = 0;
 		var bodyScrollHeight = 0;
 		var pageDimensions = [0, 0];
-    
-		pageDimensions[0] = body.clientHeight; 
-		pageDimensions[1] = body.clientWidth; 
-    
+
+		pageDimensions[0] = body.clientHeight;
+		pageDimensions[1] = body.clientWidth;
+
 		bodyOffsetWidth = body.offsetWidth;
 		bodyOffsetHeight = body.offsetHeight;
 		bodyScrollWidth = body.scrollWidth;
@@ -2923,21 +2923,21 @@ var Mouse = {
 
 		if (bodyOffsetHeight > pageDimensions[0]) {
 			pageDimensions[0] = bodyOffsetHeight;
-		}    
-    
+		}
+
 		if (bodyOffsetWidth > pageDimensions[1]) {
 			pageDimensions[1] = bodyOffsetWidth;
-		}    
-    
+		}
+
 		if (bodyScrollHeight > pageDimensions[0]) {
-			pageDimensions[0] = bodyScrollHeight; 
-		}     
-    
+			pageDimensions[0] = bodyScrollHeight;
+		}
+
 		if (bodyScrollWidth > pageDimensions[1]) {
 			pageDimensions[1] = bodyScrollWidth;
-		}  
+		}
 
-		return pageDimensions; 
+		return pageDimensions;
 	}
 };
 /**
@@ -2954,12 +2954,12 @@ var Todo = {
 		/*
 		var sid = grid.getSelectItemVal("SERV_ID");
 		var url = grid.getSelectItemVal("TODO_URL");
-		var objectID1 = grid.getSelectItemVal("TODO_OBJECT_ID1");	
+		var objectID1 = grid.getSelectItemVal("TODO_OBJECT_ID1");
 		var title = grid.getSelectItemVal("TODO_TITLE");
 		var con = grid.getSelectItemVal("TODO_CONTENT");
 		var id = grid.getSelectItemVal("TODO_ID");
-		*/		
-		Todo.viewer = viewer;			
+		*/
+		Todo.viewer = viewer;
 		var todoOpts = {
 			"sId":grid.getSelectItemVal("SERV_ID"),
 			"title":grid.getSelectItemVal("TODO_TITLE"),
@@ -3005,15 +3005,15 @@ var Todo = {
 		} else if (todoParams.url.indexOf(".byid.do") > 0) {
 			var todoUrl = todoParams.url;
 			//当前人不是待办人，就是委托的，
-			if(todoParams.ownerCode && 
-					System.getUser("USER_CODE") != todoParams.ownerCode) { 
-				todoUrl = todoUrl.substring(0,todoUrl.length-1); 
+			if(todoParams.ownerCode &&
+					System.getUser("USER_CODE") != todoParams.ownerCode) {
+				todoUrl = todoUrl.substring(0,todoUrl.length-1);
 				todoUrl += ",_AGENT_USER_:'" + todoParams.ownerCode + "'}";
 			}
-			
+
 			var params = {"from":"todo","portalHandler":todoParams.portalHandler};
 			params.handlerRefresh = this.viewer;
-			var options = {"url":todoParams.sId + ".card.do?pkCode=" + todoParams.objectID1, 
+			var options = {"url":todoParams.sId + ".card.do?pkCode=" + todoParams.objectID1,
 					"tTitle":todoParams.title, "menuFlag":4, "replaceUrl":todoUrl,
 					"params":params,"areaId":todoParams.areaId};
 			Tab.open(options);
@@ -3022,9 +3022,9 @@ var Todo = {
 			var options = {"url":todoParams.url, "tTitle":todoParams.title
 					, "params":params,"areaId":todoParams.areaId};
 			Tab.open(options);
-		}		
+		}
 	},
-	
+
 	/**
 	 * 打开待办
 	 * @param sId 服务ID
@@ -3053,7 +3053,7 @@ var Todo = {
 	        cache:false,
 	        async:false,
 	        timeout:60000,
-	        success:function(data) { 
+	        success:function(data) {
 				if (data) {
 					var dataJson = data._DATA_;
 					count = parseInt(dataJson[0]);
@@ -3081,7 +3081,7 @@ var Todo = {
 	        cache:false,
 	        async:false,
 	        timeout:60000,
-	        success:function(data) { 
+	        success:function(data) {
 				if (data) {
 					var count = 0;
 					var dataJson = data._DATA_;
@@ -3122,14 +3122,14 @@ var Todo = {
 	        cache:false,
 	        async:false,
 	        timeout:60000,
-	        success:function(data) { 
+	        success:function(data) {
 				if (data) {
 					res = data;
 				}
 		    }
 	    });
 		return res;
-	},	
+	},
 	 /* 对列表上选中行双击查看绑定事件,双击打开该选中行的服务卡片页面
 	  * (对应的服务上应该有SERV_ID，DATA_ID，TITLE)
 	 *  例如：_viewer.grid.unbindTrdblClick();
@@ -3147,7 +3147,7 @@ var Todo = {
 			"params" : {"handlerRefresh":_viewer},
 			"menuFlag" : 3
 		};
-		Tab.open(options);	
+		Tab.open(options);
 	}
 };
 /**
@@ -3161,39 +3161,39 @@ var RHWindow = {
 	getViewPort : function(target) {
 		var theWidth=800,theHeight=800;
 	    try {
-	    	if (target.innerWidth) { 
-		        theWidth = target.innerWidth 
-		        theHeight = target.innerHeight 
-		    } else if (target.document.compatMode=='CSS1Compat') { 
-		        theWidth = target.document.documentElement.clientWidth 
-		        theHeight = target.document.documentElement.clientHeight 
-		    } else if (target.document.body) { 
-		        theWidth = target.document.body.clientWidth 
-		        theHeight = target.document.body.clientHeight 
-		    } 
+	    	if (target.innerWidth) {
+		        theWidth = target.innerWidth
+		        theHeight = target.innerHeight
+		    } else if (target.document.compatMode=='CSS1Compat') {
+		        theWidth = target.document.documentElement.clientWidth
+		        theHeight = target.document.documentElement.clientHeight
+		    } else if (target.document.body) {
+		        theWidth = target.document.body.clientWidth
+		        theHeight = target.document.body.clientHeight
+		    }
 	    } catch(e) {}
 	    return {width:theWidth, height:theHeight};
-	},	
+	},
 	/**
 	 * 获取指定window的滚动条的信息
 	 * @param target window
 	 */
 	getScroll : function(target) {
-		var top=0, left=0, width=800, height=800; 
+		var top=0, left=0, width=800, height=800;
 	    try {
-	    	if (target.document.documentElement && target.document.documentElement.scrollTop) { 
-		    	top = target.document.documentElement.scrollTop; 
-		    	left = target.document.documentElement.scrollLeft; 
-		    	width = target.document.documentElement.scrollWidth; 
-		    	height = target.document.documentElement.scrollHeight; 
-		    } else if (document.body) { 
-		    	top = target.document.body.scrollTop; 
-		    	left = target.document.body.scrollLeft; 
-		    	width = target.document.body.scrollWidth; 
-		    	height = target.document.body.scrollHeight; 
+	    	if (target.document.documentElement && target.document.documentElement.scrollTop) {
+		    	top = target.document.documentElement.scrollTop;
+		    	left = target.document.documentElement.scrollLeft;
+		    	width = target.document.documentElement.scrollWidth;
+		    	height = target.document.documentElement.scrollHeight;
+		    } else if (document.body) {
+		    	top = target.document.body.scrollTop;
+		    	left = target.document.body.scrollLeft;
+		    	width = target.document.body.scrollWidth;
+		    	height = target.document.body.scrollHeight;
 		    }
 	    } catch (e) {}
-		return {top:top, left:left, width:width, height:height}; 
+		return {top:top, left:left, width:width, height:height};
 	},
 	/**
 	 * 搜索部分启用外部滚动条的监听事件
@@ -3217,7 +3217,7 @@ var RHWindow = {
 //			alert("打开一个窗口，地址必须有！");
 			alert(Language.transStatic("tools_string22"));
 			return;
-		} 
+		}
 		// 默认在新页面打开
 		if (!target || target.length == 0) {
 			target = "_blank";
@@ -3232,7 +3232,7 @@ var RHWindow = {
 		}
 		window.open(url, target, param);
 	}
-	
+
 };
 /**
  * 计时器,辅助调试时查看执行时间。调用如：
@@ -3265,7 +3265,7 @@ function Stopwatch() {
 	this.time = function() {
 		return lapTime + (startAt ? now() - startAt : 0);
 	};
-}; 
+};
 /**
  * 判断列表页中是否存在“S_HAS_PS_MIND”列，如果存在列并有值，则展示“对钩”的小图片。当鼠标放到小图片上后，显示领导意见。
  */
@@ -3328,7 +3328,7 @@ var RHWF = {
 	loadWfUserState : function(userStateCells, tableObj, colCode) {
 		//版本标识
 		var version = true; //true:td版,false:span版
-		
+
 		//取消办理用户字段排序事件
 		if(colCode){
 			tableObj.find("th[icode='" + colCode + "']").unbind("click");
@@ -3391,7 +3391,7 @@ var RHWF = {
 								if(userStateObj.N){
 									htmlVal = htmlVal + userStateObj.N;
 								}
-								
+
 								if (userStateObj.D) {
 									htmlVal = htmlVal + "(" + userStateObj.D + ")";
 								}
@@ -3466,23 +3466,23 @@ var RHWF = {
 					cellObj.attr("TITLE", "");
 				}
 			}
-			
-		});	
+
+		});
 	},
 	/**
 	 * 处理超时时间
 	 * 列表jQuery句柄
 	 */
 	highLightOverTime: function(listHandler) {
-		var dataList = listHandler._listData._DATA_;	
+		var dataList = listHandler._listData._DATA_;
 		jQuery(dataList).each(function(i) {
 			var data = dataList[i];
 			var overTimeStr = data["TODO_OVERTIME_S"];
 			if(overTimeStr.indexOf("超时") >= 0){
 				jQuery("tr[id='" + data._PK_ + "']").find("td[icode='TODO_OVERTIME_S']").css({"color":"red"});
 			}
-		});	
-	},	
+		});
+	},
 	/**
 	 * 图片化紧急字段
 	 * fieldName 原始字段名
@@ -3508,7 +3508,7 @@ var RHWF = {
 			imgO.addClass("comm_emergency__very");
 			imgO.appendTo(nameObj);
 		}
-	}	
+	}
 };
 
 /**
@@ -3549,7 +3549,7 @@ function removeFlashObject(flashId){
 			flashObj.removeNode(true);
 		}
 	} catch (ex) {
-		
+
 	}
 };
 /**
@@ -3558,21 +3558,21 @@ function removeFlashObject(flashId){
 var StringUtils = {
 		/**字符串对象增加方法：是否以指定字符串结束**/
 		"endWith" : function(srcStr,str){
-			if(str==null || str=="" || srcStr==null || srcStr.length==0 || str.length>srcStr.length) 
-			  return false; 
-			if(srcStr.substring(srcStr.length-str.length)==str) 
-			  return true; 
-			else 
-			  return false; 
+			if(str==null || str=="" || srcStr==null || srcStr.length==0 || str.length>srcStr.length)
+			  return false;
+			if(srcStr.substring(srcStr.length-str.length)==str)
+			  return true;
+			else
+			  return false;
 		} ,
 		/**字符串对象增加方法：是否以指定字符串开始**/
 		"startWith" : function(srcStr,str){
-			if(str==null||str=="" || srcStr==null || srcStr.length==0||str.length>srcStr.length) 
-			  return false; 
-			if(srcStr.substr(0,str.length)==str) 
-			  return true; 
-			else 
-			  return false; 
+			if(str==null||str=="" || srcStr==null || srcStr.length==0||str.length>srcStr.length)
+			  return false;
+			if(srcStr.substr(0,str.length)==str)
+			  return true;
+			else
+			  return false;
 		},
 		/**字符串对象增加方法：获取随机数**/
 	    "randomNum" : function() {
@@ -3583,13 +3583,13 @@ var StringUtils = {
 		 * 扩展string方法，增加format方法，
 		 * alert("各种{1}啊{0}木{0}".format("有", "拼串"));
 		 */
-		"format" : function () { 
-			var arr = arguments; 
-			try { 
-				return this.replace(/\{(\d+)\}/g, function (x, i) { return arr[i]; }); 
-			} catch (e) { 
-				return this; 
-			} 
+		"format" : function () {
+			var arr = arguments;
+			try {
+				return this.replace(/\{(\d+)\}/g, function (x, i) { return arr[i]; });
+			} catch (e) {
+				return this;
+			}
 		}
 };
 
@@ -3606,7 +3606,7 @@ function Map(){
     this.size = function(){
         return this.keys.length;
     }
-     
+
     /**
      * 添加值
      * @param {Object} key
@@ -3670,7 +3670,7 @@ function Map(){
             var value = this.data[key];
             datas[i] = {
                 'key' : key,
-                'value':value  
+                'value':value
             }
         }
         return datas;
@@ -3775,14 +3775,14 @@ var Agent = {
 		if(res[UIConst.RTN_MSG].indexOf(UIConst.RTN_OK) >= 0){
 			if (res["_DATA_"].length > 0){
 				return true;
-			}		
+			}
 		}
 		return false;
 	}
 };
 
 /**
-*提供2个方法： 
+*提供2个方法：
 *1，str2hex方法把字符串转换成16进制字符串。例如:把“中国”转换成“e4b8ade59bbd”
 *2，hex2str方法把16进制字符串转换成字符串。例如:把“e4b8ade59bbd”转换成“中国”
 **/
@@ -3807,7 +3807,7 @@ var Hex = {
 			bytes = [];
 		}
 		var result = String.fromCharCode.apply(String, bytes);
-		return this._utf8_decode(result);    
+		return this._utf8_decode(result);
 	},
 	// 把字符串转成UTF-8编码
 	_utf8_encode : function (string) {
@@ -4007,9 +4007,9 @@ var SysMsg = {
 				resizable : false,
 				open: function(event, ui) {
 					if (!title) {
-						jQuery(".ui-dialog-titlebar").hide(); 
+						jQuery(".ui-dialog-titlebar").hide();
 					} else {
-						jQuery(".ui-dialog-titlebar").show(); 
+						jQuery(".ui-dialog-titlebar").show();
 					}
 				},
 				buttons:[{
@@ -4024,15 +4024,15 @@ var SysMsg = {
 			content = content || "";
 			params = params || {};
 			params = jQuery.extend(defaultParams, params);
-			
+
 			//2.界面绘画
 			var container = $("<div>").attr({"id":dlgId,"title":title});
 			container.append($("<div class='ml10 mr10 mt20 f16' style='padding:10px;'>").html(content));
 			container.appendTo($("body"));
-			
+
 			//3.显示dialog
 			jQuery("#" + dlgId).dialog(params);
-			
+
 		},
 		"alert" : function (msg,okfunc,title,width,height){
 			var arr = new Array();
@@ -4051,7 +4051,7 @@ var SysMsg = {
 			if(height < 260) {
 				height = 260;
 			}
-			
+
 			jQuery("#" + dlgId).dialog({
 				autoOpen : true,
 				width : width || 600,
@@ -4060,14 +4060,14 @@ var SysMsg = {
 				resizable : false,
 				open: function(event, ui) {},
 //				buttons:[{text:"确定",click:function(){
-				buttons:[{text:Language.transStatic("tools_string26"),click:function(){	
+				buttons:[{text:Language.transStatic("tools_string26"),click:function(){
 						if(typeof(okfunc) == "function"){
 							okfunc.call(jQuery("#" + dlgId));
-						}	
+						}
 						jQuery("#" + dlgId).remove();
 					}
 				}]
-			});			
+			});
 		},
 		"confirm" : function(msg,yesfunc,nofunc,yesText,noText){
 			var arr = new Array();
@@ -4076,9 +4076,9 @@ var SysMsg = {
 			arr.push("<div" + " id='" + dlgId + "' title='"+Language.transStatic('tools_string27')+"'>");
 			arr.push("<div class='ml10 mr10 mt20 f16'>" + msg + "</div>");
 			arr.push("</div>");
-			
+
 			jQuery("body").append(jQuery(arr.join("")));
-			
+
 			jQuery("#" + dlgId).dialog({
 				autoOpen : true,
 				width : 600,
@@ -4087,19 +4087,19 @@ var SysMsg = {
 				resizable : false,
 				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
 //				buttons:[{text:yesText||"是",click:function(){
-				buttons:[{text:yesText||Language.transStatic("tools_string28"),click:function(){	
+				buttons:[{text:yesText||Language.transStatic("tools_string28"),click:function(){
 					jQuery("#" + dlgId).remove();
 					if(typeof(yesfunc) == "function"){
 						yesfunc.call();
 					}
 //				}},{text:noText||"否",click:function(){
-				}},{text:noText||Language.transStatic("tools_string29"),click:function(){	
+				}},{text:noText||Language.transStatic("tools_string29"),click:function(){
 					jQuery("#" + dlgId).remove();
 					if(typeof(nofunc) == "function"){
 						nofunc.call();
 					}
 				}}]
-			});	
+			});
 		}
 }
 
@@ -4176,6 +4176,79 @@ function showVerify(pkArray,viewer){
 }
 
 /**
+ *  验证码
+ * @parm 回调函数
+ */
+function showVerifyCallback(callback){
+    var imgDate = new Date();
+    var content = '<div><table>'
+        + '<tr id="errMsg" style="visibility: hidden;"><td><font color="red" size="5">验证码错误！</font></td></tr>'
+        + '<tr><td>请输入验证码:<input name="vcode" style="height: 30px; width: 130px; font-size: 22px;" type="text" id="vcode"></td></tr>'
+        + '<tr style="height:20px"><td></td></tr>'
+        + '<tr><td>验证码：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id="codevalidate" src="/VerifyCodeServlet/'+imgDate.getMilliseconds()+'" style="height: 25px;" onclick="changeImg()"> '
+        + '<a href="javascript:;" onclick="changeImg()"><font size="2">看不清，换一张</font></a></td></tr>'
+        + '</table></div>'
+        + '<script>function changeImg() {var myDate = new Date();var url = $("#codevalidate").prop("src");url = url + "/" + myDate.getMilliseconds();$("#codevalidate").prop("src", url);}</script>';
+
+    var dialog = jQuery("<div></div>").addClass("dictDialog").attr("title",
+        "验证码");
+    var container = jQuery(content).appendTo(dialog);
+    dialog.appendTo(jQuery("body"));
+    var hei = 230;
+    var wid = 280;
+
+    var scroll = RHWindow.getScroll(parent.window);
+    var viewport = RHWindow.getViewPort(parent.window);
+    var top = scroll.top + viewport.height / 2 - hei / 2 - 88;
+    var posArray = [ "", top ];
+    dialog.dialog({
+        autoOpen : true,
+        height : hei,
+        width : wid,
+        show : "bounce",
+        hide : "puff",
+        modal : true,
+        resizable : false,
+        position : posArray,
+        buttons : {
+            "确定" : function() {
+                var vcode = $("#vcode").val();
+                if (vcode.length !== 4) {
+                    $("#errMsg").css("visibility", "visible");
+                } else {
+                    FireFly.doAct("TS_UTIL", "checkVerify", {
+                        "vcode" : vcode
+                    }, true, false, function(data) {
+
+                        if (data.res === "true") {
+                            dialog.remove();
+                            if(callback){
+                                callback();
+                            }
+                        } else {
+                            $("#errMsg").css("visibility", "visible");
+                        }
+                    });
+                }
+            },
+            "关闭" : function() {
+                // viewer.refresh();
+                dialog.remove();
+            }
+        }
+    });
+    dialog.parent().find(".ui-dialog-titlebar-close").hide();
+    var btns = jQuery(".ui-dialog-buttonpane button", dialog.parent()).attr(
+        "onfocus", "this.blur()");
+    btns.first().addClass("rh-small-dialog-ok");
+    btns.last().addClass("rh-small-dialog-close");
+    dialog.parent().addClass("rh-small-dialog").addClass(
+        "rh-bottom-right-radius");
+    jQuery(".ui-dialog-titlebar").last().css("display", "block");
+}
+
+
+/**
  * 代码添加行按钮删除 绑定事件
  * @param pkCode 行数据主键
  * @param viewer _viewer
@@ -4197,7 +4270,7 @@ function rowDelete(pkCode,viewer){
     		viewer._deletePageAllNum();
     		viewer.refreshGrid();
     		viewer.afterDelete();
-		},0);	
+		},0);
 	 } else {
 	 	return false;
 	 }
@@ -4217,7 +4290,7 @@ function rowEdit(pkCode,viewer,widHeiArray,xyArray){
 }
 
 function getDialog(dialogId,title,wid,hei) {
-	
+
 	var winDialog = jQuery("<div></div>").addClass("selectDialog").attr("id",dialogId).attr("title",title);
 	winDialog.appendTo(jQuery("body"));
 	if(hei == null || wid == null || hei == "" || wid == "") {
@@ -4225,14 +4298,14 @@ function getDialog(dialogId,title,wid,hei) {
 		hei = 600;
 	}
 	var posArray = [30,30];
-	
+
 	if (event) {
 		var cy = event.clientY;
 		var cx = event.clientX;
 	    posArray[0] = cx-100;
 	    posArray[1] = cy-50;
 	}
-  
+
 	jQuery("#" + dialogId).dialog({
 		autoOpen: false,
 		height: hei,
@@ -4248,7 +4321,7 @@ function getDialog(dialogId,title,wid,hei) {
 			//_viewer.refresh();
 		}
 	});
-	
+
 	//手动打开dialog
 	var dialogObj = jQuery("#" + dialogId);
 	dialogObj.dialog("open");
@@ -4268,14 +4341,14 @@ function getListPvlg(item,user_pvlg,filed) {
 	for(let key in user_pvlg){
 		if(arr==null){
 			if(user_pvlg[key].ROLE_DCODE){
-				
+
 				arr = user_pvlg[key].ROLE_DCODE;
 			}
 
 		}else{
-			
+
 			if(user_pvlg[key].ROLE_DCODE){
-				
+
 				var d = user_pvlg[key].ROLE_DCODE.split(",");
 				for(var k=0;k<d.length;k++){
 					if(arr.indexOf(d[k])<0){
@@ -4285,12 +4358,12 @@ function getListPvlg(item,user_pvlg,filed) {
 			}
 		}
 	}
-	
+
 	var ctlg_path= item[filed];
-	
+
 	if(ctlg_path) {
 		var ctlgPathArray=ctlg_path.split("^");//最后一个元素为空
-	
+
 		for(var j=0;j<ctlgPathArray.length-1;j++){
 			if(arr.indexOf(ctlgPathArray[j])>=0){
 				flag=true;
