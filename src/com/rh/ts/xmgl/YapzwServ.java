@@ -27,10 +27,10 @@ public class YapzwServ extends CommonServ {
     // jkflag 1 一般 2 已经申请借考 3 借入状态
     private final static String yapzwInfoSql = "SELECT *, " +
             "( CASE WHEN (" +
-            " EXISTS ( SELECT 'X' FROM ts_jklb_jk c WHERE INSTR(c.JK_KSNAME, b.BM_ID) > 0 )" +
+            " EXISTS ( SELECT 'X' FROM ts_jklb_jk c WHERE INSTR(c.JK_KSNAME, b.BM_ID) > 0 and b.BM_ID !='' and b.BM_ID is not null)" +
             " AND b.BM_STATUS IN ('2', '3') " +
             ") THEN '3'" +
-            " WHEN  EXISTS ( SELECT 'X' FROM ts_jklb_jk c WHERE INSTR(c.JK_KSNAME, b.BM_ID) > 0 and c.JK_STATUS ='1')  THEN '2'" +
+            " WHEN  EXISTS ( SELECT 'X' FROM ts_jklb_jk c WHERE INSTR(c.JK_KSNAME, b.BM_ID) > 0 and b.BM_ID !='' and b.BM_ID is not null and c.JK_STATUS ='1' )  THEN '2'" +
             " ELSE '1' END ) AS jk_flag " +
             "FROM TS_XMGL_KCAP_YAPZW a LEFT JOIN TS_BMSH_PASS b ON a.SH_ID = b.SH_ID";
     //座位显示 已借入/已经申请借考 标识

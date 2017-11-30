@@ -126,6 +126,12 @@ public class BmGroupServ extends CommonServ {
             if (ServDao.count(TsConstant.SERV_BM_GROUP_USER, bean) <= 0) {
                 //先查询避免重复添加
                 bean.set("USER_DEPT_NAME", name);
+                Bean syHrmZdstaffposition = ServDao.find("SY_HRM_ZDSTAFFPOSITION", code);
+                if (syHrmZdstaffposition != null) {
+                    bean.set("GW_LB", syHrmZdstaffposition.getStr("STATION_TYPE"));
+                    bean.set("GW_XL", syHrmZdstaffposition.getStr("STATION_NO"));
+                }
+                bean.set("USER_DEPT_NAME", name);
                 beans.add(bean);
                 codeList.add(code);
             }
@@ -137,8 +143,6 @@ public class BmGroupServ extends CommonServ {
     }
 
     /**
-     *
-     *
      * @param fileId 文件id
      */
     private List<Bean> getDataFromXls(String fileId) throws IOException, BiffException {

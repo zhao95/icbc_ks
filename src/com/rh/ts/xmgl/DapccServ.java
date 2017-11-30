@@ -129,6 +129,7 @@ public class DapccServ extends CommonServ {
                 Bean bean = beanList.get(0);
                 searchJkCodePath = bean.getStr("CODE_PATH");
                 values.add(searchJkCodePath);
+                whereSql += " and a.BM_STATUS in('2','3')";
                 whereSql += " and a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
                         " and ? like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%')";
                 //select CODE_PATH,substring(CODE_PATH , LOCATE('^',CODE_PATH,1)+1, LOCATE('^',CODE_PATH,LOCATE('^',CODE_PATH,1)+1)-LOCATE('^',CODE_PATH,1)-1) from sy_org_dept where CODE_PATH is not null;
@@ -137,6 +138,7 @@ public class DapccServ extends CommonServ {
         } else {
             //获取的考生 在考场关联机构本级及下级的机构
             //*EXISTS
+            whereSql += " and a.BM_STATUS not in('1','2','3')";
             whereSql += " AND EXISTS (select '' from TS_KCGL_GLJG g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
             values.add(searchKcId);
 
@@ -175,7 +177,7 @@ public class DapccServ extends CommonServ {
                 + "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE "
                 + "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
                 + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
-                + "where a.BM_STATUS not in('1','2','3')"
+                + "where 1=1 "
                 + whereSql;
         /*not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
                 + " and */
