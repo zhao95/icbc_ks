@@ -3,10 +3,6 @@ var _viewer = this;
 $("#TS_KCGL_IPSCOPE  .rhGrid").find("th[icode='del']").html("操作");
 $("#TS_KCGL_IPSCOPE  .rhGrid").find("tr").unbind("dblclick");
 //删除单行数据
-//_viewer.grid.getBtn("del").unbind("click").bind("click",function() {
-//	var pk = jQuery(this).attr("rowpk");//获取主键信息
-//	rowDelete(pk,_viewer);
-//});
 
 /*
 * 删除前方法执行
@@ -58,7 +54,7 @@ function openMyCard(dataId,readOnly,showTab){
 }
 
 //如果父页面是只读的，则隐藏编辑行按钮
-if(_viewer.getParHandler().opts.readOnly){
+if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly){
 	$("a#TS_KCGL_IPSCOPE_edit").hide();
 }
 

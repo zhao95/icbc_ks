@@ -41,6 +41,7 @@ if (s_odept == odept) {
 }
 
 function cardReadOnly() {
+	_viewer._readOnly = true;
 	saveBtn.hide();
 	applyBtn.hide();
 	_viewer.form.disabledAll();

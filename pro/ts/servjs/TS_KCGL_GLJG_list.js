@@ -57,6 +57,6 @@ function openMyCard(dataId,readOnly,showTab){
 }
 
 //如果父页面是只读的，则隐藏编辑行按钮
-if(_viewer.getParHandler().opts.readOnly){
+if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly){
 	$("a#TS_KCGL_GLJG_edit").hide();
 }
