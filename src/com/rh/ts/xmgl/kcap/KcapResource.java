@@ -118,6 +118,8 @@ public class KcapResource {
 
 		// 加载其他资源
 		loadOther();
+		
+		showResLog();
 	}
 
 	public KcapResource(String xmId, String odept) {
@@ -140,7 +142,7 @@ public class KcapResource {
 		// 加载其他资源
 		loadOther();
 
-		// showResLog();
+		 showResLog();
 	}
 
 	/**
@@ -1384,4 +1386,42 @@ public class KcapResource {
 		return spOrgKsBean;
 	}
 
+	public void showResLog() {
+		
+		log.error(">>>>>>>>>>>>>>>>>kcBean>>>>>>>>>>" + this.getKcBean().toString());
+		
+		log.error(">>>>>>>>>>>>>>>>>freeKsBean>>>>>>>>>>" + this.getFreeKsBean().toString());
+
+//		if (this.getFreeKsBean() != null) {
+//
+//			for (Object o : this.getFreeKsBean().keySet()) {
+//
+//				Bean jg = this.getFreeKsBean().getBean(o);
+//
+//				for (Object time : jg.keySet()) {
+//
+//					Bean timeb = jg.getBean(time);
+//
+//					log.error("------------------freeKsBean-----" + o + "--------" + time + "------" + timeb.toString());
+//				}
+//			}
+//		}
+		
+		log.error(">>>>>>>>>>>>>>>>JkKsBean>>>>>>>>>" + this.getJkKsBean().toString());
+
+//		if (this.getJkKsBean() != null) {
+//			
+//			for (Object o : this.getFreeKsBean().keySet()) {
+//
+//				Bean jg = this.getFreeKsBean().getBean(o);
+//
+//				for (Object time : jg.keySet()) {
+//
+//					Bean timeb = jg.getBean(time);
+//
+//					log.error("------------------JkKsBean-----" + o + "--------" + time + "------" + timeb.toString());
+//				}
+//			}
+//		}
+	}
 }

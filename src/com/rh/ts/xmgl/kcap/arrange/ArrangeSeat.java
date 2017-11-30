@@ -46,7 +46,7 @@ public class ArrangeSeat {
 		int ksConstrain = res.getKsConstrain(); // 不符合规则考试 是否强制安排
 
 		if (ksConstrain == 1) { // 强制安排
-			
+
 			log.error("||||||||||||||||||||||||||||||||||||||||||||--强制安排分隔线--||||||||||||||||||||||||||||||||||");
 
 			try {
@@ -119,7 +119,7 @@ public class ArrangeSeat {
 					String kcName = freeKc.getStr("KC_NAME");
 
 					String ksTime = freeKc.getStr("SJ_TIME");
-					
+
 					String kcLv = freeKc.getStr("KC_LV");
 
 					String zwsort[] = KcapUtils.sortStr(freeKc); // 座位排序
@@ -143,7 +143,7 @@ public class ArrangeSeat {
 							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
 							freeZw.set("SJ_TIME", ksTime);
-							
+
 							freeZw.set("KC_LV", kcLv);
 
 							Bean odeptKs = res.getGljgKs(kcId);
@@ -154,14 +154,21 @@ public class ArrangeSeat {
 							// 过滤 相同日期,相同场次的考生
 							KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
 
-							log.error("------------|" + kcName + "|" + date + "|" + sjCC + "|"
+							log.error("------------|" + kcName + "|" + kcId + "|" + date + "|" + sjCC + "|"
 									+ freeZw.getStr("ZW_ZWH_XT"));
+
+							for (Object o : odeptKs.keySet()) {
+
+								log.error("------------odeptKs-time:" + odeptKs.getBean(o).size());
+							}
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
 
 							try {
 
 								if (oneKs != null && !oneKs.isEmpty()) {
+
+									log.error("------------oneKs:" + oneKs.size());
 
 									saveRes(freeZw, oneKs, odeptKs, res);
 								}
@@ -215,7 +222,7 @@ public class ArrangeSeat {
 					String ksTime = freeDayCc.getStr("SJ_TIME");
 
 					String kcName = freeDayCc.getStr("KC_NAME");
-					
+
 					String kcLv = freeKc.getStr("KC_LV");
 
 					String date = day.toString();
@@ -241,7 +248,7 @@ public class ArrangeSeat {
 							freeZw.set("SJ_DATE", date); // 考试日期 yyyy-mm-dd
 
 							freeZw.set("SJ_TIME", ksTime);
-							
+
 							freeZw.set("KC_LV", kcLv);
 
 							Bean odeptKs = res.getGljgKs(kcId);
@@ -252,14 +259,21 @@ public class ArrangeSeat {
 							// 过滤 相同日期,相同场次的考生
 							KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
 
-							log.error("------------|" + kcName + "|" + date + "|" + sjCC + "|"
+							log.error("------------|" + kcName + "|" + kcId + "|" + date + "|" + sjCC + "|"
 									+ freeZw.getStr("ZW_ZWH_XT"));
+
+							for (Object o : odeptKs.keySet()) {
+
+								log.error("------------odeptKs-time:" + odeptKs.getBean(o).size());
+							}
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
 
 							try {
 
 								if (oneKs != null && !oneKs.isEmpty()) {
+
+									log.error("------------oneKs:" + oneKs.toString());
 
 									saveRes(freeZw, oneKs, odeptKs, res);
 								}
@@ -479,7 +493,7 @@ public class ArrangeSeat {
 			Bean addZw = addArrange(freeZw, oneKs, odeptKs, jk);
 
 			if (!Strings.isBlank(addZw.getId())) {
-				
+
 				log.error("-----成功安排座位：time:" + ksTime + "|odept:" + uCode);
 
 				// 移除考场资源

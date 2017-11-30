@@ -185,6 +185,8 @@ public class KcapMatch {
 		if (filtBean == null || filtBean.isEmpty()) {
 			return filtBean;
 		}
+		
+		log.error("++++++++++++++++++R001-begin:"+filtBean.size());
 
 		try {
 
@@ -246,6 +248,8 @@ public class KcapMatch {
 
 			filtBean = null;
 		}
+		
+		log.error("++++++++++++++++++R001-end:"+filtBean.size());
 
 		return filtBean;
 	}
@@ -372,6 +376,8 @@ public class KcapMatch {
 
 			return new Bean();
 		}
+		
+		log.error("++++++++++++++++++R002-begin:"+filtBean.size());
 
 		try {
 
@@ -407,6 +413,8 @@ public class KcapMatch {
 
 			log.error(e);
 		}
+		
+		log.error("++++++++++++++++++R002-end:"+filtBean.size());
 
 		return filtBean;
 	}
@@ -521,6 +529,8 @@ public class KcapMatch {
 		if (filtBean == null || filtBean.isEmpty()) {
 			return filtBean;
 		}
+		
+		log.error("++++++++++++++++++R004-begin:"+filtBean.size());
 
 		Bean cloneBean = (Bean) filtBean.clone();
 
@@ -550,6 +560,8 @@ public class KcapMatch {
 		// log.error("---------后farKs--time:" + timeKey + "|filtBean.size():" +
 		// filtBean.getBean(timeKey).size());
 		// }
+		
+		log.error("++++++++++++++++++R004-end:"+filtBean.size());
 
 		return filtBean;
 	}
@@ -588,6 +600,8 @@ public class KcapMatch {
 		if (filtBean == null || filtBean.isEmpty()) {
 			return filtBean;
 		}
+		
+		log.error("++++++++++++++++++R005-begin:"+filtBean.size());
 
 		try {
 
@@ -651,6 +665,8 @@ public class KcapMatch {
 
 			filtBean = null;
 		}
+		
+		log.error("++++++++++++++++++R005-end:"+filtBean.size());
 
 		return filtBean;
 	}
@@ -728,6 +744,8 @@ public class KcapMatch {
 		if (filtBean == null || filtBean.isEmpty()) {
 			return filtBean;
 		}
+		
+		log.error("++++++++++++++++++R006-begin:"+filtBean.size());
 
 		try {
 
@@ -783,6 +801,8 @@ public class KcapMatch {
 
 			filtBean = null;
 		}
+		
+		log.error("++++++++++++++++++R006-end:"+filtBean.size());
 
 		return filtBean;
 	}
@@ -799,6 +819,8 @@ public class KcapMatch {
 		if (filtBean == null || filtBean.isEmpty()) {
 			return filtBean;
 		}
+		
+		log.error("++++++++++++++++++R007-begin:"+filtBean.size());
 
 		Bean temp = new Bean();
 
@@ -838,6 +860,8 @@ public class KcapMatch {
 				filtBean = temp;
 			}
 		}
+		
+		log.error("++++++++++++++++++R007-end:"+filtBean.size());
 
 		return filtBean;
 	}
@@ -854,6 +878,8 @@ public class KcapMatch {
 		if (filtBean == null || filtBean.isEmpty()) {
 			return filtBean;
 		}
+		
+		log.error("++++++++++++++++++R008-begin:"+filtBean.size());
 
 		Bean filt = new Bean();
 
@@ -880,6 +906,8 @@ public class KcapMatch {
 		if (!filt.isEmpty()) {
 			return filt;
 		}
+		
+		log.error("++++++++++++++++++R008-end:"+filtBean.size());
 
 		return filtBean;
 	}
@@ -1002,6 +1030,8 @@ public class KcapMatch {
 		if (filtBean == null || filtBean.isEmpty()) {
 			return filtBean;
 		}
+		
+		log.error("++++++++++++++++++R009-begin:"+filtBean.size());
 
 		String kcLv = freeZw.getStr("KC_LV"); // 考场层级 一级考场 二级考场
 
@@ -1090,6 +1120,8 @@ public class KcapMatch {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		
+		log.error("++++++++++++++++++R009-end:"+filtBean.size());
 
 		return filtBean;
 
