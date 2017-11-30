@@ -101,7 +101,7 @@ $(function() {
 											+ '</td>'
 											+ '<td class="rhGrid-td-left " id="xm_end" style="text-align: center" >'
 											+ xm_jd
-											+ '0.0%</td>'
+											+ '</td>'
 											+ '<td class="rhGrid-td-left " id="xm_currentState" style="text-align: center">'
 											+ xm_currentState
 											+ '</td>'
@@ -149,7 +149,7 @@ $(function() {
 											+ '</td>'
 											+ '<td class="rhGrid-td-left " id="xm_end" style="text-align: center" >'
 											+ xm_jd
-											+ '0.0%</td>'
+											+ '</td>'
 											+ '<td class="rhGrid-td-left " id="xm_currentState" style="text-align: center">已结束</td>'
 											+'</tr>');
 					xm_rowNum2++;

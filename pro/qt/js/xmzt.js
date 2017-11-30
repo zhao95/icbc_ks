@@ -111,8 +111,10 @@ $(function() {
 //			debugger;
 			if(kccs_state_msg!= undefined && kcap_state_msg != undefined){
 				if(kcap_state_msg =="未开启"){
-					if(kccs_state_msg!="未开启"){
-						kcMsg = "进行中";
+					if(kccs_state_msg=="未开启"){
+						kcMsg = "未开启";
+					}else{
+						kcMsg = "进行中1";
 					}
 				}else if(kcap_state_msg =="进行中"){
 					//判断总行是否将已安排过的考场发布，若发布，则显示此提示
@@ -205,18 +207,19 @@ $(function() {
 			var jdtNum = resultXM._DATA_[0].XM_JD;
 			
 			//如果项目进度已经到100%，则删除掉TS_OBJECT中相关项目所有用户的记录。
-			if (jdtNum >= 10) {
+			if (jdtNum == "100%") {
 				var paramjdtNum = {};
 				paramjdtNum["_extWhere"] = "and DATA_ID ='" + xm_id + "' and SERV_ID='TS_XMZT'";
 				FireFly.doAct("TS_XMZT","delete",paramjdtNum);
 			}
 			
-			if (jdtNum == undefined) {
+			if (jdtNum == undefined || jdtNum === "") {
 				jdtNum = "0";
-			} else {
+			} 
+			/*else {
 				var jdeNumArr = jdtNum.split(".");
 				jdtNum = jdeNumArr[0] + "0";
-			}
+			}*/
 			
 			// 此时数组存储的是内容为查询到的挂接模块的名称
 			var mkArray = xm_gj_str.split(",");
@@ -266,7 +269,7 @@ $(function() {
 				var currentColor = typeMap[currentT];
 				var currentTT = currentT;
 				if(currentTT==""){
-					currentTT="未启用";
+					currentTT="未开启";
 				}
 				//将每一个项目挂接的模块姓名和状态添加到对象中。
 				xm_gj_name_state_map[currentN] = currentTT;
@@ -287,6 +290,8 @@ $(function() {
 			}
 			// 设置进度值为百分之xx
 			// var jdtNum = CurrentXMGJ.length / xmzt_arr_all.length * 100;
+			var jdtNumArr0 = jdtNum.split("%");
+			jdtNum = jdtNumArr0[0];
 			$("#jdtNum").html("" + jdtNum + "");
 			$("#jdtName").html("" + ks_name + "");
 			divOverAndOut(xm_id);
@@ -294,7 +299,7 @@ $(function() {
 		}
 		//如果从TS_OBJECT表中未查询到数据，则证明项目已经被删除，则将页面得状态图全部设置为初始值
 		else if(resultXM._DATA_.length==0){
-			$("#jdtNum").html("0.0");
+			$("#jdtNum").html("0%");
 			$("#jdtName").html("您暂时未参加任何考试！");
 		}
 		
@@ -305,7 +310,7 @@ $(function() {
 		var resultSH = FireFly.doAct("TS_BMSH_PASS", "query", paramSH);
 		// 如果没有报名考试， 则显示提示信息到页面
 		if (resultSH._DATA_.length == 0) {
-			$("#jdtNum").html("0.0");
+			$("#jdtNum").html("0");
 			$("#jdtName").html("您暂时未参加任何考试！");
 		} else {
 			//循环遍历报名审核通过的表，若存在垃圾数据，立即删除该数据（垃圾数据即为此表中有数据指向项目ID，则项目管理表中无该项目）
@@ -328,10 +333,10 @@ $(function() {
 				// 获取项目的进度百分数
 				var jdtNum = resultXM._DATA_[0].XM_JD;
 				if (jdtNum == undefined) {
-					jdtNum = "0.0";
+					jdtNum = "0";
 				} else {
-					var jdeNumArr = jdtNum.split(".");
-					jdtNum = jdeNumArr[0] + "0.0";
+					var jdeNumArr = jdtNum.split("%");
+					jdtNum = jdeNumArr[0];
 				}
 				// 此时数组存储的是内容为查询到的挂接模块的名称
 				var mkArray = xm_gj_str.split(",");
@@ -365,13 +370,13 @@ $(function() {
 				renderDiv4Color(menuXM_ID);
 				
 			}else{
-				var jdtNum="0.0";
+				var jdtNum="0";
 				var jdtName="您暂时未报名资格考试！";
 				if(jdtName==undefined){
 					jdtName="您暂时未报名资格考试！";
 				}
 				if (jdtNum == undefined) {
-					jdtNum = "0.0";
+					jdtNum = "0";
 				}
 				$("#jdtNum").html("" + jdtNum + "");
 				$("#jdtName").html("" + jdtName + "");
