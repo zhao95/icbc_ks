@@ -884,16 +884,16 @@ public class StayServ extends CommonServ {
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where")+deptwhere;
 		List<Bean> list;
-			if(user.getODeptCode().equals("0010100000")){
+			if(dept_code.equals("0010100000")){
 				//所有人员
 				list = ServDao.finds(servId, where1);
 
 			}else{
-				List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
+			/*	List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
 				for (Bean bean : finds) {
 					dept_code+=","+bean.getStr("DEPT_CODE");
 				}
-				deptwhere = "AND S_DEPT IN ("+dept_code+")";
+				deptwhere = "AND S_DEPT IN ("+dept_code+")";*/
 				DeptBean dept = OrgMgr.getDept(dept_code);
 				String codepath = dept.getCodePath();
 				String sql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
@@ -1009,7 +1009,7 @@ public class StayServ extends CommonServ {
 			//自己所在机构以下的所有数据
 			//管理员以下的所有机构
 			String deptwhere1="";
-			if(user.getODeptCode().equals("0010100000")){
+			if(dept_code.equals("0010100000")){
 				//所有人员
 				 deptwhere1 = "WHERE XM_ID='"+xmid+"'";
 				 String sql = "select count(*) from TS_BMSH_STAY "+deptwhere1;
