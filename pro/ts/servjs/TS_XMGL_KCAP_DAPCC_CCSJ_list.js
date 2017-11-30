@@ -25,12 +25,13 @@ _viewer.getBtn("myAdd").unbind("click").bind("click", function(event) {
 	    	var ends = idArray.ARR_END.split(",");
 	    	var ccs = idArray.ARR_CC.split(",");
 	    	for(var i=0;i<starts.length;i++){
-	    		var data = {}
+	    		var data = {};
 	    		data["CC_ID"] = ccId;
 	    		data["SJ_CC"] = ccs[i];
 	    		data["SJ_START"] = starts[i];
 	    		data["SJ_END"] = ends[i];
 	    		FireFly.doAct("TS_XMGL_KCAP_DAPCC_CCSJ", "save", data);
+//	    		FireFly.doAct("TS_XMGL_KCAP_DAPCC_CCSJ", "save", data, true,false);
 	    	}
 	    	_viewer.refresh();
 	    }
