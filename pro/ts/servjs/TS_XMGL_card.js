@@ -2,7 +2,7 @@
 var _viewer = this;
 //增加全选按钮
 //<label>报名</label>
-var $allSelect=jQuery('<input type="checkbox" style="position:relative;top:4px" value="全选" name="ts_xmgl-xm_gj_all" ><label>全选</label>');
+var $allSelect=jQuery('<input type="checkbox" style="position:relative;left :2px;top:4px" value="全选" name="ts_xmgl-xm_gj_all"  id="ts_xmgl-xm_gj_all_id"><label  style="position :relative;left :2px;"  for="ts_xmgl-xm_gj_all_id">全选</label>');
 //点击'<div position="absolute"><input type="checkbox" style="position:relative;top:4px" value="全选" name="ts_xmgl-xm_gj_all" ><label>全选</label></div>'
 //$allSelect.unbind('click').bind('click',function(){checked="checked"
 //	var xmgjCheckBoxs=$('input[name="TS_XMGL-XM_GJ"]');
