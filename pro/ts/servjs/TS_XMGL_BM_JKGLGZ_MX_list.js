@@ -86,7 +86,50 @@ function bindCard() {
 		
 		var formConDiv7 = $('<div class="formContent style="width:100%;">');
 		var nameArg = name.split("#"+obj2[0].vari+"#");
-			if(obj2[0].type== 'select'){
+			if(obj2[0].type== 'jktype'){
+				for(var i=0;i<nameArg.length;i++) {
+				if(i==0){
+					var span = document.createElement("span");
+					span.innerHTML=nameArg[i];
+					formConDiv7.append(span);
+					//禁考类型
+					var jktype =[];
+					var jktp = {};
+					jktp["qk"]="2";
+					jktp["qkname"]="无故弃考";
+					jktype.push(jktp);
+					var jktp1 = {};
+					jktp1["qk"]="1";
+					jktp1["qkname"]="违纪";
+					var jktp2 = {};
+					jktp2["qk"]="3";
+					jktp2["qkname"]="其它";
+					jktype.push(jktp1);
+					jktype.push(jktp2);
+					var codestr="";
+					for(var j=0;j<(obj2.length);j++){
+						if(j==(obj2.length-1)){
+							codestr+=obj2[j].code;
+						}else{
+							
+							codestr+=obj2[j].code+",";
+						}
+					}
+					var split = codestr.split(",");
+					for(var k=0;k<jktype.length;k++){
+						var id = jktype[k].qk;
+						var name = jktype[k].qkname;
+							if(split.indexOf(id)!=-1){
+								var checkboxs = $('<span position="absolute">&nbsp;<input checked style="position:relative;top:5px" type="checkbox" id='+id+' name='+name+'>'+name+'&nbsp;</span>');
+								formConDiv7.append(checkboxs);
+							}else{
+								var checkboxs = $('<span position="absolute">&nbsp;<input style="position:relative;top:5px" type="checkbox" id='+id+' name='+name+'>'+name+'&nbsp;</span>');
+								formConDiv7.append(checkboxs);
+							}
+				}
+				}
+				}
+			}else if(obj2[0].type== 'select'){
 				
 				//类别下拉框
 				//获取级别和级别code
@@ -357,7 +400,37 @@ function bindCard() {
 		bindselect();
 		bindelete();
 		$("#SETTING-saveRuleVar").bind("click",function() {
-				if(obj2[0].type=='string'){
+			if(obj2[0].type=='jktype'){
+				//先去重
+				//类别下拉框
+				//再改变code编码
+				var arr1 = [];
+				var arr = [];
+				var mx_name = nameArg[0];
+				var jsons = "[";
+				$("input:checkbox:checked").each(function(index,item){
+					if(index==0){
+						var name = $(this).attr("name");
+						var code = $(this).attr("id");
+						mx_name+="#jktype#";
+						arr1[index]=code;
+						jsons+='{"vari":"jktype","val":"'+name+'","type":"jktype","code":"'+code+'"}';
+					}else{
+						var name = $(this).attr("name");
+						var code = $(this).attr("id");
+						mx_name+="、#jktype#";
+						arr1[index]=code;
+						jsons+=',{"vari":"jktype","val":"'+name+'","type":"jktype","code":"'+code+'"}';
+					}
+				});
+				if($("input:checkbox:checked").length==0){
+					alert("禁考类别必选，请选择");
+					return false;
+				}
+				
+				jsons+=']';
+				saveRuleVarCode(dataId,arr,arr1,jsons,mx_name);
+			}else if(obj2[0].type=='string'){
 					var arr =$("#RULE-VAR-INPUT").val()
 					saveRuleVar(dataId,arr,jsonStr);
 				}else if(obj2[0].type=='select'){

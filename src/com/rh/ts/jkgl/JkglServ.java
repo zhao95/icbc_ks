@@ -2,6 +2,7 @@ package com.rh.ts.jkgl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +49,9 @@ public class JkglServ extends CommonServ {
     	for (Bean bean : guizelist) {
 				//启用禁考规则
 				gzid=bean.getStr("GZ_ID");
+				//判断此人禁考类型是否和项目禁考类型一致不一致不再往下进行
 				 flag = true;
+				 
 		}
     	if(flag){
     	UserBean userBean = Context.getUserBean();
@@ -63,16 +66,44 @@ public class JkglServ extends CommonServ {
     		//被禁考了  判断此人禁考结束时间 是否在配置信息中的时间之前
     		String where3 = "AND GZ_ID='"+gzid+"' order by MX_SORT asc";
     		List<Bean> finds2 = ServDao.finds("ts_xmgl_bm_jkglgz_mx", where3);
+    		
+    		for (Bean bean2 : finds2) {
+    			String lk=bean2.getStr("MX_NAME");
+    			String  jsonStr =  bean2.getStr("MX_VALUE2");
+    			if(lk.indexOf("jktype")>-1){
+    				JSONArray obj;
+
+    				try {
+    					obj = new JSONArray(jsonStr);
+    					List<String> s = new ArrayList<String>();
+    					for(int i=0;i<obj.length();i++){
+    						JSONObject jsonObject = obj.getJSONObject(i);
+    						s.add((String) jsonObject.get("code"));
+    					}
+    					for (String string : s) {
+    						if(string.equals(finds.get(0).getStr("JKGL_TYPE"))){
+    							//包含此人 的禁考类型
+    							flag = false;
+    						}
+    						
+    					}
+    			}catch (Exception e){
+    				
+    			}
+			}
+    		}
+    		
+    		if(flag){
+    			//true 不包含
+    			//如果是false 则包含此人的 禁考类型
+    			return new OutBean().set("num",0);
+    		}
+    		
+    		
     		boolean flagbm = false;
-    		for (Bean bean : finds2) {
-    			int count=0;
+    		for (Bean bean : finds2) { 
     			String lk=bean.getStr("MX_NAME");
-    			for(int i=0;i<lk.length();i++){
-    			if(lk.charAt(i)=='#'){
-    			count++;
-    			}
-    			}
-    			if(count>2){
+    			if(lk.indexOf("reason")>-1){
     				 str2 = bean.getStr("MX_NAME");
 
 	    			 str2 = str2.replace("#stime#", finds.get(0).getStr("JKGL_START_DATE"));
@@ -85,7 +116,7 @@ public class JkglServ extends CommonServ {
 		    		out.set("end",endd);
 		    		out.set("reason",reason);
 
-    			}else{
+    			}else if(lk.indexOf("dataTime")>-1){
     				//时间
     				String str3 = bean.getStr("MX_VALUE2");
     				try {
