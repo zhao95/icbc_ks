@@ -1859,13 +1859,13 @@ var KcObject = {
             $kcInfoTbody.append([
                 '<tr id="' + zw.YAPZW_ID + '">',
                 '   <td><input type="checkbox"></td>',
-                '   <td>' + (i + 1) + '</td>',
+                '   <td>' + zw.ZW_ZWH_SJ + '</td>',
                 '   <td>' + zw.org1 + '</td>',//一级机构
                 '   <td>' + zw.org2 + '</td>',//二级机构
                 '   <td>' + zw.org3 + '</td>',//三级机构
                 '   <td>' + zw.org4 + '</td>',//四级机构
                 '   <td>' + zw.BM_NAME + '</td>',//姓名
-                '   <td>' + zw.BM_XL + '-' + zw.BM_MK + '</td>',//考试名称
+                '   <td>' + zw.BM_XL + '-' + (zw.BM_MK === '无模块' ? '' : ('-' + zw.BM_MK )) + '</td>',//考试名称
                 '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), zw.BM_TYPE) + '</td>',//级别
                 '   <td>' + zw.COUNT + '</td>',//报考数
                 '   <td>' + zw.IPZ_IP + '</td>',//ip
