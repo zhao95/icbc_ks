@@ -91,6 +91,7 @@ position: absolute;
 </style>
 <!--判断用户是否登录  -->
 <%
+String bmbq = request.getParameter("bmbq");
 	String user_code = userBean.getStr("USER_CODE");
 
 			//获取所有项目ID
@@ -355,12 +356,11 @@ position: absolute;
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal -->
 		</div>
-
+		<input type="hidden" id="bmbq" value ="<%=bmbq %>">
 		<input type="hidden" id="xmid"/>
 		<input type="hidden" id="dijige">
 		<input type="hidden" id="user_code" value="<%=user_code %>">
 	</div>
-
 	<script src="<%=CONTEXT_PATH%>/ts/js/baoming.js"></script>
 </body>
 </html>

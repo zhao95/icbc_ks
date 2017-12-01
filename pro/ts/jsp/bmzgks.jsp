@@ -381,6 +381,10 @@ position: absolute;
 		</div>
 		</div>
 	<div id = 'chufa'></div>
+	<form id="form1" style="display:none" method="post" action="bm.jsp">
+				<input id = "bmbq" name="bmbq"></input><!--报名标签，是否选中第二个标签  -->
+				<input type="submit" name="Submit" value="提交">
+			</form>
 	<input type="hidden" id='xmidval' value="<%=xm_id %>">
 	<script>
 	

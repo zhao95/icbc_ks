@@ -352,7 +352,8 @@ function xminfoshow(){
 					if (BM_ID.strresult != null || BM_ID.strresult != "") {
 						hideMask();
 					}
-					window.location.href = "bm.jsp";
+					$("#bmbq").val("1");
+					$("#form1").submit();
 				}
 			}
 		}
