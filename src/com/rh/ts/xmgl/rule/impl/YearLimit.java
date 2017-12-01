@@ -21,7 +21,7 @@ public class YearLimit implements IRule {
 		UserBean userBean = Context.getUserBean();
 		String id = userBean.getStr("_PK_");
 		Bean find = ServDao.find("SY_ORG_USER",id);
-		String str = find.getStr("USER_WORK_DATE");
+		String str = find.getStr("USER_CMPY_DATE");
 		if("".equals(str)){
 			return false;
 		}

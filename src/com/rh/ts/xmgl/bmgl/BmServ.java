@@ -122,9 +122,7 @@ public class BmServ extends CommonServ {
 			e.printStackTrace();
 		}
 	}
-	if(xmbean==null){
-		 outBean.set("xmname","");
-	}
+	
 	if(list.size()==0){
 		    outBean.set("list","");
 		    outBean.set("SH_TGTSY",SH_TGTSY);
@@ -146,7 +144,11 @@ public class BmServ extends CommonServ {
 	}
     outBean.set("list",w.toString());
 	//有的地方需要项目的名称展示  
-    outBean.set("xmname",xmbean.getStr("XM_NAME"));
+    if(xmbean==null){
+		 outBean.set("xmname","");
+	}else{
+		outBean.set("xmname",xmbean.getStr("XM_NAME"));
+	}
     outBean.set("SH_TGTSY",SH_TGTSY);
     outBean.set("SH_BTGTSY",SH_BTGTSY);
     outBean.set("shstate", shstate);
