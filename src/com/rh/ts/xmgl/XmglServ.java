@@ -66,7 +66,7 @@ public class XmglServ extends CommonServ {
 		NBean.set("CTLG_PCODE", bean.getStr("CTLG_PCODE"));
 		//NBean.set("XM_STATE", bean.getStr("XM_STATE"));
 		NBean.set("XM_STATE", "未发布");
-		NBean.set("XM_JD", bean.getStr("XM_JD"));
+		NBean.set("XM_JD", "0%");
 		NBean.set("EXCEL_TEMPLATE_ID", bean.getStr("EXCEL_TEMPLATE_ID"));
 		NBean.set("XM_GJ", bean.getStr("XM_GJ"));
 		NBean.set("XM_FQDW_CODE", bean.getStr("XM_FQDW_CODE"));
