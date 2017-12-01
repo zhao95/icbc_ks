@@ -119,7 +119,7 @@ $("#TS_XMGL_BMGL-BM_ODEPTCODE__NAME").unbind("click").bind("click", function(eve
 _viewer.afterSave=function(){
 	var bmStartTime=_viewer.getItem("BM_START").getValue();
 	var bmEndTime=_viewer.getItem("BM_END").getValue();
-	var bmTime=bmStartTime+"至"+bmEndTime;
+	var bmTime=bmStartTime+" 至  "+bmEndTime;
 	var param={};
 	//(String xmszExplain,String xmid,String xmszid)
 	param["xmszExplain"]=bmTime;

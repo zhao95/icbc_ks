@@ -229,7 +229,7 @@ public  OutBean  getTimes(ParamBean param){
 public  OutBean  deleteTimes(ParamBean param){
 	String  xmid=param.getStr("xmid");
 	String  xmszid=param.getStr("xmszid");
-	String impSql = "UPDATE TS_XMGL_SZ SET XM_SZ_EXPLAIN="+' ' +" WHERE XM_ID = '"+xmid+"'   AND   XM_SZ_ID='"+xmszid+"'";
+	String impSql = "UPDATE TS_XMGL_SZ SET XM_SZ_EXPLAIN="+"' '"+" WHERE XM_ID = '"+xmid+"'   AND   XM_SZ_ID='"+xmszid+"'";
     Transaction.getExecutor().execute(impSql);
     return new OutBean().setData(impSql) ;
 }

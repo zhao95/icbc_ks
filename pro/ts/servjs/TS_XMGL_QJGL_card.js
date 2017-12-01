@@ -34,7 +34,7 @@ _viewer.afterSave=function(){
 	var XM_ID = _viewer.opts.XM_ID;
 	var bmStartTime=_viewer.getItem("QJ_STADATE").getValue();
 	var bmEndTime=_viewer.getItem("QJ_ENDDATE").getValue();
-	var bmTime=bmStartTime+"至"+bmEndTime;
+	var bmTime=bmStartTime+" 至  "+bmEndTime;
 	var param={};
 	//(String xmszExplain,String xmid,String xmszid)
 	param["xmszExplain"]=bmTime;
