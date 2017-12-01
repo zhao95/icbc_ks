@@ -31,7 +31,6 @@ setTimeout(function(){
 					if (cjVal == "1") {
 						param["_WHERE_"] = "and xm_id = '"+ xmId + "' and KC_LEVEL = '一级' and KC_ODEPTCODE='"+ dataId + "'";
 						var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", param)._DATA_;
-						
 						if (kcArr.length > 0) {
 							var kcNum = kcArr.length;
 							$(item).find("td[icode='CC_KC_NUM']").html(kcNum);
@@ -234,30 +233,36 @@ function getResult(kcArr){
 	var goodSyNum = 0;
 	var maxSyNum = 0;
 	var peopleNum = 0;
+	var kcIds = "";
 	for (var i = 0; i < kcArr.length; i++) {
 		var goodNum = kcArr[i].KC_GOOD - 0;
 		var maxNum = kcArr[i].KC_MAX - 0;
 		goodSumNum += goodNum;
 		maxSumNum += maxNum;
 		// 根据考场，得到机构的范围
-		var jgArr = FireFly.doAct("TS_KCGL_GLJG","finds", {"_WHERE_":"and KC_ID = '"+kcArr[i].KC_ID+"'"})._DATA_;
-		for(var j=0;j<jgArr.length;j++){
-			jgSum = jgSum + "," + jgArr[j].JG_CODE;
-		}
-	}
-	if(jgSum != ""){
-		jgSum = jgSum.substring(1);
-		jgSum = jgSum.replace(/,/g, "','");
+//		var jgArr = FireFly.doAct("TS_KCGL_GLJG_V","finds", {"_WHERE_":"and KC_ID = '"+kcArr[i].KC_ID+"'"})._DATA_;
+//		for(var j=0;j<jgArr.length;j++){
+//			jgSum = jgSum + "," + jgArr[j].JG_CODE;
+//		}
+		kcIds += kcArr[i].KC_ID + ","
 	}
 	
+	var jgSum = "";
+	FireFly.doAct("TS_XMGL_CCCS_V","getOdetpScope", {"kcIds":kcIds},true,false,function(data){
+		jgSum = data.odeptCodes;
+		if(jgSum != ""){
+			jgSum = jgSum.substring(0,jgSum.length-1);
+			jgSum = jgSum.replace(/,/g, "','");
+		}
+	});	
+	
 	var kcTypesArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_TYPE_V","finds",{"_WHERE_":"and xm_id = '"+xmId+"'"},true,false)._DATA_;
-
 	for(var i = 0; i < kcTypesArr.length; i++){
 		var tmpBmXlCode = kcTypesArr[i].BM_XL_CODE;
 		var tmpBmMkCode = kcTypesArr[i].BM_MK_CODE;
 		var tmpBmType = kcTypesArr[i].BM_TYPE;
 		var param = {};
-		param["_WHERE_"] = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and S_ODEPT in ('"+jgSum+"') and BM_XL_CODE = '"
+		param["_WHERE_"] = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and ODEPT_CODE_V in ('"+jgSum+"') and BM_XL_CODE = '"
 			+tmpBmXlCode+"' and BM_MK_CODE = '"+tmpBmMkCode+"' and BM_TYPE = '"+tmpBmType+"'";
 		var tmpPoepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", param)._DATA_;
 		if (tmpPoepleNum != 0 && goodSumNum != 0 && maxSumNum !=0) { //最优场次数 

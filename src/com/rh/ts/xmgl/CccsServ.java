@@ -1,8 +1,10 @@
 package com.rh.ts.xmgl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.CommonServ;
@@ -31,7 +33,9 @@ public class CccsServ extends CommonServ {
 			String xmId = paramBean.getStr("XM_ID");
 			paramBean.setQueryNoPageFlag(true);
 			
-			String where = getWhere(xmId);
+//			String where = getWhere(xmId);
+			//取关联机构的所有一级机构
+			String where = getWhereNew(xmId);
 			if (where.length() > 0) {
 			    paramBean.setQueryExtWhere(where);
 			}
@@ -227,7 +231,7 @@ public class CccsServ extends CommonServ {
 	    }
 	}
 	String odeptStr1 = getOdeptStr1(list1);
-	String odeptStr2 = getOdeptStr1(list2);
+	String odeptStr2 = getOdeptStr2(list2);
 	String odeptStr = odeptStr1 + odeptStr2;
 	if (odeptStr2.length() > 0) {
 	    odeptStr = odeptStr.substring(0, odeptStr.length() - 1);
@@ -241,6 +245,72 @@ public class CccsServ extends CommonServ {
 	}
 	return "";
     }
+    
+    /**
+     * 根据项目主键取得所有项目相关的一级机构
+     */
+    public String getWhereNew(String xmId) {
+	ParamBean param = new ParamBean();
+	param.set("_SELECT_", "JG_CODE,JG_TYPE");
+	param.set("_WHERE_", "and xm_id = '"+xmId+"'");
+	List<Bean> list = ServDao.finds(VIEW_GLJG, param);
+	List<Bean> list1 = new ArrayList<Bean>();
+	List<Bean> list2 = new ArrayList<Bean>();
+	for (int i = 0; i < list.size(); i++) {
+	    Bean bean = list.get(i);
+	    int type = bean.getInt("JG_TYPE");
+	    if(type == 1){
+		//部门
+		list1.add(bean);
+	    }else{
+		//机构
+		list2.add(bean);
+	    }
+	}
+	
+	String odeptStr1 = getOneLevelOdept(list1);
+	String odeptStr2 = getOneLevelOdept(list2);
+	String odeptStr = odeptStr1 + odeptStr2;
+	if (odeptStr2.length() > 0) {
+	    odeptStr = odeptStr.substring(0, odeptStr.length() - 1);
+	}
+	
+	if(odeptStr.length() > 0){
+	    odeptStr = odeptStr.replace(",", "','");
+	    StringBuffer sb = new StringBuffer();
+	    sb.append(" AND DEPT_CODE in ('" + odeptStr + "')");
+	    return sb.toString();
+	}
+	return "";
+    }
+    
+    /**
+     * 根据dept_code 取该部门一级机构的ODEPT_CODE
+     * @param list
+     * @return
+     */
+    public String getOneLevelOdept(List<Bean> list) {
+	StringBuilder sb = new StringBuilder();
+	 Set<String> set = new  HashSet<String>(); 
+	for (int i = 0; i < list.size(); i++) {
+	    String odeptCode = list.get(i).getStr("JG_CODE");
+	    Bean bean = ServDao.find("SY_ORG_DEPT_ALL", odeptCode);
+	    String codePath = bean.getStr("CODE_PATH");
+	    //0010100000^0010100005^0010100317^0010100322^
+	    String[] codeArr = codePath.split("\\^");
+	    if(codeArr.length > 1 && set.add(codeArr[1])){
+		//特例：总行
+		List<Bean> list2 = ServDao.finds("SY_ORG_DEPT", "and dept_code = '"+codeArr[1]+"' and dept_code != odept_code");
+		if (list2.size() > 0) {
+		    sb.append(codeArr[0]+",");
+		}else{
+		    sb.append(codeArr[1]+",");
+		}
+	    }
+	}
+	return sb.toString();
+    }
+    
     public LinkedHashMap<String, Bean> createLinkedHashMap(){
 	LinkedHashMap<String, Bean> lhMap = new LinkedHashMap<String, Bean>();
 	
@@ -475,5 +545,50 @@ public class CccsServ extends CommonServ {
 	}
 	**/
 	return res;
+    }
+    
+    /**
+     * 根据考场Id 数组 取得影响的部门
+     * @param paramBean
+     * @return
+     */
+    public OutBean getOdetpScope(ParamBean paramBean){
+	OutBean outBean = new OutBean();
+	String kcIds = paramBean.getStr("kcIds");
+	String[] kcIdArr = kcIds.split(",");
+	StringBuilder sb = new StringBuilder();
+	for (int i = 0; i < kcIdArr.length; i++) {
+	    if (kcIdArr[i].length() > 0) {
+		sb.append(getOdeptStr(kcIdArr[i]));
+	    }
+	}
+	
+	outBean.set("odeptCodes", sb.toString());
+	return outBean;
+    }
+    
+    public String getOdeptStr(String kcId){
+	ParamBean param = new ParamBean();
+	param.set("_SELECT_", "JG_CODE,JG_TYPE");
+	param.set("_WHERE_", "and kc_id = '"+kcId+"'");
+	List<Bean> list = ServDao.finds(VIEW_GLJG, param);
+	List<Bean> list1 = new ArrayList<Bean>();
+	List<Bean> list2 = new ArrayList<Bean>();
+	for (int i = 0; i < list.size(); i++) {
+	    Bean bean = list.get(i);
+	    int type = bean.getInt("JG_TYPE");
+	    if(type == 1){
+		//部门
+		list1.add(bean);
+	    }else{
+		//机构
+		list2.add(bean);
+	    }
+	}
+	
+	String odeptStr1 = getOneLevelOdept(list1);
+	String odeptStr2 = getOneLevelOdept(list2);
+	String odeptStr = odeptStr1 + odeptStr2;
+	return odeptStr;
     }
 }
