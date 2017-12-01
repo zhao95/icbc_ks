@@ -1,4 +1,5 @@
 var user_code = System.getVar("@USER_CODE@");
+var bmbq = $("#bmbq").val();
 //隔一行 进行 背景颜色 渲染
 function rowscolor(table) {
     var rows = table.getElementsByTagName("tr");
@@ -167,11 +168,16 @@ $('#ayishen').click(function () {
 });
 //加载完毕  显示第一个 tab active  显示隐藏
 $(function () {
-    $('#myTab li:eq(1) a').tab('show');
-    var table = document.getElementById("table");
-    //对每一行 进行  渲染 颜色
-    ksqxm();
-    selectcreate();
+   
+	$('#myTab li:eq(1) a').tab('show');
+	selectcreate();
+    if(bmbq==1){
+    	$("#ayishen").trigger("click");
+    }else{
+    	    var table = document.getElementById("table");
+    	    //对每一行 进行  渲染 颜色
+    	    ksqxm();
+    }
 });
 //---------------------下拉框生成
 function selectcreate() {
