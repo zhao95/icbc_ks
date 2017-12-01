@@ -14,6 +14,7 @@ import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
+import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
@@ -216,6 +217,20 @@ public Boolean getTjState(String odeptcode,String xmid){
 	 return count==0?true:false;
 }
 
-
-
+//修改时间UPDATE TS_XMGL_SZ SET XM_SZ_EXPLAIN= 参数 WHERE XM_ID = 参数   AND   XM_SZ_ID=参数//String xmszExplain,String xmid,String xmszid){
+public  OutBean  getTimes(ParamBean param){
+	String  xmszExplain=param.getStr("xmszExplain");
+	String  xmid=param.getStr("xmid");
+	String  xmszid=param.getStr("xmszid");
+	String impSql = "UPDATE TS_XMGL_SZ SET XM_SZ_EXPLAIN= ' "+xmszExplain+ "' WHERE XM_ID = '"+xmid+"'   AND   XM_SZ_ID='"+xmszid+"'";
+    Transaction.getExecutor().execute(impSql);
+    return new OutBean().setData(impSql) ;
+}
+public  OutBean  deleteTimes(ParamBean param){
+	String  xmid=param.getStr("xmid");
+	String  xmszid=param.getStr("xmszid");
+	String impSql = "UPDATE TS_XMGL_SZ SET XM_SZ_EXPLAIN='"+" " +"' WHERE XM_ID = '"+xmid+"'   AND   XM_SZ_ID='"+xmszid+"'";
+    Transaction.getExecutor().execute(impSql);
+    return new OutBean().setData(impSql) ;
+}
 }

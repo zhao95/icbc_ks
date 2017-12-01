@@ -136,3 +136,28 @@ _viewer.getItem("SH_TSY").change(function(){
 		_viewer.getItem("SH_BTGTSY").show();
 	}
 });
+//保存自后TS_XMGL_BMSH-SH_END
+_viewer.afterSave=function(){debugger;
+	var XM_SZ_ID = _viewer.opts.XM_SZ_ID;
+	var XM_ID=_viewer.opts.XM_ID;
+	var shRgsh=_viewer.getItem("SH_RGSH").getValue();
+	var bmStartTime=_viewer.getItem("SH_START").getValue();
+	var bmEndTime=_viewer.getItem("SH_END").getValue();
+	if(shRgsh==2){
+	var param={};
+	param["xmid"]=XM_ID;
+	param["xmszid"]=XM_SZ_ID;
+	FireFly.doAct("TS_XMGL_SZ","deleteTimes",param,true,false);
+	}
+	if(shRgsh==1){
+	if(bmStartTime && bmEndTime){
+		var bmTime=bmStartTime+"至"+bmEndTime;
+		var param={};
+		//(String xmszExplain,String xmid,String xmszid)
+		param["xmszExplain"]=bmTime;
+		param["xmid"]=XM_ID;
+		param["xmszid"]=XM_SZ_ID;
+		FireFly.doAct("TS_XMGL_SZ","getTimes",param,true,false);	
+	}
+	}
+}

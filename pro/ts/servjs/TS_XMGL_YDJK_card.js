@@ -43,4 +43,18 @@ _viewer.beforeSave = function() {
 // 
 
 
+//保存自后
+_viewer.afterSave=function(){
+	var XM_SZ_ID = _viewer.opts.XM_SZ_ID;
+	var XM_ID = _viewer.opts.XM_ID;
+	var bmStartTime=_viewer.getItem("YDJK_STADATE").getValue();
+	var bmEndTime=_viewer.getItem("YDJK_ENDDATE").getValue();
+	var bmTime=bmStartTime+"至"+bmEndTime;
+	var param={};
+	//(String xmszExplain,String xmid,String xmszid)
+	param["xmszExplain"]=bmTime;
+	param["xmid"]=XM_ID;
+	param["xmszid"]=XM_SZ_ID;
+	FireFly.doAct("TS_XMGL_SZ","getTimes",param,true,false);
+}
 
