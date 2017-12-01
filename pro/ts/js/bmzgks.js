@@ -111,10 +111,10 @@ function xminfoshow(){
    						xlcode=resdata[z].BM_XL_CODE;
    						FLAG = true;
    					}
-   					if(resdata[z].BM_XL_CODE==bm_xl){
+   					/*if(resdata[z].BM_XL_CODE==bm_xl){
    						//本序列 只能报名一个
    						xlflag = true;
-   					}
+   					}*/
    				}
          		var divtext1 = $("#"+a).html();//获取div对应的数组
        			
@@ -132,7 +132,7 @@ function xminfoshow(){
    					continue;
    					
    				}
-   				if(xlflag){
+   				/*if(xlflag){
    					if(bm_xl==STATION_NO_CODE){
    						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">本序列只能报考一个,请撤销再提交或请选择其它考试</div>');
    						$("#"+yzjg).append("验证不通过");
@@ -141,9 +141,9 @@ function xminfoshow(){
    						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
    						$("#"+yzjg).append("验证不通过");
    					}
-   					/*$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);*/
+   					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
    					continue;
-   				}
+   				}*/
        			}
          		if(data.none=="true"){//如果没有引用规则的话 直接通过
          			
@@ -480,10 +480,15 @@ function xminfoshow(){
 		 lbparam["STATION_TYPE_CODE"]=STATION_TYPE_CODE;
 		 var resultFlag = FireFly.doAct("TS_BMLB_BM","checkXl",lbparam);
 		 var extWhere="";
+		 //不显示已报名的考试
+		 var paramb = {};
+		 paramb["xmid"]=xm_id;
+		 var ressultids = FireFly.doAct("TS_BMLB_BM","getYibmids",paramb)
+		 var ids = ressultids.ids;
 		 if(resultFlag.flag=="false"){
-		 extWhere="AND KSLBK_ID IN (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')union select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"') AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)" +sqlstr +"AND KSLBK_CODE !='023001'";
+		 extWhere="AND KSLBK_ID IN ("+ids+") AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)" +sqlstr +"AND KSLBK_CODE !='023001'";
 		 }else{
-		 extWhere="AND KSLBK_ID IN (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"'))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"')union select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xm_id+"') AND KSLBK_CODE!='"+STATION_TYPE_CODE+"'" +sqlstr +"AND KSLBK_CODE !='023001'";
+		 extWhere="AND KSLBK_ID IN ("+ids+") AND KSLBK_CODE!='"+STATION_TYPE_CODE+"'" +sqlstr +"AND KSLBK_CODE !='023001'";
 		 }
 		 var setting={data
 	             :FireFly.getDict('TS_XMGL_BM_KSLBK','KSLBK_PID',extWhere),
@@ -902,10 +907,10 @@ function xminfoshow(){
 						xlcode=resdata[z].BM_XL_CODE;
 						FLAG = true;
 					}
-					if(resdata[z].BM_XL_CODE==bm_xl){
+				/*	if(resdata[z].BM_XL_CODE==bm_xl){
 						//本序列 只能报名一个
 						xlflag = true;
-					}
+					}*/
 				}
 				if(FLAG){
 					configflag=true;
@@ -925,7 +930,7 @@ function xminfoshow(){
 					continue;
 					
 				}
-				if(xlflag){
+				/*if(xlflag){
 					configflag=true;
 					var divtext1 = $("#"+a).html();//获取div对应的数组
 	       			
@@ -938,10 +943,10 @@ function xminfoshow(){
 						$("#"+a).append('<div class="btn" name="existedbm" onclick="deleterow(this)" type="button" style="color:red;backgroundcolor:lightseagreen">请删除</div>');
 						$("#"+yzjg).append("验证不通过");
 					}
-					/*$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);*/
+					$("#"+yzjg).parent().parent().find("input[name='checkboxaa']:first").prop("checked",false);
 					continue;
 	       			}
-				}
+				}*/
 		}
 	
 		}
@@ -1099,6 +1104,9 @@ function xminfoshow(){
 		var wherexl = "AND KSLB_CODE="+"'"+STATION_TYPE_CODE+"'"+" AND KSLB_XL_CODE="+"'"+STATION_NO_CODE+"'"+" AND XM_ID="+"'"+xm_id+"'";
 		var param={};
 		param["where"]=wherexl;
+		param["STATION_TYPE_CODE"]=STATION_TYPE_CODE;
+		param["STATION_NO_CODE"]=STATION_NO_CODE;
+		param["xm_id"]=xm_id;
 		 result1 = FireFly.doAct("TS_BMLB_BM","getMatchData",param);
 				if(result1.list==""){
 					return;
@@ -1124,9 +1132,7 @@ function xminfoshow(){
 				 '<td class="rhGrid-td-hide"><div>biaoshi</div></td>'+
 				 '<td class="rhGrid-td-hide"><div>biaoshi</div></td>';
 				 
-			
 			 $("#tableid tbody").append(tr);
-	
 	}
 			
 			//模块改变事件

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
 
@@ -525,6 +526,23 @@ public class BmlbServ extends CommonServ {
 					+ "' order by cast(KSLB_TYPE as SIGNED) desc";
 		}
 		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", wheremk);
+		
+		String STATION_TYPE_CODE = paramBean.getStr("typecode");
+		String STATION_NO_CODE = paramBean.getStr("xlcode");
+		UserBean userBean = Context.getUserBean();
+		String code = userBean.getCode();
+		// 获取到所有的模块 但可能重复
+		List<Bean> finds = ServDao.finds("TS_BMLB_BM", "and BM_XL_CODE='"+STATION_NO_CODE+"' and BM_LB_CODE='"+STATION_TYPE_CODE+"' and xm_id='"+XM_ID+"' and BM_STATE='1' and BM_CODE ='"+code+"'");
+		for (Bean bean : finds) {
+			for(int i=0;i<list.size();i++){
+				if(bean.getStr("KSLBK_ID").equals(list.get(i).getStr("KSLBK_ID"))){
+					list.remove(i);
+					break;
+				}
+			}
+		}
+		
+		
 		String KSLB_TYPE = "";
 		String ks_time = "";
 		String ids = "";
@@ -1193,8 +1211,22 @@ public class BmlbServ extends CommonServ {
 	public OutBean getMatchData(Bean paramBean) {
 		OutBean out = new OutBean();
 		String wherexl = paramBean.getStr("where");
+		String xm_id = paramBean.getStr("xm_id");
+		String STATION_TYPE_CODE = paramBean.getStr("STATION_TYPE_CODE");
+		String STATION_NO_CODE = paramBean.getStr("STATION_NO_CODE");
+		UserBean userBean = Context.getUserBean();
+		String code = userBean.getCode();
 		// 获取到所有的模块 但可能重复
 		List<Bean> xlList = ServDao.finds("TS_XMGL_BM_KSLB", wherexl);
+		List<Bean> finds = ServDao.finds("TS_BMLB_BM", "and BM_XL_CODE='"+STATION_NO_CODE+"' and BM_LB_CODE='"+STATION_TYPE_CODE+"' and xm_id='"+xm_id+"' and BM_STATE='1' and BM_CODE ='"+code+"'");
+		for (Bean bean : finds) {
+			for(int i=0;i<xlList.size();i++){
+				if(bean.getStr("KSLBK_ID").equals(xlList.get(i).getStr("KSLBK_ID"))){
+					xlList.remove(i);
+					break;
+				}
+			}
+		}
 		Bean mkBean = new Bean();
 		Bean mkcodeBean = new Bean();
 		if (xlList.size() != 0) {
@@ -1850,5 +1882,50 @@ public class BmlbServ extends CommonServ {
 			ServDao.save("TS_BM_GROUP_DEPT", newBean);
 		}
 		return new OutBean().setOk("添加成功");
+	}
+	/**
+	 * 此人已报名 数据 不能再显示出来
+	 */
+	public OutBean getYibmids(Bean paramBean){
+		UserBean userBean = Context.getUserBean();
+		String code = userBean.getCode();
+		String xmid = paramBean.getStr("xmid");
+		String sql1 = "select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'";
+		List<Bean> query = Transaction.getExecutor().query(sql1);
+		/*String sql = "select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"')))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"')union select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'";
+		List<Bean> query = Transaction.getExecutor().query(sql);*/
+			List<Bean> list = ServDao.finds("TS_BMLB_BM", "AND BM_CODE = '"+code+"' and XM_ID='"+xmid+"' AND BM_STATE = 1");
+			//删除已报名的  kslbk_id
+			for (Bean bean : list) {
+				String KSLBK_ID = bean.getStr("KSLBK_ID");
+			for(int i = 0;i<query.size();i++){
+				if(query.get(i).getId().equals(KSLBK_ID)){
+					query.remove(i);
+					break;
+				}
+				}
+			}
+			//最后的
+			String ids = "";
+			for(int i = 0;i<query.size();i++){
+				if(i==0){
+					ids="'"+query.get(i).getId()+"'";
+				}else{
+					ids+=",'"+query.get(i).getId()+"'";
+				}
+			}
+			
+			String sql = "select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN ("+ids+")))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN ("+ids+"))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN ("+ids+")";
+			List<Bean> query1 = Transaction.getExecutor().query(sql);
+			String newids="";
+			for(int i = 0;i<query1.size();i++){
+				if(i==0){
+					newids="'"+query1.get(i).getId()+"'";
+				}else{
+					newids+=",'"+query1.get(i).getId()+"'";
+				}
+			}
+			newids+=","+ids;
+			return new OutBean().set("ids", newids);
 	}
 }
