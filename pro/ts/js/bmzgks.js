@@ -1108,7 +1108,7 @@ function xminfoshow(){
 			  xlcode= pageEntity[0].KSLB_XL_CODE;
 			 //拼接 tr
 			 var tr = document.createElement('tr');
-				 tr.innerHTML='<td style="text-align:center"><input style="margin-right:12px;" type="checkbox" name="checkboxaa" checked></td>'+
+				 tr.innerHTML='<td style="text-align:center"><input style="margin-right:12px;" type="checkbox" name="checkboxaa"></td>'+
 				 '<td>'+lbname+'</td>'+
 				 '<td>'+xlname+'</td>'+
 				 '<td width="27%"><select id="mkid" onchange="typeId(this)"></select></td>'+

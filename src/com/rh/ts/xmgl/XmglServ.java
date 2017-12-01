@@ -352,9 +352,12 @@ public class XmglServ extends CommonServ {
 				}
 			}
 		}*/
-		String sql1="select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END order by b.bm_end desc";
+		String sql1="select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_START AND b.BM_END order by b.bm_end ASC";
+		String sql2 = "select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END AND ('"+datestr+"'>b.BM_END OR '"+datestr+"'<b.BM_START) order by b.bm_end ASC";
 		/*String sql1 = "select * from ts_xmgl where xm_id in(SELECT XM_ID FROM TS_XMGL_BMGL WHERE '"+datestr+"' BETWEEN BM_TZ_START AND BM_TZ_END order by BM_END ASC)";*/
 		List<Bean> list = Transaction.getExecutor().query(sql1);
+		List<Bean> list2 = Transaction.getExecutor().query(sql2);
+		list.addAll(list2);
 		/*String s = "";
 		for (int i = 0; i < list.size(); i++) {
 			if (i == (list.size() - 1)) {
