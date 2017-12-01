@@ -1167,10 +1167,6 @@ public class BmlbServ extends CommonServ {
 			return out.setError("此数据不存在");
 		}
 		String xm_id = bmbean.getStr("XM_ID");
-		Bean xmbean = ServDao.find("TS_XMGL", xm_id);
-		if (xmbean == null) {
-			return out.setError("项目消失");
-		}
 		// 获取项目id
 		String where1 = "AND XM_ID=" + "'" + xm_id + "'";
 		List<Bean> bmglList = ServDao.finds("TS_XMGL_BMGL", where1);
@@ -1181,8 +1177,13 @@ public class BmlbServ extends CommonServ {
 		Bean bmglbean = bmglList.get(0);
 		out.set("bmglbean", bmglbean);
 		out.set("bmbean", bmbean);
-		out.set("xmname", xmbean.getStr("XM_NAME"));
 		out.set("phone", phontnum);
+		//
+		Bean xmbean = ServDao.find("TS_XMGL", xm_id);
+		if (xmbean == null) {
+			return out.setError("项目消失");
+		}
+		out.set("xmname", xmbean.getStr("XM_NAME"));
 		return out;
 	}
 
