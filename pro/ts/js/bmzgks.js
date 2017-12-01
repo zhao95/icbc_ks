@@ -838,7 +838,7 @@ function xminfoshow(){
 		
 		
 		if($("input[name=checkboxaa]:checked").length==0){
-			alert("请点选考试");
+			alert("请选择考试");
 			$("#tjbt").attr("data-target","");
 			return;
 		}

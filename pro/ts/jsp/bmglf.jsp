@@ -277,6 +277,7 @@
 		//非资格考试的提交数据
 			var bmlb="";
 		function tijiaofzg(){
+			bmlb="";
 			var bmArray = document.getElementsByName("checkname");
 			
 		     	for(var i=0;i<bmArray.length;i++){
@@ -289,15 +290,15 @@
 		     		}
 		     	}
 		     	 if(bmlb=="" || bmlb==null){
-				    	window.history.go(0);
 				    	alert("至少选择一项");
+				    	return;
 		     	 }
 		     	var param={};
 		     	param["ids"]=bmlb;
 		     	var result = FireFly.doAct("TS_BMLB_BM","pdfzg",param);
 		     	if(result.flag=="false"){
 		     		alert("您已重复报名")
-		     		return
+		     		return;
 		     		
 		     	}else{
 		     		var arrChk=$("input[name='checkname']:checked"); 
