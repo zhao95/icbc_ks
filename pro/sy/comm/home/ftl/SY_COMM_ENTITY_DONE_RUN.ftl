@@ -11,13 +11,13 @@ for(var i=0;i<datalist.length;i++){
 	'<td width="5%" align="center">'+datalist[i].start+'</td>'+
 	'<td width="5%" align="center">'+datalist[i].end+'</td>'+
 	'<td align="center">待安排</td>'+
-	'<td align="center" id='+datalist[i].DATA_ID+'><span style="color:lightblue"><a style="text-decoration:none;" id='+datalist[i].TODO_ID+' href="javascript:void(0);">审批</a></span></td>'+
+	'<td align="center" id='+datalist[i].DATA_ID+'><span style="color:lightblue"><a style="text-decoration:none;" id='+datalist[i].TODO_ID+' jkid='+datalist[i].DATA_ID+' href="javascript:void(0);">审批</a></span></td>'+
 	'</tr>';
 	$("#jktable").append(newTR);
 	$("#"+datalist[i].TODO_ID).click(function(){
 		var todoid = $(this).attr("id");
-		var qjid = $(this).parent().attr("id");
-		 $("#jkid").val(qjid);
+		var jkid = $(this).attr("jkid");
+		 $("#jkid").val(jkid);
 		   $("#todoId").val(todoid);
 		   $("#hidden").val("2");
 		   $("#tiaozhuanKCform").submit();
