@@ -14,8 +14,14 @@ function init(){
 	//项目名称
 	var xmname = result.xmname;
 	//开始结束时间
-	var xm_state = result.bmglbean.BM_START;
-	var xm_end = result.bmglbean.BM_END;
+	var xm_state = "";
+	var xm_end = "";
+	if(result.bmglbean==""){
+		
+	}else{
+		var xm_state = result.bmglbean.BM_START;
+		var xm_end = result.bmglbean.BM_END;
+	}
 	//考试须知
 	var ksxz = result.bmglbean.BM_KSXZ;
 	$("#xmname").html(xmname);

@@ -768,8 +768,13 @@ listPage.prototype.bldTable = function (listData) {
                         $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="color:red;text-align: center;color:red">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
                     } else if (sh_state == 0) {
                         //审核中  只有手动审核
-                        $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
-                        $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
+                    	if(conresu==0||conresu==1){
+                    		$operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
+                    		$tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:red">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
+                    	}else{
+                    		$operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
+                    		$tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
+                    	}
                     }
                 } else if (yiyistate == 1) {
                     //提交了异议且审核状态
@@ -1048,6 +1053,11 @@ function yanzh(obj) {
     params['BM_INFO'] = JSON.stringify(bminfo);
     params['BM_LIST'] = JSON.stringify(bmlist);
     FireFly.doAct("TS_XMGL_BMSH", "vlidates", params, false, true, function (data) {
+    	if(data[a]==undefined){
+    		$("#loading").modal("hide");
+    		return false;
+    	}
+    	/*if(data[a])*/
         //获取后台传过来的key
         for (var i = 0; i < bmlist.length; i++) {
 
