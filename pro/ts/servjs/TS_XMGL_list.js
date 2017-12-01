@@ -165,7 +165,7 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){debugger;
      if(result){
 	showRelease(pkAarry,_viewer);
      }else{
-    	 _viewer.listBarTipError("请正确！"); 
+    	 _viewer.listBarTipError("请正确设置报名和审核！"); 
      }
 	}
 //	if(pkAarry.length==0){
