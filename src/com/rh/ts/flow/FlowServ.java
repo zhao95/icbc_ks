@@ -12,6 +12,7 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Strings;
 import com.rh.ts.pvlg.PvlgUtils;
+
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -356,6 +357,8 @@ public class FlowServ extends CommonServ {
 				List<Bean> finds = ServDao.finds("TS_WFS_BMSHLC", "and NODE_ID='"+str+"'");
 				for (Bean bean : finds) {
 					newlist.add(bean);
+					String deptcodes = bean.getStr("DEPT_CODE");
+					String[] split = deptcodes.split(",");
 					if(bean.getStr("DEPT_CODE").equals("0010100000")){
 						s+=bean.getStr("SHR_USERCODE")+",";
 						node_name = bean2.getStr("NODE_NAME");
@@ -366,13 +369,24 @@ public class FlowServ extends CommonServ {
 						node_name = bean2.getStr("NODE_NAME");
 						continue;
 					}
-					List<DeptBean> childDepts = OrgMgr.getChildDepts(bean2.getStr("S_CMPY"), bean.getStr("DEPT_CODE"));
-					for (DeptBean deptBean : childDepts) {
-						if(deptBean.getCode().equals(userBean.getStr("DEPT_CODE"))){
-							s+=bean.getStr("SHR_USERCODE")+",";
-							node_name = bean2.getStr("NODE_NAME");
+					if("".equals(deptcodes)){
+						for (String string2 : split) {
+							boolean tiaochu = false;
+							List<DeptBean> childDepts = OrgMgr.getChildDeptsAll(bean2.getStr("S_CMPY"),string2);
+							for (DeptBean deptBean : childDepts) {
+								if(deptBean.getCode().equals(userBean.getStr("DEPT_CODE"))){
+									s+=bean.getStr("SHR_USERCODE")+",";
+									node_name = bean2.getStr("NODE_NAME");
+									tiaochu=true;
+									break;
+								}
+							}
+							if(tiaochu){
+								break;
+							}
 						}
 					}
+					
 				}
 		}
 			outBean.set("resultlist", newlist);
