@@ -27,7 +27,7 @@ _viewer.beforeSave = function() {
 };
 
 //保存自后TS_XMGL_QJGL-QJ_STADATE_label     TS_XMGL_QJGL-QJ_ENDDATE_label
-_viewer.afterSave=function(){debugger;
+_viewer.afterSave=function(){
 	var XM_SZ_ID = _viewer.opts.XM_SZ_ID;
 	var XM_ID = _viewer.opts.XM_ID;
 	var bmStartTime=_viewer.getItem("QJ_STADATE").getValue();

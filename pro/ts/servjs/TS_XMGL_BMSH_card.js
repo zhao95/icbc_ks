@@ -137,7 +137,7 @@ _viewer.getItem("SH_TSY").change(function(){
 	}
 });
 //保存自后TS_XMGL_BMSH-SH_END
-_viewer.afterSave=function(){debugger;
+_viewer.afterSave=function(){
 	var XM_SZ_ID = _viewer.opts.XM_SZ_ID;
 	var XM_ID=_viewer.opts.XM_ID;
 	var shRgsh=_viewer.getItem("SH_RGSH").getValue();
