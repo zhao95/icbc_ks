@@ -115,14 +115,17 @@ $("#TS_XMGL_BMGL-BM_ODEPTCODE__NAME").unbind("click").bind("click", function(eve
 	queryView.show(event,[],[0,495]);
 });
 
-
-
+//保存自后
 _viewer.afterSave=function(){
 	var bmStartTime=_viewer.getItem("BM_START").getValue();
 	var bmEndTime=_viewer.getItem("BM_END").getValue();
 	var bmTime=bmStartTime+"至"+bmEndTime;
-	
+	var param={};
+	//(String xmszExplain,String xmid,String xmszid)
+	param["xmszExplain"]=bmTime;
+	param["xmid"]=XM_ID;
+	param["xmszid"]=XM_SZ_ID;
+	FireFly.doAct("TS_XMGL_SZ","getTimes",param,true,false);
 }
 
-
-
+//UPDATE 表名称 SET 列名称 = 新值 WHERE 列名称 = 某值
