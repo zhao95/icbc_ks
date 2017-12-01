@@ -816,10 +816,10 @@ public class StayServ extends CommonServ {
 					if (userBean.isEmpty()) {
 						return new OutBean().setError("ERROR:user_code 为空");
 					} else {
-						if (i == split.length - 1) {
+						if (s.equals("")) {
 							s += userBean.getStr("USER_NAME");
 						} else {
-							s += userBean.getStr("USER_NAME") + ",";
+							s +=  ","+userBean.getStr("USER_NAME");
 						}
 					}
 				}

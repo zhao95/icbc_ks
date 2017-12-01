@@ -201,6 +201,16 @@ public class NoPassServ extends CommonServ {
 		}
 		String s = paramBean.getStr("checkedid");
 		String xmid = paramBean.getStr("xmid");
+		//审核流程类型
+		String flag = "";
+		String wherewfs = "AND XM_ID = '"+xmid+"'";
+		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", wherewfs);
+		for (Bean bean2 : finds) {
+		String wfsid = 	bean2.getStr("WFS_ID");
+		Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
+		flag = find.getStr("WFS_TYPE");
+		}
+		
 		String shenuser = "";
 		UserBean userBean = Context.getUserBean();
 		if (userBean.isEmpty()) {
@@ -253,12 +263,14 @@ public class NoPassServ extends CommonServ {
 				if (level == 1) {
 					// 不用再去待审核中直接去 审核通过中 且数据无改动
 				} else {
-					Bean newBean1 = new Bean();
-					newBean1.copyFrom(bean);
-					newBean1.set("SH_OTHER", allman);
-					newBean1.set("SH_LEVEL", level);
-					newBean1.set("BM_STATUS",0);
-					ServDao.save("TS_BMSH_STAY", newBean1);
+					if("1".equals(flag)){
+						Bean newBean1 = new Bean();
+						newBean1.copyFrom(bean);
+						newBean1.set("SH_OTHER", allman);
+						newBean1.set("SH_LEVEL", level);
+						newBean1.set("BM_STATUS",0);
+						ServDao.save("TS_BMSH_STAY", newBean1);
+					}
 				}
 				// 修改报名状态
 				Bean bm_bean = ServDao.find("TS_BMLB_BM", bmid);
