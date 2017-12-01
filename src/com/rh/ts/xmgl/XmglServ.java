@@ -655,6 +655,7 @@ public class XmglServ extends CommonServ {
 				List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
 				// 遍历审核节点 获取 当前人的审核机构
 				for (Bean nodebean : finds2) {
+					boolean flagstr = false;
 					// 根据流程id获取 流程绑定的人和审核机构
 					String nodeid = nodebean.getStr("NODE_ID");
 					String nodewhere = "AND NODE_ID='" + nodeid + "'";
@@ -664,13 +665,22 @@ public class XmglServ extends CommonServ {
 							// 此流程内包含此审核人
 							if ("1".equals(zhuangtai) && "待报名".equals(state)) {
 								SHlist.add(bean);
+								flagstr=true;
+								break;
 							} else if ("2".equals(zhuangtai) && "已结束".equals(state)) {
 								SHlist.add(bean);
+								flagstr=true;
+								break;
 							} else if ("全部".equals(zhuangtai)&&!"未开始".equals(state)) {
 								SHlist.add(bean);
+								flagstr=true;
+								break;
 							}
 
 						}
+					}
+					if(flagstr){
+						break;
 					}
 				}
 			}

@@ -37,7 +37,7 @@ var listPage = function () {
 		param["shownum"]=myts;
 	param["where"] = sqlWhere;
 		
-     	return FireFly.doAct("TS_XMGL","getUncheckList",param)
+     	return FireFly.doAct("TS_XMGL","getUncheckList",param);
      /*return FireFly.getListData("TS_KS_CAL", data, false);*/
 //     debugger;
  };
