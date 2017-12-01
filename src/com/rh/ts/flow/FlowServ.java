@@ -358,18 +358,19 @@ public class FlowServ extends CommonServ {
 				for (Bean bean : finds) {
 					newlist.add(bean);
 					String deptcodes = bean.getStr("DEPT_CODE");
-					String[] split = deptcodes.split(",");
-					if(bean.getStr("DEPT_CODE").equals("0010100000")){
+					if(!"".equals(deptcodes)){
+					
+					if("0010100000".equals(deptcodes)){
 						s+=bean.getStr("SHR_USERCODE")+",";
 						node_name = bean2.getStr("NODE_NAME");
 						continue;
 					}
-					if(bean.getStr("DEPT_CODE").equals(userBean.getStr("DEPT_CODE"))){
+					if(userBean.getStr("DEPT_CODE").equals(deptcodes)){
 						s+=bean.getStr("SHR_USERCODE")+",";
 						node_name = bean2.getStr("NODE_NAME");
 						continue;
 					}
-					if("".equals(deptcodes)){
+						String[] split = deptcodes.split(",");
 						for (String string2 : split) {
 							boolean tiaochu = false;
 							List<DeptBean> childDepts = OrgMgr.getChildDeptsAll(bean2.getStr("S_CMPY"),string2);
