@@ -21,8 +21,10 @@ _viewer.beforeSave = function() {
      endTime = endTimes[1] + '-' + endTimes[2] + '-' + endTimes[0] + ' ' + endTime.substring(10, 19);
     var a = (Date.parse(endTime) - Date.parse(beginTime)) / 3600 / 1000;
     if(a < 0||a == 0){
- 		$("#TS_XMGL_YDJK-YDJK_STADATE").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL_YDJK-YDJK_ENDDATE").addClass("blankError").addClass("errorbox");
+    	$("#TS_XMGL_YDJK-YDJK_STADATE").parent().showError("借考开始时间应早于借考结束时间");
+ 		$("#TS_XMGL_YDJK-YDJK_ENDDATE").parent().showError("借考结束时间应晚于借考开始时间");
+// 		$("#TS_XMGL_YDJK-YDJK_STADATE").addClass("blankError").addClass("errorbox");
+// 		$("#TS_XMGL_YDJK-YDJK_ENDDATE").addClass("blankError").addClass("errorbox");
 		return false;
  	}
 };

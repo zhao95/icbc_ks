@@ -22,8 +22,10 @@ _viewer.beforeSave = function() {
      endTime = endTimes[1] + '-' + endTimes[2] + '-' + endTimes[0] + ' ' + endTime.substring(10, 19);
     var a = (Date.parse(endTime) - Date.parse(beginTime)) / 3600 / 1000;
     if(a < 0||a == 0){
- 		$("#TS_XMGL_BM_FZGKS-FZGKS_STADATE").addClass("blankError").addClass("errorbox");
- 		$("#TS_XMGL_BM_FZGKS-FZGKS_ENDDATE").addClass("blankError").addClass("errorbox");
+    	$("#TS_XMGL_BM_FZGKS-FZGKS_STADATE").parent().showError("开始时间应早于结束时间");
+ 		$("#TS_XMGL_BM_FZGKS-FZGKS_ENDDATE").parent().showError("结束时间应晚于开始时间");
+ 		//$("#TS_XMGL_BM_FZGKS-FZGKS_STADATE").addClass("blankError").addClass("errorbox");
+ 		//$("#TS_XMGL_BM_FZGKS-FZGKS_ENDDATE").addClass("blankError").addClass("errorbox");
 		return false;
  	}
 };
