@@ -357,37 +357,27 @@ public class FlowServ extends CommonServ {
 				List<Bean> finds = ServDao.finds("TS_WFS_BMSHLC", "and NODE_ID='"+str+"'");
 				for (Bean bean : finds) {
 					newlist.add(bean);
-					String deptcodes = bean.getStr("DEPT_CODE");
-					if(!"".equals(deptcodes)){
-					
-					if("0010100000".equals(deptcodes)){
-						s+=bean.getStr("SHR_USERCODE")+",";
-						node_name = bean2.getStr("NODE_NAME");
-						continue;
-					}
-					if(userBean.getStr("DEPT_CODE").equals(deptcodes)){
-						s+=bean.getStr("SHR_USERCODE")+",";
-						node_name = bean2.getStr("NODE_NAME");
-						continue;
-					}
-						String[] split = deptcodes.split(",");
-						for (String string2 : split) {
-							boolean tiaochu = false;
-							List<DeptBean> childDepts = OrgMgr.getChildDeptsAll(bean2.getStr("S_CMPY"),string2);
-							for (DeptBean deptBean : childDepts) {
-								if(deptBean.getCode().equals(userBean.getStr("DEPT_CODE"))){
-									s+=bean.getStr("SHR_USERCODE")+",";
-									node_name = bean2.getStr("NODE_NAME");
-									tiaochu=true;
-									break;
-								}
-							}
-							if(tiaochu){
-								break;
+					String dept_code = bean.getStr("DEPT_CODE");
+					String[] split = dept_code.split(",");
+					for (String string : split) {
+						if(string.equals("0010100000")){
+							s+=bean.getStr("SHR_USERCODE")+",";
+							node_name = bean2.getStr("NODE_NAME");
+							break;
+						}
+						if(string.equals(userBean.getStr("DEPT_CODE"))){
+							s+=bean.getStr("SHR_USERCODE")+",";
+							node_name = bean2.getStr("NODE_NAME");
+							break;
+						}
+						List<DeptBean> childDepts = OrgMgr.getChildDepts(bean2.getStr("S_CMPY"), string);
+						for (DeptBean deptBean : childDepts) {
+							if(deptBean.getCode().equals(userBean.getStr("DEPT_CODE"))){
+								s+=bean.getStr("SHR_USERCODE")+",";
+								node_name = bean2.getStr("NODE_NAME");
 							}
 						}
 					}
-					
 				}
 		}
 			outBean.set("resultlist", newlist);
