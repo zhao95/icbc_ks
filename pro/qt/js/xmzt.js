@@ -33,7 +33,7 @@ $(function() {
 	}
 	//新建一个对象存储每一个挂接模块的名称和状态,用作鼠标移入进度条状态提示
 	var xm_gj_name_state_map = {};
-	
+
 	// 获取对应的色号
 	function color_num(num) {
 		// 定义颜色map键值映射规则
@@ -47,7 +47,7 @@ $(function() {
 		}
 		return colorMap[num];
 	}
-	
+
 	//渲染考试对应div的颜色
 	var renderDiv4Color=function(xm_id){
 		var findXMBean1={};
@@ -58,7 +58,7 @@ $(function() {
 			ksBean1["XM_ID"]= xm_id;
 			var ksResult1 = FireFly.doAct("TS_XMZT","getXMExamTime",ksBean1);
 			var div4StateC =ksResult1.divState;
-		
+
 		if(div4StateC=="考试中"){
 			//渲染变成红色
 			$("#jdtDivInner4").css("background-color", "#ff0000");
@@ -70,7 +70,7 @@ $(function() {
 			$("#jdtDivInner4").css("background-color", "#27b9f8");
 		}
 		}
-	}	
+	}
 	// 此时使用js控制动态颜色的改变，因为CSS的加载顺序比JS早，
 	// 而进度条的颜色是根据js获取到的，故此使用js控制鼠标移入移出的颜色变化。
 	// 鼠标移入移出事件,改变进度条的颜色
@@ -79,7 +79,7 @@ $(function() {
 		var divOverColor = "";
 		// 进度条移入移出变色
 		$("#jdtDivInner1").mouseover(function() {
-			
+
 			var bm_state_msg = xm_gj_name_state_map["报名"];
 			if(bm_state_msg ==undefined || bm_state_msg ==""){
 				bm_state_msg = "未启用";
@@ -90,7 +90,7 @@ $(function() {
 		}).mouseout(function() {
 			$("#jdtDivInner1").css("background-color", divOverColor);
 			$(".hover-div").remove();
-			
+
 		});
 		$("#jdtDivInner2").mouseover(function() {
 			var sh_state_msg = xm_gj_name_state_map["审核"];
@@ -114,14 +114,14 @@ $(function() {
 					if(kccs_state_msg=="未开启"){
 						kcMsg = "未开启";
 					}else{
-						kcMsg = "进行中1";
+						kcMsg = "进行中";
 					}
 				}else if(kcap_state_msg =="进行中"){
 					//判断总行是否将已安排过的考场发布，若发布，则显示此提示
 					var stateBean={};
 					stateBean["_extWhere"]= "and XM_ID='"+xm_id+"'";
 					var stateResult = FireFly.doAct("TS_XMGL_KCAP_DAPCC","query",stateBean);
-					
+
 					if(stateResult._DATA_.length!=0){
 							kcMsg ="准考证打印及考前请假";
 					}else{
@@ -179,7 +179,7 @@ $(function() {
 		}).mouseout(function() {
 			$("#jdtDivInner6").css("background-color", divOverColor);
 			$(".hover-div").remove();
-		});	
+		});
 	}
 
 	// 通过当前登录用户的用户信息，获取到用户报名的相关考试项目
@@ -196,33 +196,33 @@ $(function() {
 		var xm_id = resultUserAssociateXM._DATA_[0].DATA_ID;
 		// 上面结果的项目id获取到，再查询到对应的项目的挂接模块
 		// 此时获取到的是项目挂接模块的名称以逗号分割的字符串
-		
+
 		// 使用字符串的方法，将去除逗号的BM_GJ 模块合并成一条字符串， 并将字符串根据逗号进行分割， 得到分割后的数组。
 		var param2 = {};
 		param2["_extWhere"] = "and XM_ID ='" + xm_id + "' AND XM_STATE ='1'";
 		var resultXM = FireFly.doAct("TS_XMGL", "query", param2);
-		
+
 		if(resultXM._DATA_.length!=0){
 			var xm_gj_str = resultXM._DATA_[0].XM_GJ;
 			var ks_name = resultXM._DATA_[0].XM_NAME;
 			// 获取项目的进度百分数
 			var jdtNum = resultXM._DATA_[0].XM_JD;
-			
+
 			//如果项目进度已经到100%，则删除掉TS_OBJECT中相关项目所有用户的记录。
 			if (jdtNum == "100%") {
 				var paramjdtNum = {};
 				paramjdtNum["_extWhere"] = "and DATA_ID ='" + xm_id + "' and SERV_ID='TS_XMZT'";
 				FireFly.doAct("TS_XMZT","delete",paramjdtNum);
 			}
-			
+
 			if (jdtNum == undefined || jdtNum === "") {
 				jdtNum = "0";
-			} 
+			}
 			/*else {
 				var jdeNumArr = jdtNum.split(".");
 				jdtNum = jdeNumArr[0] + "0";
 			}*/
-			
+
 			// 此时数组存储的是内容为查询到的挂接模块的名称
 			var mkArray = xm_gj_str.split(",");
 			// 创建存储当前项目所有进度的数组
@@ -301,10 +301,10 @@ $(function() {
 		}
 		//如果从TS_OBJECT表中未查询到数据，则证明项目已经被删除，则将页面得状态图全部设置为初始值
 		else if(resultXM._DATA_.length==0){
-			$("#jdtNum").html("0%");
+			$("#jdtNum").html("0");
 			$("#jdtName").html("您暂时未参加任何考试！");
 		}
-		
+
 	} else {
 		// 如果未设置首页展示的项目，则查询审核通过的表添加到首页展示
 		var paramSH = {};
@@ -328,7 +328,7 @@ $(function() {
 			var param2 = {};
 			param2["_extWhere"] = "and XM_ID ='" + menuXM_ID + "'";
 			var resultXM = FireFly.doAct("TS_XMGL", "query", param2);
-			
+
 			if(resultXM._DATA_.length!=0){
 				var xm_gj_str = resultXM._DATA_[0].XM_GJ;
 				var ks_name = resultXM._DATA_[0].XM_NAME;
@@ -370,7 +370,7 @@ $(function() {
 				//div变色效果
 				divOverAndOut(menuXM_ID);
 				renderDiv4Color(menuXM_ID);
-				
+
 			}else{
 				var jdtNum="0";
 				var jdtName="您暂时未报名资格考试！";
@@ -380,6 +380,8 @@ $(function() {
 				if (jdtNum == undefined) {
 					jdtNum = "0";
 				}
+				var  jdtNum2= jdtNum.split("%");
+				jdtNum = jdtNum2[0];
 				$("#jdtNum").html("" + jdtNum + "");
 				$("#jdtName").html("" + jdtName + "");
 			}
@@ -436,7 +438,7 @@ $(function() {
 		var url = FireFly.getContextPath() + "/qt/jsp/xmzt.jsp";
 		window.location.href = url;
 	});
-	//根据进度条样式自动适应分辨率,点击切换时触发该函数，判断body的类名是否包含layout-boxed ，若包含则设置 
+	//根据进度条样式自动适应分辨率,点击切换时触发该函数，判断body的类名是否包含layout-boxed ，若包含则设置
 //	window.screen.width
 
 
