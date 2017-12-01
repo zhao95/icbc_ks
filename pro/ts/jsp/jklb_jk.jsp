@@ -170,12 +170,14 @@
             <div class="form-group">
                 <label for="jkyiji" class="col-sm-2 control-label">
                     借考一级分行
+                    <span style="color: red;font-weight: bold">*</span>
                 </label>
                 <div class="col-sm-4">
                     <select id="jkyiji" class="form-control"></select>
                 </div>
                 <label for="jkcity" class="col-sm-2 control-label">
                     希望借考的城市
+                    <span style="color: red;font-weight: bold">*</span>
                 </label>
                 <div class="col-sm-4">
                     <input type="text" class="form-control" id="jkcity">
@@ -227,7 +229,10 @@
             </div>
 
             <div class="form-group">
-                <label for="jkreason" class="col-sm-2 control-label">借考事由</label>
+                <label for="jkreason" class="col-sm-2 control-label">
+                    借考事由
+                    <span style="color: red;font-weight: bold">*</span>
+                </label>
                 <div class="col-sm-10">
                     <textarea id="jkreason" class="form-control" rows="3"></textarea>
                 </div>
@@ -245,8 +250,11 @@
                                         <div style="float: left;background-image: url(<%=CONTEXT_PATH%>/ts/image/005.png);width: 32px;height: 32px;">
                                             &nbsp;&nbsp;
                                         </div>
-                                        <div style="margin-top: 5px;margin-left: 2px;color: #91dce4;float: left;" href="#">上传</div>
-                                        <input type="file" style="display: none;" class="form-control" id="caseImage" name="file" onchange="viewImage(this)">
+                                        <div style="margin-top: 5px;margin-left: 2px;color: #91dce4;float: left;"
+                                             href="#">上传
+                                        </div>
+                                        <input type="file" style="display: none;" class="form-control" id="caseImage"
+                                               name="file" onchange="viewImage(this)">
                                     </label>
                                 </div>
                                 <input type="text" name="SERV_ID" value="TS_JKLB_JK" style="display: none;"/>
@@ -522,14 +530,22 @@
 
             if (jktitle === "") {
                 alert("标题不能为空");
-            } else if (bmids === "") {
-                alert("请选择借考的考试");
+            } /*else if (bmids === "") {
+             alert("请选择借考的考试");
+             }*/ else if (jkyiji === "") {
+                alert("请选择借考一级分行");
+            } else if (jkcity === "") {
+                alert("借考城市不能为空");
+            } else if (jkreason === "") {
+                alert("借考事由不能为空");
             } else {
                 FireFly.doAct("TS_JKLB_JK", "addData", param, false, false, function (response) {
 
                     if (response._MSG_.indexOf('ERROR') >= 0) {
                         //发起申请出错
-                        alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,'), response._MSG_.length));
+                        alert(
+                            response._MSG_.substring(response._MSG_.indexOf('ERROR,') + 6, response._MSG_.length)
+                        );
                     } else {
                         //模态框
                         var $tiJiao = $('#tiJiao');

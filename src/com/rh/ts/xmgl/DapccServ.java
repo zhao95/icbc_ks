@@ -63,9 +63,9 @@ public class DapccServ extends CommonServ {
         String searchKcId = paramBean.getStr("searchKcId");
         String searchSjId = paramBean.getStr("searchSjId");
 
-        long l = Long.MAX_VALUE;;//选中的考场时长
+        long l = Long.MAX_VALUE;//选中的考场时长
         try {
-            if(StringUtils.isNotBlank(searchSjId)){
+            if (StringUtils.isNotBlank(searchSjId)) {
                 Bean sjBean = ServDao.find(TsConstant.SERV_KCAP_CCSJ, searchSjId);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 String sjStart = sjBean.getStr("SJ_START");
@@ -131,7 +131,7 @@ public class DapccServ extends CommonServ {
                 Bean bean = beanList.get(0);
                 searchJkCodePath = bean.getStr("CODE_PATH");
                 values.add(searchJkCodePath);
-                whereSql += " and a.BM_STATUS in('2','3')";
+                whereSql += " and a.BM_STATUS in('2')";
                 whereSql += " and a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
                         " and ? like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%')";
                 //select CODE_PATH,substring(CODE_PATH , LOCATE('^',CODE_PATH,1)+1, LOCATE('^',CODE_PATH,LOCATE('^',CODE_PATH,1)+1)-LOCATE('^',CODE_PATH,1)-1) from sy_org_dept where CODE_PATH is not null;
@@ -733,16 +733,60 @@ public class DapccServ extends CommonServ {
     }
 
     /**
-     * 根据考场获取未安排人员数
+     * 根据考场获取未安排人员数/考场考生总数
      *
      * @return outBean
      */
     public OutBean getDeptKcCount(ParamBean paramBean) {
         OutBean outBean = new OutBean();
-      /*  String kcIdStr = paramBean.getStr("KC_ID");
-        String[] split = kcIdStr.split(",");
-//        bean
-*/
+        String count = "0", remainCount = "0";
+        String kcIdStr = paramBean.getStr("KC_ID");
+        if (StringUtils.isNotBlank(kcIdStr)) {
+            String xmId = paramBean.getStr("XM_ID");
+            String[] split = kcIdStr.split(",");
+
+            List<Object> kcIdValues = new ArrayList<Object>();
+            StringBuilder kcIdSql = new StringBuilder();
+            for (String kcId : split) {
+                kcIdSql.append("?,");
+                kcIdValues.add(kcId);
+            }
+            kcIdSql = new StringBuilder(kcIdSql.substring(0, kcIdSql.length() - 1));
+
+            String sql = "SELECT count(*) as count from TS_BMSH_PASS a  " +
+                    "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE " +
+                    "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE " +
+                    "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT " +
+                    "WHERE xm_id = ? " +
+                    "and (" +
+                    "(" +
+                    //考场关联机构考生
+                    "EXISTS (select '' from TS_KCGL_GLJG g " +
+                    "where g.KC_ID in(" + kcIdSql + ") " +
+                    "and INSTR(c.CODE_PATH ,g.JG_CODE)>0 ) " +
+                    "and a.BM_STATUS not in('1','2','3')" +
+                    ") or (" +
+                    //借考的考生
+                    " a.BM_STATUS in('2') and a.JK_ODEPT is not null and a.JK_ODEPT !=''" +
+                    "and exists(  " +
+                    "SELECT b.CODE_PATH FROM TS_KCGL a " +
+                    "LEFT JOIN sy_org_dept b ON b.DEPT_CODE = a.KC_ODEPTCODE WHERE KC_ID in(" + kcIdSql + ")  " +
+                    "and b.CODE_PATH like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%'))  " +
+                    ")" +
+                    ")";
+            List<Object> values = new ArrayList<Object>();
+            values.add(xmId);
+            values.addAll(kcIdValues);
+            values.addAll(kcIdValues);
+
+            List<Bean> queryList = Transaction.getExecutor().query(sql, values);
+            sql += " and not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID)";
+            List<Bean> remainCountList = Transaction.getExecutor().query(sql, values);
+            count = queryList.get(0).getStr("COUNT");
+            remainCount = remainCountList.get(0).getStr("COUNT");
+        }
+        outBean.set("count", count);
+        outBean.set("remainCount", remainCount);
         return outBean;
     }
 

@@ -329,19 +329,37 @@ var HeaderBtn = {
         $("#publish").removeClass('rh-icon-disable').addClass('rh-icon');
         $("#clearYapzw").removeClass('rh-icon-disable').addClass('rh-icon');
 
-        $("#zdfpcc").click(function () {
+        $("#zdfpcc").unbind('click').bind('click', function () {
             $('#zdfpccModal').modal({backdrop: false, show: true});
         });
-        $("#updatecc").click(function () {
+        $("#updatecc").unbind('click').bind('click', function () {
             UpdateCCModal.show();
         });
-        $("#tjccap").click(function () {
-            $('#tjccapModal').modal({backdrop: false, show: true});
+        $("#tjccap").unbind('click').bind('click', function () {
+            var kcCountBean = Utils.getRemainingKsInfo();
+            var $tjccapModal = $('#tjccapModal');
+            if (kcCountBean.count > 0) {
+                $tjccapModal.find(".modal-body").html('是否提交场次安排？' +
+                    '<div style="color:red;">有' + kcCountBean.remainCount + '个未安排的考生' +
+                    '</div>');
+            } else {
+                $tjccapModal.find(".modal-body").html('是否提交场次安排？');
+            }
+            $tjccapModal.modal({backdrop: false, show: true});
         });
-        $("#publish").click(function () {
-            $('#publishModal').modal({backdrop: false, show: true});
+        $("#publish").unbind('click').bind('click', function () {
+            var kcCountBean = Utils.getRemainingKsInfo();
+            var $publishModal = $('#publishModal');
+            if (kcCountBean.count > 0) {
+                $publishModal.find(".modal-body").html('是否发布场次安排？' +
+                    '<div style="color:red;">有' + kcCountBean.remainCount + '个未安排的考生' +
+                    '</div>');
+            } else {
+                $publishModal.find(".modal-body").html('是否发布场次安排？');
+            }
+            $publishModal.modal({backdrop: false, show: true});
         });
-        $("#clearYapzw").click(function () {
+        $("#clearYapzw").unbind('click').bind('click', function () {
             $('#clearYapzwModal').modal({backdrop: false, show: true});
         });
 
@@ -373,7 +391,16 @@ var HeaderBtn = {
             LookJkModal.show(xmId);
         });
         $("#xngs").click(function () {
-            $('#xngsModal').modal({backdrop: false, show: true});
+            var kcCountBean = Utils.getRemainingKsInfo();
+            var $xngsModal = $('#xngsModal');
+            if (kcCountBean.count > 0) {
+                $xngsModal.find(".modal-body").html('是否辖内公示座位信息？' +
+                    '<div style="color:red;">有' + kcCountBean.remainCount + '个未安排的考生' +
+                    '</div>');
+            } else {
+                $xngsModal.find(".modal-body").html('是否辖内公示座位信息？');
+            }
+            $xngsModal.modal({backdrop: false, show: true});
         });
 
         $("#unPublish").click(function () {
@@ -382,26 +409,31 @@ var HeaderBtn = {
 
         //提交确定按钮事件
         $("#tjccapModal").find('button[class="btn btn-success"]').bind('click', function () {
-            var deptCodeStr = Utils.getUserYAPAutoCode();
-            var deptCodes = deptCodeStr.split(',');
-            deptCodes = Utils.arrayUnique(deptCodes.concat(KcObject.getAllKcODeptCode()));
-            for (var i = 0; i < deptCodes.length; i++) {
-                var itemDeptCode = deptCodes[i];
-                if (itemDeptCode !== '') {
-                    //避免重复提交 保存前先查询
-                    var queryBean = FireFly.doAct("TS_XMGL_KCAP_TJJL", "query", {
-                        '_NOPAGE_': true,
-                        '_extWhere': " and TJ_DEPT_CODE ='" + itemDeptCode + "' and XM_ID ='" + xmId + "'"
-                    });
-                    if (queryBean._DATA_.length <= 0) {
-                        FireFly.doAct('TS_XMGL_KCAP_TJJL', 'save', {TJ_DEPT_CODE: itemDeptCode, XM_ID: xmId}, false);
+            showVerifyCallback(function () {
+                var deptCodeStr = Utils.getUserYAPAutoCode();
+                var deptCodes = deptCodeStr.split(',');
+                deptCodes = Utils.arrayUnique(deptCodes.concat(KcObject.getAllKcODeptCode()));
+                for (var i = 0; i < deptCodes.length; i++) {
+                    var itemDeptCode = deptCodes[i];
+                    if (itemDeptCode !== '') {
+                        //避免重复提交 保存前先查询
+                        var queryBean = FireFly.doAct("TS_XMGL_KCAP_TJJL", "query", {
+                            '_NOPAGE_': true,
+                            '_extWhere': " and TJ_DEPT_CODE ='" + itemDeptCode + "' and XM_ID ='" + xmId + "'"
+                        });
+                        if (queryBean._DATA_.length <= 0) {
+                            FireFly.doAct('TS_XMGL_KCAP_TJJL', 'save', {
+                                TJ_DEPT_CODE: itemDeptCode,
+                                XM_ID: xmId
+                            }, false);
+                        }
                     }
                 }
-            }
-            Utils.getCanDraggable(true);
-            KcObject.reloadCCInfo();
-            KsObject.setDfpKsContent();
-            self.zdfpccDisableAftertjccap();
+                Utils.getCanDraggable(true);
+                KcObject.reloadCCInfo();
+                KsObject.setDfpKsContent();
+                self.zdfpccDisableAftertjccap();
+            });
         });
 
         //发布确定按钮事件
@@ -440,15 +472,18 @@ var HeaderBtn = {
             /*= FireFly.doAct("TS_XMGL", "byid", {"_PK_": xmId}, false);*/
             // xmBean.XM_KCAP_PUBLISH_USER_CODE = System.getUser("USER_CODE");
             // xmBean.XM_KCAP_PUBLISH_TIME = rhDate.getTime();
-            FireFly.doAct("TS_XMGL", "save", xmBean, false, false, function () {
-                alert("取消发布成功！");
+
+            showVerifyCallback(function () {
+                FireFly.doAct("TS_XMGL", "save", xmBean, false, false, function () {
+                    alert("取消发布成功！");
+                });
+                Utils.getCanDraggable(true);
+                KcObject.reloadCCInfo();
+                KsObject.setDfpKsContent();
+                self.zdfpccDisableAftertjccap();
+                $("#publish").css('display', 'block');
+                $("#unPublish").css('display', 'none');
             });
-            Utils.getCanDraggable(true);
-            KcObject.reloadCCInfo();
-            KsObject.setDfpKsContent();
-            self.zdfpccDisableAftertjccap();
-            $("#publish").css('display', 'block');
-            $("#unPublish").css('display', 'none');
         });
 
         //清除座位安排确定按钮事件
@@ -549,18 +584,22 @@ var HeaderBtn = {
 
 
         $("#xngsModal").find('button[class="btn btn-success"]').bind('click', function () {
-            if (KcObject.kcArr !== null && KcObject.kcArr !== undefined) {
-                //考场不为空
-                var kcStr = '';
-                for (var i = 0; i < KcObject.kcArr.length; i++) {
-                    var kc = KcObject.kcArr[i];
-                    kcStr += kc.KC_ID + ',';
+            showVerifyCallback(function () {
+                if (KcObject.kcArr !== null && KcObject.kcArr !== undefined) {
+                    //考场不为空
+                    var kcStr = '';
+                    for (var i = 0; i < KcObject.kcArr.length; i++) {
+                        var kc = KcObject.kcArr[i];
+                        kcStr += kc.KC_ID + ',';
+                    }
+                    FireFly.doAct("TS_XMGL_KCAP_DAPCC", "xngs", {
+                        XM_ID: xmId,
+                        KC_ID_STR: kcStr.substring(0, kcStr.length - 1)
+                    }, false, false, function () {
+                        alert('辖内场次安排已公示');
+                    });
                 }
-                FireFly.doAct("TS_XMGL_KCAP_DAPCC", "xngs", {
-                    XM_ID: xmId,
-                    KC_ID_STR: kcStr.substring(0, kcStr.length - 1)
-                });
-            }
+            });
         });
 
         this.zdfpccDisableAftertjccap();
@@ -910,6 +949,8 @@ var ZdfpccModal = {
                     }
                 }
             }
+            KsObject.search();
+            KcObject.reloadCCInfo();
         });
 
     },
@@ -1493,17 +1534,23 @@ var KcObject = {
             var kc = kcArr[i];
             kcIdStr += kc.KC_ID + ',';
         }
-        var bean = FireFly.doAct('TS_XMGL_KCAP_DAPCC', 'getDeptKcCount', {KC_ID: kcIdStr}, false, false);
+        if (kcIdStr.length > 0) {
+            kcIdStr = kcIdStr.substring(0, kcIdStr.length - 1);
+        }
+        var kcCountBean = FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getDeptKcCount", {
+            XM_ID: xmId,
+            KC_ID: kcIdStr
+        }, false, false);
 
         //kcTip
         $kcTip.append([
             '<span style="color:#fff;">当前考场及场次：</span>',
             '考场数:<span id="kcCount" class="tip-yellow">' + kcArr.length + '</span>&nbsp;',
             '场次数：<span id="ccCount" class="tip-yellow">' + ccCount + '</span>&nbsp;',
-            '已安排：<span id="yapCount" class="tip-yellow">' + yapTotalCount + '</span>'
+            '已安排：<span id="yapCount" class="tip-yellow">' + yapTotalCount + '</span>&nbsp;',
+            '考生数：<span id="ksCount" class="tip-yellow">' + kcCountBean.remainCount + '/' + kcCountBean.count + '</span>&nbsp;',
         ].join(''));
         /*
-         '考生数：<span id="ksCount" class="tip-yellow">800</span>&nbsp;',
          '（借入：<span id="jieruCount" class="tip-yellow">3</span>&nbsp;',
          '借出：<span id="jiechuCount" class="tip-yellow">2</span>&nbsp;',
          '请假：<span id="qjCount" class="tip-yellow">1</span>）',*/
@@ -2168,7 +2215,6 @@ var KsObject = {
                 self.searchDeptCode = data.node.id.trim();
                 self.search();
             });
-            // debugger;
             // $ksOrgTreeContent.on("ready.jstree", function (/*e, data*/) {
             //     self.reloadKsOrgKsCount();
             // });
@@ -2200,7 +2246,6 @@ var KsObject = {
     // },
 
     setTreeText: function (orgJsonObject, kcId, sjId) {
-        // debugger;
         for (var i = 0; i < orgJsonObject.children.length; i++) {
             var treeNodeId = orgJsonObject.children[i].trim();
             /*var childOrg*/
@@ -2474,6 +2519,27 @@ var Utils = {
 
         }
         return this._canDraggable;
+    },
+
+
+    /**
+     * 获取总的未安排考生数
+     * @returns {*}
+     */
+    getRemainingKsInfo: function () {
+        var kcIdStr = '';
+        var kcArr = KcObject.kcArr;
+        for (var i = 0; i < kcArr.length; i++) {
+            var kc = kcArr[i];
+            kcIdStr += kc.KC_ID + ",";
+        }
+        if (kcIdStr.length > 0) {
+            kcIdStr = kcIdStr.substring(0, kcIdStr.length - 1);
+        }
+        return FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getDeptKcCount", {
+            XM_ID: xmId,
+            KC_ID: kcIdStr
+        }, false, false);
     },
 
     /**

@@ -217,54 +217,55 @@
 </div>
 
 <div class="modal fade" id="tiJiao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"
-     aria-hidden="true" style="padding-top:5%">
+     aria-hidden="true" style="padding-top:5%;z-index: 99999999">
     <div class="modal-dialog" style="width:50%">
         <div class="modal-content">
             <div class="modal-header"
                  style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
                 批量审核
             </div>
-            <form id="formmotai" method="post" action="bmshzg.jsp">
-                <div>
-                    <table style="height:125px;font-size:14px;">
-                        <tr style="height:25%">
-                            <td style="text-align:right;width:20%">审核人姓名</td>
-                            <td style="width:5%"></td>
-                            <td>
-                                <input id="userName" style="height:30px" type="text" name="shren" readonly/>
-                            </td>
-                            <td style="width:3%"></td>
-                            <td style="text-align:right">审核人登录名</td>
-                            <td style="width:5%"></td>
-                            <td>
-                                <input id="loginName" style="height:30px" type="text" name="shdlming" readonly/>
-                            </td>
-                        </tr>
-                        <tr style="height:25%">
-                            <td style="text-align:right">审核状态</td>
-                            <td style="width:5%"></td>
-                            <td><span id="radiospan1"><input style="vertical-align:text-bottom; margin-bottom:-3px;"
-                                                             name="state" type="radio" value="1" checked>审核通过&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                <span id="radiospan2">
-                                    <input name="state" style="vertical-align:text-bottom; margin-bottom:-4px;"
-                                           type="radio" value="2">
-                                    审核不通过
-                                </span>
-                            </td>
-                        </tr>
-                    </table>
-                    <table style="height:100px;width:700px">
-                        <tr>
-                            <td style="text-align:right;width:17.5%;vertical-align:top">审核理由</td>
-                            <td style="width:4%"></td>
-                            <td style="width:75%;vertical-align:top"><textarea id="liyou"
-                                                                               style="border:solid 1px lightseagreen;height:90%;width:88%"
-                                                                               wrap="soft"></textarea></td>
-                        </tr>
-                    </table>
-                </div>
-                <input type="hidden" id="mokuai"/>
-            </form>
+            <div class="modal-body">
+                <form class="form-horizontal" style="padding-right: 50px">
+                    <div class="form-group">
+                        <label for="userName" class="col-sm-3 control-label">
+                            审核人姓名
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="userName" name="shren" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginName" class="col-sm-3 control-label">
+                            审核人登录名
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="loginName" name="shdlming" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            审核状态
+                        </label>
+                        <div class="col-sm-9">
+                            <label class="radio-inline" id="radiospan1">
+                                <input type="radio" name="state" id="inlineRadio1" value="1" checked> 审核通过
+                            </label>
+                            <label class="radio-inline" id="radiospan2">
+                                <input type="radio" name="state" id="inlineRadio2" value="2"> 审核不通过
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="liyou" class="col-sm-3 control-label">
+                            审核理由
+                        </label>
+                        <div class="col-sm-9">
+                            <textarea id="liyou" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             <div class="modal-footer" style="text-align:center;height:60px">
                 <button type="button" class="btn btn-primary" style="height:35px;background:lightseagreen;width:80px"
                         onclick="mttijiao()">审核
@@ -281,6 +282,8 @@
 
 <script>
 
+    var mttijiao = function () {
+    };
     $(function () {
         var batch = '<%=batch%>';
         if (batch === '1' || batch === '2') {
@@ -291,6 +294,38 @@
         $('#batchsh').unbind('click').bind('click', function () {
             $('#tiJiao').modal({backdrop: false, show: true});
         });
+
+        mttijiao = function () {
+            var param = {};
+            var radiovalue = $('#tiJiao').find('input:radio:checked').val();
+            var liyou = document.getElementById("liyou").value;
+            param["shstatus"] = radiovalue;
+            param["shreason"] = liyou;
+            if (radiovalue === 1) {
+                param["isRetreat"] = "false";
+            } else {
+                param["isRetreat"] = "true";
+            }
+            var ids = "";
+            var $checkedItems = $('#todo-table tbody').find('input[type="checkbox"]:checked');
+            if ($checkedItems.length <= 0) {
+                alert('请选择要审批的待办！');
+                return;
+            } else {
+                $checkedItems.each(function () {
+                    ids = ids + $(this).attr("id") + ',';
+                });
+                ids = ids.substring(0, ids.length - 1);
+                param["todoId"] = ids;
+                if (batch === '1') {
+                    FireFly.doAct("TS_QJLB_QJ", "updateData", param);
+                } else if (batch === '2') {
+                    FireFly.doAct("TS_JKLB_JK", "updateData", param);
+                }
+                listPage.search();
+                $("#tiJiao").modal("hide");
+            }
+        };
 
         var userName = System.getUser('USER_NAME');
         var loginName = System.getUser('LOGIN_NAME');
@@ -420,21 +455,17 @@
                 tr.append('<td style="text-align: center;">' + (i + 1) + '</td>');
 
                 var td = jQuery('<td></td>');
-                var a = jQuery('<a id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>');
-
-                if (item.TYPE === '0') {
-                    a.unbind('click').bind('click', function () {
-                        var todoId = $(this).attr('id');
-                        var dataId = $(this).attr('data-id');
+                var a = jQuery('<a id="' + item.TODO_ID + '"type_value ="' + item.TYPE + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>');
+                a.unbind('click').bind('click', function () {
+                    var todoId = $(this).attr('id');
+                    var dataId = $(this).attr('data-id');
+                    var typeValue = $(this).attr('type_value');
+                    if (typeValue === '0') {
                         doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
-                    });
-                } else if (item.TYPE === '2') {
-                    a.unbind('click').bind('click', function () {
-                        var todoId = $(this).attr('id');
-                        var dataId = $(this).attr('data-id');
+                    } else if (typeValue === '1') {
                         doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId, hidden: '2'});
-                    });
-                }
+                    }
+                });
                 td.append(a);
                 tr.append(td);
 
@@ -650,38 +681,6 @@
         var listPage = new ListPage(jQuery('.content-main1'));
         listPage.bldBody();
 
-        function mttijiao() {
-            var param = {};
-            var radiovalue = $('#tiJiao').find('input:radio:checked').val();
-            var liyou = document.getElementById("liyou").value;
-            param["shstatus"] = radiovalue;
-            param["shreason"] = liyou;
-            if (radiovalue == 1) {
-                param["isRetreat"] = "false";
-            } else {
-                param["isRetreat"] = "true";
-            }
-            var ids = "";
-            var $checkedItems = $('#todo-table tbody').find('input[type="checkbox"]:checked');
-            if ($checkedItems.length <= 0) {
-                alert('请选择要审批的待办！');
-            } else {
-                $checkedItems.each(function () {
-                    ids = ids + $(this).attr("id") + ',';
-                });
-                ids = ids.substring(0, ids.length - 1);
-                param["todoId"] = ids;
-                debugger;
-            }
-            listPage.search();
-            if (batch === '1') {
-                FireFly.doAct("TS_QJLB_QJ", "updateData", param);
-            } else if (batch === '2') {
-                FireFly.doAct("TS_JKLB_JK", "updateData", param);
-            }
-            $("#tiJiao").modal("hide");
-        }
-
         //已处理待办列表
         var listPage2 = new ListPage(jQuery('.content-main2'));
         listPage2.getListData = function (num) {
@@ -713,20 +712,24 @@
                 tr.append('<td style="text-align: center;height:50px;">' + (i + 1) + '</td>');
 
                 var td = jQuery('<td></td>');
-                var a = jQuery('<a  id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>')
-                if (item.TYPE === '0') {
-                    a.unbind('click').bind('click', function () {
-                        var todoId = $(this).attr('id');
-                        var dataId = $(this).attr('data-id');
+                var a = jQuery('<a  id="' + item.TODO_ID + '"type_value ="' + item.TYPE + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>')
+
+                a.unbind('click').bind('click', function () {
+                    var todoId = $(this).attr('id');
+                    var dataId = $(this).attr('data-id');
+                    var typeValue = $(this).attr('type_value');
+                    if (typeValue === '0') {
                         doPost("/ts/jsp/qjlb_qj2.jsp", {/*todoid: item.TODO_ID,*/ qjid: dataId});
-                    });
-                } else if (item.TYPE === '2') {
-                    a.unbind('click').bind('click', function () {
-                        var todoId = $(this).attr('id');
-                        var dataId = $(this).attr('data-id');
+                    } else if (typeValue === '1') {
                         doPost("/ts/jsp/jklb_jk2.jsp", {/*todoid: item.TODO_ID,*/ jkid: dataId});
-                    });
-                }
+                    }
+                });
+//                } else if (item.TYPE === '2') {
+//                    a.unbind('click').bind('click', function () {
+//                        var todoId = $(this).attr('id');
+//                        var dataId = $(this).attr('data-id');
+//                    });
+//                }
 
 
                 td.append(a);

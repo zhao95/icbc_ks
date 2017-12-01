@@ -64,7 +64,7 @@ public class QjNumServ extends CommonServ {
 							if(!"".equals(kslist.get(0).getStr("SJ_DATE"))){
 								ks_time = kslist.get(0).getStr("SJ_DATE").split("\\(")[0];
 							}else{
-								return new OutBean().setError("请假失败,考试时间为空");
+								return new OutBean().setError("请假失败,获取不到请假里考试的时间，请校验！");
 							}
 						}
 						
@@ -84,7 +84,7 @@ public class QjNumServ extends CommonServ {
 							return new  OutBean().setError("考试周次数已达最大数");
 						}
 					}else{
-						return new OutBean().setError("请假失败,考试时间为空");
+						return new OutBean().setError("请假失败,获取不到请假里考试的时间，请校验！");
 					}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
@@ -164,7 +164,7 @@ public class QjNumServ extends CommonServ {
 										if(!"".equals(kslist.get(0).getStr("SJ_DATE"))){
 											ks_time = kslist.get(0).getStr("SJ_DATE").split("\\(")[0];
 										}else{
-											return new OutBean().setError("请假失败,考试时间为空");
+											return new OutBean().setError("请假失败,获取不到请假里考试的时间，请校验！");
 										}
 									}
 									
@@ -188,7 +188,7 @@ public class QjNumServ extends CommonServ {
 										newenddate = xmbean.getStr("XM_KSENDDATA");
 									}
 								}else{
-									return new OutBean().setError("请假失败,考试时间为空");
+									return new OutBean().setError("请假失败,获取不到请假里考试的时间，请校验！");
 								}
 							} catch (ParseException e) {
 								// TODO Auto-generated catch block
@@ -224,7 +224,7 @@ public class QjNumServ extends CommonServ {
 								if(!"".equals(kslist.get(0).getStr("SJ_DATE"))){
 									ks_time = kslist.get(0).getStr("SJ_DATE").split("\\(")[0];
 								}else{
-									return new OutBean().setError("请假失败,考试时间为空");
+									return new OutBean().setError("请假失败,获取不到请假里考试的时间，请校验！");
 								}
 							}
 							
@@ -243,7 +243,7 @@ public class QjNumServ extends CommonServ {
 								//根据报名ID找XM  开始结束时间
 							}
 						}else{
-							return new OutBean().setError("请假失败,考试时间为空");
+							return new OutBean().setError("请假失败,获取不到请假里考试的时间，请校验！");
 						}
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
