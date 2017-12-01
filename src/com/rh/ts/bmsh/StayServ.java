@@ -266,6 +266,7 @@ public class StayServ extends CommonServ {
 							newBean.set("SH_USER", shenuser);
 							newBean.set("SH_LEVEL", level);
 							newBean.set("SH_OTHER", allman1);
+							ServDao.delete("TS_BMSH_STAY", id);
 						}
 						
 						ServDao.save("TS_BMSH_PASS", newBean);
@@ -304,6 +305,7 @@ public class StayServ extends CommonServ {
 							newBean.set("SH_USER", shenuser);
 							newBean.set("SH_LEVEL", level);
 							newBean.set("SH_OTHER", allman1);
+							ServDao.delete("TS_BMSH_STAY", id);
 						}
 						ServDao.save("TS_BMSH_PASS", newBean);
 					}
