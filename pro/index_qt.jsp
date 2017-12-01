@@ -426,7 +426,9 @@
 							<div class="box-header" style="background-color: #f9f9f9;">
 								<h3 class="box-title" style="font-size:16px;">Q&A 问答</h3>
 							</div>
-							<div style="min-height:64px;"></div>
+							<div style="min-height:64px;">
+							<div style="text-align: center;line-height: 64px;">建设中...</div>
+							</div>
 							<!-- /.box-header -->
 <!-- 							<div class="box-body no-padding"> -->
 							<div class="box-body">
