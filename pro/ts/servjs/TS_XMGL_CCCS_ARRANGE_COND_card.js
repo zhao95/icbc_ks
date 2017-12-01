@@ -5,7 +5,7 @@ $("#TS_XMGL_CCCS_ARRANGE_COND-save").css("right",300);
 var xmId = _viewer.getParHandler().getParHandler().getPKCode();
 
 _viewer.getBtn("ok").click(function(){
-	var sum=_viewer.getItem("CONF_SUM").getValue();//场次总数
+//	var sum=_viewer.getItem("CONF_SUM").getValue();//场次总数
 	var date = _viewer.getItem("CONF_DATE").getValue();//日期
 	var am_time = _viewer.getItem("CONF_AM_TIME").getValue();//开始时间（上午）
 	var am_inter = _viewer.getItem("CONF_AM_INTER").getValue();//间隔（分钟）
@@ -30,10 +30,10 @@ _viewer.getBtn("ok").click(function(){
 	var pmTimes = parseInt((pm_num==""? "0":pm_num));
 	var nmTimes = parseInt((nm_num==""? "0":nm_num));
 	var times=(amTimes+pmTimes+nmTimes);
-	if(sum !=times){
-		alert("场次数不匹配");
-		return false;
-	}
+//	if(sum !=times){
+//		alert("场次数不匹配");
+//		return false;
+//	}
 	//上午判断如果开始时间有，场次有，时长为空
 	var amTimes = am_info.replace(/，/g, ",");
 	if(am_time != "" &&  am_num !="" && amTimes=="" ){

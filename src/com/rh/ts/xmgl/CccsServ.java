@@ -38,6 +38,8 @@ public class CccsServ extends CommonServ {
 			String where = getWhereNew(xmId);
 			if (where.length() > 0) {
 			    paramBean.setQueryExtWhere(where);
+			}else{
+			    paramBean.setQueryExtWhere("and 1=2");
 			}
 //			sb.append(" AND DEPT_CODE in (SELECT JG_CODE FROM ").append(VIEW_GLJG);
 //			sb.append(" WHERE XM_ID = '").append(xmId).append("')");
