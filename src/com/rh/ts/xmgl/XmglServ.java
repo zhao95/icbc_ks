@@ -352,12 +352,19 @@ public class XmglServ extends CommonServ {
 				}
 			}
 		}*/
-		String sql1="select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_START AND b.BM_END order by b.bm_end ASC";
-		String sql2 = "select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END AND ('"+datestr+"'>b.BM_END OR '"+datestr+"'<b.BM_START) order by b.bm_end ASC";
+		
+		String sql1="select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC";
+		String sql2="select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC";
+		String sql3="select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='' or c.xm_sz_type='未开启' ))d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC";
+		String sql4 = "select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END AND ('"+datestr+"'>b.BM_END OR '"+datestr+"'<b.BM_START) order by b.bm_end ASC";
 		/*String sql1 = "select * from ts_xmgl where xm_id in(SELECT XM_ID FROM TS_XMGL_BMGL WHERE '"+datestr+"' BETWEEN BM_TZ_START AND BM_TZ_END order by BM_END ASC)";*/
 		List<Bean> list = Transaction.getExecutor().query(sql1);
 		List<Bean> list2 = Transaction.getExecutor().query(sql2);
+		List<Bean> list3 = Transaction.getExecutor().query(sql3);
+		List<Bean> list4 = Transaction.getExecutor().query(sql4);
 		list.addAll(list2);
+		list.addAll(list3);
+		list.addAll(list4);
 		/*String s = "";
 		for (int i = 0; i < list.size(); i++) {
 			if (i == (list.size() - 1)) {
