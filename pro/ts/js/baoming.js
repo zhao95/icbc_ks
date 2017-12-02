@@ -414,7 +414,13 @@ function deletefile(obj) {
     FireFly.doAct("SY_COMM_FILE", "delete", param);
 
     //删除页面
-    document.getElementById(id).remove();
+    var navigatorName = "Microsoft Internet Explorer"; 
+    document.getElementById(id).parentNode.removeChild(document.getElementById(id));
+   /* if(navigator.appName == navigatorName){
+    	 document.getElementById(id).removeNode(true);
+    }else{
+    	 document.getElementById(id).remove();
+    }*/
 }
 //提交异议
 function tijiaoyiyi() {

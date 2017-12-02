@@ -361,6 +361,17 @@ String bmbq = request.getParameter("bmbq");
 		<input type="hidden" id="dijige">
 		<input type="hidden" id="user_code" value="<%=user_code %>">
 	</div>
+	<script>
+	/* function showsize(files){
+		var fso,f;
+		 var fso = new ActiveXObject("Scripting.FileSystemObject")
+		f=fso.getfile(files);
+		alert(f.size);
+		if(f.size>4*4){
+			alert(f.size+" bytes");
+		}
+	} */
+	</script>
 	<script src="<%=CONTEXT_PATH%>/ts/js/baoming.js"></script>
 </body>
 </html>

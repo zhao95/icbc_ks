@@ -796,7 +796,9 @@ $("#excelimp").click(function(){
 		 param["serv_id"]=servid;
 		 FireFly.doAct("TS_BMLB_BM","getDataFromXls",param,false,true);
 		 $("#excleupload").modal('hide');
-		 
+		 deletefiles();	
+		 var parents = document.getElementById("shanchu").parentNode.parentNode;
+		 parents.parentNode.removeChild(parents);
 		 new listPage().gotoPage(1);
 	 }
 });
@@ -826,7 +828,8 @@ function returnz(){
 }
 function closemot(){
 	deletefiles();	
-	 document.getElementById("shanchu").parentNode.parentNode.remove();
+	 var parents = document.getElementById("shanchu").parentNode.parentNode;
+	 parents.parentNode.removeChild(parents);
 }
 
 function doPost(to, data) {  // to:提交动作（action）,data:参数

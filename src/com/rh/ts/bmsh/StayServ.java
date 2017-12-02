@@ -123,22 +123,30 @@ public class StayServ extends CommonServ {
 		String belongwhere = "AND XM_ID='"+xmid+"'";
 		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
 		if(finds.size()!=0){
-			String wfsid = finds.get(0).getStr("WFS_ID");
-			//根据流程id查找所有审核节点
-			String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"' order by SH_LEVEL DESC";
-			
-			List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
-			//遍历审核节点  获取 当前人的审核机构
-			for (Bean bean : finds2) {
-				//根据流程id获取 流程绑定的人和审核机构
-				String nodeid = bean.getStr("NODE_ID");
-			Bean finds3 = ServDao.find("TS_WFS_NODE_APPLY", nodeid);
-				if(finds3!=null){
-					out.set("level", finds3.getStr("NODE_STEPS"));
-					out.set("node_id", finds3.getStr("NODE_NAME"));
+			String wfsid = 	finds.get(0).getStr("WFS_ID");
+			String wfswhere = "AND WFS_ID='" + wfsid + "'  ORDER BY NODE_STEPS ASC";
+			List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+			for (Bean nodebean : finds2) {
+				boolean flagstr = false;
+				// 根据流程id获取 流程绑定的人和审核机构
+				String nodeids = nodebean.getStr("NODE_ID");
+				String nodewhere = "AND NODE_ID='" + nodeids + "'";
+				List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
+				for (Bean codebean : finds3) {
+					if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
+						out.set("level", codebean.getStr("NODE_STEPS"));
+						out.set("node_id", codebean.getStr("NODE_NAME"));
+						break;
+					}
+					
+				}
+				if(flagstr){
+					break;
 				}
 			}
+			
 		}
+		
 		return out;
 	}
 
