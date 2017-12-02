@@ -351,7 +351,7 @@ public class FlowServ extends CommonServ {
 		    getStep = level;
 		}
 			//节点
-			List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", "AND WFS_ID='"+wfsId+"' and NODE_STEPS < "+getStep);
+			List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", "AND WFS_ID='"+wfsId+"' and NODE_STEPS < "+getStep+" order by NODE_STEPS ASC");
 			for (Bean bean2 : finds2) {
 				String str = bean2.getStr("NODE_ID");
 				List<Bean> finds = ServDao.finds("TS_WFS_BMSHLC", "and NODE_ID='"+str+"'");

@@ -2541,10 +2541,13 @@ rh.vi.listView.prototype.getUserPvlg = function(){
  */
 rh.vi.listView.prototype._checkUserPvlg = function() {
 	var _self = this;
+	
+	var userCode = System.getVar("@USER_CODE@");
+	var loginName = System.getVar("@LOGIN_NAME@");
+	
+	console.log("userCode:"+userCode,"loginName:"+loginName);
+	
 	console.log("全部权限",_self._userPvlg);
-	var odeptLv = System.getVar("@ODEPT_LEVEL@",0);
-	var deptCode = System.getVar("@DEPT_CODE@");
-	var deptPath = System.getVar("@CODE_PATH@");
 
 	var servPvlg ;
 	if(_self._userPvlg){
@@ -2552,6 +2555,10 @@ rh.vi.listView.prototype._checkUserPvlg = function() {
 		servPvlg = _self._userPvlg[_self.servId+"_PVLG"]
 	}
 	console.log(this.servId+"权限",servPvlg);
+	
+	var odeptLv = System.getVar("@ODEPT_LEVEL@",0);
+	var deptCode = System.getVar("@DEPT_CODE@");
+	var deptPath = System.getVar("@CODE_PATH@");
 	
 	if("admin" != System.getVar("@LOGIN_NAME@")){
 	

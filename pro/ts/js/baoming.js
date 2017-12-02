@@ -465,7 +465,7 @@ function ksqxm() {
         }
         //append数据
         var j = i + 1;
-        $("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">' + j + '</td><td class="rhGrid-td-hide" id="BM_TYPE' + i + '" >' + type + '</td><td class="rhGrid-td-hide" id="BM_ID' + i + '" >' + id + '</td><td class="rhGrid-td-left " id="BM_NAME' + i + '" style="text-align: left">' + name + '</td><td class="rhGrid-td-left " id="BM_ODEPT__NAME" style="text-align: center">' + dept + '</td><td class="rhGrid-td-left " id="S_ATIME" style="text-align: center" >' + endTime + '</td><td  id="BM_STATE__NAME" style="text-align: left">' + state + '</td><td id="BM_OPTIONS"><button class="btn btn-success" type="button" onclick="tiaozhuan(' + i + ')" style="margin-left:30px;display:' + display + ';color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:70px">报名</button></td></tr>');
+        $("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">' + j + '</td><td class="rhGrid-td-hide" id="BM_TYPE' + i + '" >' + type + '</td><td class="rhGrid-td-hide" id="BM_ID' + i + '" >' + id + '</td><td class="rhGrid-td-left " id="BM_NAME' + i + '" style="text-align: left">' + name + '</td><td class="rhGrid-td-left " id="BM_ODEPT__NAME">' + dept + '</td><td class="rhGrid-td-left " id="S_ATIME">' + endTime + '</td><td  id="BM_STATE__NAME" style="text-align: left">' + state + '</td><td id="BM_OPTIONS"><button class="btn btn-success" type="button" onclick="tiaozhuan(' + i + ')" style="margin-left:30px;display:' + display + ';color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:70px">报名</button></td></tr>');
     }
     var table = document.getElementById("table");
     rowscolor(table);
@@ -637,7 +637,12 @@ listPage.prototype.bldTable = function (listData) {
             leixng = BM_TITLE;
         } else {
             type = "资格";
-            var leixng = BM_TITLE + "： " + BM_LB + "-" + BM_XL + "-" + BM_MK + "-" + BM_TYPE;
+            if(BM_MK=="无模块"){
+            	
+            	 leixng = BM_TITLE + "： " + BM_LB + "-" + BM_XL + "-" + BM_TYPE;
+            }else{
+            	 leixng = BM_TITLE + "： " + BM_LB + "-" + BM_XL + "-" + BM_MK + "-" + BM_TYPE;
+            }
         }
         var yiyistate = pageEntity[i].BM_YIYI_STATE;
         var sh_state = pageEntity[i].BM_SH_STATE;
@@ -753,7 +758,7 @@ listPage.prototype.bldTable = function (listData) {
             }
         }
         
-        if (flagstate == '审核进行中' || flagstate == "无需审核"|| flagstate == "无手动审核,审核结束") {
+        if (flagstate == '审核进行中') {
             //为table重新appendtr
             //已提交异议
             //没有提交异议  且没有撤销
@@ -822,8 +827,8 @@ listPage.prototype.bldTable = function (listData) {
                 $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a style=" id="chexiao">已撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
                 $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME"style="color:red;text-align: center">已撤销</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: center">' + flagstate + '</td>');
             }
-        } else if (flagstate == "审核结束") {
-            $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
+        } else if (flagstate == "审核结束" || flagstate == "无需审核"|| flagstate == "无手动审核,审核结束") {
+            $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp;&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
             if (sh_state == 1) {
                 //审核通过 没有异议  没有撤销
             	 $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:lightseagreen">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');

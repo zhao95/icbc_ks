@@ -192,6 +192,15 @@ public class NoPassServ extends CommonServ {
 	 */
 	@SuppressWarnings("static-access")
 	public OutBean update(Bean paramBean) {
+		String shenuser = "";
+		UserBean userBean = Context.getUserBean();
+		if (userBean.isEmpty()) {
+			return new OutBean().setError("ERROR:user_code 为空");
+		} else {
+			shenuser = userBean.getStr("USER_CODE");
+		}
+		//节点名称
+		String node_name="";
 		String nodeid = paramBean.getStr("nodeid");
 		String levels = paramBean.getStr("level");
 		int level = 0;
@@ -209,15 +218,30 @@ public class NoPassServ extends CommonServ {
 		String wfsid = 	bean2.getStr("WFS_ID");
 		Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
 		flag = find.getStr("WFS_TYPE");
+		
+		String wfswhere = "AND WFS_ID='" + wfsid + "' ORDER BY NODE_STEPS ASC";
+
+		List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+		for (Bean nodebean : finds2) {
+			boolean flagstr = false;
+			// 根据流程id获取 流程绑定的人和审核机构
+			String nodeids = nodebean.getStr("NODE_ID");
+			String nodewhere = "AND NODE_ID='" + nodeids + "'";
+			List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
+			for (Bean codebean : finds3) {
+				if (shenuser.equals(codebean.getStr("SHR_USERCODE"))) {
+					node_name= nodebean.getStr("NODE_NAME");
+					flagstr = true;
+					break;
+				}
+				
+			}
+			if(flagstr){
+				break;
+			}
+		}
 		}
 		
-		String shenuser = "";
-		UserBean userBean = Context.getUserBean();
-		if (userBean.isEmpty()) {
-			return new OutBean().setError("ERROR:user_code 为空");
-		} else {
-			shenuser = userBean.getStr("USER_CODE");
-		}
 		// 被选中的id
 		String[] ss = s.split(",");
 		String liyou = paramBean.getStr("liyou");
@@ -294,7 +318,7 @@ public class NoPassServ extends CommonServ {
 
 			        } 
 				Bean mindbean = new Bean();
-				mindbean.set("SH_LEVEL", level);
+				mindbean.set("SH_LEVEL", node_name);
 				mindbean.set("SH_MIND", liyou);
 				mindbean.set("DATA_ID", bean.getStr("BM_ID"));
 				mindbean.set("SH_STATUS", 1);
@@ -680,7 +704,6 @@ public class NoPassServ extends CommonServ {
 			dept_code=user.getStr("ODEPT_CODE");
 		}
 		dept_code = dept_code.substring(0,10);
-		String compycode = user.getCmpyCode();
 		String deptwhere = "";
 		/*if("belong".equals(xianei)){
 		String belongdeptcode = "";

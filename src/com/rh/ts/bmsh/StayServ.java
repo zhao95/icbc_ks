@@ -125,7 +125,7 @@ public class StayServ extends CommonServ {
 		if(finds.size()!=0){
 			String wfsid = finds.get(0).getStr("WFS_ID");
 			//根据流程id查找所有审核节点
-			String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"'";
+			String wfswhere = "AND WFS_ID='"+wfsid+"' AND SHR_USERCODE='"+user_code+"' order by SH_LEVEL DESC";
 			
 			List<Bean> finds2 = ServDao.finds("TS_WFS_BMSHLC", wfswhere);
 			//遍历审核节点  获取 当前人的审核机构
@@ -149,6 +149,15 @@ public class StayServ extends CommonServ {
 	 */
 	@SuppressWarnings("static-access")
 	public Bean update(Bean paramBean) {
+		String shenuser = "";
+		UserBean userBean = Context.getUserBean();
+		if (userBean.isEmpty()) {
+			return new OutBean().setError("ERROR:user_code 为空");
+		} else {
+			shenuser = userBean.getStr("USER_CODE");
+		}
+		
+		String node_name = "";
 		String nodeid = paramBean.getStr("nodeid");
 
 		String levels = paramBean.getStr("level");
@@ -168,15 +177,30 @@ public class StayServ extends CommonServ {
 		String wfsid = 	bean2.getStr("WFS_ID");
 		Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
 		flag = find.getStr("WFS_TYPE");
+		String wfswhere = "AND WFS_ID='" + wfsid + "'  ORDER BY NODE_STEPS ASC";
+		List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+		for (Bean nodebean : finds2) {
+			boolean flagstr = false;
+			// 根据流程id获取 流程绑定的人和审核机构
+			String nodeids = nodebean.getStr("NODE_ID");
+			String nodewhere = "AND NODE_ID='" + nodeids + "'";
+			List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
+			for (Bean codebean : finds3) {
+				if (shenuser.equals(codebean.getStr("SHR_USERCODE"))) {
+					node_name= nodebean.getStr("NODE_NAME");
+					flagstr = true;
+					break;
+				}
+				
+			}
+			if(flagstr){
+				break;
+			}
 		}
 		
-		String shenuser = "";
-		UserBean userBean = Context.getUserBean();
-		if (userBean.isEmpty()) {
-			return new OutBean().setError("ERROR:user_code 为空");
-		} else {
-			shenuser = userBean.getStr("USER_CODE");
 		}
+		
+		
 		// 被选中的id
 		String[] ss = s.split(",");
 		String state = paramBean.getStr("radiovalue");
@@ -402,7 +426,7 @@ public class StayServ extends CommonServ {
 
 			        } 
 				Bean mindbean = new Bean();
-				mindbean.set("SH_LEVEL", level);
+				mindbean.set("SH_LEVEL", node_name);
 				mindbean.set("SH_MIND", liyou);
 				mindbean.set("DATA_ID", bean.getStr("BM_ID"));
 				mindbean.set("SH_STATUS", state);
@@ -1108,8 +1132,7 @@ public class StayServ extends CommonServ {
 			}
 		OutBean out = new OutBean();
 		if(list.size()==0){
-			out.set("num", 0);
-			out.set("num", list.size());
+			out.set("num", "");
 			return  out.set("flag", "false");
 		}else{
 			out.set("num", list.size());

@@ -346,8 +346,10 @@ function xminfoshow(){
 					alert("手机号码不能为空");
 				}
 				if (ryl_mobile != "" && ryl_mobile != null) {
+					$("#loading").modal("show");
 					var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param,
-							true, false);
+							false, false);
+					$("#loading").modal("hide");
 					showMask();
 					if (BM_ID.strresult != null || BM_ID.strresult != "") {
 						hideMask();
