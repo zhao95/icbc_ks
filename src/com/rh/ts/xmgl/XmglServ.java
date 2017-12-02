@@ -148,18 +148,25 @@ public class XmglServ extends CommonServ {
 					Bean s = new Bean();
 					if (gj[i].equals("报名")) {
 						s.set("XM_NAME_NUM", 1);
+						s.set("XM_SZ_TYPE", "未开启");
 					} else if (gj[i].equals("审核")) {
 						s.set("XM_NAME_NUM", 2);
+						s.set("XM_SZ_TYPE", "未开启");
 					} else if (gj[i].equals("请假")) {
 						s.set("XM_NAME_NUM", 3);
+						s.set("XM_SZ_TYPE", "未开启");
 					} else if (gj[i].equals("异地借考")) {
 						s.set("XM_NAME_NUM", 4);
+						s.set("XM_SZ_TYPE", "未开启");
 					} else if (gj[i].equals("试卷")) {
 						s.set("XM_NAME_NUM", 5);
+						s.set("XM_SZ_TYPE", "未开启");
 					} else if (gj[i].equals("场次测算")) {
 						s.set("XM_NAME_NUM", 6);
+						s.set("XM_SZ_TYPE", "未开启");
 					} else if (gj[i].equals("考场安排")) {
 						s.set("XM_NAME_NUM", 7);
+						s.set("XM_SZ_TYPE", "未开启");
 					}
 					s.set("XM_SZ_NAME", gj[i]);
 					s.set("XM_ID", XMID);
