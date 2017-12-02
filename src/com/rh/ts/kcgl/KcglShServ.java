@@ -26,14 +26,14 @@ public class KcglShServ extends CommonServ {
 	
 	if(roleOrgLv.indexOf("2") != -1){
 	    if(roleOrgLv.length() > 2){
-		paramBean.setQueryExtWhere(" and odept_level in (" + roleOrgLv + ")");
+		paramBean.setQueryExtWhere(" and odept_level in (1," + roleOrgLv + ")");
 	    }else{
 		paramBean.setQueryExtWhere(" and (odept_level < 3 or KC_STATE2 = 1)");
 	    }
 	}else if(!roleOrgLv.isEmpty()){
 	    UserBean userBean = Context.getUserBean();
 	    String odeptCodePath = userBean.getODeptCodePath();
-	    paramBean.setQueryExtWhere(" and odept_level > 3 and odept_path like '"+odeptCodePath+"%'");
+	    paramBean.setQueryExtWhere(" and odept_level in (" + roleOrgLv + ") and odept_path like '"+odeptCodePath+"%'");
 	}else{
 	    paramBean.setQueryExtWhere(" and 1=2");
 	}
