@@ -177,7 +177,7 @@
 				</div>
 				<table style="width:95%">
 				<tr>
-				<td style="width:15%"></td><td style="disabled:disabled;height:100px;vertical-align:top"><textarea id="describe" style="border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="disabled:disabled;height:100px;vertical-align:top"><textarea id="describe" style="border:solid 1px white;height:95%;width:95%" wrap="soft"></textarea></td>
 				</tr>
 				</table >
 				<div style="padding-top:10px;width:23%;font-size:16px;text-align:center;color:lightseagreen">
@@ -185,7 +185,7 @@
 				</div>
 				<table style="width:95%">
 				<tr>
-				<td style="width:15%"></td><td style="height:100px;vertical-align:top"><textarea id="mustknow" style="border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="height:100px;vertical-align:top"><textarea id="mustknow" style="border:solid 1px white;height:90%;width:95%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
 				<div class="modal-footer" style="text-align:center;height:60px">

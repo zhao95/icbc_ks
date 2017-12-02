@@ -137,8 +137,8 @@ String bmbq = request.getParameter("bmbq");
 								<th id="BM_XUHAO" class=""
 									style="width: 6.6%; text-align: center">序号</th>
 								<th id="BM_NAME" class="" style="width: 29.1%;">名称</th>
-								<th   style="text-align: center;width: 15%;">组织单位</th>
-								<th   style="text-align: center;width: 35%;">报名结束时间</th>
+								<th   style="text-align: left;width: 15%;">组织单位</th>
+								<th   style="text-align: left;width: 35%;">报名结束时间</th>
 								 <th id="BM_STATE__NAME" class="" style="width: 8%;">状态</th>
 								<th id="BM_OPTIONS" class=""
 									style="width: 12%; text-align: center">操作</th>
@@ -186,10 +186,10 @@ String bmbq = request.getParameter("bmbq");
 							<th id="BM_XUHAO" class=""
 									style="width: 6.6%; text-align: center">序号</th>
 									<th style="width: 10%;text-align: left">提交时间</th>
-								<th style="width: 20%; text-align: left">名称</th>
+								<th style="width: 30%; text-align: left">名称</th>
 								<th style="width: 5%; text-align: center">类型</th>
-								<th style="text-align: center; width: 14%;">审核状态</th>
-							 	<th style="width: 10%; text-align: center">状态</th>
+								<th style="text-align: center; width: 6%;">审核状态</th>
+							 	<th style="width: 6%; text-align: center">状态</th>
 								<th id="BM_OPTIONS" class=""
 									style="width: 12%; text-align: center">操作</th>
 							</tr>

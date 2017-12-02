@@ -678,6 +678,7 @@ public class XmglServ extends CommonServ {
 							}
 
 						}
+						
 					}
 					if(flagstr){
 						break;
