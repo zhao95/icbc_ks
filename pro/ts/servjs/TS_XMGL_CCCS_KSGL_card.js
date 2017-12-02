@@ -23,8 +23,5 @@ if(_viewer.getItem("BM_STATUS").getValue() == ""){
 	_viewer.getItem("BM_STATUS").setValue(0)
 }
 
-_viewer.getItem("JK_ODEPT").change(function(){
-	var codept = _viewer.getItem("JK_ODEPT").getValue();
-	_viewer.getItem("S_ODEPT").setValue(codept);
-	_viewer.getItem("S_ODEPT").setText(codept);
-});
+console.log("S_ODEPT",_viewer.getItem("S_ODEPT").getValue());
+console.log("S_DEPT",_viewer.getItem("S_DEPT").getValue());

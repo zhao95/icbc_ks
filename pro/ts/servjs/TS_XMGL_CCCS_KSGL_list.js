@@ -5,7 +5,7 @@ $(".rhGrid").find("tr").unbind("dblclick");
 /*
 * 业务可覆盖此方法，在导航树的点击事件加载前 
 */
-rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
+_viewer.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	var params = {};
 	var user_pvlg=_viewer._userPvlg[_viewer.servId+"_PVLG"];
 	params["USER_PVLG"] = user_pvlg;
@@ -14,6 +14,11 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	_viewer.listClearTipLoad();
 	return flag;
 };
+
+_viewer.afterTreeNodeClick = function(item,id,dictId) {
+	_viewer._transferData["S_ODEPT"] = item.ODEPT_CODE;
+	_viewer._transferData["S_ODEPT__NAME"] = item.ODEPT_CODE;
+}
 
 /*
  * 删除前方法执行

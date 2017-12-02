@@ -835,7 +835,7 @@ rh.vi.rhDictTreeView.prototype._checkClick = function(item,s,id) {
  */
 rh.vi.rhDictTreeView.prototype._checkUserPvlg = function(item) {
 	try{
-		if(this._confJson.sId.indexOf('TS_ORG_DEPT')>=0 || this._confJson.sId.indexOf('TS_CTLG_TREE')>=0) {
+		if(this._confJson.sId.indexOf('TS_ORG_DEPT')>=0) {
 			
 			var _self = this;
 			
