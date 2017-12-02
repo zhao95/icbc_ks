@@ -15,6 +15,10 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	_viewer.whereData["extParams"] = params;
 	 var flag = getListPvlg(item,user_pvlg,"CODE_PATH");
 	_viewer.listClearTipLoad();
+	
+	_viewer._transferData["S_ODEPT"] = item.ODEPT_CODE;
+	_viewer._transferData["S_ODEPT__NAME"] = item.ODEPT_CODE;
+	
 	return flag;
 };
 
