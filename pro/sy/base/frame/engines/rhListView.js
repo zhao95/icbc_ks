@@ -1763,11 +1763,16 @@ rh.vi.listView.prototype._bldNavTree = function() {
 				var dictSubs = confJson && (confJson.DICT_SUBS) ? confJson.DICT_SUBS:null;//是否查询当前点的所有子
 				var pId = confJson && (confJson.PID) ? confJson.PID:null;
                 var expandLevelParam = 1;
+                
+                var url = "SY_COMM_INFO.dict.do";
+                if (dictId.indexOf('TS_ORG_DEPT')>=0 || dictId.indexOf('TS_CTLG_TREE')>=0) {
+                	url = url + "?USE_SERV_ID="+_self.servId;
+                }
 				var setting = {
 						rhexpand: false,
 						expandLevel:expandLevelParam,
 				    	showcheck: false,   
-				    	url: "SY_COMM_INFO.dict.do", 
+				    	url: url, 
 				        theme: "bbit-tree-no-lines", //bbit-tree-lines ,bbit-tree-no-lines,bbit-tree-arrows
 				        rhItemCode:itemCode,
 				        rhBeforeOnNodeClick: function (item,id) {//点击添加选中状态之前

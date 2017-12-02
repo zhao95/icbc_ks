@@ -126,10 +126,12 @@ public class RoleUtil {
 				if(differ == 0 ) {
 					odeptBean = userBean.getODeptBean();
 				} else {
+					
+					odeptBean = userBean.getODeptBean();
 
 					for (int j = 1; j <= differ; j++) {
 	
-						odeptBean = userBean.getODeptBean().getParentDeptBean().getODeptBean();
+						odeptBean = odeptBean.getParentDeptBean().getODeptBean();
 	
 //						System.out.println("上级 lv=" + odeptBean.getLevel() + "   curLv=" + curLv);
 					}
