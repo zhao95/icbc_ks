@@ -36,8 +36,7 @@ public class KSSendTipMessageServ {
             String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
             if (confTipType.equals("EMAIL")) {
                 //发送邮件包含的网页页面
-                String html = FreeMarkerUtils.parseText(Context.appStr(Context.APP.SYSPATH) + "sy/comm/home/ftl/SY_EMAIL_NEWS.ftl", pBean);
-                DIIOPMailSender.sendMail("请假开始提醒", html, UserMgr.getUser(USER_CODE).getStr("USER_EMAIL"));
+                sendMail(USER_CODE, "请假开始提醒", tipMsg);
             }
             //融E联方式发送
             else if (confTipType.equals("ELINK")) {
