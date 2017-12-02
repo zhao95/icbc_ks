@@ -186,8 +186,6 @@ $(function() {
 	var param1 = {};
 	// 调用平台级的方法，使用系统变量获取到当前登录用户的人力资源编码
 	// 通过人力资源编码查询报名项目的服务对应的表
-	// var CurrentUser_work_num=System.getUser("USER_WORK_NUM");
-
 	// 因审核暂时使用的是用户编码，所以此时暂时使用USER_CODE
 	var CurrentUser_code = System.getUser("USER_CODE");
 	param1["_extWhere"] = "and STR1='" + CurrentUser_code + "' AND OBJ_INT1 ='1'";
@@ -199,7 +197,7 @@ $(function() {
 
 		// 使用字符串的方法，将去除逗号的BM_GJ 模块合并成一条字符串， 并将字符串根据逗号进行分割， 得到分割后的数组。
 		var param2 = {};
-		param2["_extWhere"] = "and XM_ID ='" + xm_id + "' AND XM_STATE ='1'";
+		param2["_extWhere"] = "and XM_ID ='" + xm_id + "' AND XM_STATE ='1' AND XM_JD<>'100%' ";
 		var resultXM = FireFly.doAct("TS_XMGL", "query", param2);
 
 		if(resultXM._DATA_.length!=0){
@@ -249,7 +247,7 @@ $(function() {
 
 			// 此时需要获取项目的当前进度模块，需要获取项目的挂接模块的状态。将获取到的状态进行分析，
 			// 如果未开始，则表示项目未开始，如果开放中，则表示项目开始中，如果已结束，则表示项目已结束
-			// 将已完成和进行中的项目模块放进CurrentXMGJ数组中,作为当前项目进度数组， 留待与总模块通过公式计算当前项目百分比
+			// 将已完成和进行中的项目模块放进CurrentXMGJ数组中,作为当前项目进度数组， 当前项目百分比是从项目设置中获取到的。
 			// 之后对三种状态的模块对应的进度条变色
 			var param3 = {};
 			// 传递什么参数？当前项目的xm_id? xm_id怎么获取？ 仍旧是最初的项目id。
@@ -299,10 +297,19 @@ $(function() {
 			divOverAndOut(xm_id);
 			renderDiv4Color(xm_id);
 		}
-		//如果从TS_OBJECT表中未查询到数据，则证明项目已经被删除，则将页面得状态图全部设置为初始值
+		//如果从TS_OBJECT表中未查询到数据，并且项目管理中的进度已经百分百，则将页面得状态图全部设置为初始值
 		else if(resultXM._DATA_.length==0){
 			$("#jdtNum").html("0");
 			$("#jdtName").html("您暂时未参加任何考试！");
+			//将页面的进度条颜色设置为初始值
+            $("#jdtDivInner1").css("background-color", "#f0f0f0");
+            $("#jdtDivInner2").css("background-color", "#f0f0f0");
+            $("#jdtDivInner3").css("background-color", "#f0f0f0");
+            $("#jdtDivInner4").css("background-color", "#f0f0f0");
+           /* $("#jdtDivInner1").css("background-color", "#f0f0f0");
+            $("#jdtDivInner1").css("background-color", "#f0f0f0");
+            $("#jdtDivInner1").css("background-color", "#f0f0f0");*/
+
 		}
 
 	} else {
@@ -326,7 +333,7 @@ $(function() {
 			var menuXM_ID = resultSH._DATA_[0].XM_ID;
 			// 使用字符串的方法，将去除逗号的BM_GJ 模块合并成一条字符串， 并将字符串根据，进行分割， 得到分割后的数组。
 			var param2 = {};
-			param2["_extWhere"] = "and XM_ID ='" + menuXM_ID + "'";
+			param2["_extWhere"] = "and XM_ID ='" + menuXM_ID + "' and XM_JD <>'100%'";
 			var resultXM = FireFly.doAct("TS_XMGL", "query", param2);
 
 			if(resultXM._DATA_.length!=0){
@@ -370,10 +377,58 @@ $(function() {
 				//div变色效果
 				divOverAndOut(menuXM_ID);
 				renderDiv4Color(menuXM_ID);
+				
+				// 此时需要获取项目的当前进度模块，需要获取项目的挂接模块的状态。将获取到的状态进行分析，
+				// 如果未开始，则表示项目未开始，如果开放中，则表示项目开始中，如果已结束，则表示项目已结束
+				// 将已完成和进行中的项目模块放进CurrentXMGJ数组中,作为当前项目进度数组， 留待与总模块通过公式计算当前项目百分比
+				// 之后对三种状态的模块对应的进度条变色
+				var param3 = {};
+				// 传递什么参数？当前项目的xm_id? xm_id怎么获取？ 仍旧是最初的项目id。
+				// 此时 TS_XMGL_BM的XM_ID和TS_XMGL_SZ的XM_ID是同一ID
+				param3["_extWhere"] = "and xm_id='" + menuXM_ID + "'"
+				// 获取到的是项目设置中的所有挂接模块的列表
+				var current_xm = FireFly.doAct("TS_XMGL_SZ", "query", param3);
 
+				// 新建数组存储已执行的模块的名称，留待判断百分比用
+				var CurrentXMGJ = [];
+
+				// 遍历列表的数据，获取每一个挂接模块的名称和状态
+				for (var i = 0; i < current_xm._DATA_.length; i++) {
+					// 获取该模块的名称
+					var currentN = current_xm._DATA_[i].XM_SZ_NAME;
+					// 获取该模块的状态
+					var currentT = current_xm._DATA_[i].XM_SZ_TYPE;
+					var currentTT = currentT;
+					//将每一个项目挂接的模块姓名和状态添加到对象中。
+					if(currentTT==""){
+						currentTT="未启用";
+					}
+					xm_gj_name_state_map[currentN] = currentTT;
+//					debugger;
+					// 获取到模块对应的状态和颜色的值
+					var currentDiv = nameMap[currentN];
+					var currentColor = typeMap[currentT];
+					// 如果当前模块的状态属于已完成或者进行中， 则将该模块存储进CurrentXMGJ数组
+					if (currentColor === "c2" || currentColor === "c3") {
+						CurrentXMGJ.push(current_xm._DATA_[i]);
+					}
+
+					// 将模块对应的状态和颜色设置对应的进度条样式颜色
+					jQuery("#" + currentDiv).css("background-color",
+							color_num(currentColor));
+					if (currentN === "请假" && currentColor === "c2") {
+						jQuery("#qj_sp").css("color", "#ff0000");
+					}
+					if (currentN === "异地借考" && currentColor === "c2") {
+						jQuery("#jk_sp").css("color", "#ff0000");
+					}
+				}
+				
+				
 			}else{
 				var jdtNum="0";
 				var jdtName="您暂时未报名资格考试！";
+				debugger;
 				if(jdtName==undefined){
 					jdtName="您暂时未报名资格考试！";
 				}
@@ -384,51 +439,10 @@ $(function() {
 				jdtNum = jdtNum2[0];
 				$("#jdtNum").html("" + jdtNum + "");
 				$("#jdtName").html("" + jdtName + "");
-			}
-			// 此时需要获取项目的当前进度模块，需要获取项目的挂接模块的状态。将获取到的状态进行分析，
-			// 如果未开始，则表示项目未开始，如果开放中，则表示项目开始中，如果已结束，则表示项目已结束
-			// 将已完成和进行中的项目模块放进CurrentXMGJ数组中,作为当前项目进度数组， 留待与总模块通过公式计算当前项目百分比
-			// 之后对三种状态的模块对应的进度条变色
-			var param3 = {};
-			// 传递什么参数？当前项目的xm_id? xm_id怎么获取？ 仍旧是最初的项目id。
-			// 此时 TS_XMGL_BM的XM_ID和TS_XMGL_SZ的XM_ID是同一ID
-			param3["_extWhere"] = "and xm_id='" + menuXM_ID + "'"
-			// 获取到的是项目设置中的所有挂接模块的列表
-			var current_xm = FireFly.doAct("TS_XMGL_SZ", "query", param3);
-
-			// 新建数组存储已执行的模块的名称，留待判断百分比用
-			var CurrentXMGJ = [];
-
-			// 遍历列表的数据，获取每一个挂接模块的名称和状态
-			for (var i = 0; i < current_xm._DATA_.length; i++) {
-				// 获取该模块的名称
-				var currentN = current_xm._DATA_[i].XM_SZ_NAME;
-				// 获取该模块的状态
-				var currentT = current_xm._DATA_[i].XM_SZ_TYPE;
-				var currentTT = currentT;
-				//将每一个项目挂接的模块姓名和状态添加到对象中。
-				if(currentTT==""){
-					currentTT="未启用";
-				}
-				xm_gj_name_state_map[currentN] = currentTT;
-//				debugger;
-				// 获取到模块对应的状态和颜色的值
-				var currentDiv = nameMap[currentN];
-				var currentColor = typeMap[currentT];
-				// 如果当前模块的状态属于已完成或者进行中， 则将该模块存储进CurrentXMGJ数组
-				if (currentColor === "c2" || currentColor === "c3") {
-					CurrentXMGJ.push(current_xm._DATA_[i]);
-				}
-
-				// 将模块对应的状态和颜色设置对应的进度条样式颜色
-				jQuery("#" + currentDiv).css("background-color",
-						color_num(currentColor));
-				if (currentN === "请假" && currentColor === "c2") {
-					jQuery("#qj_sp").css("color", "#ff0000");
-				}
-				if (currentN === "异地借考" && currentColor === "c2") {
-					jQuery("#jk_sp").css("color", "#ff0000");
-				}
+                $("#jdtDivInner1").css("background-color", "#f0f0f0");
+                $("#jdtDivInner2").css("background-color", "#f0f0f0");
+                $("#jdtDivInner3").css("background-color", "#f0f0f0");
+                $("#jdtDivInner4").css("background-color", "#f0f0f0");
 			}
 		}
 	}

@@ -26,7 +26,7 @@ public class XmztServ extends CommonServ {
 	 * @return 保存或更改首页显示状态后返回的bean
 	 */
 	public Bean modifyShowType(ParamBean paramBean) {
-		//获取当前登录用户的人力资源编码
+		//获取当前登录用户的编码
 		String user_code = paramBean.getStr("USER_CODE");
 		String xm_id = paramBean.getStr("XM_ID");
 		//查询到当前用户所有的进行中的和进行过的项目，将状态设置为首页不显示
