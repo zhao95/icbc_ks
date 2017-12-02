@@ -3,8 +3,8 @@ var param={};
 param['type']="0";
 var result = FireFly.doAct("TS_QJLB_QJ","getQtData",param);
 var datalist = result.datalist;
-for(var i=0;i<datalist.length;i++){
 	var j=1;
+for(var i=0;i<datalist.length;i++){
 	var newTR='<tr style="height:30px;" >'+
 	'<td width="5%" align="center">'+j+'</td>'+
 	'<td width="5%" align="center">'+datalist[i].TITLE+'</td>'+
