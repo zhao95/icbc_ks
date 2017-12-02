@@ -21,23 +21,25 @@ public class KcglShServ extends CommonServ {
 //	extParams={USER_PVLG={upd={ROLE_DCODE=, ROLE_ORG_LV=3}}}
 //	有总行考场审核人员权限和一级分行考场审核人员权限
 //	extParams={USER_PVLG={upd={ROLE_DCODE=, ROLE_ORG_LV=2,3}}}
-	String roleOrgLv = paramBean.getBean("extParams").getBean("USER_PVLG").getBean("upd").getStr("ROLE_ORG_LV");
-//	String roleDcode = paramBean.getBean("extParams").getBean("USER_PVLG").getBean("upd").getStr("ROLE_DCODE");
-	
-	if(roleOrgLv.indexOf("2") != -1){
-	    if(roleOrgLv.length() > 2){
-		paramBean.setQueryExtWhere(" and odept_level in (1," + roleOrgLv + ")");
-	    }else{
-		paramBean.setQueryExtWhere(" and (odept_level < 3 or KC_STATE2 = 1)");
-	    }
-	}else if(!roleOrgLv.isEmpty()){
-	    UserBean userBean = Context.getUserBean();
-	    String odeptCodePath = userBean.getODeptCodePath();
-	    paramBean.setQueryExtWhere(" and odept_level in (" + roleOrgLv + ") and odept_path like '"+odeptCodePath+"%'");
-	}else{
+	Bean pvlgBean = paramBean.getBean("extParams").getBean("USER_PVLG");
+	if(pvlgBean.getStr("upd").equals("0")){
 	    paramBean.setQueryExtWhere(" and 1=2");
+	}else{
+	    String roleOrgLv = pvlgBean.getBean("upd").getStr("ROLE_ORG_LV");
+	    if(roleOrgLv.indexOf("2") != -1){
+		if(roleOrgLv.length() > 2){
+		    paramBean.setQueryExtWhere(" and (odept_level in (1," + roleOrgLv + ") or KC_STATE2 = 1)");
+		}else{
+		    paramBean.setQueryExtWhere(" and (odept_level < 3 or KC_STATE2 = 1)");
+		}
+	    }else if(!roleOrgLv.isEmpty()){
+		UserBean userBean = Context.getUserBean();
+		String odeptCodePath = userBean.getODeptCodePath();
+		paramBean.setQueryExtWhere(" and odept_level in (" + roleOrgLv + ") and odept_path like '"+odeptCodePath+"%'");
+	    }else{
+		paramBean.setQueryExtWhere(" and 1=2");
+	    }
 	}
-	
     }
 
     /**

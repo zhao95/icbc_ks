@@ -69,7 +69,6 @@ setTimeout(function(){
 						var CcGood = 0;
 						// 最大计算机场次
 						var CcMax = 0;
-						
 						// 1级考场
 						param["_WHERE_"] = "and xm_id = '" + xmId+ "' and KC_LEVEL = '一级' and KC_ODEPTCODE='" + dataId + "'";
 						var deptName = $(item).find("td[icode='DEPT_NAME']").html();
@@ -93,10 +92,10 @@ setTimeout(function(){
 						// 2级考场
 						var param = {};
 						param["_SELECT_"] = "DEPT_CODE";
-						param["DEPT_PCODE"] = dataId;
-						param["DEPT_TYPE"] = "2";
-						param["S_FLAG"] = "1";
-						
+//						param["DEPT_PCODE"] = dataId;
+//						param["DEPT_TYPE"] = "2";
+//						param["S_FLAG"] = "1";
+						param["_WHERE_"] = "and (DEPT_PCODE = '"+dataId+"' or dept_code = '"+dataId+"') and DEPT_TYPE=2 and s_flag = 1";
 						var odept3Arr = FireFly.doAct("TS_ORG_DEPT","finds", param)._DATA_;
 						if(odept3Arr.length > 0){
 							for(var i=0;i<odept3Arr.length;i++){
@@ -255,7 +254,6 @@ function getResult(kcArr){
 			jgSum = jgSum.replace(/,/g, "','");
 		}
 	});	
-	
 	var kcTypesArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_TYPE_V","finds",{"_WHERE_":"and xm_id = '"+xmId+"'"},true,false)._DATA_;
 	for(var i = 0; i < kcTypesArr.length; i++){
 		var tmpBmXlCode = kcTypesArr[i].BM_XL_CODE;
