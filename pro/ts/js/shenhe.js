@@ -249,6 +249,7 @@ function firall(){
 				$("#shenheA").removeAttr("data-target");
 			}else{
 				 $('input:checkbox[name=checkboxa]:checked').each(function(){
+					
 					 if($(this).attr("SHLV")!=0){
 					 if(nowlevel>$(this).attr("SHLV")){
 						 var color=$(this.parentNode.parentNode).css("background-color");
@@ -258,7 +259,6 @@ function firall(){
 									$(this.parentNode.parentNode).css("background-color", color);
 								}
 							});
-							 alert("您无权修改上级审核结果！");
 							 flag=true;
 							 return;
 						 
@@ -266,6 +266,7 @@ function firall(){
 					 }
 				 });
 				 if(flag){
+					 alert("您无权修改上级审核结果！");
 					 $("#shenheA").attr("data-target",'');
 				 }else{
 					 $("#shenheA").attr("data-target",'#tiJiao');
@@ -398,13 +399,13 @@ function firall(){
 								$(this.parentNode.parentNode).css("background-color", color);
 							}
 						});
-						 alert("您的上级已审核您没有审核权利");
 						 flag=true;
 						 return;
 					 }
 					 }
 				 });
 				 if(flag){
+					 alert("您的上级已审核您没有审核权利");
 					 $("#shenheB").attr("data-target",'');
 				 }else{
 					 $("#shenheB").attr("data-target",'#tiJiao');
@@ -437,6 +438,7 @@ function firall(){
 				$("#shenheC").removeAttr("data-target");
 			}else{
 				 $('input:checkbox[name=checkboxc]:checked').each(function(){
+					
 					 if($(this).attr("SHLV")!=0){
 					 if(nowlevel>$(this).attr("SHLV")){
 						 var color=$(this.parentNode.parentNode).css("background-color");
@@ -446,13 +448,13 @@ function firall(){
 									$(this.parentNode.parentNode).css("background-color", color);
 								}
 							});
-							 alert("您的上级已审核您没有审核权利");
 							 flag=true;
 							 return;
 					 }
 					 }
 				 })
 				 if(flag){
+					 alert("您的上级已审核您没有审核权利");
 					 $("#shenheC").attr("data-target",'');
 				 }else{
 					 $("#shenheC").attr("data-target",'#tiJiao');

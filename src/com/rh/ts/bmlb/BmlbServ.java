@@ -493,6 +493,7 @@ public class BmlbServ extends CommonServ {
 			e.printStackTrace();
 		}
 		outBean.set("strresult", "提交成功");
+		outBean.setOk("报名成功");
 		return outBean;
 	}
 

@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"",
-"S_MTIME":"2017-11-15 16:37:07:161",
+"S_MTIME":"2017-12-02 15:56:07:630",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "TABLE_VIEW":"TS_XMGL_CCCS_V",
@@ -623,6 +623,33 @@
 "SY_SERV_ACT":
 [
 {
+"ACT_TYPE":"1",
+"ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"begin",
+"ACT_MEMO":"",
+"ACT_CODE":"run",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"27pFoD2Kh0prxZLqsZJn",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"27pFoD2Kh0prxZLqsZJn",
+"SERV_ID":"TS_XMGL_CCCS_V",
+"S_MTIME":"2017-12-02 15:56:07:555",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"5",
+"ACT_GROUP":"2",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"0",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":"测算"
+},
+{
 "ACT_TYPE":"3",
 "ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"byid",
@@ -644,7 +671,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"0",
+"_ROWNUM_":"1",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 查 看 "
@@ -671,7 +698,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"1",
+"_ROWNUM_":"2",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"条件"
@@ -698,7 +725,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"2",
+"_ROWNUM_":"3",
 "ACT_TIP":"确保列表无编辑组按钮卡片也可以保存",
 "EN_JSON":"",
 "ACT_NAME":"修改"
@@ -725,7 +752,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"3",
+"_ROWNUM_":"4",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 添 加 "
@@ -752,7 +779,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"4",
+"_ROWNUM_":"5",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 保 存 "
@@ -779,7 +806,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"5",
+"_ROWNUM_":"6",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 保 存 "
@@ -806,7 +833,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"6",
+"_ROWNUM_":"7",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"复制并新建"
@@ -833,7 +860,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"7",
+"_ROWNUM_":"8",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"变更历史"
@@ -860,7 +887,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"8",
+"_ROWNUM_":"9",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 删 除 "
@@ -887,7 +914,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"9",
+"_ROWNUM_":"10",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"导出Excel"
@@ -914,7 +941,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"10",
+"_ROWNUM_":"11",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 入 "
@@ -941,7 +968,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"11",
+"_ROWNUM_":"12",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 出 "
@@ -968,7 +995,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"12",
+"_ROWNUM_":"13",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 接 收 "
@@ -995,7 +1022,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"13",
+"_ROWNUM_":"14",
 "ACT_TIP":"zip文件导入",
 "EN_JSON":"",
 "ACT_NAME":"批量导入"
@@ -1022,7 +1049,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"14",
+"_ROWNUM_":"15",
 "ACT_TIP":"zip文件导出",
 "EN_JSON":"",
 "ACT_NAME":"批量导出"

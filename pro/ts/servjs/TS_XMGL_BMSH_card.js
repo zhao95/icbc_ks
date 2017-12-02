@@ -151,7 +151,7 @@ _viewer.afterSave=function(){
 	}
 	if(shRgsh==1){
 	if(bmStartTime && bmEndTime){
-		var bmTime=bmStartTime+" 至  "+bmEndTime;
+		var bmTime=bmStartTime+"  至  "+bmEndTime;
 		var param={};
 		//(String xmszExplain,String xmid,String xmszid)
 		param["xmszExplain"]=bmTime;

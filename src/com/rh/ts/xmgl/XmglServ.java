@@ -352,12 +352,19 @@ public class XmglServ extends CommonServ {
 				}
 			}
 		}*/
-		String sql1="select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_START AND b.BM_END order by b.bm_end ASC";
-		String sql2 = "select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END AND ('"+datestr+"'>b.BM_END OR '"+datestr+"'<b.BM_START) order by b.bm_end ASC";
+		
+		String sql1="select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC";
+		String sql2="select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC";
+		String sql3="select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='' or c.xm_sz_type='未开启' ))d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC";
+		String sql4 = "select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END AND ('"+datestr+"'>b.BM_END OR '"+datestr+"'<b.BM_START) order by b.bm_end ASC";
 		/*String sql1 = "select * from ts_xmgl where xm_id in(SELECT XM_ID FROM TS_XMGL_BMGL WHERE '"+datestr+"' BETWEEN BM_TZ_START AND BM_TZ_END order by BM_END ASC)";*/
 		List<Bean> list = Transaction.getExecutor().query(sql1);
 		List<Bean> list2 = Transaction.getExecutor().query(sql2);
+		List<Bean> list3 = Transaction.getExecutor().query(sql3);
+		List<Bean> list4 = Transaction.getExecutor().query(sql4);
 		list.addAll(list2);
+		list.addAll(list3);
+		list.addAll(list4);
 		/*String s = "";
 		for (int i = 0; i < list.size(); i++) {
 			if (i == (list.size() - 1)) {
@@ -631,20 +638,41 @@ public class XmglServ extends CommonServ {
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where");
-		String sql = "SELECT * FROM TS_XMGL WHERE XM_ID IN(select XM_ID from TS_XMGL_BMSH WHERE SH_RGSH = '1') "+where1;
-		List<Bean> list = Transaction.getExecutor().query(sql);
+		String sql1 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+		List<Bean> list = Transaction.getExecutor().query(sql1);
+		
+		String sql2 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='未开启' or c.xm_sz_type=''))d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+		List<Bean> find2 = Transaction.getExecutor().query(sql2);
+		
+		String sql4 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+		List<Bean> find4 = Transaction.getExecutor().query(sql4);
+		
+		String sql3 = " SELECT * FROM(SELECT a.*,b.sh_end FROM ts_xmgl a LEFT JOIN TS_XMGL_BMSH b ON a.xm_id = b.xm_id WHERE b.sh_rgsh=1 AND (NOW()< STR_TO_DATE(b.sh_start,'%Y-%m-%d %H:%i:%s') OR NOW()> STR_TO_DATE(b.sh_end,'%Y-%m-%d %H:%i:%s')) "
+				+where1+" AND b.SH_LOOK =1  ORDER BY b.sh_end ASC)t ";
+		List<Bean> find3 = Transaction.getExecutor().query(sql3);
+		list.addAll(find2);
+		list.addAll(find4);
+		list.addAll(find3);
+		/*String sql = "SELECT * FROM TS_XMGL WHERE XM_ID IN(select XM_ID from TS_XMGL_BMSH WHERE SH_RGSH = '1') "+where1;
+		List<Bean> list = Transaction.getExecutor().query(sql);*/
 		List<Bean> SHlist = new ArrayList<Bean>();
 		for (Bean bean : list) {
 			// 根据报名id找到审核数据的状态
 			String id = bean.getId();
 			ParamBean paramb = new ParamBean();
 			paramb.set("xmid", id);
-			OutBean out = ServMgr.act("TS_XMGL_BMGL", "getSHState", paramb);
-			String state = "";
-			List<Bean> list2 = out.getList("nojson");
-			if (list2.size() != 0) {
-				state = list2.get(0).getStr("STATE");
-			}
+			OutBean out = ServMgr.act("TS_XMGL_BMGL", "getSHState", paramb);//审核状态数据
+			OutBean out1 = ServMgr.act("TS_BMSH_STAY", "getsingxmnum", paramb);//待审核数据量
+			String numstr = out1.getStr("num");
+			bean.set("numstr", numstr);
+			String state =out.getStr("state");
+			String END_TIME =out.getStr("END_TIME");
+			bean.set("endtimestr", END_TIME);
+			bean.set("shstatestr", state);
+			
 			// 根据项目id找到流程下的所有节点
 			String belongwhere = "AND XM_ID='" + id + "'";
 			List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
@@ -678,6 +706,7 @@ public class XmglServ extends CommonServ {
 							}
 
 						}
+						
 					}
 					if(flagstr){
 						break;
@@ -758,29 +787,45 @@ public class XmglServ extends CommonServ {
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		List<Bean> list = new ArrayList<Bean>();
-		List<Bean> finds = ServDao.finds("TS_XMGL", where1);
+		/*List<Bean> finds = ServDao.finds("TS_XMGL", where1);*/
+		String sql1 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+		List<Bean> finds = Transaction.getExecutor().query(sql1);
+		
+		String sql2 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='未开启' or c.xm_sz_type=''))d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+		List<Bean> find2 = Transaction.getExecutor().query(sql2);
+		
+		String sql4 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+		List<Bean> find4 = Transaction.getExecutor().query(sql4);
+		
+		String sql3 = " SELECT * FROM(SELECT a.*,b.sh_end FROM ts_xmgl a LEFT JOIN TS_XMGL_BMSH b ON a.xm_id = b.xm_id WHERE b.sh_rgsh=1 AND (NOW()< STR_TO_DATE(b.sh_start,'%Y-%m-%d %H:%i:%s') OR NOW()> STR_TO_DATE(b.sh_end,'%Y-%m-%d %H:%i:%s')) "
+				+where1+" AND b.SH_LOOK =1  ORDER BY b.sh_end ASC)t ";
+		List<Bean> finds3 = Transaction.getExecutor().query(sql3);
+		finds.addAll(find2);
+		finds.addAll(find4);
+		finds.addAll(finds3);
 		for (Bean bean : finds) {
 			ParamBean param = new ParamBean();
 			param.set("xmid", bean.getId());
-			OutBean act = ServMgr.act("TS_XMGL_BMGL","getShowLook", param);
-			int showlook = act.getInt("showlook");
-			
-			if("1".equals(zhuangtai)&&"审核中".equals(act.getStr("state"))){
-				if(showlook==1){
-					bean.set("SH_STATE_STR", act.getStr("state"));
+			OutBean out = ServMgr.act("TS_XMGL_BMGL", "getSHState", param);//审核状态数据
+			String state =out.getStr("state");
+		/*	OutBean act = ServMgr.act("TS_XMGL_BMGL","getShowLook", param);
+			int showlook = act.getInt("showlook");*/
+			if("1".equals(zhuangtai)&&"待报名".equals(state)){
+					bean.set("SH_STATE_STR", "进行中");
 					list.add(bean);
-				}
 
-			}else if("2".equals(zhuangtai)&&"审核结束".equals(act.getStr("state"))){
-				if(showlook==1){
-					bean.set("SH_STATE_STR", act.getStr("state"));
+			}else if("2".equals(zhuangtai)&&"已结束".equals(state)){
+					bean.set("SH_STATE_STR", state);
 					list.add(bean);
-				}
 			}else if("全部".equals(zhuangtai)){
-				if(showlook==1){
-					bean.set("SH_STATE_STR", act.getStr("state"));
-					list.add(bean);
+				if("待报名".equals(state)){
+					state ="进行中";
 				}
+					bean.set("SH_STATE_STR", state);
+					list.add(bean);
 			}
 		}
 		

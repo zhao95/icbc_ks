@@ -188,6 +188,8 @@ public class PassServ extends CommonServ {
 	 */
 	@SuppressWarnings("static-access")
 	public Bean update(Bean paramBean) {
+		
+		String node_name = "";
 		int level = 0;
 		String nodeid = paramBean.getStr("nodeid");
 		String levels = paramBean.getStr("level");
@@ -212,8 +214,27 @@ public class PassServ extends CommonServ {
 				String wfsid = 	bean2.getStr("WFS_ID");
 				Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
 				flag = find.getStr("WFS_TYPE");
+				
+				String wfswhere = "AND WFS_ID='" + wfsid + "' ORDER BY NODE_STEPS ASC";
+				List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+				for (Bean nodebean : finds2) {
+					boolean flagstr = false;
+					// 根据流程id获取 流程绑定的人和审核机构
+					String nodeids = nodebean.getStr("NODE_ID");
+					String nodewhere = "AND NODE_ID='" + nodeids + "'";
+					List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
+					for (Bean codebean : finds3) {
+						if (shenuser.equals(codebean.getStr("SHR_USERCODE"))) {
+							node_name= nodebean.getStr("NODE_NAME");
+							flagstr = true;
+							break;
+						}
+					}
+					if(flagstr){
+						break;
+					}
 				}
-		
+				}
 		
 		// 被选中的id
 		String[] ss = s.split(",");
@@ -320,7 +341,7 @@ public class PassServ extends CommonServ {
 
 			        } 
 				Bean mindbean = new Bean();
-				mindbean.set("SH_LEVEL", level);
+				mindbean.set("SH_LEVEL", node_name);
 				mindbean.set("SH_MIND", liyou);
 				mindbean.set("DATA_ID", bean.getStr("BM_ID"));
 				mindbean.set("SH_STATUS", state);

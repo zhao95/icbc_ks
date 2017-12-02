@@ -112,7 +112,7 @@
 					<th id="BM_NAME" class="" style="width: 20%; text-align: left">名称</th>
 					<th id="BM_ODEPT__NAME" class=""
 						style="width: 20%; text-align: left">组织单位</th>
-					<th id="S_ATIME" class="" style="width: 20%; text-align: left">创建时间</th>
+					<th id="S_ATIME" class="" style="width: 20%; text-align: left">审核结束时间</th>
 					<th id="BM_STATE__NAME" class="" style="width: 10%;text-align: center">状态</th>
 					<th id="BM_STATE__NUM" class="" style="width: 5%;text-align: center">待审核</th>
 					<th id="BM_OPTIONS" class="" style="width: 15%; text-align: center">操作</th>
@@ -179,7 +179,7 @@
 				</div>
 				<table style="width:95%">
 				<tr>
-				<td style="width:15%"></td><td style="disabled:disabled;height:20%;vertical-align:top"><textarea id="describe" style="background-color:white;border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="disabled:disabled;height:20%;vertical-align:top"><textarea id="describe" style="background-color:white;border:solid 1px white;height:95%;width:90%" wrap="soft"></textarea></td>
 				</tr>
 				</table >
 				<div style="padding-top:10px;width:23%;font-size:13px;text-align:center;color:lightseagreen">
@@ -187,7 +187,7 @@
 				</div>
 				<table style="width:95%">
 				<tr>
-				<td style="width:15%"></td><td style="height:20%;vertical-align:top"><textarea id="mustknow" style="background-color:white;border:solid 1px white;height:90%;width:90%" wrap="soft"></textarea></td>
+				<td style="width:15%"></td><td style="height:20%;vertical-align:top"><textarea id="mustknow" style="background-color:white;border:solid 1px white;height:90%;width:95%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
 				<div class="modal-footer" style="text-align:center;height:45px">

@@ -90,7 +90,7 @@ public class PaixuServ extends CommonServ {
 		List<Bean> list = ServDao.finds("TS_BMSH_PX", where);
 		Bean outBean = new Bean();
 		if (list.size() == 0) {
-			String where1 = "AND USER_CODE is null order by cast(PX_XUHAO as SIGNED)";
+			String where1 = "AND USER_CODE is null order by cast(PX_XUHAO as SIGNED) limit 0,5";
 			// 默认没有保存过 的排序
 			List<Bean> listall = ServDao.finds("TS_BMSH_PX", where1);
 

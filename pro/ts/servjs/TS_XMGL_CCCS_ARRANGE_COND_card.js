@@ -5,7 +5,7 @@ $("#TS_XMGL_CCCS_ARRANGE_COND-save").css("right",300);
 var xmId = _viewer.getParHandler().getParHandler().getPKCode();
 
 _viewer.getBtn("ok").click(function(){
-//	var sum=_viewer.getItem("CONF_SUM").getValue();//场次总数
+	//上午
 	var date = _viewer.getItem("CONF_DATE").getValue();//日期
 	var am_time = _viewer.getItem("CONF_AM_TIME").getValue();//开始时间（上午）
 	var am_inter = _viewer.getItem("CONF_AM_INTER").getValue();//间隔（分钟）
@@ -26,81 +26,50 @@ _viewer.getBtn("ok").click(function(){
 		alert("日期未填写");
 		return false;
 	}
+	
+	//场次数	
 	var amTimes = parseInt((am_num==""? "0":am_num));
 	var pmTimes = parseInt((pm_num==""? "0":pm_num));
 	var nmTimes = parseInt((nm_num==""? "0":nm_num));
-	var times=(amTimes+pmTimes+nmTimes);
-//	if(sum !=times){
-//		alert("场次数不匹配");
-//		return false;
-//	}
+	
+	//时长替换中文逗号
+	am_info = am_info.replace(/，/g, ",");
+	pm_info = pm_info.replace(/，/g, ",");
+	nm_info = nm_info.replace(/，/g, ",");
+	
 	//上午判断如果开始时间有，场次有，时长为空
-	var amTimes = am_info.replace(/，/g, ",");
-	if(am_time != "" &&  am_num !="" && amTimes=="" ){
 	
+	if(am_time != "" &&  am_num !="" && am_info!=""){
+		var amTimesNum = am_info.split(",").length;
+		if(amTimes !=amTimesNum){
 			alert("请正确匹配场次数和时长段");
 			return false;
-		
+		}
 	}
-	if(am_time != "" &&  am_num !="" && amTimes!=""){
-	var amTimesNum = amTimes.split(",").length;
-	if(am_num !=amTimesNum){
-		alert("请正确匹配场次数和时长段");
-		return false;
-	}
-	}
-	//中午判断如果开始时间有，场次有，时长为空
-	var pmTimes = pm_info.replace(/，/g, ",");
-	if(pm_time != "" &&  pm_num !="" && pmTimes=="" ){
-	
+
+	if(pm_time != "" &&  pm_num !="" && pm_info!=""){
+		var pmTimesNum = pm_info.split(",").length;
+		if(pmTimes !=pmTimesNum){
 			alert("请正确匹配场次数和时长段");
 			return false;
-		
-	}
-	if(pm_time != "" &&  pm_num !="" && pmTimes!=""){
-	var pmTimesNum = pmTimes.split(",").length;
-	if(pm_num !=pmTimesNum){
-		alert("请正确匹配场次数和时长段");
-		return false;
-	}
+		}
 	}
 	//晚上判断如果开始时间有，场次有，时长为空
-	var nmTimes = nm_info.replace(/，/g, ",");
-	if(nm_time != "" &&  nm_num !="" && nmTimes=="" ){
-	
+	if(nm_time != "" &&  nm_num !="" && nm_info!=""){
+		var nmTimesNum = nm_info.split(",").length;
+		if(nmTimes !=nmTimesNum){
 			alert("请正确匹配场次数和时长段");
 			return false;
-		
+		}
 	}
-	if(nm_time != "" &&  nm_num !="" && nmTimes!=""){
-	var nmTimesNum = nmTimes.split(",").length;
-	if(nm_num !=nmTimesNum){
-		alert("请正确匹配场次数和时长段");
-		return false;
-	}
-	}
-	if(am_time == "" && am_inter != "" &&  am_num!= "" && am_info != ""){
-		alert("请填写开始时间");
-		return false;
-	}
-	if(pm_time == "" && pm_inter != "" &&  pm_num!= "" && pm_info != ""){
-		alert("请填写开始时间");
-		return false;
-	}
-	if(nm_time == "" && nm_inter != "" &&  nm_num!= "" && nm_info != ""){
-		alert("请填写开始时间");
-		return false;
-	}
+	
 	if(am_time != "" && am_inter != "" &&  am_num!= "" && am_info != ""){//am_inter != "" &&
-		am_info = am_info.replace(/，/g, ",");
 		js(date,am_time,am_inter,am_num,am_info);//	日期、开始时间、间隔、场次数、时长
 	}
 	if(pm_time != "" && am_inter != "" &&  pm_num!= "" && pm_info != ""){//pm_inter != "" &&
-		pm_info = pm_info.replace(/，/g, ",");
 		js(date,pm_time,pm_inter,pm_num,pm_info);
 	}
 	if(nm_time != "" && am_inter != "" &&  nm_num!= "" && nm_info != ""){//nm_inter != "" &&
-		nm_info = nm_info.replace(/，/g, ",");
 		js(date,nm_time,nm_inter,nm_num,nm_info);
 	}
 	_viewer.getParHandler().refresh();
