@@ -1132,8 +1132,7 @@ public class StayServ extends CommonServ {
 			}
 		OutBean out = new OutBean();
 		if(list.size()==0){
-			out.set("num", 0);
-			out.set("num", list.size());
+			out.set("num", "");
 			return  out.set("flag", "false");
 		}else{
 			out.set("num", list.size());

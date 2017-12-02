@@ -112,7 +112,7 @@
 					<th id="BM_NAME" class="" style="width: 20%; text-align: left">名称</th>
 					<th id="BM_ODEPT__NAME" class=""
 						style="width: 20%; text-align: left">组织单位</th>
-					<th id="S_ATIME" class="" style="width: 20%; text-align: left">创建时间</th>
+					<th id="S_ATIME" class="" style="width: 20%; text-align: left">审核结束时间</th>
 					<th id="BM_STATE__NAME" class="" style="width: 10%;text-align: center">状态</th>
 					<th id="BM_STATE__NUM" class="" style="width: 5%;text-align: center">待审核</th>
 					<th id="BM_OPTIONS" class="" style="width: 15%; text-align: center">操作</th>
