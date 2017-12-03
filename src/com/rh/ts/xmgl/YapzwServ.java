@@ -122,10 +122,32 @@ public class YapzwServ extends CommonServ {
     }
 
     /**
+     * 清除场次安排脏数据
+     *
+     * @param paramBean XM_ID
+     * @return outBean
+     */
+    public OutBean clearDirtyData(ParamBean paramBean) {
+        String xmId = paramBean.getStr("XM_ID");
+
+        //删除考场安排 脏数据
+        String sql = "delete from ts_xmgl_kcap_yapzw " +
+                "where YAPZW_ID in ( " +
+                "   SELECT t.yapzw_id from ( " +
+                "       select a.yapzw_id from ts_xmgl_kcap_yapzw a left join ts_xmgl_kcap_dapcc_ccsj b on a.SJ_ID =b.SJ_ID where b.SJ_ID is null " +
+                "   ) t " +
+                ") and XM_ID ='" + xmId + "'";
+        Transaction.getExecutor().execute(sql);
+        return new OutBean().setOk();
+    }
+
+    /**
      * @param paramBean
      * @return
      */
     public OutBean saveBean(ParamBean paramBean) {
+        clearDirtyData(paramBean);
+
         //ZW_ID:zwId,
         //SJ_ID:sjid,
         //SJ_CC:sjcc,
