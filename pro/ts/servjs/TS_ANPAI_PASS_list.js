@@ -1,14 +1,15 @@
 _viewer = this;
 $(".rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
-		var XM_ID = item.xm_id;
+		console.log(item);
+		var XM_ID = $(item).find("td[icode='XM_ID']").html();
 		$(item).find("td[icode='buttons']").append('<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optSetBtn" rowpk="'+XM_ID+'"><span class="rh-icon-inner">设置</span><span class="rh-icon-img btn-option"></span></a>'); 
 		bindCard();
 	}
 });
 
 function bindCard(){
-	jQuery("td[operCode='optSetBtn']").unbind("click").bind("click",function() {
+	jQuery("a[operCode='optSetBtn']").unbind("click").bind("click",function() {
 		var pkCode = jQuery(this).attr("rowpk");
 		var height = jQuery(window).height()-80;
 		var width = jQuery(window).width()-200;
