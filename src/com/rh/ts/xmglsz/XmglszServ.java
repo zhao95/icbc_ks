@@ -168,7 +168,7 @@ public class XmglszServ extends CommonServ {
 	for (Bean bean : ALLList) {
 		//判断项目 是否  启用了
 			String xmid = bean.getStr("XM_ID");
-			String sql = "SELECT count(k.KC_ID)" 
+			String sql = "SELECT k.KC_ID" 
 					+" FROM"
   +" TS_XMGL_KCAP_DAPCC c" 
   +" LEFT JOIN ts_kcgl k" 
