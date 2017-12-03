@@ -1,8 +1,5 @@
 $(function() {
 	// 新建元素为页面要展示模块的数组，将之后查询到的考试项目挂接模块的数组与该数组进行比较，
-	// 若有相同元素，则存入项目所有进度的数组，并根据项目当前进度的数组的长度与项目所有进度的数组的长度进行公式计算，
-	// 即可得出当前项目的百分比，并将该百分比的值设置成页面的进度num,并改变对应进度条颜色
-	// 公式为 width = 当前项目进度数组的长度/项目所有进度数组的长度 *100
 	var pageAllMK = [ "报名", "审核", "请假", "异地借考","试卷","场次测算","考场安排"];
 	// 定义状态map键值映射规则
 	// 定义一个map集合，（对象的形式），存储状态对应的颜色
@@ -42,7 +39,7 @@ $(function() {
 			c1 : "#27b9f8",
 			// 进行中
 			c2 : "#ff0000",
-			// 已结束/已设置
+			// 已结束
 			c3 : "#70c0b3"
 		}
 		return colorMap[num];
@@ -71,11 +68,8 @@ $(function() {
 		}
 		}
 	}
-	// 此时使用js控制动态颜色的改变，因为CSS的加载顺序比JS早，
-	// 而进度条的颜色是根据js获取到的，故此使用js控制鼠标移入移出的颜色变化。
 	// 鼠标移入移出事件,改变进度条的颜色
-	//移入移出的变色效果方法
-	var  divOverAndOut=function(xm_id){
+	var  divOverAndOut = function(xm_id){
 		var divOverColor = "";
 		// 进度条移入移出变色
 		$("#jdtDivInner1").mouseover(function() {
@@ -184,9 +178,6 @@ $(function() {
 
 	// 通过当前登录用户的用户信息，获取到用户报名的相关考试项目
 	var param1 = {};
-	// 调用平台级的方法，使用系统变量获取到当前登录用户的人力资源编码
-	// 通过人力资源编码查询报名项目的服务对应的表
-	// 因审核暂时使用的是用户编码，所以此时暂时使用USER_CODE
 	var CurrentUser_code = System.getUser("USER_CODE");
 	param1["_extWhere"] = "and STR1='" + CurrentUser_code + "' AND OBJ_INT1 ='1'";
 	var resultUserAssociateXM = FireFly.doAct("TS_XMZT", "query", param1);
@@ -194,8 +185,6 @@ $(function() {
 		var xm_id = resultUserAssociateXM._DATA_[0].DATA_ID;
 		// 上面结果的项目id获取到，再查询到对应的项目的挂接模块
 		// 此时获取到的是项目挂接模块的名称以逗号分割的字符串
-
-		// 使用字符串的方法，将去除逗号的BM_GJ 模块合并成一条字符串， 并将字符串根据逗号进行分割， 得到分割后的数组。
 		var param2 = {};
 		param2["_extWhere"] = "and XM_ID ='" + xm_id + "' AND XM_STATE ='1' AND XM_JD<>'100%' ";
 		var resultXM = FireFly.doAct("TS_XMGL", "query", param2);
@@ -306,10 +295,6 @@ $(function() {
             $("#jdtDivInner2").css("background-color", "#f0f0f0");
             $("#jdtDivInner3").css("background-color", "#f0f0f0");
             $("#jdtDivInner4").css("background-color", "#f0f0f0");
-           /* $("#jdtDivInner1").css("background-color", "#f0f0f0");
-            $("#jdtDivInner1").css("background-color", "#f0f0f0");
-            $("#jdtDivInner1").css("background-color", "#f0f0f0");*/
-
 		}
 
 	} else {
@@ -322,13 +307,6 @@ $(function() {
 			$("#jdtNum").html("0");
 			$("#jdtName").html("您暂时未参加任何考试！");
 		} else {
-			//循环遍历报名审核通过的表，若存在垃圾数据，立即删除该数据（垃圾数据即为此表中有数据指向项目ID，则项目管理表中无该项目）
-//			for (var k = 0; k < resultSH._DATA_.length; k++) {
-//				var DeleteMenuXM_ID = resultSH._DATA_[k].XM_ID;
-//				var paramDD = {};
-//				paramDD["XM_ID"] = DeleteMenuXM_ID;
-//				FireFly.doAct("TS_BMSH_PASS", "GarbageDeleteData", paramDD);
-//			}
 			resultSH = FireFly.doAct("TS_BMSH_PASS", "query", paramSH);
 			var menuXM_ID = resultSH._DATA_[0].XM_ID;
 			// 使用字符串的方法，将去除逗号的BM_GJ 模块合并成一条字符串， 并将字符串根据，进行分割， 得到分割后的数组。
@@ -383,7 +361,6 @@ $(function() {
 				// 将已完成和进行中的项目模块放进CurrentXMGJ数组中,作为当前项目进度数组， 留待与总模块通过公式计算当前项目百分比
 				// 之后对三种状态的模块对应的进度条变色
 				var param3 = {};
-				// 传递什么参数？当前项目的xm_id? xm_id怎么获取？ 仍旧是最初的项目id。
 				// 此时 TS_XMGL_BM的XM_ID和TS_XMGL_SZ的XM_ID是同一ID
 				param3["_extWhere"] = "and xm_id='" + menuXM_ID + "'"
 				// 获取到的是项目设置中的所有挂接模块的列表
@@ -404,7 +381,6 @@ $(function() {
 						currentTT="未启用";
 					}
 					xm_gj_name_state_map[currentN] = currentTT;
-//					debugger;
 					// 获取到模块对应的状态和颜色的值
 					var currentDiv = nameMap[currentN];
 					var currentColor = typeMap[currentT];
