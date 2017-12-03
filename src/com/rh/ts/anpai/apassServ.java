@@ -56,7 +56,7 @@ public class apassServ extends CommonServ {
 			paramBean.set(Constant.PARAM_WHERE, "and TJ_DEPT_CODE='"+odeptcode+"'");
 		}else if(a==2){
 			//发布人
-			paramBean.set(Constant.PARAM_WHERE, "and TJ_DEPT_CODE is not null");
+			paramBean.set(Constant.PARAM_WHERE, "and LENGTH(TJ_DEPT_CODE)>10");
 
 		}
 

@@ -134,6 +134,7 @@ public class XmglszServ extends CommonServ {
 		}
 		int  a=0;
 		if ("0".equals(userPvlgToHTBean.getStr("publish"))) {
+			
 			Bean str = (Bean) userPvlgToHTBean.get("auto");
 			if (str == null) {
 				return new OutBean().setError("无权限");
@@ -187,6 +188,7 @@ public class XmglszServ extends CommonServ {
 				if(a==1){
 					Boolean tjState = getTjState(odeptcode,xmid);
 					if(tjState==true){
+						
 						String xm_name = bean.getStr("XM_NAME");
 						String xm_start = bean.getStr("XM_START");
 						String xm_end = bean.getStr("XM_END");
@@ -221,6 +223,7 @@ public class XmglszServ extends CommonServ {
 	}
 	//判断是否提交了数据
 public Boolean getTjState(String odeptcode,String xmid){
+	//如果  上级 已提交 下级 不能在进行 安排
 	 Bean sqlbean = new Bean();
 	 sqlbean.set("XM_ID", xmid);
 	 sqlbean.set("TJ_DEPT_CODE", odeptcode);
