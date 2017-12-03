@@ -19,6 +19,8 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
+import com.rh.ts.pvlg.PvlgUtils;
+import com.rh.ts.util.RoleUtil;
 import com.rh.ts.util.TsConstant;
 
 /**
@@ -121,21 +123,50 @@ public class XmglszServ extends CommonServ {
 		//所有考场安排的 项目设置ID
 		UserBean userBean = Context.getUserBean();
 		String user_code = userBean.getCode();
-		String odeptcode = userBean.getODeptCode();
-		
+		String odeptcode ="";
+		Bean userPvlgToHT = RoleUtil.getPvlgRole(user_code);
+		Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_XMGL_KCAP_YAPZW_PVLG");
+		if (userPvlgToHTBean == null) {
+			return new OutBean().setError("无权限");
+		}
+		if("0".equals(userPvlgToHTBean.getStr("publish"))&&"0".equals(userPvlgToHTBean.getStr("auto"))){
+			return new OutBean();
+		}
+		int  a=0;
+		if ("0".equals(userPvlgToHTBean.getStr("publish"))) {
+			Bean str = (Bean) userPvlgToHTBean.get("auto");
+			if (str == null) {
+				return new OutBean().setError("无权限");
+			}
+			odeptcode = str.getStr("ROLE_DCODE");
+			if ("".equals(odeptcode)) {
+				 odeptcode = userBean.getODeptCode();
+			}
+			//提交人
+			a=1;
+		} else {
+			Bean str = (Bean) userPvlgToHTBean.get("publish");
+			if (str == null) {
+				return new OutBean().setError("无权限");
+			}
+			odeptcode = str.getStr("ROLE_DCODE");
+			if ("".equals(odeptcode)) {
+				 odeptcode = userBean.getODeptCode();
+			}
+			//发布人  
+			a=2;
+		}
+		odeptcode=odeptcode.substring(0,10);
+		Date date = new Date();
+		SimpleDateFormat simp =new SimpleDateFormat("yyyy-MM-dd");
+		String simpdate = simp.format(date);
+		//查询此人最大权限
 	List<Bean> dataList = new ArrayList<Bean>();
-	List<Bean> ALLList = ServDao.finds("TS_XMGL_SZ", "AND XM_SZ_NAME='考场安排' AND XM_SZ_TYPE='进行中'");
+	String sql1 = "select * from ts_xmgl a left join TS_XMGL_SZ b on a.xm_id=b.xm_id where b.xm_sz_name = '考场安排 ' and xm_sz_type='进行中' and '"+simpdate+"' between a.xm_start and a.xm_end and a.XM_STATE =1"; 
+	List<Bean> ALLList = Transaction.getExecutor().query(sql1);
 	for (Bean bean : ALLList) {
 		//判断项目 是否  启用了
-			//判断时间
-			Date date = new Date();
 			String xmid = bean.getStr("XM_ID");
-			SimpleDateFormat simp =new SimpleDateFormat("yyyy-MM-dd");
-			String simpdate = simp.format(date);
-			List<Bean> xmlist = ServDao.finds("TS_XMGL", "AND XM_ID='"+xmid+"' AND '"+simpdate+"' between xm_start and xm_end");
-			if(xmlist.size()==0){
-				continue;
-			}
 			String sql = "SELECT count(k.KC_ID)" 
 					+" FROM"
   +" TS_XMGL_KCAP_DAPCC c" 
@@ -153,15 +184,27 @@ public class XmglszServ extends CommonServ {
     +" AND SY_ORG_DEPT.S_FLAG = 1)";
 			int count = Transaction.getExecutor().count(sql);
 			if(count>0){
-				Boolean tjState = getTjState(odeptcode,xmid);
-				if(tjState==true){
-					String xm_name = xmlist.get(0).getStr("XM_NAME");
-					String xm_start = xmlist.get(0).getStr("XM_START");
-					String xm_end = xmlist.get(0).getStr("XM_END");
-					bean.set("xm_name", xm_name);
-					bean.set("xm_start", xm_start);
-					bean.set("xm_end", xm_end);
-					dataList.add(bean);
+				if(a==1){
+					Boolean tjState = getTjState(odeptcode,xmid);
+					if(tjState==true){
+						String xm_name = bean.getStr("XM_NAME");
+						String xm_start = bean.getStr("XM_START");
+						String xm_end = bean.getStr("XM_END");
+						bean.set("xm_name", xm_name);
+						bean.set("xm_start", xm_start);
+						bean.set("xm_end", xm_end);
+						dataList.add(bean);
+					}
+				}else if(a==2){
+					//判断发布
+					Bean find = ServDao.find("TS_XMGL", xmid);
+					if(find!=null){
+						String str = find.getStr("XM_KCAP_PUBLISH_TIME");
+						if("".equals(str)){
+							//未发布
+							dataList.add(bean);
+						}
+					}
 				}
 				//判断是否已发布
 			}
