@@ -108,23 +108,21 @@
                 <table id="ybmtable1" style="padding: 10px;width:100%;">
                     <thead>
                     <tr style="backGround-color: WhiteSmoke; height: 30px">
-                        <th style="width: 10%;text-align: center;" align="center;"><input type="checkbox" id="checkall">
-                        </th>
-                        <th style="width: 5%;" align="center">序号</th>
-                        <th style="width: 27%;">标题</th>
-                        <th style="width: 18%;">所属项目</th>
-                        <th style="width: 15%;">报名人</th>
-                        <th style="width: 25%">创建时间</th>
+                        <%--<th style="width: 10%;text-align: center;" align="center;"><input type="checkbox" id="checkall">
+                        </th>--%>
+                        <th style="width: 5%;text-align: center">序号</th>
+                        <th style="width: 27%;">项目名称</th>
+                        <th style="width: 25%">操作</th>
                     </tr>
                     </thead>
                     <tbody>
 
                     </tbody>
                 </table>
-                <button id="wyqj" class="btn btn-success"
+               <%-- <button id="wyqj" class="btn btn-success"
                         style="top: 20px;position: relative;font-size:16px;width: 120px;height:35px;background-color: #00c2c2;left: 43%;"
                         data-toggle="modal" data-target="#wyqj" onclick="qingjia()">我要请假
-                </button>
+                </button>--%>
             </div>
         </div>
     </div>
@@ -189,7 +187,7 @@
         table1Tbody.html('');
         //获取可申请的请假数据
         var data = {USER_CODE: currentUserCode};
-        var userCanLeaveList = FireFly.doAct('TS_QJLB_QJ', 'getUserCanLeaveList', data);
+        var userCanLeaveList = FireFly.doAct('TS_QJLB_QJ', 'getUserCanLeaveXmList', data);
         //没有可请假的考试，我要请假 置灰
         if (userCanLeaveList._DATA_.length <= 0) {
             $('#wyqj').attr('disabled', 'disabled');
@@ -197,32 +195,28 @@
         for (var i = 0; i < userCanLeaveList._DATA_.length; i++) {
             var userCanLeave = userCanLeaveList._DATA_[i];
 
+            /*'   <td class="rhGrid-td-hide">',
+             '       ' + userCanLeave.BM_ID + '',
+             '   </td>',
+             '   <td align="center">',
+             '       <input type="checkbox" name="bm_id" value="' + userCanLeave.BM_ID + '"/>',
+             '   </td>',*/
             table1Tbody.append([
                 '<tr style="height: 40px">',
-                '   <td class="rhGrid-td-hide">',
-                '       ' + userCanLeave.BM_ID + '',
-                '   </td>',
-                '   <td align="center">',
-                '       <input type="checkbox" name="bm_id" value="' + userCanLeave.BM_ID + '"/>',
-                '   </td>',
-                '   <td style="padding-left: 10px;text-align: left;">',
+                '   <td style="padding-left: 10px;text-align: center"">',
                 '       ' + (i + 1),
-                '   </td>',
-                '   <td>',
-                '       ' + userCanLeave.title,//userCanLeave.title
                 '   </td>',
                 '   <td>',
                 '       ' + userCanLeave.XM_NAME,//userCanLeave.title
                 '   </td>',
                 '   <td>',
-                '       ' + userCanLeave.BM_NAME,//.title
-                '   </td>',
-                '   <td>',
-                '       ' + userCanLeave.S_ATIME,//userCanLeave.title
+                '<input type="button" id="' + userCanLeave.XM_ID + '" onclick="qingjia2(this)" value="请假" style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px">',
                 '   </td>',
                 '</tr>'
             ].join(''));
         }
+        // <a id="' + userCanLeave.XM_ID + '" onclick="qingjia2(this)">请假</a>',//id 为项目id
+
 
         /*已申请的请假*/
         var table1Tbody2 = jQuery('#ybmtable2 tbody');
@@ -293,6 +287,12 @@
             }
         }
         doPost('qjlb_qj.jsp', {bmids: bmids});
+    }
+
+    //请假跳转到请假页面
+    function qingjia2(e) {
+        var xmId = $(e).attr('id');
+        doPost('qjlb_qj.jsp', {xmId: xmId});
     }
 
     //已申请的请假列表 点击进行查看

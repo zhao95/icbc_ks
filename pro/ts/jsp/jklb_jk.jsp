@@ -4,6 +4,7 @@
 <%
     final String CONTEXT_PATH = request.getContextPath();
     String bmIdStr = request.getParameter("bmids") != null ? request.getParameter("bmids") : "";//已选中的报名-传递到该页面的参数
+    String xmId = request.getParameter("xmId") != null ? request.getParameter("xmId") : "";//项目id
 %>
 <html>
 <head>
@@ -163,7 +164,7 @@
                     借考标题
                     <span style="color: red;font-weight: bold">*</span></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="jktitle">
+                    <input type="text" class="form-control" id="jktitle" readonly>
                 </div>
             </div>
 
@@ -370,13 +371,41 @@
 </div>
 <script type="text/javascript">
 
+    function doPost(to, data) {  // to:提交动作（action）,data:参数
+        var myForm = document.createElement("form");
+        myForm.method = "post";
+        myForm.action = to;
+        for (var i in data) {
+            var myInput = document.createElement("input");
+            myInput.setAttribute("name", i);  // 为input对象设置name
+            myInput.setAttribute("value", data[i]);  // 为input对象设置value
+            myForm.appendChild(myInput);
+        }
+        document.body.appendChild(myForm);
+        myForm.submit();
+        document.body.removeChild(myForm);  // 提交后移除创建的form
+    }
+
+    function initData(xmId) {
+        var xmBean = FireFly.doAct("TS_XMGL", 'byid', {_PK_: xmId});
+        var xmName = xmBean.XM_NAME;
+        $('#jktitle').val(xmName);//标题
+    }
+
+    var xmId = '<%=xmId%>';
+    //xmId值为空返回到列表页面
+    if (!xmId) {
+        doPost({}, 'qjlb.jsp');
+    }
+
     $(function () {
+        initData(xmId);
 
         /*可申请的请假列表*/
         var table1Tbody = jQuery('#tabletjId tbody');
         table1Tbody.html('');
         //获取可申请的请假数据
-        var data = {USER_CODE: System.getUser("USER_CODE")};
+        var data = {USER_CODE: System.getUser("USER_CODE"), XM_ID: xmId};
         var userCanLeaveList = FireFly.doAct('TS_JKLB_JK', 'getUserCanLeaveList', data);
         for (var i = 0; i < userCanLeaveList._DATA_.length; i++) {
             var userCanLeave = userCanLeaveList._DATA_[i];

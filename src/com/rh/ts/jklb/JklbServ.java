@@ -399,16 +399,16 @@ public class JklbServ extends CommonServ {
     public OutBean getUserCanLeaveList(ParamBean paramBean) throws ParseException {
         OutBean outBean = new OutBean();
 //    String userWorkNum = (String) paramBean.get("USER_WORK_NUM");//用户人力资源编码
-        String userCode = (String) paramBean.get("USER_CODE");
+        String userCode = paramBean.getStr("USER_CODE");
+        String xmId = paramBean.getStr("XM_ID");
 
-        List<Bean> tsBmshPassList = ServDao.finds("TS_BMSH_PASS", "and BM_CODE='" + userCode + "'");//userCode
-        //todo 后续数据量越来越来多 这样每个都判断是不是不好 1、通过sql过滤
+        List<Bean> tsBmshPassList = ServDao.finds("TS_BMSH_PASS", "and BM_CODE='" + userCode + "' and  XM_ID ='" + xmId + "'");//userCode
         for (Iterator<Bean> iterator = tsBmshPassList.iterator(); iterator.hasNext(); ) {
             Bean tsBmshPass = iterator.next();
-            String xmId = (String) tsBmshPass.get("XM_ID");
+//            String xmId = (String) tsBmshPass.get("XM_ID");
             String bmId = (String) tsBmshPass.get("BM_ID");
 
-            List<Bean> queryQjList = ServDao.finds(TSJK_SERVID, "and JK_KSNAME like '%" + bmId + "%' and JK_STATUS in('1','2')");
+            List<Bean> queryQjList = ServDao.finds(TSJK_SERVID, "and JK_KSNAME like '%" + bmId + "%' and JK_STATUS in('1','2') ");
             //项目有报名设置 在项目报名时间内 && 不存在进行中或已通过的报名（是否已经请假）
             if (inApplyTime(xmId) && queryQjList.size() <= 0) {
                 //通过TS_BMLB_BM表，获取标题信息
@@ -443,6 +443,33 @@ public class JklbServ extends CommonServ {
             }
         }
         outBean.setData(tsBmshPassList);
+        return outBean;
+    }
+
+    /**
+     * 获取可申请的请假列表
+     */
+    public OutBean getUserCanLeaveXmList(ParamBean paramBean) throws ParseException {
+        String userCode = paramBean.getStr("USER_CODE");
+//        String xmId = paramBean.getStr("XM_ID");
+        OutBean outBean = new OutBean();
+        List<Bean> xmBeanList = Transaction.getExecutor().query("select * from TS_XMGL a"+
+                //进行中的项目  &&  项目中存在可以申请请假的报名（存在不在申请中/申请通过的请假 && 由场次安排引入的考试忽略）
+                " where now() BETWEEN str_to_date(XM_START,'%Y-%m-%d %H:%i:%s') and str_to_date(XM_END,'%Y-%m-%d %H:%i:%s') " +
+                "and exists( " +
+                "select * from TS_BMSH_PASS pass " +
+                "where not EXISTS(select '' from ts_jklb_jk jk where jk.JK_KSNAME like CONCAT('%',pass.BM_ID,'%') and jk.JK_STATUS in('1','2')) " +
+                "and pass.BM_ID !='' and pass.BM_ID is not null and a.XM_ID =pass.XM_ID and BM_CODE ='" + userCode + "')");
+
+        for (Iterator<Bean> iterator = xmBeanList.iterator(); iterator.hasNext(); ) {
+            Bean xmBean = iterator.next();
+            if (inApplyTime(xmBean.getId())) {
+
+            } else {
+                iterator.remove();
+            }
+        }
+        outBean.setData(xmBeanList);
         return outBean;
     }
 

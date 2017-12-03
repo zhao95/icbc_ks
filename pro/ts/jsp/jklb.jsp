@@ -61,7 +61,8 @@
 %>
 <%@ include file="../../qt/jsp/header-logo.jsp" %>
 <div class="" style="padding: 10px">
-    <a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;" src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
+    <a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;"
+                                                  src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
     <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;我的借考</span>
 </div>
 <%--tab标签页--%>
@@ -107,23 +108,21 @@
                 <table id="ybmtable1" style="padding: 10px;width:100%;">
                     <thead>
                     <tr style="backGround-color: WhiteSmoke; height: 30px">
-                        <th style="width: 10%;text-align: center;" align="center;"><input type="checkbox" id="checkall">
-                        </th>
-                        <th style="width: 5%;" align="center">序号</th>
-                        <th style="width: 27%;">标题</th>
-                        <th style="width: 18%;">所属项目</th>
-                        <th style="width: 15%;">报名人</th>
-                        <th style="width: 25%">创建时间</th>
+                        <%--<th style="width: 10%;text-align: center;" align="center;"><input type="checkbox" id="checkall">
+                        </th>--%>
+                        <th style="width: 5%;text-align: center">序号</th>
+                        <th style="width: 18%;">项目名称</th>
+                        <th style="width: 25%">操作</th>
                     </tr>
                     </thead>
                     <tbody>
 
                     </tbody>
                 </table>
-                <button id="wyjk" class="btn btn-success"
+                <%--<button id="wyjk" class="btn btn-success"
                         style="top: 20px;position: relative;font-size:16px;width: 120px;height:35px;background-color: #00c2c2;left: 43%;"
                         data-toggle="modal" data-target="#wyqj" onclick="jiekao()">我要借考
-                </button>
+                </button>--%>
             </div>
         </div>
     </div>
@@ -188,7 +187,7 @@
         table1Tbody.html('');
         //获取可申请的借考数据
         var data = {USER_CODE: currentUserCode};
-        var userCanLeaveList = FireFly.doAct('TS_JKLB_JK', 'getUserCanLeaveList', data);
+        var userCanLeaveList = FireFly.doAct('TS_JKLB_JK', 'getUserCanLeaveXmList', data);
         //没有可借考的考试，我要借考 置灰
         if (userCanLeaveList._DATA_.length <= 0) {
             $('#wyjk').attr('disabled', 'disabled');
@@ -196,28 +195,23 @@
         for (var i = 0; i < userCanLeaveList._DATA_.length; i++) {
             var userCanLeave = userCanLeaveList._DATA_[i];
 
+            /*'   <td align="center">',
+             '       <input type="checkbox" name="bm_id" value="' + userCanLeave.BM_ID + '"/>',
+             '   </td>',*/
             table1Tbody.append([
                 '<tr style="height: 40px">',
                 '   <td class="rhGrid-td-hide">',
                 '       ' + userCanLeave.BM_ID + '',
                 '   </td>',
-                '   <td align="center">',
-                '       <input type="checkbox" name="bm_id" value="' + userCanLeave.BM_ID + '"/>',
-                '   </td>',
+
                 '   <td style="padding-left: 10px;text-align: left;">',
                 '       ' + (i + 1),
-                '   </td>',
-                '   <td>',
-                '       ' + userCanLeave.title,//userCanLeave.title
                 '   </td>',
                 '   <td>',
                 '       ' + userCanLeave.XM_NAME,//userCanLeave.title
                 '   </td>',
                 '   <td>',
-                '       ' + userCanLeave.BM_NAME,//.title
-                '   </td>',
-                '   <td>',
-                '       ' + userCanLeave.S_ATIME,//userCanLeave.title
+                '       <input type="button" id="' + userCanLeave.XM_ID + '" onclick="jiekao2(this)" value="借考" style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px">',
                 '   </td>',
                 '</tr>'
             ].join(''));
@@ -296,6 +290,12 @@
             }
         }
         doPost('jklb_jk.jsp', {bmids: bmids});
+    }
+
+    //跳转到借考页面
+    function jiekao2(e) {
+        var xmId = $(e).attr('id');
+        doPost('jklb_jk.jsp', {xmId: xmId});
     }
 
     //已申请的借考列表 点击进行查看
