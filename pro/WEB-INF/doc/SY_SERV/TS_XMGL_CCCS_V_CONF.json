@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"",
-"S_MTIME":"2017-08-28 14:59:07:515",
+"S_MTIME":"2017-12-03 17:07:50:490",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "TABLE_VIEW":"",
@@ -28,7 +28,7 @@
 "ITEM_LIST_ORDER":"10",
 "ITEM_LIST_ALIGN":"0",
 "ITEM_UNIQUE_GROUP":"0",
-"ITEM_CARD_ORDER":"0",
+"ITEM_CARD_ORDER":"",
 "ITEM_FIELD_LENGTH":"40",
 "S_FLAG":"1",
 "ITEM_TIP":"",
@@ -84,7 +84,7 @@
 "ITEM_LIST_ORDER":"20",
 "ITEM_LIST_ALIGN":"0",
 "ITEM_UNIQUE_GROUP":"0",
-"ITEM_CARD_ORDER":"0",
+"ITEM_CARD_ORDER":"",
 "ITEM_FIELD_LENGTH":"40",
 "S_FLAG":"1",
 "ITEM_TIP":"",
@@ -140,7 +140,7 @@
 "ITEM_LIST_ORDER":"30",
 "ITEM_LIST_ALIGN":"0",
 "ITEM_UNIQUE_GROUP":"0",
-"ITEM_CARD_ORDER":"0",
+"ITEM_CARD_ORDER":"",
 "ITEM_FIELD_LENGTH":"40",
 "S_FLAG":"1",
 "ITEM_TIP":"",
@@ -215,7 +215,7 @@
 "SERV_CLASS":"",
 "SERV_CMPY":"",
 "SERV_DELETE_FLAG":"2",
-"SERV_CARD_STYLE":"2",
+"SERV_CARD_STYLE":"1",
 "SERV_NAME":"项目管理—场次测算—参数",
 "TODO_TYPE":"",
 "SERV_LIST_STYLE":"",
@@ -232,7 +232,7 @@
 [
 {
 "ACT_TYPE":"3",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"byid",
 "ACT_MEMO":"",
 "ACT_CODE":"byid",
@@ -259,7 +259,7 @@
 },
 {
 "ACT_TYPE":"3",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"exp",
 "ACT_MEMO":"",
 "ACT_CODE":"modify",
@@ -286,7 +286,7 @@
 },
 {
 "ACT_TYPE":"1",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"add",
 "ACT_MEMO":"",
 "ACT_CODE":"add",
@@ -313,7 +313,7 @@
 },
 {
 "ACT_TYPE":"1",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"batchSave",
 "ACT_MEMO":"",
 "ACT_CODE":"batchSave",
@@ -340,7 +340,7 @@
 },
 {
 "ACT_TYPE":"2",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"report",
 "ACT_MEMO":"",
 "ACT_CODE":"save",
@@ -351,7 +351,7 @@
 "ACT_HOT_KEY":"",
 "ACT_ID":"0kS1yVkyZ1wNa8q93aly",
 "SERV_ID":"TS_XMGL_CCCS_V_CONF",
-"S_MTIME":"2017-08-08 16:59:51:874",
+"S_MTIME":"2017-12-03 17:03:07:320",
 "ACT_EXPRESSION":"",
 "ACT_WS_RESULT":"",
 "ACT_MOBILE_FLAG":"1",
@@ -363,11 +363,11 @@
 "_ROWNUM_":"4",
 "ACT_TIP":"",
 "EN_JSON":"",
-"ACT_NAME":"测算"
+"ACT_NAME":" 测算"
 },
 {
 "ACT_TYPE":"2",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"copy",
 "ACT_MEMO":"",
 "ACT_CODE":"copyNew",
@@ -394,7 +394,7 @@
 },
 {
 "ACT_TYPE":"2",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"search",
 "ACT_MEMO":"",
 "ACT_CODE":"logItem",
@@ -421,7 +421,7 @@
 },
 {
 "ACT_TYPE":"1",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"delete",
 "ACT_MEMO":"",
 "ACT_CODE":"delete",
@@ -448,7 +448,7 @@
 },
 {
 "ACT_TYPE":"1",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"imp",
 "ACT_MEMO":"",
 "ACT_CODE":"imp",
@@ -475,7 +475,7 @@
 },
 {
 "ACT_TYPE":"1",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"exp",
 "ACT_MEMO":"@{\"_SELECT_\":\"*\"}",
 "ACT_CODE":"exp",
@@ -502,7 +502,7 @@
 },
 {
 "ACT_TYPE":"2",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"exp",
 "ACT_MEMO":"this.receive();",
 "ACT_CODE":"receive",
@@ -529,7 +529,7 @@
 },
 {
 "ACT_TYPE":"1",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"imp",
 "ACT_MEMO":"",
 "ACT_CODE":"impZip",
@@ -556,7 +556,7 @@
 },
 {
 "ACT_TYPE":"1",
-"ACT_EXPRESSION_FLAG":"0",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"imp",
 "ACT_MEMO":"",
 "ACT_CODE":"expZip",
