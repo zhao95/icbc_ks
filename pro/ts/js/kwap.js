@@ -1738,9 +1738,11 @@ var KcObject = {
 
         } else if (type === 'list') {
             if (Utils.getCanDraggable()) {
+                var contextPath = FireFly.getContextPath();
                 $kcTip.append('<div style="margin:0 10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>');
-                var $addTo = jQuery('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-down" style="color:green;" aria-hidden="true"></i><span>添加</span></div>');
-                var $remove = jQuery('<div style="cursor:pointer;padding: 3px 10px;float: right;"><i class="fa fa-arrow-up" style="color:green;"></i><span>移出</span></div>');
+                var $addTo = jQuery('<div style="cursor:pointer;padding: 3px 10px;float: right;"><img src="' + contextPath + '/ts/image/down.png" alt="">&nbsp;<span>移入</span></div>');
+                <!-- class="fa fa-arrow-down" style="color:green;" aria-hidden="true"-->
+                var $remove = jQuery('<div style="cursor:pointer;padding: 3px 10px;float: right;"><img src="' + contextPath + '/ts/image/up.png" alt="">&nbsp;<span>移出</span></div>');
                 $remove.unbind('click').bind('click', function () {
                     var $trs = Utils.getTableTbodyCheckedTrs("kcInfo");
                     var idStr = '';
@@ -1759,39 +1761,42 @@ var KcObject = {
                         }
                     });
                 });
-                // $addTo.unbind('click').bind('click', function () {
-                //     var tableTbodyCheckedTrs = Utils.getTableTbodyCheckedTrs('ksTable');
-                //     if (tableTbodyCheckedTrs.length <= 0) {
-                //         return;
-                //     }
-                //     var shIdStr = ',';
-                //     for (var i = 0; i < tableTbodyCheckedTrs.length; i++) {
-                //         var tr = tableTbodyCheckedTrs[i];
-                //         shIdStr += tr.attr('shid') + ',';
-                //     }
-                //     var sjid = self.currentCc.SJ_ID;
-                //     var ccid = self.currentCc.CC_ID;
-                //     var sjCC = self.currentCc.SJ_CC;
-                //     var sjDate = self.currentCc.SJ_START.substring(0, 10);
-                //     var kcid = self.currentParentKc.KC_ID;
-                //     // var zwId = $(this).attr('id');
-                //
-                //     FireFly.doAct("TS_XMGL_KCAP_YAPZW", 'saveBeanFromList', {
-                //         // ZW_ID: zwId,
-                //         SJ_ID: sjid,
-                //         SJ_CC: sjCC,
-                //         SJ_DATE: sjDate,
-                //         CC_ID: ccid,
-                //         KC_ID: kcid,
-                //         SH_ID: shIdStr.substring(1),
-                //         XM_ID: self.xmId
-                //     }, false, false, function (/*data*/) {
-                //         KsObject.search();
-                //         KcObject.reloadCCInfo();
-                //     });
-                // });
+                $addTo.unbind('click').bind('click', function () {
+                    var tableTbodyCheckedTrs = Utils.getTableTbodyCheckedTrs('ksTable');
+                    if (tableTbodyCheckedTrs.length <= 0) {
+                        return;
+                    }
+                    var shIdStr = '';
+                    for (var i = 0; i < tableTbodyCheckedTrs.length; i++) {
+                        var tr = tableTbodyCheckedTrs[i];
+                        shIdStr += ',' + tr.attr('shid');
+                    }
+                    if (shIdStr.length > 1) {
+                        shIdStr = shIdStr.substring(1);
+                    }
+                    var sjid = self.currentCc.SJ_ID;
+                    var ccid = self.currentCc.CC_ID;
+                    var sjCC = self.currentCc.SJ_CC;
+                    var sjDate = self.currentCc.SJ_START.substring(0, 10);
+                    var kcid = self.currentParentKc.KC_ID;
+                    // var zwId = $(this).attr('id');
+
+                    FireFly.doAct("TS_XMGL_KCAP_YAPZW", 'saveBeanFromList', {
+                        // ZW_ID: zwId,
+                        SJ_ID: sjid,
+                        SJ_CC: sjCC,
+                        SJ_DATE: sjDate,
+                        CC_ID: ccid,
+                        KC_ID: kcid,
+                        SH_ID_STR: shIdStr,
+                        XM_ID: self.xmId
+                    }, false, false, function (/*data*/) {
+                        KsObject.search();
+                        KcObject.reloadCCInfo();
+                    });
+                });
                 $kcTip.append($remove);
-                // $kcTip.append($addTo);
+                $kcTip.append($addTo);
                 $kcTip.append('<div style="margin-right:10px;float: right;height: 20px;width: 1px;background-color: #fff;border-left: 1px solid #7a7c81;"></div>');
             }
             // $kcTip.append([

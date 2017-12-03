@@ -10,9 +10,9 @@ import com.rh.ts.util.BMUtil;
 import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.kcap.KcapResource;
 import com.rh.ts.xmgl.kcap.arrange.ArrangeSeat;
+import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by shenh on 2017/10/10.
@@ -248,15 +248,74 @@ public class YapzwServ extends CommonServ {
     public OutBean saveBeanFromList(ParamBean paramBean) {
         clearDirtyData(paramBean);
 
-        paramBean.getStr("SJ_ID");
-        paramBean.getStr("SJ_CC");
-        paramBean.getStr("SJ_DATE");
-        paramBean.getStr("CC_ID");
-        paramBean.getStr("KC_ID");
-        paramBean.getStr("SH_ID");
-        paramBean.getStr("XM_ID");
+//        String sjId = paramBean.getStr("SJ_ID");
+//        String sjCc = paramBean.getStr("SJ_CC");
+//        String sjDate = paramBean.getStr("SJ_DATE");
+        String ccId = paramBean.getStr("CC_ID");
+        String kcId = paramBean.getStr("KC_ID");
+        String shIdStr = paramBean.getStr("SH_ID_STR");
+        String xmId = paramBean.getStr("XM_ID");
+        String[] shIds = shIdStr.split(",");
+        List<String> shIdList = new ArrayList<String>(Arrays.asList(shIds));
 
-        paramBean.set("ZW_ID","");
+        Bean queryBean = new Bean();
+        queryBean.set("_NOPAGE_", true);
+        queryBean.set("_WHERE_", "and KC_ID = '" + kcId + "'");
+        queryBean.set("_ORDER_", " ZW_ZWH_XT asc");
+        List<Bean> zwList = ServDao.finds(TsConstant.SERV_KCGL_ZWDYB, queryBean);
+        List<Integer> rows = new ArrayList<Integer>();
+        List<Integer> cols = new ArrayList<Integer>();
+        Map<String, Bean> zwMap = new HashMap<String, Bean>();
+        for (Bean zwBean : zwList) {
+            String zwZwhXt = zwBean.getStr("ZW_ZWH_XT");
+            String[] splits = zwZwhXt.split("-");
+            try {
+                String row = splits[0];
+                rows.add(Integer.parseInt(row));
+                String col = splits[1];
+                cols.add(Integer.parseInt(col));
+                zwMap.put(row + "-" + col, zwBean);
+            } catch (Exception e) {
+                //错误信息跳过
+            }
+        }
+        //有正确的座位数据  有要安排的考生
+        if (!rows.isEmpty() && !cols.isEmpty() && !shIdList.isEmpty()) {
+            Integer maxRowIndex = Collections.max(rows);
+            Integer maxColIndex = Collections.max(cols);
+            for (int i = 1; i <= maxRowIndex; i++) {
+                for (int j = 1; j <= maxColIndex; j++) {
+                    Bean zwBean = zwMap.get(i + "-" + j);
+                    //有座位并启用
+                    if (zwBean != null && "1".equals(zwBean.getStr("ZW_KY"))) {
+                        String zwId = zwBean.getStr("ZW_ID");
+
+                        List<Bean> beans = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and ZW_ID='" + zwId + "' and KC_ID='" + kcId + "' and CC_ID='" + ccId + "' and XM_ID='" + xmId + "'");
+                        if (beans.size() > 0) {
+                            //座位已安排 下一个座位
+                            continue;
+                        }
+                        for (Iterator<String> iterator = shIdList.iterator(); iterator.hasNext(); ) {
+                            String shId = iterator.next();
+                            paramBean.set("ZW_ID", zwId);
+                            paramBean.set("SH_ID", shId);
+                            ParamBean newParamBean = new ParamBean();
+                            newParamBean.putAll(paramBean);
+                            OutBean outBean = saveBean(newParamBean);
+                            if (StringUtils.isNotBlank(outBean.getStr("YAPZW_ID"))) {
+                                iterator.remove();
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (shIdList.isEmpty()) {
+                    break;//没有安排的考生跳过
+                }
+            }
+        } /*else {
+            //没有座位 跳过
+        }*/
 
         return new OutBean();
     }

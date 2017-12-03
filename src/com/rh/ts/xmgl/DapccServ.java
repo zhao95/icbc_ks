@@ -182,7 +182,7 @@ public class DapccServ extends CommonServ {
                 + "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
                 + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
                 + "where 1=1 "
-                + whereSql;
+                + whereSql +" order by a.BM_CODE";//,c.DEPT_CODE
         /*not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
                 + " and */
         //where 姓名/登录名/报考类型/报考数  bm_name /login_name?/
@@ -196,7 +196,7 @@ public class DapccServ extends CommonServ {
             bean.putAll(getUserOrg(userCodeParamBean));
         }
 
-        String countSql = "select count(*) as count " + sql.substring(sql.indexOf("from TS_BMSH_PASS a "));
+        String countSql = "select count(*) as count " + sql.substring(sql.indexOf("from TS_BMSH_PASS a "),sql.indexOf("order by"));
         /*设置数据总数*/
         int count = dataList.size();
         int showCount = page.getShowNum();
