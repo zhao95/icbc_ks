@@ -162,7 +162,7 @@ public class XmglszServ extends CommonServ {
 		String simpdate = simp.format(date);
 		//查询此人最大权限
 	List<Bean> dataList = new ArrayList<Bean>();
-	String sql1 = "select * from ts_xmgl a left join TS_XMGL_SZ b on a.xm_id=b.xm_id where b.xm_sz_name = '考场安排 ' and xm_sz_type='进行中' and '"+simpdate+"' between a.xm_start and a.xm_end and a.XM_STATE =1"; 
+	String sql1 = "select a.* from ts_xmgl a left join TS_XMGL_SZ b on a.xm_id=b.xm_id where b.xm_sz_name = '考场安排 ' and xm_sz_type='进行中' and '"+simpdate+"' between a.xm_start and a.xm_end and a.XM_STATE =1"; 
 	List<Bean> ALLList = Transaction.getExecutor().query(sql1);
 	for (Bean bean : ALLList) {
 		//判断项目 是否  启用了
@@ -202,6 +202,12 @@ public class XmglszServ extends CommonServ {
 						String str = find.getStr("XM_KCAP_PUBLISH_TIME");
 						if("".equals(str)){
 							//未发布
+							String xm_name = bean.getStr("XM_NAME");
+							String xm_start = bean.getStr("XM_START");
+							String xm_end = bean.getStr("XM_END");
+							bean.set("xm_name", xm_name);
+							bean.set("xm_start", xm_start);
+							bean.set("xm_end", xm_end);
 							dataList.add(bean);
 						}
 					}
