@@ -30,9 +30,23 @@ _viewer.getBtn("add").unbind("click").bind("click", function(event) {
 	    		data["KC_NAME"] = kcNames[i];
 	    		data["CTLG_PCODE"] = ctlgpCodes[i];
 	    		FireFly.doAct("TS_XMGL_KCAP_DAPCC", "save", data,false,false,function(result){
-	    			
 					if(result._MSG_.indexOf("OK") == -1){
 						_viewer.listBarTipError("添加失败！");
+					}else{
+						var ccId = result.CC_ID;
+						var kcId = result.KC_ID;
+						FireFly.doAct("TS_KCGL_GLJG", "finds", {"_WHERE_":"and kc_id = '"+kcId+"'"},false,false,function(res){
+							for(var i=0;i<res._DATA_.length;i++){
+								var bean = {};
+								bean["CC_ID"] = ccId;
+								bean["JG_CODE"] = res._DATA_[i].JG_CODE;
+								bean["JG_FAR"] = res._DATA_[i].JG_FAR;
+								bean["JG_NAME"] = res._DATA_[i].JG_NAME;
+								bean["JG_TYPE"] = res._DATA_[i].JG_TYPE;
+								bean["KC_ID"] = res._DATA_[i].KC_ID;
+								FireFly.doAct("TS_XMGL_KCAP_GLJG","save",bean);
+							}
+						});
 					}
 	    		});
 	    	}
