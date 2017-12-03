@@ -1227,7 +1227,6 @@ public class KcapResource {
 		} else {
 			sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a." + odeptField);
 		}
-		sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a." + odeptField);
 		sb.append(" AND SY_ORG_DEPT.ODEPT_CODE in (" + allOdept + ")");
 		sb.append(" )");
 		sql.appendWhere(sb.toString());
