@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
@@ -119,92 +120,53 @@ public class XmglszServ extends CommonServ {
 	public OutBean getStayApXm(Bean paramBean){
 		//所有考场安排的 项目设置ID
 		UserBean userBean = Context.getUserBean();
+		String user_code = userBean.getCode();
 		String odeptcode = userBean.getODeptCode();
+		
 	List<Bean> dataList = new ArrayList<Bean>();
 	List<Bean> ALLList = ServDao.finds("TS_XMGL_SZ", "AND XM_SZ_NAME='考场安排' AND XM_SZ_TYPE='进行中'");
 	for (Bean bean : ALLList) {
-		boolean flag= false;
 		//判断项目 是否  启用了
 			//判断时间
 			Date date = new Date();
+			String xmid = bean.getStr("XM_ID");
 			SimpleDateFormat simp =new SimpleDateFormat("yyyy-MM-dd");
 			String simpdate = simp.format(date);
-			List<Bean> xmlist = ServDao.finds("TS_XMGL", "AND XM_ID='"+bean.getStr("XM_ID")+"' AND '"+simpdate+"' between xm_start and xm_end");
+			List<Bean> xmlist = ServDao.finds("TS_XMGL", "AND XM_ID='"+xmid+"' AND '"+simpdate+"' between xm_start and xm_end");
 			if(xmlist.size()==0){
 				continue;
 			}
-			String xm_name = xmlist.get(0).getStr("XM_NAME");
-			String xm_start = xmlist.get(0).getStr("XM_START");
-			String xm_end = xmlist.get(0).getStr("XM_END");
-			bean.set("xm_name", xm_name);
-			bean.set("xm_start", xm_start);
-			bean.set("xm_end", xm_end);
-		//所有可见报名人员  的 odept
-		List<Bean> grouplist = ServDao.finds("TS_BM_GROUP", "AND XM_ID='"+bean.getStr("XM_ID")+"'");
-		for (Bean bean2 : grouplist) {
-			if(flag==true){
-				flag = false;
-				break;
-			}
-			//遍历所有群组
-			String groupId =  bean2.getId();
-			//用户
-			String sql = "SELECT USER_DEPT_CODE FROM TS_BM_GROUP_USER_DEPT WHERE G_ID='"+groupId+"' AND G_TYPE='1' GROUP BY USER_DEPT_CODE";
-			List<Bean> userList = Transaction.getExecutor().query(sql);
-			for (Bean bean3 : userList) {
-			UserBean user = UserMgr.getUser(bean3.getStr("USER_DEPT_CODE"));
-			String odept_code = user.getODeptCode();
-			if(odeptcode.equals(odept_code)){
-				//可以安排此考场
-			//判断此考场是否已经被提交 被安排
-				String xmid = bean.getStr("XM_ID");
+			String sql = "SELECT count(k.KC_ID)" 
+					+" FROM"
+  +" TS_XMGL_KCAP_DAPCC c" 
+  +" LEFT JOIN ts_kcgl k" 
+   +" ON k.kc_id = c.kc_id" 
++" WHERE c.XM_ID = '"+xmid+"'" 
+  +" AND k.KC_ODEPTCODE IN" 
+  +" (SELECT" 
+   +" DEPT_CODE" 
+  +" FROM"
+    +" SY_ORG_DEPT" 
+  +" WHERE SY_ORG_DEPT.CODE_PATH LIKE CONCAT('"+odeptcode+"', '%')" 
+    +" AND SY_ORG_DEPT.DEPT_TYPE = 2" 
+    +" AND SY_ORG_DEPT.CMPY_CODE = 'icbc'" 
+    +" AND SY_ORG_DEPT.S_FLAG = 1)";
+			int count = Transaction.getExecutor().count(sql);
+			if(count>0){
 				Boolean tjState = getTjState(odeptcode,xmid);
 				if(tjState==true){
-					//没有提交
+					String xm_name = xmlist.get(0).getStr("XM_NAME");
+					String xm_start = xmlist.get(0).getStr("XM_START");
+					String xm_end = xmlist.get(0).getStr("XM_END");
+					bean.set("xm_name", xm_name);
+					bean.set("xm_start", xm_start);
+					bean.set("xm_end", xm_end);
 					dataList.add(bean);
-					flag=true;
-					break;
 				}
+				//判断是否已发布
 			}
-			}
-			if(flag==true){
-				flag = false;
-				break;
-			}
-			//部门
-			Bean whereBean = new Bean();
-			whereBean.set(Constant.PARAM_SELECT, "USER_DEPT_CODE");
-			whereBean.set(Constant.PARAM_WHERE, "AND G_ID='"+groupId+"' AND G_TYPE='2'");
-			whereBean.set(Constant.PARAM_GROUP, "USER_DEPT_CODE");
-			List<Bean> deptList = ServDao.finds("TS_BM_GROUP_USER", whereBean);
-			for (Bean bean4 : deptList) {
-				if(bean4.getStr("USER_DEPT_CODE").equals("0010100000")){
-					//总行不用判断
-					String xmid = bean.getStr("XM_ID");
-					Boolean tjState = getTjState(odeptcode,xmid);
-					if(tjState==true){
-						//没有提交
-						dataList.add(bean);
-						flag=true;
-						break;
-					}
-				}else{
-					//部门编码
-				String dept_code = bean4.getStr("USER_DEPT_CODE");
-				DeptBean odept = OrgMgr.getOdept(dept_code);
-				if(odept.equals(odeptcode)){
-					String xmid = bean.getStr("XM_ID");
-					Boolean tjState = getTjState(odeptcode,xmid);
-					if(tjState==true){
-						//没有提交
-						dataList.add(bean);
-						flag=true;
-						break;
-					}
-				}
-			}
-			}
-		}
+			
+		
 	}
 	return new OutBean().setData(dataList);
 	}

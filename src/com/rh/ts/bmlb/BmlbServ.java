@@ -1850,6 +1850,15 @@ public class BmlbServ extends CommonServ {
 		String STATION_NO_CODE =paramBean.getStr("STATION_NO_CODE");
 		String STATION_TYPE_CODE =paramBean.getStr("STATION_TYPE_CODE");
 		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", "AND (KSLB_XL_CODE<>'"+STATION_NO_CODE+"') AND KSLB_CODE='"+STATION_TYPE_CODE+"' AND XM_ID='"+xm_id+"'");
+		List<Bean> find = ServDao.finds("TS_BMLB_BM", "and xm_id='"+xm_id+"' AND BM_XL_CODE<>'"+STATION_NO_CODE+"' and bm_lb_code ='"+STATION_TYPE_CODE+"'");
+		//删除 已报名的数据 之后
+		for (Bean bean : find) {
+			for(int i=0;i<list.size();i++){
+				if(bean.getStr("KSLBK_ID").equals(list.get(i).getStr("KSLBK_ID"))){
+					list.remove(i);
+				}
+			}
+		}
 		if(list ==null||list.size()==0){
 			return new OutBean().set("flag", "true");
 		}
