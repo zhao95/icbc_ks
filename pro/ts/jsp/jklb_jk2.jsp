@@ -574,6 +574,28 @@
         updateData("TS_JKLB_JK", param);
     }
 
+    /*function fanhui() {
+        if ('<!%=hidden%>' === '') {
+            doPost('jklb.jsp', {});
+        }else{
+            doPost('/<!%=CONTEXT_PATH%>/qt/jsp/todo.jsp', {});
+        }
+    }
+
+    function doPost(to, data) {  // to:提交动作（action）,data:参数
+        var myForm = document.createElement("form");
+        myForm.method = "post";
+        myForm.action = to;
+        for (var i in data) {
+            var myInput = document.createElement("input");
+            myInput.setAttribute("name", i);  // 为input对象设置name
+            myInput.setAttribute("value", data[i]);  // 为input对象设置value
+            myForm.appendChild(myInput);
+        }
+        document.body.appendChild(myForm);
+        myForm.submit();
+        document.body.removeChild(myForm);  // 提交后移除创建的form
+    }*/
 
 </script>
 <script src="<%=CONTEXT_PATH%>/ts/js/qj_jk_apply.js"></script>

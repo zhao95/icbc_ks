@@ -31,7 +31,11 @@ public class TodoDoneServ extends CommonServ {
             }
         }
 
-        String sql = "select a.*,b.SH_STATUS from ts_comm_todo_done a left join ts_comm_mind b on b.SH_LEVEL = a.NODE_STEPS and b.DATA_ID =a.DATA_ID ";
+        String sql = "select a.*,b.SH_STATUS," +
+                "(case when a.TYPE='1' then(select jk.JK_STATUS from TS_JKLB_JK jk where jk.JK_ID = a.DATA_ID)" +
+                " when a.TYPE='0' then(select qj.QJ_STATUS from TS_QJLB_QJ qj where qj.QJ_ID = a.DATA_ID) else '' end) as ZH_STATUS" +
+                " from ts_comm_todo_done a " +
+                "left join ts_comm_mind b on b.SH_LEVEL = a.NODE_STEPS and b.DATA_ID =a.DATA_ID ";
         sql += "where 1=1 " + paramBean.getStr("_extWhere");
         List<Bean> dataList = Transaction.getExecutor().queryPage(
                 sql, page.getNowPage(), page.getShowNum(), null, null);

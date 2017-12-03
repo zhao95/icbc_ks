@@ -1,6 +1,7 @@
 package com.rh.ts.xmgl;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
@@ -104,6 +105,9 @@ public class YapzwServ extends CommonServ {
      */
     public OutBean doArrangeSeat(ParamBean paramBean) {
 
+        //清除场次安排脏数据
+        clearDirtyData(paramBean);
+
         OutBean outBean = new OutBean();
 
         String xmId = paramBean.getStr("XM_ID");
@@ -139,6 +143,35 @@ public class YapzwServ extends CommonServ {
                 ") and XM_ID ='" + xmId + "'";
         Transaction.getExecutor().execute(sql);
         return new OutBean().setOk();
+    }
+
+    public OutBean getIndexInfo(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+
+        String shId = paramBean.getStr("SH_ID");
+        String sjDate = paramBean.getStr("SJ_DATE");
+        String sjCc = paramBean.getStr("SJ_CC");
+//        String xmId = paramBean.getStr("XM_ID");
+        Bean bmshPassBean = ServDao.find(TsConstant.SERV_BMSH_PASS, shId);
+        String userCode = bmshPassBean.getStr("BM_CODE");//类别编码
+
+        String msgStr = "";//"' and XM_ID ='" + xmId +
+        List<Bean> beanList = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and SJ_CC ='" + sjCc + "' and U_CODE ='" + userCode + "' and SJ_DATE ='" + sjDate + "'");
+        if (beanList != null && beanList.size() > 0 && !beanList.get(0).getStr("SJ_CC").equals(sjCc)) {
+            Bean bean = beanList.get(0);
+            Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, bean.getStr("XM_ID"));
+            Bean kcBean = ServDao.find("TS_KCGL", bean.getStr("KC_ID"));
+            Bean sjBean = ServDao.find(TsConstant.SERV_KCAP_CCSJ, bean.getStr("SJ_ID"));
+            String kcName = kcBean.getStr("KC_NAME");
+            String xmName = xmBean.getStr("XM_NAME");
+            String sjStart = sjBean.getStr("SJ_START");
+            msgStr = xmName + " " + kcName + " " + sjStart + " 已安排";
+            outBean.set("XM_NAME", xmName);
+            outBean.set("KC_NAME", kcName);
+            outBean.set("SJ_START", sjStart);
+        }
+        outBean.set("MSG_STR", msgStr);
+        return outBean;
     }
 
     /**
@@ -187,22 +220,45 @@ public class YapzwServ extends CommonServ {
         int uType = (bmshPassBean.getStr("BM_STATUS").equals("2") || bmshPassBean.getStr("BM_STATUS").equals("3")) ? 1 : 0;
         paramBean.put("U_TYPE", uType);//是否借考 1借考
         paramBean.put("ISSUE", 0);//是否 提交/发布
+        paramBean.put("ISAUTO", 2);//1自动 2手动
+        paramBean.put("S_USER", Context.getUserBean().getCode());//安排人
 
-        OutBean yapzwBean = new OutBean();
+        OutBean outBean = new OutBean();
         try {
-            yapzwBean = super.save(paramBean);
+            outBean = super.save(paramBean);
         } catch (Exception e) {
             if (e.getCause().getMessage().contains("IDX_DATE_CC_USER")) {
-                yapzwBean.setError("IDX_DATE_CC_USER");
+                outBean.setError("IDX_DATE_CC_USER");
             }
         }
-        String yapzwId = yapzwBean.getStr("YAPZW_ID");
+        String yapzwId = outBean.getStr("YAPZW_ID");
         Bean yapZw = getYapZwById(yapzwId);
         if (yapZw != null) {
-            yapzwBean.putAll(yapZw);
+            outBean.putAll(yapZw);
         }
 
-        return yapzwBean;
+        return outBean;
+    }
+
+
+    /**
+     * @param paramBean
+     * @return
+     */
+    public OutBean saveBeanFromList(ParamBean paramBean) {
+        clearDirtyData(paramBean);
+
+        paramBean.getStr("SJ_ID");
+        paramBean.getStr("SJ_CC");
+        paramBean.getStr("SJ_DATE");
+        paramBean.getStr("CC_ID");
+        paramBean.getStr("KC_ID");
+        paramBean.getStr("SH_ID");
+        paramBean.getStr("XM_ID");
+
+        paramBean.set("ZW_ID","");
+
+        return new OutBean();
     }
 
     /**

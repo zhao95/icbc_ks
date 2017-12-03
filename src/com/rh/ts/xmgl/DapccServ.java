@@ -76,6 +76,8 @@ public class DapccServ extends CommonServ {
             }
         } catch (ParseException e) {
             l = Long.MAX_VALUE;
+        } catch (NullPointerException e) {
+            l = Long.MAX_VALUE;
         }
         paramBean.set("searchKsTime", "");
 
@@ -141,11 +143,11 @@ public class DapccServ extends CommonServ {
             //获取的考生 在考场关联机构本级及下级的机构
             //*EXISTS
             whereSql += " and a.BM_STATUS not in('1','2','3')";
-            whereSql += " AND EXISTS (select '' from TS_KCGL_GLJG g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+            whereSql += " AND EXISTS (select '' from ts_xmgl_kcap_gljg g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
             values.add(searchKcId);
 
             //*in
-//            whereSql += " and c.CODE_PATH in(select c.CODE_PATH from TS_KCGL_GLJG g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+//            whereSql += " and c.CODE_PATH in(select c.CODE_PATH from ts_xmgl_kcap_gljg g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
 //            values.add(searchKcId);
 
             //*deptSql
@@ -283,7 +285,7 @@ public class DapccServ extends CommonServ {
         //b考场信息 c考场关联机构 d考场关联机构信息
         List<Bean> list = Transaction.getExecutor().query("select a.*,d.DEPT_CODE,b.KC_ODEPTCODE from TS_XMGL_KCAP_DAPCC a " +
                 "INNER JOIN TS_KCGL b on b.KC_ID =a.KC_ID " +
-                "INNER JOIN TS_KCGL_GLJG c on c.KC_ID=a.KC_ID " +
+                "INNER JOIN ts_xmgl_kcap_gljg c on c.KC_ID=a.KC_ID " +
                 "LEFT JOIN SY_ORG_DEPT d on d.DEPT_CODE = c.JG_CODE " +
                 "LEFT JOIN SY_ORG_DEPT e on b.KC_ODEPTCODE = e.DEPT_CODE " +
                 "where a.XM_ID=? " + deptSql, values);
@@ -369,7 +371,7 @@ public class DapccServ extends CommonServ {
     /**
      * 显示提交还是发布
      *
-     * @param paramBean XM_ID
+     * @param paramBean XM_ID deptCodeStr
      * @return "tj" "publish"
      */
     public OutBean getTjOrPublish(ParamBean paramBean) {
@@ -431,7 +433,7 @@ public class DapccServ extends CommonServ {
         values.add(kcId);
         List<Bean> list = Transaction.getExecutor().query("select a.*, c.JG_CODE from TS_XMGL_KCAP_DAPCC a " +
 //                "INNER JOIN TS_KCGL b on b.KC_ID =a.KC_ID " +
-                "INNER JOIN TS_KCGL_GLJG c on c.KC_ID=a.KC_ID " +
+                "INNER JOIN ts_xmgl_kcap_gljg c on c.KC_ID=a.KC_ID " +
 //                "LEFT JOIN SY_ORG_DEPT d on d.DEPT_CODE = c.JG_CODE " +
                 "where a.KC_ID=?", values);
         Set<String> hashSet = new HashSet<String>();
@@ -712,6 +714,16 @@ public class DapccServ extends CommonServ {
      * @return outBean
      */
     public OutBean clearYapzw(ParamBean paramBean) {
+
+        //删除考场安排 脏数据
+        String sql = "delete from ts_xmgl_kcap_yapzw " +
+                "where YAPZW_ID in ( " +
+                "   SELECT t.yapzw_id from ( " +
+                "       select a.yapzw_id from ts_xmgl_kcap_yapzw a left join ts_xmgl_kcap_dapcc_ccsj b on a.SJ_ID =b.SJ_ID where b.SJ_ID is null " +
+                "   ) t " +
+                ")";
+        Transaction.getExecutor().execute(sql);
+
         OutBean outBean = new OutBean();
         String kcIdStr = paramBean.getStr("KC_ID_STR");
         String[] split = kcIdStr.split(",");
@@ -761,7 +773,7 @@ public class DapccServ extends CommonServ {
                     "and (" +
                     "(" +
                     //考场关联机构考生
-                    "EXISTS (select '' from TS_KCGL_GLJG g " +
+                    "EXISTS (select '' from ts_xmgl_kcap_gljg g " +
                     "where g.KC_ID in(" + kcIdSql + ") " +
                     "and INSTR(c.CODE_PATH ,g.JG_CODE)>0 ) " +
                     "and a.BM_STATUS not in('1','2','3')" +

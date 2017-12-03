@@ -188,6 +188,7 @@
                             <th class="" style="width: 20%;">送交人所在单位</th>
                             <th class="" style="width: 20%;">送交时间</th>
                             <th class="" style="width: 10%;">处理结果</th>
+                            <th class="" style="width: 10%;">终审结果</th>
                         </tr>
                         </thead>
                         <tbody class="grid-tbody">
@@ -740,6 +741,7 @@
                 tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
                 tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');
                 tr.append('<td>' + ( item.SH_STATUS === '2' ? '不同意' : '同意' ) + '</td>');
+                tr.append('<td>' + ( item.ZH_STATUS === '2' ? '通过' : (item.ZH_STATUS === '3' ? '不通过' : '') ) + '</td>');
                 rhGridTBody.append(tr);
             }
         };

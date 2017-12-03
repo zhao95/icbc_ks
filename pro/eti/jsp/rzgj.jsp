@@ -286,7 +286,7 @@
                     '   <td style="text-align: center">',
                     '   ' + data.ISSUE_DATE_STR,
                     '   </td>',
-                    '   <td style="text-align: center">' + data.FNAME_CHN + '</td>',//CERT_GRADE_CODE
+                    '   <td style="text-align: center">' + data.FNAME_CHN + (data.typeName ? '(' + data.typeName + ')' : '') + '</td>',//CERT_GRADE_CODE
                     '   <td style="text-align: center">' + data.date + '</td>',
                     '   <td style="text-align: center">' + data.state + '</td>',
                     '   <td style="text-align: center">' +

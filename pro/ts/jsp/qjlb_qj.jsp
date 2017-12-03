@@ -465,7 +465,7 @@
     var xmId = '<%=xmId%>';
     //xmId值为空返回到列表页面
     if (!xmId) {
-        doPost({}, 'qjlb.jsp');
+        doPost( 'qjlb.jsp',{});
     }
 
     var uploadFiles = function () {
