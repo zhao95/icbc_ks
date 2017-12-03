@@ -236,6 +236,8 @@ function xminfoshow(){
            				}
        				}else{
        					if(shArray==true&&truetisi=="true"){
+       						$("#"+a).find("img[src='/ts/image/u4721.png']").attr("src","aa");//xx改为 问号
+       						/*$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');*/
        						$("#"+a).append('<div">管理任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
        						$("#tishiyu").html(tishiyu);
        						$("#yzxx").modal("show");
@@ -271,7 +273,6 @@ function xminfoshow(){
 	//提交所有数据
 	function mttijiao(){
 		is_confirm=false;
-	
 		//获取手机号码
 		var ryl_mobile = document.getElementById("user_mobile2").value
 		//获取到资格考试类型主键id
@@ -820,6 +821,9 @@ function xminfoshow(){
 		} 
 
 	})
+	$("#yzinput").blur(function(){
+		//验证 数字 和任职年限 
+	})
 	$("#user_mobile2").blur(function(){
 		var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
 		if(!myreg.test($("#user_mobile1").val())){ 
@@ -832,10 +836,38 @@ function xminfoshow(){
 	
 	//获取应考试的值
 	function tijiao(){
+		var bdyz = false;
+		$("input[name='checkboxaa']:checked").each(function(){
+			if($(this.parentNode.parentNode).find("input[name='yzspan']").length>0){
+				var inputvalue = $(this.parentNode.parentNode).find("input[name='yzspan']").val();
+				if(""==inputvalue){
+					alert("请输入任职年限");
+					$("#tjbt").attr("data-target","");
+					bdyz = true;
+					return ;
+				}
+				if(parseInt(inputvalue)>60){
+					alert("任职年限不能超过六十年");
+					$("#tjbt").attr("data-target","");
+					bdyz = true;
+					return ;
+				}
+				if(parseInt(inputvalue)!=inputvalue){
+					alert("请输入数字");
+					$("#tjbt").attr("data-target","");
+					bdyz = true;
+					return ;
+				}
+			}
+		})
+		
+		if(bdyz==true){
+			return;
+		}
 		if($("#user_mobile1").val()==""){
 			alert("请填写手机号");
 			$("#tjbt").attr("data-target","");
-			return false;
+			return ;
 		}
 		
 		
@@ -1284,6 +1316,19 @@ function yanzheng(){
 }
 
 function yztj(){
+	if(""==($("#yzinput").val())){
+		alert("请输入任职年限");
+		return false;
+	}
+	if(parseInt($("#yzinput").val())>60){
+		alert("任职年限不能超过六十年");
+		return false;
+	}
+	if(parseInt($("#yzinput").val())!=$("#yzinput").val()){
+		alert("请输入数字");
+		return false;
+	}
+	
 	$("input[name='yzspan']").each(function(){
 		$(this).val($("#yzinput").val());
 	});
