@@ -1227,7 +1227,7 @@ public class KcapResource {
 		sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a." + odeptField);
 		// sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath +
 		// "','%') )");
-//		sb.append(" AND SY_ORG_DEPT.DEPT_CODE in (" + allOdept + ")");
+		// sb.append(" AND SY_ORG_DEPT.DEPT_CODE in (" + allOdept + ")");
 		sb.append(" )");
 		sql.appendWhere(sb.toString());
 		// }
@@ -1436,21 +1436,20 @@ public class KcapResource {
 
 		log.error(">>>>>>>>>>>>>>>>>freeKsBean>>>>>>>>>>" + this.getFreeKsBean().toString());
 
-		// if (this.getFreeKsBean() != null) {
-		//
-		// for (Object o : this.getFreeKsBean().keySet()) {
-		//
-		// Bean jg = this.getFreeKsBean().getBean(o);
-		//
-		// for (Object time : jg.keySet()) {
-		//
-		// Bean timeb = jg.getBean(time);
-		//
-		// log.error("------------------freeKsBean-----" + o + "--------" + time
-		// + "------" + timeb.toString());
-		// }
-		// }
-		// }
+		if (this.getFreeKsBean() != null) {
+
+			for (Object o : this.getFreeKsBean().keySet()) {
+
+				Bean jg = this.getFreeKsBean().getBean(o);
+
+				for (Object time : jg.keySet()) {
+
+					Bean timeb = jg.getBean(time);
+
+					log.error("------------------freeKsBean-----" + o + "--------" + time + "------" + timeb.size());
+				}
+			}
+		}
 
 		log.error(">>>>>>>>>>>>>>>>JkKsBean>>>>>>>>>" + this.getJkKsBean().toString());
 
@@ -1472,23 +1471,23 @@ public class KcapResource {
 	}
 
 	private void cleanBusyZw(String xmId) {
-		
+
 		ParamBean param = new ParamBean();
-		
+
 		param.set("XM_ID", xmId);
-		
+
 		ServMgr.act(TsConstant.SERV_KCAP_YAPZW, "clearDirtyData", param);
 
 		boolean isdel = ConfMgr.getConf("TS_KCAP_YAPZW_AUTO_DEL", false);
 
-		if (isdel) { //自动安排考场前 清空已安排的考生
-			
+		if (isdel) { // 自动安排考场前 清空已安排的考生
+
 			List<String> kcList = new ArrayList<String>();
 
 			List<String> jglist = new ArrayList<String>();
 
 			for (Object kcid : kcOrgBean.keySet()) {
-				
+
 				kcList.add(kcid.toString());
 
 				Bean kcjg = kcOrgBean.getBean(kcid);
@@ -1501,7 +1500,7 @@ public class KcapResource {
 
 			SqlBean sql = new SqlBean().and("XM_ID", xmId);
 
-//			sql.and("S_USER", Context.getUserBean().getCode());
+			// sql.and("S_USER", Context.getUserBean().getCode());
 
 			sql.and("ISAUTO", 1);// 自动安排
 
