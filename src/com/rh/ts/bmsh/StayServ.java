@@ -674,6 +674,8 @@ public class StayServ extends CommonServ {
 	 */
 	@Override
 	public OutBean exp(ParamBean paramBean) {
+		String xmid = paramBean.getStr("xmid");
+		
 		String servid = paramBean.getServId();
 		ParamBean parr = new ParamBean();
 		UserBean userBean1 = Context.getUserBean();
@@ -692,15 +694,47 @@ public class StayServ extends CommonServ {
 		paramBean.setQueryPageShowNum(ONETIME_EXP_NUM); // 设置每页最大导出数据量
 		String searchWhere = "";
 		beforeExp(paramBean); // 执行监听方法
+		
+		List<Bean> dataList= new ArrayList<Bean>();
 		if (paramBean.getId().length() > 0) { // 支持指定记录的导出（支持多选）
 			searchWhere = " and " + serv.getPKey() + " in ('"
 					+ paramBean.getId().replaceAll(",", "','") + "')";
 			paramBean.setQuerySearchWhere(searchWhere);
-		}else{ // 支持指定记录的导出（支持多选）
-			return new OutBean().setError("没有数据");
+			dataList = ServDao.finds(servid, searchWhere);
+		}else{ // 导出所有记录
+			if(!"".equals(xmid)){
+				UserBean user = Context.getUserBean();
+				Bean userPvlgToHT = RoleUtil
+						.getPvlgRole(user.getCode(), "TS_BMGL_XNBM");
+				Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+				Bean str = (Bean) userPvlgToHTBean.get("XN_BM");
+				String dept_code = str.getStr("ROLE_DCODE");
+				if ("".equals(dept_code)) {
+					dept_code = user.getStr("ODEPT_CODE");
+				}
+				dept_code = dept_code.substring(0, 10);
+				if (dept_code.equals("0010100000")) {
+					String sql =   " select * from ts_bmsh_stay where XM_ID='" + xmid + "'";
+					dataList = Transaction.getExecutor().query(sql);
+					
+				}else{
+					DeptBean dept = OrgMgr.getDept(dept_code);
+					String codepath = dept.getCodePath();
+					String sql = "select * from "
+							+ servid
+							+ " a where exists(select dept_code from sy_org_dept b where code_path like concat('"
+							+ codepath
+							+ "','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"
+							+ xmid + "'";
+					dataList = Transaction.getExecutor().query(sql);
+				}
+
+			}else{
+				String where = paramBean.getStr("where");
+				String sql = "select * from ts_bmsh_stay "+where;
+				dataList =Transaction.getExecutor().query(sql);
+			}
 		}
-		// 所有
-		List<Bean> dataList = ServDao.finds(servid, searchWhere);
 
 		List<Bean> finalList = new ArrayList<Bean>();
 
@@ -1066,7 +1100,7 @@ public class StayServ extends CommonServ {
 				String sql = "select COUNT(*) from TS_BMSH_STAY a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
 				 List<Bean> query = Transaction.getExecutor().query(sql);
 				 int stay = Integer.parseInt(query.get(0).getId());
-				out.set("staynum", query);
+				out.set("staynum", stay);
 				String sql1 = "select COUNT(*) from TS_BMSH_NOPASS a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
 				 List<Bean> query1 = Transaction.getExecutor().query(sql1);
 				int nopass = Integer.parseInt(query1.get(0).getId());

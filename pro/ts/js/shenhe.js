@@ -511,6 +511,10 @@ function firall(){
 				//定义一个公共变量  当进行条件查询时  将 数据ID放入数组中
 				function exportdata(obj,name){
 					var checkboxchecked = $('input:checkbox[name='+name+']:checked');
+					if($('input:checkbox[name='+name+']').length==0){
+						alert("没有可供导出的数据");
+						return false;
+					}
 					//没有选中
 					var arrstring = "";
 					if(checkboxchecked.length!=0){
@@ -522,19 +526,14 @@ function firall(){
 							  var aa = $(this).val();
 							  arrstring+=aa+",";
 				 });
-				} else{
+				} 
 					//导出所有数据
-					var where5 = " AND XM_ID="+"'"+xmid+"'";
+					var where5 = " where XM_ID="+"'"+xmid+"'";
 					var where6 = "AND SH_OTHER like '%"+user_code+"%'";
-					var param={};
-					param["where"]=where5+where6;
-					param["servId"]=obj;
-					param["xianei"]="belong";
-					var result =FireFly.doAct("TS_BMLB_BM","getexportdata",param);
-					arrstring=result.dataids;
-					} 
+					
 				var whereData={};
 				var data = {"_PK_":arrstring};
+				data["where"]=where5+where6;
 				data = jQuery.extend(data,whereData);
 				
 				window.open(FireFly.getContextPath() + '/' + obj + '.exp.do?data=' + 

@@ -444,6 +444,10 @@ function firall(){
 					var checkboxchecked = $('input:checkbox[name='+name+']:checked');
 					var arrstring = "";
 					//没有选中
+					if($('input:checkbox[name='+name+']').length==0){
+						alert("没有可供导出的数据");
+						return false;
+					}
 					if(checkboxchecked.length!=0){
 						//定义变量 把id拼成 逗号分隔字符串
 						//定义 变量 
@@ -453,17 +457,11 @@ function firall(){
 							  var aa = $(this).val();
 							  arrstring+=aa+",";
 				 });
-				} else{
-					//导出所有数据
-					var param={};
-					param["xmid"]=xmid;
-					param["servId"]=obj;
-					param["xianei"]=xianei;
-					var result =FireFly.doAct("TS_BMLB_BM","getAllBelongData",param);
-					arrstring=result.ids;
 				}
+					
 				var whereData={};
 				var data = {"_PK_":arrstring};
+				data["xmid"]=xmid;
 				data = jQuery.extend(data,whereData);
 				
 				window.open(FireFly.getContextPath() + '/' + obj + '.exp.do?data=' + 
