@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"",
-"S_MTIME":"2017-12-02 15:56:07:630",
+"S_MTIME":"2017-12-03 17:01:52:160",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "TABLE_VIEW":"TS_XMGL_CCCS_V",
@@ -623,33 +623,6 @@
 "SY_SERV_ACT":
 [
 {
-"ACT_TYPE":"1",
-"ACT_EXPRESSION_FLAG":"",
-"ACT_CSS":"begin",
-"ACT_MEMO":"",
-"ACT_CODE":"run",
-"S_FLAG":"1",
-"ACT_WS_FLAG":"2",
-"_PK_":"27pFoD2Kh0prxZLqsZJn",
-"ACT_LOG_FLAG":"2",
-"ACT_HOT_KEY":"",
-"ACT_ID":"27pFoD2Kh0prxZLqsZJn",
-"SERV_ID":"TS_XMGL_CCCS_V",
-"S_MTIME":"2017-12-02 15:56:07:555",
-"ACT_EXPRESSION":"",
-"ACT_WS_RESULT":"",
-"ACT_MOBILE_FLAG":"1",
-"ACT_ORDER":"5",
-"ACT_GROUP":"2",
-"SY_SERV_ACT_PARAM":
-[
-],
-"_ROWNUM_":"0",
-"ACT_TIP":"",
-"EN_JSON":"",
-"ACT_NAME":"测算"
-},
-{
 "ACT_TYPE":"3",
 "ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"byid",
@@ -671,7 +644,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"1",
+"_ROWNUM_":"0",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 查 看 "
@@ -698,10 +671,37 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"2",
+"_ROWNUM_":"1",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"条件"
+},
+{
+"ACT_TYPE":"1",
+"ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"begin",
+"ACT_MEMO":"",
+"ACT_CODE":"run",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"27pFoD2Kh0prxZLqsZJn",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"27pFoD2Kh0prxZLqsZJn",
+"SERV_ID":"TS_XMGL_CCCS_V",
+"S_MTIME":"2017-12-03 17:01:52:149",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"15",
+"ACT_GROUP":"2",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"2",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":"测算"
 },
 {
 "ACT_TYPE":"3",

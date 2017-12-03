@@ -1,5 +1,4 @@
 var _viewer = this;
-
 $("#TS_XMGL_CCCS_V .rhGrid").find("tr").unbind("dblclick");
 var xmId = _viewer.getParHandler().getPKCode();
 _viewer.getBtn("config").unbind("click").bind("click", function(event) {
@@ -7,8 +6,8 @@ _viewer.getBtn("config").unbind("click").bind("click", function(event) {
 		"act" : UIConst.ACT_CARD_ADD,
 		"sId" : "TS_XMGL_CCCS_V_CONF",
 		"parHandler" : _viewer,
-		"widHeiArray" : [ 1000, 380 ],
-		"xyArray" : [ 100, 100 ]
+		"widHeiArray" : [ 600, 100 ],
+		"xyArray" : [ 300, 300 ]
 	};
 	var cardView = new rh.vi.cardView(temp);
 	cardView.show();
@@ -16,6 +15,12 @@ _viewer.getBtn("config").unbind("click").bind("click", function(event) {
 var scVal = Cookie.get("scVal");
 var sjVal = Cookie.get("sjVal");
 var cjVal = Cookie.get("cjVal");// 层级
+var runVal = Cookie.get("runVal");
+
+if(runVal == "1"){
+	Cookie.set("runVal", 0, 1);
+	run();
+}
 
 _viewer.getBtn("run").unbind("click").bind("click", function(event) {
 	if(scVal == "" || sjVal == "" || cjVal == ""){
