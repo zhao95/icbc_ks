@@ -1227,7 +1227,8 @@ public class KcapResource {
 		sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a." + odeptField);
 		// sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath +
 		// "','%') )");
-		sb.append(" AND SY_ORG_DEPT.DEPT_CODE in (" + allOdept + ") )");
+//		sb.append(" AND SY_ORG_DEPT.DEPT_CODE in (" + allOdept + ")");
+		sb.append(" )");
 		sql.appendWhere(sb.toString());
 		// }
 
