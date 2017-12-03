@@ -1190,7 +1190,7 @@ public class KcapResource {
 	 */
 	private List<Bean> getKsList(String xmId, String odept, int status) {
 
-		String odeptField = "S_ODEPT";
+		String odeptField = "S_DEPT";
 
 		if (status == 2) {
 			odeptField = "JK_ODEPT";
@@ -1203,10 +1203,6 @@ public class KcapResource {
 		sql.and("a.BM_STATUS", status);
 
 		sql.appendWhere(" AND a.BM_CODE = p.PERSON_ID");
-
-		// if (!Strings.isBlank(odept)) {
-
-		// String codePath = OrgMgr.getOdept(odept).getCodePath();
 
 		String allOdept = "'0'";
 
@@ -1221,16 +1217,20 @@ public class KcapResource {
 		}
 
 		StringBuffer sb = new StringBuffer();
-		sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE ");
-		sb.append(" SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
+
+		sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE 1=1");
+		// sb.append(" AND SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
 		sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
+
+		if (status == 2) {
+			sb.append(" AND SY_ORG_DEPT.ODEPT_CODE = a." + odeptField);
+		} else {
+			sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a." + odeptField);
+		}
 		sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a." + odeptField);
-		// sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath +
-		// "','%') )");
-		// sb.append(" AND SY_ORG_DEPT.DEPT_CODE in (" + allOdept + ")");
+		sb.append(" AND SY_ORG_DEPT.ODEPT_CODE in (" + allOdept + ")");
 		sb.append(" )");
 		sql.appendWhere(sb.toString());
-		// }
 
 		sql.tables(TsConstant.SERV_BMSH_PASS + " a, SY_HRM_ZDSTAFFPOSITION p");
 
