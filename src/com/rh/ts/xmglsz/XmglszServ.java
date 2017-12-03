@@ -179,7 +179,7 @@ public class XmglszServ extends CommonServ {
    +" DEPT_CODE" 
   +" FROM"
     +" SY_ORG_DEPT" 
-  +" WHERE SY_ORG_DEPT.CODE_PATH LIKE CONCAT('"+odeptcode+"', '%')" 
+  +" WHERE SY_ORG_DEPT.CODE_PATH LIKE CONCAT('%"+odeptcode+"', '%')" 
     +" AND SY_ORG_DEPT.DEPT_TYPE = 2" 
     +" AND SY_ORG_DEPT.CMPY_CODE = 'icbc'" 
     +" AND SY_ORG_DEPT.S_FLAG = 1)";
