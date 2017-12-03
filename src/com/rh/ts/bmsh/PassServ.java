@@ -458,7 +458,7 @@ public class PassServ extends CommonServ {
 		LinkedHashMap<String, Bean> cols = new LinkedHashMap<String, Bean>();
 		List<Bean> pxdatalist1 = ServDao.finds("TS_BMSH_PX", searchWhere);
 		if (pxdatalist1.size() == 0) {
-			String where1 = "AND USER_CODE is null ";
+			String where1 = "AND USER_CODE is null limit 0,5";
 			pxdatalist1 = ServDao.finds("TS_BMSH_PX", where1);
 		}
 		// 查询出所有的 待审核记录

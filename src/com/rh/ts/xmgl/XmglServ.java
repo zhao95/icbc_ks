@@ -795,21 +795,28 @@ public class XmglServ extends CommonServ {
 		String SHOWNUM = paramBean.getStr("shownum");
 		List<Bean> list = new ArrayList<Bean>();
 		/*List<Bean> finds = ServDao.finds("TS_XMGL", where1);*/
-		String sql1 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
+		String sql1 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' and b.SH_RGSH=1)d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
 				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
 		List<Bean> finds = Transaction.getExecutor().query(sql1);
 		
-		String sql2 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='未开启' or c.xm_sz_type=''))d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
+		String sql2 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='未开启' or c.xm_sz_type='') and b.SH_RGSH=1)d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
 				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
 		List<Bean> find2 = Transaction.getExecutor().query(sql2);
 		
-		String sql4 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
+		String sql4 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' and b.SH_RGSH=1 )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
 				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
 		List<Bean> find4 = Transaction.getExecutor().query(sql4);
 		
 		String sql3 = " SELECT * FROM(SELECT a.*,b.sh_end FROM ts_xmgl a LEFT JOIN TS_XMGL_BMSH b ON a.xm_id = b.xm_id WHERE b.sh_rgsh=1 AND (NOW()< STR_TO_DATE(b.sh_start,'%Y-%m-%d %H:%i:%s') OR NOW()> STR_TO_DATE(b.sh_end,'%Y-%m-%d %H:%i:%s')) "
-				+where1+" AND b.SH_LOOK =1  ORDER BY b.sh_end ASC)t ";
+				+where1+" AND b.SH_LOOK =1 and b.SH_RGSH=1 ORDER BY b.sh_end ASC)t ";
 		List<Bean> finds3 = Transaction.getExecutor().query(sql3);
+		String sql5 = "select a.* from ts_xmgl a left join ts_xmgl_bmsh b on a.xm_id=b.xm_id and b.SH_RGSH=2" +where1;
+		List<Bean> find5 = Transaction.getExecutor().query(sql5);
+		for (Bean bean : find5) {
+			bean.set("SH_STATE_STR", "无手动审核");
+			bean.set("SH_END", "");
+		}
+	
 		finds.addAll(find2);
 		finds.addAll(find4);
 		finds.addAll(finds3);
@@ -835,7 +842,9 @@ public class XmglServ extends CommonServ {
 					list.add(bean);
 			}
 		}
-		
+		if("全部".equals(zhuangtai)){
+			list.addAll(find5);
+		}
 		int ALLNUM = list.size();
 		// 计算页数
 		int meiye = Integer.parseInt(SHOWNUM);
