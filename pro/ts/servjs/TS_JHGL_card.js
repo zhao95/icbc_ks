@@ -43,3 +43,15 @@ _viewer.beforeSave = function() {
 		return false;
  	}
 };
+//保存按钮之后，关闭卡片
+_viewer.afterSave = function(){
+	setTimeout(function(){
+		_viewer.backA.mousedown();
+	},100);
+};
+
+//_viewer.getBtn("save").click(function(){
+//	setTimeout(function(){
+//		_viewer.backA.mousedown();
+//	},500);
+//});
