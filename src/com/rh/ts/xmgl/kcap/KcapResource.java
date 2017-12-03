@@ -16,6 +16,7 @@ import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.util.OrgConstant;
+import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
@@ -109,6 +110,10 @@ public class KcapResource {
 		loadRule(xmId);
 		// 考场信息
 		loadKc(xmId, "");
+
+		// 清空自动安排的考生
+		cleanBusyZw(xmId);
+
 		// 考生信息
 		loadKs(xmId, "");
 		// 考场座位安排
@@ -118,7 +123,7 @@ public class KcapResource {
 
 		// 加载其他资源
 		loadOther();
-		
+
 		showResLog();
 	}
 
@@ -132,6 +137,9 @@ public class KcapResource {
 		// 考场信息
 		loadKc(xmId, odept);
 
+		// 清空自动安排的考生
+		cleanBusyZw(xmId);
+
 		// 考生信息
 		loadKs(xmId, odept);
 
@@ -142,7 +150,7 @@ public class KcapResource {
 		// 加载其他资源
 		loadOther();
 
-		 showResLog();
+		showResLog();
 	}
 
 	/**
@@ -254,34 +262,38 @@ public class KcapResource {
 
 			SqlBean sql = new SqlBean().and("XM_ID", xmId);
 
-//			if (!Strings.isBlank(odept)) {
-//
-//				String codePath = OrgMgr.getOdept(odept).getCodePath();
-//				
-//				String allOdept = "'0'";
-//				
-//				for(Object kcid:kcOrgBean.keySet()) {
-//					
-//					Bean kcjg = kcOrgBean.getBean(kcid);
-//					
-//					for(Object jg:kcjg.keySet()) {
-//						
-//						allOdept += ",'"+jg+"'";
-//					}
-//				}
-//
-//				StringBuffer sb = new StringBuffer();
-//				sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE ");
-//				sb.append(" SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
-//				sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
-//				sb.append(" AND SY_ORG_DEPT.DEPT_CODE = " + TsConstant.SERV_KCAP_YAPZW + ".U_ODEPT");
-//				
-////				sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath + "','%') )");
-//				
-//				sb.append(" AND SY_ORG_DEPT.DEPT_CODE in ("+allOdept+") )");
-//				
-//				sql.appendWhere(sb.toString());
-//			}
+			// if (!Strings.isBlank(odept)) {
+			//
+			// String codePath = OrgMgr.getOdept(odept).getCodePath();
+			//
+			// String allOdept = "'0'";
+			//
+			// for(Object kcid:kcOrgBean.keySet()) {
+			//
+			// Bean kcjg = kcOrgBean.getBean(kcid);
+			//
+			// for(Object jg:kcjg.keySet()) {
+			//
+			// allOdept += ",'"+jg+"'";
+			// }
+			// }
+			//
+			// StringBuffer sb = new StringBuffer();
+			// sb.append(" AND EXISTS ( SELECT DEPT_CODE FROM " +
+			// ServMgr.SY_ORG_DEPT + " WHERE ");
+			// sb.append(" SY_ORG_DEPT.DEPT_TYPE = " +
+			// OrgConstant.DEPT_TYPE_ORG);
+			// sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
+			// sb.append(" AND SY_ORG_DEPT.DEPT_CODE = " +
+			// TsConstant.SERV_KCAP_YAPZW + ".U_ODEPT");
+			//
+			//// sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath
+			// + "','%') )");
+			//
+			// sb.append(" AND SY_ORG_DEPT.DEPT_CODE in ("+allOdept+") )");
+			//
+			// sql.appendWhere(sb.toString());
+			// }
 
 			List<Bean> busyZwList = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, sql);
 
@@ -881,8 +893,9 @@ public class KcapResource {
 			List<Bean> ccList = ServDao.finds(TsConstant.SERV_KCAP_CCSJ, ccsql);
 
 			// 关联机构
-			SqlBean jgsql = new SqlBean().and("KC_ID", kcId).and("S_FLAG", 1).selects("KC_ID,JG_CODE,JG_NAME,JG_FAR,JG_TYPE");
-			List<Bean> jgList = ServDao.finds(TsConstant.SERV_KCGL_GLJG, jgsql);
+			SqlBean jgsql = new SqlBean().and("KC_ID", kcId).and("S_FLAG", 1)
+					.selects("KC_ID,JG_CODE,JG_NAME,JG_FAR,JG_TYPE");
+			List<Bean> jgList = ServDao.finds(TsConstant.SERV_KCAP_GLJG, jgsql);
 
 			Bean gljg = new Bean();
 
@@ -1191,33 +1204,32 @@ public class KcapResource {
 
 		sql.appendWhere(" AND a.BM_CODE = p.PERSON_ID");
 
-//		if (!Strings.isBlank(odept)) {
+		// if (!Strings.isBlank(odept)) {
 
-//			String codePath = OrgMgr.getOdept(odept).getCodePath();
-			
-			String allOdept = "'0'";
-			
-			for(Object kcid:kcOrgBean.keySet()) {
-				
-				Bean kcjg = kcOrgBean.getBean(kcid);
-				
-				for(Object jg:kcjg.keySet()) {
-					
-					allOdept += ",'"+jg+"'";
-				}
+		// String codePath = OrgMgr.getOdept(odept).getCodePath();
+
+		String allOdept = "'0'";
+
+		for (Object kcid : kcOrgBean.keySet()) {
+
+			Bean kcjg = kcOrgBean.getBean(kcid);
+
+			for (Object jg : kcjg.keySet()) {
+
+				allOdept += ",'" + jg + "'";
 			}
+		}
 
-			StringBuffer sb = new StringBuffer();
-			sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE ");
-			sb.append(" SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
-			sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
-			sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a." + odeptField);
-//			sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath + "','%') )");
-			sb.append(" AND SY_ORG_DEPT.DEPT_CODE in ("+allOdept+") )");
-			sql.appendWhere(sb.toString());
-//		}
-		
-		
+		StringBuffer sb = new StringBuffer();
+		sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE ");
+		sb.append(" SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
+		sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
+		sb.append(" AND SY_ORG_DEPT.DEPT_CODE = a." + odeptField);
+		// sb.append(" AND SY_ORG_DEPT.CODE_PATH LIKE CONCAT('" + codePath +
+		// "','%') )");
+		sb.append(" AND SY_ORG_DEPT.DEPT_CODE in (" + allOdept + ") )");
+		sql.appendWhere(sb.toString());
+		// }
 
 		sql.tables(TsConstant.SERV_BMSH_PASS + " a, SY_HRM_ZDSTAFFPOSITION p");
 
@@ -1418,41 +1430,86 @@ public class KcapResource {
 	}
 
 	public void showResLog() {
-		
+
 		log.error(">>>>>>>>>>>>>>>>>kcBean>>>>>>>>>>" + this.getKcBean().toString());
-		
+
 		log.error(">>>>>>>>>>>>>>>>>freeKsBean>>>>>>>>>>" + this.getFreeKsBean().toString());
 
-//		if (this.getFreeKsBean() != null) {
-//
-//			for (Object o : this.getFreeKsBean().keySet()) {
-//
-//				Bean jg = this.getFreeKsBean().getBean(o);
-//
-//				for (Object time : jg.keySet()) {
-//
-//					Bean timeb = jg.getBean(time);
-//
-//					log.error("------------------freeKsBean-----" + o + "--------" + time + "------" + timeb.toString());
-//				}
-//			}
-//		}
-		
+		// if (this.getFreeKsBean() != null) {
+		//
+		// for (Object o : this.getFreeKsBean().keySet()) {
+		//
+		// Bean jg = this.getFreeKsBean().getBean(o);
+		//
+		// for (Object time : jg.keySet()) {
+		//
+		// Bean timeb = jg.getBean(time);
+		//
+		// log.error("------------------freeKsBean-----" + o + "--------" + time
+		// + "------" + timeb.toString());
+		// }
+		// }
+		// }
+
 		log.error(">>>>>>>>>>>>>>>>JkKsBean>>>>>>>>>" + this.getJkKsBean().toString());
 
-//		if (this.getJkKsBean() != null) {
-//			
-//			for (Object o : this.getFreeKsBean().keySet()) {
-//
-//				Bean jg = this.getFreeKsBean().getBean(o);
-//
-//				for (Object time : jg.keySet()) {
-//
-//					Bean timeb = jg.getBean(time);
-//
-//					log.error("------------------JkKsBean-----" + o + "--------" + time + "------" + timeb.toString());
-//				}
-//			}
-//		}
+		// if (this.getJkKsBean() != null) {
+		//
+		// for (Object o : this.getFreeKsBean().keySet()) {
+		//
+		// Bean jg = this.getFreeKsBean().getBean(o);
+		//
+		// for (Object time : jg.keySet()) {
+		//
+		// Bean timeb = jg.getBean(time);
+		//
+		// log.error("------------------JkKsBean-----" + o + "--------" + time +
+		// "------" + timeb.toString());
+		// }
+		// }
+		// }
+	}
+
+	private void cleanBusyZw(String xmId) {
+		
+		ParamBean param = new ParamBean();
+		
+		param.set("XM_ID", xmId);
+		
+		ServMgr.act(TsConstant.SERV_KCAP_YAPZW, "clearDirtyData", param);
+
+		boolean isdel = ConfMgr.getConf("TS_KCAP_YAPZW_AUTO_DEL", false);
+
+		if (isdel) { //自动安排考场前 清空已安排的考生
+			
+			List<String> kcList = new ArrayList<String>();
+
+			List<String> jglist = new ArrayList<String>();
+
+			for (Object kcid : kcOrgBean.keySet()) {
+				
+				kcList.add(kcid.toString());
+
+				Bean kcjg = kcOrgBean.getBean(kcid);
+
+				for (Object jg : kcjg.keySet()) {
+
+					jglist.add(jg.toString());
+				}
+			}
+
+			SqlBean sql = new SqlBean().and("XM_ID", xmId);
+
+//			sql.and("S_USER", Context.getUserBean().getCode());
+
+			sql.and("ISAUTO", 1);// 自动安排
+
+			sql.andIn("U_ODEPT", jglist.toArray());
+
+			sql.andIn("KC_ID", kcList.toArray());
+
+			ServDao.delete(TsConstant.SERV_KCAP_YAPZW, sql);
+
+		}
 	}
 }

@@ -609,6 +609,12 @@ public class ArrangeSeat {
 		addZw.set("BM_KS_TIME", ksTime);
 		addZw.set("U_ODEPT", ksOdept);
 		addZw.set("U_CODE", uCode);
+		addZw.set("ISAUTO", 1);
+		
+		addZw.set("U_TYPE", 0);
+		addZw.set("ISSUE", 0);
+		addZw.set("PUBLICITY", 0);
+		
 
 		if (jkKs.containsKey(uCode)) { // 判断是否借考
 

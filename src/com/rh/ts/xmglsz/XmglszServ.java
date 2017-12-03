@@ -134,6 +134,7 @@ public class XmglszServ extends CommonServ {
 		}
 		int  a=0;
 		if ("0".equals(userPvlgToHTBean.getStr("publish"))) {
+			
 			Bean str = (Bean) userPvlgToHTBean.get("auto");
 			if (str == null) {
 				return new OutBean().setError("无权限");
@@ -162,7 +163,7 @@ public class XmglszServ extends CommonServ {
 		String simpdate = simp.format(date);
 		//查询此人最大权限
 	List<Bean> dataList = new ArrayList<Bean>();
-	String sql1 = "select * from ts_xmgl a left join TS_XMGL_SZ b on a.xm_id=b.xm_id where b.xm_sz_name = '考场安排 ' and xm_sz_type='进行中' and '"+simpdate+"' between a.xm_start and a.xm_end and a.XM_STATE =1"; 
+	String sql1 = "select a.* from ts_xmgl a left join TS_XMGL_SZ b on a.xm_id=b.xm_id where b.xm_sz_name = '考场安排 ' and xm_sz_type='进行中' and '"+simpdate+"' between a.xm_start and a.xm_end and a.XM_STATE =1"; 
 	List<Bean> ALLList = Transaction.getExecutor().query(sql1);
 	for (Bean bean : ALLList) {
 		//判断项目 是否  启用了
@@ -187,6 +188,7 @@ public class XmglszServ extends CommonServ {
 				if(a==1){
 					Boolean tjState = getTjState(odeptcode,xmid);
 					if(tjState==true){
+						
 						String xm_name = bean.getStr("XM_NAME");
 						String xm_start = bean.getStr("XM_START");
 						String xm_end = bean.getStr("XM_END");
@@ -202,6 +204,12 @@ public class XmglszServ extends CommonServ {
 						String str = find.getStr("XM_KCAP_PUBLISH_TIME");
 						if("".equals(str)){
 							//未发布
+							String xm_name = bean.getStr("XM_NAME");
+							String xm_start = bean.getStr("XM_START");
+							String xm_end = bean.getStr("XM_END");
+							bean.set("xm_name", xm_name);
+							bean.set("xm_start", xm_start);
+							bean.set("xm_end", xm_end);
 							dataList.add(bean);
 						}
 					}
@@ -215,6 +223,7 @@ public class XmglszServ extends CommonServ {
 	}
 	//判断是否提交了数据
 public Boolean getTjState(String odeptcode,String xmid){
+	//如果  上级 已提交 下级 不能在进行 安排
 	 Bean sqlbean = new Bean();
 	 sqlbean.set("XM_ID", xmid);
 	 sqlbean.set("TJ_DEPT_CODE", odeptcode);
