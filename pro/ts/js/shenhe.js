@@ -25,90 +25,99 @@ var nodeid = "";
 
 //------------------------------------------------拖动效果
 function Drag(div,table){
-	  
     var ochek=document.getElementById(div),
-        otable=document.getElementById(table),
-        otody=otable.tBodies[0],
-        oth=otable.getElementsByTagName("th"),
-        otd=otody.getElementsByTagName("td"),
-        box=document.getElementById("box"),
-        arrn=[];
-        var a =0 ;
-        var b =1;
-        var c= 2;
-        for (var i = 0; i < otd.length; i++) {
-        	var length = oth.length-1;
-        	if(i!=0&&i%length==0){
-        		a+=oth.length;
-        		b+=oth.length;
-        		c+=oth.length;
-        	}
-        	
-        	if(i!=a&&i!=b&&i!=c){
-          otd[i].onmousedown=function(e){
-              var e=e||window.event,
+    otable=document.getElementById(table),
+    otody=otable.tBodies[0],
+    oth=otable.getElementsByTagName("th"),
+    otd=otody.getElementsByTagName("td"),
+    box=document.getElementById("box"),
+    arrn=[];
+	var hanghaoarr=[];
+    var a =0 ;
+    hanghaoarr.push(a);
+    var b =1;
+    hanghaoarr.push(b);
+    var c= 2;
+    hanghaoarr.push(c);
+    var length = oth.length-1;
+    for (var i = 0; i < otd.length; i++) {
+    	
+    	if(i!=0&&i%length==0){
+    		hanghaoarr.push(a+=oth.length);
+    		hanghaoarr.push(b+=oth.length);
+    		hanghaoarr.push(c+=oth.length);
+    	}
+    	var flag = false;
+    	for(var j=0;j<hanghaoarr.length;j++){
+    		if(i==hanghaoarr[j]){
+    			flag=true;
+    		}
+    	}
+    	if(!flag){
+    		otd[i].onmousedown=function(e){
+            var e=e||window.event,
+            target = e.target||e.srcElement,
+								
+              thW = target.offsetWidth,
+              maxl=ochek.offsetWidth-thW,
+              rows=otable.rows,
+              ckL=ochek.offsetLeft,
+              disX=target.offsetLeft,
+              _this=this,
+              cdisX=e.clientX-ckL-disX;
+				
+              for (var i = 0; i < rows.length; i++) {
+                  var op=document.createElement("p");
+                  op.innerHTML=rows[i].cells[this.cellIndex].innerHTML;  
+                  box.appendChild(op);
+              };    
+              for (var i = 0; i < oth.length; i++) {
+                     arrn.push(oth[i].offsetLeft);      
+              }; 
+              box.style.display="block";
+              box.style.width=thW+"px";
+              box.style.left=disX+"px";
+              //未完成 还有事件没写。
+              document.onmousemove=function(e){
+                  var e=e||window.event,
                   target = e.target||e.srcElement,
-									
-                  thW = target.offsetWidth,
-                  maxl=ochek.offsetWidth-thW,
-                  rows=otable.rows,
-                  ckL=ochek.offsetLeft,
-                  disX=target.offsetLeft,
-                  _this=this,
-                  cdisX=e.clientX-ckL-disX;
-					
-                  for (var i = 0; i < rows.length; i++) {
-                      var op=document.createElement("p");
-                      op.innerHTML=rows[i].cells[this.cellIndex].innerHTML;  
-                      box.appendChild(op);
-                  };    
-                  for (var i = 0; i < oth.length; i++) {
-                         arrn.push(oth[i].offsetLeft);      
-                  }; 
-                  box.style.display="block";
-                  box.style.width=thW+"px";
-                  box.style.left=disX+"px";
-                  //未完成 还有事件没写。
-                  document.onmousemove=function(e){
-                      var e=e||window.event,
-                      target = e.target||e.srcElement,
-                      thW = target.offsetWidth;
-                      box.style.top=0;
-                      box.style.left=e.clientX-ckL-cdisX+"px";
-                      if(box.offsetLeft>maxl){
-                           box.style.left=maxl+"px";
-                      }else if(box.offsetLeft<0){
-                           box.style.left=0;
-                      }        
-                      document.onselectstart=function(){return false};     
-                    window.getSelection ? window.getSelection().removeAllRanges() : doc.selection.empty();              
-                  }
-                  document.onmouseup=function(e){
-                     var e=e||window.event,
-                         opr=box.getElementsByTagName("p"),
-                         oboxl=box.offsetLeft+cdisX;
-                        for (var i = 0; i < arrn.length; i++) {
-                           if(arrn[i]<oboxl){
-                            var index=i;
-                           }
-                        };
-                       for (var i = 0; i < rows.length; i++) {
-                          rows[i].cells[_this.cellIndex].innerHTML="";
-                          rows[i].cells[_this.cellIndex].innerHTML=rows[i].cells[index].innerHTML;
-                          rows[i].cells[index].innerHTML="";
-                          rows[i].cells[index].innerHTML=opr[i].innerHTML;
-                       };
-                       box.innerHTML="";
-                       arrn.splice(0,arrn.length);
-                       box.style.display="none";
-                       document.onmousemove=null; 
-                       document.onmouseup=null;
-                       document.onselectstart=function(){return false};     
-                  }
-                   this.onclick=null;
-          }
-        	}
-        };
+                  thW = target.offsetWidth;
+                  box.style.top=0;
+                  box.style.left=e.clientX-ckL-cdisX+"px";
+                  if(box.offsetLeft>maxl){
+                       box.style.left=maxl+"px";
+                  }else if(box.offsetLeft<0){
+                       box.style.left=0;
+                  }        
+                  document.onselectstart=function(){return false};     
+                window.getSelection ? window.getSelection().removeAllRanges() : doc.selection.empty();              
+              }
+              document.onmouseup=function(e){
+                 var e=e||window.event,
+                     opr=box.getElementsByTagName("p"),
+                     oboxl=box.offsetLeft+cdisX;
+                    for (var i = 0; i < arrn.length; i++) {
+                       if(arrn[i]<oboxl){
+                        var index=i;
+                       }
+                    };
+                   for (var i = 0; i < rows.length; i++) {
+                      rows[i].cells[_this.cellIndex].innerHTML="";
+                      rows[i].cells[_this.cellIndex].innerHTML=rows[i].cells[index].innerHTML;
+                      rows[i].cells[index].innerHTML="";
+                      rows[i].cells[index].innerHTML=opr[i].innerHTML;
+                   };
+                   box.innerHTML="";
+                   arrn.splice(0,arrn.length);
+                   box.style.display="none";
+                   document.onmousemove=null; 
+                   document.onmouseup=null;
+                   document.onselectstart=function(){return false};     
+              }
+               this.onclick=null;
+      }
+    	}
+    };
         
   }
 
