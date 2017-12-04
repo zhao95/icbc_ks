@@ -5,21 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.icbc.ctp.jdbc.transaction.TransactionManager;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
-import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
-import com.rh.core.org.mgr.OrgMgr;
-import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
-import com.rh.core.util.Constant;
-import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.RoleUtil;
 import com.rh.ts.util.TsConstant;
 

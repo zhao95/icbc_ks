@@ -792,7 +792,7 @@ public class NoPassServ extends CommonServ {
 				deptwhere = "AND S_DEPT IN ("+dept_code+")";*/
 				DeptBean dept = OrgMgr.getDept(dept_code);
 				String codepath = dept.getCodePath();
-				String sql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('%"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
+				String sql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
 				 list = Transaction.getExecutor().query(sql);
 				
 			}
