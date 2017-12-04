@@ -1312,22 +1312,30 @@ rh.vi.listView.prototype._imp = function(fileId, param) {
 	//form提交，需要服务器再返回Excel
 	FireFly.doAct(_self.opts.sId, "imp", data, false, true, function(result) {
 		if(result._MSG_.indexOf("ERROR,") == 0) {
-//			var msg = "导入文件失败，点击“确定按钮”下载文件。请打开文件查看导入结果。";
-			var msg = Language.transStatic("rhListView_string16");
-			SysMsg.alert(msg, function(){
-				if(result.FILE_ID) {
-					var url = FireFlyContextPath + "/file/" + result.FILE_ID;
-					window.open(url);
-				}
-			});
+			console.log(result);
+			if(result.FILE_ID) {
+	//			var msg = "导入文件失败，点击“确定按钮”下载文件。请打开文件查看导入结果。";
+				var msg = Language.transStatic("rhListView_string16");
+				SysMsg.alert(msg, function(){
+					
+						var url = FireFlyContextPath + "/file/" + result.FILE_ID;
+						window.open(url);
+					
+				});
+			} else {
+				SysMsg.alert(result._MSG_);
+			}
 		} else {
-			var msg = "点击“确定按钮”下载文件。请打开文件查看导入结果。";
-			SysMsg.alert(msg, function(){
-				if(result.FILE_ID) {
-					var url = FireFlyContextPath + "/file/" + result.FILE_ID;
-					window.open(url);
-				}
-			});
+			
+			if(result.FILE_ID) {
+				var msg = "点击“确定按钮”下载文件。请打开文件查看导入结果。";
+				SysMsg.alert(msg, function(){
+						var url = FireFlyContextPath + "/file/" + result.FILE_ID;
+						window.open(url);
+				});
+			} else {
+				SysMsg.alert(result._MSG_);
+			}
 		}
 		_self._deletePageAllNum();
 		_self.refreshGrid();

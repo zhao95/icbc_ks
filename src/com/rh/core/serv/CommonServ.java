@@ -1045,8 +1045,7 @@ public class CommonServ extends AbstractServ {
                     book = Workbook.getWorkbook(in) ;
                 } catch(Exception e) {
                     log.error(e.getMessage(), e);
-                    throw new RuntimeException("Wrong file format, only suport 2003 and lower version," 
-                            + "pls use export excel file as the template!");
+                    throw new RuntimeException("请使用excel 2003导入!");
                 }
                 
                 tempFile = new TempFile(Storage.SMART);
@@ -1135,8 +1134,16 @@ public class CommonServ extends AbstractServ {
                 //关闭文件  
                 wbook.write();
 				wbook.close();
+				
+				fileBean.set("FILE_NAME", fileBean.getStr("DIS_NAME")+"-导入结果.xls");
+				Bean newFileBean = saveTempFile(fileBean, tempFile);
+				
+				if(newFileBean != null) {
+					outBean.set("FILE_ID", newFileBean.getId());
+				}
+				
             } catch (Exception e) {
-            	outBean.setError("导入失败，请查看文件。");
+            	outBean.setError("导入失败:文件格式错误，"+e.getMessage());
             	isOk = false;
                 log.error(e.getMessage(), e);  
             } finally {
@@ -1144,14 +1151,8 @@ public class CommonServ extends AbstractServ {
                 IOUtils.closeQuietly(os);
             }
             
-            Bean newFileBean = saveTempFile(fileBean, tempFile);
-            
-            if(newFileBean != null) {
-				outBean.set("FILE_ID", newFileBean.getId());
-			}
-            
             if(!isOk) {
-            	outBean.setError("导入失败，请查看文件。");
+//            	outBean.setError("导入失败，请查看文件。");
             } else {
             	tempFile.destroy();
             }
