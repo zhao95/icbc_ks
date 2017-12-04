@@ -175,7 +175,7 @@
 <!-- 		<input type="hidden" id="xmid"/> -->
 <!-- 		<input type="hidden" id="dijige"> -->
 	</div>
-	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script>
+<%-- 	<script src="<%=CONTEXT_PATH%>/qt/js/index_qt.js"></script> --%>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
