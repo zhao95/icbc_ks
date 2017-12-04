@@ -153,7 +153,7 @@ _viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
 	var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
 	Tab.open(options);
 	$( ".ui-dialog-titlebar-close").click();
-	_viewer.getParHandler().refresh()
+	_viewer.getParHandler().refresh();
 	}else{
 		return  false;
 	}

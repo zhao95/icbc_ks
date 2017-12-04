@@ -144,6 +144,12 @@ $(".hoverDiv").find("a").hover(function() {
 
 
 function  findBmshAuto(pkAarry,_viewer){
+//var  StrPk=pkAarry.join(",");
+//   //var   param={"pkAarry":pkAarry};
+//var  param={"pks":StrPk};
+//var beanBmgl=FireFly.doAct("TS_XMGL", "countNum", param);
+//console.log(beanBmgl);
+
 	for (var i = 0; i < pkAarry.length; i++) {
 		var status = $('#'+pkAarry[i]).find("td[icode='XM_TYPE']").html();
 		if(status=='资格类考试'){
@@ -151,21 +157,21 @@ function  findBmshAuto(pkAarry,_viewer){
 		paramfb["_WHERE_"] = "and XM_ID ='"+pkAarry[i]+"'";
 		var beanBmgl = FireFly.doAct("TS_XMGL_BMGL", "finds", paramfb);
 		var beanBmsh = FireFly.doAct("TS_XMGL_BMSH", "finds", paramfb);
-//		var  where="and XM_ID='"+pkAarry[i]+"'";
-//		var  data={_extWhere:where};
-//		var beanBmsh = FireFly.doAct("TS_XMGL_BMSH", "query", data);
+////		var  where="and XM_ID='"+pkAarry[i]+"'";
+////		var  data={_extWhere:where};
+////		var beanBmsh = FireFly.doAct("TS_XMGL_BMSH", "query", data);
 		if(beanBmgl._DATA_.length==0){
 			return  false;
 		}
 		if(beanBmsh._DATA_.length==0){
 			return  false;
-		}else{
-		if(beanBmsh._DATA_[0].SH_RGSH==0 && beanBmsh._DATA_[0].SH_ZDSH==0){
+		}else if(beanBmsh._DATA_.length > 0){
+		   if(beanBmsh._DATA_[i].SH_RGSH==0 && beanBmsh._DATA_[i].SH_ZDSH==0){
 	            return  false;
-		}else{
+		   }else{
 			return  true;
 		}
-	 }
+	    }
 	}else{
 		return  true;
 	}
@@ -179,7 +185,6 @@ function  findBmshAuto(pkAarry,_viewer){
 _viewer.getBtn("fabu").unbind("click").bind("click",function(){debugger;
 	//点击选择框，获取数据的id；
 	var pkAarry = _viewer.grid.getSelectPKCodes();
-	
 	if(pkAarry.length==0){
 		_viewer.listBarTipError("请选择要发布的项目！");
 	}else{
@@ -220,7 +225,7 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){debugger;
 	
 });
 //初次发布
-function  firRelea(pkAarry,_viewer){
+function  firRelea(pkAarry,_viewer){debugger;
 	//if(pkAarry.length==0){
 		//_viewer.listBarTipError("请选择要发布的项目！");
 	//}else{
@@ -244,16 +249,47 @@ function  firRelea(pkAarry,_viewer){
 				
 		}
 	//}
-	
-	 
 //		FireFly.doAct("TS_XMGL", "UpdateStatusStart", paramXm,false,false,function(){
 //			Tip.show("项目发布成功！");
 //		});
 //		_viewer.refresh();请选择相应记录
 }
+//点击时取消发布
+_viewer.getBtn("stopfabu").unbind("click").bind("click",function(){
+	//点击选择框，获取数据的id；
+	var pkAarry = _viewer.grid.getSelectPKCodes();
+	if(pkAarry.length==0){
+		_viewer.listBarTipError("请选择要取消的项目！");
+	}else{
+    var  sflg=3;
+	showRelease(pkAarry,_viewer,sflg);
+	}
+});
 
 
-
+//初次取消
+function  stopRelea(pkAarry,_viewer){
+	//判断数据库是否未发布
+	for (var i = 0; i < pkAarry.length; i++) {
+		var paramfb = {};
+		paramfb["_extWhere"] = "and XM_ID ='"+pkAarry[i]+"'";
+		var beanFb = FireFly.doAct(_viewer.servId, "query", paramfb);
+		//判断是否已发布，否则提示已经发布 0是未发布   1是已发布
+		if(beanFb._DATA_ != 0){
+			if(beanFb._DATA_[0].XM_STATE=="0"){
+				_viewer.listBarTipError("所选项目未发布！");
+			}else if(beanFb._DATA_[0].XM_STATE=="1"){
+				var param = {};
+				param["pkCodes"] = pkAarry[i];
+				FireFly.doAct(_viewer.servId, "UpdateStatusStop", param);
+				Tip.show("项目已取消发布！");
+				_viewer.refresh();
+			}
+		}else if(beanFb._DATA_  == 0){
+			Tip.show("当前用户无权限取消发布！");
+		}
+	}
+}
 //传给后台的数据
 /*
 * 业务可覆盖此方法，在导航树的点击事件加载前
@@ -302,7 +338,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
  * @parm pkArray 主键
  * @parm viewer 页面_viewer
  */
-function showRelease(pkAarry,_viewer,sflg){
+function showRelease(pkAarry,_viewer,sflg){debugger;
 	var imgDate = new Date();
 	var content = '<div><table>'
 			+ '<tr id="errMsg" style="visibility: hidden;"><td><font color="red" size="5">验证码错误！</font></td></tr>'
@@ -345,16 +381,20 @@ function showRelease(pkAarry,_viewer,sflg){
 					}, true, false, function(data) {
 						if (data.res == "true") {
 							dialog.remove();
-							if(sflg==1){
+							if(sflg==1){//发布
 							firRelea(pkAarry,_viewer);
 							_viewer.refresh();
 							}
-							if(sflg==2){
-								delXmData(pkAarry,_viewer)
+							if(sflg==2){//取消
+							delXmData(pkAarry,_viewer);
 							FireFly.listDelete(_viewer.servId,{"_PK_":pkAarry.toString()},true);
 							_viewer.refresh();
 							_viewer.afterDelete();
 							}
+							if(sflg==3){//取消发布
+								stopRelea(pkAarry,_viewer);
+								_viewer.refresh();
+								}
 						} else {
 							$("#errMsg").css("visibility", "visible");
 							
@@ -385,7 +425,6 @@ function showRelease(pkAarry,_viewer,sflg){
 
 
 function  delXmData(pkAarry,_viewer){
-	var  servId
 	for (var i = 0; i < pkAarry.length; i++) {
 		var param = {};
 		param["xmpk"]= pkAarry[i];

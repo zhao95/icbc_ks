@@ -10,3 +10,9 @@ if(_viewer.opts.act == "cardAdd"){
 		_viewer.getItem("NODE_ID").setValue(NODE_ID);
 	}
 }
+
+
+//$(".ui-icon-closethick").unbind("click").bind("click",function(){debugger;
+//	var   a=$("#TS_WFS_NODE_APPLY-save").click();
+//	console.log(a);
+//});
