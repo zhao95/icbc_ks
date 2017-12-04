@@ -32,9 +32,31 @@ $(".hoverDiv").bind("mouseleave", function(e){
 /*
  * 删除前方法执行
  */
-rh.vi.listView.prototype.beforeDelete = function(pkArray) {
-	showVerify(pkArray,_viewer);
-};	
+//rh.vi.listView.prototype.beforeDelete = function(pkArray) {debugger;
+//	showVerify(pkArray,_viewer);
+//	
+//};	
+/*
+ * 删除前方法执行
+ */
+rh.vi.listView.prototype.beforeDelete = function() {
+	//showVerify(pkArray,_viewer);
+	//点击选择框，获取数据的id；
+	var pkAarry = _viewer.grid.getSelectPKCodes();
+	if(pkAarry.length==0){
+		_viewer.listBarTipError("请选择要删除的项目！");
+	}else{
+    var  sflg=2;
+    
+	showRelease(pkAarry,_viewer,sflg);
+    
+     }
+	
+	
+}
+
+
+
 
 function bindCard() {
 	jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter",function() {
@@ -163,7 +185,8 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){debugger;
 	}else{
      var result= findBmshAuto(pkAarry,_viewer);
      if(result){
-	showRelease(pkAarry,_viewer);
+    	 var  sflg=1;
+	showRelease(pkAarry,_viewer,sflg);
      }else{
     	 _viewer.listBarTipError("请正确设置报名和审核！"); 
      }
@@ -279,7 +302,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
  * @parm pkArray 主键
  * @parm viewer 页面_viewer
  */
-function showRelease(pkAarry,_viewer){
+function showRelease(pkAarry,_viewer,sflg){
 	var imgDate = new Date();
 	var content = '<div><table>'
 			+ '<tr id="errMsg" style="visibility: hidden;"><td><font color="red" size="5">验证码错误！</font></td></tr>'
@@ -322,11 +345,16 @@ function showRelease(pkAarry,_viewer){
 					}, true, false, function(data) {
 						if (data.res == "true") {
 							dialog.remove();
+							if(sflg==1){
 							firRelea(pkAarry,_viewer);
-							//FireFly.listDelete(viewer.servId,{"_PK_":pkArray.toString()},true);
 							_viewer.refresh();
-							//viewer.afterDelete();
-							
+							}
+							if(sflg==2){
+								delXmData(pkAarry,_viewer)
+							FireFly.listDelete(_viewer.servId,{"_PK_":pkAarry.toString()},true);
+							_viewer.refresh();
+							_viewer.afterDelete();
+							}
 						} else {
 							$("#errMsg").css("visibility", "visible");
 							
@@ -351,4 +379,16 @@ function showRelease(pkAarry,_viewer){
 			"rh-bottom-right-radius");
 	jQuery(".ui-dialog-titlebar").last().css("display", "block");
 	
+}
+
+
+
+
+function  delXmData(pkAarry,_viewer){
+	var  servId
+	for (var i = 0; i < pkAarry.length; i++) {
+		var param = {};
+		param["xmpk"]= pkAarry[i];
+		FireFly.doAct(_viewer.servId, "delXmAll", param);
+	}
 }

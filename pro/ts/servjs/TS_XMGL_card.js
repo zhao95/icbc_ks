@@ -152,6 +152,8 @@ _viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
 	var url = "TS_XMGL_SZ.list.do?&_extWhere=" + extWhere;
 	var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
 	Tab.open(options);
+	$( ".ui-dialog-titlebar-close").click();
+	_viewer.getParHandler().refresh()
 	}else{
 		return  false;
 	}
