@@ -422,11 +422,11 @@ rh.vi.cardView.prototype._tabLayout = function() {
 	   
 	   this.backA.on("mousedown",function() {
 		   
-		   if ((_self._actVar == UIConst.ACT_CARD_ADD)) {//添加
-			   if (!confirm("数据未保存，确定关闭窗口？")){
-				   return false;
-			   }
-		   }
+//		   if ((_self._actVar == UIConst.ACT_CARD_ADD)) {//添加
+//			   if (!confirm("数据未保存，确定关闭窗口？")){
+//				   return false;
+//			   }
+//		   }
 		   if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {//修改
 			   if (jQuery.isEmptyObject(_self.getChangeData())) {
 			   } else {
