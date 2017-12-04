@@ -104,9 +104,6 @@ public class JklbServ extends CommonServ {
         Bean jkBean = ServDao.find(TSJK_SERVID, jkId);
         Transaction.begin();
         try {
-            //修改状态
-            jkBean.set("JK_STATUS", "4");
-            ServDao.update(TSJK_SERVID, jkBean);
             //删除待办信息
             Bean whereBean = new Bean();
             List<Object> values = new ArrayList<Object>();
@@ -114,6 +111,8 @@ public class JklbServ extends CommonServ {
             whereBean.put(Constant.PARAM_PRE_VALUES, values);
             whereBean.put(Constant.PARAM_WHERE, "and DATA_ID =? ");
             ServDao.destroy(TODO_SERVID, whereBean);
+            //删除请假数据
+            ServDao.destroy(TSJK_SERVID, jkBean.getId());
             Transaction.commit();
         } catch (Exception e) {
             Transaction.rollback();

@@ -246,7 +246,7 @@
              '       <input type="checkbox" name="bm_id" value="' + userCanLeave.BM_ID + '"/>',
              '   </td>',*/
             table1Tbody.append([
-                '<tr style="height: 40px">',
+                '<tr style="height: 50px">',
                 '   <td class="rhGrid-td-hide">',
                 '       ' + userCanLeave.BM_ID + '',
                 '   </td>',
@@ -295,7 +295,7 @@
                 jkStatus = "已撤回";
             }
             var $tr = jQuery([
-                '<tr style="height: 40px">',
+                '<tr style="height: 50px">',
                 '	<td class="rhGrid-td-hide">',
                 '	    ' + jkId,
                 '	</td>',

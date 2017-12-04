@@ -249,7 +249,7 @@
              '       <input type="checkbox" name="bm_id" value="' + userCanLeave.BM_ID + '"/>',
              '   </td>',*/
             table1Tbody.append([
-                '<tr style="height: 40px">',
+                '<tr style="height: 50px">',
                 '   <td style="padding-left: 10px;text-align: center"">',
                 '       ' + (i + 1),
                 '   </td>',
@@ -299,7 +299,7 @@
             }
 
             var $tr = jQuery([
-                '<tr style="height: 40px">',
+                '<tr style="height: 50px">',
                 '	<td class="rhGrid-td-hide">',
                 '	    ' + qjId,
                 '	</td>',
