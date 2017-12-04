@@ -441,7 +441,7 @@ rh.vi.cardView.prototype._tabLayout = function() {
 		   
 		   
 		 //如果用户修改数据，提示用户保存
-		  
+		  /**
            if (_self._actVar == UIConst.ACT_CARD_MODIFY) {
 			   if (jQuery.isEmptyObject(_self.getChangeData())||flagclose==1) {
 				   flagclose=0;
@@ -459,6 +459,21 @@ rh.vi.cardView.prototype._tabLayout = function() {
 				   }
 			   }
 		   }
+           */
+		   if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {//修改
+			   if (jQuery.isEmptyObject(_self.getChangeData())) {
+			   } else {
+//				   var confirmDel=confirm("数据有修改，是否保存？");
+				   var confirmDel=confirm(Language.transStatic("rhCardView_string1"));
+				   if (confirmDel == true){
+					   if (_self.btns[UIConst.ACT_SAVE]) {
+						   _self.btns[UIConst.ACT_SAVE].click();
+						   return false;
+					   }
+				   }
+			   }
+		   }
+           
            inadd-=10;
            _self.destroyUI();
 		   if (_self._pCon) {//有设定容器
