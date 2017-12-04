@@ -3,6 +3,8 @@ var user_name = System.getVar("@USER_NAME@");
 var user_sex = System.getVar("@USER_SEX@");
 var odept_name = System.getVar("@ODEPT_NAME@");
 var dept_code = System.getVar("@DEPT_CODE@");
+var maxnum = FireFly.getConfig("TS_BM_MIDDLE_MAXNUM").CONF_VALUE;//配置中级最大数
+var maxhigh = FireFly.getConfig("TS_BM_HIGH_MAXNUM").CONF_VALUE;//配置高级最大数
 var param = {};
 param["user_code"]=user_code;
 var resultphone = FireFly.doAct("TS_BMLB_BM","getPhone",param);
@@ -989,6 +991,7 @@ function xminfoshow(){
 			alert("请先删除或撤销已有的报名");
 			return false;
 		}else{
+			debugger;
 			var motaitable = document.getElementById("motaitable");
 			var rowlength = motaitable.rows.length-1;
 			//选中了 重复的报名需要先删除再提交
@@ -997,6 +1000,27 @@ function xminfoshow(){
 			var canhightnum = $("#canheighnum").text();
 			var canmiddlenum = $("#cannum").text();
 			//选中的考试  中级 高级不能超过上限判断
+			var param={};
+			param["lbcode"]=STATION_TYPE_CODE;
+			param["xlcode"]=STATION_NO_CODE;
+			param["user_code"]=user_code;
+			var data = FireFly.doAct("TS_BMLB_BM","getBmNum",param,true,false);
+			var yihig=data.highnum;
+			var yimidd = data.allnum;
+			if(canhightnum==(maxnum-yihig)){
+				
+			}else{
+				canhightnum=maxnum-yihig;
+				$("#gaoji").html(yihig);
+				$("#canheighnum").html(canhightnum);
+			}
+			if(canmiddlenum==(maxnum-yimidd)){
+				
+			}else{
+				canmiddlenum=maxnum-yimidd;
+				$("#allnum").html(yimidd);//中级
+				$("#cannum").html(canmiddlenum);
+			}
 			$("input[name=checkboxaa]:checked").each(function(){
 				var tds = $(this.parentNode.parentNode).find("td");
 				var JIBIE = "";
@@ -1018,6 +1042,7 @@ function xminfoshow(){
 					}
 				}
 			})
+			
 			if(highbmnum>canhightnum){
 				alert("选择的高级考试数目超过上限，请删除再提交");
 				$("#tjbt").attr("data-target","");
@@ -1254,8 +1279,6 @@ var highnum=0;
 		var data = FireFly.doAct("TS_BMLB_BM","getBmNum",param,true,false);
 		var num = data.allnum;
 		$("#allnum").html(num);//中级
-		var maxnum = FireFly.getConfig("TS_BM_MIDDLE_MAXNUM").CONF_VALUE;//配置中级最大数
-		var maxhigh = FireFly.getConfig("TS_BM_HIGH_MAXNUM").CONF_VALUE;//配置高级最大数
 		//高级剩余次数
 		var high = data.highnum;
 		var highcanum = maxhigh-high;
