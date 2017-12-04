@@ -13,7 +13,7 @@ $("#TS_XMGL_KCAP_GLJG-JG_CODE__NAME").next().unbind("click").bind("click", funct
 });
 
 function sel(event){
-	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'single','sId':'TS_ORG_DEPT','pvlg':'CODE_PATH'}";
+	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'multi','sId':'TS_ORG_DEPT','pvlg':'CODE_PATH'}";//single
 
 	var options = {
 			"config" :configStr,
@@ -28,10 +28,10 @@ function sel(event){
 				$("#TS_XMGL_KCAP_GLJG-JG_CODE").val(codes);
 				$("#TS_XMGL_KCAP_GLJG-JG_NAME").val(names);
 				
-				var code = idArray[0];
-				FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
-					_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
-				});
+//				var code = idArray[0];
+//				FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
+//					_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
+//				});
 				
 			}
 	};
@@ -40,8 +40,56 @@ function sel(event){
 	queryView.show(event,[],[0,495]);
 }
 
-_viewer.afterSave = function(resultData) {
-	setTimeout(function(){
-		_viewer.backA.mousedown();
-	},100)
-};
+//_viewer.afterSave = function(resultData) {
+//	setTimeout(function(){
+//		_viewer.backA.mousedown();
+//	},100)
+//};
+
+_viewer.getBtn("save").unbind("click").bind("click", function(event) {
+	
+	var jgCode = _viewer.getItem("JG_CODE").getValue();
+	var jgName = _viewer.getItem("JG_NAME").getValue();
+	var kcId = _viewer.getItem("KC_ID").getValue();
+	var jgFar =  _viewer.getItem("JG_FAR").getValue();
+	var ccId = _viewer.getItem("CC_ID").getValue();
+	
+	var codes = jgCode.split(",");
+	var names = jgName.split(",");
+	
+	var paramArray = [];
+	
+	for(var i=0; i<codes.length; i++) {
+		
+		FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":codes[i]},true,false,function(data) {
+			
+			var param = {};
+			//用户编码
+			param.JG_CODE = codes[i];
+			//用户名称
+			param.JG_NAME = names[i];
+			
+			param.KC_ID = kcId;
+			
+			param.JG_FAR = jgFar;
+			
+			param.CC_ID = ccId
+			
+			//机构类型 1部门 2机构
+			param.JG_TYPE = data.DEPT_TYPE;
+			
+			paramArray.push(param);
+			
+		});
+	}
+	
+	var batchData = {};
+	batchData.BATCHDATAS = paramArray;
+	
+	console.log("batchSave",paramArray);
+	//批量保存
+	var rtn = FireFly.batchSave(_viewer.servId,batchData,null,2,false);
+	
+	_viewer.backA.mousedown();
+	
+});
