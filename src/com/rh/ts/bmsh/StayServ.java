@@ -965,7 +965,7 @@ public class StayServ extends CommonServ {
 				deptwhere = "AND S_DEPT IN ("+dept_code+")";*/
 				DeptBean dept = OrgMgr.getDept(dept_code);
 				String codepath = dept.getCodePath();
-				String sql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
+				String sql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('%"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
 				 list = Transaction.getExecutor().query(sql);
 				
 			}
@@ -1097,15 +1097,15 @@ public class StayServ extends CommonServ {
 			}else{
 				DeptBean dept = OrgMgr.getDept(dept_code);
 				String codepath = dept.getCodePath();
-				String sql = "select COUNT(*) from TS_BMSH_STAY a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
+				String sql = "select COUNT(*) from TS_BMSH_STAY a where exists(select dept_code from sy_org_dept b where code_path like concat('%"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
 				 List<Bean> query = Transaction.getExecutor().query(sql);
 				 int stay = Integer.parseInt(query.get(0).getId());
 				out.set("staynum", stay);
-				String sql1 = "select COUNT(*) from TS_BMSH_NOPASS a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
+				String sql1 = "select COUNT(*) from TS_BMSH_NOPASS a where exists(select dept_code from sy_org_dept b where code_path like concat('%"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
 				 List<Bean> query1 = Transaction.getExecutor().query(sql1);
 				int nopass = Integer.parseInt(query1.get(0).getId());
 				out.set("nopassnum", nopass);
-				String sql2 = "select COUNT(*) from TS_BMSH_PASS a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
+				String sql2 = "select COUNT(*) from TS_BMSH_PASS a where exists(select dept_code from sy_org_dept b where code_path like concat('%"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"+xmid+"'";
 				 List<Bean> query2 = Transaction.getExecutor().query(sql2);
 				int pass = Integer.parseInt(query2.get(0).getId());
 				out.set("passnum", pass);
