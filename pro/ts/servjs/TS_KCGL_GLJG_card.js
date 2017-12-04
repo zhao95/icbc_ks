@@ -36,6 +36,14 @@ function sel(event){
 				$("#TS_KCGL_GLJG-JG_CODE").val(codes);
 				$("#TS_KCGL_GLJG-JG_NAME").val(names);
 				
+				if(_viewer.getItem("JG_NAME").getValue().length>0){
+					$("#TS_KCGL_GLJG-JG_CODE_label").find(".name").removeClass("error");
+					$("#TS_KCGL_GLJG-JG_CODE__NAME").parent().removeAttr("validate_msg").removeClass("blankError").removeClass("errorbox");
+				}
+				
+//				itemB.obj.parent().parent().find(".name").removeClass("error");
+//				itemB.obj.removeAttr("validate_msg").removeClass("errorbox_textarea").addClass("correctbox");
+				
 //				var code = idArray[0];
 //				FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
 //					_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);

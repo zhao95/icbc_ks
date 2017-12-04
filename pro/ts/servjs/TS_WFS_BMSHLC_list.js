@@ -48,7 +48,7 @@ function openMyCard(dataId,readOnly,showTab){
     cardView.show();
 }
 
-var height = jQuery(window).height()-50;
+var height = jQuery(window).height()-100;
 var width = jQuery(window).width()-100;
 _viewer.getBtn("add").unbind("click").bind("click",function(){
 	var wfsId = _viewer.getParHandler().getItem("WFS_ID").getValue();

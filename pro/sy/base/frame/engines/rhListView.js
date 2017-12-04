@@ -1869,10 +1869,43 @@ rh.vi.listView.prototype._bldNavTree = function() {
 					}
 		    });
 		    //展开收起的功能实现
+		    /**放大，缩小**/
+		    _self.navTreeContainer.hover(
+			    	   function(event) {
+				    	   if (jQuery(".content-navTree-close").length == 0) {
+				    		   
+				    		  var close = jQuery("<div></div>").addClass("content-navTree-close").addClass("content-navTree-expand").appendTo(jQuery(this));
+				    		  
+				    		   close.bind("click",function(event) {
+				    			   if (jQuery(".content-navTree-close").hasClass("content-navTree-expand")) {
+				    				   
+				    				   _self.navTreeContainer.data("orWid",_self.navTreeContainer.width());
+				    				   _self.contentMainCont.data("orWid",_self.contentMainCont.width());
+				    				   _self.navTreeContainer.width("30%");
+				    				   _self.contentMainCont.width("70%");
+				    				   jQuery(".content-navTree-close").removeClass("content-navTree-expand");	 
+				    			   } else {
+				    				   _self.navTreeContainer.data("orWid",_self.navTreeContainer.width());
+				    				   _self.contentMainCont.data("orWid",_self.contentMainCont.width());
+				    				   _self.navTreeContainer.width("18%");
+				    				   _self.contentMainCont.width("82%");
+				    				   jQuery(".content-navTree-close").addClass("content-navTree-expand");
+				    			   }
+				    		   });
+				    	   }
+					   },
+					   function(event) {
+			               if (jQuery(".content-navTree-expand").length == 1) {
+			            	   jQuery(".content-navTree-close").remove();
+			               }
+					   }
+				  );
+		    
+		    /** 隐藏，显示
 	       _self.navTreeContainer.hover(
 	    	   function(event) {
 		    	   if (jQuery(".content-navTree-close").length == 0) {
-		    		 /*  var close = jQuery("<div></div>").addClass("content-navTree-close").appendTo(jQuery(this));*/
+		    		  var close = jQuery("<div></div>").addClass("content-navTree-close").appendTo(jQuery(this));
 		    		   close.bind("click",function(event) {
 		    			   if (jQuery(".content-navTree-close").hasClass("content-navTree-expand")) {
 		    				   _self.navTreeContainer.width(_self.navTreeContainer.data("orWid")-1);
@@ -1896,7 +1929,7 @@ rh.vi.listView.prototype._bldNavTree = function() {
 	            	   jQuery(".content-navTree-close").remove();
 	               }
 			   }
-		  );
+		  ); **/
     	//},0);
     //});
 };
