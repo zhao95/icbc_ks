@@ -95,7 +95,7 @@ public class DIIOPMailSender implements IMailSender {
 		Document doc = null;
 		try {
 			// 获取session
-			String anonymous = ConfMgr.getConf("DOMINO_ANONYMOUS", "true");
+			String anonymous = ConfMgr.getConf("TS_DOMINO_ANONYMOUS", "true");
 			if (anonymous.equals("true")) {
 				session = NotesFactory.createSession(server);
 			} else {
