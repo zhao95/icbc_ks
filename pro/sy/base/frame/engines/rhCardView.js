@@ -16,7 +16,7 @@ rh.vi.cardView = function(options) {
 		"title":"",//当前标题
 		"reset":true, //重置外层高度
 		"backBtn":true,//返回按钮显示与否
-		"beforeSaveCheck":false,//返回时是否检查保存
+		"beforeSaveCheck":true,//返回时是否检查保存
 		"areaId":"",//刷新home页的portal相应区块
 		"cardIn":false,//单条记录进卡片
 		"widHeiArray":null,//小卡片窗口的[宽度,高度]
@@ -421,6 +421,26 @@ rh.vi.cardView.prototype._tabLayout = function() {
 	   }*/
 	   
 	   this.backA.on("mousedown",function() {
+		   
+		   if ((_self._actVar == UIConst.ACT_CARD_ADD)) {//添加
+			   if (!confirm("数据未保存，确定关闭窗口？")){
+				   return false;
+			   }
+		   }
+		   if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {//修改
+			   if (jQuery.isEmptyObject(_self.getChangeData())) {
+			   } else {
+//				   var confirmDel=confirm("数据有修改，是否保存？");
+				   var confirmDel=confirm(Language.transStatic("rhCardView_string1"));
+				   if (confirmDel == true){
+					   if (_self.btns[UIConst.ACT_SAVE]) {
+						   _self.btns[UIConst.ACT_SAVE].click();
+						   return false;
+					   }
+				   }
+			   }
+		   }
+		   
 		   if ((window.self == window.top) && (_self.miniCard == false)) {//顶层页面自动关闭
 			   if (jQuery("#viewPage").val() == "card") {
 				   //父页面刷新
@@ -460,19 +480,6 @@ rh.vi.cardView.prototype._tabLayout = function() {
 			   }
 		   }
            */
-		   if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {//修改
-			   if (jQuery.isEmptyObject(_self.getChangeData())) {
-			   } else {
-//				   var confirmDel=confirm("数据有修改，是否保存？");
-				   var confirmDel=confirm(Language.transStatic("rhCardView_string1"));
-				   if (confirmDel == true){
-					   if (_self.btns[UIConst.ACT_SAVE]) {
-						   _self.btns[UIConst.ACT_SAVE].click();
-						   return false;
-					   }
-				   }
-			   }
-		   }
            
            inadd-=10;
            _self.destroyUI();
@@ -706,7 +713,8 @@ rh.vi.cardView.prototype._bldWin = function() {
     		this.winDialog.find("ul:first").css("display","none");
     	}
     	this.winDialog.find("a[class='rhCard-close']").css("display","none");
-    	
+//    	div.find("span:last").hide();
+    	$(".ui-dialog-titlebar-close").unbind("click");
     	div.find("span:last").unbind("click").bind("click",function(){
     		jQuery("a[class='rhCard-close']:last").trigger("mousedown");
     	})

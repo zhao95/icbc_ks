@@ -1,7 +1,7 @@
 var _viewer = this;
 var module = 'PLAN';
 var height = jQuery(window).height()-50;
-var width = jQuery(window).width()-100;
+var width = jQuery(window).width()-200;
 $("#TS_JHGL .rhGrid").find("tr").unbind("dblclick");
 // 每一行添加编辑和删除
 $("#TS_JHGL .rhGrid").find("tr").each(function(index, item) {
