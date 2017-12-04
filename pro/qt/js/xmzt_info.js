@@ -42,8 +42,8 @@ $(function() {
 					var xm_name = resultXM._DATA_[0].XM_NAME;
 					var xm_type = resultXM._DATA_[0].XM_TYPE;
 					// 根据返回值可以找到查询数据字典后的结果，直接拿来用即可。数据为发起单位。
-					var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME;
-					// var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME__NAME;
+//					var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME;
+					var xm_dept = resultXM._DATA_[0].XM_FQDW_CODE__NAME;
 					var xm_start = resultXM._DATA_[0].XM_START;
 					var xm_end = resultXM._DATA_[0].XM_END;
 					var xm_jd = resultXM._DATA_[0].XM_JD;
@@ -118,7 +118,8 @@ $(function() {
 					var xm_name = resultXM._DATA_[0].XM_NAME;
 					var xm_type = resultXM._DATA_[0].XM_TYPE;
 					// 根据返回值可以找到查询数据字典后的结果，直接拿来用即可。
-					var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME;
+//					var xm_dept = resultXM._DATA_[0].XM_FQDW_NAME;
+					var xm_dept = resultXM._DATA_[0].XM_FQDW_CODE__NAME;
 					var xm_start = resultXM._DATA_[0].XM_START;
 					var xm_end = resultXM._DATA_[0].XM_END;
 					var xm_jd = resultXM._DATA_[0].XM_JD;
