@@ -1144,12 +1144,13 @@ public class CommonServ extends AbstractServ {
                 IOUtils.closeQuietly(os);
             }
             
+            Bean newFileBean = saveTempFile(fileBean, tempFile);
+            
+            if(newFileBean != null) {
+				outBean.set("FILE_ID", newFileBean.getId());
+			}
             
             if(!isOk) {
-				Bean newFileBean = saveTempFile(fileBean, tempFile);
-				if(newFileBean != null) {
-					outBean.set("FILE_ID", newFileBean.getId());
-				}
             	outBean.setError("导入失败，请查看文件。");
             } else {
             	tempFile.destroy();
@@ -1195,7 +1196,7 @@ public class CommonServ extends AbstractServ {
 	private Bean saveTempFile(Bean oldFileBean, TempFile tempFile) {
 		try {
 			Bean param = new Bean();
-			param.set("SERV_ID", oldFileBean.getStr("DATA_ID"));
+			param.set("SERV_ID", oldFileBean.getStr("SERV_ID"));
 			param.set("FILE_CAT", "TEMP_EXCEL_IMP");
 			param.set("DATA_ID", oldFileBean.getStr("DATA_ID"));
 			param.set("FILE_NAME", oldFileBean.getStr("FILE_NAME"));
