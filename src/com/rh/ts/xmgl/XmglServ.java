@@ -130,7 +130,7 @@ public class XmglServ extends CommonServ {
 	public OutBean afterSaveToSz(Bean bean) {
 		String XMID = bean.getStr("XM_ID");
 		String XMGJ = bean.getStr("XM_GJ");
-		// 根据XM_ID查询，从数据库查询
+		// 根据XM_ID查询，从数据库查询XM _JD
 		String where = " and XM_ID='" + XMID + "'";
 		List<Bean> szList = ServDao.finds("TS_XMGL_SZ", where);
 		if (!StringUtil.isBlank(XMGJ)) {
@@ -914,4 +914,21 @@ public class XmglServ extends CommonServ {
 		param.set("serviceName", serviceName);
 		PvlgUtils.setCtlgPvlgWhere(param);
 	}
+	
+	
+	public Bean delXmAll(Bean paramBean)  {	
+		//String   delXmidAll=paramBean.getStr("xmpk");
+		//考试准考证表 
+		//String sqldel01="delete *  from  ts_xmgl_admission_file    where   XM_ID='"+delXmidAll+"'";
+		//Transaction.getExecutor().execute(sqldel01);
+		//非资格考试表
+		//String sqldel02="delete *  from  ts_xmgl_bm_fzgks    where   XM_ID='"+delXmidAll+"'";
+		//Transaction.getExecutor().execute(sqldel02);
+		
+//		String  count="  SELECT  COUNT(*)  FROM  SY_SERV   WHERE   SERV_ID LIKE 'TS_%' ";
+//	    int count2 = Transaction.getExecutor().count(count);
+//	    System.out.println(count2);
+	 	return  null;
+	}
+	
 }

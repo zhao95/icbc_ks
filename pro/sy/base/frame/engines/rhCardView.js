@@ -440,8 +440,8 @@ rh.vi.cardView.prototype._tabLayout = function() {
 		   }
 		   
 		   
-		 /*  //如果用户修改数据，提示用户保存
-		  
+		 //如果用户修改数据，提示用户保存
+		  /**
            if (_self._actVar == UIConst.ACT_CARD_MODIFY) {
 			   if (jQuery.isEmptyObject(_self.getChangeData())||flagclose==1) {
 				   flagclose=0;
@@ -458,7 +458,22 @@ rh.vi.cardView.prototype._tabLayout = function() {
 						   
 				   }
 			   }
-		   }*/
+		   }
+           */
+		   if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {//修改
+			   if (jQuery.isEmptyObject(_self.getChangeData())) {
+			   } else {
+//				   var confirmDel=confirm("数据有修改，是否保存？");
+				   var confirmDel=confirm(Language.transStatic("rhCardView_string1"));
+				   if (confirmDel == true){
+					   if (_self.btns[UIConst.ACT_SAVE]) {
+						   _self.btns[UIConst.ACT_SAVE].click();
+						   return false;
+					   }
+				   }
+			   }
+		   }
+           
            inadd-=10;
            _self.destroyUI();
 		   if (_self._pCon) {//有设定容器
@@ -652,11 +667,12 @@ rh.vi.cardView.prototype._bldWin = function() {
     this.winDialog.dialog("open");
     this.winDialog.parent().addClass("rh-ui-dialog").addClass("bodyBack"); 
     //定位
-   /* this.winDialog.parent().css("position","fixed");*/
-    
+    this.winDialog.parent().css("position","fixed");
+    /*
     var dialoglen = jQuery("a[class='rhCard-close']").length-1;
     var toplen=  dialoglen*20+10;
     this.winDialog.parent().css("top",toplen+"px");
+    */
   /*  
     if(dialoglen>0){
     	var leftlen = jQuery("div[role='dialog']").eq(jQuery("div[role='dialog']").length-2).css("left");
@@ -664,7 +680,7 @@ rh.vi.cardView.prototype._bldWin = function() {
     var leftlen = this.winDialog.parent().css("left");
     leftlen=parseInt(leftlen.substring(0,leftlen.length-2))+inadd;
     inadd+=10;
-    this.winDialog.parent().css("left",leftlen+"px");
+//    this.winDialog.parent().css("left",leftlen+"px");
     if (this.miniCard) {//小卡片设置区分边框
     	this.winDialog.addClass("rh-ui-dialog-mini-border");
     	this.winDialog.parent().addClass("rh-ui-dialog-mini");

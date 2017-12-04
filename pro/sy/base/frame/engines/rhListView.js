@@ -849,7 +849,7 @@ rh.vi.listView.prototype._openCardView = function(act,pkCode,servId,readOnly,par
     this.cardView = null;
     var temp = {"act":_act,"sId":sId,"parHandler":this,"transferData":this._transferData,"readOnly":readFlag,"title":this._title,
     		    "paramData":paramData,"links":this.links,"pCon":this.opts.cardCon,"reset":this.opts.cardReset,
-    		    "backBtn":backBtn,"widHeiArray":widHeiArray};
+    		    "backBtn":backBtn,"widHeiArray":widHeiArray,"xyArray":[50,100]};
     temp[UIConst.PK_KEY] = pkCode || "";
     
     if (window.ICBC && window.self != window.top && false) { //不是弹出页面，才弹出，否则不弹出
