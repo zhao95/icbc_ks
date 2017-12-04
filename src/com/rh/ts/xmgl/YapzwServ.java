@@ -80,7 +80,7 @@ public class YapzwServ extends CommonServ {
                 "LEFT JOIN ts_xmgl_kcap_yapzw b ON a.SH_ID = b.SH_ID " +
                 "left join TS_KCGL_ZWDYB c on b.ZW_ID = c.ZW_ID " +
                 "left join TS_KCGL_IPZWH d on b.KC_ID=d.KC_ID and d.IPZ_ZWH=c.ZW_ZWH_SJ " +
-                "WHERE SJ_ID = ?";
+                "WHERE SJ_ID = ? order by cast(c.ZW_ZWH_SJ AS UNSIGNED)";
         Object sjId = paramBean.get("SJ_ID");
         List<Object> values = new ArrayList<Object>();
         values.add(sjId);

@@ -1761,7 +1761,11 @@ var KcObject = {
                         }
                     });
                 });
-                $addTo.unbind('click').bind('click', function () {
+                $addTo.unbind('click').bind('click', function (e) {
+                    if (KsObject.searchDeptCode === 'qj') {
+                        alert('已请假考生不安排');
+                        return;
+                    }
                     var tableTbodyCheckedTrs = Utils.getTableTbodyCheckedTrs('ksTable');
                     if (tableTbodyCheckedTrs.length <= 0) {
                         return;
@@ -2237,13 +2241,29 @@ var KsObject = {
             var treeData = [root];
             // var jkListBean = FireFly.doAct("TS_XMGL_KCAP_DAPCC", "getKcJk", {kcId: kcId});
             // if (jkListBean._DATA_ && jkListBean._DATA_.length >= 0) {
-            treeData.push({
-                id: 'jk',
-                text: '借考',
-                data: {id: 'jk', text: '借考'},
-                state: {opened: true},
-                children: []
-            });
+
+            // kcId = KcObject.currentParentKc.KC_ID;
+            var sjId = KcObject.currentCc.SJ_ID;
+
+            if (parseInt(KsObject.countKsCount({kcId: kcId, sjId: sjId, isJk: true, totalArrange: true})) > 0) {
+                treeData.push({
+                    id: 'jk',
+                    text: '借考',
+                    data: {id: 'jk', text: '借考'},
+                    state: {opened: true},
+                    children: []
+                });
+            }
+            if (parseInt(KsObject.countKsCount({kcId: kcId, sjId: sjId, isQj: true, totalArrange: true})) > 0) {
+                treeData.push({
+                    id: 'qj',
+                    text: '请假',
+                    data: {id: 'qj', text: '请假'},
+                    state: {opened: true},
+                    children: []
+                });
+            }
+
             // }
 
             try {
@@ -2294,14 +2314,14 @@ var KsObject = {
 
     setTreeText: function (orgJsonObject, kcId, sjId) {
         for (var i = 0; i < orgJsonObject.children.length; i++) {
-            var treeNodeId = orgJsonObject.children[i].trim();
+            var treeNodeId = orgJsonObject.children[i];
             /*var childOrg*/
             // = childOrg.id;
             // var text = childOrg.data.DEPT_NAME ? childOrg.data.DEPT_NAME : childOrg.data.NAME;
             var node = KsObject.ksOrgTree.jstree(true).get_node(treeNodeId);
             var text = KsObject.ksOrgTree.jstree(true).get_text(node);
             text = text.split('(')[0];
-            var count = KsObject.countKsCount({kcId: kcId, sjId: sjId, searchDeptCode: treeNodeId});
+            var count = KsObject.countKsCount({kcId: kcId, sjId: sjId, searchDeptCode: treeNodeId.trim()});
             KsObject.ksOrgTree.jstree(true).set_text(node, text + '(<span style="color: red">' + count + '</span>)');
             // KsObject.setTreeText(childOrg, kcId, sjId);
         }
@@ -2381,6 +2401,7 @@ var KsObject = {
         var kcId = ksParams.kcId,
             sjId = ksParams.sjId,
             isJk = ksParams.isJk,
+            isQj = ksParams.isQj,
             totalArrange = ksParams.totalArrange,
             searchDeptCode = ksParams.searchDeptCode;
         var self = this;
@@ -2390,6 +2411,9 @@ var KsObject = {
         params1._PAGE_.SHOWNUM = 1;
         if (isJk) {
             params1.searchDeptCode = 'jk';
+        }
+        if (isQj) {
+            params1.searchDeptCode = 'qj';
         }
         if (totalArrange) {
             params1.isArrange = 'false';
@@ -2452,7 +2476,7 @@ var KsObject = {
         Utils.addTableCheckboxChangeEvent('ksTable');
         $('#ksTablePage').css('display', 'block');
 
-        if (Utils.getCanDraggable()) {
+        if (Utils.getCanDraggable() && KsObject.searchDeptCode !== 'qj') {
             //允许拖拉
             $ksTable.find("tbody tr").draggable({
                 // cursor: 'move',

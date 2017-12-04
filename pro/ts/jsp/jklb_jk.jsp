@@ -1,3 +1,8 @@
+<%@ page import="com.rh.core.serv.ServMgr" %>
+<%@ page import="com.rh.ts.util.TsConstant" %>
+<%@ page import="com.rh.core.serv.ParamBean" %>
+<%@ page import="com.rh.core.serv.OutBean" %>
+<%@ page import="com.rh.core.serv.ServDao" %>
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
@@ -71,8 +76,27 @@
     String user_code = userBean.getStr("USER_CODE");
     //获取用户名称
     String user_name = userBean.getStr("USER_NAME");
+    //获取用户机构编码
+    String dept_code = userBean.getStr("DEPT_CODE");
     //获取用户机构
     String dept_name = userBean.getStr("DEPT_NAME");
+
+//    Bean bean = ServDao.find("SY_ORG_DEPT", dept_code);
+//    String codePath = bean.getStr("CODE_PATH");
+//    String[] splits = codePath.split("\\^");//0010100000^0020000000^0020000087^
+//    StringBuilder deptNameStr = new StringBuilder();
+//    for (String split : splits) {
+//        Bean itemBean = ServDao.find("SY_ORG_DEPT", split);
+//        if (itemBean == null) {
+//            continue;
+//        }
+//        String itemDeptName = itemBean.getStr("DEPT_NAME");
+//        deptNameStr.append("/").append(itemDeptName);
+//    }
+//    if (deptNameStr.length() > 0) {
+//        deptNameStr = new StringBuilder(deptNameStr.substring(1));
+//    }
+
 //    //获取用户性别
 //    String user_sex = userBean.getStr("USER_SEX");
 //    //获取用户办公电话
@@ -225,7 +249,7 @@
                     部门
                 </label>
                 <div class="col-sm-5">
-                    <input type="text" id="bumen" class="form-control" value="<%=dept_name %>">
+                    <input type="text" id="bumen" class="form-control" value="<%=dept_name %>" readonly>
                 </div>
             </div>
 
@@ -556,12 +580,11 @@
             param["bmids"] = bmids;
             param["user_name"] = System.getUser("USER_NAME");
 
-
             if (jktitle === "") {
                 alert("标题不能为空");
-            } /*else if (bmids === "") {
-             alert("请选择借考的考试");
-             }*/ else if (jkyiji === "") {
+            } else if (bmids === "") {
+                alert("请选择借考的考试");
+            } else if (jkyiji === "") {
                 alert("请选择借考一级分行");
             } else if (jkcity === "") {
                 alert("借考城市不能为空");

@@ -88,7 +88,7 @@ public class DapccServ extends CommonServ {
 //        }
 //
 
-        if (StringUtils.isNotBlank(searchDeptCode) && !"jk".equals(searchDeptCode)) {
+        if (StringUtils.isNotBlank(searchDeptCode) && !"jk".equals(searchDeptCode) && !"qj".equals(searchDeptCode)) {
             Bean dept = this.getDeptByCode(searchDeptCode, null);
             String deptLevel = dept.getStr("DEPT_LEVEL");
             if ("3".equals(deptLevel) || "2".equals(deptLevel) || "1".equals(deptLevel)) {
@@ -139,6 +139,12 @@ public class DapccServ extends CommonServ {
                 //select CODE_PATH,substring(CODE_PATH , LOCATE('^',CODE_PATH,1)+1, LOCATE('^',CODE_PATH,LOCATE('^',CODE_PATH,1)+1)-LOCATE('^',CODE_PATH,1)-1) from sy_org_dept where CODE_PATH is not null;
 //                paramBean.set("searchJkCodePath", searchJkCodePath);
             }
+        } else if ("qj".equals(searchDeptCode)) {
+            //请假数据 不考虑时长
+            l = Long.MAX_VALUE;
+            whereSql += " and a.BM_STATUS in('1','3')";
+            whereSql += " AND EXISTS (select '' from ts_xmgl_kcap_gljg g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+            values.add(searchKcId);
         } else {
             //获取的考生 在考场关联机构本级及下级的机构
             //*EXISTS
@@ -182,7 +188,7 @@ public class DapccServ extends CommonServ {
                 + "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
                 + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
                 + "where 1=1 "
-                + whereSql +" order by a.BM_CODE";//,c.DEPT_CODE
+                + whereSql + " order by a.BM_CODE";//,c.DEPT_CODE
         /*not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
                 + " and */
         //where 姓名/登录名/报考类型/报考数  bm_name /login_name?/
@@ -196,7 +202,7 @@ public class DapccServ extends CommonServ {
             bean.putAll(getUserOrg(userCodeParamBean));
         }
 
-        String countSql = "select count(*) as count " + sql.substring(sql.indexOf("from TS_BMSH_PASS a "),sql.indexOf("order by"));
+        String countSql = "select count(*) as count " + sql.substring(sql.indexOf("from TS_BMSH_PASS a "), sql.indexOf("order by"));
         /*设置数据总数*/
         int count = dataList.size();
         int showCount = page.getShowNum();

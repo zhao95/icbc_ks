@@ -10,6 +10,7 @@ import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.util.Constant;
+import com.rh.core.util.DateUtils;
 import com.rh.core.util.i18n.Language;
 import com.rh.ts.util.BMUtil;
 import com.rh.ts.util.TsConstant;
@@ -31,13 +32,102 @@ public class QjlbServ extends CommonServ {
     private final static String dateFormatString = "yyyy-MM-dd HH:mm:ss";
     private final static String dateFormatString2 = "yyyy-MM-dd";
 
+
+    /**
+     * 获取已请假的列表
+     *
+     * @param paramBean _extWhere
+     * @return
+     */
+    public OutBean getAppliedLeaveList(ParamBean paramBean) {
+              /*分页参数处理*/
+//        PageBean page = paramBean.getQueryPage();
+//        int rowCount = paramBean.getShowNum(); //通用分页参数优先级最高，然后是查询的分页参数
+//        if (rowCount > 0) { //快捷参数指定的分页信息，与finds方法兼容
+//            page.setShowNum(rowCount); //从参数中获取需要取多少条记录，如果没有则取所有记录
+//            page.setNowPage(paramBean.getNowPage());  //从参数中获取第几页，缺省为第1页
+//        } else {
+//            if (!page.contains(Constant.PAGE_SHOWNUM)) { //初始化每页记录数设定
+//                if (paramBean.getQueryNoPageFlag()) { //设定了不分页参数
+//                    page.setShowNum(0);
+//                } else { //没有设定不分页，取服务设定的每页记录数
+//                    page.setShowNum(50);
+//                }
+//            }
+//        }
+
+        //有审批记录说明已审批 撤回标识为false
+        String currentUserCode = Context.getUserBean().getCode();
+        String sql = "select a.*,(case when exists(select '' from ts_comm_mind b where b.DATA_ID=QJ_ID) then 'false' else 'true' end) as canRetract from TS_QJLB_QJ a where a.USER_CODE ='" + currentUserCode + "' order by a.QJ_DATE";
+        List<Bean> dataList = Transaction.getExecutor().query(sql);//, page.getNowPage(), page.getShowNum(), null, null
+
+//        String countSql = "select count(*) as count " + sql.substring(sql.indexOf("from TS_QJLB_QJ a"));
+//        /*设置数据总数*/
+//        int count = dataList.size();
+//        int showCount = page.getShowNum();
+//        boolean bCount; //是否计算分页
+//        if ((showCount == 0) || paramBean.getQueryNoPageFlag()) {
+//            bCount = false;
+//        } else {
+//            bCount = true;
+//        }
+        OutBean outBean = new OutBean();
+//        if (bCount) { //进行分页处理
+//            if (!page.contains(Constant.PAGE_ALLNUM)) { //如果有总记录数就不再计算
+//                int allNum;
+//                if ((page.getNowPage() == 1) && (count < showCount)) { //数据量少，无需计算分页
+//                    allNum = count;
+//                } else {
+//                    allNum = Transaction.getExecutor().queryOne(countSql).getInt("COUNT");
+//                }
+//                page.setAllNum(allNum);
+//            }
+//            outBean.setCount(page.getAllNum()); //设置为总记录数
+//        } else {
+//            outBean.setCount(dataList.size());
+//        }
+        outBean.setData(dataList);
+//        outBean.setPage(page);
+        return outBean;
+    }
+
+    /**
+     * 撤回请假申请
+     *
+     * @param paramBean
+     * @return
+     */
+    public OutBean retract(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String qjId = paramBean.getStr("QJ_ID");
+        Bean qjBean = ServDao.find(TSQJ_SERVID, qjId);
+        Transaction.begin();
+        try {
+            //修改状态
+            qjBean.set("QJ_STATUS", "4");
+            ServDao.update(TSQJ_SERVID, qjBean);
+            //删除待办信息
+            Bean whereBean = new Bean();
+            List<Object> values = new ArrayList<Object>();
+            values.add(qjId);
+            whereBean.put(Constant.PARAM_PRE_VALUES, values);
+            whereBean.put(Constant.PARAM_WHERE, "and DATA_ID =? ");
+            ServDao.destroy(TODO_SERVID, whereBean);
+            Transaction.commit();
+        } catch (Exception e) {
+            Transaction.rollback();
+        }
+        Transaction.end();
+        return outBean;
+    }
+
     /**
      * 发起请假申请
      *
      * @param paramBean
      * @return
      */
-    public OutBean addData(ParamBean paramBean) {
+    public OutBean addData(ParamBean paramBean) throws ParseException {
         Transaction.begin();
         OutBean outBean = new OutBean();
         String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
@@ -101,7 +191,7 @@ public class QjlbServ extends CommonServ {
      * @param paramBean
      * @return
      */
-    public OutBean updateData(Bean paramBean) {
+    public OutBean updateData(Bean paramBean) throws ParseException {
         //获取前台传过来的值
 //        String qj_status = paramBean.getStr("qjstatus");
 //        String qjId = paramBean.getStr("qjid");
@@ -126,7 +216,7 @@ public class QjlbServ extends CommonServ {
      * @param paramBean {shstatus:"2",shreason:...,isRetreat:"true",todoId:"todoId"}
      * @return OutBean
      */
-    public OutBean updateDataBySystem(Bean paramBean) {
+    public OutBean updateDataBySystem(Bean paramBean) throws ParseException {
         //获取前台传过来的值
         /*String sh_status = paramBean.getStr("shstatus");//同意 不同意
         String sh_reason = paramBean.getStr("shreason");//审核内容
@@ -153,7 +243,7 @@ public class QjlbServ extends CommonServ {
      * @param paramBean
      * @return
      */
-    private OutBean updateData2(Bean paramBean, UserBean currentUser) {
+    private OutBean updateData2(Bean paramBean, UserBean currentUser) throws ParseException {
         OutBean outBean = new OutBean();
 //        UserBean currentUser = Context.getUserBean();//当前用户
         //获取前台传过来的值
@@ -255,7 +345,7 @@ public class QjlbServ extends CommonServ {
      * @param qjbean
      * @param qj_status
      */
-    private void afterApply(OutBean outBean, Bean qjbean, String qj_status) {
+    private void afterApply(OutBean outBean, Bean qjbean, String qj_status) throws ParseException {
         String qjId = qjbean.getStr("QJ_ID");
         qjbean.set("QJ_STATUS", qj_status);
         ServDao.update(TSQJ_SERVID, qjbean);
@@ -283,6 +373,7 @@ public class QjlbServ extends CommonServ {
             //请假已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
             String qjKsname = qjbean.getStr("QJ_KSNAME");
             String[] bmIds = qjKsname.split(",");
+            StringBuilder shIdStr = new StringBuilder();
             for (String bmId : bmIds) {
                 ParamBean queryParamBean = new ParamBean();
                 queryParamBean.set("BM_ID", bmId);
@@ -290,6 +381,9 @@ public class QjlbServ extends CommonServ {
                 if (bean == null) {
                     continue;
                 }
+
+                shIdStr.append(",").append(bean.getStr("SH_ID"));
+
                 if ("2".equals(bean.getStr("BM_STATUS"))) {
                     bean.set("BM_STATUS", "3");
                 } else {
@@ -297,9 +391,13 @@ public class QjlbServ extends CommonServ {
                 }
                 ServDao.update(TS_BMSH_PASS_SERVID, bean);
             }
+            if (shIdStr.length() > 0) {
+                shIdStr = new StringBuilder(shIdStr.substring(1));
+            }
             //请假通过 修改请假次数和请假周数
             ParamBean getQxBean = new ParamBean();
             getQxBean.put("bmids", qjKsname);
+            getQxBean.put("xm_id", qjbean.getStr("XM_ID"));
             getQxBean.put("user_code", qjbean.getStr("USER_CODE"));
             getQxBean.put("cishu", ConfMgr.getConf("TS_KSQJ_SETCONUTS", "0"));
             getQxBean.put("zhoushu", ConfMgr.getConf("TS_KSQJ_WEEK_MAXNUM", "0"));
@@ -314,6 +412,30 @@ public class QjlbServ extends CommonServ {
                 Transaction.rollback();
                 outBean.setError("发起人请假次数已超出规定，审批失败");
             }
+
+            String xmId = qjbean.getStr("XM_ID");
+            Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+            String xmKsStartDate = xmBean.getStr("XM_KSSTARTDATA"); //项目详情考试开始时间
+            Date date = DateUtils.parseDate(xmKsStartDate);
+            if (new Date().before(date)) {
+                //在考试开始时间前，删除考位安排
+                String[] split = shIdStr.toString().split(",");
+                StringBuilder shIdSql = new StringBuilder();
+                List<Object> values = new ArrayList<Object>();
+                for (String s : split) {
+                    shIdSql.append("?").append(s);
+                    values.add(s);
+                }
+                if (shIdSql.length() > 0) {
+                    shIdSql = new StringBuilder(shIdSql.substring(1));
+                }
+                Bean whereBean = new Bean();
+                whereBean.set(Constant.PARAM_WHERE, " and SH_ID in(" + shIdSql.toString() + ")");
+                whereBean.set(Constant.PARAM_PRE_VALUES, values);
+                ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean);
+            } /*else {
+                //之后 不做操作
+            }*/
         }
     }
 
@@ -326,7 +448,7 @@ public class QjlbServ extends CommonServ {
      * @param level    流程当前级别
      */
 
-    private void doFlowTask(OutBean outBean, UserBean userBean, Bean qjbean, int level) {
+    private void doFlowTask(OutBean outBean, UserBean userBean, Bean qjbean, int level) throws ParseException {
         String qjId = (String) qjbean.get("QJ_ID");
         String qjTitle = (String) qjbean.get("QJ_TITLE");
         String xmId = (String) qjbean.get("XM_ID");
@@ -512,13 +634,13 @@ public class QjlbServ extends CommonServ {
         String userCode = paramBean.getStr("USER_CODE");
 //        String xmId = paramBean.getStr("XM_ID");
         OutBean outBean = new OutBean();
-        List<Bean> xmBeanList = Transaction.getExecutor().query("select * from TS_XMGL a"+
+        List<Bean> xmBeanList = Transaction.getExecutor().query("select * from TS_XMGL a" +
                 //进行中的项目  &&  项目中存在可以申请请假的报名（存在不在申请中/申请通过的请假 && 由场次安排引入的考试忽略）
                 " where now() BETWEEN str_to_date(XM_START,'%Y-%m-%d %H:%i:%s') and str_to_date(XM_END,'%Y-%m-%d %H:%i:%s') " +
-                        "and exists( " +
-                        "select * from TS_BMSH_PASS pass " +
-                        "where not EXISTS(select '' from TS_QJLB_QJ qj where qj.QJ_KSNAME like CONCAT('%',pass.BM_ID,'%') and qj.QJ_STATUS in('1','2')) " +
-                        "and pass.BM_ID !='' and pass.BM_ID is not null and a.XM_ID =pass.XM_ID and BM_CODE ='" + userCode + "')");
+                "and exists( " +
+                "select * from TS_BMSH_PASS pass " +
+                "where not EXISTS(select '' from TS_QJLB_QJ qj where qj.QJ_KSNAME like CONCAT('%',pass.BM_ID,'%') and qj.QJ_STATUS in('1','2')) " +
+                "and pass.BM_ID !='' and pass.BM_ID is not null and a.XM_ID =pass.XM_ID and BM_CODE ='" + userCode + "')");
 
         for (Iterator<Bean> iterator = xmBeanList.iterator(); iterator.hasNext(); ) {
             Bean xmBean = iterator.next();
