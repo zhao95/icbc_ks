@@ -107,13 +107,16 @@ public class TsConstant {
 
 	/** 考场管理 关联机构*/
 	public static final String SERV_KCGL_GLJG = "TS_KCGL_GLJG";
-	
+
 	/* 考场安排 关联机构*/
 	public static final String SERV_KCAP_GLJG = "TS_XMGL_KCAP_GLJG";
 
+	//项目管理_考场安排_待安排场次
+	public static final String SERV_KCAP_DAPCC = "TS_XMGL_KCAP_DAPCC";
+
 	/** 考场管理 大时间段 场次安排*/
 	public static final String SERV_KCAP_CCSJ = "TS_XMGL_KCAP_DAPCC_CCSJ";
-	
+
 	/** 机构接口信息 */
 	public static final String SERV_BOM_ZDPSTRUINFO = "SY_BOM_ZDPSTRUINFO";
 

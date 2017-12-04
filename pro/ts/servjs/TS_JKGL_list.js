@@ -1,4 +1,7 @@
 var _viewer = this;
+var height = jQuery(window).height()-200;
+var width = jQuery(window).width()-200;
+
 $(".rhGrid").find("tr").unbind("dblclick"); 
 $(".rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
@@ -30,6 +33,6 @@ function bindCard(){
 	//当行编辑事件
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = $(this).parent().parent().attr("id");
-		rowEdit(pkCode,_viewer,[700,600],[100,100]);
+		rowEdit(pkCode,_viewer,[width,height],[100,100]);
 	});
 }

@@ -33,6 +33,95 @@ public class JklbServ extends CommonServ {
 
     private final static String dateFormatString2 = "yyyy-MM-dd";
 
+
+    /**
+     * 获取已借考的列表
+     *
+     * @param paramBean _extWhere
+     * @return
+     */
+    public OutBean getAppliedJkList(ParamBean paramBean) {
+              /*分页参数处理*/
+//        PageBean page = paramBean.getQueryPage();
+//        int rowCount = paramBean.getShowNum(); //通用分页参数优先级最高，然后是查询的分页参数
+//        if (rowCount > 0) { //快捷参数指定的分页信息，与finds方法兼容
+//            page.setShowNum(rowCount); //从参数中获取需要取多少条记录，如果没有则取所有记录
+//            page.setNowPage(paramBean.getNowPage());  //从参数中获取第几页，缺省为第1页
+//        } else {
+//            if (!page.contains(Constant.PAGE_SHOWNUM)) { //初始化每页记录数设定
+//                if (paramBean.getQueryNoPageFlag()) { //设定了不分页参数
+//                    page.setShowNum(0);
+//                } else { //没有设定不分页，取服务设定的每页记录数
+//                    page.setShowNum(50);
+//                }
+//            }
+//        }
+
+        //有审批记录说明已审批 撤回标识为false
+        String currentUserCode = Context.getUserBean().getCode();
+        String sql = "select a.*,(case when exists(select '' from ts_comm_mind b where b.DATA_ID=JK_ID) then 'false' else 'true' end) as canRetract from TS_JKLB_JK a where a.USER_CODE ='" + currentUserCode + "' order by a.JK_DATE";
+        List<Bean> dataList = Transaction.getExecutor().query(sql);//, page.getNowPage(), page.getShowNum(), null, null
+
+//        String countSql = "select count(*) as count " + sql.substring(sql.indexOf("from TS_QJLB_QJ a"));
+//        /*设置数据总数*/
+//        int count = dataList.size();
+//        int showCount = page.getShowNum();
+//        boolean bCount; //是否计算分页
+//        if ((showCount == 0) || paramBean.getQueryNoPageFlag()) {
+//            bCount = false;
+//        } else {
+//            bCount = true;
+//        }
+        OutBean outBean = new OutBean();
+//        if (bCount) { //进行分页处理
+//            if (!page.contains(Constant.PAGE_ALLNUM)) { //如果有总记录数就不再计算
+//                int allNum;
+//                if ((page.getNowPage() == 1) && (count < showCount)) { //数据量少，无需计算分页
+//                    allNum = count;
+//                } else {
+//                    allNum = Transaction.getExecutor().queryOne(countSql).getInt("COUNT");
+//                }
+//                page.setAllNum(allNum);
+//            }
+//            outBean.setCount(page.getAllNum()); //设置为总记录数
+//        } else {
+//            outBean.setCount(dataList.size());
+//        }
+        outBean.setData(dataList);
+//        outBean.setPage(page);
+        return outBean;
+    }
+
+    /**
+     * 撤回请假申请
+     *
+     * @param paramBean
+     * @return
+     */
+    public OutBean retract(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String jkId = paramBean.getStr("JK_ID");
+        Bean jkBean = ServDao.find(TSJK_SERVID, jkId);
+        Transaction.begin();
+        try {
+            //修改状态
+            jkBean.set("JK_STATUS", "4");
+            ServDao.update(TSJK_SERVID, jkBean);
+            //删除待办信息
+            Bean whereBean = new Bean();
+            List<Object> values = new ArrayList<Object>();
+            values.add(jkId);
+            whereBean.put(Constant.PARAM_PRE_VALUES, values);
+            whereBean.put(Constant.PARAM_WHERE, "and DATA_ID =? ");
+            ServDao.destroy(TODO_SERVID, whereBean);
+            Transaction.commit();
+        } catch (Exception e) {
+            Transaction.rollback();
+        }
+        Transaction.end();
+        return outBean;
+    }
+
     /**
      * 发起借考申请
      *

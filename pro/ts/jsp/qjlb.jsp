@@ -119,10 +119,10 @@
 
                     </tbody>
                 </table>
-               <%-- <button id="wyqj" class="btn btn-success"
-                        style="top: 20px;position: relative;font-size:16px;width: 120px;height:35px;background-color: #00c2c2;left: 43%;"
-                        data-toggle="modal" data-target="#wyqj" onclick="qingjia()">我要请假
-                </button>--%>
+                <%-- <button id="wyqj" class="btn btn-success"
+                         style="top: 20px;position: relative;font-size:16px;width: 120px;height:35px;background-color: #00c2c2;left: 43%;"
+                         data-toggle="modal" data-target="#wyqj" onclick="qingjia()">我要请假
+                 </button>--%>
             </div>
         </div>
     </div>
@@ -156,6 +156,37 @@
         </div>
     </div>
 </div>
+
+<%--确认撤回--%>
+<div class="modal" style="z-index: 999999999" id="retractModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    撤回确定
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                是否撤回该请假？
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button id="" type="button" class="btn btn-success" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+                <button type="button" class="btn btn-default" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
 <script>
     //全选，全不选
     $("#checkall").click(
@@ -179,6 +210,22 @@
 </script>
 <script type="text/javascript">
     $(function () {
+
+        $("#retractModal").find('button[class="btn btn-success"]').bind('click', function () {
+            var qjId = $(this).attr('id');
+            if (qjId !== '') {
+                FireFly.doAct('TS_QJLB_QJ', 'retract', {QJ_ID: qjId}, false, false, function (response) {
+                    if (response._MSG_.indexOf('ERROR') >= 0) {
+                        //撤回出错
+                        alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,') + 6, response._MSG_.length));
+                    } else {
+                        setAppliedLeaveList();
+                        alert('撤回成功');
+                    }
+                    $("#retractModal").find('button[class="btn btn-success"]').attr('id', '');
+                });
+            }
+        });
 
         var currentUserCode = System.getUser("USER_CODE");
 
@@ -210,20 +257,28 @@
                 '       ' + userCanLeave.XM_NAME,//userCanLeave.title
                 '   </td>',
                 '   <td>',
-                '<input type="button" id="' + userCanLeave.XM_ID + '" onclick="qingjia2(this)" value="请假" style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px">',
+                '       <input type="button" id="' + userCanLeave.XM_ID + '" onclick="qingjia2(this)" value="请假" style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px">',
                 '   </td>',
                 '</tr>'
             ].join(''));
         }
         // <a id="' + userCanLeave.XM_ID + '" onclick="qingjia2(this)">请假</a>',//id 为项目id
 
+        setAppliedLeaveList();
+    });
+
+    /**
+     * 已申请的请假
+     **/
+    function setAppliedLeaveList() {
+        var currentUserCode = System.getUser("USER_CODE");
 
         /*已申请的请假*/
         var table1Tbody2 = jQuery('#ybmtable2 tbody');
         table1Tbody2.html('');
         //获取已申请的请假数据
         data = {_SELECT_: '*', _extWhere: "and USER_CODE='" + currentUserCode + "'", _NOPAGE_: true};
-        var qjListBean = FireFly.doAct('TS_QJLB_QJ', 'query', data);
+        var qjListBean = FireFly.doAct('TS_QJLB_QJ', 'getAppliedLeaveList', data);
         var qjList = qjListBean._DATA_;
         for (var i = 0; i < qjList.length; i++) {
             var qj = qjList[i];
@@ -239,8 +294,11 @@
                 qjStatus = "已通过";
             } else if (qjStatus === "3") {
                 qjStatus = "未通过";
+            } else if (qjStatus === "4") {
+                qjStatus = "已撤回";
             }
-            table1Tbody2.append([
+
+            var $tr = jQuery([
                 '<tr style="height: 40px">',
                 '	<td class="rhGrid-td-hide">',
                 '	    ' + qjId,
@@ -263,15 +321,31 @@
                 '	<td  style="text-align: center">',
                 '	    ' + qjStatus,
                 '	</td>',
-                '	<td style="text-align: center">',
+                '</tr>'
+            ].join(''));
+
+            var $retract = jQuery(['<input type="button" id="' + qjId + '" value="撤回"',
+                ' style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"/>'
+            ].join(''));
+            $retract.unbind('click').bind('click', function () {
+                var qjId = $(this).attr('id');
+                var $retractModal = $('#retractModal');
+                $retractModal.find('button[class="btn btn-success"]').attr('id', qjId);
+                $retractModal.modal({backdrop: false, show: true});
+            });
+
+            var $td = jQuery(['	<td style="text-align: center">',
                 '	    <input type="button" onclick="chakan(this)" value="查看"',
                 '	        style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"/>',
-                '	</td>',
-                '</tr>',
-            ].join(''));
-        }
+                '	</td>'].join(''));
+            if (qj.CANRETRACT === 'true' && qj.QJ_STATUS !== "4") {
+                $td.append($retract);
+            }
 
-    });
+            $tr.append($td);
+            table1Tbody2.append($tr);
+        }
+    }
 
     //请假跳转到请假页面
     function qingjia() {
@@ -292,7 +366,12 @@
     //请假跳转到请假页面
     function qingjia2(e) {
         var xmId = $(e).attr('id');
-        doPost('qjlb_qj.jsp', {xmId: xmId});
+        var xmSzBean = FireFly.doAct('ts_xmgl_sz', 'query', {_extWhere: " and XM_ID = '" + xmId + "' and XM_SZ_NAME ='考场安排'"});
+        if (xmSzBean._DATA_.length > 0 && (xmSzBean._DATA_[0].XM_SZ_TYPE === '未开启' || xmSzBean._DATA_[0].XM_SZ_TYPE === '')) {
+            alert('考场安排未开始，您可在我的报名已申请报名页面撤销报名');
+        } else {
+            doPost('qjlb_qj.jsp', {xmId: xmId});
+        }
     }
 
     //已申请的请假列表 点击进行查看

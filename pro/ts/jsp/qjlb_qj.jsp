@@ -168,8 +168,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="qjdks" class="col-sm-2 control-label"> 请假的考试 <span
-                        style="color: red; font-weight: bold">*</span>
+                <label for="qjdks" class="col-sm-2 control-label">
+                    请假的考试
+                    <span style="color: red; font-weight: bold">*</span>
                 </label>
                 <div class="col-sm-10 bkuan">
                     <div onclick="xuanze()" data-toggle="modal" data-target="#myModal"
@@ -204,12 +205,15 @@
                 <label class="col-sm-2 control-label"> 部门 </label>
                 <div class="col-sm-5">
                     <input type="text" id="bumen" class="form-control"
-                           value="<%=dept_name%>">
+                           value="<%=dept_name%>" readonly>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="qjreason" class="col-sm-2 control-label">请假事由</label>
+                <label for="qjreason" class="col-sm-2 control-label">
+                    <span style="color: red; font-weight: bold">*</span>
+                    请假事由
+                </label>
                 <div class="col-sm-10">
                     <textarea id="qjreason" class="form-control" rows="3"></textarea>
                 </div>
@@ -260,11 +264,11 @@
                     </div>
 
                 </div>
-                <div class="col-sm-12">
+                <%--<div class="col-sm-12">
                     <input id="fileupload" type="file" name="files" multiple style="display: none">
                     <a data-btn="btn_upload_many" onclick="uploadFiles();" href="javascript:void(0);"
                        class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">批量上传</a>
-                </div>
+                </div>--%>
             </div>
 
         </form>
@@ -465,52 +469,53 @@
     var xmId = '<%=xmId%>';
     //xmId值为空返回到列表页面
     if (!xmId) {
-        doPost( 'qjlb.jsp',{});
+        doPost('qjlb.jsp', {});
     }
+
 
     var uploadFiles = function () {
 
     };
     $(function () {
         initData(xmId);
+//        $('#fileupload').fileupload();
+        <%--$('#fileupload').fileupload({--%>
+        <%--dataType: 'json',--%>
+        <%--url: '${pageContext.request.contextPath}/qua/quaCheckAction!checkUploadFile.action',--%>
+        <%--start: function (e, data) {--%>
+        <%--//                parent.$.messager.progress({--%>
+        <%--//                    title: $.i18n.prop('msg_show_title'),--%>
+        <%--//                    text: $.i18n.prop('msg_show_text')--%>
+        <%--//                });--%>
+        <%--},--%>
+        <%--stop: function () {--%>
+        <%--//                parent.$.messager.progress('close');--%>
+        <%--//                $.messager.show({--%>
+        <%--//                    title: $.i18n.prop('msg_show_title'),--%>
+        <%--//                    msg: $.i18n.prop('upload_success'),--%>
+        <%--//                    timeout: 5000,--%>
+        <%--//                    showType: 'slide'--%>
+        <%--//                });--%>
+        <%--}--%>
+        <%--/* done: function (e, data) {--%>
+        <%--debugger--%>
+        <%--parent.$.messager.progress('close');--%>
+        <%--//导入成功--%>
+        <%--$.messager.show({--%>
+        <%--title:$.i18n.prop('msg_show_title'),--%>
+        <%--msg:$.i18n.prop('upload_success'),--%>
+        <%--timeout:5000,--%>
+        <%--showType:'slide'--%>
+        <%--});--%>
+        <%--$.each(data.result.files, function (index, file) {--%>
+        <%--$('<p/>').text(file.name).appendTo(document.body);--%>
+        <%--});--%>
+        <%--} */--%>
+        <%--});--%>
 
-        $('#fileupload').fileupload({
-            dataType: 'json',
-            url: '${pageContext.request.contextPath}/qua/quaCheckAction!checkUploadFile.action',
-            start: function (e, data) {
-//                parent.$.messager.progress({
-//                    title: $.i18n.prop('msg_show_title'),
-//                    text: $.i18n.prop('msg_show_text')
-//                });
-            },
-            stop: function () {
-//                parent.$.messager.progress('close');
-//                $.messager.show({
-//                    title: $.i18n.prop('msg_show_title'),
-//                    msg: $.i18n.prop('upload_success'),
-//                    timeout: 5000,
-//                    showType: 'slide'
-//                });
-            }
-            /* done: function (e, data) {
-             debugger
-             parent.$.messager.progress('close');
-             //导入成功
-             $.messager.show({
-             title:$.i18n.prop('msg_show_title'),
-             msg:$.i18n.prop('upload_success'),
-             timeout:5000,
-             showType:'slide'
-             });
-             $.each(data.result.files, function (index, file) {
-             $('<p/>').text(file.name).appendTo(document.body);
-             });
-             } */
-        });
-
-        uploadFiles = function () {
-            $('#fileupload').click();
-        };
+//        uploadFiles = function () {
+//            $('#fileupload').click();
+//        };
 
     });
 
@@ -619,10 +624,14 @@
 
             if (qjtitle === "") {
                 alert("标题不能为空");
+            } else if (qjreason === '' || qjreason === undefined) {
+                alert('请假事由不能为空');
+                return false;
             } else {
 
                 var paramstr = {};
 
+                paramstr["xm_id"] = xmId;
                 paramstr["cishu"] = cishu;
 
                 paramstr["bmids"] = bmids;

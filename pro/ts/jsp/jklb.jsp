@@ -156,6 +156,37 @@
         </div>
     </div>
 </div>
+
+<%--确认撤回--%>
+<div class="modal" style="z-index: 999999999" id="retractModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    撤回确定
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                是否撤回该请假？
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button id="" type="button" class="btn btn-success" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+                <button type="button" class="btn btn-default" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
 <script>
     //全选，全不选
     $("#checkall").click(
@@ -179,6 +210,22 @@
 </script>
 <script type="text/javascript">
     $(function () {
+
+        $("#retractModal").find('button[class="btn btn-success"]').bind('click', function () {
+            var jkId = $(this).attr('id');
+            if (jkId !== '') {
+                FireFly.doAct('TS_JKLB_JK', 'retract', {JK_ID: jkId}, false, false, function (response) {
+                    if (response._MSG_.indexOf('ERROR') >= 0) {
+                        //撤回出错
+                        alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,') + 6, response._MSG_.length));
+                    } else {
+                        setAppliedJkList();
+                        alert('撤回成功');
+                    }
+                    $("#retractModal").find('button[class="btn btn-success"]').attr('id', '');
+                });
+            }
+        });
 
         var currentUserCode = System.getUser("USER_CODE");
 
@@ -217,12 +264,18 @@
             ].join(''));
         }
 
+        setAppliedJkList();
+    });
+
+    function setAppliedJkList() {
+        var currentUserCode = System.getUser("USER_CODE");
+
         /*已申请的借考*/
         var table1Tbody2 = jQuery('#ybmtable2 tbody');
         table1Tbody2.html('');
         //获取已申请的借考数据
-        data = {_SELECT_: '*', _extWhere: "and USER_CODE='" + currentUserCode + "'", _NOPAGE_: true};
-        var jkListBean = FireFly.doAct('TS_JKLB_JK', 'query', data);
+        var data = {_SELECT_: '*', _extWhere: "and USER_CODE='" + currentUserCode + "'", _NOPAGE_: true};
+        var jkListBean = FireFly.doAct('TS_JKLB_JK', 'getAppliedJkList', data);
         var jkList = jkListBean._DATA_;
         for (var i = 0; i < jkList.length; i++) {
             var jk = jkList[i];
@@ -238,8 +291,10 @@
                 jkStatus = "已通过";
             } else if (jkStatus === "3") {
                 jkStatus = "未通过";
+            } else if (jkStatus === "4") {
+                jkStatus = "已撤回";
             }
-            table1Tbody2.append([
+            var $tr = jQuery([
                 '<tr style="height: 40px">',
                 '	<td class="rhGrid-td-hide">',
                 '	    ' + jkId,
@@ -262,19 +317,31 @@
                 '	<td>',
                 '	    ' + jkStatus,
                 '	</td>',
-                '	<td>',
+                '</tr>',
+            ].join(''));
+
+            var $td = jQuery(['	<td>',
                 '	    <input type="button" onclick="chakan(this)" value="查看"',
                 '	        style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"/>',
-                '	</td>',
-                '</tr>',
-                <%-- 							<input type="button" onclick="bianji(this)"style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"value="编辑" />
-                <input type="button" onclick="shanchu(this)"style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"value="删除" />
-                </td>
-                --%>
-            ].join(''));
-        }
+                '	</td>'].join(''));
 
-    });
+            var $retract = jQuery(['<input type="button" id="' + jkId + '" value="撤回"',
+                ' style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"/>'
+            ].join(''));
+            $retract.unbind('click').bind('click', function () {
+                var jkId = $(this).attr('id');
+                var $retractModal = $("#retractModal");
+                $retractModal.find('button[class="btn btn-success"]').attr('id', jkId);
+                $retractModal.modal({backdrop: false, show: true});
+            });
+            if (jk.CANRETRACT === 'true' && jk.JK_STATUS !== "4") {
+                $td.append($retract);
+            }
+
+            $tr.append($td);
+            table1Tbody2.append($tr);
+        }
+    }
 
     //跳转到借考页面
     function jiekao() {

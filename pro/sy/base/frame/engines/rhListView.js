@@ -1000,7 +1000,12 @@ rh.vi.listView.prototype._act = function(aId,aObj) {
 		    			_self._imp(fileId);
 		    			importWin.closePrompt();
 				        // _self.refreshGrid();
+		    			
 		    			file.destroy();
+		    			
+//		    			var param = {"fileId":fileId};
+//		    			window.open(FireFly.getContextPath() + '/' + _self.opts.sId + '.expResult.do?data=' + 
+//		    		    		encodeURIComponent(jQuery.toJSON(param)));
 		    		},
 		    		closeFunc:function() {
 		    			file.destroy();
@@ -1315,7 +1320,15 @@ rh.vi.listView.prototype._imp = function(fileId, param) {
 					window.open(url);
 				}
 			});
-		} 
+		} else {
+			var msg = "点击“确定按钮”下载文件。请打开文件查看导入结果。";
+			SysMsg.alert(msg, function(){
+				if(result.FILE_ID) {
+					var url = FireFlyContextPath + "/file/" + result.FILE_ID;
+					window.open(url);
+				}
+			});
+		}
 		_self._deletePageAllNum();
 		_self.refreshGrid();
 		_loadbar.hideDelayed();	
