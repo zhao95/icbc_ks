@@ -728,7 +728,9 @@ public class BmlbServ extends CommonServ {
 		String whereSql = " where a.BM_TITLE LIKE '%"+ppname+"%' AND a.BM_CODE=" + "'" + user_code + "' " + where1
 				+ " order by s_atime desc";
 
-		String sql = "select a.*,c.PUBLICITY from TS_BMLB_BM a left join ts_bmsh_pass b on b.BM_ID = a.BM_ID "
+		String sql = "select a.*,c.PUBLICITY," +
+				"(case when exists(select * from ts_xmgl_sz sz where sz.XM_ID=a.XM_ID and sz.XM_SZ_NAME ='考场安排' and (sz.XM_SZ_TYPE = '未开启' or sz.XM_SZ_TYPE ='' )) then 'true' else 'false' end) as canRetract" +
+				" from TS_BMLB_BM a left join ts_bmsh_pass b on b.BM_ID = a.BM_ID "
 				+ "left join ts_xmgl_kcap_yapzw c on c.SH_ID = b.SH_ID "
 				+ whereSql;
 		List<Object> values = new LinkedList<Object>();

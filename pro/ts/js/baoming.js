@@ -168,7 +168,7 @@ $('#ayishen').click(function () {
 });
 //加载完毕  显示第一个 tab active  显示隐藏
 $(function () {
-   
+
 	$('#myTab li:eq(1) a').tab('show');
 	selectcreate();
     if(bmbq==1){
@@ -414,7 +414,7 @@ function deletefile(obj) {
     FireFly.doAct("SY_COMM_FILE", "delete", param);
 
     //删除页面
-    var navigatorName = "Microsoft Internet Explorer"; 
+    var navigatorName = "Microsoft Internet Explorer";
     document.getElementById(id).parentNode.removeChild(document.getElementById(id));
    /* if(navigator.appName == navigatorName){
     	 document.getElementById(id).removeNode(true);
@@ -536,7 +536,7 @@ listPage.prototype.getListData = function (num) {
     param._PAGE_ = {};
     param._PAGE_.NOWPAGE = num;
     param._PAGE_.SHOWNUM = showNum;
-    
+
     param["ppname"]=$("#ksnameselect").val();
     param["user_code"] = user_code;
     // //每页条数
@@ -644,7 +644,7 @@ listPage.prototype.bldTable = function (listData) {
         } else {
             type = "资格";
             if(BM_MK=="无模块"){
-            	
+
             	 leixng = BM_TITLE + "： " + BM_LB + "-" + BM_XL + "-" + BM_TYPE;
             }else{
             	 leixng = BM_TITLE + "： " + BM_LB + "-" + BM_XL + "-" + BM_MK + "-" + BM_TYPE;
@@ -671,7 +671,7 @@ listPage.prototype.bldTable = function (listData) {
         paramSH["xmid"] = XM_ID;
         var successinfo =  pageEntity[i].SH_TGTSY;
         var failerinfo =  pageEntity[i].SH_BTGTSY;
-        
+
         var shstate =  pageEntity[i].shstate;
         var flagstate = '审核进行中';
         var conresu = pageEntity[i].countstr;
@@ -680,7 +680,7 @@ listPage.prototype.bldTable = function (listData) {
                   failerinfo = data.SH_BTGTSY;
                   shstate = data.shstate;
               });*/
-        
+
         //此处查的是 报名时间应该查  审核时间
         /* var param1={};
          param1["xmid"]=pageEntity[i].XM_ID;
@@ -763,7 +763,7 @@ listPage.prototype.bldTable = function (listData) {
 
             }
         }
-        
+
         if (flagstate == '审核进行中') {
             //为table重新appendtr
             //已提交异议
@@ -839,7 +839,7 @@ listPage.prototype.bldTable = function (listData) {
                 //审核通过 没有异议  没有撤销
             	 $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:lightseagreen">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
             }else{
-            	
+
             	$tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:red">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
             }
         } else {
@@ -856,6 +856,11 @@ listPage.prototype.bldTable = function (listData) {
         $tr.append($operTd);
         $tr.append('<td class="rhGrid-td-hide" id="baomingid' + i + '">' + BM_ID + '</td><td class="rhGrid-td-hide" id="XMID' + i + '">' + XM_ID + '</td>');
         $ybmTableTbody.append($tr);
+
+        if(pageEntity[i].CANRETRACT ==='false'){
+            debugger;
+            $('#chexiao' + i).css('display','none');
+        }
 
     }
     var table = document.getElementById("ybmtable");
