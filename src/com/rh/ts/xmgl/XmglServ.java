@@ -811,7 +811,7 @@ public class XmglServ extends CommonServ {
 		String sql3 = " SELECT * FROM(SELECT a.*,b.sh_end FROM ts_xmgl a LEFT JOIN TS_XMGL_BMSH b ON a.xm_id = b.xm_id WHERE b.sh_rgsh=1 AND (NOW()< STR_TO_DATE(b.sh_start,'%Y-%m-%d %H:%i:%s') OR NOW()> STR_TO_DATE(b.sh_end,'%Y-%m-%d %H:%i:%s')) "
 				+where1+" AND b.SH_LOOK =1 and b.SH_RGSH=1 ORDER BY b.sh_end ASC)t ";
 		List<Bean> finds3 = Transaction.getExecutor().query(sql3);
-		String sql5 = "select a.* from ts_xmgl a left join ts_xmgl_bmsh b on a.xm_id=b.xm_id and b.SH_RGSH=2" +where1;
+		String sql5 = "select a.* from ts_xmgl a left join ts_xmgl_bmsh b on a.xm_id=b.xm_id where b.SH_RGSH=2 " +where1;
 		List<Bean> find5 = Transaction.getExecutor().query(sql5);
 		for (Bean bean : find5) {
 			bean.set("SH_STATE_STR", "无手动审核");
