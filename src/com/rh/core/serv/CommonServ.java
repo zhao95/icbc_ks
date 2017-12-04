@@ -1171,7 +1171,7 @@ public class CommonServ extends AbstractServ {
      * @param data 数据bean
      * @return
      */
-    private boolean isEmptyBeanByItems (Cell[] cell,Bean[] itemMaps,int cols,Bean data){
+    public boolean isEmptyBeanByItems (Cell[] cell,Bean[] itemMaps,int cols,Bean data){
     	//传参有问题，直接判断为数据空行
     	if (null == cell || null == itemMaps || null == data) {
 			return true;
@@ -1194,7 +1194,7 @@ public class CommonServ extends AbstractServ {
      * @param tempFile
      * @return
      */
-	private Bean saveTempFile(Bean oldFileBean, TempFile tempFile) {
+	public Bean saveTempFile(Bean oldFileBean, TempFile tempFile) {
 		try {
 			Bean param = new Bean();
 			param.set("SERV_ID", oldFileBean.getStr("SERV_ID"));
