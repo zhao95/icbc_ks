@@ -37,7 +37,7 @@ function userInfo() {
  */
 function showMenu() {
 	var data = FireFly.doAct("TS_UTIL", "getMenu", {"S_FLAG":1});
-	var result = FireFly.doAct("TS_BMLB_BM","LOOKXN","");//是否可见辖内报名
+	var result = FireFly.doAct("TS_BMLB_BM","lookXn","");//是否可见辖内报名
 	var lookflag = result.look;
 	 var param = {};
      param["user_code"]=System.getVar("@USER_CODE@");
@@ -45,26 +45,29 @@ function showMenu() {
      param["shownum"] =10;
      param["where"]= "";
      param["nowpage"]= 1;
-     var act = FireFly.doAct("TS_XMGL", "getUncheckList", param);
-     var list = act.alllist;
+     var act = FireFly.doAct("TS_XMGL", "getMyShState", param);
+     //判断此人是否可进行审核
+     var flagstr = act.flag;
      //查询是否有待审核的数据
 	if (data.menuList.length > 0) {
 		for (var i = 0; i < data.menuList.length; i++) {
 			var MENU_URL = "'"+data.menuList[i].MENU_URL+"'";
 //			debugger;
-			  if(list.length==0&&data.menuList[i].MENU_NAME=="报名审核"){
+			  if(flagstr=="false"&&data.menuList[i].MENU_NAME=="报名审核"){
 			    	 //不显示
 				  continue;
 			     }
 			  if(data.menuList[i].MENU_NAME=="报名审核"){
+				  debugger;
 				  //报名审核 数据  是否有 待审核的数据
-				  var xmids = "";
+				/*  var xmids = "";
 				  for(var j=0;j<list.length;j++){
 					  xmids+=list[j].XM_ID+",";
 				  }
 				  var paramstay = {};
-				  paramstay["ids"]=xmids;
-				 var result =  FireFly.doAct("TS_BMSH_STAY","getStayList",paramstay);
+				  paramstay["ids"]=xmids;*/
+				 var result =  FireFly.doAct("TS_BMSH_STAY","getStayList","");
+				 
 				  if(result.flag!="true"){
 					  //有待审核的数据
 					  $(".sidebar-menu")

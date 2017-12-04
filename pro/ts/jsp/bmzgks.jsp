@@ -360,7 +360,8 @@ position: absolute;
 		</div>
 		<!-- /.modal -->
 	</div>
-	<div class="modal fade" id="yzxx" tabindex="-1" role="dialog"
+	
+		<div class="modal fade" id="yzxx" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -370,13 +371,32 @@ position: absolute;
 					
 					<h6 class="modal-title">信息验证</h6>
 				</div>
-				<div style="padding-left:5%;padding-right:5%;font-size:16px;color:red" id="tishiyu"></div>
-				<div style="padding-top:2%;padding-bottom:6%;margin-left:27%;font-size:16px;">请输入您已入职满&nbsp;<input style="width:20%" id="yzinput"/>&nbsp;年</div>
-				<div class="modal-footer" style="height:10%">
-					<button type="button" class="btn btn-primary" onclick="yztj()">提交</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						style="color:white;width: 100px;margin-left:100px;background-color: #00c2c2;">关闭</button>
 					
 				</div>
 			</div>
+			<!-- /.modal-content -->
+		</div>
+		
+		<div class="modal fade" id="littleyzxx" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div id="mask" class="mask"></div>
+				<div class="modal-header"
+					style="background-color: #00c2c2; color: white">
+					
+					<h6 class="modal-title">规则详细验证信息</h6>
+				</div>
+				<div class="modal-content" style="padding-top:20px;padding-bottom:20px">
+					<div id="littlediv"></div>
+					</div>
+					<div class="modal-footer" style="text-align:center;height:50px">
+					<button type="button" class="btn btn-default" style="border-color:#245580;color:white;background:lightseagreen;font-size:13px;height:35px;width:80px;margin-top:-8px" data-dismiss="modal">关闭</button>
+				</div>
+					
+				</div>
 			<!-- /.modal-content -->
 		</div>
 		</div>

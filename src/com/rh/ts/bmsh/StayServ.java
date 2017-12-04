@@ -729,10 +729,6 @@ public class StayServ extends CommonServ {
 					dataList = Transaction.getExecutor().query(sql);
 				}
 
-			}else{
-				String where = paramBean.getStr("where");
-				String sql = "select * from ts_bmsh_stay "+where;
-				dataList =Transaction.getExecutor().query(sql);
 			}
 		}
 
@@ -837,6 +833,7 @@ public class StayServ extends CommonServ {
 			afterExp(paramBean, outBean); // 执行导出查询后扩展方法
 			// 查询出表头 查询出 对应数据 hashmaplist
 			expExcel.createHeader(cols);
+			
 			expExcel.appendData1(finalList, paramBean);
 			// 存在多页数据
 			if (ONETIME_EXP_NUM < count) {
@@ -1120,11 +1117,17 @@ public class StayServ extends CommonServ {
 	 * 审核人是否有需要审核的数据提醒
 	 */
 	public OutBean getStayList(Bean paramBean){
-		String str = paramBean.getStr("ids");
-		String[] split = str.split(",");
 		UserBean userBean = Context.getUserBean();
 		String user_code = userBean.getCode();
+		String sql1 = "select e.* from (select distinct d.xm_id from (select * from TS_WFS_BMSHLC where node_id in (select NODE_ID from TS_WFS_NODE_APPLY where wfs_id in(select WFS_ID from ts_xmgl a left join TS_XMGL_BMSH b on a.xm_id=b.xm_id))) c left join TS_XMGL_BMSH d on c.wfs_id = d.wfs_id where c.SHR_USERCODE='"+user_code+"') f left join TS_BMSH_STAY e on f.xm_id = e.xm_id ";
+		List<Bean> list1 = Transaction.getExecutor().query(sql1);
 		List<Bean> list = new ArrayList<Bean>();
+		for (Bean bean : list1) {
+			String other = bean.getStr("SH_OTHER");
+			if (other.contains(user_code)) {
+				list.add(bean);
+			}
+		}/*
 		for (String string : split) {
 			if(!"".equals(string)){
 				//当前审核人 待审核的数据
@@ -1139,7 +1142,7 @@ public class StayServ extends CommonServ {
 				
 				
 			}
-		}
+		}*/
 		OutBean out = new OutBean();
 		if(list.size()==0){
 			out.set("num", 0);

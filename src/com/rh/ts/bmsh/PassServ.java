@@ -473,10 +473,6 @@ public class PassServ extends CommonServ {
 					dataList = Transaction.getExecutor().query(sql);
 				}
 
-			}else{
-				String where = paramBean.getStr("where");
-				String sql = "select * from ts_bmsh_pass "+where;
-				dataList =Transaction.getExecutor().query(sql);
 			}
 		}
 		// 所有

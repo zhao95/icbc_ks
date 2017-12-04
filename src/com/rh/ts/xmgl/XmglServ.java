@@ -680,6 +680,7 @@ public class XmglServ extends CommonServ {
 			bean.set("endtimestr", END_TIME);
 			bean.set("shstatestr", state);
 			
+			
 			// 根据项目id找到流程下的所有节点
 			String belongwhere = "AND XM_ID='" + id + "'";
 			List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
@@ -929,6 +930,22 @@ public class XmglServ extends CommonServ {
 //	    int count2 = Transaction.getExecutor().count(count);
 //	    System.out.println(count2);
 	 	return  null;
+	}
+	/**
+	 * 判断此人是否能进行报名审核
+	 */
+	public OutBean getMyShState(Bean paramBean){
+		UserBean userBean = Context.getUserBean();
+		String user_code = userBean.getCode();
+		String sql = "select * from TS_WFS_BMSHLC where node_id in (select NODE_ID from TS_WFS_NODE_APPLY where wfs_id in(select WFS_ID from ts_xmgl a left join TS_XMGL_BMSH b on a.xm_id=b.xm_id))";
+		List<Bean> list = Transaction.getExecutor().query(sql);
+		for (Bean codebean : list) {
+			if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
+				//可进行审核
+				return new OutBean().set("flag","true");
+			}
+		}
+		return new OutBean().set("flag", "false");
 	}
 	
 }

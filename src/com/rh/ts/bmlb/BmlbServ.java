@@ -1772,7 +1772,7 @@ public class BmlbServ extends CommonServ {
 	/**
 	 * 是否有权限查看辖内报名
 	 */
-	public OutBean LOOKXN(Bean paramBean) {
+	public OutBean lookXn(Bean paramBean) {
 		UserBean userBean = Context.getUserBean();
 		Bean userPvlgToHT = RoleUtil.getPvlgRole(userBean.getCode(),
 				"TS_BMGL_XNBM");

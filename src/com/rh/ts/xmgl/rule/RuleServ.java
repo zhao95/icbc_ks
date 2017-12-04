@@ -49,9 +49,7 @@ public class RuleServ extends CommonServ {
 	 */
 
 	public OutBean vlidates(ParamBean paramBean) {
-
 		OutBean outBean = new OutBean();
-
 		try {
 
 			String infostr = paramBean.getStr("BM_INFO");
@@ -129,14 +127,19 @@ public class RuleServ extends CommonServ {
 						String msg = ""; // 验证信息
 
 						boolean flag = false;
+						Bean data = new Bean();
+						List<Bean> littlegz = new ArrayList<Bean>();
 						for (Bean bean : gzmxGroupList) {
+							Bean littelGzBean = new Bean();
 							bean.putAll(bmBean); // 报名考试信息
 							bean.putAll(bmInfo); // 报名人信息
+							String mx_name = bean.getStr("MX_NAME");
+							String mx_value2 = bean.getStr("MX_VALUE2");
+							String littlemxname = mx_name;
+							JSONArray mxvaluearr;
 							
-
 							String mxName = getMxName(bean);
 							String clazz = bean.getStr("MX_IMPL");
-							String mx_name = bean.getStr("MX_NAME");
 							boolean result=false;
 							if(mx_name.indexOf("XL")!=-1){
 								//启用管理类规则
@@ -145,15 +148,34 @@ public class RuleServ extends CommonServ {
 									flag=true;
 									result=false;
 								}
+								/*littelGzBean.set("name", obj);*/
 							}else if(bean.getStr("MX_VALUE2").indexOf("rzyear")!=-1){
 								//管理员任职年限提示
-								
 								str =mx_name;
 								result=false;
 							}else{
 								result = this.vlidateOne(clazz, bean); // 执行验证
-								
+								try {
+									if("".equals(mx_value2)){
+										littelGzBean.set("validate", result);
+										littelGzBean.set("name",littlemxname);
+									}else{
+										mxvaluearr = new JSONArray(mx_value2);
+										for(int a=0;a<mxvaluearr.length();a++){
+											String vari = mxvaluearr.getJSONObject(a).getString("vari");
+											String val = mxvaluearr.getJSONObject(a).getString("val");
+											littlemxname=littlemxname.replaceFirst("#"+vari+"#", val);
+										}
+										littelGzBean.set("validate", result);
+										littelGzBean.set("name",littlemxname);
+									}
+								} catch (JSONException e) {
+
+									e.printStackTrace();
+								}
 							}
+
+							littlegz.add(littelGzBean);
 							
 							if (gzType == 1) { // 审核不通过规则(与)
 
@@ -174,9 +196,10 @@ public class RuleServ extends CommonServ {
 							}
 
 						}
-
-						Bean data = new Bean();
-
+						
+						
+						
+						data.set("littlega", littlegz);
 						data.set("NAME", shgz.getStr("GZ_NAME")); // 规则名称
 
 						data.set("VLIDATE", pass);

@@ -167,17 +167,26 @@ function xminfoshow(){
        				var othergz = "";
        				var zsgz = "";
        				for(var j=0;j<dataArray.length;j++){
+       					
+       					var divid = a+j+"xxx";
+       					
+       					var littlegz = dataArray[j]["littlega"];
+       					var sss =JSON.stringify(littlegz);
        					if(j==0){
        						$("#"+a).append('<div style="height:5px;"></div>');
        					}
        					if(dataArray[j].VLIDATE=="true"){
-                            $("#"+a).append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'</div>');
-	       					
-						}if(dataArray[j].VLIDATE=="false"){
-							
-								$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');
+                            $("#"+a).append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'&nbsp;&nbsp<span style="padding:2px 9px" class="btn btn-success" name="'+divid+'" onclick="showinfo(this)">详细</span></div><div style="display:none" id="'+divid+'">'+sss+'</div>');
+                           
 						}
+       					if(dataArray[j].VLIDATE=="false"){
+								$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'&nbsp;&nbsp<span style="padding:2px 9px" class="btn btn-success" name="'+divid+'" onclick="showinfo(this)">详细</span></div><div style="display:none" id="'+divid+'">'+sss+'</div>');
+								
+						}
+						
 						shti=dataArray[j].TISHI;
+						$("#"+a).append('<div style="height:5px;"></div>');
+						
 						if(dataArray[j].VLIDATE=="false"){
 							if(countflag!=1){
 							if(shti!="TRUE"){
@@ -198,7 +207,7 @@ function xminfoshow(){
 							//证书规则 通过或不通过
 							 zsgz = dataArray[j].zsgz
 						}
-						$("#"+a).append('<div style="height:5px;"></div>');
+						
 						
        				}
        				if(othergz!="false"&&zsgz!=""){
@@ -1530,3 +1539,22 @@ $("#slaveselect").change(function(){
 })
 */
 //页面关闭时提示 是否要离开页面
+function showinfo(obj){
+	$("#littlediv").html("");
+	var spanid = $(obj).attr("name");
+	var jsonstr = JSON.parse($("#"+spanid).html());
+	for(var i=0;i<jsonstr.length;i++){
+		if(jsonstr[i].name!=undefined&&jsonstr[i].name!=""){
+			if(jsonstr[i].validate=="false"){
+				$("#littlediv").append("<div style='color:red;padding-left:20%'><img src='/ts/image/u4721.png'>"+jsonstr[i].name+"</div>");
+			}else{
+				$("#littlediv").append("<div style='color:lightseagreen;padding-left:20%'><img src='/ts/image/u4719.png'>"+jsonstr[i].name+"</div>");
+			}
+		}
+	}
+	if(jsonstr.length==0){
+		alert("信息为空")
+	}else{
+		$("#littleyzxx").modal('show');
+	}
+}
