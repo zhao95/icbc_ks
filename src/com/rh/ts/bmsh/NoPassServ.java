@@ -71,7 +71,7 @@ public class NoPassServ extends CommonServ {
 			List<Bean> query1 = Transaction.getExecutor().query(sql1);
 			for (Bean bean : query1) {
 				//判断哪些考生部门 在此codepath 下
-				String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_nopass a left join sy_org_dept b on a.s_dept=b.dept_code) c where c.code_path like concat('"+bean.getId()+"','%')";
+				String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_nopass a left join sy_org_dept b on a.s_dept=b.dept_code and xm_id = '"+xmid+"') c where c.code_path like concat('"+bean.getId()+"','%') ";
 				List<Bean> query2 = Transaction.getExecutor().query(sql3);
 				list.addAll(query2);
 			}
