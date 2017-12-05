@@ -205,7 +205,7 @@ public class KcapResource {
 
 				sql1 += " SY_ORG_DEPT.CODE_PATH like CONCAT('" + codePath + "','%') ";
 
-				sql1 += " AND SY_ORG_DEPT.DEPT_TYPE = 2";
+//				sql1 += " AND SY_ORG_DEPT.DEPT_TYPE = 2";
 
 				sql1 += " AND SY_ORG_DEPT.CMPY_CODE =  '" + cmpyCode + "'";
 
