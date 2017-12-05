@@ -410,25 +410,40 @@ var HeaderBtn = {
         //提交确定按钮事件
         $("#tjccapModal").find('button[class="btn btn-success"]').bind('click', function () {
             showVerifyCallback(function () {
-                var deptCodeStr = Utils.getUserYAPAutoCode();
+                var deptCodeStr = '';//Utils.getUserYAPAutoCode();
                 var deptCodes = deptCodeStr.split(',');
                 deptCodes = Utils.arrayUnique(deptCodes.concat(KcObject.getAllKcODeptCode()));
-                for (var i = 0; i < deptCodes.length; i++) {
-                    var itemDeptCode = deptCodes[i];
-                    if (itemDeptCode !== '') {
-                        //避免重复提交 保存前先查询
-                        var queryBean = FireFly.doAct("TS_XMGL_KCAP_TJJL", "query", {
-                            '_NOPAGE_': true,
-                            '_extWhere': " and TJ_DEPT_CODE ='" + itemDeptCode + "' and XM_ID ='" + xmId + "'"
-                        });
-                        if (queryBean._DATA_.length <= 0) {
-                            FireFly.doAct('TS_XMGL_KCAP_TJJL', 'save', {
-                                TJ_DEPT_CODE: itemDeptCode,
-                                XM_ID: xmId
-                            }, false);
-                        }
-                    }
+                var kcIdStr = '';
+                for (var i = 0; i < KcObject.kcArr.length; i++) {
+                    var kc = KcObject.kcArr[i];
+                    kcIdStr += ',' + kc.KC_ID;
                 }
+                if (kcIdStr.length > 0) {
+                    kcIdStr = kcIdStr.substring(1);
+                }
+                FireFly.doAct("TS_XMGL_KCAP_DAPCC", 'submit', {
+                    data: JSON.stringify({
+                        XM_ID: xmId,
+                        DEPT_CODES: deptCodes,
+                        KC_ID_STR: kcIdStr
+                    })
+                }, false, false);
+                // for (var i = 0; i < deptCodes.length; i++) {
+                //     var itemDeptCode = deptCodes[i];
+                //     if (itemDeptCode !== '') {
+                //         //避免重复提交 保存前先查询
+                //         var queryBean = FireFly.doAct("TS_XMGL_KCAP_TJJL", "query", {
+                //             '_NOPAGE_': true,
+                //             '_extWhere': " and TJ_DEPT_CODE ='" + itemDeptCode + "' and XM_ID ='" + xmId + "'"
+                //         });
+                //         if (queryBean._DATA_.length <= 0) {
+                //             FireFly.doAct('TS_XMGL_KCAP_TJJL', 'save', {
+                //                 TJ_DEPT_CODE: itemDeptCode,
+                //                 XM_ID: xmId
+                //             }, false);
+                //         }
+                //     }
+                // }
                 Utils.getCanDraggable(true);
                 KcObject.reloadCCInfo();
                 KsObject.setDfpKsContent();
@@ -590,11 +605,14 @@ var HeaderBtn = {
                     var kcStr = '';
                     for (var i = 0; i < KcObject.kcArr.length; i++) {
                         var kc = KcObject.kcArr[i];
-                        kcStr += kc.KC_ID + ',';
+                        kcStr += ',' + kc.KC_ID;
+                    }
+                    if (kcStr.length > 0) {
+                        kcStr = kcStr.substring(1);
                     }
                     FireFly.doAct("TS_XMGL_KCAP_DAPCC", "xngs", {
                         XM_ID: xmId,
-                        KC_ID_STR: kcStr.substring(0, kcStr.length - 1)
+                        KC_ID_STR: kcStr
                     }, false, false, function () {
                         alert('辖内场次安排已公示');
                     });
@@ -1817,7 +1835,7 @@ var KcObject = {
                 '   <th>一级机构</th>',
                 '   <th>二级机构</th>',
                 '   <th>三级机构</th>',
-                '   <th>四级机构</th>',
+                '   <th>人力资源编码</th>',
                 '   <th>姓名</th>',
                 '   <th>考试名称</th>',
                 '   <th>考试级别</th>',
@@ -1826,6 +1844,7 @@ var KcObject = {
                 '   <th>备注</th>',
                 '</tr>'
             ].join(''));
+            //                '   <th>四级机构</th>',
 
             this.setZwListContent(sjId, $kcInfoTbody);
 
@@ -1904,7 +1923,7 @@ var KcObject = {
                 '   <td>' + zw.org1 + '</td>',//一级机构
                 '   <td>' + zw.org2 + '</td>',//二级机构
                 '   <td>' + zw.org3 + '</td>',//三级机构
-                '   <td>' + zw.org4 + '</td>',//四级机构
+                '   <td>' + zw.BM_CODE + '</td>',//四级机构
                 '   <td>' + zw.BM_NAME + '</td>',//姓名
                 '   <td>' + zw.BM_XL + '-' + (zw.BM_MK === '无模块' ? '' : ('-' + zw.BM_MK )) + '</td>',//考试名称
                 '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), zw.BM_TYPE) + '</td>',//级别
@@ -1913,6 +1932,7 @@ var KcObject = {
                 '   <td></td>',//备注
                 '</tr>'
             ].join(''));
+            // '   <td>' + zw.org4 + '</td>',//四级机构
         }
     },
 
@@ -2223,6 +2243,9 @@ var KsObject = {
                 for (var i = 0; i < childs.length; i++) {
                     var child = childs[i];
                     var id = child.DEPT_CODE ? child.DEPT_CODE : child.ID + ' ';
+                    if (data.DEPT_CODE === id.trim()) {
+                        continue;
+                    }
                     var text = child.DEPT_NAME ? child.DEPT_NAME : child.NAME;
                     var item = {
                         id: id,

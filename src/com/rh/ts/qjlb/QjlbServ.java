@@ -393,6 +393,35 @@ public class QjlbServ extends CommonServ {
             if (shIdStr.length() > 0) {
                 shIdStr = new StringBuilder(shIdStr.substring(1));
             }
+
+            String xmId = qjbean.getStr("XM_ID");
+            Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+            String xmKsStartDate = xmBean.getStr("XM_KSSTARTDATA"); //项目详情考试开始时间
+            Date date = DateUtils.parseDate(xmKsStartDate);
+            //如果在提交场次安排前，请假成功删除考位安排
+            String[] split = shIdStr.toString().split(",");
+            for (String s : split) {
+                List<Object> values = new ArrayList<Object>();
+                values.add(s);
+                Bean whereBean = new Bean();
+                whereBean.set(Constant.PARAM_WHERE, " and SH_ID =? and IS_SUBMIT='1'");
+                whereBean.set(Constant.PARAM_PRE_VALUES, values);
+                ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean);
+            }
+//                StringBuilder shIdSql = new StringBuilder();
+//                List<Object> values = new ArrayList<Object>();
+//                for (String s : split) {
+//                    shIdSql.append(",?");
+//                    values.add(s);
+//                }
+//                if (shIdSql.length() > 0) {
+//                    shIdSql = new StringBuilder(shIdSql.substring(1));
+//                }
+//                Bean whereBean = new Bean();
+//                whereBean.set(Constant.PARAM_WHERE, " and SH_ID in(" + shIdSql.toString() + ")");
+//                whereBean.set(Constant.PARAM_PRE_VALUES, values);
+//                ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean);
+
             //请假通过 修改请假次数和请假周数
             ParamBean getQxBean = new ParamBean();
             getQxBean.put("bmids", qjKsname);
@@ -403,38 +432,12 @@ public class QjlbServ extends CommonServ {
             try {
                 Bean result = ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
                 if (!"true".equals(result.getStr("yes"))) {
-                    Transaction.rollback();
                     outBean.setError((String) result.get(Constant.RTN_MSG));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Transaction.rollback();
                 outBean.setError("发起人请假次数已超出规定，审批失败");
             }
-
-            String xmId = qjbean.getStr("XM_ID");
-            Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
-            String xmKsStartDate = xmBean.getStr("XM_KSSTARTDATA"); //项目详情考试开始时间
-            Date date = DateUtils.parseDate(xmKsStartDate);
-            if (new Date().before(date)) {
-                //在考试开始时间前，删除考位安排
-                String[] split = shIdStr.toString().split(",");
-                StringBuilder shIdSql = new StringBuilder();
-                List<Object> values = new ArrayList<Object>();
-                for (String s : split) {
-                    shIdSql.append(",?");
-                    values.add(s);
-                }
-                if (shIdSql.length() > 0) {
-                    shIdSql = new StringBuilder(shIdSql.substring(1));
-                }
-                Bean whereBean = new Bean();
-                whereBean.set(Constant.PARAM_WHERE, " and SH_ID in(" + shIdSql.toString() + ")");
-                whereBean.set(Constant.PARAM_PRE_VALUES, values);
-                ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean);
-            } /*else {
-                //之后 不做操作
-            }*/
         }
     }
 

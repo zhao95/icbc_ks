@@ -143,6 +143,7 @@ public class DapccServ extends CommonServ {
             //请假数据 不考虑时长
             l = Long.MAX_VALUE;
             whereSql += " and a.BM_STATUS in('1','3')";
+            paramBean.set("isArrange", "false");//请假数据获取所有，不考虑是否安排
             whereSql += " AND EXISTS (select '' from ts_xmgl_kcap_gljg g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
             values.add(searchKcId);
         } else {
@@ -186,7 +187,7 @@ public class DapccServ extends CommonServ {
                 + "from TS_BMSH_PASS a "
                 + "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE "
                 + "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
-                + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
+//                + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
                 + "where 1=1 "
                 + whereSql + " order by a.BM_CODE";//,c.DEPT_CODE
         /*not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
@@ -633,10 +634,12 @@ public class DapccServ extends CommonServ {
      * xngs 辖内公示
      */
     public OutBean xngs(ParamBean paramBean) {
+
+        //set PUBLICITY = '1'
         String xmId = paramBean.getStr("XM_ID");
         String kcIdStr = paramBean.getStr("KC_ID_STR");
         String kcIdSql = "'" + kcIdStr.replaceAll(",", "','") + "'";
-        String sql = "update ts_xmgl_kcap_yapzw set PUBLICITY = '1 ' where XM_ID = ? and KC_ID in (" + kcIdSql + ")";
+        String sql = "update ts_xmgl_kcap_yapzw set PUBLICITY = '1' where XM_ID = ? and KC_ID in (" + kcIdSql + ")";
         List<Object> values = new LinkedList<Object>();
         values.add(xmId);
         Transaction.getExecutor().execute(sql, values);
@@ -665,6 +668,42 @@ public class DapccServ extends CommonServ {
             log.error("考场公示提醒失败，" + "XM_ID:" + xmId + ",USER_CODE:" + Context.getUserBean().getName());
         }
         return new OutBean().setOk();
+    }
+
+    /**
+     * 提交考场安排
+     *
+     * @param paramBean XM_ID DEPT_CODES KC_ID_STR
+     * @return outBean
+     */
+    public OutBean submit(ParamBean paramBean) {
+
+        String xmId = paramBean.getStr("XM_ID");
+        List<String> deptCodes = paramBean.getList("DEPT_CODES");
+        String kcIdStr = paramBean.getStr("KC_ID_STR");
+
+        for (String deptCode : deptCodes) {
+            ParamBean whereBean = new ParamBean();
+            whereBean.setWhere(" and TJ_DEPT_CODE ='" + deptCode + "' and XM_ID ='" + xmId + "'");
+            List<Bean> beanList = ServDao.finds("TS_XMGL_KCAP_TJJL", whereBean);
+            if (StringUtils.isNotBlank(deptCode)) {
+                if (beanList == null || beanList.size() <= 0) {
+                    Bean dataBean = new Bean();
+                    dataBean.set("XM_ID", xmId);
+                    dataBean.set("TJ_DEPT_CODE", deptCode);
+                    ServDao.create("TS_XMGL_KCAP_TJJL", dataBean);
+                }
+            }
+        }
+
+        //set PUBLICITY = '1'
+        String kcIdSql = "'" + kcIdStr.replaceAll(",", "','") + "'";
+        String sql = "update ts_xmgl_kcap_yapzw set IS_SUBMIT = '1' where XM_ID = ? and KC_ID in (" + kcIdSql + ")";
+        List<Object> values = new LinkedList<Object>();
+        values.add(xmId);
+        Transaction.getExecutor().execute(sql, values);
+
+        return new OutBean();
     }
 
     /**
