@@ -6,7 +6,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.json.JSONArray;
+
 import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
+import com.rh.core.org.UserBean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -14,6 +18,8 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
+import com.rh.core.util.JsonUtils;
+import com.rh.core.util.var.Var;
 
 public class CccsServ extends CommonServ {
     private static final String SERV_ID1 = "TS_KCZGL";
@@ -181,21 +187,42 @@ public class CccsServ extends CommonServ {
     public OutBean expExcel(ParamBean paramBean){
 	OutBean outBean = new OutBean();
 	String xmId = paramBean.getStr("xmId");
-	//时间
-	String sjVal = paramBean.getStr("sjVal");
-	//层级
-	String cjVal = paramBean.getStr("cjVal");
-	if(sjVal == ""||cjVal == ""){
-	    return outBean.setError();
-	}
+	UserBean userBean = Context.getUserBean();
+	String userCode = userBean.getCode();
 		
-	String sqlWhere = getWhere(xmId);
-	List<Bean> list = ServDao.finds("TS_XMGL_CCCS_V", sqlWhere);
+	List<Bean> explist = ServDao.finds("TS_XMGL_CCCS_EXP", "and xm_id = '"+xmId+"' and S_USER = '"+userCode+"' order by s_mtime desc");
 	List<Bean> dataList = new ArrayList<Bean>();
-	for (int i = 0; i < list.size(); i++) {
-	    String deptCode = list.get(i).getId();
-	    String deptName = list.get(i).getStr("DEPT_NAME");
-	    dataList = getData(xmId,dataList,deptCode,deptName,cjVal,sjVal);
+	if(explist.size() > 0){
+	    String expStr = explist.get(0).getStr("EXP_STR");
+	    
+	    List<Bean> list = JsonUtils.toBeanList(expStr);
+	    for(int i=0;i<list.size();i++){
+		Bean bean = new Bean();
+		bean.set("DEPT_NAME", explist.get(0).getStr("DEPT_NAME"));
+		bean.set("CC_KC_NUM", explist.get(0).getStr("CC_KC_NUM"));
+		bean.set("CC_COMPUTER_GOODNUM", explist.get(0).getStr("CC_COMPUTER_GOODNUM"));
+		bean.set("CC_GOOD_NUM", explist.get(0).getStr("CC_GOOD_NUM"));
+		bean.set("CC_GOOD_SYNUM", explist.get(0).getStr("CC_GOOD_SYNUM"));
+		bean.set("CC_COMPUTER_MAXNUM", explist.get(0).getStr("CC_COMPUTER_MAXNUM"));
+		bean.set("CC_MAX_NUM", explist.get(0).getStr("CC_MAX_NUM"));
+		bean.set("CC_MAX_SYNUM", explist.get(0).getStr("CC_MAX_SYNUM"));
+		dataList.add(bean);
+		List<Bean> tmpList = list.get(i).getList("childArr");
+		for (int j = 0; j < tmpList.size(); j++) {
+		    Bean tmpBean = new Bean();
+		    tmpBean.set("DEPT_NAME", tmpList.get(j).getStr("DEPT_NAME"));
+		    tmpBean.set("CC_KC_NUM", tmpList.get(j).getStr("CC_KC_NUM"));
+		    tmpBean.set("CC_COMPUTER_GOODNUM", tmpList.get(j).getStr("CC_COMPUTER_GOODNUM"));
+		    tmpBean.set("CC_GOOD_NUM", tmpList.get(j).getStr("CC_GOOD_NUM"));
+		    tmpBean.set("CC_GOOD_SYNUM", tmpList.get(j).getStr("CC_GOOD_SYNUM"));
+		    tmpBean.set("CC_COMPUTER_MAXNUM", tmpList.get(j).getStr("CC_COMPUTER_MAXNUM"));
+		    tmpBean.set("CC_MAX_NUM", tmpList.get(j).getStr("CC_MAX_NUM"));
+		    tmpBean.set("CC_MAX_SYNUM", tmpList.get(j).getStr("CC_MAX_SYNUM"));
+		    dataList.add(tmpBean);
+		}
+	    }
+//	    List<Bean> arrList = explist.get(0).getArray(Bean, "EXP_STR");
+//	    JSONObject jsStr = JSONObject.parseObject(expStr); 
 	}
 	
 	ServDefBean serv = ServUtils.getServDef("TS_XMGL_CCCS_V");
