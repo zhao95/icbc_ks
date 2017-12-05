@@ -7,10 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.rh.core.base.Bean;
 import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.util.Strings;
 import com.rh.ts.xmgl.kcap.KcapResource;
+import com.rh.ts.xmgl.kcap.arrange.KcapMatch;
 
 public class KcapUtils {
 
@@ -271,6 +275,49 @@ public class KcapUtils {
 		}
 
 		return sort;
+	}
+
+	public static boolean isEmpty(Bean ksBean) {
+
+		if (ksBean == null || ksBean.isEmpty()) {
+
+			return true;
+		} else {
+
+			boolean isnull = true;
+
+			for (Object time : ksBean.keySet()) {
+
+				if (!ksBean.getBean(time).isEmpty()) {
+
+					isnull = false;
+				}
+			}
+
+			if (isnull) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static void showInfo(Bean ksBean, String msg, Class clazz) {
+
+		Log log = LogFactory.getLog(clazz);
+
+		if (ksBean == null || ksBean.isEmpty()) {
+
+			log.error(msg + "|0");
+
+		} else {
+
+			for (Object time : ksBean.keySet()) {
+
+				log.error(msg + "|time:" + time.toString() + "|" + ksBean.getBean(time).size());
+			}
+		}
 	}
 
 }

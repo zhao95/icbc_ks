@@ -16,6 +16,7 @@ import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.DateUtils;
 import com.rh.core.util.Strings;
 import com.rh.ts.xmgl.kcap.KcapResource;
+import com.rh.ts.xmgl.kcap.utils.KcapUtils;
 
 public class KcapMatch {
 
@@ -37,24 +38,9 @@ public class KcapMatch {
 	 */
 	public static Bean matchUser(Bean freeZw, Bean ksBean, KcapResource res, boolean isConstrain) {
 
-		if (ksBean == null || ksBean.isEmpty()) {
+		if (KcapUtils.isEmpty(ksBean)) {
 
 			return new Bean();
-		} else {
-
-			boolean isnull = true;
-
-			for (Object time : ksBean.keySet()) {
-
-				if (!ksBean.getBean(time).isEmpty()) {
-
-					isnull = false;
-				}
-			}
-
-			if (isnull) {
-				return new Bean();
-			}
 		}
 
 		Bean busyZwBean = res.getBusyZwBean();
@@ -197,11 +183,12 @@ public class KcapMatch {
 	 */
 	private static Bean filtR001(Bean freeZw, Bean busyZwBean, Bean filtBean) {
 
-		if (filtBean == null || filtBean.isEmpty()) {
+		if (KcapUtils.isEmpty(filtBean)) {
+
 			return filtBean;
 		}
-
-		log.error("++++++++++++++++++R001-begin:" + filtBean.size());
+		
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R001-begin:", KcapMatch.class);
 
 		try {
 
@@ -261,10 +248,10 @@ public class KcapMatch {
 
 			log.error(e);
 
-			filtBean = null;
+			filtBean = new Bean();
 		}
-
-		log.error("++++++++++++++++++R001-end:" + filtBean.size());
+		
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R001-end:", KcapMatch.class);
 
 		return filtBean;
 	}
@@ -392,7 +379,7 @@ public class KcapMatch {
 			return new Bean();
 		}
 
-		log.error("++++++++++++++++++R002-begin:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R002-begin:", KcapMatch.class);
 
 		try {
 
@@ -429,7 +416,7 @@ public class KcapMatch {
 			log.error(e);
 		}
 
-		log.error("++++++++++++++++++R002-end:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R002-end:", KcapMatch.class);
 
 		return filtBean;
 	}
@@ -545,7 +532,7 @@ public class KcapMatch {
 			return filtBean;
 		}
 
-		log.error("++++++++++++++++++R004-begin:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R003-begin:", KcapMatch.class);
 
 		Bean cloneBean = (Bean) filtBean.clone();
 
@@ -576,7 +563,7 @@ public class KcapMatch {
 		// filtBean.getBean(timeKey).size());
 		// }
 
-		log.error("++++++++++++++++++R004-end:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R003-end:", KcapMatch.class);
 
 		return filtBean;
 	}
@@ -590,14 +577,6 @@ public class KcapMatch {
 	 *            {考生ID:考生bean}
 	 */
 	private static Bean filtR004(Bean freeZw, KcapResource res, Bean filtBean) {
-
-		SqlBean sql = new SqlBean();
-
-		ServDao.find("", sql);
-
-		if (filtBean == null || filtBean.isEmpty()) {
-			return filtBean;
-		}
 
 		return filtBean;
 	}
@@ -616,7 +595,7 @@ public class KcapMatch {
 			return filtBean;
 		}
 
-		log.error("++++++++++++++++++R005-begin:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R005-begin:", KcapMatch.class);
 
 		try {
 
@@ -681,7 +660,7 @@ public class KcapMatch {
 			filtBean = null;
 		}
 
-		log.error("++++++++++++++++++R005-end:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R005-end:", KcapMatch.class);
 
 		return filtBean;
 	}
@@ -760,7 +739,7 @@ public class KcapMatch {
 			return filtBean;
 		}
 
-		log.error("++++++++++++++++++R006-begin:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R006-begin:", KcapMatch.class);
 
 		try {
 
@@ -817,7 +796,7 @@ public class KcapMatch {
 			filtBean = null;
 		}
 
-		log.error("++++++++++++++++++R006-end:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R006-end:", KcapMatch.class);
 
 		return filtBean;
 	}
@@ -835,7 +814,7 @@ public class KcapMatch {
 			return filtBean;
 		}
 
-		log.error("++++++++++++++++++R007-begin:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R007-begin:", KcapMatch.class);
 
 		Bean temp = new Bean();
 
@@ -876,7 +855,7 @@ public class KcapMatch {
 			}
 		}
 
-		log.error("++++++++++++++++++R007-end:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R007-end:", KcapMatch.class);
 
 		return filtBean;
 	}
@@ -894,7 +873,7 @@ public class KcapMatch {
 			return filtBean;
 		}
 
-		log.error("++++++++++++++++++R008-begin:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R008-begin:", KcapMatch.class);
 
 		Bean filt = new Bean();
 
@@ -909,8 +888,10 @@ public class KcapMatch {
 				String type = obj.getString("direction");
 
 				if (!Strings.isBlank(type) && !res.getSpOrgKsBean().isEmpty()) {
+					
+					Bean cloneFiltBean = (Bean) filtBean.clone();
 
-					filt = filtR008Ks(freeZw, res, filtBean.copyOf(), type);
+					filt = filtR008Ks(freeZw, res, cloneFiltBean, type);
 				}
 			}
 
@@ -922,7 +903,7 @@ public class KcapMatch {
 			return filt;
 		}
 
-		log.error("++++++++++++++++++R008-end:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R008-end:", KcapMatch.class);
 
 		return filtBean;
 	}
@@ -968,10 +949,12 @@ public class KcapMatch {
 		Bean temp = new Bean();
 
 		Bean spOrgKsBean = res.getSpOrgKsBean();
+		
+		Bean cloneFiltBean = (Bean) filtBean.clone();
 
-		for (Object time : filtBean.copyOf().keySet()) { // 遍历考试时长
+		for (Object time : cloneFiltBean.keySet()) { // 遍历考试时长
 
-			Bean timeBean = filtBean.getBean(time).copyOf();
+			Bean timeBean = (Bean) filtBean.getBean(time).clone();
 
 			Bean uTemp = new Bean();
 
@@ -1046,7 +1029,7 @@ public class KcapMatch {
 			return filtBean;
 		}
 
-		log.error("++++++++++++++++++R009-begin:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R009-begin:", KcapMatch.class);
 
 		String kcLv = freeZw.getStr("KC_LV"); // 考场层级 一级考场 二级考场
 
@@ -1136,7 +1119,7 @@ public class KcapMatch {
 			e.printStackTrace();
 		}
 
-		log.error("++++++++++++++++++R009-end:" + filtBean.size());
+		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R009-end:", KcapMatch.class);
 
 		return filtBean;
 

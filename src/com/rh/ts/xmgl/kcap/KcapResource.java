@@ -161,12 +161,16 @@ public class KcapResource {
 	 */
 	private void loadKs(String xmId, String odept) {
 
-		List<Bean> jkKsList = getKsList(xmId, odept, 2);
+//		List<Bean> jkKsList = getKsList(xmId, odept, 2);
+		
+		List<Bean> jkKsList = getKsListNew(xmId, odept, 2);
 
 		jkKsBean = ksList2Bean(jkKsList, "S_ODEPT", "BM_KS_TIME", "BM_CODE");
 
 		// 考试
-		List<Bean> ksList = getKsList(xmId, odept, 0);
+//		List<Bean> ksList = getKsList(xmId, odept, 0);
+		
+		List<Bean> ksList = getKsListNew(xmId, odept,0);
 
 		if (jkKsList != null) {
 
@@ -801,8 +805,10 @@ public class KcapResource {
 		}
 
 		aksBean = commList2Bean(ksList, keys[0]); // "S_ODEPT"
+		
+		Bean cloneAskBean = (Bean) aksBean.clone();
 
-		for (Object odept : aksBean.copyOf().keySet()) {
+		for (Object odept : cloneAskBean.keySet()) {
 
 			boolean ishas = false;
 
@@ -1219,7 +1225,8 @@ public class KcapResource {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append(" AND  EXISTS  ( SELECT DEPT_CODE FROM " + ServMgr.SY_ORG_DEPT + " WHERE 1=1");
-		// sb.append(" AND SY_ORG_DEPT.DEPT_TYPE = " + OrgConstant.DEPT_TYPE_ORG);
+		// sb.append(" AND SY_ORG_DEPT.DEPT_TYPE = " +
+		// OrgConstant.DEPT_TYPE_ORG);
 		sb.append(" AND SY_ORG_DEPT.S_FLAG = 1");
 
 		if (status == 2) {
@@ -1242,6 +1249,68 @@ public class KcapResource {
 		where += " where 1=1 " + sql.getWhere();
 
 		List<Bean> ksList = Transaction.getExecutor().query(where, sql.getVars());
+
+		return ksList;
+	}
+
+	private List<Bean> getKsListNew(String xmId, String odept, int status) {
+
+		String kcIds = "";
+
+		for (Object kcid : kcOrgBean.keySet()) {
+
+			if (Strings.isBlank(kcIds)) {
+
+				kcIds += "'" + kcid + "'";
+
+			} else {
+
+				kcIds += ",'" + kcid + "'";
+			}
+
+		}
+
+		StringBuffer sb = new StringBuffer();
+
+		sb.append("SELECT  a.*,p.STATION_TYPE,p.STATION_TYPE_CODE,p.STATION_NO,p.STATION_NO_CODE FROM ");
+
+		sb.append("TS_BMSH_PASS a ");
+
+		sb.append("LEFT JOIN SY_ORG_USER b ON a.BM_CODE = b.USER_CODE ");
+
+		if (status == 2) {
+			sb.append("LEFT JOIN SY_ORG_DEPT c ON c.DEPT_CODE = a.JK_ODEPT ");
+		} else {
+			sb.append("LEFT JOIN SY_ORG_DEPT c ON c.DEPT_CODE = b.DEPT_CODE ");
+		}
+		sb.append("LEFT JOIN SY_HRM_ZDSTAFFPOSITION p ON a.BM_CODE = p.PERSON_ID ");
+
+		sb.append("WHERE 1 = 1 AND XM_ID = '").append(xmId);
+
+		if (status == 2) {
+			
+			sb.append("' AND a.BM_STATUS = 2 ");
+			
+		} else {
+			
+			sb.append("' AND a.BM_STATUS = 0 ");
+		}
+
+		StringBuffer exists = new StringBuffer(" SELECT '' FROM ");
+
+		exists.append(TsConstant.SERV_KCAP_GLJG);
+
+		exists.append(" g WHERE g.KC_ID IN (").append(kcIds).append(") ");
+
+		exists.append(" AND INSTR(c.CODE_PATH, g.JG_CODE) > 0");
+
+		sb.append(" AND EXISTS (").append(exists.toString()).append(")");
+
+		String notExistsSql = " select * from " + TsConstant.SERV_KCAP_YAPZW + " b where b.SH_ID = a.SH_ID";
+
+		sb.append(" AND NOT EXISTS (").append(notExistsSql).append(")");
+
+		List<Bean> ksList = Transaction.getExecutor().query(sb.toString(), new ArrayList<Object>());
 
 		return ksList;
 	}
