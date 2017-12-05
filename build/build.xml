@@ -299,4 +299,16 @@
 		<delete dir="${dist.dir}/js" />
 	</target>
 	<!--TODO用于打增量包 <date when="after" datetime="2013/07/3 00:00:00"   pattern="yyyy/MM/dd HH:mm:ss" />-->
+	<target name="copyFile" depends="compile">
+		<loadfile property="file" srcfile="fileList.txt"/>
+	    <tstamp>
+		  <format property="nowTime" pattern="yyyyMMdd-HH-mm-ss" unit="second"/>
+	    </tstamp>
+		<for param="line" list="${file}" delimiter="${line.separator}">
+		  <sequential>
+			<copy file="${root.dir}/@{line}" tofile="${dist.dir}/${nowTime}/@{line}" verbose="false" overwrite="true"/>
+		  </sequential>
+		</for>
+		<zip destfile="${dist.dir}/${nowTime}/pro.zip" basedir="${dist.dir}/${nowTime}/pro" />
+	  </target>
 </project>
