@@ -132,7 +132,7 @@
 				<!-- Sidebar user panel -->
 				<div class="user-panel text-center">
 					<div class=" image" style="position: absolute;padding-left: 10px;">
-						<img id="userImg1" style="min-width: 64px; max-width: 65px;"  onerror="this.src='/sy/theme/default/images/common/user_64_64.png'" class="img-circle" alt="User Image">
+						<img id="userImg1" style="min-width: 64px; max-width: 65px;"  onerror="this.src='/sy/theme/default/images/common/user_64_64.png'" class="img-circle" alt="">
 <!-- 						<img id="userImg1" style="max-width: 64px;" src="/sy/theme/default/images/common/user_64_64.png" onerror="this.src='/sy/theme/default/images/common/user_64_64.png'" class="img-circle" alt="User Image"> -->
 					</div>
 					<div id="userInfo" class="text-center" style="line-height: 32px;height: 64px;margin-left: 74px;">
