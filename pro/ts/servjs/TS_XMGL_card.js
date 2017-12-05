@@ -105,7 +105,7 @@ $('#'+xmKsEndData._opts.id+"_div").css('min-height','32px');
 
 // 下一步按钮
 // 1把数据保存到数据库
-_viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
+_viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {debugger;
 	var xmStart=_viewer.getItem("XM_START").getValue();//项目开始时间
 	var xmEnd=_viewer.getItem("XM_END").getValue();//项目截至时间
 	var xmKsStartData=_viewer.getItem("XM_KSSTARTDATA").getValue();//考试开始时间
@@ -151,15 +151,15 @@ _viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
 	var params = {"XM_ID" : XM_ID,"_extWhere" : extWhere};
 	var url = "TS_XMGL_SZ.list.do?&_extWhere=" + extWhere;
 	var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
-	Tab.open(options);
 	$( ".ui-dialog-titlebar-close").click();
+	Tab.open(options);
 	_viewer.getParHandler().refresh();
 	}else{
 		return  false;
 	}
 });
 
-// 保存后的操作
+// 保存后的操作ui-dialog-titlebar-close
 
 _viewer.afterSave = function(resultdata) {
 	var XM_ID = resultdata.XM_ID;

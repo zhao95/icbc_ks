@@ -905,6 +905,28 @@ public class XmglServ extends CommonServ {
 		}
 	}
 
+
+	/**
+	 * 批量改变 状态(取消发布)
+	 * 
+	 * 
+	 * @param paramBean
+	 * 
+	 */
+	public void UpdateStatusStop(Bean paramBean) {
+		try {
+			String dataId = paramBean.getStr("pkCodes");
+			Bean xmBean = ServDao.find("TS_XMGL", dataId);
+			if (1 == xmBean.getInt("XM_STATE")) {
+				ServDao.save("TS_XMGL", xmBean.set("XM_STATE", 0));
+			}
+		} catch (Exception e) {
+			throw new TipException("服务器异常，发布失败！");
+		}
+	}	
+		
+	
+	
 	// 查询前添加查询条件
 	protected void beforeQuery(ParamBean paramBean) {
 		ParamBean param = new ParamBean();
@@ -914,22 +936,6 @@ public class XmglServ extends CommonServ {
 		param.set("ctlgModuleName", ctlgModuleName);
 		param.set("serviceName", serviceName);
 		PvlgUtils.setCtlgPvlgWhere(param);
-	}
-	
-	
-	public Bean delXmAll(Bean paramBean)  {	
-		//String   delXmidAll=paramBean.getStr("xmpk");
-		//考试准考证表 
-		//String sqldel01="delete *  from  ts_xmgl_admission_file    where   XM_ID='"+delXmidAll+"'";
-		//Transaction.getExecutor().execute(sqldel01);
-		//非资格考试表
-		//String sqldel02="delete *  from  ts_xmgl_bm_fzgks    where   XM_ID='"+delXmidAll+"'";
-		//Transaction.getExecutor().execute(sqldel02);
-		
-//		String  count="  SELECT  COUNT(*)  FROM  SY_SERV   WHERE   SERV_ID LIKE 'TS_%' ";
-//	    int count2 = Transaction.getExecutor().count(count);
-//	    System.out.println(count2);
-	 	return  null;
 	}
 	/**
 	 * 判断此人是否能进行报名审核
@@ -947,5 +953,67 @@ public class XmglServ extends CommonServ {
 		}
 		return new OutBean().set("flag", "false");
 	}
+
+	
+	public Bean delXmAll(Bean paramBean)  {	
+		String   delXmidAll=paramBean.getStr("xmpk");
+		//报名列表
+				String sqldel12="delete *  from  TS_BMLB_BM    where   XM_ID='"+delXmidAll+"'";
+				Transaction.getExecutor().execute(sqldel12);
+		//报名列表
+		String sqldel01="delete *  from  TS_BMLB_BM    where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqldel01);
+		//已通过报名
+		String sqldel02="delete *  from  TS_BMSH_PASS    where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqldel02);
+		//待审核人员
+		String sqldel03="delete *  from  TS_BMSH_STAY    where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqldel03);
+		//没通关过
+		String sqldel04="delete *  from  TS_BMSH_NOPASS    where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqldel04);
+		//没通关过
+	    String sqldel05="delete *  from  TS_QJLB_QJ    where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqldel05);
+		//没通关过
+	    String sqldel06="delete *  from  TS_JKLB_JK     where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqldel06);
+		//准考证
+	    String sqldel07="delete *  from  TS_XMGL_ADMISSION_FILE     where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqldel07);
+		
+		
+		
+		//SELECT  *   FROM      ts_comm_todo 
+		//SELECT  *   FROM   ts_comm_todo_done
+	 	return null ;
+	}	
+	
+//	public OutBean countNum(Bean paramBean) {
+//	OutBean outBean = new OutBean();
+//	String  parampk=paramBean.getStr("pks");//项目id",,";
+//	String[] pksArray=parampk.split(",");
+//	String Str="";
+//	for(int  i=0;i<pksArray.length;i++){
+//		 Str+="'"+pksArray[i]+"',";
+//	}
+//	Str = Str.substring(0,Str.length()-1);
+//	String sql1="SELECT COUNT(*)  FROM (SELECT xm_id FROM TS_XMGL  WHERE XM_ID IN "
+//	        +" ( "+Str+ "))"
+//	        +"  a   LEFT JOIN ts_xmgl_BMSH b "
+//	        +"  ON a.xm_id = b.xm_id   "
+//	        +"   WHERE b.SH_RGSH`=1   "
+//	        +"  AND b.`SH_ZDSH`=1  ";
+//	
+//	String sql2="SELECT COUNT(*)  FROM (SELECT xm_id FROM TS_XMGL  WHERE XM_ID IN "
+//			+ "("+Str+ ")) a"
+//	        +"  LEFT JOIN ts_xmgl_BMGL b "
+//	        +"   ON a.xm_id = b.xm_id  ";
+//	outBean.set("sql1", sql1);
+//	outBean.set("sql2", sql2);
+//	
+//	return  outBean;
+//}	
+	
 	
 }
