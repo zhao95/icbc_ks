@@ -9,6 +9,8 @@ function rowscolor(table) {
             rows[i].style.backgroundColor = "Azure";
         }
     }
+
+
 }
 //-----------------------撤销按钮
 function chexiao(i) {

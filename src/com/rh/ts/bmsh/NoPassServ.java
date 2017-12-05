@@ -46,15 +46,38 @@ public class NoPassServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getUncheckList(Bean paramBean) {
+		String usercode = Context.getUserBean().getCode();
+		//查询当前审核人的流程 绑定的审核机构
+		String xmid= paramBean.getStr("xmid");
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();
-		String servId = "TS_BMSH_NOPASS";
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where");
-		List<Bean> list = ServDao.finds(servId, where1);
+		String sql = "select n.dept_code from (select node_id from(select wfs_id from ts_xmgl_bmsh where xm_id='"+xmid+"') c left join TS_WFS_NODE_APPLY d on c.wfs_id = d.wfs_id) m left join TS_WFS_BMSHLC n on m.node_id = n.node_id  "+
+				"where n.shr_usercode= '"+usercode+"'";
+		List<Bean> query = Transaction.getExecutor().query(sql);
+		String dept_code="";
 
-		//获取到辖内的报名
+		for (Bean bean : query) {
+			if(!"".equals(bean.getId())){}
+			//dept_code
+			dept_code+="'"+bean.getId()+"',";
+		}
+		List<Bean> list = new ArrayList<Bean>();
+		if(dept_code.length()>5){
+			dept_code = dept_code.substring(0,dept_code.length()-1);
+			String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+dept_code+")) and dept_code in("+dept_code+")";
+			List<Bean> query1 = Transaction.getExecutor().query(sql1);
+			for (Bean bean : query1) {
+				//判断哪些考生部门 在此codepath 下
+				String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_nopass a left join sy_org_dept b on a.s_dept=b.dept_code) c where c.code_path like concat('"+bean.getId()+"','%')";
+				List<Bean> query2 = Transaction.getExecutor().query(sql3);
+				list.addAll(query2);
+			}
+		}else{
+			return new OutBean().setError("空");
+		}
 		
 		
 		int ALLNUM = list.size();
@@ -477,37 +500,39 @@ public class NoPassServ extends CommonServ {
 					+ paramBean.getId().replaceAll(",", "','") + "')";
 			paramBean.setQuerySearchWhere(searchWhere);
 			dataList = ServDao.finds(servid, searchWhere);
-		}else{ // 导出所有记录
-			if(!"".equals(xmid)){
-				UserBean user = Context.getUserBean();
-				Bean userPvlgToHT = RoleUtil
-						.getPvlgRole(user.getCode(), "TS_BMGL_XNBM");
-				Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
-				Bean str = (Bean) userPvlgToHTBean.get("XN_BM");
-				String dept_code = str.getStr("ROLE_DCODE");
-				if ("".equals(dept_code)) {
-					dept_code = user.getStr("ODEPT_CODE");
-				}
-				dept_code = dept_code.substring(0, 10);
-				if (dept_code.equals("0010100000")) {
-					dataList=ServDao.finds("TS_BMSH_NOPASS",where);
+		}else{// 导出所有记录
+			String usercode = Context.getUserBean().getCode();
+			//查询当前审核人的流程 绑定的审核机构
+			Bean _PAGE_ = new Bean();
+			Bean outBean = new Bean();
+			String NOWPAGE = paramBean.getStr("nowpage");
+			String SHOWNUM = paramBean.getStr("shownum");
+			String where1 = paramBean.getStr("where");
+			String sql = "select n.dept_code from (select node_id from(select wfs_id from ts_xmgl_bmsh where xm_id='"+xmid+"') c left join TS_WFS_NODE_APPLY d on c.wfs_id = d.wfs_id) m left join TS_WFS_BMSHLC n on m.node_id = n.node_id  "+
+					"where n.shr_usercode= '"+usercode+"'";
+			List<Bean> query = Transaction.getExecutor().query(sql);
+			String dept_code="";
 
-				}else{
-					DeptBean dept = OrgMgr.getDept(dept_code);
-					String codepath = dept.getCodePath();
-					String sql = "select * from "
-							+ servid
-							+ " a where exists(select dept_code from sy_org_dept b where code_path like concat('"
-							+ codepath
-							+ "','%') and a.s_dept=b.dept_code and s_flag='1') "+where;
-					dataList = Transaction.getExecutor().query(sql);
-				}
-
-			}else{
-				String sql = "select * from ts_bmsh_nopass "+where;
-				dataList =Transaction.getExecutor().query(sql);
+			for (Bean bean : query) {
+				if(!"".equals(bean.getId())){}
+				//dept_code
+				dept_code+="'"+bean.getId()+"',";
 			}
-					}
+			if(dept_code.length()>5){
+				dept_code = dept_code.substring(0,dept_code.length()-1);
+				String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+dept_code+")) and dept_code in("+dept_code+")";
+				List<Bean> query1 = Transaction.getExecutor().query(sql1);
+				for (Bean bean : query1) {
+					//判断哪些考生部门 在此codepath 下
+					String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_nopass a left join sy_org_dept b on a.s_dept=b.dept_code) c where c.code_path like concat('"+bean.getId()+"','%')";
+					List<Bean> query2 = Transaction.getExecutor().query(sql3);
+					dataList.addAll(query2);
+				}
+			}else{
+				return new OutBean().setError("空");
+			}
+
+		}
 		List<Bean> finalList = new ArrayList<Bean>();
 
 		// 判断user_code 是否为空 若为空则 导出所有
