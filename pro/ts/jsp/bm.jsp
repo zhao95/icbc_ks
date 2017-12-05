@@ -288,7 +288,7 @@ String bmbq = request.getParameter("bmbq");
 		</div><!-- /.modal -->
 	</div>
 
-	<div class="modal fade" id="yzxx" tabindex="-1" role="dialog"
+	<!-- <div class="modal fade" id="yzxx" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -306,9 +306,9 @@ String bmbq = request.getParameter("bmbq");
 
 				</div>
 			</div>
-			<!-- /.modal-content -->
+			/.modal-content
 		</div>
-	</div>
+	</div> -->
 	<div class="modal fade" id="loading" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div  class="modal-dialog" style="width:700px;">

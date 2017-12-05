@@ -371,14 +371,17 @@ position: absolute;
 					
 					<h6 class="modal-title">信息验证</h6>
 				</div>
-					<button type="button" class="btn btn-default" data-dismiss="modal"
-						style="color:white;width: 100px;margin-left:100px;background-color: #00c2c2;">关闭</button>
+					<div style="padding-left:5%;padding-right:5%;font-size:16px;color:red" id="tishiyu"></div>
+				<div style="padding-top:2%;padding-bottom:6%;margin-left:27%;font-size:16px;">请输入您已入职满&nbsp;<input style="width:20%" id="yzinput"/>&nbsp;年</div>
+				<div class="modal-footer" style="height:10%">
+					<button type="button" class="btn btn-primary" onclick="yztj()">提交</button>
+
 					
 				</div>
 			</div>
 			<!-- /.modal-content -->
 		</div>
-		
+		</div>
 		<div class="modal fade" id="littleyzxx" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div class="modal-dialog">
