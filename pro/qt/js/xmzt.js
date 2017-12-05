@@ -124,8 +124,8 @@ $(function() {
 				}else if(kcap_state_msg =="未启用"){
 					kcMsg = "未启用";
 				}
-			}else if(kccs_state_msg== undefined && kcap_state_msg == undefined){
-				kcMsg = "未启用";
+			}else if(kcap_state_msg == undefined){
+				kcMsg = kccs_state_msg;
 			}else{
 				kcMsg = "未启用";
 			}
