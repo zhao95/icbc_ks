@@ -75,7 +75,6 @@ queryView.show(event);
 
 
 _viewer.getBtn("ImpchData").unbind("click").bind("click",function(event) {
-	alert("a");
 	
 	var configStr = "TS_XMGL,{'TARGET':'XM_TITLE~XM_NAME~XM_NAME','SOURCE':'XM_TITLE~XM_NAME~XM_NAME~XM_ID'," +
 	"'HIDE':'XM_ID','TYPE':'single','HTMLITEM':''}";

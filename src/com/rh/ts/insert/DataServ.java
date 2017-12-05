@@ -47,14 +47,14 @@ public class DataServ extends CommonServ {
 		int i=0;
 		int j=0;
 		int a = 0;
-		String sql = "SELECT DISTINCT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_LEVEL = '2'";
+		String sql = "SELECT CODE_PATH,DISTINCT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_LEVEL = '2'";
 		List<Bean> odeptlist = Transaction.getExecutor().query(sql);
 		
 		List bmlistbean = new ArrayList<Bean>();
 		List shlistbean = new ArrayList<Bean>();
 		for (Bean ODEPTBEAN : odeptlist) {
 			Transaction.begin();
-			String code_path = ODEPTBEAN.getStr("code_path");
+			String code_path = ODEPTBEAN.getStr("CODE_PATH");
 		
 		List<Bean> DEPTLIST = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE CONCAT('"+code_path+"','%') and DEPT_LEVEL =3");
 		for (Bean bean : DEPTLIST) {
@@ -630,11 +630,11 @@ public class DataServ extends CommonServ {
 		int i = 0;
 		int j = 0;
 		int a = 0;
-		String sql = "SELECT DISTINCT DEPT_CODE FROM SY_ORG_DEPT  where dept_code in('0110200000','0230100000','0162000000','0111800000','0060100000','0130100000','0010100500')";
+		String sql = "SELECT DISTINCT CODE_PATH,DEPT_CODE FROM SY_ORG_DEPT  where dept_code in('0110200000','0230100000','0162000000','0111800000','0060100000','0130100000')";
 		List<Bean> odeptlist = Transaction.getExecutor().query(sql);
 		for (Bean ODEPTBEAN : odeptlist) {
 			Transaction.begin();
-			String deptcode = ODEPTBEAN.getStr("code_path");
+			String deptcode = ODEPTBEAN.getStr("CODE_PATH");
 
 			List<Bean> DEPTLIST = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE CONCAT('" + deptcode + "','%') and DEPT_LEVEL =3");
 			for (Bean bean : DEPTLIST) {
