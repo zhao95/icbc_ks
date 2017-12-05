@@ -96,12 +96,13 @@ public class BmlbServ extends CommonServ {
 			beans.set("BM_ENDDATE", fzgks_date2);
 			beans.set("BM_TITLE", fzgks_name);
 			beans.set("XM_ID", xm_id);
+			Bean bmbean = ServDao.create(servId, beans);
 			int count = XmglMgr.existSh(xm_id);
 
 			if (count == 0 || count == 1) {
+
 				beans.set("BM_SH_STATE", 1);
 				// 新增到数据库
-				Bean bmbean = ServDao.create(servId, beans);
 				String bm_id = bmbean.getStr("BM_ID");
 				Bean mindbean = new Bean();
 				mindbean.set("SH_LEVEL", 0);
@@ -115,8 +116,18 @@ public class BmlbServ extends CommonServ {
 				mindbean.set("S_DNAME", dept_name);
 				mindbean.set("S_DEPT", bmbean.getStr("S_DEPT"));
 				ServDao.save("TS_COMM_MIND", mindbean);
+
+				String bm_idS = bmbean.getStr("BM_ID");
+				// 添加到审核表中
+				Bean shBean = new Bean();
+				shBean.set("XM_ID", xm_id);
+				shBean.set("BM_ID", bm_idS);
+				shBean.set("BM_NAME", user_name);
+				shBean.set("BM_CODE", user_code);
+				shBean.set("ODEPT_CODE", odept_code);
+				ServDao.save("TS_BMSH_PASS", shBean);
+
 			} else {
-				Bean bmbean = ServDao.create(servId, beans);
 				// 获取到报名id
 				String bm_id = bmbean.getStr("BM_ID");
 				beans.set("BM_SH_STATE", 0);
