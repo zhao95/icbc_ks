@@ -28,7 +28,6 @@ var listPage = function () {
 	var index = type.selectedIndex;
 	var  zhuangtai = type.options[index].value;
 	sqlWhere = where1 + where2;
-	var param = {};
 	//页面的输入查询条件放入传递的参数中
 	var param={};
 	param["zhuangtai"]=zhuangtai;
@@ -36,7 +35,6 @@ var listPage = function () {
 		param["nowpage"]=num;
 		param["shownum"]=myts;
 	param["where"] = sqlWhere;
-		
      	return FireFly.doAct("TS_XMGL","getUncheckList",param);
      /*return FireFly.getListData("TS_KS_CAL", data, false);*/
 //     debugger;
