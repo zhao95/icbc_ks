@@ -58,7 +58,6 @@ function showMenu() {
 				  continue;
 			     }
 			  if(data.menuList[i].MENU_NAME=="报名审核"){
-				  debugger;
 				  //报名审核 数据  是否有 待审核的数据
 				/*  var xmids = "";
 				  for(var j=0;j<list.length;j++){
@@ -66,24 +65,28 @@ function showMenu() {
 				  }
 				  var paramstay = {};
 				  paramstay["ids"]=xmids;*/
-				 var result =  FireFly.doAct("TS_BMSH_STAY","getStayList","");
-				 
-				  if(result.flag!="true"){
-					  //有待审核的数据
-					  $(".sidebar-menu")
-						.append(
-								'<li><a href="#" onclick="window.open('+MENU_URL+')"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
-										+ data.menuList[i].MENU_NAME
-										+ '</span></a></li>');
-				  }else{
-					 var num =  result.num
-					  //有需要 审核的数据  <span class="label label-warning" id="tipSum">0</span>
-					  $(".sidebar-menu")
-						.append(
-								'<li><a href="#" onclick="window.open('+MENU_URL+')"><i class="'+data.menuList[i].MENU_IMG+'"></i> <span>'
-										+ data.menuList[i].MENU_NAME
-										+ '</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-warning" id="tipSum">'+num+'</span></a></li>');
-				  }
+				  var MENU_IMG = data.menuList[i].MENU_IMG;
+				  var MENU_NAME = data.menuList[i].MENU_NAME;
+				 FireFly.doAct("TS_BMSH_STAY","getStayList","",true,true,function(result){
+
+                     if(result.flag!="true"){
+                         //有待审核的数据
+                         $(".sidebar-menu")
+                             .append(
+                                 '<li><a href="#" onclick="window.open('+MENU_URL+')"><i class="'+MENU_IMG+'"></i> <span>'
+                                 + MENU_NAME
+                                 + '</span></a></li>');
+                     }else{
+                         var num =  result.num
+                         //有需要 审核的数据  <span class="label label-warning" id="tipSum">0</span>
+                         $(".sidebar-menu")
+                             .append(
+                                 '<li><a href="#" onclick="window.open('+MENU_URL+')"><i class="'+MENU_IMG+'"></i> <span>'
+                                 + MENU_NAME
+                                 + '</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-warning" id="tipSum">'+num+'</span></a></li>');
+                     }
+				  });
+
 			  }else if(data.menuList[i].MENU_NAME=="查看辖内报名"&&lookflag=="false"){
 				  continue;
 			  }else if(data.menuList[i].MENU_NAME=="首页"){
