@@ -151,13 +151,14 @@ public class YapzwServ extends CommonServ {
         String shId = paramBean.getStr("SH_ID");
         String sjDate = paramBean.getStr("SJ_DATE");
         String sjCc = paramBean.getStr("SJ_CC");
+        String kcId = paramBean.getStr("KC_ID");
 //        String xmId = paramBean.getStr("XM_ID");
         Bean bmshPassBean = ServDao.find(TsConstant.SERV_BMSH_PASS, shId);
         String userCode = bmshPassBean.getStr("BM_CODE");//类别编码
 
         String msgStr = "";//"' and XM_ID ='" + xmId +
         List<Bean> beanList = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and SJ_CC ='" + sjCc + "' and U_CODE ='" + userCode + "' and SJ_DATE ='" + sjDate + "'");
-        if (beanList != null && beanList.size() > 0 && !beanList.get(0).getStr("SJ_CC").equals(sjCc)) {
+        if (beanList != null && beanList.size() > 0 && !beanList.get(0).getStr("KC_ID").equals(kcId)) {
             Bean bean = beanList.get(0);
             Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, bean.getStr("XM_ID"));
             Bean kcBean = ServDao.find("TS_KCGL", bean.getStr("KC_ID"));
