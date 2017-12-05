@@ -51,7 +51,25 @@ function bindCard(){
 	//当行删除事件
 	jQuery("td [operCode='optDeleteBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		rowDelete(pkCode,_viewer);
+		
+		var res = confirm("同时删除考场安排中引用的考场！");Language.transStatic("rhListView_string9")
+		if (res == true) {
+			_viewer.listBarTipLoad(Language.transStatic("rhListView_string7"));
+				setTimeout(function() {
+					if(!_viewer.beforeDelete(pkCode)){
+						return false;
+					}
+		    		var strs = pkCode;
+		    		var temp = {};
+					temp[UIConst.PK_KEY]=strs;
+		    		var resultData = FireFly.listDelete(_viewer.opts.sId,temp,_viewer.getNowDom());
+		    		_viewer._deletePageAllNum();
+		    		_viewer.refreshGrid();
+		    		_viewer.afterDelete();
+				},0);
+		} else {
+			return false;
+		}
 	});
 	
 	jQuery("td [operCode='optZBtn']").unbind("click").bind("click", function(){
@@ -65,5 +83,36 @@ function bindCard(){
  * 删除前方法执行
  */
 rh.vi.listView.prototype.beforeDelete = function(pkArray) {
-	showVerify(pkArray,_viewer);
+		showVerify(pkArray,_viewer);
 };
+
+
+_viewer.getBtn("delete").unbind("click").bind("click",function() {
+	
+    var pkArray = _viewer.grid.getSelectPKCodes();
+	if (jQuery.isArray(pkArray) && pkArray.length == 0) {
+//		 _viewer.listBarTipError("请选择要删除的条目");
+		_viewer.listBarTipError(Language.transStatic("rhListView_string8"));
+	} else {
+//		 var res = confirm("您确定要删除该数据么？");Language.transStatic("rhListView_string9")
+		 var res = confirm("同时删除考场安排中引用的考场！");
+		 if (res == true) {
+//    		_viewer.listBarTipLoad("提交中...");
+			 _viewer.listBarTipLoad(Language.transStatic("rhListView_string7"));
+    		setTimeout(function() {
+    			if(!_viewer.beforeDelete(pkArray)){
+    				return false;
+    			}
+	    		var strs = pkArray.join(",");
+	    		var temp = {};
+	    		temp[UIConst.PK_KEY]=strs;
+	    		var resultData = FireFly.listDelete(_viewer.opts.sId,temp,_viewer.getNowDom());
+	    		_viewer._deletePageAllNum();
+	    		_viewer.refreshGrid();
+	    		_viewer.afterDelete();
+    		},0);	
+		 } else {
+		 	return false;
+		 }
+	}
+}); 

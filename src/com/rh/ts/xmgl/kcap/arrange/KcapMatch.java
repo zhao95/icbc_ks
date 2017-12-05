@@ -11,8 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
-import com.rh.core.serv.ServDao;
-import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.DateUtils;
 import com.rh.core.util.Strings;
 import com.rh.ts.xmgl.kcap.KcapResource;

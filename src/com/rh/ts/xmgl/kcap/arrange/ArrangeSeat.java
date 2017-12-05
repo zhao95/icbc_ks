@@ -529,7 +529,7 @@ public class ArrangeSeat {
 
 			if (!Strings.isBlank(addZw.getId())) {
 
-				log.error("------------5-成功安排座位：time:" + ksTime + "|odept:" + uCode);
+				log.error("------------5-|成功安排座位：time:" + ksTime + "|odept:" + uCode);
 
 				// 移除考场资源
 				if (priority == 1) { // 最少场次
