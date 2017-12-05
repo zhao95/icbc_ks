@@ -1925,7 +1925,7 @@ var KcObject = {
                 '   <td>' + zw.org3 + '</td>',//三级机构
                 '   <td>' + zw.BM_CODE + '</td>',//四级机构
                 '   <td>' + zw.BM_NAME + '</td>',//姓名
-                '   <td>' + zw.BM_XL + '-' + (zw.BM_MK === '无模块' ? '' : ('-' + zw.BM_MK )) + '</td>',//考试名称
+                '   <td>' + zw.BM_XL + (zw.BM_MK === '无模块' ? '' : ('-' + zw.BM_MK )) + '</td>',//考试名称
                 '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), zw.BM_TYPE) + '</td>',//级别
                 '   <td>' + zw.COUNT + '</td>',//报考数
                 '   <td>' + zw.IPZ_IP + '</td>',//ip
@@ -2485,13 +2485,14 @@ var KsObject = {
                 '   <td>' + ks.org1 + '</td>',//一级机构
                 '   <td>' + ks.org2 + '</td>',//二级机构
                 '   <td>' + ks.org3 + '</td>',//三级机构
-                '   <td>' + ks.org4 + '</td>',//四级机构
+                '   <td>' + ks.BM_CODE + '</td>',//人力资源编码
+                // '   <td>' + ks.org4 + '</td>',//四级机构
                 '   <td>' + ks.BM_NAME + '</td>',//姓名
                 '   <td>' + ks.BM_XL + (ks.BM_MK === '无模块' ? '' : ('-' + ks.BM_MK)) + '</td>',//考试名称
                 '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), ks.BM_TYPE) + '</td>',//级别
                 '   <td>' + ks.COUNT + '</td>',//报考数
                 // '   <td>' + ks.STATUS + '</td>',//状态
-                '   <td>' + ks.BM_CODE + '</td>',//人力资源编码
+
                 '</tr>'
             ].join(''));
 

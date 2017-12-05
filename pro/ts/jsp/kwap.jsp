@@ -292,13 +292,13 @@
                                 <th style="min-width: 90px">一级机构</th>
                                 <th style="min-width: 90px">二级机构</th>
                                 <th style="min-width: 90px">三级机构</th>
-                                <th style="min-width: 90px">四级机构</th>
+                                <th style="min-width: 115px">人力资源编码</th>
+                                <%--<th style="min-width: 90px">四级机构</th>--%>
                                 <th style="min-width: 90px">姓名</th>
                                 <th style="min-width: 90px">考试名称</th>
                                 <th style="min-width: 90px">级别</th>
                                 <th style="min-width: 64px">报考数</th>
                                 <%--<th>状态</th>--%>
-                                <th style="min-width: 115px">人力资源编码</th>
                             </tr>
                             </thead>
                             <tbody id="rhGrid-tbody">
