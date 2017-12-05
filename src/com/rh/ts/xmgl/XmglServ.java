@@ -1051,56 +1051,56 @@ public Bean delXmAll(Bean paramBean)  {
 //考场测算的删除
 public  void delFieldCal(String   delXmidAll)  {	
 	//变跟申请记录 TS_KCGL_UPDATE 
-    String   delsqlupdate="DELETE     FROM  TS_KCGL_UPDATE D  WHERE   D.KC_ID  IN "
+    String   delsqlupdate="DELETE     FROM  TS_KCGL_UPDATE    WHERE   KC_ID  IN "
                   +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
 		          +"WHERE A.GROUP_ID = B.GROUP_ID   "
 		          + "AND  B.KCZ_ID = C.KCZ_ID   "
 		          + "AND C.XM_ID ='"+delXmidAll+"')";
     Transaction.getExecutor().execute(delsqlupdate);
    //考场ip段 TS_KCGL_IPSCOPE
-    String   delsqlipScope="DELETE     FROM  TS_KCGL_IPSCOPE  D  WHERE   D.KC_ID  IN "
+    String   delsqlipScope="DELETE     FROM  TS_KCGL_IPSCOPE    WHERE   KC_ID  IN "
                       +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
     		          +"WHERE A.GROUP_ID = B.GROUP_ID   "
     		          + "AND  B.KCZ_ID = C.KCZ_ID   "
     		          + "AND C.XM_ID ='"+delXmidAll+"')";
    Transaction.getExecutor().execute(delsqlipScope); 
   //考场ip段 TS_KCGL_IPZWH
-    String   delsqlIPzwh="DELETE     FROM  TS_KCGL_IPZWH  D  WHERE   D.KC_ID  IN "
+    String   delsqlIPzwh="DELETE     FROM  TS_KCGL_IPZWH   WHERE   KC_ID  IN "
                           +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
         		          +"WHERE A.GROUP_ID = B.GROUP_ID   "
         		          + "AND  B.KCZ_ID = C.KCZ_ID   "
         		          + "AND C.XM_ID ='"+delXmidAll+"')";
     Transaction.getExecutor().execute(delsqlIPzwh); 
     //关联机构  （表TS_KCGL_GLJG         
-    String   delsqlGljg="DELETE     FROM  TS_KCGL_GLJG  D  WHERE   D.KC_ID  IN "
+    String   delsqlGljg="DELETE     FROM  TS_KCGL_GLJG    WHERE   KC_ID  IN "
               +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
 	          +"WHERE A.GROUP_ID = B.GROUP_ID   "
 	          + "AND  B.KCZ_ID = C.KCZ_ID   "
 	          + "AND C.XM_ID ='"+delXmidAll+"')";
     Transaction.getExecutor().execute(delsqlGljg);   
   //考场管理员  （表TS_KCGL_GLY         
-    String   delsqlGly="DELETE     FROM  TS_KCGL_GLY  D  WHERE   D.KC_ID  IN "
+    String   delsqlGly="DELETE     FROM  TS_KCGL_GLY    WHERE   KC_ID  IN "
               +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
 	          +"WHERE A.GROUP_ID = B.GROUP_ID   "
 	          + "AND  B.KCZ_ID = C.KCZ_ID   "
 	          + "AND C.XM_ID ='"+delXmidAll+"')";
     Transaction.getExecutor().execute(delsqlGly); 
     //系统座位号对应    TS_KCGL_ZWDYB 
-    String   delsqlZwdyb="DELETE     FROM  TS_KCGL_ZWDYB  D  WHERE   D.KC_ID  IN "
+    String   delsqlZwdyb="DELETE     FROM  TS_KCGL_ZWDYB    WHERE   KC_ID  IN "
             +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
 	          +"WHERE A.GROUP_ID = B.GROUP_ID   "
 	          + "AND  B.KCZ_ID = C.KCZ_ID   "
 	          + "AND C.XM_ID ='"+delXmidAll+"')";
   Transaction.getExecutor().execute(delsqlZwdyb);
   //监控地址  （表TS_KCGL_JKIP  
-  String   delsqljkip="DELETE     FROM  TS_KCGL_JKIP  D  WHERE   D.KC_ID  IN "
+  String   delsqljkip="DELETE     FROM  TS_KCGL_JKIP    WHERE   KC_ID  IN "
           +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
 	          +"WHERE A.GROUP_ID = B.GROUP_ID   "
 	          + "AND  B.KCZ_ID = C.KCZ_ID   "
 	          + "AND C.XM_ID ='"+delXmidAll+"')";
    Transaction.getExecutor().execute(delsqljkip);
    //考场管理  （表TS_KCGL
-       String   delsqlkcgl=" DELETE      FROM    TS_KCGL   A   WHERE   A.GROUP_ID   IN"
+       String   delsqlkcgl=" DELETE      FROM    TS_KCGL      WHERE   GROUP_ID   IN"
 		   +"(SELECT  B.GROUP_ID   FROM  TS_KCZGL_GROUP B,TS_KCZGL C  WHERE B.KCZ_ID = C.KCZ_ID  "
 		   + "AND C.XM_ID ='"+delXmidAll+"')";
 	   Transaction.getExecutor().execute(delsqlkcgl);
