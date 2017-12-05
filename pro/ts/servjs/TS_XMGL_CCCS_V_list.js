@@ -226,10 +226,13 @@ function run(type){
 
 			}
 			
-			if(type == 1){
-				var str = JSON.stringify(allArray); 
-				alert(2);
-			}
+			var str = JSON.stringify(allArray); 
+			var expData = {};
+			expData["EXP_STR"] = str;
+			expData["XM_ID"] = xmId;
+			var userCode = System.getVar("@USER_CODE@");
+			//FireFly.doAct("TS_XMGL_CCCS_EXP","delete",{"_WHERE_":"and s_user = '"+userCode+"' and xm_id='"+xmId+"'"},false,true);
+			FireFly.doAct("TS_XMGL_CCCS_EXP","save",expData,false);
 			
 		} catch(e) {
 			console.log("error",e);
@@ -392,9 +395,9 @@ function getResult2(kcArr){
 }
 // 导出
 _viewer.getBtn("expExcel").unbind("click").bind("click",function(event) {
-	tabletoExcel("JColResizer2");
-//	window.open(FireFly.getContextPath() + '/TS_XMGL_CCCS_V.expExcel.do?data=' + 
-//    		encodeURIComponent(jQuery.toJSON({"xmId":xmId,"scVal":scVal,"sjVal":sjVal,"cjVal":cjVal})));
+//	tabletoExcel("JColResizer2");
+	window.open(FireFly.getContextPath() + '/TS_XMGL_CCCS_V.expExcel.do?data=' + 
+    		encodeURIComponent(jQuery.toJSON({"xmId":xmId})));
 });
 
 
