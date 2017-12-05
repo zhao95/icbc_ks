@@ -593,4 +593,94 @@ public class CccsServ extends CommonServ {
 	String odeptStr = odeptStr1 + odeptStr2;
 	return odeptStr;
     }
+    
+    /********二级考场计算**********************************************************************************************************/
+    /**
+     * 二级考场计算应用
+     * @param paramBean
+     * @return
+     */
+    public OutBean get2OdetpScope(ParamBean paramBean){
+	OutBean outBean = new OutBean();
+	String kcIds = paramBean.getStr("kcIds");
+	String[] kcIdArr = kcIds.split(",");
+	StringBuilder sb = new StringBuilder();
+	for (int i = 0; i < kcIdArr.length; i++) {
+	    if (kcIdArr[i].length() > 0) {
+		sb.append(get2OdeptStr(kcIdArr[i]));
+	    }
+	}
+	
+	outBean.set("odeptCodes", sb.toString());
+	return outBean;
+    }
+    
+    public String get2OdeptStr(String kcId){
+	ParamBean param = new ParamBean();
+	param.set("_SELECT_", "JG_CODE,JG_TYPE");
+	param.set("_WHERE_", "and kc_id = '"+kcId+"'");
+	List<Bean> list = ServDao.finds(VIEW_GLJG, param);
+	List<Bean> list1 = new ArrayList<Bean>();
+	List<Bean> list2 = new ArrayList<Bean>();
+	for (int i = 0; i < list.size(); i++) {
+	    Bean bean = list.get(i);
+	    int type = bean.getInt("JG_TYPE");
+	    if(type == 1){
+		//部门
+		list1.add(bean);
+	    }else{
+		//机构
+		list2.add(bean);
+	    }
+	}
+	
+	String odeptStr1 = getTwoSelfOdept(list1);
+	String odeptStr2 = getTwoAllOdept(list2);
+	String odeptStr = odeptStr1 + odeptStr2;
+	return odeptStr;
+    }
+    /**
+     * 根据部门取自己机构
+     * @param list
+     * @return
+     */
+    public String getTwoSelfOdept(List<Bean> list){
+	StringBuilder sb = new StringBuilder();
+	Set<String> set = new  HashSet<String>(); 
+	for (int i = 0; i < list.size(); i++) {
+	    String deptCode = list.get(i).getStr("JG_CODE");
+	    Bean bean = ServDao.find("SY_ORG_DEPT_ALL", deptCode);
+	    String odeptCode = bean.getStr("ODEPT_CODE");
+	    if(set.add(odeptCode)){
+		sb.append(odeptCode+",");
+	    }
+	}
+	return sb.toString();
+    }
+    
+    /**
+     * 根据机构取下级所有机构
+     * @param list
+     * @return
+     */
+    public String getTwoAllOdept(List<Bean> list){
+	StringBuilder sb = new StringBuilder();
+	Set<String> set = new  HashSet<String>(); 
+	for (int i = 0; i < list.size(); i++) {
+	    String odeptCode = list.get(i).getStr("JG_CODE");
+	    Bean bean = ServDao.find("SY_ORG_DEPT_ALL", odeptCode);
+	    String codePath = bean.getStr("CODE_PATH");
+	    Bean whereBean = new Bean();
+	    whereBean.set("_SELECT_", "DEPT_CODE");
+	    whereBean.set("_WHERE_", "and DEPT_CODE = ODEPT_CODE and CODE_PATH like '" + codePath +"%'");
+	    List<Bean> tmpList = ServDao.finds("SY_ORG_DEPT_ALL", whereBean);
+	    for (int j = 0; j < tmpList.size(); j++) {
+		String tmpOdeptCode = tmpList.get(j).getStr("ODEPT_CODE");
+		if (!tmpOdeptCode.isEmpty() && set.add(odeptCode)) {
+		    sb.append(tmpOdeptCode + ",");
+		}
+	    }
+	}
+	return sb.toString();
+    } 
 }

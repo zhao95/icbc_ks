@@ -29,7 +29,10 @@ _viewer.getBtn("run").unbind("click").bind("click", function(event) {
 	run();
 });
 
-function run(){
+function run(type){
+
+	_viewer.refreshGrid();
+	var allArray = new Array();
 	var myloadbar = new rh.ui.loadbar({"id":"my-loadbar"});
 	myloadbar.show();
 
@@ -40,11 +43,11 @@ function run(){
 					if (index != 0) {
 						var dataId = item.id;
 						if(dataId == "") return;
-						var param = {};
 						if (cjVal == "1") {
+							var param = {};
 							param["_WHERE_"] = "and xm_id = '"+ xmId + "' and KC_LEVEL = '一级' and KC_ODEPTCODE='"+ dataId + "'";
 							var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", param)._DATA_;
-							if (kcArr.length > 0) {
+							if (kcArr.length > 0) {								
 								var kcNum = kcArr.length;
 								$(item).find("td[icode='CC_KC_NUM']").html(kcNum);
 								var result = getResult(kcArr);
@@ -55,6 +58,19 @@ function run(){
 								$(item).find("td[icode='CC_MAX_NUM']").html(result.CC_MAX_NUM);
 								$(item).find("td[icode='CC_GOOD_SYNUM']").html(result.CC_GOOD_SYNUM);
 								$(item).find("td[icode='CC_MAX_SYNUM']").html(result.CC_MAX_SYNUM);
+								
+								var tmpBean = {};
+								tmpBean["DEPT_CODE"] = dataId;
+								tmpBean["DEPT_NAME"] = deptName;
+								tmpBean["CC_KC_NUM"] = kcArrTemp.length;
+								tmpBean["CC_PEOPLE_NUM"] = result.CC_PEOPLE_NUM;
+								tmpBean["CC_COMPUTER_GOODNUM"] = result.CC_COMPUTER_GOODNUM;
+								tmpBean["CC_GOOD_NUM"] = result.CC_GOOD_NUM;
+								tmpBean["CC_GOOD_SYNUM"] = result.CC_GOOD_SYNUM;
+								tmpBean["CC_COMPUTER_MAXNUM"] = result.CC_COMPUTER_MAXNUM;
+								tmpBean["CC_MAX_NUM"] = result.CC_MAX_NUM;
+								tmpBean["CC_MAX_SYNUM"] = result.CC_MAX_SYNUM;
+								allArray.push(tmpBean);
 							} else {
 								$(item).find("td[icode='CC_KC_NUM']").html("0");
 								$(item).find("td[icode='CC_PEOPLE_NUM']").html("0");
@@ -64,8 +80,22 @@ function run(){
 								$(item).find("td[icode='CC_COMPUTER_MAXNUM']").html("0");
 								$(item).find("td[icode='CC_MAX_NUM']").html("0");
 								$(item).find("td[icode='CC_MAX_SYNUM']").html("0");
+								
+								var tmpBean = {};
+								tmpBean["DEPT_CODE"] = 0;
+								tmpBean["DEPT_NAME"] = 0;
+								tmpBean["CC_KC_NUM"] = 0;
+								tmpBean["CC_PEOPLE_NUM"] = 0;
+								tmpBean["CC_COMPUTER_GOODNUM"] = 0;
+								tmpBean["CC_GOOD_NUM"] = 0;
+								tmpBean["CC_GOOD_SYNUM"] = 0;
+								tmpBean["CC_COMPUTER_MAXNUM"] = 0;
+								tmpBean["CC_MAX_NUM"] = 0;
+								tmpBean["CC_MAX_SYNUM"] = 0;
+								allArray.push(tmpBean);
 							}
 						} else {
+							var twoLevelArray=new Array();
 							// 考场数
 							var kcNumSum = 0;
 							// 报考人数
@@ -83,9 +113,10 @@ function run(){
 							// 最大计算机场次
 							var CcMax = 0;
 							// 1级考场
+							var param = {};
 							param["_WHERE_"] = "and xm_id = '" + xmId+ "' and KC_LEVEL = '一级' and KC_ODEPTCODE='" + dataId + "'";
 							var deptName = $(item).find("td[icode='DEPT_NAME']").html();
-							var deptNameA = "<a href='javascript:void(0);' id='deptNameA"+dataId+"' class='deptNameA' myType='1'>"+ deptName + "</>";
+							var deptNameA = "<a id='deptNameA"+dataId+"' class='deptNameA' myType='1'>"+ deptName + "</>";
 							$(item).find("td[icode='DEPT_NAME']").html(deptNameA);
 							
 							var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", param)._DATA_;
@@ -100,25 +131,43 @@ function run(){
 								maxSyNumSum += result.CC_MAX_SYNUM;
 								CcGood = result.CC_GOOD_NUM;
 								CcMax = result.CC_MAX_NUM;
+								
+								var tmpBean = {};
+								tmpBean["DEPT_CODE"] = dataId;
+								tmpBean["DEPT_NAME"] = deptName;
+								tmpBean["CC_KC_NUM"] = kcArr.length;
+								tmpBean["CC_PEOPLE_NUM"] = result.CC_PEOPLE_NUM;
+								tmpBean["CC_COMPUTER_GOODNUM"] = result.CC_COMPUTER_GOODNUM;
+								tmpBean["CC_GOOD_NUM"] = result.CC_GOOD_NUM;
+								tmpBean["CC_GOOD_SYNUM"] = result.CC_GOOD_SYNUM;
+								tmpBean["CC_COMPUTER_MAXNUM"] = result.CC_COMPUTER_MAXNUM;
+								tmpBean["CC_MAX_NUM"] = result.CC_MAX_NUM;
+								tmpBean["CC_MAX_SYNUM"] = result.CC_MAX_SYNUM;
+								
+								twoLevelArray.push(tmpBean);
 							}
 							
 							// 2级考场
-							var param = {};
-							param["_SELECT_"] = "DEPT_CODE";
-//							param["DEPT_PCODE"] = dataId;
-//							param["DEPT_TYPE"] = "2";
-//							param["S_FLAG"] = "1";
-							param["_WHERE_"] = "and (DEPT_PCODE = '"+dataId+"' or dept_code = '"+dataId+"') and DEPT_TYPE=2 and s_flag = 1";
-							var odept3Arr = FireFly.doAct("TS_ORG_DEPT","finds", param)._DATA_;
+							var param2 = {};
+							param2["_SELECT_"] = "DEPT_CODE,DEPT_NAME";
+//							param2["DEPT_PCODE"] = dataId;
+//							param2["DEPT_TYPE"] = "2";
+//							param2["S_FLAG"] = "1";
+							param2["_WHERE_"] = "and (DEPT_PCODE = '"+dataId+"' or dept_code = '"+dataId+"') and DEPT_TYPE=2 and s_flag = 1";
+							var odept3Arr = FireFly.doAct("TS_ORG_DEPT","finds", param2)._DATA_;
+							//二级机构数据
+							
 							if(odept3Arr.length > 0){
 								for(var i=0;i<odept3Arr.length;i++){
+									var tmpBean = {};
 									var deptCode = odept3Arr[i].DEPT_CODE;
 									var tempParam = {};
 									tempParam["_WHERE_"] = "and xm_id = '" + xmId+ "' and KC_LEVEL = '二级' and KC_ODEPTCODE='" + deptCode + "'";
 									var kcArrTemp = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", tempParam)._DATA_;
 									if(kcArrTemp.length > 0){
+										
 										kcNumSum += kcArrTemp.length;
-										var result = getResult(kcArrTemp);
+										var result = getResult2(kcArrTemp);
 										peopleNumSum += (result.CC_PEOPLE_NUM-0);
 										computerGoodNumSum += result.CC_COMPUTER_GOODNUM;
 										goodSyNumSum += result.CC_GOOD_SYNUM;
@@ -130,6 +179,18 @@ function run(){
 										if(result.CC_MAX_NUM > CcMax){
 											CcMax = result.CC_MAX_NUM;
 										}
+										tmpBean["DEPT_CODE"] = odept3Arr[i].DEPT_CODE;
+										tmpBean["DEPT_NAME"] = odept3Arr[i].DEPT_NAME;
+										tmpBean["CC_KC_NUM"] = kcArrTemp.length;
+										tmpBean["CC_PEOPLE_NUM"] = result.CC_PEOPLE_NUM;
+										tmpBean["CC_COMPUTER_GOODNUM"] = result.CC_COMPUTER_GOODNUM;
+										tmpBean["CC_GOOD_NUM"] = result.CC_GOOD_NUM;
+										tmpBean["CC_GOOD_SYNUM"] = result.CC_GOOD_SYNUM;
+										tmpBean["CC_COMPUTER_MAXNUM"] = result.CC_COMPUTER_MAXNUM;
+										tmpBean["CC_MAX_NUM"] = result.CC_MAX_NUM;
+										tmpBean["CC_MAX_SYNUM"] = result.CC_MAX_SYNUM;
+										
+										twoLevelArray.push(tmpBean);
 									}
 								}
 							}
@@ -142,89 +203,63 @@ function run(){
 							$(item).find("td[icode='CC_MAX_NUM']").html(CcMax);
 							$(item).find("td[icode='CC_MAX_SYNUM']").html(maxSyNumSum);
 							
-	// $("#deptNameA"+dataId).click(function() {
-								showDetail(dataId);
-	// });
+							var tmpAllBean = {};
+							tmpAllBean["DEPT_CODE"] = dataId;
+							tmpAllBean["DEPT_NAME"] = deptName;
+							tmpAllBean["CC_KC_NUM"] = kcNumSum;
+							tmpAllBean["CC_PEOPLE_NUM"] = peopleNumSum;
+							tmpAllBean["CC_COMPUTER_GOODNUM"] = computerGoodNumSum;
+							tmpAllBean["CC_GOOD_NUM"] = CcGood;
+							tmpAllBean["CC_GOOD_SYNUM"] = goodSyNumSum;
+							tmpAllBean["CC_COMPUTER_MAXNUM"] = computerMaxNumSum;
+							tmpAllBean["CC_MAX_NUM"] = CcMax;
+							tmpAllBean["CC_MAX_SYNUM"] = maxSyNumSum;
+							tmpAllBean["childArr"] = twoLevelArray;
+							
+							allArray.push(tmpAllBean);
+							// $("#deptNameA"+dataId).click(function() {
+							showDetail(dataId,twoLevelArray);
+							// });
 						}
 					}
 				});
+
 			}
+			
+			if(type == 1){
+				var str = JSON.stringify(allArray); 
+				alert(2);
+			}
+			
 		} catch(e) {
 			console.log("error",e);
 			myloadbar.hideDelayed();
 		} finally {
 			myloadbar.hideDelayed();
 		}
-	},200);
+	},100);
+	
+	myloadbar.hideDelayed();
 }
 
 
-function showDetail(dataId) {
-	try{
-		var obj = $("#deptNameA"+dataId)
-		var myType = obj.attr("myType");
-		var trObj = obj.parent().parent();
-		var trPK = trObj[0].id;
-		if (myType == "1") {
-			obj.attr("myType", "2");
-			var odept3Arr = FireFly.doAct("TS_ORG_DEPT","finds", {"_WHERE_" : "AND DEPT_PCODE = '" + trPK+ "' AND DEPT_TYPE=2"})._DATA_;
-			for (var i = 0; i < odept3Arr.length; i++) {
-				var deptCode = odept3Arr[i].DEPT_CODE;
-				var deptName = odept3Arr[i].DEPT_NAME;
-				var param = {};
-				param["_WHERE_"] = "and xm_id = '"+ xmId + "' and KC_LEVEL = '二级' and KC_ODEPTCODE='"+ deptCode + "'";
-				var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V","finds", param)._DATA_;
-				if (kcArr.length > 0) {
-					var result = getResult(kcArr);
-					var strChild = "<tr class='tBody-tr tr_"+ trPK + " id="+ deptCode
-							+ "'><td colspan='2'></td><td icode='DEPT_NAME'>&nbsp;&nbsp;"+ deptName
-							+ "</td><td icode='CC_KC_NUM'>"+ kcArr.length
-							+ "</td><td icode='CC_PEOPLE_NUM'>"+ result.CC_PEOPLE_NUM
-							+ "</td><td icode='CC_COMPUTER_GOODNUM'>"+ result.CC_COMPUTER_GOODNUM
-							+ "</td><td icode='CC_GOOD_NUM'>"+ result.CC_GOOD_NUM
-							+ "</td><td icode='CC_GOOD_SYNUM'>"+ result.CC_GOOD_SYNUM
-							+ "</td><td icode='CC_COMPUTER_MAXNUM'>"+ result.CC_COMPUTER_MAXNUM
-							+ "</td><td icode='CC_MAX_NUM'>"+ result.CC_MAX_NUM
-							+ "</td><td icode='CC_MAX_SYNUM'>"+ result.CC_MAX_SYNUM
-							+ "</td></tr>";
-					trObj.after(strChild);
-				}
-			}
-			var param = {};
-			param["_WHERE_"] = "and xm_id = '" + xmId + "' and KC_LEVEL = '一级' and KC_ODEPTCODE='"+ trPK + "'";
-			var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V","finds", param)._DATA_;
-			if (kcArr.length > 0) {
-				var result = getResult(kcArr);
-				var str = "<tr class='tBody-tr tr_"+ trPK + " id="+ trPK+ "'><td colspan='2'></td><td icode='DEPT_NAME'>&nbsp;&nbsp;"
-						+ obj.text()+ "</td><td icode='CC_KC_NUM'>"+ kcArr.length
-						+ "</td><td icode='CC_PEOPLE_NUM'>"+result.CC_PEOPLE_NUM
-						+ "</td><td icode='CC_COMPUTER_GOODNUM'>"+ result.CC_COMPUTER_GOODNUM
-						+ "</td><td icode='CC_GOOD_NUM'>"+ result.CC_GOOD_NUM
-						+ "</td><td icode='CC_GOOD_SYNUM'>"+ result.CC_GOOD_SYNUM
-						+ "</td><td icode='CC_COMPUTER_MAXNUM'>"+ result.CC_COMPUTER_MAXNUM
-						+ "</td><td icode='CC_MAX_NUM'>"+ result.CC_MAX_NUM
-						+ "</td><td icode='CC_MAX_SYNUM'>"+ result.CC_MAX_SYNUM
-						+ "</td></tr>";
-				trObj.after(str);
-			} else {
-				var str = "<tr class='tBody-tr tr_"+ trPK+ " id="+ trPK+ "'><td colspan='2'></td><td icode='DEPT_NAME'>&nbsp;&nbsp;"
-						+ obj.text()
-						+ "</td><td icode='CC_KC_NUM'>0</td><td icode='CC_PEOPLE_NUM'>0</td>" 
-						+ "<td icode='CC_COMPUTER_GOODNUM'>0"
-						+ "</td><td icode='CC_GOOD_NUM'>0"
-						+ "</td><td icode='CC_GOOD_SYNUM'>0"
-						+ "</td><td icode='CC_COMPUTER_MAXNUM'>0"
-						+ "</td><td icode='CC_MAX_NUM'>0"
-						+ "</td><td icode='CC_MAX_SYNUM'>0"
-						+ "</td></tr>";
-				trObj.after(str);
-			}
-		} else {
-			obj.attr("myType", "1");
-			$(".tr_" + trPK).remove();
-		}
-	} catch(e) {
-		alert(e);
+function showDetail(dataId,childArr) {
+	var obj = $("#deptNameA"+dataId);
+	var trObj = obj.parent().parent();
+	var trPK = dataId;
+	for(var i=0;i<childArr.length;i++){
+		var strChild = "<tr class='tBody-tr tr_"+ trPK + " id="+ childArr[i].DEPT_CODE
+		+ "'><td colspan='2'></td><td icode='DEPT_NAME'>&nbsp;&nbsp;"+ childArr[i].DEPT_NAME
+		+ "</td><td icode='CC_KC_NUM'>"+ childArr[i].CC_KC_NUM
+		+ "</td><td icode='CC_PEOPLE_NUM'>"+ childArr[i].CC_PEOPLE_NUM
+		+ "</td><td icode='CC_COMPUTER_GOODNUM'>"+ childArr[i].CC_COMPUTER_GOODNUM
+		+ "</td><td icode='CC_GOOD_NUM'>"+ childArr[i].CC_GOOD_NUM
+		+ "</td><td icode='CC_GOOD_SYNUM'>"+ childArr[i].CC_GOOD_SYNUM
+		+ "</td><td icode='CC_COMPUTER_MAXNUM'>"+ childArr[i].CC_COMPUTER_MAXNUM
+		+ "</td><td icode='CC_MAX_NUM'>"+ childArr[i].CC_MAX_NUM
+		+ "</td><td icode='CC_MAX_SYNUM'>"+ childArr[i].CC_MAX_SYNUM
+		+ "</td></tr>";
+		trObj.after(strChild);
 	}
 }
 
@@ -277,6 +312,66 @@ function getResult(kcArr){
 		param["_WHERE_"] = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and ODEPT_CODE_V in ('"+jgSum+"') and BM_XL_CODE = '"
 			+tmpBmXlCode+"' and BM_MK_CODE = '"+tmpBmMkCode+"' and BM_TYPE = '"+tmpBmType+"'";
 		var tmpPoepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", param)._DATA_;
+		peopleNum += tmpPoepleNum-0;
+		if (tmpPoepleNum != 0 && goodSumNum != 0 && maxSumNum !=0) { //最优场次数 
+			maxSyNum += maxSumNum-tmpPoepleNum-0;
+			goodSyNum += goodSumNum-tmpPoepleNum-0;
+			goodCCNum += Math.ceil(tmpPoepleNum/goodSumNum); //最大场次数 
+			maxCCNum += Math.ceil(tmpPoepleNum/maxSumNum); //最优剩余机器数 
+		}
+	}
+	res["CC_PEOPLE_NUM"] = peopleNum;
+	res["CC_COMPUTER_GOODNUM"] = goodSumNum;
+	res["CC_COMPUTER_MAXNUM"] = maxSumNum; 
+	res["CC_GOOD_NUM"] = goodCCNum;
+	res["CC_GOOD_SYNUM"] = goodSyNum; 
+	res["CC_MAX_NUM"] = maxCCNum;
+	res["CC_MAX_SYNUM"] = maxSyNum; 
+	return res;
+}
+
+function getResult2(kcArr){
+	// 返回结果
+	var res = {};
+	var goodSumNum = 0;
+	var maxSumNum = 0;
+	var jgSum = "";
+	var goodCCNum = 0;
+	var maxCCNum = 0;
+	var goodSyNum = 0;
+	var maxSyNum = 0;
+	var peopleNum = 0;
+	var kcIds = "";
+	for (var i = 0; i < kcArr.length; i++) {
+		var goodNum = kcArr[i].KC_GOOD - 0;
+		var maxNum = kcArr[i].KC_MAX - 0;
+		goodSumNum += goodNum;
+		maxSumNum += maxNum;
+		// 根据考场，得到机构的范围
+//		var jgArr = FireFly.doAct("TS_KCGL_GLJG_V","finds", {"_WHERE_":"and KC_ID = '"+kcArr[i].KC_ID+"'"})._DATA_;
+//		for(var j=0;j<jgArr.length;j++){
+//			jgSum = jgSum + "," + jgArr[j].JG_CODE;
+//		}
+		kcIds += kcArr[i].KC_ID + ","
+	}
+	
+	var jgSum = "";
+	FireFly.doAct("TS_XMGL_CCCS_V","get2OdetpScope", {"kcIds":kcIds},true,false,function(data){
+		jgSum = data.odeptCodes;
+		if(jgSum != ""){
+			jgSum = jgSum.substring(0,jgSum.length-1);
+			jgSum = jgSum.replace(/,/g, "','");
+		}
+	});	
+	var kcTypesArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_TYPE_V","finds",{"_WHERE_":"and xm_id = '"+xmId+"'"},true,false)._DATA_;
+	for(var i = 0; i < kcTypesArr.length; i++){
+		var tmpBmXlCode = kcTypesArr[i].BM_XL_CODE;
+		var tmpBmMkCode = kcTypesArr[i].BM_MK_CODE;
+		var tmpBmType = kcTypesArr[i].BM_TYPE;
+		var param = {};
+		param["_WHERE_"] = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and ODEPT_CODE_V in ('"+jgSum+"') and BM_XL_CODE = '"
+			+tmpBmXlCode+"' and BM_MK_CODE = '"+tmpBmMkCode+"' and BM_TYPE = '"+tmpBmType+"'";
+		var tmpPoepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", param)._DATA_;
 		if (tmpPoepleNum != 0 && goodSumNum != 0 && maxSumNum !=0) { //最优场次数 
 			peopleNum += tmpPoepleNum-0;
 			maxSyNum += maxSumNum-tmpPoepleNum-0;
@@ -292,24 +387,94 @@ function getResult(kcArr){
 	res["CC_GOOD_SYNUM"] = goodSyNum; 
 	res["CC_MAX_NUM"] = maxCCNum;
 	res["CC_MAX_SYNUM"] = maxSyNum; 
-	/**
-	 * 11月29日 更改场次测算逻辑 var poepleNum =
-	 * FireFly.doAct("TS_XMGL_CCCS_KSGL","count", {"_WHERE_":"and BM_KS_TIME in
-	 * ("+sjVal+") and S_ODEPT in ('"+jgSum+"')"})._DATA_; res["CC_PEOPLE_NUM"] =
-	 * poepleNum; res["CC_COMPUTER_GOODNUM"] = goodSumNum;
-	 * res["CC_COMPUTER_MAXNUM"] = maxSumNum; if (goodSumNum != 0 && maxSumNum !=
-	 * 0) { //最优场次数 var goodCCNum = Math.ceil(poepleNum/goodSumNum); //最大场次数 var
-	 * maxCCNum = Math.ceil(poepleNum/maxSumNum); //最优剩余机器数 var goodSyNum =
-	 * goodCCNum * goodSumNum - poepleNum; //最大剩余机器数 var maxSyNum = maxCCNum *
-	 * maxSumNum - poepleNum; res["CC_GOOD_NUM"] = goodCCNum;
-	 * res["CC_GOOD_SYNUM"] = goodSyNum; res["CC_MAX_NUM"] = maxCCNum;
-	 * res["CC_MAX_SYNUM"] = maxSyNum; }else{ res["CC_GOOD_NUM"] = 0;
-	 * res["CC_GOOD_SYNUM"] = 0; res["CC_MAX_NUM"] = 0; res["CC_MAX_SYNUM"] = 0; }
-	 */
+
 	return res;
 }
 // 导出
 _viewer.getBtn("expExcel").unbind("click").bind("click",function(event) {
-	window.open(FireFly.getContextPath() + '/TS_XMGL_CCCS_V.expExcel.do?data=' + 
-    		encodeURIComponent(jQuery.toJSON({"xmId":xmId,"scVal":scVal,"sjVal":sjVal,"cjVal":cjVal})));
+	tabletoExcel("JColResizer2");
+//	window.open(FireFly.getContextPath() + '/TS_XMGL_CCCS_V.expExcel.do?data=' + 
+//    		encodeURIComponent(jQuery.toJSON({"xmId":xmId,"scVal":scVal,"sjVal":sjVal,"cjVal":cjVal})));
 });
+
+
+function getExplorer() { 
+    if (window.navigator.userAgent.indexOf("MSIE") >= 0) {
+        return 1;
+    } else if (window.navigator.userAgent.indexOf("Firefox") >= 0) {
+        return 0;
+    } else if (window.navigator.userAgent.indexOf("Chrome") >= 0) {
+        return 0;
+    } else if (window.navigator.userAgent.indexOf("Opera") >= 0) {
+        return 0;
+    } else if (window.navigator.userAgent.indexOf("Safari") >= 0) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+function tabletoExcel(tableid) {//整个表格拷贝到EXCEL中
+    if(getExplorer()=='ie')
+    {
+        var curTbl = document.getElementById(tableid);
+        var oXL = new ActiveXObject("Excel.Application");
+
+        //创建AX对象excel 
+        var oWB = oXL.Workbooks.Add();
+        //获取workbook对象 
+        var xlsheet = oWB.Worksheets(1);
+        //激活当前sheet 
+        var sel = document.body.createTextRange();
+        sel.moveToElementText(curTbl);
+        //把表格中的内容移到TextRange中 
+        sel.select();
+        //全选TextRange中内容 
+        sel.execCommand("Copy");
+        //复制TextRange中内容  
+        xlsheet.Paste();
+        //粘贴到活动的EXCEL中       
+        oXL.Visible = true;
+        //设置excel可见属性
+
+        try {
+            var fname = oXL.Application.GetSaveAsFilename("Excel.xls", "Excel Spreadsheets (*.xls), *.xls");
+        } catch (e) {
+            print("Nested catch caught " + e);
+        } finally {
+            oWB.SaveAs(fname);
+
+            oWB.Close(savechanges = false);
+            //xls.visible = false;
+            oXL.Quit();
+            oXL = null;
+            //结束excel进程，退出完成
+            //window.setInterval("Cleanup();",1);
+            idTmr = window.setInterval("Cleanup();", 1);
+
+        }
+
+    }
+    else
+    {
+        tableToExcel(tableid);
+    }
+}
+function Cleanup() {
+    window.clearInterval(idTmr);
+    CollectGarbage();
+}
+
+var tableToExcel = (function() {
+    var uri = 'data:application/vnd.ms-excel;base64,',
+    template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+    base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) },
+    format = function(s, c) {
+        return s.replace(/{(\w+)}/g,
+        function(m, p) { return c[p]; }) }
+            return function(table, name) {
+                if (!table.nodeType) table = document.getElementById(table)
+                var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+                window.location.href = uri + base64(format(template, ctx))
+              }
+})();
