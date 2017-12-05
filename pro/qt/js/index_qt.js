@@ -1,10 +1,12 @@
 
 $(function() {
 	$(".wrapper").css("background-color", "#064d78");
-	$(".main-sidebar").css("background-color", "#064d78");
+	//$(".main-sidebar").css("background-color", "#064d78");
 	$(".main-header").css("background-color", "white");
-	userInfo();
-	showMenu();
+	setTimeout(function(){
+        userInfo();
+        showMenu();
+	});
 });
 
 /**
