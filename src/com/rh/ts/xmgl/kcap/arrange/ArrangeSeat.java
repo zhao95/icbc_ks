@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.rh.core.base.Bean;
+import com.rh.core.comm.ConfMgr;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Strings;
@@ -18,6 +19,10 @@ import com.rh.ts.xmgl.kcap.utils.KcapUtils;
 public class ArrangeSeat {
 
 	private static Log log = LogFactory.getLog(ArrangeSeat.class);
+
+	private boolean isFiltTime = ConfMgr.getConf("TEST_KCAP_FILT_TIME", true);
+
+	private boolean isRepeatUser = ConfMgr.getConf("TEST_KCAP_REPEAT_USER", true);
 
 	public void doArrange(KcapResource res) {
 
@@ -47,7 +52,7 @@ public class ArrangeSeat {
 
 		if (ksConstrain == 1) { // 强制安排
 
-			log.error("||||||||||||||||||||||||||||||||||||||||||||--强制安排分隔线--||||||||||||||||||||||||||||||||||");
+			log.error("|||||||||||||||||||||||||||||||||--强制安排--||||||||||||||||||||||||||||||||||");
 
 			try {
 				// Transaction.begin();
@@ -72,6 +77,8 @@ public class ArrangeSeat {
 
 		// 考生人数少于机器数一半时，考生左右间隔不低于1个座位，前后不低于1个
 		if (res.getRuleBean().containsKey(KcapRuleEnum.R006.getCode())) {
+			
+			log.error("|||||||||||||||||||||||||||||||||--人数少于机器数一半时--||||||||||||||||||||||||||||||||||");
 
 			arrangeR006(res);
 		}
@@ -148,18 +155,25 @@ public class ArrangeSeat {
 
 							Bean odeptKs = res.getGljgKs(kcId);
 
-							// 根据考试时长筛选考生
-							KcapMatch.filtKsTime(freeZw, odeptKs);
+							log.error("------begin-安排考位-|" + date + "|" + sjCC + "|"
+									+ freeZw.getStr("ZW_ZWH_XT") + "|" + kcId + "|"+ kcName);
 
-							// 过滤 相同日期,相同场次的考生
-							KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
+							KcapUtils.showInfo(odeptKs, "------------1-|机构下总报考人数-报名考生人数|", this.getClass());
 
-							log.error("------------|" + kcName + "|" + kcId + "|" + date + "|" + sjCC + "|"
-									+ freeZw.getStr("ZW_ZWH_XT"));
+							if (isFiltTime) {
 
-							for (Object o : odeptKs.keySet()) {
+								// 根据考试时长筛选考生
+								KcapMatch.filtKsTime(freeZw, odeptKs);
 
-								log.error("------------odeptKs-time:" + odeptKs.getBean(o).size());
+								KcapUtils.showInfo(odeptKs, "------------2-|过滤考试时长后-报名考生人数|", this.getClass());
+							}
+
+							if (isRepeatUser) {
+
+								// 过滤 相同日期,相同场次的考生
+								KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
+
+								KcapUtils.showInfo(odeptKs, "------------3-|过滤相同日期和场次考生后-报名考生人数|", this.getClass());
 							}
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
@@ -168,7 +182,7 @@ public class ArrangeSeat {
 
 								if (oneKs != null && !oneKs.isEmpty()) {
 
-									log.error("------------oneKs:" + oneKs.size());
+									log.error("------------4-|成功找到安排考生-:" + oneKs.toString());
 
 									saveRes(freeZw, oneKs, odeptKs, res);
 								}
@@ -253,18 +267,26 @@ public class ArrangeSeat {
 
 							Bean odeptKs = res.getGljgKs(kcId);
 
-							// 根据考试时长筛选考生
-							KcapMatch.filtKsTime(freeZw, odeptKs);
+							log.error("------begin-安排考位-|" + date + "|" + sjCC + "|"
+									+ freeZw.getStr("ZW_ZWH_XT") + "|" + kcId + "|"+ kcName);
 
-							// 过滤 相同日期,相同场次的考生
-							KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
+							KcapUtils.showInfo(odeptKs, "------------1-|机构下总报考人数-报名考生人数|", this.getClass());
 
-							log.error("------------|" + kcName + "|" + kcId + "|" + date + "|" + sjCC + "|"
-									+ freeZw.getStr("ZW_ZWH_XT"));
+							if (isFiltTime) {
 
-							for (Object o : odeptKs.keySet()) {
+								// 根据考试时长筛选考生
+								KcapMatch.filtKsTime(freeZw, odeptKs);
 
-								log.error("------------odeptKs-time:" + odeptKs.getBean(o).size());
+								KcapUtils.showInfo(odeptKs, "------------2-|过滤考试时长后-报名考生人数|", this.getClass());
+							}
+
+							if (isRepeatUser) {
+
+								// 过滤 相同日期,相同场次的考生
+								KcapMatch.filtKsSameCc(freeZw, res.getBusyZwBean(), odeptKs);
+
+								KcapUtils.showInfo(odeptKs, "------------3-|过滤相同日期和场次考生后-报名考生人数|", this.getClass());
+
 							}
 
 							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
@@ -273,7 +295,7 @@ public class ArrangeSeat {
 
 								if (oneKs != null && !oneKs.isEmpty()) {
 
-									log.error("------------oneKs:" + oneKs.toString());
+									log.error("------------4-|成功找到安排考生-:" + oneKs.toString());
 
 									saveRes(freeZw, oneKs, odeptKs, res);
 								}
@@ -335,6 +357,8 @@ public class ArrangeSeat {
 
 				// 将当前考场的考生安排 从 已安排资源移除
 				res.getBusyZwBean().remove(kcKey);
+				
+				log.error("------------00-|待重置考生|"+busyZwKc.size());
 
 				for (Object zwhKey : busyZwKc.keySet()) { // 遍历座位安排信息
 
@@ -379,6 +403,8 @@ public class ArrangeSeat {
 						resetFiltKs.set(time, temp);
 					}
 				} // busyZwKc.keySet()
+				
+				KcapUtils.showInfo(resetFiltKs, "------------01-|已重置考生|", this.getClass());
 
 				try {
 
@@ -419,8 +445,15 @@ public class ArrangeSeat {
 							resetZw.set("SJ_ID", sjId);
 
 							resetZw.set("CC_ID", ccId);
+							
+							Bean resetFiltBean = (Bean) resetFiltKs.clone();
+							
+							log.error("------begin-安排考位-|" + date + "|" + cc + "|"
+									+ resetZw.getStr("ZW_ZWH_XT") + "|" + kcId + "|");
 
-							Bean tempFiltBean = KcapMatch.filtR006(resetZw, res.getBusyZwBean(), resetFiltKs.copyOf());
+							KcapUtils.showInfo(resetFiltBean, "------------1-|机构下总报考人数-报名考生人数|", this.getClass());
+
+							Bean tempFiltBean = KcapMatch.filtR006(resetZw, res.getBusyZwBean(), resetFiltBean);
 
 							if (tempFiltBean != null && !tempFiltBean.isEmpty()) {
 
@@ -429,6 +462,8 @@ public class ArrangeSeat {
 								try {
 
 									if (resetOneKs != null && !resetOneKs.isEmpty()) {
+										
+										log.error("------------4-|成功找到安排考生-:" + resetOneKs.toString());
 										// 保存更新 考场、考生的信息
 										saveRes(resetZw, resetOneKs, resetFiltKs, res);
 									}
@@ -494,7 +529,7 @@ public class ArrangeSeat {
 
 			if (!Strings.isBlank(addZw.getId())) {
 
-				log.error("-----成功安排座位：time:" + ksTime + "|odept:" + uCode);
+				log.error("------------5-成功安排座位：time:" + ksTime + "|odept:" + uCode);
 
 				// 移除考场资源
 				if (priority == 1) { // 最少场次
@@ -610,11 +645,10 @@ public class ArrangeSeat {
 		addZw.set("U_ODEPT", ksOdept);
 		addZw.set("U_CODE", uCode);
 		addZw.set("ISAUTO", 1);
-		
+
 		addZw.set("U_TYPE", 0);
 		addZw.set("ISSUE", 0);
 		addZw.set("PUBLICITY", 0);
-		
 
 		if (jkKs.containsKey(uCode)) { // 判断是否借考
 
