@@ -674,7 +674,7 @@ public class StayServ extends CommonServ {
 	 */
 	@Override
 	public OutBean exp(ParamBean paramBean) {
-		String xmid = paramBean.getStr("xmid");
+		String where = paramBean.getStr("where");
 		
 		String servid = paramBean.getServId();
 		ParamBean parr = new ParamBean();
@@ -702,7 +702,6 @@ public class StayServ extends CommonServ {
 			paramBean.setQuerySearchWhere(searchWhere);
 			dataList = ServDao.finds(servid, searchWhere);
 		}else{ // 导出所有记录
-			if(!"".equals(xmid)){
 				UserBean user = Context.getUserBean();
 				Bean userPvlgToHT = RoleUtil
 						.getPvlgRole(user.getCode(), "TS_BMGL_XNBM");
@@ -714,8 +713,7 @@ public class StayServ extends CommonServ {
 				}
 				dept_code = dept_code.substring(0, 10);
 				if (dept_code.equals("0010100000")) {
-					String sql =   " select * from ts_bmsh_stay where XM_ID='" + xmid + "'";
-					dataList = Transaction.getExecutor().query(sql);
+					dataList = ServDao.finds("TS_BMSH_STAY",where);
 					
 				}else{
 					DeptBean dept = OrgMgr.getDept(dept_code);
@@ -724,12 +722,11 @@ public class StayServ extends CommonServ {
 							+ servid
 							+ " a where exists(select dept_code from sy_org_dept b where code_path like concat('"
 							+ codepath
-							+ "','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"
-							+ xmid + "'";
+							+ "','%') and a.s_dept=b.dept_code and s_flag='1') "+where;
+
 					dataList = Transaction.getExecutor().query(sql);
 				}
 
-			}
 		}
 
 		List<Bean> finalList = new ArrayList<Bean>();

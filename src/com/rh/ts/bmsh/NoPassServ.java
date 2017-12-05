@@ -452,7 +452,7 @@ public class NoPassServ extends CommonServ {
 	public OutBean exp(ParamBean paramBean) {
 		
 		String xmid = paramBean.getStr("xmid");
-		
+		String where = paramBean.getStr("where");
 		String servid = paramBean.getServId();
 		ParamBean parr = new ParamBean();
 		UserBean userBean1 = Context.getUserBean();
@@ -490,9 +490,8 @@ public class NoPassServ extends CommonServ {
 				}
 				dept_code = dept_code.substring(0, 10);
 				if (dept_code.equals("0010100000")) {
-					String sql =   " select * from ts_bmsh_nopass where XM_ID='" + xmid + "'";
-					dataList = Transaction.getExecutor().query(sql);
-					
+					dataList=ServDao.finds("TS_BMSH_NOPASS",where);
+
 				}else{
 					DeptBean dept = OrgMgr.getDept(dept_code);
 					String codepath = dept.getCodePath();
@@ -500,13 +499,11 @@ public class NoPassServ extends CommonServ {
 							+ servid
 							+ " a where exists(select dept_code from sy_org_dept b where code_path like concat('"
 							+ codepath
-							+ "','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"
-							+ xmid + "'";
+							+ "','%') and a.s_dept=b.dept_code and s_flag='1') "+where;
 					dataList = Transaction.getExecutor().query(sql);
 				}
 
 			}else{
-				String where = paramBean.getStr("where");
 				String sql = "select * from ts_bmsh_nopass "+where;
 				dataList =Transaction.getExecutor().query(sql);
 			}

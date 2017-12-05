@@ -537,14 +537,14 @@ function firall(){
 				 });
 				} 
 					//导出所有数据
-					var where5 = " where XM_ID="+"'"+xmid+"'";
+					var where5 = " and  XM_ID="+"'"+xmid+"'";
 					var where6 = "AND SH_OTHER like '%"+user_code+"%'";
-					
 				var whereData={};
 				var data = {"_PK_":arrstring};
 				data["where"]=where5+where6;
+				data["xmid"]=xmid;
 				data = jQuery.extend(data,whereData);
-				
+				alert(obj);
 				window.open(FireFly.getContextPath() + '/' + obj + '.exp.do?data=' + 
 				encodeURIComponent(jq.toJSON(data)));
 				
