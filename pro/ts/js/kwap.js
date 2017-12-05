@@ -2066,6 +2066,7 @@ var KcObject = {
                             //后端错误
                             if (data._MSG_.indexOf('IDX_DATE_CC_USER') >= 0) {
                                 var bean = FireFly.doAct('TS_XMGL_KCAP_YAPZW', 'getIndexInfo', {
+                                    KC_ID: kcid,
                                     SH_ID: shId,
                                     SJ_DATE: sjDate,
                                     SJ_CC: sjCC,
