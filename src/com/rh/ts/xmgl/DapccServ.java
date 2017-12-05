@@ -187,7 +187,7 @@ public class DapccServ extends CommonServ {
                 + "from TS_BMSH_PASS a "
                 + "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE "
                 + "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
-//                + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
+                + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
                 + "where 1=1 "
                 + whereSql + " order by a.BM_CODE";//,c.DEPT_CODE
         /*not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
