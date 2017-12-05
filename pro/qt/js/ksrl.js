@@ -16,7 +16,9 @@ var hasCreate = {
 jQuery(document).ready(function(){
 	//存放
 	var eventArr = [];
-	doPick($("[iiCode='kaoshi'] .TS_KS_CAL_picker"),type);
+	setTimeout(function(){
+		doPick($("[iiCode='kaoshi'] .TS_KS_CAL_picker"),type);
+	});
 	jQuery(".title_002,.title_003,.title_004").unbind("click").click(function(){
 		var iCode = jQuery(this).attr("iCode");
 		type = iCode;
@@ -41,9 +43,9 @@ jQuery(document).ready(function(){
 		hasCreate[type] = true;
 		eventArr = getMonthData("",type);
 
-		
-		
-		
+
+
+
 	    //获取所有的月份
 		var picker = target.datepicker({
 			inline: true,
@@ -144,7 +146,7 @@ jQuery(document).ready(function(){
 			liebiaoArr.push("<tr><td style='width:30%;border:0;text-align:center;padding-right:10px;'>"+time+"</td><td style='border:0;text-align:left;padding-right:4px;overflow: hidden; text-overflow: ellipsis;'>"+name+"</td></tr>");
 //			liebiaoArr.push("<tr><td style='width:120px;border:0;text-align:center;padding-right:10px;'>"+time+"</td><td style='border:0;text-align:left;padding-right:4px;'>"+name+"</td></tr>");
 		});
-		if (eventArr.length == 0) {
+		if (typeof(eventArr)== "undefined" || eventArr.length == 0) {
 			liebiaoArr.push("<tr><td colspan='2' style='border:0;'>暂无记录</td></tr>");
 		}
 		liebiaoArr.push("</table>");
