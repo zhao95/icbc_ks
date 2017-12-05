@@ -1285,9 +1285,7 @@ public class BmlbServ extends CommonServ {
 		String strdate = sdf.format(date);
 		// 跨序列高级考试
 		String highwhere = "AND BM_CODE=" + "'" + user_code
-				+ "' AND BM_ENDDATE like" + "'%" + strdate
-				+ "%' AND BM_LB_CODE<>'" + lb_code + "' AND BM_XL_CODE<>'"
-				+ xl_code + "' AND BM_TYPE=3  AND BM_STATE='1'";
+				+ "' AND BM_TYPE=3  AND BM_STATE='1'";
 		List<Bean> highlist = ServDao.finds("TS_BMLB_BM", highwhere);
 		// 查询出 通过了但请假没考的 的数据 这些数据不算
 		for (Bean bean : highlist) {
@@ -1302,9 +1300,7 @@ public class BmlbServ extends CommonServ {
 		out.set("highnum", highlist.size());
 		// 夸序列中级考试
 		String where = "AND BM_CODE=" + "'" + user_code
-				+ "' AND  BM_ENDDATE like" + "'%" + strdate
-				+ "%' AND BM_LB_CODE<>'" + lb_code + "' AND BM_XL_CODE<>'"
-				+ xl_code + "' AND BM_TYPE=2 AND BM_STATE='1'";
+				+"' AND BM_TYPE=2 AND BM_STATE='1'";
 		List<Bean> list = ServDao.finds("TS_BMLB_BM", where);
 		for (Bean bean : list) {
 			String bmid = bean.getStr("BM_ID");
