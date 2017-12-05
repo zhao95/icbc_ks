@@ -215,7 +215,7 @@ public class OrgMgr {
         	return null;
         }
         condition.append("and DEPT_CODE != '" + deptCode + "'");
-        condition.append("and S_FLAG != '3' ");
+        condition.append("and S_FLAG = '1' ");
         
         Bean paramBean = new Bean();
         paramBean.set(Constant.PARAM_WHERE, condition.toString());
