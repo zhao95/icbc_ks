@@ -760,7 +760,7 @@ public class DataServ extends CommonServ {
 							shBean.set("S_TDEPT", userBean.getStr("TDEPT_CODE"));
 							shBean.set("S_DEPT", userBean.getStr("DEPT_CODE"));
 							shBean.set("BM_KS_TIME", ks_time);
-							shBean.set("BM_STATUS", 1);
+							shBean.set("BM_STATUS", 0);
 							if(shlistbean.size()==100){
 								  ParamBean batchSave = new ParamBean();
 									batchSave.setBatchSaveDatas(shlistbean);
