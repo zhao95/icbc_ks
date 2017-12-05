@@ -181,28 +181,30 @@ function setApplyContent() {
  */
 function setAnnouncementContent() {
     var data = {};
-    var ggList = FireFly.doAct("TS_GG", 'query', data, false);
-    var tbodyEl = jQuery('#announcement-box').find('.table tbody');
-    tbodyEl.html('');
+    FireFly.doAct("TS_GG", 'query', data, false,true,function(ggList){
+    	var tbodyEl = jQuery('#announcement-box').find('.table tbody');
+        tbodyEl.html('');
 
-    var circleColors = ['#398daf', '#b4dbc0', '#ff0000', '#62a9d8', '#9521b8'];
+        var circleColors = ['#398daf', '#b4dbc0', '#ff0000', '#62a9d8', '#9521b8'];
 
-    for (var i = 0; i < ggList._DATA_.length; i++) {
-        if (i === 5) {
-            return false;
+        for (var i = 0; i < ggList._DATA_.length; i++) {
+            if (i === 5) {
+                return false;
+            }
+            var gg = ggList._DATA_[i];
+            var trEl = jQuery([
+                '<tr id="' + gg.GG_ID + '">',
+                '   <td class="col-md-8">',
+                '       <span style="color: ' + circleColors[i] + ';width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;">●</span>',
+                '       <a href="' + FireFly.getContextPath() + '/qt/jsp/gg.jsp?id=' + gg.GG_ID + '"target="_blank" style="display:inline;cursor:pointer;" class="gg-title">' + gg.GG_TITLE + '</a>',
+                '   </td>',
+                '<td class="col-md-4">' +((gg.S_ATIME&&gg.S_ATIME.length>=10) ? gg.S_ATIME.substring(0,10) : '') + '</td>',//yyyy-mm-dd HH:MM
+                '</tr>'
+            ].join(''));
+            trEl.appendTo(tbodyEl);
         }
-        var gg = ggList._DATA_[i];
-        var trEl = jQuery([
-            '<tr id="' + gg.GG_ID + '">',
-            '   <td class="col-md-8">',
-            '       <span style="color: ' + circleColors[i] + ';width: 16px;height: 16px;display: inline-block;font-size: 13px;text-align: center;">●</span>',
-            '       <a href="' + FireFly.getContextPath() + '/qt/jsp/gg.jsp?id=' + gg.GG_ID + '"target="_blank" style="display:inline;cursor:pointer;" class="gg-title">' + gg.GG_TITLE + '</a>',
-            '   </td>',
-            '<td class="col-md-4">' +((gg.S_ATIME&&gg.S_ATIME.length>=10) ? gg.S_ATIME.substring(0,10) : '') + '</td>',//yyyy-mm-dd HH:MM
-            '</tr>'
-        ].join(''));
-        trEl.appendTo(tbodyEl);
-    }
+    });
+    
 
 }
 
