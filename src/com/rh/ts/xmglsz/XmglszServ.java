@@ -19,7 +19,7 @@ import com.rh.ts.util.TsConstant;
 
 /**
  * 项目管理设置
- * 
+ *
  * @author
  *
  */
@@ -128,7 +128,7 @@ public class XmglszServ extends CommonServ {
 		}
 		int  a=0;
 		if ("0".equals(userPvlgToHTBean.getStr("publish"))) {
-			
+
 			Bean str = (Bean) userPvlgToHTBean.get("auto");
 			if (str == null) {
 				return new OutBean().setError("无权限");
@@ -148,7 +148,7 @@ public class XmglszServ extends CommonServ {
 			if ("".equals(odeptcode)) {
 				 odeptcode = userBean.getODeptCode();
 			}
-			//发布人  
+			//发布人
 			a=2;
 		}
 		odeptcode=odeptcode.substring(0,10);
@@ -157,32 +157,36 @@ public class XmglszServ extends CommonServ {
 		String simpdate = simp.format(date);
 		//查询此人最大权限
 	List<Bean> dataList = new ArrayList<Bean>();
-	String sql1 = "select a.* from ts_xmgl a left join TS_XMGL_SZ b on a.xm_id=b.xm_id where b.xm_sz_name = '考场安排 ' and xm_sz_type='进行中' and '"+simpdate+"' between a.xm_start and a.xm_end and a.XM_STATE =1"; 
+	String sql1 = "select a.* from ts_xmgl a left join TS_XMGL_SZ b on a.xm_id=b.xm_id where b.xm_sz_name = '考场安排 ' and xm_sz_type='进行中' and '"+simpdate+"' between a.xm_start and a.xm_end and a.XM_STATE =1";
 	List<Bean> ALLList = Transaction.getExecutor().query(sql1);
 	for (Bean bean : ALLList) {
 		//判断项目 是否  启用了
 			String xmid = bean.getStr("XM_ID");
-			String sql = "SELECT k.KC_ID" 
+			String sql = "SELECT k.KC_ID"
 					+" FROM"
-  +" TS_XMGL_KCAP_DAPCC c" 
-  +" LEFT JOIN ts_kcgl k" 
-   +" ON k.kc_id = c.kc_id" 
-+" WHERE c.XM_ID = '"+xmid+"'" 
-  +" AND k.KC_ODEPTCODE IN" 
-  +" (SELECT" 
-   +" DEPT_CODE" 
+                +" TS_KCZGL zgl"
+                +" left join ts_kczgl_group gro on gro.KCZ_ID = zgl.KCZ_ID and zgl.SERV_ID ='TS_XMGL_CCCS_KCZGL'"
+                +" left join TS_KCGL k on k.GROUP_ID=gro.GROUP_ID and gro.SERV_ID ='TS_KCZGL_GROUP'"
+					//TS_KCZGL
+//  +" TS_XMGL_KCAP_DAPCC c"
+//  +" LEFT JOIN ts_kcgl k"
+//   +" ON k.kc_id = c.kc_id"
++" WHERE zgl.XM_ID = '"+xmid+"'"
+  +" AND k.KC_ODEPTCODE IN"
+  +" (SELECT"
+   +" DEPT_CODE"
   +" FROM"
-    +" SY_ORG_DEPT" 
-  +" WHERE SY_ORG_DEPT.CODE_PATH LIKE CONCAT('%"+odeptcode+"', '%')" 
-    +" AND SY_ORG_DEPT.DEPT_TYPE = 2" 
-    +" AND SY_ORG_DEPT.CMPY_CODE = 'icbc'" 
+    +" SY_ORG_DEPT"
+  +" WHERE SY_ORG_DEPT.CODE_PATH LIKE CONCAT('%"+odeptcode+"', '%')"
+    +" AND SY_ORG_DEPT.DEPT_TYPE = 2"
+    +" AND SY_ORG_DEPT.CMPY_CODE = 'icbc'"
     +" AND SY_ORG_DEPT.S_FLAG = 1)";
 			int count = Transaction.getExecutor().count(sql);
 			if(count>0){
 				if(a==1){
 					Boolean tjState = getTjState(odeptcode,xmid);
 					if(tjState==true){
-						
+
 						String xm_name = bean.getStr("XM_NAME");
 						String xm_start = bean.getStr("XM_START");
 						String xm_end = bean.getStr("XM_END");
@@ -210,8 +214,8 @@ public class XmglszServ extends CommonServ {
 				}
 				//判断是否已发布
 			}
-			
-		
+
+
 	}
 	return new OutBean().setData(dataList);
 	}
