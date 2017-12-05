@@ -404,7 +404,7 @@ public class QjlbServ extends CommonServ {
                 List<Object> values = new ArrayList<Object>();
                 values.add(s);
                 Bean whereBean = new Bean();
-                whereBean.set(Constant.PARAM_WHERE, " and SH_ID =? and IS_SUBMIT!='1'");
+                whereBean.set(Constant.PARAM_WHERE, " and SH_ID =? and (IS_SUBMIT!='1' or IS_SUBMIT is null)");
                 whereBean.set(Constant.PARAM_PRE_VALUES, values);
                 ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean);
             }

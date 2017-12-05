@@ -2514,7 +2514,7 @@ var KsObject = {
                         '<div style="/*width:30px;height: 30px;*/background-color: #FFF8DC; border:1px solid #999999;border-radius:3px;padding: 3px;opacity: 0.7;">',//
                         '   <div>' + cells[6].innerText + '</div>',
                         '   <div>' + cells[7].innerText + '</div>',
-                        '   <div>' + cells[10].innerText + '</div>',
+                        '   <div>' + cells[5].innerText + '</div>',
                         '</div>'
                     ].join('');
                 },
