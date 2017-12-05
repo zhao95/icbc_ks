@@ -54,12 +54,12 @@ function showMenu() {
 	if (data.menuList.length > 0) {
 		for (var i = 0; i < data.menuList.length; i++) {
 			var MENU_URL = "'"+data.menuList[i].MENU_URL+"'";
-//			debugger;
 			  if(flagstr=="false"&&data.menuList[i].MENU_NAME=="报名审核"){
 			    	 //不显示
 				  continue;
 			     }
 			  if(data.menuList[i].MENU_NAME=="报名审核"){
+				  var menu_url = MENU_URL;
 				  //报名审核 数据  是否有 待审核的数据
 				/*  var xmids = "";
 				  for(var j=0;j<list.length;j++){
@@ -75,7 +75,7 @@ function showMenu() {
                          //有待审核的数据
                          $(".sidebar-menu")
                              .append(
-                                 '<li><a href="#" onclick="window.open('+MENU_URL+')"><i class="'+MENU_IMG+'"></i> <span>'
+                                 '<li><a href="#" onclick="window.open('+menu_url+')"><i class="'+MENU_IMG+'"></i> <span>'
                                  + MENU_NAME
                                  + '</span></a></li>');
                      }else{
@@ -83,7 +83,7 @@ function showMenu() {
                          //有需要 审核的数据  <span class="label label-warning" id="tipSum">0</span>
                          $(".sidebar-menu")
                              .append(
-                                 '<li><a href="#" onclick="window.open('+MENU_URL+')"><i class="'+MENU_IMG+'"></i> <span>'
+                                 '<li><a href="#" onclick="window.open('+menu_url+')"><i class="'+MENU_IMG+'"></i> <span>'
                                  + MENU_NAME
                                  + '</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-warning" id="tipSum">'+num+'</span></a></li>');
                      }
