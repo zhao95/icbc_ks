@@ -411,21 +411,6 @@ position: absolute;
 	<input type="hidden" id='xmidval' value="<%=xm_id %>">
 	<script>
 	
-	$(window).bind('beforeunload', function(){
-
-		    // 只有在标识变量is_confirm不为false时，才弹出确认提示
-
-		    if(window.is_confirm !== false){
-		    var  leng = $("input[name='checkboxaa']").length;
-			if(leng>0){
-	    	return '还有考试没有提交 您确定离开页面吗？'; 
-				
-			}
-		    }
-
-
-		});
-
 	/* function checkLeave(){
 		//判断是否有考试没有提交
 		var  leng = $("input[name='checkboxaa']").length;
