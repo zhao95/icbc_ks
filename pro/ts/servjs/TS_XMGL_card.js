@@ -151,9 +151,10 @@ _viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {debugger
 	var params = {"XM_ID" : XM_ID,"_extWhere" : extWhere};
 	var url = "TS_XMGL_SZ.list.do?&_extWhere=" + extWhere;
 	var options = {"url" : url,"params" : params,"menuFlag" : 3,"top" : true};
-	$( ".ui-dialog-titlebar-close").click();
+	//$( ".ui-dialog-titlebar-close").click();
 	Tab.open(options);
 	_viewer.getParHandler().refresh();
+	_viewer.backA.mousedown();
 	}else{
 		return  false;
 	}

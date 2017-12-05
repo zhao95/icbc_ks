@@ -143,13 +143,11 @@ $(".hoverDiv").find("a").hover(function() {
 
 
 
-function  findBmshAuto(pkAarry,_viewer){
+function  findBmshAuto(pkAarry,_viewer){debugger
 //var  StrPk=pkAarry.join(",");
-//   //var   param={"pkAarry":pkAarry};
 //var  param={"pks":StrPk};
 //var beanBmgl=FireFly.doAct("TS_XMGL", "countNum", param);
 //console.log(beanBmgl);
-
 	for (var i = 0; i < pkAarry.length; i++) {
 		var status = $('#'+pkAarry[i]).find("td[icode='XM_TYPE']").html();
 		if(status=='资格类考试'){
@@ -157,9 +155,9 @@ function  findBmshAuto(pkAarry,_viewer){
 		paramfb["_WHERE_"] = "and XM_ID ='"+pkAarry[i]+"'";
 		var beanBmgl = FireFly.doAct("TS_XMGL_BMGL", "finds", paramfb);
 		var beanBmsh = FireFly.doAct("TS_XMGL_BMSH", "finds", paramfb);
-////		var  where="and XM_ID='"+pkAarry[i]+"'";
-////		var  data={_extWhere:where};
-////		var beanBmsh = FireFly.doAct("TS_XMGL_BMSH", "query", data);
+//		var  where="and XM_ID='"+pkAarry[i]+"'";
+//		var  data={_extWhere:where};
+//		var beanBmsh = FireFly.doAct("TS_XMGL_BMSH", "query", data);
 		if(beanBmgl._DATA_.length==0){
 			return  false;
 		}
@@ -386,6 +384,7 @@ function showRelease(pkAarry,_viewer,sflg){debugger;
 							_viewer.refresh();
 							}
 							if(sflg==2){//取消
+								debugger;
 							delXmData(pkAarry,_viewer);
 							FireFly.listDelete(_viewer.servId,{"_PK_":pkAarry.toString()},true);
 							_viewer.refresh();
@@ -421,10 +420,7 @@ function showRelease(pkAarry,_viewer,sflg){debugger;
 	
 }
 
-
-
-
-function  delXmData(pkAarry,_viewer){
+function  delXmData(pkAarry,_viewer){debugger;
 	for (var i = 0; i < pkAarry.length; i++) {
 		var param = {};
 		param["xmpk"]= pkAarry[i];

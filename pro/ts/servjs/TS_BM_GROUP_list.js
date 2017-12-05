@@ -108,3 +108,17 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 	cardView.show();
 	return false;
 });
+
+//
+//$("#TS_BM_GROUP-delete").unbind("click").bind("click",function() {
+//	//点击选择框，获取数据的id；
+//	var pkAarry = _viewer.grid.getSelectPKCodes();
+//	if(pkAarry.length==0){
+//		_viewer.listBarTipError("请选择要删除数据！");
+//	}else{
+//    
+//	showRelease(pkAarry,_viewer,sflg);
+//	}
+//});
+
+

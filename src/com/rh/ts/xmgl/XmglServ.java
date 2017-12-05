@@ -956,40 +956,176 @@ public class XmglServ extends CommonServ {
 	}
 
 	
-	public Bean delXmAll(Bean paramBean)  {	
+public Bean delXmAll(Bean paramBean)  {	
 		String   delXmidAll=paramBean.getStr("xmpk");
-		//报名列表
-				String sqldel12="delete *  from  TS_BMLB_BM    where   XM_ID='"+delXmidAll+"'";
-				Transaction.getExecutor().execute(sqldel12);
-		//报名列表
-		String sqldel01="delete *  from  TS_BMLB_BM    where   XM_ID='"+delXmidAll+"'";
-		Transaction.getExecutor().execute(sqldel01);
-		//已通过报名
-		String sqldel02="delete *  from  TS_BMSH_PASS    where   XM_ID='"+delXmidAll+"'";
+		
+		//删除前台
+		//删除请假待办
+		String  todoqj="delete  from  TS_COMM_TODO  WHERE  DATA_ID  IN (SELECT QJ_ID FROM  TS_QJLB_QJ WHERE XM_ID='"+delXmidAll+"')";
+		Transaction.getExecutor().execute(todoqj);
+		
+		//删除请假已办
+		String  tododoneqj="delete   from  TS_COMM_TODO_DONE  WHERE  DATA_ID  IN (SELECT QJ_ID FROM  TS_QJLB_QJ WHERE XM_ID='"+delXmidAll+"')";
+		Transaction.getExecutor().execute(tododoneqj);
+		//请假审核意见
+		String  tododoneMindqj="delete   from  TS_COMM_MIND  WHERE  DATA_ID  IN (SELECT QJ_ID FROM  TS_QJLB_QJ WHERE XM_ID='"+delXmidAll+"')";
+		Transaction.getExecutor().execute(tododoneMindqj);
+		//删除借考待办
+		String  todojk="delete   from  TS_COMM_TODO  WHERE  DATA_ID  IN (SELECT JK_ID FROM  TS_JKLB_JK WHERE XM_ID='"+delXmidAll+"')";
+		Transaction.getExecutor().execute(todojk);
+		//删除借考已办
+		String  tododonejk="delete   from  TS_COMM_TODO_DONE  WHERE  DATA_ID  IN (SELECT JK_ID FROM  TS_JKLB_JK WHERE XM_ID='"+delXmidAll+"')";
+		Transaction.getExecutor().execute(tododonejk);
+		//删除借考意见
+		String  tododoneMindjk="delete   from  TS_COMM_MIND  WHERE  DATA_ID  IN (SELECT JK_ID FROM  TS_JKLB_JK WHERE XM_ID='"+delXmidAll+"')";
+		Transaction.getExecutor().execute(tododoneMindjk);
+		
+		//删除已通过报名
+		String sqldel02="delete   from  TS_BMSH_PASS    where   XM_ID='"+delXmidAll+"'";
 		Transaction.getExecutor().execute(sqldel02);
-		//待审核人员
-		String sqldel03="delete *  from  TS_BMSH_STAY    where   XM_ID='"+delXmidAll+"'";
+		//删除待审核人员
+		String sqldel03="delete   from  TS_BMSH_STAY    where   XM_ID='"+delXmidAll+"'";
 		Transaction.getExecutor().execute(sqldel03);
-		//没通关过
-		String sqldel04="delete *  from  TS_BMSH_NOPASS    where   XM_ID='"+delXmidAll+"'";
+		//删除没通关过
+		String sqldel04="delete   from  TS_BMSH_NOPASS    where   XM_ID='"+delXmidAll+"'";
 		Transaction.getExecutor().execute(sqldel04);
-		//没通关过
-	    String sqldel05="delete *  from  TS_QJLB_QJ    where   XM_ID='"+delXmidAll+"'";
+		//删除请假
+	    String sqldel05="delete   from  TS_QJLB_QJ    where   XM_ID='"+delXmidAll+"'";
 		Transaction.getExecutor().execute(sqldel05);
-		//没通关过
-	    String sqldel06="delete *  from  TS_JKLB_JK     where   XM_ID='"+delXmidAll+"'";
+		//删除借考
+	    String sqldel06="delete   from  TS_JKLB_JK     where   XM_ID='"+delXmidAll+"'";
 		Transaction.getExecutor().execute(sqldel06);
-		//准考证
-	    String sqldel07="delete *  from  TS_XMGL_ADMISSION_FILE     where   XM_ID='"+delXmidAll+"'";
+		//删除准考证
+	    String sqldel07="delete   from  TS_XMGL_ADMISSION_FILE     where   XM_ID='"+delXmidAll+"'";
 		Transaction.getExecutor().execute(sqldel07);
+		//删除后台相关数据
+		//报名管理删除机构和报名
+		String  sqlDelUserDept="delete   from  TS_BM_GROUP_USER_DEPT   WHERE  G_ID  IN (SELECT G_ID FROM  TS_BM_GROUP WHERE XM_ID='"+delXmidAll+"')";
+		Transaction.getExecutor().execute(sqlDelUserDept);
+		 String sqlDelGroup="delete   from  TS_BM_GROUP     where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqlDelGroup);
+		//删除非资格考试
+		String sqlDelFzgks="delete   from  TS_XMGL_BM_FZGKS     where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqlDelFzgks);
+		//禁考规则表
+		String sqlDelJkglgz="delete   from  TS_XMGL_BM_JKGLGZ     where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqlDelJkglgz);
+		//删除考试类别设置	
+		String sqlDelKslb="delete   from  TS_XMGL_BM_KSLB     where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqlDelKslb);
+		//删除考试类别组
+	    String sqlDelKsqz="delete   from  TS_XMGL_BM_KSQZ     where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqlDelKsqz);
+		//删除报管理
+		String sqlDelBmgl="delete   from  TS_XMGL_BMGL     where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqlDelBmgl);
+		//项目管理_场次测算_大时间段安排
+		String sqlDelArr="delete   from  TS_XMGL_CCCS_ARRANGE     where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqlDelArr);
+		//项目管理-考场安排-已安排座位     
+		String sqlDelYap="delete   from  TS_XMGL_KCAP_YAPZW     where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqlDelYap);
+		//场次安排提交记录     (表ts_xmgl_kcap_tjjl       字段 XM_ID
+		String sqlDelTjjl="delete   from  TS_XMGL_KCAP_TJJL     where   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqlDelTjjl);
+		//项目管理_考场安排_待安排场次_场次时间 
+		String  sqlDelCcsj="delete   from  TS_XMGL_KCAP_DAPCC_CCSJ   WHERE  CC_ID  IN (SELECT CC_ID FROM  TS_XMGL_KCAP_DAPCC  WHERE XM_ID='"+delXmidAll+"')";
+		Transaction.getExecutor().execute(sqlDelCcsj);
+		//项目管理_考场安排_待安排场次_场次时间 
+		String  sqlDelGljg="delete   from  TS_XMGL_KCAP_GLJG   WHERE  CC_ID  IN (SELECT CC_ID FROM  TS_XMGL_KCAP_DAPCC  WHERE XM_ID='"+delXmidAll+"')";
+		Transaction.getExecutor().execute(sqlDelGljg);
+		//项目管理_考场安排_待安排场次   
+		String  sqlDelDap="delete  from  TS_XMGL_KCAP_DAPCC   WHERE   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqlDelDap);
 		
+		//报名审核规则明细
+		String  sqlDelMx="delete   from  TS_XMGL_BMSH_SHGZ_MX   WHERE   XM_ID='"+delXmidAll+"'";
+		Transaction.getExecutor().execute(sqlDelMx);
 		
-		
-		//SELECT  *   FROM      ts_comm_todo 
-		//SELECT  *   FROM   ts_comm_todo_done
-	 	return null ;
+		//场次测算
+		delFieldCal(delXmidAll);
+		Bean  bean=new  Bean();
+	 	return bean ;
 	}	
 	
+//考场测算的删除
+public  void delFieldCal(String   delXmidAll)  {	
+	//变跟申请记录 TS_KCGL_UPDATE 
+    String   delsqlupdate="DELETE     FROM  TS_KCGL_UPDATE D  WHERE   D.KC_ID  IN "
+                  +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
+		          +"WHERE A.GROUP_ID = B.GROUP_ID   "
+		          + "AND  B.KCZ_ID = C.KCZ_ID   "
+		          + "AND C.XM_ID ='"+delXmidAll+"')";
+    Transaction.getExecutor().execute(delsqlupdate);
+   //考场ip段 TS_KCGL_IPSCOPE
+    String   delsqlipScope="DELETE     FROM  TS_KCGL_IPSCOPE  D  WHERE   D.KC_ID  IN "
+                      +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
+    		          +"WHERE A.GROUP_ID = B.GROUP_ID   "
+    		          + "AND  B.KCZ_ID = C.KCZ_ID   "
+    		          + "AND C.XM_ID ='"+delXmidAll+"')";
+   Transaction.getExecutor().execute(delsqlipScope); 
+  //考场ip段 TS_KCGL_IPZWH
+    String   delsqlIPzwh="DELETE     FROM  TS_KCGL_IPZWH  D  WHERE   D.KC_ID  IN "
+                          +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
+        		          +"WHERE A.GROUP_ID = B.GROUP_ID   "
+        		          + "AND  B.KCZ_ID = C.KCZ_ID   "
+        		          + "AND C.XM_ID ='"+delXmidAll+"')";
+    Transaction.getExecutor().execute(delsqlIPzwh); 
+    //关联机构  （表TS_KCGL_GLJG         
+    String   delsqlGljg="DELETE     FROM  TS_KCGL_GLJG  D  WHERE   D.KC_ID  IN "
+              +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
+	          +"WHERE A.GROUP_ID = B.GROUP_ID   "
+	          + "AND  B.KCZ_ID = C.KCZ_ID   "
+	          + "AND C.XM_ID ='"+delXmidAll+"')";
+    Transaction.getExecutor().execute(delsqlGljg);   
+  //考场管理员  （表TS_KCGL_GLY         
+    String   delsqlGly="DELETE     FROM  TS_KCGL_GLY  D  WHERE   D.KC_ID  IN "
+              +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
+	          +"WHERE A.GROUP_ID = B.GROUP_ID   "
+	          + "AND  B.KCZ_ID = C.KCZ_ID   "
+	          + "AND C.XM_ID ='"+delXmidAll+"')";
+    Transaction.getExecutor().execute(delsqlGly); 
+    //系统座位号对应    TS_KCGL_ZWDYB 
+    String   delsqlZwdyb="DELETE     FROM  TS_KCGL_ZWDYB  D  WHERE   D.KC_ID  IN "
+            +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
+	          +"WHERE A.GROUP_ID = B.GROUP_ID   "
+	          + "AND  B.KCZ_ID = C.KCZ_ID   "
+	          + "AND C.XM_ID ='"+delXmidAll+"')";
+  Transaction.getExecutor().execute(delsqlZwdyb);
+  //监控地址  （表TS_KCGL_JKIP  
+  String   delsqljkip="DELETE     FROM  TS_KCGL_JKIP  D  WHERE   D.KC_ID  IN "
+          +"(SELECT  A.KC_ID  FROM  TS_KCGL  A , TS_KCZGL_GROUP B,TS_KCZGL C   "
+	          +"WHERE A.GROUP_ID = B.GROUP_ID   "
+	          + "AND  B.KCZ_ID = C.KCZ_ID   "
+	          + "AND C.XM_ID ='"+delXmidAll+"')";
+   Transaction.getExecutor().execute(delsqljkip);
+   //考场管理  （表TS_KCGL
+       String   delsqlkcgl=" DELETE      FROM    TS_KCGL   A   WHERE   A.GROUP_ID   IN"
+		   +"(SELECT  B.GROUP_ID   FROM  TS_KCZGL_GROUP B,TS_KCZGL C  WHERE B.KCZ_ID = C.KCZ_ID  "
+		   + "AND C.XM_ID ='"+delXmidAll+"')";
+	   Transaction.getExecutor().execute(delsqlkcgl);
+	   //考场组  （表TS_KCZGL_GROUP  
+       String   delsqlGroup=" DELETE     FROM   TS_KCZGL_GROUP    WHERE  KCZ_ID  IN (   SELECT   KCZ_ID   FROM    TS_KCZGL   WHERE    XM_ID='"+delXmidAll+"')";
+	   Transaction.getExecutor().execute(delsqlGroup);
+    //项目管理_场次测算_考场组管理 （表TS_KCZGL 
+	   String   delsqlkczgl=" DELETE     FROM   TS_KCZGL    WHERE     XM_ID='"+delXmidAll+"'";
+	   Transaction.getExecutor().execute(delsqlkczgl);
+	 //删除报名列表
+	 		String sqldel01="delete   from  TS_BMLB_BM    where   XM_ID='"+delXmidAll+"'";
+	 		Transaction.getExecutor().execute(sqldel01);
+  
+}
+
+
+
+
+
+
+
+
+
+
+
 //	public OutBean countNum(Bean paramBean) {
 //	OutBean outBean = new OutBean();
 //	String  parampk=paramBean.getStr("pks");//项目id",,";
@@ -999,19 +1135,21 @@ public class XmglServ extends CommonServ {
 //		 Str+="'"+pksArray[i]+"',";
 //	}
 //	Str = Str.substring(0,Str.length()-1);
-//	String sql1="SELECT COUNT(*)  FROM (SELECT xm_id FROM TS_XMGL  WHERE XM_ID IN "
+//	String sql1="SELECT *  FROM (SELECT xm_id FROM TS_XMGL  WHERE XM_ID IN "
 //	        +" ( "+Str+ "))"
 //	        +"  a   LEFT JOIN ts_xmgl_BMSH b "
-//	        +"  ON a.xm_id = b.xm_id   "
-//	        +"   WHERE b.SH_RGSH`=1   "
-//	        +"  AND b.`SH_ZDSH`=1  ";
-//	
-//	String sql2="SELECT COUNT(*)  FROM (SELECT xm_id FROM TS_XMGL  WHERE XM_ID IN "
+//	        +"  ON  a.xm_id = b.xm_id   "
+//	        +"  WHERE  b.SH_RGSH=0   "
+//	        +"  AND    b.SH_ZDSH=0  ";
+//	 int count1 = Transaction.getExecutor().count(sql1);
+//	//String sql2="SELECT COUNT(*)  FROM (SELECT xm_id FROM TS_XMGL  WHERE XM_ID IN "
+//	 String sql2="SELECT    *  FROM (SELECT xm_id FROM TS_XMGL  WHERE XM_ID IN "
 //			+ "("+Str+ ")) a"
 //	        +"  LEFT JOIN ts_xmgl_BMGL b "
 //	        +"   ON a.xm_id = b.xm_id  ";
-//	outBean.set("sql1", sql1);
-//	outBean.set("sql2", sql2);
+//	int count2=Transaction.getExecutor().count(sql2);
+//	outBean.set("sql1", count1);
+//	outBean.set("sql2", count2);
 //	
 //	return  outBean;
 //}	
