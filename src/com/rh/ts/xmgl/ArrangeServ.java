@@ -82,6 +82,7 @@ public class ArrangeServ extends CommonServ {
 			ParamBean param = new ParamBean();
 			param.set("SJ_ID", id);
 			param.setId(id);
+			@SuppressWarnings("unused")
 			OutBean out = ServMgr.act(TsConstant.SERV_KCAP_CCSJ, ServMgr.ACT_DELETE, param);
 			
 //			log.debug(out.toString());
