@@ -65,7 +65,7 @@ public class AuthUtil {
 			// 统一认证版本
 			String ssicVersion = Context.getSyConf("AAM_AUTH_SSIC_VERSION", "1.0");
 			// 统一认证客户端密钥文件名
-			String ssicClientKeyName = Context.getSyConf("AAM_AUTH_SSIC_C_KEY", "OIS");
+			String ssicClientKeyName = Context.getSyConf("AAM_AUTH_SSIC_C_KEY", "NOES");
 			// 统一认证服务器端密钥文件名
 			String ssicServerkeyName = Context.getSyConf("AAM_AUTH_SSIC_S_KEY", "SSIC");
 			// 密钥密码
