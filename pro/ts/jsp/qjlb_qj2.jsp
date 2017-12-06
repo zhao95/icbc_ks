@@ -4,6 +4,7 @@
 <%@ page import="com.rh.core.serv.ServMgr" %>
 <%@ page import="com.rh.core.serv.OutBean" %>
 <%@ page import="com.rh.core.org.mgr.UserMgr" %>
+<%@ page import="com.rh.core.comm.FileMgr" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
@@ -124,6 +125,8 @@
     String qj_danwei = qjbean.getStr("QJ_DANWEI");
     String qj_name = qjbean.getStr("QJ_NAME");
     String qjImg = qjbean.getStr("QJ_IMG");
+
+    List<Bean> files = FileMgr.getFileListBean("TS_QJLB_QJ", qjImg);
 
 //    //获取人力资源编码
 //    String user_code = userBean.getStr("USER_CODE");
@@ -247,6 +250,30 @@
                 <div class="col-sm-10">
 
                     <div class="row">
+                        <div class="col-sm-12">
+                            <ul>
+                                <%
+                                    for (Bean file : files) {
+                                %>
+                                <li style="clear:both;margin-top:7px;">
+
+                                    <div style="float: left;overflow:hidden;text-overflow:ellipsis; width: 200px"
+                                         title="<%=file.getStr("FILE_NAME")%>">
+                                        <%=file.getStr("FILE_NAME")%>
+                                    </div>
+                                    <span id="<%=file.getId()%>" file-name="<%=file.getStr("FILE_NAME")%>"
+                                          class="file" style="margin-left: 5px;cursor: pointer;color: blue;">
+                                        下载
+                                    </span>
+                                </li>
+                                <%
+                                    }
+                                %>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <%--<div class="row">
                         <div class="col-sm-4">
                             <div id="localImag" style="display: block;height: 88px">
                                 <% if (qjImg != null && !qjImg.equals("")) {
@@ -262,7 +289,7 @@
                                style="display: inline;cursor: pointer;">下载</a>
                             <%}%>
                         </div>
-                    </div>
+                    </div>--%>
 
                 </div>
             </div>
@@ -466,6 +493,11 @@
         initData();
         setKsInfo(bmIdStr);
         showFlowView(todoId);
+
+        $('.file').unbind('click').bind('click', function () {
+            var $this = jQuery(this);
+            rh.ui.File.prototype.downloadFile($this.attr("id"), $this.attr("file-name"));
+        });
     });
 
     function initData() {
@@ -554,28 +586,28 @@
         updateData("TS_QJLB_QJ", param);
     }
 
-   /* function fanhui() {
-        if ('<!%=hidden%>' === '') {
-            doPost('qjlb.jsp', {});
-        }else{
-            doPost('/<!%=CONTEXT_PATH%>/qt/jsp/todo.jsp', {});
-        }
-    }
+    /* function fanhui() {
+     if ('<!%=hidden%>' === '') {
+     doPost('qjlb.jsp', {});
+     }else{
+     doPost('/<!%=CONTEXT_PATH%>/qt/jsp/todo.jsp', {});
+     }
+     }
 
-    function doPost(to, data) {  // to:提交动作（action）,data:参数
-        var myForm = document.createElement("form");
-        myForm.method = "post";
-        myForm.action = to;
-        for (var i in data) {
-            var myInput = document.createElement("input");
-            myInput.setAttribute("name", i);  // 为input对象设置name
-            myInput.setAttribute("value", data[i]);  // 为input对象设置value
-            myForm.appendChild(myInput);
-        }
-        document.body.appendChild(myForm);
-        myForm.submit();
-        document.body.removeChild(myForm);  // 提交后移除创建的form
-    }*/
+     function doPost(to, data) {  // to:提交动作（action）,data:参数
+     var myForm = document.createElement("form");
+     myForm.method = "post";
+     myForm.action = to;
+     for (var i in data) {
+     var myInput = document.createElement("input");
+     myInput.setAttribute("name", i);  // 为input对象设置name
+     myInput.setAttribute("value", data[i]);  // 为input对象设置value
+     myForm.appendChild(myInput);
+     }
+     document.body.appendChild(myForm);
+     myForm.submit();
+     document.body.removeChild(myForm);  // 提交后移除创建的form
+     }*/
 
 </script>
 <script src="<%=CONTEXT_PATH%>/ts/js/qj_jk_apply.js"></script>

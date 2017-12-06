@@ -462,6 +462,7 @@ function firall(){
 				var whereData={};
 				var data = {"_PK_":arrstring};
 				data["xmid"]=xmid;
+				data["within"]="true";
 				data = jQuery.extend(data,whereData);
 				
 				window.open(FireFly.getContextPath() + '/' + obj + '.exp.do?data=' + 
