@@ -95,3 +95,44 @@ if($("#TS_KCGL-KC_ODEPTCODE__NAME").hasClass("disabled") == false) {
 		queryView.show(event,[],[0,495]);
 	});
 }
+
+_viewer.getItem("KC_ODEPTCODE").change(function(){
+	check("KC_ODEPTCODE");
+});
+_viewer.getItem("KC_LEVEL").change(function(){
+	check("KC_LEVEL");
+});
+
+function check(colName){
+	var kcOdeptCode = _viewer.getItem("KC_ODEPTCODE").getValue();
+	var kcLevel = _viewer.getItem("KC_LEVEL").getValue();
+	if(kcOdeptCode == "") return;
+	
+	FireFly.doAct("SY_ORG_DEPT","byid",{"_PK_":kcOdeptCode},false,false,function(data){
+		var level = data.DEPT_LEVEL;
+		if(kcLevel == "一级"){
+			if(level != 2){
+				if(colName == "KC_ODEPTCODE"){
+					_viewer.getItem("KC_ODEPTCODE").clear();
+				}else{
+					_viewer.getItem("KC_LEVEL").clear();
+				}
+				_viewer.cardBarTipError("一级考场所属机构为一级机构");
+			}
+		}else if(kcLevel == "二级"){
+			if(level != 3){
+				if(colName == "KC_ODEPTCODE"){
+					_viewer.getItem("KC_ODEPTCODE").clear();
+				}else{
+					_viewer.getItem("KC_LEVEL").clear();
+				}
+				_viewer.cardBarTipError("二级考场所属机构为二级机构");
+			}
+		}
+	});
+}
+
+
+
+
+
