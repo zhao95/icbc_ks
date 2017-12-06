@@ -1234,7 +1234,7 @@ public class StayServ extends CommonServ {
 				 if(jieshu>ALLNUM){
 					 showpage=ALLNUM-chushi;
 				 }
-				 String datasql = "select * from TS_BMSH_PASS where 1=1"+where1 +" limit "+chushi+","+showpage;
+				 String datasql = "select * from TS_BMSH_STAY where 1=1"+where1 +" limit "+chushi+","+showpage;
 				  list = Transaction.getExecutor().query(datasql);
 
 			}else{
