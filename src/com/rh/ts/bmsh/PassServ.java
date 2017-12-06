@@ -630,24 +630,26 @@ public class PassServ extends CommonServ {
 			UserBean userBean = UserMgr.getUser(s);
 			String ss = userBean.getODeptName() + ",";
 			// 获取当前机构;
-			DeptBean oneodeptcode1 = userBean.getODeptBean();
-			String codes = "";
-			if (oneodeptcode1 != null) {
-				// 获取所有逗号分隔的字符串
-				codes = getusercodes(oneodeptcode1, ss);
-			}
-			if("".equals(codes)){
-				codes=ss;
-			}
-			String[] codesarr = codes.split(",");
+			// 获取当前机构;
+						DeptBean oneodeptcode1 = userBean.getODeptBean();
+						String codePath = oneodeptcode1.getCodePath();
+						/*if (oneodeptcode1 != null) {
+							// 获取所有逗号分隔的字符串
+							codes = getusercodes(oneodeptcode1, s);
+							if("".equals(codes)){
+								codes=s;
+							}
+						}*/
+						 String[] codesarr = codePath.split("\\^");
 
-			int j = 0;
-			for (int i = codesarr.length - 1; i >= 0; i--) {
-				// 最后一个 deptcodename
-				String evname = codesarr[i];
-				j++;
-				outBean.set("LEVEL" + j, evname);
-			}
+						int j = 0;
+						for (int i =0; i<codesarr.length; i++) {
+							if(!"".equals(codesarr[i])){
+								String evname = OrgMgr.getDept(codesarr[i]).getName();
+								j++;
+								outBean.set("LEVEL" + j, evname);
+							}
+						}
 
 			String shuser = "";
 			UserBean userBean1 = Context.getUserBean();
