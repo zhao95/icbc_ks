@@ -206,7 +206,7 @@ public class DataServ extends CommonServ {
 						if(shlistbean.size()==500){
 							  ParamBean batchSave = new ParamBean();
 								batchSave.setBatchSaveDatas(shlistbean);
-								ServMgr.act("TS_BMSH_PASS", ServMgr.ACT_BATCHSAVE, batchSave);
+								ServMgr.act("TS_BMSH_STAY", ServMgr.ACT_BATCHSAVE, batchSave);
 								shlistbean.clear(); 
 						}else{
 							shlistbean.add(shBean);
