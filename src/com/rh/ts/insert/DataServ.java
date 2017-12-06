@@ -60,31 +60,11 @@ public class DataServ extends CommonServ {
 		for (Bean bean : DEPTLIST) {
 			
 			String odept_code = bean.getStr("DEPT_CODE");
-			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' limit 1400,3500");
+			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' limit 0,4000");
 			if(finds2!=null&&finds2.size()!=0){
 				
 				//向报名列表中插数据
 				for (Bean userBean : finds2) {
-					String user_code = userBean.getStr("USER_CODE");
-					String dept_code = userBean.getStr("dept_code");
-					ParamBean param = new ParamBean();
-					param.set("examerUserCode", user_code);
-					param.set("level", 0);
-					param.set("deptCode", dept_code);
-					param.set("odeptCode", odept_code);
-					param.set("xmId", xmid);
-					param.set("flowName", 1);
-					param.set("shrUserCode", user_code);
-					OutBean out = ServMgr
-							.act("TS_WFS_APPLY", "backFlow", param);
-					String blist = out.getStr("result");
-					String allman = "";
-					String node_name = "";
-					if (!"".equals(blist)) {
-						allman = blist.substring(0, blist.length() - 1);
-						node_name = out.getStr("NODE_NAME");
-					}
-					
 					String STATION_TYPE_CODE=userBean.getStr("STATION_TYPE_CODE");
 					String STATION_NO=userBean.getStr("STATION_NO_CODE");
 					String DUTY_LEVEL_CODE=userBean.getStr("DUTY_LV_CODE");
@@ -217,9 +197,7 @@ public class DataServ extends CommonServ {
 						shBean.set("BM_XL_CODE", kslbkbean.getStr("KSLB_XL_CODE"));
 						shBean.set("BM_MK_CODE", kslbkbean.getStr("KSLB_MK_CODE"));
 						shBean.set("BM_TYPE_NAME", kslbkbean.getStr("KSLB_TYPE_NAME"));
-						shBean.set("SH_NODE", node_name);// 目前审核节点
 						shBean.set("SH_USER", "");// 当前办理人
-						shBean.set("SH_OTHER", allman);// 其他办理人
 						shBean.set("S_ODEPT",userBean.getStr("ODEPT_CODE"));
 						shBean.set("S_TDEPT",userBean.getStr("TDEPT_CODE"));
 						shBean.set("S_DEPT",userBean.getStr("DEPT_CODE"));
