@@ -60,7 +60,7 @@ public class DataServ extends CommonServ {
 		for (Bean bean : DEPTLIST) {
 			
 			String odept_code = bean.getStr("DEPT_CODE");
-			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' limit 0,4000");
+			List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '"+bean.getStr("DEPT_CODE")+"' limit 0,10000");
 			if(finds2!=null&&finds2.size()!=0){
 				
 				//向报名列表中插数据
