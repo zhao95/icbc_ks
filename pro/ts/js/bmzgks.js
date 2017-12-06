@@ -500,9 +500,9 @@ function xminfoshow(){
 		 var ressultids = FireFly.doAct("TS_BMLB_BM","getYibmids",paramb)
 		 var ids = ressultids.ids;
 		 if(resultFlag.flag=="false"){
-		 extWhere="AND KSLBK_ID IN ("+ids+") AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)" +sqlstr +"AND KSLBK_CODE !='023001'";
+		 extWhere="AND KSLBK_ID IN ("+ids+") AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)AND KSLBK_CODE !='023001'";
 		 }else{
-		 extWhere="AND KSLBK_ID IN ("+ids+") AND KSLBK_CODE!='"+STATION_TYPE_CODE+"'" +sqlstr +"AND KSLBK_CODE !='023001'";
+		 extWhere="AND KSLBK_ID IN ("+ids+") AND KSLBK_CODE!='"+STATION_TYPE_CODE+"'AND KSLBK_CODE !='023001'";
 		 }
 		 var setting={data
 	             :FireFly.getDict('TS_XMGL_BM_KSLBK','KSLBK_PID',extWhere),
