@@ -408,17 +408,22 @@ public class QjlbServ extends CommonServ {
             String xmId = qjbean.getStr("XM_ID");
             Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
             String xmKsStartDate = xmBean.getStr("XM_KSSTARTDATA"); //项目详情考试开始时间
-            Date date = DateUtils.parseDate(xmKsStartDate);
+//            Date date = DateUtils.parseDate(xmKsStartDate);
             //如果在提交场次安排前，请假成功删除考位安排
             String[] split = shIdStr.toString().split(",");
-            for (String s : split) {
-                List<Object> values = new ArrayList<Object>();
-                values.add(s);
-                Bean whereBean = new Bean();
-                whereBean.set(Constant.PARAM_WHERE, " and SH_ID =? and (IS_SUBMIT!='1' or IS_SUBMIT is null)");
-                whereBean.set(Constant.PARAM_PRE_VALUES, values);
-                ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean);
+            String xmKcapPublishTime = xmBean.getStr("XM_KCAP_PUBLISH_TIME");//项目场次发布时间
+            if(StringUtils.isBlank(xmKcapPublishTime)){
+                //项目场次未发布
+                for (String s : split) {
+                    List<Object> values = new ArrayList<Object>();
+                    values.add(s);
+                    Bean whereBean = new Bean();
+                    whereBean.set(Constant.PARAM_WHERE, " and SH_ID =? and (IS_SUBMIT!='1' or IS_SUBMIT is null)");
+                    whereBean.set(Constant.PARAM_PRE_VALUES, values);
+                    ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean);
+                }
             }
+
 //                StringBuilder shIdSql = new StringBuilder();
 //                List<Object> values = new ArrayList<Object>();
 //                for (String s : split) {
