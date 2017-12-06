@@ -89,7 +89,7 @@ function bindCard() {
  	 //复制
  	 $(".hoverDiv [actcode='copy']").unbind("click").bind("click", function(){
  	  
- 		var pkCode = jQuery(this).attr("rowpk");
+ 		var pkCode = jQuery(this).attr("rowpk");debugger;
  	    param = {};
  	    param["pkCodes"] = pkCode;
  	    FireFly.doAct(_viewer.servId, "copy", param);

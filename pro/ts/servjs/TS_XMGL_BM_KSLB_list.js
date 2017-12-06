@@ -96,7 +96,7 @@ _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	   				param["KSLB_TYPE"] = types[i]; 
 	   				param["KSLBK_ID"]=ids[i];
 	   				param["KSQZ_ID"] = qzId;
-	   				param["XM_SZ_ID"] = XM_SZ_ID;debugger;
+	   				param["XM_SZ_ID"] = XM_SZ_ID;
 	   				param["BM_ID"] = BM_ID;
 	   				param["XM_ID"] = XM_ID;
 	   				param["KSLB_CODE"]=LBcodes[i];

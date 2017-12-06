@@ -1,3 +1,4 @@
+
 package com.rh.ts.xmgl;
 
 import java.io.IOException;
@@ -25,7 +26,6 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
-import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
 import com.rh.core.util.Strings;
 import com.rh.ts.pvlg.PvlgUtils;
@@ -76,8 +76,438 @@ public class XmglServ extends CommonServ {
 		NBean.set("XM_KCAP_PUBLISH_TIME", bean.getStr("XM_KCAP_PUBLISH_TIME"));
 		Bean beanA= ServDao.save(servId, NBean);
 		afterSaveToSz( beanA);
-		
+		//报名模块
+		copyBmgl(dataId,beanA);
+       //审核模块
+		copybmsh(dataId,beanA);
+       //请假模块
+		copyqjgl(dataId,beanA);
+		//借考管理
+		copyjkgl(dataId,beanA);
+		//考场
+		copyKczgl( dataId, beanA);
 	}
+	//报名管理      dataId老项目管理
+public  void   copyBmgl(String dataId,Bean beanA){
+	//根据old项目ID查找老数据
+	String bmglservId="TS_XMGL_BMGL";
+	String   oldXmidWhere="and  XM_ID='"+dataId+"'";
+	List<Bean>  bmglBean= ServDao.finds(bmglservId, oldXmidWhere);//1条
+	//得到新数据的xm_id，得到新数据的项目设置id    beanA为新的项目数据
+	String  nXmid=beanA.getStr("XM_ID");
+	String  bmszServId="TS_XMGL_SZ";
+	String  nXmszidWhere="and XM_ID='"+nXmid+"' and   XM_NAME_NUM=1";//新xmid
+	List<Bean> xmszBean = ServDao.finds(bmszServId, nXmszidWhere);
+	String nXmszid="";
+	Bean  beanBmgl=new  Bean();
+	if(xmszBean !=null && !xmszBean.isEmpty()){
+	 nXmszid=	xmszBean.get(0).getStr("XM_SZ_ID");
+	}
+	if(bmglBean !=null && !bmglBean.isEmpty()){
+			Bean  nbean  =new   Bean();
+			nbean.copyFrom(bmglBean.get(0));
+			nbean.set("XM_ID", nXmid);
+			nbean.set("XM_SZ_ID", nXmszid);
+			nbean.remove("BM_ID");
+			nbean.remove("_PK_");
+			 beanBmgl=ServDao.save(bmglservId, nbean);
+	}
+
+	
+   //考试类别组复制	 根据xmid找到老数据
+	String   oKsqzServId="TS_XMGL_BM_KSQZ";
+	Bean  kaqzBean=new  Bean();
+	List<Bean>  ksqzBean= ServDao.finds(oKsqzServId, oldXmidWhere);//多条
+	Bean   ksqzIdBean   =new   Bean();
+	if(ksqzBean !=null && !ksqzBean.isEmpty()){
+		for(int i=0;i<ksqzBean.size();i++){
+		Bean  nksqzbean  =new   Bean();
+		nksqzbean.copyFrom(ksqzBean.get(i));
+		nksqzbean.set("XM_ID", nXmid);
+		nksqzbean.set("XM_SZ_ID", nXmszid);
+		nksqzbean.set("BM_ID", beanBmgl.getId());
+		nksqzbean.remove("KSQZ_ID");
+		nksqzbean.remove("_PK_");
+		ksqzIdBean =ServDao.save(oKsqzServId, nksqzbean);
+		copyGZ ( oldXmidWhere,nXmid,ksqzIdBean.getId());
+		}
+	}
+	// 考试类别复制
+	String  OkslbServId="TS_XMGL_BM_KSLB";
+	List<Bean>  OkslbBeanList= ServDao.finds(OkslbServId, oldXmidWhere);//1条
+	if(OkslbBeanList !=null && !OkslbBeanList.isEmpty()){
+		for(int i=0;i<OkslbBeanList.size();i++){
+			Bean  kslbbean  =new   Bean();
+			kslbbean.copyFrom(OkslbBeanList.get(i));
+			kslbbean.set("XM_ID", nXmid);
+			kslbbean.set("XM_SZ_ID", nXmszid);
+			kslbbean.set("BM_ID", beanBmgl.getId());
+			kslbbean.set("KSQZ_ID", kaqzBean.getId());
+			kslbbean.remove("KSLB_ID");
+			kslbbean.remove("_PK_");
+			ServDao.save(OkslbServId, kslbbean);
+		}
+	}
+	
+//禁考管理复制，需要oldxmid
+	String jkglgzServId="TS_XMGL_BM_JKGLGZ";
+	List<Bean>  OjkglgzBean= ServDao.finds(jkglgzServId, oldXmidWhere);//1条
+	if(OjkglgzBean !=null && !OjkglgzBean.isEmpty()){
+		Bean  jkglbean  =new   Bean();
+		jkglbean.copyFrom(OjkglgzBean.get(0));
+		jkglbean.set("XM_ID", nXmid);
+		jkglbean.remove("GZ_ID");
+		jkglbean.remove("_PK_");
+		ServDao.save(jkglgzServId, jkglbean);
+	}
+//可报名群组       TS_BM_GROUP
+	String bmGroupServId="TS_BM_GROUP";
+	List<Bean>  ObmGroupBeanList= ServDao.finds(bmGroupServId, oldXmidWhere);//1条
+	if(ObmGroupBeanList !=null && !ObmGroupBeanList.isEmpty()){
+		for(int i=0;i<ObmGroupBeanList.size();i++){
+		Bean  bmgroupbean  =new   Bean();
+		bmgroupbean.copyFrom(ObmGroupBeanList.get(i));
+		bmgroupbean.set("XM_ID", nXmid);
+		bmgroupbean.remove("G_ID");
+		bmgroupbean.remove("_PK_");
+		ServDao.save(bmGroupServId, bmgroupbean);
+		}
+	}	
+//非资格考试复制xm——id
+	String  OfzgksServId="TS_XMGL_BM_FZGKS";
+	List<Bean>  OfzgksBeanList= ServDao.finds(OfzgksServId, oldXmidWhere);//1条
+	if(OfzgksBeanList !=null && !OfzgksBeanList.isEmpty()){
+		for(int i=0;i<OfzgksBeanList.size();i++){
+			Bean  fzgksbean  =new   Bean();
+			fzgksbean.copyFrom(OfzgksBeanList.get(i));
+			fzgksbean.set("XM_ID", nXmid);
+			fzgksbean.set("XM_SZ_ID", nXmszid);
+			fzgksbean.set("BM_ID", beanBmgl.getId());
+			fzgksbean.remove("FZGKS_ID");
+			fzgksbean.remove("_PK_");
+			ServDao.save(OfzgksServId, fzgksbean);
+		}
+	}
+
+	
+	
+	
+}
+	
+//审核规则的复制
+public  void  copyGZ (String oldXmidWhere,String nXmid,String   ksqzId){
+	//审核规则的复制
+		String  ObmshgzkServId="TS_XMGL_BMSH_SHGZ";
+		Bean  GZBean  =new   Bean();
+		List<Bean>  ObmshgzkBeanList= ServDao.finds(ObmshgzkServId, oldXmidWhere);//1条
+		if(ObmshgzkBeanList !=null && !ObmshgzkBeanList.isEmpty()){
+			for(int i=0;i<ObmshgzkBeanList.size();i++){
+				Bean  bmshgzkbean  =new   Bean();
+				bmshgzkbean.copyFrom(ObmshgzkBeanList.get(i));
+				bmshgzkbean.set("XM_ID", nXmid);
+				bmshgzkbean.set("KSQZ_ID", ksqzId);
+				bmshgzkbean.remove("GZ_ID");
+				bmshgzkbean.remove("_PK_");
+				GZBean =ServDao.save(ObmshgzkServId, bmshgzkbean);
+				copyGZMX ( oldXmidWhere, nXmid,   ksqzId, GZBean.getId());
+			}
+		}
+}
+	
+//规则详细
+public  void  copyGZMX (String oldXmidWhere,String nXmid,String   ksqzId,String  gzid){
+	//审核规则的复制
+		String  ObmshgzkmxServId="TS_XMGL_BMSH_SHGZ_MX";
+		List<Bean>  ObmshgzkBeanList= ServDao.finds(ObmshgzkmxServId, oldXmidWhere);//1条
+		if(ObmshgzkBeanList !=null && !ObmshgzkBeanList.isEmpty()){
+			for(int i=0;i<ObmshgzkBeanList.size();i++){
+				Bean  bmshgzkmxbean  =new   Bean();
+				bmshgzkmxbean.copyFrom(ObmshgzkBeanList.get(i));
+				bmshgzkmxbean.set("XM_ID", nXmid);
+				bmshgzkmxbean.set("KSQZ_ID", ksqzId);
+				bmshgzkmxbean.set("GZ_ID", ksqzId);
+				bmshgzkmxbean.remove("MX_ID");
+				bmshgzkmxbean.remove("_PK_");
+				ServDao.save(ObmshgzkmxServId, bmshgzkmxbean);
+			}
+		}
+}
+//报名审核复制
+public  void  copybmsh(String dataId,Bean beanA){
+	String bmshservId="TS_XMGL_BMSH";
+	String   oldXmidWhere="and  XM_ID='"+dataId+"'";
+	List<Bean>  bmshBean= ServDao.finds(bmshservId, oldXmidWhere);//1条
+	//得到新数据的xm_id，得到新数据的项目设置id    beanA为新的项目数据
+	String  nXmid=beanA.getStr("XM_ID");
+	String  bmszServId="TS_XMGL_SZ";
+	String  nXmszidWhere="and XM_ID='"+nXmid+"' and   XM_NAME_NUM=2";//新xmid
+	List<Bean> xmszBean = ServDao.finds(bmszServId, nXmszidWhere);
+	String nXmszid="";
+	
+	if(xmszBean !=null && !xmszBean.isEmpty()){
+	 nXmszid=	xmszBean.get(0).getStr("XM_SZ_ID");
+	}
+	if(bmshBean !=null && !bmshBean.isEmpty()){
+			Bean  nbean  =new   Bean();
+			nbean.copyFrom(bmshBean.get(0));
+			nbean.set("XM_ID", nXmid);
+			nbean.set("XM_SZ_ID", nXmszid);
+			nbean.remove("SH_ID");
+			nbean.remove("_PK_");
+			ServDao.save(bmshservId, nbean);
+	}
+	
+	}
+//请假管理
+public  void  copyqjgl(String dataId,Bean beanA){
+	String QJGLservId=" TS_XMGL_QJGL";
+	String   oldXmidWhere="and  XM_ID='"+dataId+"'";
+	List<Bean>  bmshBean= ServDao.finds(QJGLservId, oldXmidWhere);//1条
+	//得到新数据的xm_id，得到新数据的项目设置id    beanA为新的项目数据
+	String  nXmid=beanA.getStr("XM_ID");
+	String  bmszServId="TS_XMGL_SZ";
+	String  nXmszidWhere="and XM_ID='"+nXmid+"' and   XM_NAME_NUM=3";//新xmid
+	List<Bean> xmszBean = ServDao.finds(bmszServId, nXmszidWhere);
+	String nXmszid="";
+	if(xmszBean !=null && !xmszBean.isEmpty()){
+	 nXmszid=	xmszBean.get(0).getStr("XM_SZ_ID");
+	}
+	if(bmshBean !=null && !bmshBean.isEmpty()){
+			Bean  nbean  =new   Bean();
+			nbean.copyFrom(bmshBean.get(0));
+			nbean.set("XM_ID", nXmid);
+			nbean.set("XM_SZ_ID", nXmszid);
+			nbean.remove("QJ_ID");
+			nbean.remove("_PK_");
+			ServDao.save(QJGLservId, nbean);
+	}
+	
+	}
+//借考管理
+public  void  copyjkgl(String dataId,Bean beanA){
+	String jkglservId="  TS_XMGL_YDJK";
+	String   oldXmidWhere="and  XM_ID='"+dataId+"'";
+	List<Bean>  bmshBean= ServDao.finds(jkglservId, oldXmidWhere);//1条
+	//得到新数据的xm_id，得到新数据的项目设置id    beanA为新的项目数据
+	String  nXmid=beanA.getStr("XM_ID");
+	String  bmszServId="TS_XMGL_SZ";
+	String  nXmszidWhere="and XM_ID='"+nXmid+"' and   XM_NAME_NUM=3";//新xmid
+	List<Bean> xmszBean = ServDao.finds(bmszServId, nXmszidWhere);
+	String nXmszid="";
+	if(xmszBean !=null && !xmszBean.isEmpty()){
+	 nXmszid=	xmszBean.get(0).getStr("XM_SZ_ID");
+	}
+	if(bmshBean !=null && !bmshBean.isEmpty()){
+			Bean  nbean  =new   Bean();
+			nbean.copyFrom(bmshBean.get(0));
+			nbean.set("XM_ID", nXmid);
+			nbean.set("XM_SZ_ID", nXmszid);
+			nbean.remove("YDJK_ID");
+			nbean.remove("_PK_");
+			ServDao.save(jkglservId, nbean);
+	}
+	
+}
+//考场组群管理
+public  void  copyKczgl(String dataId,Bean beanA){
+	String kczglervId="TS_KCZGL";
+	String   oldXmidWhere="and  XM_ID='"+dataId+"'";
+	List<Bean>  kczglBeanList= ServDao.finds(kczglervId, oldXmidWhere);//多条
+	String  nXmid=beanA.getStr("XM_ID");
+	if(kczglBeanList !=null && !kczglBeanList.isEmpty()){
+		Bean  kczBean  =new  Bean();
+		for(int i=0;i<kczglBeanList.size();i++){
+			String oldKczid=kczglBeanList.get(i).getStr("KCZ_ID");
+				Bean  bmshgzkmxbean  =new   Bean();
+			if(kczglBeanList.get(i).getInt("KCZ_STATE")==1){
+			bmshgzkmxbean.copyFrom(kczglBeanList.get(i));
+			bmshgzkmxbean.set("XM_ID", nXmid);
+			bmshgzkmxbean.remove("KCZ_ID");
+			bmshgzkmxbean.remove("_PK_");
+			kczBean=ServDao.save(kczglervId, bmshgzkmxbean);
+			String   kczid=kczBean.getId();
+			copyGroup( kczid ,oldKczid);
+		}
+	  }	
+	}
+}
+
+public  void  copyGroup(String kczid ,String oldKczid){
+	String kczglGroupervId="TS_KCZGL_GROUP";
+	String   oldKczWhere="and  KCZ_ID='"+oldKczid+"'";
+	List<Bean>  kczglGroupBeanList= ServDao.finds(kczglGroupervId, oldKczWhere);//多条
+	if(kczglGroupBeanList !=null && !kczglGroupBeanList.isEmpty()){
+		Bean kczGroupBean=new   Bean();
+		for(int i=0;i<kczglGroupBeanList.size();i++){
+			String oldGroupId= kczglGroupBeanList.get(i).getStr("GROUP_ID");
+			Bean  bmshgzkmxbean  =new   Bean();
+			bmshgzkmxbean.copyFrom(kczglGroupBeanList.get(i));
+			bmshgzkmxbean.set("KCZ_ID", kczid);
+			bmshgzkmxbean.remove("GROUP_ID");
+			bmshgzkmxbean.remove("_PK_");
+			kczGroupBean=ServDao.save(kczglGroupervId, bmshgzkmxbean);
+			String   groupId=kczGroupBean.getId();
+			copykcgls( groupId ,oldGroupId);
+	  }	
+	}
+}
+public  void  copykcgls(String groupId ,String  oldGroupId){
+	String kczglKcglServId="TS_KCGL";
+	String   oldGroupWhere="and  GROUP_ID='"+oldGroupId+"'";
+	List<Bean>  kczglGroupkcBeanList= ServDao.finds(kczglKcglServId, oldGroupWhere);//多条
+	if(kczglGroupkcBeanList !=null && !kczglGroupkcBeanList.isEmpty()){
+		Bean kczGroupBean=new   Bean();
+		for(int i=0;i<kczglGroupkcBeanList.size();i++){
+			if(kczglGroupkcBeanList.get(i).getInt("KC_STATE")==5){
+				String  oldkcid=kczglGroupkcBeanList.get(i).getStr("KC_ID");
+				Bean  bmshgzkmxbean  =new   Bean();
+				bmshgzkmxbean.copyFrom(kczglGroupkcBeanList.get(i));
+				bmshgzkmxbean.set("GROUP_ID", groupId);
+				bmshgzkmxbean.remove("KCZ_ID");
+				bmshgzkmxbean.remove("_PK_");
+				kczGroupBean=ServDao.save(kczglKcglServId, bmshgzkmxbean);
+				String   kcId=kczGroupBean.getId();
+				copyUpdate( kcId ,oldkcid);
+				copyIpscope( kcId ,oldkcid);
+				copyIpzwh( kcId ,oldkcid);
+				copyGljg( kcId ,oldkcid);
+				copyGly( kcId ,oldkcid);
+				copyZwdyb( kcId ,oldkcid); 
+				copyJkip( kcId ,oldkcid);
+				
+			}
+		  }	
+	}
+}
+//TS_KCGL_UPDATE
+public  void  copyUpdate(String kcId ,String  oldkcid){
+	String kczglKcglServId="TS_KCGL_UPDATE";
+	String   oldGroupWhere="and  KC_ID='"+oldkcid+"'";
+	List<Bean>  kczglGroupkcBeanList= ServDao.finds(kczglKcglServId, oldGroupWhere);//多条
+	if(kczglGroupkcBeanList !=null && !kczglGroupkcBeanList.isEmpty()){
+		for(int i=0;i<kczglGroupkcBeanList.size();i++){
+				Bean  bmshgzkmxbean  =new   Bean();
+				bmshgzkmxbean.copyFrom(kczglGroupkcBeanList.get(i));
+				bmshgzkmxbean.set("KC_ID", kcId);
+				bmshgzkmxbean.remove("KCZ_ID");
+				bmshgzkmxbean.remove("_PK_");
+				ServDao.save(kczglKcglServId, bmshgzkmxbean);
+		  }	
+	}
+}
+	
+
+
+public  void  copyIpscope(String kcId ,String  oldkcid){
+	String kczglKcglServId="TS_KCGL_IPSCOPE";
+	String   oldGroupWhere="and  KC_ID='"+oldkcid+"'";
+	List<Bean>  kczglGroupkcBeanList= ServDao.finds(kczglKcglServId, oldGroupWhere);//多条
+	if(kczglGroupkcBeanList !=null && !kczglGroupkcBeanList.isEmpty()){
+		for(int i=0;i<kczglGroupkcBeanList.size();i++){
+				Bean  bmshgzkmxbean  =new   Bean();
+				bmshgzkmxbean.copyFrom(kczglGroupkcBeanList.get(i));
+				bmshgzkmxbean.set("KC_ID", kcId);
+				bmshgzkmxbean.remove("IPS_ID");
+				bmshgzkmxbean.remove("_PK_");
+				ServDao.save(kczglKcglServId, bmshgzkmxbean);
+		  }	
+	}
+}
+
+
+
+
+
+public  void  copyIpzwh(String kcId ,String  oldkcid){
+	String kczglKcglServId="TS_KCGL_IPZWH";
+	String   oldGroupWhere="and  KC_ID='"+oldkcid+"'";
+	List<Bean>  kczglGroupkcBeanList= ServDao.finds(kczglKcglServId, oldGroupWhere);//多条
+	if(kczglGroupkcBeanList !=null && !kczglGroupkcBeanList.isEmpty()){
+		for(int i=0;i<kczglGroupkcBeanList.size();i++){
+				Bean  bmshgzkmxbean  =new   Bean();
+				bmshgzkmxbean.copyFrom(kczglGroupkcBeanList.get(i));
+				bmshgzkmxbean.set("KC_ID", kcId);
+				bmshgzkmxbean.remove("IPZ_ID");
+				bmshgzkmxbean.remove("_PK_");
+				ServDao.save(kczglKcglServId, bmshgzkmxbean);
+		  }	
+	}
+}
+
+
+
+public  void  copyGljg(String kcId ,String  oldkcid){
+	String kczglKcglServId="TS_KCGL_GLJG";
+	String   oldGroupWhere="and  KC_ID='"+oldkcid+"'";
+	List<Bean>  kczglGroupkcBeanList= ServDao.finds(kczglKcglServId, oldGroupWhere);//多条
+	if(kczglGroupkcBeanList !=null && !kczglGroupkcBeanList.isEmpty()){
+		for(int i=0;i<kczglGroupkcBeanList.size();i++){
+				Bean  bmshgzkmxbean  =new   Bean();
+				bmshgzkmxbean.copyFrom(kczglGroupkcBeanList.get(i));
+				bmshgzkmxbean.set("KC_ID", kcId);
+				bmshgzkmxbean.remove("JG_ID");
+				bmshgzkmxbean.remove("_PK_");
+				ServDao.save(kczglKcglServId, bmshgzkmxbean);
+		  }	
+	}
+}
+
+
+
+
+public  void  copyGly(String kcId ,String  oldkcid){
+	String kczglKcglServId="TS_KCGL_GLY";
+	String   oldGroupWhere="and  KC_ID='"+oldkcid+"'";
+	List<Bean>  kczglGroupkcBeanList= ServDao.finds(kczglKcglServId, oldGroupWhere);//多条
+	if(kczglGroupkcBeanList !=null && !kczglGroupkcBeanList.isEmpty()){
+		for(int i=0;i<kczglGroupkcBeanList.size();i++){
+				Bean  bmshgzkmxbean  =new   Bean();
+				bmshgzkmxbean.copyFrom(kczglGroupkcBeanList.get(i));
+				bmshgzkmxbean.set("KC_ID", kcId);
+				bmshgzkmxbean.remove("GLY_ID");
+				bmshgzkmxbean.remove("_PK_");
+				ServDao.save(kczglKcglServId, bmshgzkmxbean);
+		  }	
+	}
+}
+
+
+
+
+
+public  void  copyZwdyb(String kcId ,String  oldkcid){
+	String kczglKcglServId="TS_KCGL_ZWDYB";
+	String   oldGroupWhere="and  KC_ID='"+oldkcid+"'";
+	List<Bean>  kczglGroupkcBeanList= ServDao.finds(kczglKcglServId, oldGroupWhere);//多条
+	if(kczglGroupkcBeanList !=null && !kczglGroupkcBeanList.isEmpty()){
+		for(int i=0;i<kczglGroupkcBeanList.size();i++){
+				Bean  bmshgzkmxbean  =new   Bean();
+				bmshgzkmxbean.copyFrom(kczglGroupkcBeanList.get(i));
+				bmshgzkmxbean.set("KC_ID", kcId);
+				bmshgzkmxbean.remove("ZW_ID");
+				bmshgzkmxbean.remove("_PK_");
+				ServDao.save(kczglKcglServId, bmshgzkmxbean);
+		  }	
+	}
+}
+
+
+public  void  copyJkip(String kcId ,String  oldkcid){
+	String kczglKcglServId="TS_KCGL_JKIP";
+	String   oldGroupWhere="and  KC_ID='"+oldkcid+"'";
+	List<Bean>  kczglGroupkcBeanList= ServDao.finds(kczglKcglServId, oldGroupWhere);//多条
+	if(kczglGroupkcBeanList !=null && !kczglGroupkcBeanList.isEmpty()){
+		for(int i=0;i<kczglGroupkcBeanList.size();i++){
+				Bean  bmshgzkmxbean  =new   Bean();
+				bmshgzkmxbean.copyFrom(kczglGroupkcBeanList.get(i));
+				bmshgzkmxbean.set("KC_ID", kcId);
+				bmshgzkmxbean.remove("JKIP_ID");
+				bmshgzkmxbean.remove("_PK_");
+				ServDao.save(kczglKcglServId, bmshgzkmxbean);
+		  }	
+	}
+}
+
 //	public OutBean copy(ParamBean paramBean) {
 //		OutBean outBean = new OutBean();
 //		String servId = paramBean.getStr("serv");
