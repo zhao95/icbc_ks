@@ -29,3 +29,30 @@ _viewer.afterTreeNodeClick = function(item,id,dictId) {
 _viewer.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 };
+
+/**
+ * 系统管理员和项目创建人 显示添加和删除按钮
+ */
+var userCode = System.getVar("@USER_CODE@");
+if(userCode != 'admin') {
+	if(_viewer.links.XM_ID != 'undefined') {
+		var data = {};
+		data["_WHERE_"] = " and S_USER ='" + userCode + "'  and XM_ID = '"+_viewer.links.XM_ID+"'";
+		
+		FireFly.doAct("TS_XMGL", "count", data, false, true, function(result) {
+			
+			if(result._MSG_.indexOf("ERROR,") == 0) {
+				_viewer.getBtn("add").hide();
+				_viewer.getBtn("delete").hide();
+			} else {
+				
+				if(result["_OKCOUNT_"] <= 0) {
+					_viewer.getBtn("add").hide();
+					_viewer.getBtn("delete").hide();
+				}
+			}
+		});
+	}
+}
+
+
