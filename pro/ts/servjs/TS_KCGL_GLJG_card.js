@@ -21,7 +21,14 @@ $("#TS_KCGL_GLJG-JG_CODE__NAME").next().unbind("click").bind("click", function(e
 });
 
 function sel(event){
-	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'multi','sId':'TS_ORG_DEPT','pvlg':'CODE_PATH'}";//single
+	
+	var seltype = "single";
+	
+	if(_viewer._actVar == UIConst.ACT_CARD_ADD) {
+		seltype = "multi" ;
+	}
+	
+	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'"+seltype+"','sId':'TS_ORG_DEPT','pvlg':'CODE_PATH'}";//single
 
 	var options = {
 			"config" :configStr,
@@ -41,13 +48,10 @@ function sel(event){
 					$("#TS_KCGL_GLJG-JG_CODE__NAME").parent().removeAttr("validate_msg").removeClass("blankError").removeClass("errorbox");
 				}
 				
-//				itemB.obj.parent().parent().find(".name").removeClass("error");
-//				itemB.obj.removeAttr("validate_msg").removeClass("errorbox_textarea").addClass("correctbox");
-				
-//				var code = idArray[0];
-//				FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
-//					_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
-//				});
+				var code = idArray[0];
+				FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
+					_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
+				});
 			}
 	};
 	
@@ -55,6 +59,8 @@ function sel(event){
 	queryView.show(event,[],[0,495]);
 }
 
+if(_viewer._actVar == UIConst.ACT_CARD_ADD) {
+	
 _viewer.getBtn("save").unbind("click").bind("click", function(event) {
 	
 	var jgCode = _viewer.getItem("JG_CODE").getValue();
@@ -96,6 +102,11 @@ _viewer.getBtn("save").unbind("click").bind("click", function(event) {
 	//批量保存
 	var rtn = FireFly.batchSave(_viewer.servId,batchData,null,2,false);
 	
-	_viewer.backA.mousedown();
+	setTimeout(function(){ 
+		_viewer._parHandler.refreshGrid(); 
+		jQuery("#" + _viewer.dialogId).dialog("close");
+	}, 100);
 	
 });
+
+}
