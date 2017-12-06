@@ -696,7 +696,7 @@ public class CccsServ extends CommonServ {
 	    Bean bean = ServDao.find("SY_ORG_DEPT_ALL", odeptCode);
 	    String codePath = bean.getStr("CODE_PATH");
 	    Bean whereBean = new Bean();
-	    whereBean.set("_SELECT_", "DEPT_CODE");
+	    whereBean.set("_SELECT_", "DEPT_CODE,ODEPT_CODE");
 	    whereBean.set("_WHERE_", "and DEPT_CODE = ODEPT_CODE and CODE_PATH like '" + codePath +"%'");
 	    List<Bean> tmpList = ServDao.finds("SY_ORG_DEPT_ALL", whereBean);
 	    for (int j = 0; j < tmpList.size(); j++) {
