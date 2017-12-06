@@ -47,7 +47,7 @@ public class DataServ extends CommonServ {
 		int i=0;
 		int j=0;
 		int a = 0;
-		String sql = "SELECT CODE_PATH,DISTINCT DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_LEVEL = '2'";
+		String sql = "SELECT DISTINCT CODE_PATH,DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_LEVEL = '2'";
 		List<Bean> odeptlist = Transaction.getExecutor().query(sql);
 		
 		List bmlistbean = new ArrayList<Bean>();
