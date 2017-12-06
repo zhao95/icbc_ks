@@ -469,6 +469,27 @@ function firall(){
 				encodeURIComponent(jq.toJSON(data)));
 				
 				};
+//----------------------------------------------导出全部人员信息到excel表
+//				expAllfun('TS_BMSH_STAY','expAllfun')
+				function expAllfun(obj,name){
+					var arrstring="";
+					//定义变量 把id拼成 逗号分隔字符串
+					//定义 变量 
+					var i=0;
+					$('input:checkbox[name='+name+']:checked').each(function(){
+					i++;
+					var aa = $(this).val();
+					arrstring+=aa+",";
+					 });
+				
+					var whereData={};
+					var data = {"_PK_":arrstring};
+					data["xmid"]=xmid;
+					data = jQuery.extend(data,whereData);
+					
+					window.open(FireFly.getContextPath() + '/' + obj + '.expAll.do?data=' + 
+					encodeURIComponent(jq.toJSON(data)));
+				}
 //--------------------------------------------------------------------------异议图标
 function yiyi(obj){
 		var a = obj.parentNode.id;

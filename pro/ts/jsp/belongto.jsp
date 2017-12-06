@@ -110,7 +110,7 @@ if(userBean != null) {
 		 <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;辖内报名情况</span>
 	</div>
 	
-	<span style="padding-left:5%;">当前辖内报名总人数：</span><strong id="allnum" style="color:red"></strong>、待审核：<strong id="staynum" style="color:red"></strong>、审核通过：<strong id="passnum" style="color:red"></strong>、审核未通过：<strong id="nopassnum" style="color:red"></strong>
+	<span style="padding-left:5%;">当前辖内报名总人数：</span><strong id="allnum" style="color:red"></strong>、待审核：<strong id="staynum" style="color:red"></strong>、审核通过：<strong id="passnum" style="color:red"></strong>、审核未通过：<strong id="nopassnum" style="color:red"></strong><button class="btn btn-success" data-toggle="modal" style="border: none; color: white; height: 30px; width: 150px; background: lightseagreen; margin-left:20px; " onclick="expAllfun('TS_BMSH_STAY','expAllfun')" id="expAllfun">导出全部人员清单</button>
 	<table id="myTab" class="nav nav-tabs"
 		style="margin-left: 10px; width: 98%; background-color: white">
 		<tr style="height: 70px">

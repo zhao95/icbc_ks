@@ -887,7 +887,248 @@ public class StayServ extends CommonServ {
 		}
 		return new OutBean().setOk();
 	}
+	/**
+	 * 导出全部的报名人员
+	 * @param paramBean
+	 * @return
+	 */
+	public OutBean expAll(ParamBean paramBean) {
+		int flag=0;
+		//导出待审核人员到excel
+		String xmid = paramBean.getStr("xmid");
+		//所有已报名的服务类，仅供设置导出表明使用
+		String bmAll = "TS_BM_ALL";
 
+		ServDefBean bmAllServBean = ServUtils.getServDef(bmAll);
+		String dshServid = "TS_BMSH_STAY";
+		String passServid = "TS_BMSH_PASS";
+		String noPassServid = "TS_BMSH_NOPASS";
+		ExportExcel expExcel = new ExportExcel(bmAllServBean);
+		//调用模板方法将三种类型的人员全部导出到excel表中
+		List<Bean> dshExpList = expTemp(xmid, dshServid, paramBean,expExcel,flag);
+			flag++;
+		List<Bean> passExpList = expTemp(xmid, passServid, paramBean,expExcel,flag);
+		flag++;	
+//		flag = (int) passExpList.get(0).get("exp_flag");
+		List<Bean> nopassExpList = expTemp(xmid, noPassServid, paramBean,expExcel,flag);
+//			flag = (int) nopassExpList.get(0).get("exp_flag");
+		System.out.println(dshExpList.toString()+passExpList.toString()+nopassExpList.toString());
+		return new OutBean().setOk();
+	}
+	
+	public List<Bean> expTemp(String xmid,String servId,ParamBean paramBean,ExportExcel expExcel,int flag){
+
+		List<Bean> errList = new ArrayList<Bean>();
+		List<Bean> okList = new ArrayList<Bean>();
+		ParamBean parr = new ParamBean();
+		UserBean userBean1 = Context.getUserBean();
+		String user_code1 = "";
+		if (userBean1.isEmpty()) {
+			errList.add(new OutBean().setError("ERROR:user_code 为空"));
+			return errList;
+		} else {
+			user_code1 = userBean1.getStr("USER_CODE");
+		}
+		parr.copyFrom(paramBean);
+		parr.setServId("TS_BMSH_PX");
+		ServDefBean serv = ServUtils.getServDef(servId);
+		long count = 0;
+		long times = 0;
+		paramBean.setQueryPageShowNum(ONETIME_EXP_NUM); // 设置每页最大导出数据量
+		String searchWhere = "";
+		beforeExp(paramBean); // 执行监听方法
+		
+		List<Bean> dataList= new ArrayList<Bean>();
+		if (paramBean.getId().length() > 0) { // 支持指定记录的导出（支持多选）
+			searchWhere = " and " + serv.getPKey() + " in ('"
+					+ paramBean.getId().replaceAll(",", "','") + "')";
+			paramBean.setQuerySearchWhere(searchWhere);
+			dataList = ServDao.finds(servId, searchWhere);
+		}else{ // 导出所有记录
+			if(!"".equals(xmid)){
+				UserBean user = Context.getUserBean();
+				Bean userPvlgToHT = RoleUtil
+						.getPvlgRole(user.getCode(), "TS_BMGL_XNBM");
+				Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+				Bean str = (Bean) userPvlgToHTBean.get("XN_BM");
+				String dept_code = str.getStr("ROLE_DCODE");
+				if ("".equals(dept_code)) {
+					dept_code = user.getStr("ODEPT_CODE");
+				}
+				dept_code = dept_code.substring(0, 10);
+				if (dept_code.equals("0010100000")) {
+					String sql =   " select * from "+servId+" where XM_ID='" + xmid + "'";
+					dataList = Transaction.getExecutor().query(sql);
+					
+				}else{
+					DeptBean dept = OrgMgr.getDept(dept_code);
+					String codepath = dept.getCodePath();
+					String sql = "select * from "
+							+ servId
+							+ " a where exists(select dept_code from sy_org_dept b where code_path like concat('"
+							+ codepath
+							+ "','%') and a.s_dept=b.dept_code and s_flag='1') AND XM_ID='"
+							+ xmid + "'";
+					dataList = Transaction.getExecutor().query(sql);
+				}
+
+			}else{
+				String where = paramBean.getStr("where");
+				String sql = "select * from "+servId+where;
+				dataList =Transaction.getExecutor().query(sql);
+			}
+		}
+
+		List<Bean> finalList = new ArrayList<Bean>();
+
+		// 判断user_code 是否为空 若为空则 导出所有
+
+		searchWhere = " AND USER_CODE =" + "'" + user_code1 + "' order by cast(PX_XUHAO as SIGNED)";
+
+		// 排序用的 parr存读取th
+		parr.setQuerySearchWhere(searchWhere);
+		LinkedHashMap<String, Bean> cols = new LinkedHashMap<String, Bean>();
+		List<Bean> pxdatalist1 = ServDao.finds("TS_BMSH_PX", searchWhere);
+		if (pxdatalist1.size() == 0) {
+			String where1 = "AND USER_CODE is null ";
+			pxdatalist1 = ServDao.finds("TS_BMSH_PX", where1);
+		}
+		// 查询出所有的 待审核记录
+		OutBean outBean = query(paramBean);
+		for (Bean bean : dataList) {
+			String work_num = bean.getStr("BM_CODE");
+			Bean userBean = getUserInfo1(work_num);
+			Bean newBean = new Bean();
+			// for循环排序bean
+			for (Bean pxbean : pxdatalist1) {
+				String aa = pxbean.getStr("PX_NAME");
+				String namecol = pxbean.getStr("PX_COLUMN");
+				String pxcol = namecol;
+				Bean colBean = new Bean();
+
+				colBean.set("SAFE_HTML", "");
+				colBean.set("ITEM_LIST_FLAG", "1");
+				colBean.set("ITEM_CODE", namecol);
+				colBean.set("EN_JSON", "");
+				colBean.set("ITEM_NAME", aa);
+				cols.put(pxcol, colBean);
+
+				// 字段
+				// 如果 有值 赋值
+				String name = bean.getStr(namecol);
+				if (!"".equals(bean.getStr(namecol))) {
+					newBean.set(namecol, bean.getStr(namecol));
+				}
+				if (!"".equals(userBean.getStr(namecol))) {
+					newBean.set(namecol, userBean.getStr(namecol));
+					name = userBean.getStr(namecol);
+				}
+				if ("".equals(bean.getStr(namecol))
+						&& "".equals(userBean.getStr(namecol))) {
+					newBean.set(namecol, "");
+				}
+				if ("SH_OTHER".equals(namecol)) {
+					// 其它办理人
+					Bean parambeansss = new Bean();
+					parambeansss.set("codes", bean.getStr("SH_OTHER"));
+					Bean outBeans = getusername(bean);
+					name = outBeans.getStr("usernames");
+				}
+				if(flag==0){
+					if("SH_STATUS".equals(namecol)){
+						//审核状态;
+						name = "审核中...";
+					}
+				}
+				if(flag==1){
+					if("SH_STATUS".equals(namecol)){
+						//审核状态;
+						name = "审核通过";
+					}
+				}
+				if(flag==2){
+					if("SH_STATUS".equals(namecol)){
+						//审核状态;
+						name = "审核未通过";
+					}
+				}
+				
+				if ("JOB_LB".equals(namecol)) {
+					name = bean.getStr("BM_LB");
+				}
+				if ("JOB_XL".equals(namecol)) {
+					name = bean.getStr("BM_XL");
+				}
+				if ("TONGYI".equals(namecol)) {
+					name = bean.getStr("BM_CODE");
+				}
+				String BM_TYPE = "";
+				if ("BM_TYPE".equals(namecol)) {
+					if ("1".equals(bean.getStr("BM_TYPE"))) {
+						BM_TYPE = "初级";
+					} else if ("2".equals(bean.getStr("BM_TYPE"))) {
+						BM_TYPE = "中级";
+					} else {
+						BM_TYPE = "高级";
+					}
+					name = BM_TYPE;
+
+				}
+				newBean.set(namecol, name);
+				newBean.set("_ROWNUM_", "");
+				newBean.set("ROWNUM_", "");
+			}
+			finalList.add(newBean);
+
+		}
+//		ExportExcel expExcel = new ExportExcel(serv);
+		try {
+			// 查询出 要导出的数据
+			count = outBean.getCount();
+			// 总数大于excel可写最大值
+			if (count > EXCEL_MAX_NUM) {
+				errList.add(new OutBean().setError("导出数据总条数大于Excel最大行数："+ EXCEL_MAX_NUM));
+				return errList;
+			}
+			// 导出第一次查询数据
+			paramBean.setQueryPageNowPage(1); // 导出当前第几页
+			afterExp(paramBean, outBean); // 执行导出查询后扩展方法
+			// 查询出表头 查询出 对应数据 hashmaplist
+			if(flag<1){
+				expExcel.createHeader(cols);
+			}
+			expExcel.appendData1(finalList, paramBean);
+			// 存在多页数据
+			/*if (ONETIME_EXP_NUM < count) {
+				times = count / ONETIME_EXP_NUM;
+				// 如果获取的是整页数据
+				if (ONETIME_EXP_NUM * times == count && count != 0) {
+					times = times - 1;
+				}
+				for (int i = 1; i <= times; i++) {
+					paramBean.setQueryPageNowPage(i + 1); // 导出当前第几页
+					OutBean out = query(paramBean);
+					afterExp(paramBean, out); // 执行导出查询后扩展方法
+					expExcel.appendData(out.getDataList(), paramBean);
+				}
+			}*/
+			if(flag>=2){
+			expExcel.addSumRow();
+			}
+		} catch (Exception e) {
+			log.error("导出Excel文件异常" + e.getMessage(), e);
+		} finally {
+			if(flag>=2){
+				expExcel.close();
+			}
+			flag++;
+		}
+		Bean flagBean = new Bean();
+		flagBean.set("exp_flag", flag);
+		okList.add(flagBean);
+		okList.add(new OutBean().setOk());
+		return okList; 
+	}
 	/**
 	 * 根据usercode 获取username
 	 */
