@@ -527,8 +527,8 @@ public class StayServ extends CommonServ {
 			UserBean userBean = UserMgr.getUser(bm_code);
 
 			// 获取当前机构;
-			DeptBean oneodeptcode1 = userBean.getODeptBean();
-			String codePath = oneodeptcode1.getCodePath();
+			DeptBean dept = OrgMgr.getDept(userBean.getDeptCode());
+			String codePath = dept.getCodePath();
 			/*if (oneodeptcode1 != null) {
 				// 获取所有逗号分隔的字符串
 				codes = getusercodes(oneodeptcode1, s);
@@ -603,17 +603,8 @@ public class StayServ extends CommonServ {
 			// 根据人力编码获取人力信息
 			UserBean userBean = UserMgr.getUser(s);
 
-			// 获取当前机构;
-			DeptBean oneodeptcode1 = userBean.getODeptBean();
-			// 获取当前机构;
-						String codePath = oneodeptcode1.getCodePath();
-						/*if (oneodeptcode1 != null) {
-							// 获取所有逗号分隔的字符串
-							codes = getusercodes(oneodeptcode1, s);
-							if("".equals(codes)){
-								codes=s;
-							}
-						}*/
+			DeptBean dept = OrgMgr.getDept(userBean.getDeptCode());
+			String codePath = dept.getCodePath();
 						 String[] codesarr = codePath.split("\\^");
 
 						int j = 0;
