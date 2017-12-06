@@ -156,7 +156,6 @@ function run(type){
 							param2["_WHERE_"] = "and (DEPT_PCODE = '"+dataId+"' or dept_code = '"+dataId+"') and DEPT_TYPE=2 and s_flag = 1";
 							var odept3Arr = FireFly.doAct("TS_ORG_DEPT","finds", param2)._DATA_;
 							//二级机构数据
-							
 							if(odept3Arr.length > 0){
 								for(var i=0;i<odept3Arr.length;i++){
 									var tmpBean = {};
@@ -317,8 +316,8 @@ function getResult(kcArr){
 		var tmpPoepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", param)._DATA_;
 		peopleNum += tmpPoepleNum-0;
 		if (tmpPoepleNum != 0 && goodSumNum != 0 && maxSumNum !=0) { //最优场次数 
-			maxSyNum += maxSumNum-tmpPoepleNum-0;
-			goodSyNum += goodSumNum-tmpPoepleNum-0;
+//			maxSyNum += maxSumNum-tmpPoepleNum-0;
+//			goodSyNum += goodSumNum-tmpPoepleNum-0;
 			goodCCNum += Math.ceil(tmpPoepleNum/goodSumNum); //最大场次数 
 			maxCCNum += Math.ceil(tmpPoepleNum/maxSumNum); //最优剩余机器数 
 		}
@@ -327,9 +326,9 @@ function getResult(kcArr){
 	res["CC_COMPUTER_GOODNUM"] = goodSumNum;
 	res["CC_COMPUTER_MAXNUM"] = maxSumNum; 
 	res["CC_GOOD_NUM"] = goodCCNum;
-	res["CC_GOOD_SYNUM"] = goodSyNum; 
+	res["CC_GOOD_SYNUM"] = goodCCNum * goodSumNum - peopleNum; ; 
 	res["CC_MAX_NUM"] = maxCCNum;
-	res["CC_MAX_SYNUM"] = maxSyNum; 
+	res["CC_MAX_SYNUM"] = maxCCNum * maxSumNum - peopleNum; 
 	return res;
 }
 
@@ -377,8 +376,8 @@ function getResult2(kcArr){
 		var tmpPoepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", param)._DATA_;
 		if (tmpPoepleNum != 0 && goodSumNum != 0 && maxSumNum !=0) { //最优场次数 
 			peopleNum += tmpPoepleNum-0;
-			maxSyNum += maxSumNum-tmpPoepleNum-0;
-			goodSyNum += goodSumNum-tmpPoepleNum-0;
+			//maxSyNum += maxSumNum-tmpPoepleNum-0;
+			//goodSyNum += goodSumNum-tmpPoepleNum-0;
 			goodCCNum += Math.ceil(tmpPoepleNum/goodSumNum); //最大场次数 
 			maxCCNum += Math.ceil(tmpPoepleNum/maxSumNum); //最优剩余机器数 
 		}
@@ -387,9 +386,9 @@ function getResult2(kcArr){
 	res["CC_COMPUTER_GOODNUM"] = goodSumNum;
 	res["CC_COMPUTER_MAXNUM"] = maxSumNum; 
 	res["CC_GOOD_NUM"] = goodCCNum;
-	res["CC_GOOD_SYNUM"] = goodSyNum; 
+	res["CC_GOOD_SYNUM"] = goodCCNum * goodSumNum - peopleNum; 
 	res["CC_MAX_NUM"] = maxCCNum;
-	res["CC_MAX_SYNUM"] = maxSyNum; 
+	res["CC_MAX_SYNUM"] = maxCCNum * maxSumNum - peopleNum; 
 
 	return res;
 }
