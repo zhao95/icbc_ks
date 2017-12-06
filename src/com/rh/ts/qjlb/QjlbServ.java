@@ -5,6 +5,7 @@ import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.comm.ConfMgr;
+import com.rh.core.comm.FileMgr;
 import com.rh.core.icbc.basedata.KSSendTipMessageServ;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
@@ -110,6 +111,16 @@ public class QjlbServ extends CommonServ {
             whereBean.put(Constant.PARAM_PRE_VALUES, values);
             whereBean.put(Constant.PARAM_WHERE, "and DATA_ID =? ");
             ServDao.destroy(TODO_SERVID, whereBean);
+            //删除附件
+            String qjImg = qjBean.getStr("QJ_IMG");
+            if (StringUtils.isNotBlank(qjImg)) {
+                List<Bean> fileListBean = FileMgr.getFileListBean(TSQJ_SERVID, qjImg);
+                if (fileListBean != null && fileListBean.size() > 0) {
+                    for (Bean fileBean : fileListBean) {
+                        FileMgr.deleteFile(fileBean.getId());
+                    }
+                }
+            }
             //删除请假数据
             ServDao.destroy(TSQJ_SERVID, qjBean.getId());
             Transaction.commit();
@@ -440,6 +451,10 @@ public class QjlbServ extends CommonServ {
             }
         }
     }
+
+//    public OutBean getQx2(ParamBean paramBean){
+//        return new OutBean();
+//    }
 
     /**
      * 处理流程

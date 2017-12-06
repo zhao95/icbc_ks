@@ -5,6 +5,7 @@ import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.comm.ConfMgr;
+import com.rh.core.comm.FileMgr;
 import com.rh.core.icbc.basedata.KSSendTipMessageServ;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
@@ -111,7 +112,17 @@ public class JklbServ extends CommonServ {
             whereBean.put(Constant.PARAM_PRE_VALUES, values);
             whereBean.put(Constant.PARAM_WHERE, "and DATA_ID =? ");
             ServDao.destroy(TODO_SERVID, whereBean);
-            //删除请假数据
+            //删除附件
+            String jkImg = jkBean.getStr("JK_IMG");
+            if (StringUtils.isNotBlank(jkImg)) {
+                List<Bean> fileListBean = FileMgr.getFileListBean(TSJK_SERVID, jkImg);
+                if (fileListBean != null && fileListBean.size() > 0) {
+                    for (Bean fileBean : fileListBean) {
+                        FileMgr.deleteFile(fileBean.getId());
+                    }
+                }
+            }
+            //删除借考数据
             ServDao.destroy(TSJK_SERVID, jkBean.getId());
             Transaction.commit();
         } catch (Exception e) {
@@ -541,7 +552,7 @@ public class JklbServ extends CommonServ {
         String userCode = paramBean.getStr("USER_CODE");
 //        String xmId = paramBean.getStr("XM_ID");
         OutBean outBean = new OutBean();
-        List<Bean> xmBeanList = Transaction.getExecutor().query("select * from TS_XMGL a"+
+        List<Bean> xmBeanList = Transaction.getExecutor().query("select * from TS_XMGL a" +
                 //进行中的项目  &&  项目中存在可以申请请假的报名（存在不在申请中/申请通过的请假 && 由场次安排引入的考试忽略）
                 " where now() BETWEEN str_to_date(XM_START,'%Y-%m-%d %H:%i:%s') and str_to_date(XM_END,'%Y-%m-%d %H:%i:%s') " +
                 "and exists( " +
@@ -602,10 +613,10 @@ public class JklbServ extends CommonServ {
         long time;
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormatString);
         try {
-             time = sdf.parse(dateStr).getTime();
+            time = sdf.parse(dateStr).getTime();
             return time;
         } catch (ParseException e) {
-             sdf = new SimpleDateFormat(dateFormatString2);
+            sdf = new SimpleDateFormat(dateFormatString2);
             try {
                 time = sdf.parse(dateStr).getTime();
             } catch (ParseException e1) {

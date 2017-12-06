@@ -250,7 +250,7 @@ public class YapzwServ extends CommonServ {
         clearDirtyData(paramBean);
 
 //        String sjId = paramBean.getStr("SJ_ID");
-//        String sjCc = paramBean.getStr("SJ_CC");
+        String sjCc = paramBean.getStr("SJ_CC");
 //        String sjDate = paramBean.getStr("SJ_DATE");
         String ccId = paramBean.getStr("CC_ID");
         String kcId = paramBean.getStr("KC_ID");
@@ -291,7 +291,7 @@ public class YapzwServ extends CommonServ {
                     if (zwBean != null && "1".equals(zwBean.getStr("ZW_KY"))) {
                         String zwId = zwBean.getStr("ZW_ID");
 
-                        List<Bean> beans = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and ZW_ID='" + zwId + "' and KC_ID='" + kcId + "' and CC_ID='" + ccId + "' and XM_ID='" + xmId + "'");
+                        List<Bean> beans = ServDao.finds(TsConstant.SERV_KCAP_YAPZW, " and ZW_ID='" + zwId + "' and KC_ID='" + kcId + "' and CC_ID='" + ccId + "' and XM_ID='" + xmId + "' and SJ_CC='" + sjCc + "'");
                         if (beans.size() > 0) {
                             //座位已安排 下一个座位
                             continue;

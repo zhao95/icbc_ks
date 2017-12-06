@@ -268,25 +268,25 @@
                 <div class="col-sm-10">
                     <div class="row">
                         <div class="col-sm-12">
-                            <form action="<%=CONTEXT_PATH%>/sy/base/frame/coms/ueditor/jsp/imageUp.jsp" method="post"
-                                  id="imgformid" enctype="multipart/form-data">
-                                <div class="form-group" id="caseIma">
-                                    <label class="" style="cursor:pointer;">
-                                        <div style="float: left;background-image: url(<%=CONTEXT_PATH%>/ts/image/005.png);width: 32px;height: 32px;">
-                                            &nbsp;&nbsp;
-                                        </div>
-                                        <div style="margin-top: 5px;margin-left: 2px;color: #91dce4;float: left;"
-                                             href="#">上传
-                                        </div>
-                                        <input type="file" style="display: none;" class="form-control" id="caseImage"
-                                               name="file" onchange="viewImage(this)">
-                                    </label>
-                                </div>
-                                <input type="text" name="SERV_ID" value="TS_JKLB_JK" style="display: none;"/>
-                                <input type="text" name="DATA_ID" value="" style="display: none;"/>
-                                <input type="text" name="FILE_CAT" value="IMAGE_CAT" style="display: none;"/>
-                                <input type="submit" value="传递" style="display: none;"/>
-                            </form>
+
+                            <div class="form-group" id="caseIma2">
+                                <label class="" style="cursor:pointer;" onclick="uploadFiles()"><%----%>
+                                    <div style="float: left;background-image: url(<%=CONTEXT_PATH%>/ts/image/005.png);width: 32px;height: 32px;">
+                                        &nbsp;&nbsp;
+                                    </div>
+                                    <div style="margin-top: 5px;margin-left: 2px;color: #91dce4;float: left;"
+                                         href="#">上传
+                                    </div>
+                                </label>
+                            </div>
+                            <ul id="files">
+                                <%--<li>
+                                    <div>
+                                        <div>asdfsfd.png</div>
+                                        <span>del</span>
+                                    </div>
+                                </li>--%>
+                            </ul>
                         </div>
                     </div>
 
@@ -304,6 +304,9 @@
                     </div>
 
                 </div>
+            </div>
+            <div class="col-sm-12">
+                <input id="fileupload" type="file" name="files" multiple style="display: none">
             </div>
 
         </form>
@@ -395,6 +398,46 @@
 </div>
 <script type="text/javascript">
 
+    var fileData = undefined;
+
+    var indexOfLastModified = function (arr, lastModified) {
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].lastModified === lastModified) return i;
+        }
+        return -1;
+    };
+
+    var fileRemove = function (arr, val) {
+        var index = indexOfLastModified(arr, val);
+        if (index > -1) {
+            arr.splice(index, 1);
+        }
+    };
+
+    function getUuid() {
+        var len = 32;//32长度
+        var radix = 16;//16进制
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+        var uuid = [], i;
+        radix = radix || chars.length;
+        if (len) {
+            for (i = 0; i < len; i++)uuid[i] = chars[0 | Math.random() * radix];
+        } else {
+            var r;
+            uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+            uuid[14] = '4';
+            for (i = 0; i < 36; i++) {
+                if (!uuid[i]) {
+                    r = 0 | Math.random() * 16;
+                    uuid[i] = chars[(i === 19) ? (r & 0x3) | 0x8 : r];
+                }
+            }
+        }
+        return uuid.join('');
+    }
+
+    var uuid = getUuid().substring(0, 32);
+
     function doPost(to, data) {  // to:提交动作（action）,data:参数
         var myForm = document.createElement("form");
         myForm.method = "post";
@@ -414,6 +457,54 @@
         var xmBean = FireFly.doAct("TS_XMGL", 'byid', {_PK_: xmId});
         var xmName = xmBean.XM_NAME;
         $('#jktitle').val(xmName);//标题
+
+
+        //fileupload
+        var $fileUpload = $('#fileupload');
+        // data赋值
+        $fileUpload.bind('fileuploadsubmit', function (e, data) {
+            // console.log(data);
+            var jsonData = {};
+            jsonData["DATA_ID"] = uuid;
+            jsonData["SERV_ID"] = "TS_QJLB_QJ";
+            data.formData = jsonData;
+        });
+        $fileUpload.fileupload({
+            url: '/file',
+            dataType: 'json',
+            add: function (e, data) {
+                for (var i = 0; i < data.files.length; i++) {
+                    var obj = data.files[i];
+                    var $li = $([
+                        '<li style="clear:both;margin-top:7px;">',
+                        '     <div style="float: left;overflow:hidden;text-overflow:ellipsis; width: 200px" title="' + obj.name + '">' + obj.name + '</div>',
+                        '     ',
+                        '</li>'
+                    ].join(''));
+                    var $a1 = $('<span id="' + obj.lastModified + '" style="margin-left: 5px;cursor: pointer;color: blue;">删除</span>');
+                    $a1.unbind('click').bind('click', function () {
+                        var id = $(this).attr('id');
+                        fileRemove(fileData.files, id);
+                        $a1.parent().remove();
+                    });
+                    $li.append($a1);
+                    $li.appendTo($('#files'));
+                }
+                if (fileData === undefined) {
+                    fileData = data;
+                } else {
+                    fileData.files = fileData.files.concat(data.files);
+                }
+            },
+            done: function (/*e, data*/) {
+                saveData(uuid);
+//                data.context.text('Upload finished.');
+            },
+            fail: function () {
+                alert("上传附件失败");
+            }
+        });
+
     }
 
     var xmId = '<%=xmId%>';
@@ -422,9 +513,16 @@
         doPost('jklb.jsp', {});
     }
 
+    var uploadFiles = function () {
+
+    };
+
     $(function () {
         initData(xmId);
 
+        uploadFiles = function () {
+            $('#fileupload').click();
+        };
         /*可申请的请假列表*/
         var table1Tbody = jQuery('#tabletjId tbody');
         table1Tbody.html('');
@@ -551,77 +649,89 @@
         //var currentUserWorkNum = System.getUser("USER_WORK_NUM");
 //        var data = {USER_WORK_NUM: currentUserWorkNum};
 
-        function saveData(fileId) {
-
 //        var imgformid = document.getElementById("imgformid");
-            var jktitle = document.getElementById("jktitle").value;
-            var jkyiji = document.getElementById("jkyiji").value;
-            var jkcity = document.getElementById("jkcity").value;
-            var bumen = document.getElementById("bumen").value;
-            var jkreason = document.getElementById("jkreason").value;
-            var bmidsArray = document.getElementsByName("bmids");
-            var bmids = "";
-            for (var i = 0; i < bmidsArray.length; i++) {
-                if (i === 0) {
-                    bmids = bmidsArray[i].value;
-                } else {
-                    bmids += "," + bmidsArray[i].value;
-                }
-            }
-            var param = {};
-            param["jkimg"] = fileId;
-            param["jktitle"] = jktitle;
-            param["jkyiji"] = jkyiji;
-            param["jkcity"] = jkcity;
-            // param["user_work_num"] = currentUserWorkNum;
-            param["user_code"] = System.getUser("USER_CODE");
-            param["bumen"] = bumen;
-            param["jkreason"] = jkreason;
-            param["bmids"] = bmids;
-            param["user_name"] = System.getUser("USER_NAME");
-
-            if (jktitle === "") {
-                alert("标题不能为空");
-            } else if (bmids === "") {
-                alert("请选择借考的考试");
-            } else if (jkyiji === "") {
-                alert("请选择借考一级分行");
-            } else if (jkcity === "") {
-                alert("借考城市不能为空");
-            } else if (jkreason === "") {
-                alert("借考事由不能为空");
+        var jktitle = document.getElementById("jktitle").value;
+        var jkyiji = document.getElementById("jkyiji").value;
+        var jkcity = document.getElementById("jkcity").value;
+        var bumen = document.getElementById("bumen").value;
+        var jkreason = document.getElementById("jkreason").value;
+        var bmidsArray = document.getElementsByName("bmids");
+        var bmids = "";
+        for (var i = 0; i < bmidsArray.length; i++) {
+            if (i === 0) {
+                bmids = bmidsArray[i].value;
             } else {
-                FireFly.doAct("TS_JKLB_JK", "addData", param, false, false, function (response) {
+                bmids += "," + bmidsArray[i].value;
+            }
+        }
 
-                    if (response._MSG_.indexOf('ERROR') >= 0) {
-                        //发起申请出错
-                        alert(
-                            response._MSG_.substring(response._MSG_.indexOf('ERROR,') + 6, response._MSG_.length)
-                        );
-                    } else {
-                        //模态框
-                        var $tiJiao = $('#tiJiao');
-                        $('#shrNames').html(response.shrNames);
-                        //关闭提示框后返回到请假页面
-                        $tiJiao.on('hidden.bs.modal', function (/*e*/) {
-                            back();
-                        });
-                        //显示提示框
-                        $tiJiao.modal('show');
-                    }
+        if (jktitle === "") {
+            alert("标题不能为空");
+        } else if (bmids === "") {
+            alert("请选择借考的考试");
+        } else if (jkyiji === "") {
+            alert("请选择借考一级分行");
+        } else if (jkcity === "") {
+            alert("借考城市不能为空");
+        } else if (jkreason === "") {
+            alert("借考事由不能为空");
+        } else {
+            if (/*$('#preview').css('display') === 'none' ||*/ fileData === undefined || fileData.files.length <= 0) {
+                //没有证明材料不用上传
+                saveData('');
+            } else {
+                fileData.submit();
+            }
+        }
+    }
 
+    function saveData(fileId) {
+        var jktitle = document.getElementById("jktitle").value;
+        var jkyiji = document.getElementById("jkyiji").value;
+        var jkcity = document.getElementById("jkcity").value;
+        var bumen = document.getElementById("bumen").value;
+        var jkreason = document.getElementById("jkreason").value;
+        var bmidsArray = document.getElementsByName("bmids");
+        var bmids = "";
+        for (var i = 0; i < bmidsArray.length; i++) {
+            if (i === 0) {
+                bmids = bmidsArray[i].value;
+            } else {
+                bmids += "," + bmidsArray[i].value;
+            }
+        }
+        var param = {};
+        param["jkimg"] = fileId;
+        param["jktitle"] = jktitle;
+        param["jkyiji"] = jkyiji;
+        param["jkcity"] = jkcity;
+        // param["user_work_num"] = currentUserWorkNum;
+        param["user_code"] = System.getUser("USER_CODE");
+        param["bumen"] = bumen;
+        param["jkreason"] = jkreason;
+        param["bmids"] = bmids;
+        param["user_name"] = System.getUser("USER_NAME");
+
+        FireFly.doAct("TS_JKLB_JK", "addData", param, false, false, function (response) {
+
+            if (response._MSG_.indexOf('ERROR') >= 0) {
+                //发起申请出错
+                alert(
+                    response._MSG_.substring(response._MSG_.indexOf('ERROR,') + 6, response._MSG_.length)
+                );
+            } else {
+                //模态框
+                var $tiJiao = $('#tiJiao');
+                $('#shrNames').html(response.shrNames);
+                //关闭提示框后返回到请假页面
+                $tiJiao.on('hidden.bs.modal', function (/*e*/) {
+                    back();
                 });
+                //显示提示框
+                $tiJiao.modal('show');
             }
 
-        }
-
-        if ($('#preview').css('display') === 'none') {
-            //没有证明材料不用上传
-            saveData('');
-        } else {
-            upImg(saveData);
-        }
-
+        });
     }
 </script>
 <script type="text/javascript">

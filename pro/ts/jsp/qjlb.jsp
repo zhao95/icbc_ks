@@ -277,7 +277,7 @@
         var table1Tbody2 = jQuery('#ybmtable2 tbody');
         table1Tbody2.html('');
         //获取已申请的请假数据
-        data = {_SELECT_: '*', _extWhere: "and USER_CODE='" + currentUserCode + "'", _NOPAGE_: true};
+        var data = {_SELECT_: '*', _extWhere: "and USER_CODE='" + currentUserCode + "'", _NOPAGE_: true};
         var qjListBean = FireFly.doAct('TS_QJLB_QJ', 'getAppliedLeaveList', data);
         var qjList = qjListBean._DATA_;
         for (var i = 0; i < qjList.length; i++) {

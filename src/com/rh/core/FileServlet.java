@@ -107,32 +107,32 @@ public class FileServlet extends HttpServlet {
         }
         UserBean userBean;
         if (request.getParameter("X-XSRF-TOKEN") != null) {
-            userBean = Context.getUserBean(request, request.getParameter("X-XSRF-TOKEN"), 
+            userBean = Context.getUserBean(request, request.getParameter("X-XSRF-TOKEN"),
                     request.getParameter("X-DEVICE-NAME"));
         } else {
             userBean = Context.getUserBean(request);
         }
-        
+
         if (userBean == null) {
-            if (request.getHeader("X-DEVICE-NAME") != null 
+            if (request.getHeader("X-DEVICE-NAME") != null
                     || request.getParameter("X-DEVICE-NAME") != null) { //远程设备方式访问返回401错误码
-            	
+
             	// 如果不为空,返回token错误
                 if (request.getParameter("X-XSRF-TOKEN") != null) {
                 	response.setHeader(Constant.RTN_MSG, URLEncoder.encode(Context.getSyConf("CC_TOKEN_ERROR_MSG", "用户凭证信息验证失败,请重新登录!"), "utf-8"));
                 } else { // 如果为空,返回token为空
                 	response.setHeader(Constant.RTN_MSG, URLEncoder.encode(Context.getSyConf("CC_TOKEN_NULL_MSG", "用户凭证信息为空,请重新登录!"), "utf-8"));
                 }
-            	
+
             	response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            
+
             } else { //浏览器进行登录跳转
                 RequestUtils.sendDisp(request, response, "/sy/comm/login/jumpToIndex.jsp");
                 response.flushBuffer();
             }
             return;
         }
-        
+
         FileUploadHandler handler = null;
         String handlerStr = request.getParameter("handler");
         if (handlerStr == null) {
@@ -369,9 +369,9 @@ public class FileServlet extends HttpServlet {
 				out.flush();
 				return;
             }
-            
+
             listener = this.createListener(resultBean.getStr("SERV_ID"));
-            
+
             String relativePath = resultBean.getStr("FILE_PATH");
             if (0 == relativePath.length()) {
                 // set waiting for storage default image
@@ -405,7 +405,7 @@ public class FileServlet extends HttpServlet {
                 // set response file content
                 response.setContentType(downFileType);
             }
-            
+
             //response设置数据大小
             if (0 < is.available()) {
                 response.setContentLength(is.available());
@@ -418,7 +418,7 @@ public class FileServlet extends HttpServlet {
             		response.setContentLength(totalBytes);
             	}
             }
-      
+
             OutputStream out = response.getOutputStream();
             IOUtils.copyLarge(is, out);
             IOUtils.closeQuietly(is);
@@ -443,7 +443,7 @@ public class FileServlet extends HttpServlet {
             response.flushBuffer();
         }
     }
-    
+
     /**
      * 输出错误消息
      * @param response HttpServletResponse
@@ -489,17 +489,18 @@ public class FileServlet extends HttpServlet {
         if (servListener != null) {
             servListener.beforeAdd(paramBean);
         }
-        
-        String fileName = paramBean.getStr("FILE_NAME");
+
+
         List<Bean> dataList = new ArrayList<Bean>();
         // upload file from file form
         Iterator<FileItem> iter = items.iterator();
         while (iter.hasNext()) {
+            String fileName = paramBean.getStr("FILE_NAME");
             FileItem item = iter.next();
             checkSpecialFile(item);
             InputStream is = null;
             try {
-                if (null == fileName || 0 == fileName.length()) {
+                if (null != item.getName() && 0 != item.getName().length()) {
                     fileName = item.getName();
                     paramBean.set("FILE_NAME", fileName);
                 }
@@ -516,8 +517,8 @@ public class FileServlet extends HttpServlet {
                     // 原始文件
                     input = item.getInputStream();
                 }
-                
-            
+
+
                 // 是否翻转图片
                 double rotate = paramBean.get("rotate", 0);
                 if (rotate > 0 && isImage(fileName)) {
@@ -527,7 +528,7 @@ public class FileServlet extends HttpServlet {
 //                    item.delete();
 //                    item = new RuahoFileItem(input);
                 }
-                
+
                 Bean data = FileMgr.upload(paramBean, input);
                 IOUtils.closeQuietly(input);
 
@@ -565,7 +566,7 @@ public class FileServlet extends HttpServlet {
         if (listener != null) {
             listener.afterAdd(paramBean, dataList);
         }
-        
+
         if (servListener != null) {
             servListener.afterAdd(paramBean, dataList);
         }
@@ -633,7 +634,7 @@ public class FileServlet extends HttpServlet {
         }
 
     }
-    
+
     /**
      * get image file type
      * @param item - file item
@@ -688,7 +689,7 @@ public class FileServlet extends HttpServlet {
         if (listener != null) {
             listener.beforeUpdate(paramBean, fileBean);
         }
-        
+
         /**
          * 前缀加服务ID配置的文件监听
          * 必须通过fileBean才能获取到服务ID，因为paramBean里可能没有SERV_ID
@@ -697,7 +698,7 @@ public class FileServlet extends HttpServlet {
         if (servListener != null) {
             servListener.beforeUpdate(paramBean, fileBean);
         }
-        
+
         Bean newFileBean = null;
 
         while (iter.hasNext()) {
@@ -757,7 +758,7 @@ public class FileServlet extends HttpServlet {
         int height = paramBean.getInt("height");
         String pathExpre = fileBean.getStr("FILE_PATH");
         String absolutePath = FileMgr.getAbsolutePath(pathExpre);
-        
+
         InputStream in = null;
         ByteArrayOutputStream tmp = null; // 中转图片流
         try {
@@ -770,13 +771,13 @@ public class FileServlet extends HttpServlet {
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(tmp);
         }
-        
+
         InputStream result = null;
         try {
             result = new ByteArrayInputStream(tmp.toByteArray());
             // 用中转图片流重写原图
 //            fileBean = FileMgr.overWrite(fileBean.getId(), result, fileBean.getStr("FILE_NAME"), false);
-            
+
             // 用中转图片重新生成一条文件的记录，否则由于checkSum的去重，服务器端不会保存新图片
             fileBean.remove("FILE_ID");
             fileBean.remove("FILE_PATH");
@@ -784,14 +785,14 @@ public class FileServlet extends HttpServlet {
             fileBean.remove("FILE_CHECKSUM");
             fileBean.remove("FILE_SIZE");
             fileBean = FileMgr.upload(fileBean, result);
-            
+
         } finally {
             IOUtils.closeQuietly(result);
         }
-        
+
         return fileBean;
     }
-    
+
     /**
      * get file id from restful url
      * @param request HttpServletRequest
@@ -911,7 +912,7 @@ public class FileServlet extends HttpServlet {
     }
 
     /**
-     * 
+     *
      * @param paramBean 参数名称
      * @return 创建监听对象
      */
@@ -922,7 +923,7 @@ public class FileServlet extends HttpServlet {
         }
         return this.doCreateListener(FileUploadListener.CONF_PREFIX + listener);
     }
-    
+
     /**
      * @param servId 参数名称
      * @return 通过SERV_ID获取配置创建监听对象
@@ -931,10 +932,10 @@ public class FileServlet extends HttpServlet {
         if (Strings.isBlank(servId)) {
             return null;
         }
-        
+
         return this.doCreateListener(FileUploadListener.CONF_PREFIX_LISTENER + servId);
     }
-    
+
     /**
      * 根据配置KEY构造监听类
      * @param confKey 监听配置KEY
@@ -945,7 +946,7 @@ public class FileServlet extends HttpServlet {
         if (StringUtils.isEmpty(clsName)) {
             return null;
         }
-        
+
         return (FileUploadListener) Lang.createObject(FileUploadListener.class, clsName);
     }
 
@@ -967,20 +968,20 @@ public class FileServlet extends HttpServlet {
         }
         return url;
     }
-    
+
     /**
      * 检查特殊文件 ， 如果存在于黑名单中，则抛出提示错误信息
      * @param item 文件条目
-     * 
+     *
      */
     private void checkSpecialFile(FileItem item) {
         String fileName = item.getName();
         if (0 < fileName.lastIndexOf(".")) {
             String suffix = "," + FilenameUtils.getExtension(fileName) + ",";
-            
+
             //不能上传的文件后缀
-            String blackFile = "," + Context.getSyConf("SY_FILE_NOT_UPLOAD_SUFFIX", "") + ","; 
-            
+            String blackFile = "," + Context.getSyConf("SY_FILE_NOT_UPLOAD_SUFFIX", "") + ",";
+
             if (blackFile.toLowerCase().indexOf(suffix.toLowerCase()) >= 0) { //存在于黑名单中
                 throw new TipException("不能上传后缀是 " + suffix + " 的文件");
             }
