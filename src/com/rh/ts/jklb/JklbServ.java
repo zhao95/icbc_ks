@@ -25,6 +25,7 @@ import java.util.List;
 
 public class JklbServ extends CommonServ {
     private final static String TSJK_SERVID = "TS_JKLB_JK";
+    private final static String TSQJ_SERVID = "TS_QJLB_QJ";
     private final static String TODO_SERVID = "TS_COMM_TODO";
     private final static String DONE_SERVID = "TS_COMM_TODO_DONE";
     private final static String TS_BMSH_PASS_SERVID = "TS_BMSH_PASS";
@@ -507,9 +508,11 @@ public class JklbServ extends CommonServ {
 //            String xmId = (String) tsBmshPass.get("XM_ID");
             String bmId = (String) tsBmshPass.get("BM_ID");
 
-            List<Bean> queryQjList = ServDao.finds(TSJK_SERVID, "and JK_KSNAME like '%" + bmId + "%' and JK_STATUS in('1','2') ");
-            //项目有报名设置 在项目报名时间内 && 不存在进行中或已通过的报名（是否已经请假）
-            if (inApplyTime(xmId) && queryQjList.size() <= 0) {
+            List<Bean> queryJkList = ServDao.finds(TSJK_SERVID, "and JK_KSNAME like '%" + bmId + "%' and JK_STATUS in('1','2') ");
+            List<Bean> queryQjList = ServDao.finds(TSQJ_SERVID, "and QJ_KSNAME like '%" + bmId + "%' and QJ_STATUS in('1','2')");
+
+            //项目有报名设置 在项目报名时间内 && 不存在进行中或已通过的报名（是否已经请假）（是否已经借考）
+            if (inApplyTime(xmId) && queryJkList.size() <= 0 && queryQjList.size() <= 0) {
                 //通过TS_BMLB_BM表，获取标题信息
                 Bean bmBean = ServDao.find("TS_BMLB_BM", bmId);
                 if (bmBean == null) {
@@ -553,12 +556,14 @@ public class JklbServ extends CommonServ {
 //        String xmId = paramBean.getStr("XM_ID");
         OutBean outBean = new OutBean();
         List<Bean> xmBeanList = Transaction.getExecutor().query("select * from TS_XMGL a" +
-                //进行中的项目  &&  项目中存在可以申请请假的报名（存在不在申请中/申请通过的请假 && 由场次安排引入的考试忽略）
+                //进行中的项目  &&  项目中存在可以申请借考的报名（存在不在申请中/申请通过的借考 && 由场次安排引入的考试忽略）
+                //请假了不能借考
                 " where now() BETWEEN str_to_date(XM_START,'%Y-%m-%d %H:%i:%s') and str_to_date(XM_END,'%Y-%m-%d %H:%i:%s') " +
                 "and exists( " +
                 "select * from TS_BMSH_PASS pass " +
                 "where not EXISTS(select '' from ts_jklb_jk jk where jk.JK_KSNAME like CONCAT('%',pass.BM_ID,'%') and jk.JK_STATUS in('1','2')) " +
-                "and pass.BM_ID !='' and pass.BM_ID is not null and a.XM_ID =pass.XM_ID and BM_CODE ='" + userCode + "')");
+                " and not EXISTS(select '' from TS_QJLB_QJ qj where qj.QJ_KSNAME like CONCAT('%',pass.BM_ID,'%') and qj.QJ_STATUS in('1','2')) " +
+                " and pass.BM_ID !='' and pass.BM_ID is not null and a.XM_ID =pass.XM_ID and BM_CODE ='" + userCode + "')");
 
         for (Iterator<Bean> iterator = xmBeanList.iterator(); iterator.hasNext(); ) {
             Bean xmBean = iterator.next();

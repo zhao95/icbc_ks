@@ -659,7 +659,7 @@
             return false;
         } else {
             var bmidarr = bmids.split(",");
-            if (bmidarr > cishu) {
+            if (bmidarr.length > cishu) {
                 alert("选择考试超过上限");
                 return false;
             }

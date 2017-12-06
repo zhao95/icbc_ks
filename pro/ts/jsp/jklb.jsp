@@ -140,8 +140,9 @@
                     <tr style="backGround-color: WhiteSmoke; height: 30px">
                         <td style="width: 6%;" align="left">序号</td>
                         <td style="width: 25%;">标题</td>
-                        <td style="width: 20%;">单位</td>
-                        <td style="width: 10%;">借考人</td>
+                        <td style="width: 15%;">单位</td>
+                        <td style="width: 6%;">借考人</td>
+                        <td style="width: 9%;">借考地</td>
                         <td style="width: 10%">创建时间</td>
                         <td style="width: 9%; ">审核状态</td>
                         <td style="width: 20%; text-align: center">操作</td>
@@ -285,7 +286,9 @@
             var jkDept = jk.JK_DEPT;
             var jkDate = jk.JK_DATE;
             var jkStatus = jk.JK_STATUS;
-            if (jkStatus === "1") {
+            var yjfh = jk.JK_YJFH;
+            var yjfhDept = FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":yjfh},false,false);
+                if (jkStatus === "1") {
                 jkStatus = "审核中";
             } else if (jkStatus === "2") {
                 jkStatus = "已通过";
@@ -310,6 +313,9 @@
                 '	</td>',
                 '	<td>',
                 '	    ' + jkName,
+                '	</td>',
+                '	<td>',
+                '	    ' +  yjfhDept.DEPT_NAME,
                 '	</td>',
                 '	<td>',
                 '	    ' + jkDate,
