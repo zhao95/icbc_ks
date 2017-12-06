@@ -25,6 +25,7 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
+import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
 import com.rh.core.util.Strings;
 import com.rh.ts.pvlg.PvlgUtils;
@@ -574,28 +575,18 @@ public class XmglServ extends CommonServ {
 		List<Bean> list = ServDao.finds("TS_XMGL", "");
 		// 可审核的项目list
 		List<Bean> SHlist = new ArrayList<Bean>();
-		Boolean show = false;
+		OutBean out = new OutBean();
 		for (Bean bean : list) {
-			String id = bean.getId();
-			// 查询待审核 表 里的other字段判断 是否包含user_code
-			String where = "AND XM_ID=" + "'" + id + "'";
-			List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", where);
-
-			for (Bean bean2 : staylist) {
-
-				String other = bean2.getStr("SH_OTHER");
-				if (other.contains(user_code)) {
-					show = true;
-				}
-			}
-			if (show) {
-				SHlist.add(bean);
-			}
+			//多个机构不能用字符串逗号拼接   以后改  不能用like
+				//当前审核人 待审核的数据
+				SHlist = ServDao.finds("TS_BMSH_STAY", "AND XM_ID='"+bean.getStr("XM_ID")+"' AND SH_OTHER LIKE '%"+user_code+"%' limit 0,50");
+		
 		}
 
-		Bean out = new Bean();
 		out.set("list", SHlist);
 		return out;
+		
+		
 	}
 
 	/**
@@ -647,19 +638,19 @@ public class XmglServ extends CommonServ {
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where");
 		String sql1 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,15";
 		List<Bean> list = Transaction.getExecutor().query(sql1);
 		
 		String sql2 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='未开启' or c.xm_sz_type=''))d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,15";
 		List<Bean> find2 = Transaction.getExecutor().query(sql2);
 		
 		String sql4 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,15";
 		List<Bean> find4 = Transaction.getExecutor().query(sql4);
 		
 		String sql3 = " SELECT * FROM(SELECT a.*,b.sh_end FROM ts_xmgl a LEFT JOIN TS_XMGL_BMSH b ON a.xm_id = b.xm_id WHERE b.sh_rgsh=1 AND (NOW()< STR_TO_DATE(b.sh_start,'%Y-%m-%d %H:%i:%s') OR NOW()> STR_TO_DATE(b.sh_end,'%Y-%m-%d %H:%i:%s')) "
-				+where1+" AND b.SH_LOOK =1  ORDER BY b.sh_end ASC)t ";
+				+where1+" AND b.SH_LOOK =1  ORDER BY b.sh_end ASC)t limit 0,15";
 		List<Bean> find3 = Transaction.getExecutor().query(sql3);
 		list.addAll(find2);
 		list.addAll(find4);

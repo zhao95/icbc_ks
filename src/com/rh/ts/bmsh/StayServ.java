@@ -23,6 +23,7 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
+import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.ts.util.RoleUtil;
@@ -46,6 +47,15 @@ public class StayServ extends CommonServ {
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where");
+		int ALLNUM = 0;
+		int meiye = Integer.parseInt(SHOWNUM);
+
+		int nowpage = Integer.parseInt(NOWPAGE);
+		int showpage = Integer.parseInt(SHOWNUM);
+		// 计算第一项 开始
+		int chushi = (nowpage - 1) * showpage;
+		// 计算结束项
+		int jieshu = (nowpage - 1) * showpage + showpage;
 		String sql = "select n.dept_code from (select node_id from(select wfs_id from ts_xmgl_bmsh where xm_id='"+xmid+"') c left join TS_WFS_NODE_APPLY d on c.wfs_id = d.wfs_id) m left join TS_WFS_BMSHLC n on m.node_id = n.node_id  "+
 				"where n.shr_usercode= '"+usercode+"'";
 		List<Bean> query = Transaction.getExecutor().query(sql);
@@ -55,18 +65,33 @@ public class StayServ extends CommonServ {
 			if(!"".equals(bean.getId())){}
 			//dept_code
 			dept_code+="'"+bean.getId()+"',";
+			String[] split = dept_code.split(",");
+			dept_code="";
+			for (String string : split) {
+				dept_code+=string+",";
+			}
 		}
 		List<Bean> list = new ArrayList<Bean>();
 				if(dept_code.length()>5){
 			dept_code = dept_code.substring(0,dept_code.length()-1);
 			String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+dept_code+")) and dept_code in("+dept_code+")";
 					List<Bean> query1 = Transaction.getExecutor().query(sql1);
-					for (Bean bean : query1) {
+					String sql3 = "";
+					sql3 += "select * from (select a.*,b.code_path from ts_bmsh_stay a left join sy_org_dept b on a.s_dept=b.dept_code and xm_id = '"+xmid+"') c ";
+					for (int i=0;i<query1.size();i++) {
 						//判断哪些考生部门 在此codepath 下
-						String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_stay a left join sy_org_dept b on a.s_dept=b.dept_code and xm_id = '"+xmid+"') c where c.code_path like concat('"+bean.getId()+"','%')";
-						List<Bean> query2 = Transaction.getExecutor().query(sql3);
-						list.addAll(query2);
+						if(i==0){
+							sql3+="where c.code_path like concat('"+query1.get(i).getId()+"','%')";
+						}else{
+							sql3+=" or c.code_path like concat('"+query1.get(i).getId()+"','%')";
+						}
 					}
+					ALLNUM = Transaction.getExecutor().count(sql3);
+					 if(jieshu>ALLNUM){
+						 showpage=ALLNUM-chushi;
+					 }
+					sql3+=" limit "+chushi+","+showpage;
+					 list = Transaction.getExecutor().query(sql3);
 				}else{
 			return new OutBean().setError("空");
 				}
@@ -79,9 +104,6 @@ public class StayServ extends CommonServ {
 				list.add(bean);
 			}
 		}*/
-		int ALLNUM = list.size();
-		// 计算页数
-		int meiye = Integer.parseInt(SHOWNUM);
 		int yeshu = ALLNUM / meiye;
 		int yushu = ALLNUM % meiye;
 		// 获取总页数
@@ -89,30 +111,9 @@ public class StayServ extends CommonServ {
 			yeshu += 1;
 		}
 
-		int nowpage = Integer.parseInt(NOWPAGE);
-		int showpage = Integer.parseInt(SHOWNUM);
-		// 计算第一项 开始
-		int chushi = (nowpage - 1) * showpage + 1;
-		// 计算结束项
-		int jieshu = (nowpage - 1) * showpage + showpage;
 		// 放到Array中
 		List<Bean> list2 = new ArrayList<Bean>();
-		if (ALLNUM == 0) {
-			// 没有数据
-		} else {
-
-			if (jieshu <= ALLNUM) {
-				// 循环将数据放入list2中返回给前台
-				for (int i = chushi; i <= jieshu; i++) {
-					list2.add(list.get(i - 1));
-				}
-
-			} else {
-				for (int j = chushi; j < ALLNUM + 1; j++) {
-					list2.add(list.get(j - 1));
-				}
-			}
-		}
+		
 		// ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter w = new StringWriter();
@@ -130,7 +131,7 @@ public class StayServ extends CommonServ {
 		_PAGE_.set("NOWPAGE", NOWPAGE);
 		_PAGE_.set("PAGES", yeshu);
 		_PAGE_.set("SHOWNUM", SHOWNUM);
-		outBean.set("list", w.toString());
+		outBean.set("list", list);
 		outBean.set("_PAGE_", _PAGE_);
 		outBean.set("first", chushi);
 		return outBean;
@@ -703,7 +704,6 @@ public class StayServ extends CommonServ {
 	@Override
 	public OutBean exp(ParamBean paramBean) {
 		String where = paramBean.getStr("where");
-		
 		String servid = paramBean.getServId();
 		ParamBean parr = new ParamBean();
 		UserBean userBean1 = Context.getUserBean();
@@ -754,7 +754,7 @@ public class StayServ extends CommonServ {
 				List<Bean> query1 = Transaction.getExecutor().query(sql1);
 				for (Bean bean : query1) {
 					//判断哪些考生部门 在此codepath 下
-					String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_stay a left join sy_org_dept b on a.s_dept=b.dept_code) c where c.code_path like concat('"+bean.getId()+"','%')";
+					String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_stay a left join sy_org_dept b on a.s_dept=b.dept_code and xm_id='"+xmid+"') c where c.code_path like concat('"+bean.getId()+"','%')";
 					List<Bean> query2 = Transaction.getExecutor().query(sql3);
 					dataList.addAll(query2);
 				}
@@ -986,21 +986,42 @@ public class StayServ extends CommonServ {
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where")+deptwhere;
+		
+		int ALLNUM = 0;
+		int meiye = Integer.parseInt(SHOWNUM);
+
+		int nowpage = Integer.parseInt(NOWPAGE);
+		int showpage = Integer.parseInt(SHOWNUM);
+		// 计算第一项 开始
+		int chushi = (nowpage - 1) * showpage;
+		// 计算结束项
+		int jieshu = (nowpage - 1) * showpage + showpage;
+		
 		List<Bean> list;
 			if(dept_code.equals("0010100000")){
 				//所有人员
-				list = ServDao.finds(servId, where1);
+				String sql = "select * from TS_BMSH_STAY where 1=1"+where1;
+				ALLNUM = Transaction.getExecutor().count(sql);
+				 if(jieshu>ALLNUM){
+					 showpage=ALLNUM-chushi;
+				 }
+				 String datasql = "select * from TS_BMSH_PASS where 1=1"+where1 +" limit "+chushi+","+showpage;
+				  list = Transaction.getExecutor().query(datasql);
 
 			}else{
 			/*	List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
 				for (Bean bean : finds) {
 					dept_code+=","+bean.getStr("DEPT_CODE");
 				}
-				deptwhere = "AND S_DEPT IN ("+dept_code+")";*/
+				deptwhhere = "AND S_DEPT IN ("+dept_code+")";*/
+				deptwhere = "AND S_DEPT IN ("+dept_code+")";
 				DeptBean dept = OrgMgr.getDept(dept_code);
 				String codepath = dept.getCodePath();
-				String sql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
-				 list = Transaction.getExecutor().query(sql);
+				String sql = "select count(*) from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
+				ALLNUM = Transaction.getExecutor().count(sql);
+				 ALLNUM = Transaction.getExecutor().count(sql);
+				 String datasql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1+" limit "+chushi+","+jieshu;
+				  list = Transaction.getExecutor().query(datasql);
 				
 			}
 		//根据审核  机构 匹配当前机构下的所有人
@@ -1008,9 +1029,7 @@ public class StayServ extends CommonServ {
 		Bean outBean = new Bean();
 		
 
-		int ALLNUM = list.size();
 		// 计算页数
-		int meiye = Integer.parseInt(SHOWNUM);
 		int yeshu = ALLNUM / meiye;
 		int yushu = ALLNUM % meiye;
 		// 获取总页数
@@ -1018,37 +1037,16 @@ public class StayServ extends CommonServ {
 			yeshu += 1;
 		}
 
-		int nowpage = Integer.parseInt(NOWPAGE);
-		int showpage = Integer.parseInt(SHOWNUM);
-		// 计算第一项 开始
-		int chushi = (nowpage - 1) * showpage + 1;
-		// 计算结束项
-		int jieshu = (nowpage - 1) * showpage + showpage;
 		// 放到Array中
 		List<Bean> list2 = new ArrayList<Bean>();
-		if (ALLNUM == 0) {
-			// 没有数据
-		} else {
-
-			if (jieshu <= ALLNUM) {
-				// 循环将数据放入list2中返回给前台
-				for (int i = chushi; i <= jieshu; i++) {
-					list2.add(list.get(i - 1));
-				}
-
-			} else {
-				for (int j = chushi; j < ALLNUM + 1; j++) {
-					list2.add(list.get(j - 1));
-				}
-			}
-		}
-		outBean.set("list", list2);
+		
+		outBean.set("list", list);
 		_PAGE_.set("ALLNUM", ALLNUM);
 		_PAGE_.set("NOWPAGE", NOWPAGE);
 		_PAGE_.set("PAGES", yeshu);
 		_PAGE_.set("SHOWNUM", SHOWNUM);
 		outBean.set("_PAGE_", _PAGE_);
-		 int first=chushi;
+		 int first=chushi+1;
 		 outBean.set("first", first);
 		return outBean;
 		
@@ -1154,17 +1152,33 @@ public class StayServ extends CommonServ {
 	 * 审核人是否有需要审核的数据提醒
 	 */
 	public OutBean getStayList(Bean paramBean){
-		UserBean userBean = Context.getUserBean();
-		String user_code = userBean.getCode();
-		String sql1 = "select e.* from (select distinct d.xm_id from (select * from TS_WFS_BMSHLC where node_id in (select NODE_ID from TS_WFS_NODE_APPLY where wfs_id in(select WFS_ID from ts_xmgl a left join TS_XMGL_BMSH b on a.xm_id=b.xm_id))) c left join TS_XMGL_BMSH d on c.wfs_id = d.wfs_id where c.SHR_USERCODE='"+user_code+"') f left join TS_BMSH_STAY e on f.xm_id = e.xm_id ";
-		List<Bean> list1 = Transaction.getExecutor().query(sql1);
+		int count = 0;
+		String usercode = Context.getUserBean().getCode();
+		//查询当前审核人的流程 绑定的审核机构
+		Bean _PAGE_ = new Bean();
+		Bean outBean = new Bean();
+		String servId = "TS_BMSH_STAY";
+		String sql = "select n.dept_code from (select node_id from(select wfs_id from ts_xmgl_bmsh where sh_rgsh=1) c left join TS_WFS_NODE_APPLY d on c.wfs_id = d.wfs_id) m left join TS_WFS_BMSHLC n on m.node_id = n.node_id  "+
+				"where n.shr_usercode= '"+usercode+"'";
+		List<Bean> query = Transaction.getExecutor().query(sql);
+		String dept_code="";
+
+		for (Bean bean : query) {
+			if(!"".equals(bean.getId())){}
+			//dept_code
+			dept_code+="'"+bean.getId()+"',";
+		}
 		List<Bean> list = new ArrayList<Bean>();
-		for (Bean bean : list1) {
-			String other = bean.getStr("SH_OTHER");
-			if (other.contains(user_code)) {
-				list.add(bean);
+		if(dept_code.length()>5){
+			dept_code = dept_code.substring(0,dept_code.length()-1);
+			String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+dept_code+")) and dept_code in("+dept_code+")";
+			List<Bean> query1 = Transaction.getExecutor().query(sql1);
+			for (Bean bean : query1) {
+				//判断哪些考生部门 在此codepath 下
+				String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_pass a left join sy_org_dept b on a.s_dept=b.dept_code) c where c.code_path like concat('"+bean.getId()+"','%')";
+				  count += Transaction.getExecutor().count(sql3);
 			}
-		}/*
+			/*
 		for (String string : split) {
 			if(!"".equals(string)){
 				//当前审核人 待审核的数据
@@ -1180,17 +1194,17 @@ public class StayServ extends CommonServ {
 				
 			}
 		}*/
+		}
 		OutBean out = new OutBean();
 		if(list.size()==0){
 			out.set("num", 0);
 			return  out.set("flag", "false");
 		}else{
-			out.set("num", list.size());
+			out.set("num", count);
 			return out.set("flag", "true");
 		}
 		
 	}
-	
 	/**
 	 * 审核人需要审核的数据提醒（一个项目下）
 	 */
@@ -1198,26 +1212,20 @@ public class StayServ extends CommonServ {
 		String str = paramBean.getStr("xmid");
 		UserBean userBean = Context.getUserBean();
 		String user_code = userBean.getCode();
-		List<Bean> list = new ArrayList<Bean>();
-			if(!"".equals(str)){
+		int count=0;
+			if(!"".equals(str)){//多个机构不能用字符串逗号拼接   以后改  不能用like
 				//当前审核人 待审核的数据
-				List<Bean> list1 = ServDao.finds("TS_BMSH_STAY", "AND XM_ID='"+str+"'");
-				
-				for (Bean bean : list1) {
-					String other = bean.getStr("SH_OTHER");
-					if (other.contains(user_code)) {
-						list.add(bean);
-					}
-				
-				
-		}
+				SqlBean sqlbean = new SqlBean();
+				sqlbean.appendWhere("AND XM_ID=? AND SH_OTHER LIKE ?", str,"'%"+user_code+"%'");
+				 count = ServDao.count("TS_BMSH_STAY", sqlbean);
+			
 			}
 		OutBean out = new OutBean();
-		if(list.size()==0){
+		if(count==0){
 			out.set("num", "");
 			return  out.set("flag", "false");
 		}else{
-			out.set("num", list.size());
+			out.set("num", count);
 			return out.set("flag", "true");
 		
 	}

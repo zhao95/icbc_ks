@@ -39,7 +39,7 @@ public class PassServ extends CommonServ {
 	 *  获取那一页的记录 返回
 	 * 
 	 * @param paramBean
-	 * @return
+	 * @returnge
 	 */
 	public Bean getUncheckList(Bean paramBean) {
 		String usercode = Context.getUserBean().getCode();
@@ -68,7 +68,7 @@ public class PassServ extends CommonServ {
 			List<Bean> query1 = Transaction.getExecutor().query(sql1);
 			for (Bean bean : query1) {
 				//判断哪些考生部门 在此codepath 下
-				String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_pass a left join sy_org_dept b on a.s_dept=b.dept_code and xm_id = '"+xmid+"') c where c.code_path like concat('"+bean.getId()+"','%')";
+				String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_pass a left join sy_org_dept b on a.s_dept=b.dept_code and xm_id = '"+xmid+"' and a.sh_other!='') c where c.code_path like concat('"+bean.getId()+"','%')";
 				List<Bean> query2 = Transaction.getExecutor().query(sql3);
 				list.addAll(query2);
 			}
@@ -489,7 +489,7 @@ public class PassServ extends CommonServ {
                 List<Bean> query1 = Transaction.getExecutor().query(sql1);
                 for (Bean bean : query1) {
                     //判断哪些考生部门 在此codepath 下
-                    String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_pass a left join sy_org_dept b on a.s_dept=b.dept_code) c where c.code_path like concat('"+bean.getId()+"','%')";
+                    String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_pass a left join sy_org_dept b on a.s_dept=b.dept_code and xm_id='"+xmid+"' AND a.sh_other!='') c where c.code_path like concat('"+bean.getId()+"','%')";
                     List<Bean> query2 = Transaction.getExecutor().query(sql3);
                     dataList.addAll(query2);
                 }
@@ -766,11 +766,28 @@ public class PassServ extends CommonServ {
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where")+deptwhere;
+		
+		int ALLNUM = 0;
+		int meiye = Integer.parseInt(SHOWNUM);
+		
+
+		int nowpage = Integer.parseInt(NOWPAGE);
+		int showpage = Integer.parseInt(SHOWNUM);
+		// 计算第一项 开始
+		int chushi = (nowpage - 1) * showpage;
+		// 计算结束项
+		int jieshu = (nowpage - 1) * showpage + showpage;
 		List<Bean> list;
 			if(dept_code.equals("0010100000")){
 				//所有人员
-				list = ServDao.finds(servId, where1);
-
+				String sql = "select * from TS_BMSH_PASS where 1=1"+where1;
+				 ALLNUM = Transaction.getExecutor().count(sql);
+				 if(jieshu>ALLNUM){
+					 showpage=ALLNUM-chushi;
+				 }
+				 String datasql = "select * from TS_BMSH_PASS where 1=1"+where1 +" limit "+chushi+","+showpage;
+				  list = Transaction.getExecutor().query(datasql);
+				 
 			}else{
 				/*List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
 				for (Bean bean : finds) {
@@ -779,34 +796,29 @@ public class PassServ extends CommonServ {
 				deptwhere = "AND S_DEPT IN ("+dept_code+")";*/
 				DeptBean dept = OrgMgr.getDept(dept_code);
 				String codepath = dept.getCodePath();
-				String sql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
-				 list = Transaction.getExecutor().query(sql);
-				
+				String sql = "select count(*) from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
+				ALLNUM = Transaction.getExecutor().count(sql);
+				 ALLNUM = Transaction.getExecutor().count(sql);
+				 String datasql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1+" limit "+chushi+","+jieshu;
+				  list = Transaction.getExecutor().query(datasql);
 			}
 		//根据审核  机构 匹配当前机构下的所有人
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();
-		
-
-		int ALLNUM = list.size();
-		// 计算页数
-		int meiye = Integer.parseInt(SHOWNUM);
 		int yeshu = ALLNUM / meiye;
 		int yushu = ALLNUM % meiye;
-		// 获取总页数
 		if (yushu != 0) {
 			yeshu += 1;
 		}
 
-		int nowpage = Integer.parseInt(NOWPAGE);
-		int showpage = Integer.parseInt(SHOWNUM);
-		// 计算第一项 开始
-		int chushi = (nowpage - 1) * showpage + 1;
-		// 计算结束项
-		int jieshu = (nowpage - 1) * showpage + showpage;
+		
+		// 计算页数
+		
+		// 获取总页数
+		
 		// 放到Array中
 		List<Bean> list2 = new ArrayList<Bean>();
-		if (ALLNUM == 0) {
+		/*if (ALLNUM == 0) {
 			// 没有数据
 		} else {
 
@@ -821,15 +833,15 @@ public class PassServ extends CommonServ {
 					list2.add(list.get(j - 1));
 				}
 			}
-		}
+		}*/
 	
-		outBean.set("list", list2);
+		outBean.set("list", list);
 		_PAGE_.set("ALLNUM", ALLNUM);
 		_PAGE_.set("NOWPAGE", NOWPAGE);
 		_PAGE_.set("PAGES", yeshu);
 		_PAGE_.set("SHOWNUM", SHOWNUM);
 		outBean.set("_PAGE_", _PAGE_);
-		 int first=chushi;
+		 int first=chushi+1;
 		 outBean.set("first", first);
 		return outBean;
 		
