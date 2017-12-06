@@ -47,37 +47,59 @@ public class PassServ extends CommonServ {
 		String xmid= paramBean.getStr("xmid");
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();
-		String servId = "TS_BMSH_STAY";
+		String servId = "TS_BMSH_PASS";
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where");
+		int ALLNUM = 0;
+		int meiye = Integer.parseInt(SHOWNUM);
+
+		int nowpage = Integer.parseInt(NOWPAGE);
+		int showpage = Integer.parseInt(SHOWNUM);
+		// 计算第一项 开始
+		int chushi = (nowpage - 1) * showpage;
+		// 计算结束项
+		int jieshu = (nowpage - 1) * showpage + showpage;
 		String sql = "select n.dept_code from (select node_id from(select wfs_id from ts_xmgl_bmsh where xm_id='"+xmid+"') c left join TS_WFS_NODE_APPLY d on c.wfs_id = d.wfs_id) m left join TS_WFS_BMSHLC n on m.node_id = n.node_id  "+
 				"where n.shr_usercode= '"+usercode+"'";
 		List<Bean> query = Transaction.getExecutor().query(sql);
 		String dept_code="";
-
+		String deptcodes = "";
 		for (Bean bean : query) {
 			if(!"".equals(bean.getId())){}
 			//dept_code
-			dept_code+="'"+bean.getId()+"',";
-		}
-		List<Bean> list = new ArrayList<Bean>();
-		if(dept_code.length()>5){
-			dept_code = dept_code.substring(0,dept_code.length()-1);
-			String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+dept_code+")) and dept_code in("+dept_code+")";
-			List<Bean> query1 = Transaction.getExecutor().query(sql1);
-			for (Bean bean : query1) {
-				//判断哪些考生部门 在此codepath 下
-				String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_pass a left join sy_org_dept b on a.s_dept=b.dept_code and xm_id = '"+xmid+"' and a.sh_other!='') c where c.code_path like concat('"+bean.getId()+"','%')";
-				List<Bean> query2 = Transaction.getExecutor().query(sql3);
-				list.addAll(query2);
+			dept_code=bean.getId();
+			String[] split = dept_code.split(",");
+			for (String string : split) {
+				deptcodes+="'"+string+"',";
 			}
-		}else{
-			return new OutBean().setError("空");
 		}
-		int ALLNUM = list.size();
-		// 计算页数
-		int meiye = Integer.parseInt(SHOWNUM);
+		
+		List<Bean> list = new ArrayList<Bean>();
+		if(deptcodes.length()>5){
+			deptcodes = deptcodes.substring(0,deptcodes.length()-1);
+	String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+deptcodes+")) and dept_code in("+deptcodes+")";
+			List<Bean> query1 = Transaction.getExecutor().query(sql1);
+			String sql3 = "";
+			sql3 += "select * from (select a.*,b.code_path from ts_bmsh_pass a left join sy_org_dept b on a.s_dept=b.dept_code where xm_id = '"+xmid+"') c ";
+			for (int i=0;i<query1.size();i++) {
+				//判断哪些考生部门 在此codepath 下
+				if(i==0){
+					sql3+="where c.code_path like concat('"+query1.get(i).getId()+"','%')";
+				}else{
+					sql3+=" or c.code_path like concat('"+query1.get(i).getId()+"','%')";
+				}
+			}
+			ALLNUM = Transaction.getExecutor().count(sql3);
+			 if(jieshu>ALLNUM){
+				 showpage=ALLNUM-chushi;
+			 }
+			sql3+=" limit "+chushi+","+showpage;
+			 list = Transaction.getExecutor().query(sql3);
+		}else{
+	return new OutBean().setError("空");
+		}
+		
 		int yeshu = ALLNUM / meiye;
 		int yushu = ALLNUM % meiye;
 		// 获取总页数
@@ -85,51 +107,15 @@ public class PassServ extends CommonServ {
 			yeshu += 1;
 		}
 
-		int nowpage = Integer.parseInt(NOWPAGE);
-		int showpage = Integer.parseInt(SHOWNUM);
-		// 计算第一项 开始
-		int chushi = (nowpage - 1) * showpage + 1;
-		// 计算结束项
-		int jieshu = (nowpage - 1) * showpage + showpage;
-		// 放到Array中
-		List<Bean> list2 = new ArrayList<Bean>();
-		if (ALLNUM == 0) {
-			// 没有数据
-		} else {
-
-			if (jieshu <= ALLNUM) {
-				// 循环将数据放入list2中返回给前台
-				for (int i = chushi; i <= jieshu; i++) {
-					list2.add(list.get(i - 1));
-				}
-
-			} else {
-				for (int j = chushi; j < ALLNUM + 1; j++) {
-					list2.add(list.get(j - 1));
-				}
-			}
-		}
-		// ObjectMapper和StringWriter都是jackson中的，通过这两个可以实现对list的序列化
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter w = new StringWriter();
-		try {
-			mapper.writeValue(w, list2);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		outBean.set("list", w.toString());
+		
+		outBean.set("list",list);
 		
 		_PAGE_.set("ALLNUM", ALLNUM);
 		_PAGE_.set("NOWPAGE", NOWPAGE);
 		_PAGE_.set("PAGES", yeshu);
 		_PAGE_.set("SHOWNUM", SHOWNUM);
-		outBean.set("list", w.toString());
 		outBean.set("_PAGE_", _PAGE_);
-		 outBean.set("first", chushi);
+		 outBean.set("first", chushi+1);
 		return outBean;
 	}
 
@@ -438,6 +424,10 @@ public class PassServ extends CommonServ {
 	 */
 	@Override
 	public OutBean exp(ParamBean paramBean) {
+		if("true".equals(paramBean.getStr("within"))){
+			expwithdata(paramBean);
+			return new OutBean().setOk();
+		}
 		String where = paramBean.getStr("where");
 		String servid = paramBean.getServId();
 		ParamBean parr = new ParamBean();
@@ -465,37 +455,44 @@ public class PassServ extends CommonServ {
 			paramBean.setQuerySearchWhere(searchWhere);
 			dataList = ServDao.finds(servid, searchWhere);
 		}else{ // 导出所有记录
-            String usercode = Context.getUserBean().getCode();
-            //查询当前审核人的流程 绑定的审核机构
-            String xmid= paramBean.getStr("xmid");
-            Bean _PAGE_ = new Bean();
-            Bean outBean = new Bean();
-            String NOWPAGE = paramBean.getStr("nowpage");
-            String SHOWNUM = paramBean.getStr("shownum");
-            String where1 = paramBean.getStr("where");
-            String sql = "select n.dept_code from (select node_id from(select wfs_id from ts_xmgl_bmsh where xm_id='"+xmid+"') c left join TS_WFS_NODE_APPLY d on c.wfs_id = d.wfs_id) m left join TS_WFS_BMSHLC n on m.node_id = n.node_id  "+
-                    "where n.shr_usercode= '"+usercode+"'";
-            List<Bean> query = Transaction.getExecutor().query(sql);
-            String dept_code="";
-
-            for (Bean bean : query) {
-                if(!"".equals(bean.getId())){}
-                //dept_code
-                dept_code+="'"+bean.getId()+"',";
-            }
-            if(dept_code.length()>5){
-                dept_code = dept_code.substring(0,dept_code.length()-1);
-                String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+dept_code+")) and dept_code in("+dept_code+")";
-                List<Bean> query1 = Transaction.getExecutor().query(sql1);
-                for (Bean bean : query1) {
-                    //判断哪些考生部门 在此codepath 下
-                    String sql3 = "select * from (select a.*,b.code_path from ts_bmsh_pass a left join sy_org_dept b on a.s_dept=b.dept_code and xm_id='"+xmid+"' AND a.sh_other!='') c where c.code_path like concat('"+bean.getId()+"','%')";
-                    List<Bean> query2 = Transaction.getExecutor().query(sql3);
-                    dataList.addAll(query2);
-                }
-            }else{
-                return new OutBean().setError("空");
-            }
+			String usercode = Context.getUserBean().getCode();
+			//查询当前审核人的流程 绑定的审核机构
+			String xmid= paramBean.getStr("xmid");
+			Bean _PAGE_ = new Bean();
+			String NOWPAGE = paramBean.getStr("nowpage");
+			String SHOWNUM = paramBean.getStr("shownum");
+			String sql = "select n.dept_code from (select node_id from(select wfs_id from ts_xmgl_bmsh where xm_id='"+xmid+"') c left join TS_WFS_NODE_APPLY d on c.wfs_id = d.wfs_id) m left join TS_WFS_BMSHLC n on m.node_id = n.node_id  "+
+					"where n.shr_usercode= '"+usercode+"'";
+			List<Bean> query = Transaction.getExecutor().query(sql);
+			String dept_code="";
+			String deptcodes = "";
+			for (Bean bean : query) {
+				if(!"".equals(bean.getId())){}
+				//dept_code
+				dept_code=bean.getId();
+				String[] split = dept_code.split(",");
+				for (String string : split) {
+					deptcodes+="'"+string+"',";
+				}
+			}
+					if(deptcodes.length()>5){
+						deptcodes = deptcodes.substring(0,deptcodes.length()-1);
+				String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+deptcodes+")) and dept_code in("+deptcodes+")";
+						List<Bean> query1 = Transaction.getExecutor().query(sql1);
+						String sql3 = "";
+						sql3 += "select * from (select a.*,b.code_path from ts_bmsh_pass a left join sy_org_dept b on a.s_dept=b.dept_code where xm_id = '"+xmid+"') c ";
+						for (int i=0;i<query1.size();i++) {
+							//判断哪些考生部门 在此codepath 下
+							if(i==0){
+								sql3+="where c.code_path like concat('"+query1.get(i).getId()+"','%')";
+							}else{
+								sql3+=" or c.code_path like concat('"+query1.get(i).getId()+"','%')";
+							}
+						}
+						dataList = Transaction.getExecutor().query(sql3);
+					}else{
+				return new OutBean().setError("空");
+					}
 
 		}
 		// 所有
@@ -590,10 +587,10 @@ public class PassServ extends CommonServ {
 			// 查询出 要导出的数据
 			count = outBean.getCount();
 			// 总数大于excel可写最大值
-			if (count > EXCEL_MAX_NUM) {
+			/*if (count > EXCEL_MAX_NUM) {
 				return new OutBean().setError("导出数据总条数大于Excel最大行数："
 						+ EXCEL_MAX_NUM);
-			}
+			}*/
 			// 导出第一次查询数据
 			paramBean.setQueryPageNowPage(1); // 导出当前第几页
 			afterExp(paramBean, outBean); // 执行导出查询后扩展方法
@@ -601,7 +598,7 @@ public class PassServ extends CommonServ {
 			expExcel.createHeader(cols);
 			expExcel.appendData1(finalList, paramBean);
 			// 存在多页数据
-			if (ONETIME_EXP_NUM < count) {
+			/*if (ONETIME_EXP_NUM < count) {
 				times = count / ONETIME_EXP_NUM;
 				// 如果获取的是整页数据
 				if (ONETIME_EXP_NUM * times == count && count != 0) {
@@ -611,10 +608,10 @@ public class PassServ extends CommonServ {
 					paramBean.setQueryPageNowPage(i + 1); // 导出当前第几页
 					OutBean out = query(paramBean);
 					afterExp(paramBean, out); // 执行导出查询后扩展方法
-					expExcel.appendData(out.getDataList(), paramBean);
+					expExcel.appendData1(out.getDataList(), paramBean);
 				}
 			}
-			expExcel.addSumRow();
+			*/expExcel.addSumRow();
 		} catch (Exception e) {
 			log.error("导出Excel文件异常" + e.getMessage(), e);
 		} finally {
@@ -720,14 +717,11 @@ public class PassServ extends CommonServ {
 		
 		Bean userPvlgToHT = RoleUtil.getPvlgRole(user.getCode(),"TS_BMGL_XNBM");
 		Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
-		log.error(userPvlgToHTBean);
 		Bean str = (Bean)userPvlgToHTBean.get("XN_BM");
-		log.error(str);
 		String dept_code = str.getStr("ROLE_DCODE");
 		if("".equals(dept_code)){
 			dept_code=user.getStr("ODEPT_CODE");
 		}
-		log.error(dept_code);
 		dept_code = dept_code.substring(0,10);
 		/*if("belong".equals(xianei)){*/
 		//根据项目id找到流程下的所有节点
@@ -876,4 +870,180 @@ public class PassServ extends CommonServ {
 		}
 		return out;
 	}
+	
+
+/**
+ * 导出辖内报名
+ */
+	public OutBean expwithdata(ParamBean paramBean){
+		String xmid = paramBean.getStr("xmid");
+		ParamBean parr = new ParamBean();
+		UserBean userBean1 = Context.getUserBean();
+		String user_code1 = "";
+		if (userBean1.isEmpty()) {
+			return new OutBean().setError("ERROR:user_code 为空");
+		} else {
+			user_code1 = userBean1.getStr("USER_CODE");
+		}
+		parr.copyFrom(paramBean);
+		parr.setServId("TS_BMSH_PX");
+		String servId = paramBean.getServId();
+		ServDefBean serv = ServUtils.getServDef(servId);
+		long count = 0;
+		long times = 0;
+		paramBean.setQueryPageShowNum(ONETIME_EXP_NUM); // 设置每页最大导出数据量
+		String searchWhere = "";
+		beforeExp(paramBean); // 执行监听方法
+		/*	String xianei = paramBean.getStr("xianei");*/
+			//当前审核人
+			UserBean user = Context.getUserBean();
+			
+			Bean userPvlgToHT = RoleUtil.getPvlgRole(user.getCode(),"TS_BMGL_XNBM");
+			Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_BMGL_XNBM_PVLG");
+			Bean str = (Bean)userPvlgToHTBean.get("XN_BM");
+			String dept_code = str.getStr("ROLE_DCODE");
+			if("".equals(dept_code)){
+				dept_code=user.getStr("ODEPT_CODE");
+			}
+			dept_code = dept_code.substring(0,10);
+		
+			
+			List<Bean> dataList;
+				if(dept_code.equals("0010100000")){
+					//所有人员
+					 String datasql = "select * from TS_BMSH_PASS  where xm_id='"+xmid+"'";
+					 dataList = Transaction.getExecutor().query(datasql);
+					 
+				}else{
+					/*List<DeptBean> finds = OrgMgr.getChildDepts(compycode, user.getODeptCode());
+					for (Bean bean : finds) {
+						dept_code+=","+bean.getStr("DEPT_CODE");
+					}
+					deptwhere = "AND S_DEPT IN ("+dept_code+")";*/
+					DeptBean dept = OrgMgr.getDept(dept_code);
+					String codepath = dept.getCodePath();
+					String sql = "select * from TS_BMSH_PASS a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') and xm_id='"+xmid+"'";
+					dataList = Transaction.getExecutor().query(sql);
+					  
+				}
+				
+				List<Bean> finalList = new ArrayList<Bean>();
+
+				// 判断user_code 是否为空 若为空则 导出所有
+
+				searchWhere = " AND USER_CODE=" + "'" + user_code1 + "' order by cast(PX_XUHAO as SIGNED)";
+
+				// 排序用的 parr存读取th
+				parr.setQuerySearchWhere(searchWhere);
+				LinkedHashMap<String, Bean> cols = new LinkedHashMap<String, Bean>();
+				List<Bean> pxdatalist1 = ServDao.finds("TS_BMSH_PX", searchWhere);
+				if (pxdatalist1.size() == 0) {
+					String where1 = "AND USER_CODE is null ";
+					pxdatalist1 = ServDao.finds("TS_BMSH_PX", where1);
+				}
+				// 查询出所有的 待审核记录
+				OutBean outBean = query(paramBean);
+				for (Bean bean : dataList) {
+					String work_num = bean.getStr("BM_CODE");
+					Bean userBean = getUserInfo1(work_num);
+					Bean newBean = new Bean();
+					// for循环排序bean
+					for (Bean pxbean : pxdatalist1) {
+						String aa = pxbean.getStr("PX_NAME");
+						String namecol = pxbean.getStr("PX_COLUMN");
+						String pxcol = namecol;
+						Bean colBean = new Bean();
+
+						colBean.set("SAFE_HTML", "");
+						colBean.set("ITEM_LIST_FLAG", "1");
+						colBean.set("ITEM_CODE", namecol);
+						colBean.set("EN_JSON", "");
+						colBean.set("ITEM_NAME", aa);
+						cols.put(pxcol, colBean);
+
+						// 字段
+						// 如果 有值 赋值
+						String name = bean.getStr(namecol);
+						if (!"".equals(bean.getStr(namecol))) {
+							newBean.set(namecol, bean.getStr(namecol));
+						}
+						if (!"".equals(userBean.getStr(namecol))) {
+							newBean.set(namecol, userBean.getStr(namecol));
+							name = userBean.getStr(namecol);
+						}
+						if ("".equals(bean.getStr(namecol))
+								&& "".equals(userBean.getStr(namecol))) {
+							newBean.set(namecol, "");
+						}
+						if ("SH_OTHER".equals(namecol)) {
+							// 其它办理人
+							ParamBean parambeansss = new ParamBean();
+							parambeansss.set("codes", bean.getStr("SH_OTHER"));
+							Bean outBeans = ServMgr.act("TS_BMSH_STAY", "getusername",
+									parambeansss);
+							name = outBeans.getStr("usernames");
+						}
+						if("SH_STATUS".equals(namecol)){
+							//审核状态;
+							name = "审核未通过";
+						}
+						if ("JOB_LB".equals(namecol)) {
+							name = bean.getStr("BM_LB");
+						}
+						if ("JOB_XL".equals(namecol)) {
+							name = bean.getStr("BM_XL");
+						}
+						if ("TONGYI".equals(namecol)) {
+							name = bean.getStr("BM_CODE");
+						}
+						String BM_TYPE = "";
+						if ("BM_TYPE".equals(namecol)) {
+							if ("1".equals(bean.getStr("BM_TYPE"))) {
+								BM_TYPE = "初级";
+							} else if ("2".equals(bean.getStr("BM_TYPE"))) {
+								BM_TYPE = "中级";
+							} else {
+								BM_TYPE = "高级";
+							}
+							name = BM_TYPE;
+
+						}
+						newBean.set(namecol, name);
+						newBean.set("_ROWNUM_", "");
+						newBean.set("ROWNUM_", "");
+					}
+					finalList.add(newBean);
+
+				}
+				ExportExcel expExcel = new ExportExcel(serv);
+				try {
+					// 查询出 要导出的数据
+					count = outBean.getCount();
+					// 总数大于excel可写最大值
+					if (count > EXCEL_MAX_NUM) {
+						return new OutBean().setError("导出数据总条数大于Excel最大行数："
+								+ EXCEL_MAX_NUM);
+					}
+					// 导出第一次查询数据
+					paramBean.setQueryPageNowPage(1); // 导出当前第几页
+					afterExp(paramBean, outBean); // 执行导出查询后扩展方法
+					// 查询出表头 查询出 对应数据 hashmaplist
+					expExcel.createHeader(cols);
+					expExcel.appendData1(finalList, paramBean);
+					// 存在多页数据
+					
+					expExcel.addSumRow();
+				} catch (Exception e) {
+					log.error("导出Excel文件异常" + e.getMessage(), e);
+				} finally {
+					expExcel.close();
+				}
+				return new OutBean().setOk();	
+				
+				
+				
+	}
+	
+	
+	
 }

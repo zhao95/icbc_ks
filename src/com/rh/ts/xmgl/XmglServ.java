@@ -361,10 +361,10 @@ public class XmglServ extends CommonServ {
 			}
 		}*/
 
-		String sql1="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id";
-		String sql2="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id";
-		String sql3="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='' or c.xm_sz_type='未开启' ))d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id";
-		String sql4 = "select m.*,n.g_id from (select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END AND ('"+datestr+"'>b.BM_END OR '"+datestr+"'<b.BM_START) order by b.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id";
+		String sql1="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,15";
+		String sql2="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,15";
+		String sql3="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='' or c.xm_sz_type='未开启' ))d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,15";
+		String sql4 = "select m.*,n.g_id from (select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END AND ('"+datestr+"'>b.BM_END OR '"+datestr+"'<b.BM_START) order by b.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,15";
 		/*String sql1 = "select * from ts_xmgl where xm_id in(SELECT XM_ID FROM TS_XMGL_BMGL WHERE '"+datestr+"' BETWEEN BM_TZ_START AND BM_TZ_END order by BM_END ASC)";*/
 		List<Bean> list = Transaction.getExecutor().query(sql1);
 		List<Bean> list2 = Transaction.getExecutor().query(sql2);
@@ -637,6 +637,9 @@ public class XmglServ extends CommonServ {
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where");
+		
+		
+		
 		String sql1 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
 				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,15";
 		List<Bean> list = Transaction.getExecutor().query(sql1);
@@ -789,21 +792,21 @@ public class XmglServ extends CommonServ {
 		List<Bean> list = new ArrayList<Bean>();
 		/*List<Bean> finds = ServDao.finds("TS_XMGL", where1);*/
 		String sql1 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' and b.SH_RGSH=1)d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,50";
 		List<Bean> finds = Transaction.getExecutor().query(sql1);
 		
 		String sql2 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='未开启' or c.xm_sz_type='') and b.SH_RGSH=1)d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,50";
 		List<Bean> find2 = Transaction.getExecutor().query(sql2);
 		
 		String sql4 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' and b.SH_RGSH=1 )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 ";
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,50";
 		List<Bean> find4 = Transaction.getExecutor().query(sql4);
 		
 		String sql3 = " SELECT * FROM(SELECT a.*,b.sh_end FROM ts_xmgl a LEFT JOIN TS_XMGL_BMSH b ON a.xm_id = b.xm_id WHERE b.sh_rgsh=1 AND (NOW()< STR_TO_DATE(b.sh_start,'%Y-%m-%d %H:%i:%s') OR NOW()> STR_TO_DATE(b.sh_end,'%Y-%m-%d %H:%i:%s')) "
-				+where1+" AND b.SH_LOOK =1 and b.SH_RGSH=1 ORDER BY b.sh_end ASC)t ";
+				+where1+" AND b.SH_LOOK =1 and b.SH_RGSH=1 ORDER BY b.sh_end ASC)t limit 0,50";
 		List<Bean> finds3 = Transaction.getExecutor().query(sql3);
-		String sql5 = "select a.* from ts_xmgl a left join ts_xmgl_bmsh b on a.xm_id=b.xm_id where b.SH_RGSH=2 " +where1;
+		String sql5 = "select a.* from ts_xmgl a left join ts_xmgl_bmsh b on a.xm_id=b.xm_id where b.SH_RGSH=2 " +where1 +"limit 0,50";
 		List<Bean> find5 = Transaction.getExecutor().query(sql5);
 		for (Bean bean : find5) {
 			bean.set("SH_STATE_STR", "无手动审核");

@@ -544,7 +544,6 @@ function firall(){
 				data["where"]=where5+where6;
 				data["xmid"]=xmid;
 				data = jQuery.extend(data,whereData);
-				alert(obj);
 				window.open(FireFly.getContextPath() + '/' + obj + '.exp.do?data=' + 
 				encodeURIComponent(jq.toJSON(data)));
 				
@@ -1120,8 +1119,7 @@ var listPage = function () {
   	 nowlevel=result2.level;
   	 nodeid=result2.node_id;
   	 
-	 var data = listData.list;
-	 var pageEntity=JSON.parse(data);
+	 var pageEntity = listData.list;
 		$("#"+table+" tbody").html("");
 		
 	    for(var i=0;i<pageEntity.length;i++){
