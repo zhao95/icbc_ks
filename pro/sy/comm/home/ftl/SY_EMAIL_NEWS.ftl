@@ -89,11 +89,11 @@ body {
 	<hr width="300px" color="gray" size="1" align="left" />
 	<table id="footertable">
 		<tr>
-			<td>办公信息化系统</td>
-			<td style="padding-left: 10px"><a href="http://oas.icbc">http://oas.icbc</a></td>
+			<td>工商银行考试系统</td>
+			<td style="padding-left: 10px"><a href="http://oas.icbc">http://exam.icbc</a></td>
 		</tr>
 		<tr>
-			<td>OIS</td>
+			<td>EXAM</td>
 			<td style="padding-left: 10px">${CURRENT_TIME!''}</td>
 		</tr>
 	</table>
