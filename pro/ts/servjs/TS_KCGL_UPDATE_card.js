@@ -52,3 +52,5 @@ _viewer.getBtn("shBtgBtn").unbind("click").bind("click", function(event) {
 	}
 });
 
+$("#TS_KCGL_UPDATE-save").css("visibility","hidden");
+

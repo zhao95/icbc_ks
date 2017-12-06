@@ -12,3 +12,9 @@ if(action == "" || action == "add"){
 	$("#TS_KCGL_UPDATE_GLY-GLY_ACTION input[value='add']").attr("disabled", true);
 }
 
+_viewer.afterSave = function(resultData) {
+	setTimeout(function(){ 
+		_viewer._parHandler.refreshGrid(); 
+		jQuery("#" + _viewer.dialogId).dialog("close");
+	}, 100);
+};

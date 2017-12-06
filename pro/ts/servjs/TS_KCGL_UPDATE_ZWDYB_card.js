@@ -12,7 +12,12 @@ if(action == "" || action == "add"){
 	$("#TS_KCGL_UPDATE_ZWDYB-ZW_ACTION input[value='add']").attr("disabled", true);
 }
 
-
+_viewer.afterSave = function(resultData) {
+	setTimeout(function(){ 
+		_viewer._parHandler.refreshGrid(); 
+		jQuery("#" + _viewer.dialogId).dialog("close");
+	}, 100);
+};
 
 
 

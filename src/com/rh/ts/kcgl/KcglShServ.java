@@ -35,8 +35,9 @@ public class KcglShServ extends CommonServ {
 		    paramBean.setQueryExtWhere(" and (odept_level < 3 or KC_STATE2 = 1)");
 		}
 	    }else if(!roleOrgLv.isEmpty()){
-		String odeptCodePath = userBean.getODeptCodePath();
-		paramBean.setQueryExtWhere(" and odept_level in (" + roleOrgLv + ") and odept_path like '"+odeptCodePath+"%'");
+//		String odeptCodePath = userBean.getODeptCodePath();
+//		paramBean.setQueryExtWhere(" and odept_level in (" + roleOrgLv + ") and odept_path like '"+odeptCodePath+"%'");
+		paramBean.setQueryExtWhere(" and odept_level in (" + roleOrgLv + ")");
 	    }else{
 		paramBean.setQueryExtWhere(" and 1=2");
 	    }
@@ -106,12 +107,18 @@ public class KcglShServ extends CommonServ {
 		    break;
 		}
 		String action = listTmp.get(j).getStr(actionCode);
-		if (action.equals("add") || action.equals("update")) {
+		if (action.equals("add")) {
+		    dataBean.remove(actionCode);
+		    dataBean.remove("UPDATE_ID");
+		    dataBean.set("KC_ID", kcId);
+		    dataBean.remove("_PK_");
+		    ServDao.save(tables2[i], dataBean);
+		} else if(action.equals("update")){
 		    dataBean.remove(actionCode);
 		    dataBean.remove("UPDATE_ID");
 		    dataBean.set("KC_ID", kcId);
 		    ServDao.save(tables2[i], dataBean);
-		} else if (action.equals("delete")) {
+		}else if (action.equals("delete")) {
 		    ServDao.delete(tables2[i], dataBean.getId());
 		}
 	    }

@@ -25,3 +25,10 @@ _viewer.getItem("MX_COL").change(function(){
 		_viewer.getItem("MX_DATA4").hide();
 	}
 });
+
+_viewer.afterSave = function(resultData) {
+	setTimeout(function(){ 
+		_viewer._parHandler.refreshGrid(); 
+		jQuery("#" + _viewer.dialogId).dialog("close");
+	}, 100);
+};

@@ -42,3 +42,10 @@ if($("#TS_KCGL_UPDATE_GLJG-JG_CODE__NAME").hasClass("disabled") == false) {
 		queryView.show(event,[],[0,495]);
 	});
 }
+
+_viewer.afterSave = function(resultData) {
+	setTimeout(function(){ 
+		_viewer._parHandler.refreshGrid(); 
+		jQuery("#" + _viewer.dialogId).dialog("close");
+	}, 100);
+};
