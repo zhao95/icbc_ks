@@ -89,13 +89,15 @@ public class DataServ extends CommonServ {
 						}
 						a=j;
 					}
-					List<Bean> kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' limit "+a+","+2);
+					List<Bean> kslbklist = new ArrayList<Bean>();
 					if(cengji>=3&&kslbklist.size()==0){
 						wherestr = " AND  (KSLB_TYPE = '2' or KSLB_TYPE=1) ";
 						if(a>kslbklist2.size()-3){
 							a=0;
 						}
-						kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' limit "+a+","+2);
+						kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' limit 0,4");
+					}else{
+						kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr+" AND XM_ID='"+xmid+"' limit 0,4");
 					}
 					
 					for (Bean kslbkbean : kslbklist) {

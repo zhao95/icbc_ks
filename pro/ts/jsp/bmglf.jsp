@@ -281,7 +281,7 @@
 			var bmArray = document.getElementsByName("checkname");
 			
 		     	for(var i=0;i<bmArray.length;i++){
-		     		if(bmArray[i].checked){
+		     		if(bmArray[i].checked==true){
 		     			if(i==0){
 		     				bmlb = bmArray[i].value;
 		     			}else{

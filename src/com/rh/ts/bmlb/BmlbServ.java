@@ -56,10 +56,12 @@ public class BmlbServ extends CommonServ {
 	public void addData(Bean paramBean) {
 		UserBean userBean = Context.getUserBean();
 		String odept_code = "";
+		String dept_code = "";
 		if (userBean.isEmpty()) {
 
 		} else {
 			odept_code = userBean.getODeptCode();
+			dept_code =userBean.getDeptCode();
 		}
 		DeptBean deptbean = OrgMgr.getDept(odept_code);
 		String dept_name = deptbean.getName();

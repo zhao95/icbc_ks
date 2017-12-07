@@ -865,7 +865,6 @@ var listPage = function () {
 		 		}
 		 	}
 	}
-	
 	//param`
 	var where5 = " AND XM_ID="+"'"+xmid+"'";
 	 var param = {};

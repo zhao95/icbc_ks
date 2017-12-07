@@ -979,7 +979,7 @@ public class PassServ extends CommonServ {
 						}
 						if("SH_STATUS".equals(namecol)){
 							//审核状态;
-							name = "审核未通过";
+							name = "审核通过";
 						}
 						if ("JOB_LB".equals(namecol)) {
 							name = bean.getStr("BM_LB");
