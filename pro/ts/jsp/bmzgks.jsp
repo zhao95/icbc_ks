@@ -323,14 +323,14 @@ position: absolute;
 						</tbody>
 					</table>
 					<table>
-						<tr style="height: 100px; font-size: 15px">
-							<td style="width: 35%; color: red;" align="right">融e联绑定的手机号</td>
+						<tr style="height: 10px; font-size: 15px">
+							<td style="width: 35%; color: red;display:none" align="right">融e联绑定的手机号</td>
 							<td style="width: 3%"></td>
-							<td style="width: 20%; text-align: center"><input
+							<td style="width: 20%; text-align: center;display:none"><input
 								type="text" id="user_mobile2" style="width: 100px; height: 30px"
 								id="user_mobile2"></td>
 							<td style="width: 3%"></td>
-							<td style="color: lightseagreen;">验证码：<input type="text"
+							<td style="color: lightseagreen;;display:none">验证码：<input type="text"
 								style="width: 50px; height: 30px"> <input
 								style="height: 30px" type="button" value="获取验证码">
 							</td>

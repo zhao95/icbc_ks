@@ -237,7 +237,11 @@ public class BmlbServ extends CommonServ {
 			if (json.length() > 0) {
 				for (int i = 0; i < json.length(); i++) {
 					JSONObject job = json.getJSONObject(i); // 遍历 jsonarray
-					String ks_time = (String) job.get("BM_KS_TIME"); // 对象
+					String ks_time = "";
+					if("".equals(job.get("BM_KS_TIME"))){
+					}else{
+					 ks_time = (String) job.get("BM_KS_TIME"); // 对象
+					}
 					String kslb_code = (String) job.get("BM_LB");
 					String kslb_xl_code = (String) job.get("BM_XL");
 					String kslb_mk_code = (String) job.get("BM_MK");

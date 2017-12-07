@@ -745,8 +745,9 @@ function xminfoshow(){
 			       xk['BM_MK'] = kslb_mk_code;
 			       xk['BM_TYPE'] =kslb_type;
 			       if(ks_time==""){
-			    	   ks_time=0;
+			    	   ks_time="0";
 			       }
+			      
 			       xk['BM_KS_TIME']=ks_time;
 			       xkArg.push(xk);
 			}
