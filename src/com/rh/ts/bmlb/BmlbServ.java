@@ -79,6 +79,9 @@ public class BmlbServ extends CommonServ {
 		String bmcode = paramBean.getStr("bmCodes");
 		String[] bmcodes = bmcode.split(",");
 		for (String string : bmcodes) {
+			if("".equals(string)){
+				continue;
+			}
 			// 根据服务id 主键id获取 当前非资格考试的服务
 			Bean bean = ServDao.find("TS_XMGL_BM_FZGKS", string);
 			String fzgks_date1 = bean.getStr("FZGKS_STADATE");
@@ -97,6 +100,7 @@ public class BmlbServ extends CommonServ {
 			beans.set("BM_STARTDATE", fzgks_date1);
 			beans.set("BM_ENDDATE", fzgks_date2);
 			beans.set("BM_TITLE", fzgks_name);
+			beans.set("BM_SH_STATE", 1);
 			beans.set("XM_ID", xm_id);
 			Bean bmbean = ServDao.create(servId, beans);
 			int count = XmglMgr.existSh(xm_id);
