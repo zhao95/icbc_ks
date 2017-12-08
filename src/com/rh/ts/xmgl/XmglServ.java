@@ -1,4 +1,7 @@
 
+
+
+
 package com.rh.ts.xmgl;
 
 import java.io.IOException;
@@ -150,7 +153,8 @@ public  void   copyBmgl(String dataId,Bean beanA){
 	}
 	
 //禁考管理复制，需要oldxmid
-	String jkglgzServId="TS_XMGL_BM_JKGLGZ";
+	String jkglgzServId="TS_XMGL_BM_JKGZ";
+	//List<Bean>  OjkglgzBean= ServDao.finds(jkglgzServId, oldXmidWhere);//1条ts_xmgl_bm_jkglgz
 	List<Bean>  OjkglgzBean= ServDao.finds(jkglgzServId, oldXmidWhere);//1条
 	if(OjkglgzBean !=null && !OjkglgzBean.isEmpty()){
 		Bean  jkglbean  =new   Bean();
@@ -188,10 +192,6 @@ public  void   copyBmgl(String dataId,Bean beanA){
 			ServDao.save(OfzgksServId, fzgksbean);
 		}
 	}
-
-	
-	
-	
 }
 	
 //审核规则的复制
@@ -260,7 +260,7 @@ public  void  copybmsh(String dataId,Bean beanA){
 	}
 //请假管理
 public  void  copyqjgl(String dataId,Bean beanA){
-	String QJGLservId=" TS_XMGL_QJGL";
+	String QJGLservId="TS_XMGL_QJGL";
 	String   oldXmidWhere="and  XM_ID='"+dataId+"'";
 	List<Bean>  bmshBean= ServDao.finds(QJGLservId, oldXmidWhere);//1条
 	//得到新数据的xm_id，得到新数据的项目设置id    beanA为新的项目数据
@@ -285,17 +285,17 @@ public  void  copyqjgl(String dataId,Bean beanA){
 	}
 //借考管理
 public  void  copyjkgl(String dataId,Bean beanA){
-	String jkglservId="  TS_XMGL_YDJK";
+	String jkglservId="TS_XMGL_YDJK";
 	String   oldXmidWhere="and  XM_ID='"+dataId+"'";
 	List<Bean>  bmshBean= ServDao.finds(jkglservId, oldXmidWhere);//1条
 	//得到新数据的xm_id，得到新数据的项目设置id    beanA为新的项目数据
 	String  nXmid=beanA.getStr("XM_ID");
 	String  bmszServId="TS_XMGL_SZ";
-	String  nXmszidWhere="and XM_ID='"+nXmid+"' and   XM_NAME_NUM=3";//新xmid
+	String  nXmszidWhere="and XM_ID='"+nXmid+"' and   XM_NAME_NUM=4";//新xmid
 	List<Bean> xmszBean = ServDao.finds(bmszServId, nXmszidWhere);
 	String nXmszid="";
 	if(xmszBean !=null && !xmszBean.isEmpty()){
-	 nXmszid=	xmszBean.get(0).getStr("XM_SZ_ID");
+	 nXmszid=xmszBean.get(0).getStr("XM_SZ_ID");
 	}
 	if(bmshBean !=null && !bmshBean.isEmpty()){
 			Bean  nbean  =new   Bean();
@@ -306,7 +306,6 @@ public  void  copyjkgl(String dataId,Bean beanA){
 			nbean.remove("_PK_");
 			ServDao.save(jkglservId, nbean);
 	}
-	
 }
 //考场组群管理
 public  void  copyKczgl(String dataId,Bean beanA){
@@ -318,7 +317,7 @@ public  void  copyKczgl(String dataId,Bean beanA){
 		Bean  kczBean  =new  Bean();
 		for(int i=0;i<kczglBeanList.size();i++){
 			String oldKczid=kczglBeanList.get(i).getStr("KCZ_ID");
-				Bean  bmshgzkmxbean  =new   Bean();
+			Bean  bmshgzkmxbean  =new   Bean();
 			if(kczglBeanList.get(i).getInt("KCZ_STATE")==1){
 			bmshgzkmxbean.copyFrom(kczglBeanList.get(i));
 			bmshgzkmxbean.set("XM_ID", nXmid);
@@ -363,7 +362,7 @@ public  void  copykcgls(String groupId ,String  oldGroupId){
 				Bean  bmshgzkmxbean  =new   Bean();
 				bmshgzkmxbean.copyFrom(kczglGroupkcBeanList.get(i));
 				bmshgzkmxbean.set("GROUP_ID", groupId);
-				bmshgzkmxbean.remove("KCZ_ID");
+				bmshgzkmxbean.remove("KC_ID");
 				bmshgzkmxbean.remove("_PK_");
 				kczGroupBean=ServDao.save(kczglKcglServId, bmshgzkmxbean);
 				String   kcId=kczGroupBean.getId();
@@ -389,7 +388,7 @@ public  void  copyUpdate(String kcId ,String  oldkcid){
 				Bean  bmshgzkmxbean  =new   Bean();
 				bmshgzkmxbean.copyFrom(kczglGroupkcBeanList.get(i));
 				bmshgzkmxbean.set("KC_ID", kcId);
-				bmshgzkmxbean.remove("KCZ_ID");
+				bmshgzkmxbean.remove("UPDATE_ID");
 				bmshgzkmxbean.remove("_PK_");
 				ServDao.save(kczglKcglServId, bmshgzkmxbean);
 		  }	
