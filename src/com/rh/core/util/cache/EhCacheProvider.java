@@ -18,7 +18,7 @@ import net.sf.ehcache.Element;
  */
 public class EhCacheProvider implements ICacheProvider {
 
-    private CacheManager cacheMgr = null;
+    protected static CacheManager cacheMgr = null;
     
     /**
      * 构建体方法
