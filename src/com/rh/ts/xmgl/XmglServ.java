@@ -309,7 +309,7 @@ public  void  copyjkgl(String dataId,Bean beanA){
 }
 //考场组群管理
 public  void  copyKczgl(String dataId,Bean beanA){
-	String kczglervId="TS_KCZGL";
+	String kczglervId="TS_XMGL_CCCS_KCZGL";
 	String   oldXmidWhere="and  XM_ID='"+dataId+"'";
 	List<Bean>  kczglBeanList= ServDao.finds(kczglervId, oldXmidWhere);//多条
 	String  nXmid=beanA.getStr("XM_ID");
