@@ -827,7 +827,7 @@
         }
         return true;
     }
-    FireFly.doAct()
+//    FireFly.doAct()
 </script>
 
 

@@ -407,6 +407,13 @@ var HeaderBtn = {
             $('#unPublishModal').modal({backdrop: false, show: true});
         });
 
+        $("#expAll").click(function () {
+            var data = {searchKcId: KcObject.kcArr[0].KC_ID, XM_ID: xmId};
+            window.open(FireFly.getContextPath() + '/TS_XMGL_KCAP_DAPCC.expAll.do?data=' +
+                encodeURIComponent(JSON.stringify(data)));
+            // FireFly.doAct("TS_XMGL_KCAP_DAPCC", "expAll", data);
+        });
+
         //提交确定按钮事件
         $("#tjccapModal").find('button[class="btn btn-success"]').bind('click', function () {
             showVerifyCallback(function () {
@@ -503,16 +510,27 @@ var HeaderBtn = {
 
         //清除座位安排确定按钮事件
         $("#clearYapzwModal").find('button[class="btn btn-success"]').bind('click', function () {
-            var kcIdStr = '';
-            for (var i = 0; i < KcObject.kcArr.length; i++) {
-                var kc = KcObject.kcArr[i];
-                kcIdStr += kc.KC_ID + ',';
-            }
-            FireFly.doAct("TS_XMGL_KCAP_DAPCC", "clearYapzw", {KC_ID_STR: kcIdStr}, false, false, function () {
-                alert("清除座位安排成功！");
+            var ksInfoBean = Utils.getRemainingKsInfo();
+            var number = ksInfoBean.count - ksInfoBean.remainCount;
+            var $clearYapzwInfoModal = $('#clearYapzwInfoModal');
+            $clearYapzwInfoModal.find('.modal-body').html('<span style="color: red;">已经安排了' + number + '人，是否清除</span>');
+            $clearYapzwInfoModal.modal({backdrop: false, show: true});
+        });
+
+        //清除座位安排确定按钮事件
+        $("#clearYapzwInfoModal").find('button[class="btn btn-success"]').bind('click', function () {
+            showVerifyCallback(function () {
+                var kcIdStr = '';
+                for (var i = 0; i < KcObject.kcArr.length; i++) {
+                    var kc = KcObject.kcArr[i];
+                    kcIdStr += kc.KC_ID + ',';
+                }
+                FireFly.doAct("TS_XMGL_KCAP_DAPCC", "clearYapzw", {KC_ID_STR: kcIdStr}, false, false, function () {
+                    alert("清除座位安排成功！");
+                });
+                KcObject.reloadCCInfo();
+                KsObject.setDfpKsContent();
             });
-            KcObject.reloadCCInfo();
-            KsObject.setDfpKsContent();
         });
 
 
@@ -1622,7 +1640,9 @@ var KcObject = {
     },
 
     reloadCCInfo: function () {
-        this.setCcInfo(this.currentCc, this.currentParentKc, this.currentType);
+        if (this.currentCc !== null && this.currentCc.SJ_ID) {
+            this.setCcInfo(this.currentCc, this.currentParentKc, this.currentType);
+        }
     },
 
     _setCcInfoType: function (type) {

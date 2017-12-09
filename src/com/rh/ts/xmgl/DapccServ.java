@@ -9,9 +9,12 @@ import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.serv.bean.PageBean;
+import com.rh.core.serv.util.ExportExcel;
+import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.Constant;
 import com.rh.core.util.DateUtils;
 import com.rh.ts.pvlg.PvlgUtils;
+import com.rh.ts.util.BMUtil;
 import com.rh.ts.util.TsConstant;
 import org.apache.commons.lang.StringUtils;
 
@@ -34,9 +37,132 @@ public class DapccServ extends CommonServ {
 
 
     /**
+     * 每次获取数据条数
+     */
+    private static final int ONETIME_EXP_NUM = 5000;
+    /**
+     * excel最大行数
+     */
+    private static final int EXCEL_MAX_NUM = 65536;
+
+    /**
+     * 提供导出Excel
+     *
+     * @param paramBean 参数信息
+     * @return 执行结果
+     */
+    public OutBean expAll(ParamBean paramBean) {
+        paramBean.set("isArrange", "false");//获取所有安排和未安排的考生
+        String servId = paramBean.getServId();
+        ServDefBean serv = ServUtils.getServDef(servId);
+        paramBean.set(ParamBean.QUERY_NOPAGE_FLAG, "true");
+        List<Bean> allList = new ArrayList<Bean>();
+
+        //
+        OutBean ksOutBean = this.getKsContent(paramBean);
+        List<Bean> ksList = ksOutBean.getDataList();
+        for (Bean bean : ksList) {
+            bean.set("state", "");
+        }
+        allList.addAll(ksList);
+
+        //请假
+        paramBean.set("searchDeptCode", "qj");
+        OutBean qjKsOutBean = this.getKsContent(paramBean);
+        List<Bean> qjKsList = qjKsOutBean.getDataList();
+        for (Bean bean : qjKsList) {
+            bean.set("state", "已请假");
+        }
+        allList.addAll(qjKsList);
+
+        //借考
+        paramBean.set("searchDeptCode", "jk");
+        OutBean jkKsOutBean = this.getKsContent(paramBean);
+        List<Bean> jkKsList = jkKsOutBean.getDataList();
+        for (Bean bean : jkKsList) {
+            bean.set("state", "借入考生");
+        }
+        allList.addAll(jkKsList);
+
+        for (Bean bean : allList) {
+            String examinationName = BMUtil.getExaminationName(bean.getStr("BM_TYPE"), bean.getStr("BM_XL"), bean.getStr("BM_MK"));
+            bean.set("ksName", examinationName);
+        }
+
+        OutBean outBean = new OutBean();
+        outBean.setCount(allList.size());
+
+        LinkedHashMap<String, Bean> cols = new LinkedHashMap<String, Bean>();
+
+        Map<String, String> colMap = new LinkedHashMap<String, String>();
+        colMap.put("BM_CODE", "人力资源编码");
+        colMap.put("BM_NAME", "姓名");
+        colMap.put("USER_LOGIN_NAME", "统一认证号");
+        colMap.put("org1", "一级机构");
+        colMap.put("org2", "二级机构");
+        colMap.put("org3", "三级机构");
+        colMap.put("COUNT", "报名数");
+        colMap.put("ksName", "考试名称");
+        colMap.put("BM_TYPE_NAME", "级别");
+//        colMap.put("", "考场名称");
+//        colMap.put("", "考场地址");
+        colMap.put("state", "状态");
+        colMap.put("", "承办单位备注");
+
+        for (String itemCode : colMap.keySet()) {
+            Bean colBean = new Bean();
+            colBean.set("SAFE_HTML", "");
+            colBean.set("ITEM_LIST_FLAG", "1");
+            colBean.set("ITEM_CODE", itemCode);
+            colBean.set("EN_JSON", "");
+            colBean.set("ITEM_NAME", colMap.get(itemCode));
+            cols.put(itemCode, colBean);
+        }
+
+        ExportExcel expExcel = new ExportExcel(serv);
+        try {
+            // 查询出 要导出的数据
+            long count = outBean.getCount();
+            // 总数大于excel可写最大值
+            if (count > EXCEL_MAX_NUM) {
+                return new OutBean().setError("导出数据总条数大于Excel最大行数："
+                        + EXCEL_MAX_NUM);
+            }
+            // 导出第一次查询数据
+            paramBean.setQueryPageNowPage(1); // 导出当前第几页
+            afterExp(paramBean, outBean); // 执行导出查询后扩展方法
+            // 查询出表头 查询出 对应数据 hashmaplist
+
+            expExcel.createHeader(cols);
+            expExcel.appendData1(allList, paramBean);
+//             //存在多页数据
+//            if (ONETIME_EXP_NUM < count) {
+//                times = count / ONETIME_EXP_NUM;
+//                // 如果获取的是整页数据
+//                if (ONETIME_EXP_NUM * times == count && count != 0) {
+//                    times = times - 1;
+//                }
+//                for (int i = 1; i <= times; i++) {
+//                    paramBean.setQueryPageNowPage(i + 1); // 导出当前第几页
+//                    OutBean out = query(paramBean);
+//                    afterExp(paramBean, out); // 执行导出查询后扩展方法
+//                    expExcel.appendData(out.getDataList(), paramBean);
+//                }
+//            }
+            expExcel.addSumRow();
+        } catch (Exception e) {
+            log.error("导出Excel文件异常" + e.getMessage(), e);
+        } finally {
+            expExcel.close();
+        }
+        return new OutBean().setOk();
+    }
+
+
+    /**
      * 根据条件 获取考生信息
      *
-     * @param paramBean paramBean
+     * @param paramBean paramBean searchKcId searchSjId searchDeptCode
      * @return outBean
      */
     public OutBean getKsContent(ParamBean paramBean) {
@@ -62,6 +188,16 @@ public class DapccServ extends CommonServ {
         String searchDeptCode = paramBean.getStr("searchDeptCode");
         String searchKcId = paramBean.getStr("searchKcId");
         String searchSjId = paramBean.getStr("searchSjId");
+
+        String[] split = searchKcId.split(",");
+        List<Object> kcIdValues = new ArrayList<Object>();
+        StringBuilder kcIdSql = new StringBuilder();
+        for (String kcId : split) {
+            kcIdSql.append("?,");
+            kcIdValues.add(kcId);
+        }
+        kcIdSql = kcIdSql.insert(0, "'',");
+        kcIdSql = new StringBuilder(kcIdSql.substring(0, kcIdSql.length() - 1));
 
         long l = Long.MAX_VALUE;//选中的考场时长
         try {
@@ -124,9 +260,10 @@ public class DapccServ extends CommonServ {
         if ("jk".equals(searchDeptCode)) {
             String searchJkCodePath = "";
             String sql = "SELECT b.CODE_PATH FROM TS_KCGL a " +
-                    "LEFT JOIN sy_org_dept b ON b.DEPT_CODE = a.KC_ODEPTCODE WHERE KC_ID = ?";
+                    "LEFT JOIN sy_org_dept b ON b.DEPT_CODE = a.KC_ODEPTCODE WHERE KC_ID in(" + kcIdSql + ")";
             List<Object> values1 = new LinkedList<Object>();
-            values1.add(searchKcId);
+            values1.addAll(kcIdValues);
+//            values1.add(searchKcId);
             List<Bean> beanList = Transaction.getExecutor().query(sql, values1);
             //substring(b.CODE_PATH , 12, 10) 获取
             if (beanList != null && beanList.size() > 0) {
@@ -144,14 +281,16 @@ public class DapccServ extends CommonServ {
             l = Long.MAX_VALUE;
             whereSql += " and a.BM_STATUS in('1','3')";
             paramBean.set("isArrange", "false");//请假数据获取所有，不考虑是否安排
-            whereSql += " AND EXISTS (select '' from ts_xmgl_kcap_gljg g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
-            values.add(searchKcId);
+            whereSql += " AND EXISTS (select '' from ts_xmgl_kcap_gljg g where g.KC_ID in(" + kcIdSql + ") and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+            values.addAll(kcIdValues);
+//            values.add(searchKcId);
         } else {
             //获取的考生 在考场关联机构本级及下级的机构
             //*EXISTS
             whereSql += " and a.BM_STATUS not in('1','2','3')";
-            whereSql += " AND EXISTS (select '' from ts_xmgl_kcap_gljg g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
-            values.add(searchKcId);
+            whereSql += " AND EXISTS (select '' from ts_xmgl_kcap_gljg g where g.KC_ID in(" + kcIdSql + ") and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+            values.addAll(kcIdValues);
+//            values.add(searchKcId);
 
             //*in
 //            whereSql += " and c.CODE_PATH in(select c.CODE_PATH from ts_xmgl_kcap_gljg g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
@@ -418,7 +557,7 @@ public class DapccServ extends CommonServ {
         Bean rootDeptBean = this.getDeptList(deptCodeList, cache);
         for (String deptCode : deptCodeList) {
             ParamBean queryBean = new ParamBean();
-            queryBean.set("DICT_ID", "SY_ORG_ODEPT_ALL");
+            queryBean.set("DICT_ID", "TS_ORG_DEPT_ALL");
             queryBean.set("PID", deptCode);
             OutBean bean = ServMgr.act("SY_COMM_INFO", "dict", queryBean);
             List<Bean> child = bean.getList("CHILD");
@@ -433,7 +572,7 @@ public class DapccServ extends CommonServ {
      * 获取考场关联机构的编码
      *
      * @param kcId kcId
-     * @return
+     * @return set
      */
     private Set<String> getKcRelateOrgCodeList(String kcId) {
         List<Object> values = new ArrayList<Object>();
