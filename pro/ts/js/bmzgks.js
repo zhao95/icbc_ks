@@ -282,7 +282,10 @@ function xminfoshow(){
     	});	
 	}
 	//提交所有数据
-	function mttijiao(){
+	$("#mttijiao").click(function(){
+		$(this).unbind("click");
+		$("#tjloading").modal("show");
+
 		is_confirm=false;
 		//获取手机号码
 		var ryl_mobile = document.getElementById("user_mobile2").value
@@ -359,18 +362,16 @@ function xminfoshow(){
 				}
 				if (ryl_mobile != "" && ryl_mobile != null) {
 					$("#loading").modal("show");
-					var BM_ID = FireFly.doAct("TS_BMLB_BM", "addZgData", param,
-							false, false);
-					$("#loading").modal("hide");
-					showMask();
-					if (BM_ID.strresult != null || BM_ID.strresult != "") {
-						hideMask();
-					}
-					$("#bmbq").val("1");
-					$("#form1").submit();
+					FireFly.doAct("TS_BMLB_BM", "addZgData", param,
+							true, true,function(data){
+						$("#bmbq").val("1");
+						$("#form1").submit();
+					});
+					
 				}
 			}
-		}
+	})
+	
 	function showFzgList(showList){
 		jQuery('#ksxxId').html('');
 		var strchecked = checked.join(",");
@@ -747,7 +748,6 @@ function xminfoshow(){
 			       if(ks_time==""){
 			    	   ks_time="0";
 			       }
-			      
 			       xk['BM_KS_TIME']=ks_time;
 			       xkArg.push(xk);
 			}

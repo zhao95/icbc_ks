@@ -78,6 +78,14 @@
 	opacity: 0.5;
 	-moz-opacity: 0.5;
 }
+
+#tjloading .modal-dialog{
+position: absolute; 
+    top: 20%; 
+    bottom: 200px; 
+    left: 20%; 
+    right: 0; 
+}
 #loading .modal-dialog{
 position: absolute; 
     top: 20%; 
@@ -339,7 +347,7 @@ position: absolute;
 					</table>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" onclick="mttijiao()">提交</button>
+					<button type="button" class="btn btn-primary" id='mttijiao'>提交</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal"
 						onclick="quxiao()">取消</button>
 				</div>
@@ -360,7 +368,17 @@ position: absolute;
 		</div>
 		<!-- /.modal -->
 	</div>
-	
+	<div class="modal fade" id="tjloading" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div  class="modal-dialog" style="width:700px;">
+			<div id="loadingdialog" class="modal-content" style="position:absoluate;background:white;height:100px;width:50%">
+				<div style="color:lightseagreen;padding-left:30%;padding-top:10px;font-size:16px;">&nbsp;&nbsp;<B>正在提交数据请稍候.....</B></div>
+				<div id="loadiv" style="position:relative;top:-80%;left:15%;font-size:16px;"><img src="<%=CONTEXT_PATH%>/ts/image/loading.gif"></img></div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
 		<div class="modal fade" id="yzxx" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
 		<div class="modal-dialog">

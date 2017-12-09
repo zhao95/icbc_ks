@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
+
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
 
@@ -56,12 +57,10 @@ public class BmlbServ extends CommonServ {
 	public void addData(Bean paramBean) {
 		UserBean userBean = Context.getUserBean();
 		String odept_code = "";
-		String dept_code = "";
 		if (userBean.isEmpty()) {
 
 		} else {
 			odept_code = userBean.getODeptCode();
-			dept_code =userBean.getDeptCode();
 		}
 		DeptBean deptbean = OrgMgr.getDept(odept_code);
 		String dept_name = deptbean.getName();
@@ -87,6 +86,16 @@ public class BmlbServ extends CommonServ {
 			String fzgks_date1 = bean.getStr("FZGKS_STADATE");
 			String fzgks_date2 = bean.getStr("FZGKS_ENDDATE");
 			String fzgks_name = bean.getStr("FZGKS_NAME");
+		/*	ServDao.count(servId, paramBean)*/
+			SqlBean sqlbean = new SqlBean();
+			sqlbean.and("xm_id", xm_id);
+			sqlbean.and("kslbk_id", string);
+			sqlbean.and("bm_code", user_code);
+			int count2 = ServDao.count("TS_BMLB_BM", sqlbean);
+			if(count2==0){
+			}else{
+				continue;
+			}
 			Bean beans = new Bean();
 			beans.set("KSLBK_ID", string);
 			beans.set("ODEPT_CODE", odept_code);
@@ -204,6 +213,7 @@ public class BmlbServ extends CommonServ {
 	 * @return
 	 */
 	public Bean addZgData(Bean paramBean) {
+		
 		// 获取服务ID
 		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
 		// 获取前台传过来的值
@@ -321,6 +331,16 @@ public class BmlbServ extends CommonServ {
 								ad_result = "0";
 							}
 						}
+					}
+					SqlBean sqlbean = new SqlBean();
+					sqlbean.and("xm_id", xm_id);
+					sqlbean.and("kslbk_id", kslbk_id);
+					sqlbean.and("bm_code", user_code);
+					int count2 = ServDao.count("TS_BMLB_BM", sqlbean);
+					if(count2==0){
+					}else{
+						outBean.setError("重复报名");
+						continue;
 					}
 					Bean beans = new Bean();
 
@@ -1959,4 +1979,6 @@ public class BmlbServ extends CommonServ {
 			newids+=","+ids;
 			return new OutBean().set("ids", newids);
 	}
+	
+	
 }

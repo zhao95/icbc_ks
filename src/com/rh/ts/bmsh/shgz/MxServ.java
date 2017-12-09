@@ -14,6 +14,12 @@ import com.rh.core.serv.ServDao;
  */
 public class MxServ extends CommonServ {
 
+	/**
+	 * 复制规则明细
+	 * @param paramBean
+	 * @return
+	 */
+	
 	public OutBean CopyMx(Bean paramBean){
 		String dataId = paramBean.getStr("dataId");
 		

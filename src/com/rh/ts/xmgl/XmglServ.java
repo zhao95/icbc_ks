@@ -1067,8 +1067,6 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where");
 		
-		
-		
 		String sql1 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
 				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,15";
 		List<Bean> list = Transaction.getExecutor().query(sql1);
@@ -1235,7 +1233,7 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		String sql3 = " SELECT * FROM(SELECT a.*,b.sh_end FROM ts_xmgl a LEFT JOIN TS_XMGL_BMSH b ON a.xm_id = b.xm_id WHERE b.sh_rgsh=1 AND (NOW()< STR_TO_DATE(b.sh_start,'%Y-%m-%d %H:%i:%s') OR NOW()> STR_TO_DATE(b.sh_end,'%Y-%m-%d %H:%i:%s')) "
 				+where1+" AND b.SH_LOOK =1 and b.SH_RGSH=1 ORDER BY b.sh_end ASC)t limit 0,50";
 		List<Bean> finds3 = Transaction.getExecutor().query(sql3);
-		String sql5 = "select a.* from ts_xmgl a left join ts_xmgl_bmsh b on a.xm_id=b.xm_id where b.SH_RGSH=2 " +where1 +"limit 0,50";
+		String sql5 = "select a.* from ts_xmgl a left join ts_xmgl_bmsh b on a.xm_id=b.xm_id where b.SH_RGSH=2 and b.sh_look=1 " +where1 +"limit 0,50";
 		List<Bean> find5 = Transaction.getExecutor().query(sql5);
 		for (Bean bean : find5) {
 			bean.set("SH_STATE_STR", "无手动审核");
