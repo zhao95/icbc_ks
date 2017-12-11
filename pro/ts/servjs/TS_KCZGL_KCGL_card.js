@@ -31,7 +31,7 @@ function check(colName){
 	FireFly.doAct("SY_ORG_DEPT","byid",{"_PK_":kcOdeptCode},false,false,function(data){
 		var level = data.DEPT_LEVEL;
 		if(kcLevel == "一级"){
-			if(level != 2){
+			if(level == 3){
 				if(colName == "KC_ODEPTCODE"){
 					_viewer.getItem("KC_ODEPTCODE").clear();
 				}else{
