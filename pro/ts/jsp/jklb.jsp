@@ -228,6 +228,13 @@
             }
         });
 
+
+        $('a[id="ayishen"]').on('shown.bs.tab', function (e) {
+            setJkLookFlagTo1(jkList);
+//            e.target; // newly activated tab
+//            e.relatedTarget;// previous active tab
+        });
+
         var currentUserCode = System.getUser("USER_CODE");
 
         /*可申请的借考列表*/
@@ -239,6 +246,8 @@
         //没有可借考的考试，我要借考 置灰
         if (userCanLeaveList._DATA_.length <= 0) {
             $('#wyjk').attr('disabled', 'disabled');
+        } else if (userCanLeaveList._DATA_.length !== 0) {
+            $('#keshen').html('可申请的借考(' + userCanLeaveList._DATA_.length + ')');
         }
         for (var i = 0; i < userCanLeaveList._DATA_.length; i++) {
             var userCanLeave = userCanLeaveList._DATA_[i];
@@ -268,6 +277,11 @@
         setAppliedJkList();
     });
 
+    var jkList = [];
+
+    /**
+     * 获取已申请的借考列表
+     **/
     function setAppliedJkList() {
         var currentUserCode = System.getUser("USER_CODE");
 
@@ -277,7 +291,11 @@
         //获取已申请的借考数据
         var data = {_SELECT_: '*', _extWhere: "and USER_CODE='" + currentUserCode + "'", _NOPAGE_: true};
         var jkListBean = FireFly.doAct('TS_JKLB_JK', 'getAppliedJkList', data);
-        var jkList = jkListBean._DATA_;
+        if (jkListBean.FLAG_COUNT !== '0') {
+            $('#yishen').html('已申请的借考(' + jkListBean.FLAG_COUNT + ')');
+        }
+
+        jkList = jkListBean._DATA_;
         for (var i = 0; i < jkList.length; i++) {
             var jk = jkList[i];
             var jkId = jk.JK_ID;
@@ -287,8 +305,8 @@
             var jkDate = jk.JK_DATE;
             var jkStatus = jk.JK_STATUS;
             var yjfh = jk.JK_YJFH;
-            var yjfhDept = FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":yjfh},false,false);
-                if (jkStatus === "1") {
+            var yjfhDept = FireFly.doAct("SY_ORG_DEPT_ALL", "byid", {"_PK_": yjfh}, false, false);
+            if (jkStatus === "1") {
                 jkStatus = "审核中";
             } else if (jkStatus === "2") {
                 jkStatus = "已通过";
@@ -298,7 +316,7 @@
                 jkStatus = "已撤回";
             }
             var $tr = jQuery([
-                '<tr style="height: 50px">',
+                '<tr style="height: 50px;' + (jk.LOOK_FLAG === '0' ? 'color:red;' : '') + '">',
                 '	<td class="rhGrid-td-hide">',
                 '	    ' + jkId,
                 '	</td>',
@@ -315,7 +333,7 @@
                 '	    ' + jkName,
                 '	</td>',
                 '	<td>',
-                '	    ' +  yjfhDept.DEPT_NAME,
+                '	    ' + yjfhDept.DEPT_NAME,
                 '	</td>',
                 '	<td>',
                 '	    ' + jkDate,
@@ -346,6 +364,24 @@
 
             $tr.append($td);
             table1Tbody2.append($tr);
+        }
+    }
+
+    /**
+     * set jk LOOK_FLAG 0 to 1
+     * @params jkList
+     **/
+    function setJkLookFlagTo1(jkList) {
+        for (var i = 0; i < jkList.length; i++) {
+            var jk = jkList[i];
+            if (jk.LOOK_FLAG === '0') {
+                var jkBean = {
+                    XM_ID: jk.JK_ID,
+                    _PK_: jk.JK_ID,
+                    LOOK_FLAG: "1"
+                };
+                FireFly.doAct("TS_JKLB_JK", "save", jkBean, false, false);
+            }
         }
     }
 

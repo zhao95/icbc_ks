@@ -408,7 +408,16 @@ var HeaderBtn = {
         });
 
         $("#expAll").click(function () {
-            var data = {searchKcId: KcObject.kcArr[0].KC_ID, XM_ID: xmId};
+
+            var kcIdStr = '';
+            for (var i = 0; i < KcObject.kcArr.length; i++) {
+                var kc = KcObject.kcArr[i];
+                kcIdStr += ',' + kc.KC_ID;
+            }
+            if (kcIdStr.length > 0) {
+                kcIdStr = kcIdStr.substring(1);
+            }
+            var data = {searchKcId: kcIdStr, XM_ID: xmId};
             window.open(FireFly.getContextPath() + '/TS_XMGL_KCAP_DAPCC.expAll.do?data=' +
                 encodeURIComponent(JSON.stringify(data)));
             // FireFly.doAct("TS_XMGL_KCAP_DAPCC", "expAll", data);

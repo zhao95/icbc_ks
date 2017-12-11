@@ -59,8 +59,12 @@ public class JklbServ extends CommonServ {
 //            }
 //        }
 
-        //有审批记录说明已审批 撤回标识为false
+//        select count
         String currentUserCode = Context.getUserBean().getCode();
+        String lookCountSql = "select count(*) as COUNT from ts_jklb_jk where LOOK_FLAG ='0' and USER_CODE ='" + currentUserCode + "'";
+        int lookCount = Transaction.getExecutor().queryOne(lookCountSql).getInt("COUNT");//, page.getNowPage(), page.getShowNum(), null, null
+
+        //有审批记录，说明已审批 撤回标识为false 不可撤回
         String sql = "select a.*,(case when exists(select '' from ts_comm_mind b where b.DATA_ID=JK_ID) then 'false' else 'true' end) as canRetract from TS_JKLB_JK a where a.USER_CODE ='" + currentUserCode + "' order by a.JK_DATE";
         List<Bean> dataList = Transaction.getExecutor().query(sql);//, page.getNowPage(), page.getShowNum(), null, null
 
@@ -90,6 +94,7 @@ public class JklbServ extends CommonServ {
 //            outBean.setCount(dataList.size());
 //        }
         outBean.setData(dataList);
+        outBean.set("FLAG_COUNT", lookCount);
 //        outBean.setPage(page);
         return outBean;
     }
@@ -308,8 +313,9 @@ public class JklbServ extends CommonServ {
                 jkbean.set("JK_STATUS", jk_status);
                 ServDao.update(TSJK_SERVID, jkbean);
 
-                try {
-                    if ("2".equals(jk_status) || "3".equals(jk_status)) {
+
+                if ("2".equals(jk_status) || "3".equals(jk_status)) {
+                    try {
                         //流程结束 发送消息
                         //TS_JK_RESULT_TIP	借考结果提醒语
                         String jkResultMsg = ConfMgr.getConf("TS_JK_RESULT_TIP", "您的借考申请，有了审批结果，可登录工商银行考试查看。");
@@ -322,11 +328,16 @@ public class JklbServ extends CommonServ {
                         jkResultTipBean.set("USER_CODE", jkbean.getStr("USER_CODE"));
                         jkResultTipBean.set("tipMsg", jkResultMsg);
                         new KSSendTipMessageServ().sendTipMessageBeanForICBC(jkResultTipBean, "jkResult");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        log.error("借考结果提醒失败，" + "JK_ID:" + jkId + ",USER_CODE:" + jkbean.getStr("USER_CODE"));
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    log.error("借考结果提醒失败，" + "JK_ID:" + jkId + ",USER_CODE:" + jkbean.getStr("USER_CODE"));
+
+                    //修改借考记录状态为未读
+                    jkbean.set("LOOK_FLAG", "0");
+                    ServDao.update(TSJK_SERVID, jkbean);
                 }
+
 
                 if ("2".equals(jk_status)) {
                     //借考已通过 修改 TS_BMSH_PASS BM_STATUS字段信息

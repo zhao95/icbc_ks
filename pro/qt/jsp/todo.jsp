@@ -124,9 +124,22 @@
              style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
             <span style="margin-left: 50px; padding-top: 10px">未处理待办</span>
         </div>
-        <div style="display:none;width:85px;;background-color:lightseagreen;margin-left:5%;color:white;margin-top:10px"
-             id="batchsh" class="btn">
-            批量审核
+
+        <div class="form-group" style="padding: 15px;">
+
+            <label class="control-label col-sm-1" style="max-width: 63px;padding: 7px;" for="xm_id">项目</label>
+            <div class="col-sm-3">
+                <select id="xm_id" class="form-control">
+                    <option value=""></option>
+                </select>
+            </div>
+
+            <div id="batchsh" class="col-sm-3" style="display:none;">
+                <div style="width:85px;;background-color:lightseagreen;margin-left:5%;color:white;"
+                     class="btn">
+                    批量审核
+                </div>
+            </div>
         </div>
         <div style="margin-left: 10px; background-color: white; height: 20px; width: 98%"></div>
         <div id="table1" class="" style="margin-left: 10px; width: 98%">
@@ -287,10 +300,31 @@
     };
     $(function () {
         var batch = '<%=batch%>';
+        var type = '';
+        if (batch === '1') {
+            type = '0';
+        } else if (batch === '2') {
+            type = '1';
+        }
+
         if (batch === '1' || batch === '2') {
             $('#todo-th-checkbox').css('display', 'block');
             $('#batchsh').css('display', 'block');
         }
+
+        /*获取待办项目列表*/
+        var todoXmListBean = FireFly.doAct("TS_COMM_TODO", "getTodoXMList", {"TYPE": type});
+        var todoXmList = todoXmListBean._DATA_;
+        var $xmIdSelect = $('#xm_id');
+        $xmIdSelect.html('');
+        $xmIdSelect.append('<option value=""></option>');
+        for (var i = 0; i < todoXmList.length; i++) {
+            var todoXm = todoXmList[i];
+            $xmIdSelect.append('<option value="' + todoXm.XM_ID + '">' + todoXm.XM_NAME + '</option>');
+        }
+        $xmIdSelect.unbind('change').bind('change', function () {
+            listPage.search();
+        });
 
         $('#batchsh').unbind('click').bind('click', function () {
             $('#tiJiao').modal({backdrop: false, show: true});
@@ -413,11 +447,11 @@
         /*获取搜索条件 where语句*/
         ListPage.prototype.getExtWhere = function () {
             var extWhere = "and OWNER_CODE='" + System.getUser("USER_CODE") + "'";
-            if (batch === '1') {
-                extWhere += " and TYPE ='0'";
-            } else if (batch === '2') {
-                extWhere += " and TYPE ='1'";
-            }
+//            if (batch === '1') {
+//                extWhere += " and TYPE ='0'";
+//            } else if (batch === '2') {
+//                extWhere += " and TYPE ='1'";
+//            }
 //            for (var i = 0; i < icodes.length; i++) {
 //                var icode = icodes[i];
 //                var select = jQuery('select[icode="' + icode + '"]');
@@ -430,11 +464,24 @@
         };
         /*根据条件获取数据*/
         ListPage.prototype.getListData = function (num) {
+            var batch = '<%=batch%>';
+            var type = '';
+            if (batch === '1') {
+                type = '0';
+            } else if (batch === '2') {
+                type = '1';
+            }
+            var xmId = $('#xm_id').find("option:selected").val();
+
             var showNum = parseInt(this.showNumSelect.find("option:selected").val());
+
             var data = {};
             data["_PAGE_"] = {"NOWPAGE": num, "SHOWNUM": showNum};
+            data.TYPE = type;
+            data.XM_ID = xmId;
             data["_extWhere"] = this.getExtWhere();
-            return FireFly.doAct("TS_COMM_TODO", 'query', data, false);
+
+            return FireFly.doAct("TS_COMM_TODO", 'getToDoList', data, false);
 //            return FireFly.getListData("TS_COMM_TODO", data, false);
         };
         /*根据listdata构建表格*/
