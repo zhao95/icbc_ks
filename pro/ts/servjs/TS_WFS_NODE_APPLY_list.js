@@ -1,12 +1,13 @@
 var _viewer = this;
-var height=jQuery(window).height()-200;
+var height=jQuery(window).height()-400;
 var width=jQuery(window).width()-200;
 //列表需要建一个code为buttons的自定义字段。
 $("#TS_WFS_NODE_APPLY .rhGrid").find("tr").each(function(index,item){
 	if(index !=0){
 		var  dataId=item.id;
 		$(item).find("td[icode='BUTTONS']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_edit" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_edit" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_addes" rowpk="'+dataId+'"><span class="rh-icon-inner">添加管理</span><span class="rh-icon-img btn-edit"></span></a>'
 				//'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
 				)
 				//为每个按钮绑定卡片
@@ -26,11 +27,22 @@ function bindCard(){
 		var pkCode = jQuery(this).attr("rowpk");
 		openMyCard(pkCode);
 	});
+	//当行添加管理事件
+	jQuery("td [id='TS_WFS_NODE_APPLY_addes']").unbind("click").bind("click", function(){
+		var pkCode = jQuery(this).attr("rowpk");//NODEID
+//		var height = jQuery(window).height()-350;
+//		var width = jQuery(window).width()-200;
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_WFS_ADMINER","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+		temp[UIConst.PK_KEY] = pkCode;//修改时，必填
+	    var cardView = new rh.vi.cardView(temp);
+	    cardView.show();
+	});
 	//当行删除事件
 	jQuery("td [id='TS_WFS_NODE_APPLY_delete']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
 	});
+	
 }
 
 //列表操作按钮 弹dialog
@@ -47,3 +59,51 @@ function openMyCard(dataId,readOnly,showTab){
     cardView.show();
    
 }
+//		var dataId = "";
+//		FireFly.doAct("TS_WFS_NODEAPPLY_ADMINER","finds",{"_WHERE_":" and NODE_ID='"+pkCode+"'"},true,false,function(data){
+//			if(data._DATA_.length > 0){
+//				dataId = data._DATA_[0].ADMINDER_ID;
+//			}
+//		}); 
+		
+//		var temp = {};
+//		if(dataId == ""){
+//			var temp = {"act":UIConst.ACT_CARD_ADD,"sId":"TS_WFS_NODEAPPLY_ADMINER","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+//		}else{
+//			var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_WFS_NODEAPPLY_ADMINER","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+//		    temp[UIConst.PK_KEY] = dataId;//修改时，必填
+//		}
+//		
+//		temp["NODE_ID"] = pkCode;
+//	    var cardView = new rh.vi.cardView(temp);
+//	    cardView.show();
+//		var params={NODE_ID:pkCode};
+//	    var height = jQuery(window).height()-80;
+//		var width = jQuery(window).width()-200;
+//		var temp = {
+//				//"act":UIConst.ACT_CARD_MODIFY,
+//				"sId":"TS_WFS_NODEAPPLY_ADMINER",
+//				//"parHandler":_viewer,
+//				"widHeiArray":[width,height],
+//				"resetHeiWid":[width,height],
+//				"xyArray":[100,100], 
+//				"params":params};
+//		//temp[UIConst.PK_KEY] = pkCode;//修改时，必填
+//		  var listView = new rh.vi.listView(temp);
+//		    listView.show();
+		    
+//		var height = jQuery(window).height()-400;debugger;
+//		var width = jQuery(window).width()-200;
+//		    getServListDialog(event,"sj_manager","设置审核",width,height,[100,50]);
+//			const ext =  "and NODE_ID= '"+pkCode+"'";
+//			var params={NODE_ID:pkCode};
+//			var conf = {
+//					"sId":"TS_WFS_NODEAPPLY_ADMINER",
+//					 "showSearchFlag":"true",
+//				    "pCon":jQuery("#sj_manager"),
+//			        "parHandler":_viewer,
+//			        "params":params,
+//			        "linkWhere":ext
+//			    };
+//		    var listView = new rh.vi.listView(conf);
+//		    listView.show();   

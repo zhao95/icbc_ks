@@ -8,17 +8,13 @@ if(flowServ == 3){
 }
 _viewer.getItem("WFS_SERVID").change(function(){
 	var flowSerTmp = _viewer.getItem("WFS_SERVID").getValue(); 
-	if(flowSerTmp == 1){
+	if(flowSerTmp == 1 || flowSerTmp == 3){
 		_viewer.getItem("WFS_TYPE").show();
 	}else{
 		_viewer.getItem("WFS_TYPE").hide();
 	}
 	
-	if(flowSerTmp == 3){
-		_viewer.getItem("WFS_TYPE").show();
-	}else{
-		_viewer.getItem("WFS_TYPE").hide();
-	}
+	
 });	
 	
 var stept=_viewer.getItem("WFS_STEPS").getValue();
