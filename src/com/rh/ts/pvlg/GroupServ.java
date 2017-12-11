@@ -48,6 +48,8 @@ public class GroupServ extends CommonServ {
 		if (outBean.getStr("_MSG_").startsWith("OK")) {
 
 			GroupMgr.setGroupCache(paramBean.getId());
+			GroupMgr.setGroupUserCache(paramBean.getId());
+			GroupMgr.setGroupRoleCache(paramBean.getId());
 		}
 	}
 
@@ -64,6 +66,8 @@ public class GroupServ extends CommonServ {
 				
 				for (Bean bean : list) {
 					GroupMgr.setGroupCache(bean.getId());
+					GroupMgr.setGroupUserCache(bean.getId());
+					GroupMgr.setGroupRoleCache(bean.getId());
 				}
 			}
 		}
