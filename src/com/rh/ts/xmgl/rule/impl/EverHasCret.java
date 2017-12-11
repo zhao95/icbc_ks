@@ -26,7 +26,7 @@ public class EverHasCret implements IRule {
 
 			SqlBean sql = new SqlBean();
 			
-			sql.and("STATION_NO_CODE", xl);
+			sql.and("STATION_NO", xl);
 			
 			sql.and("STU_PERSON_ID", user);// 人员编码
 

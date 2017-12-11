@@ -152,6 +152,25 @@ String bmbq = request.getParameter("bmbq");
 				</div>
 
 		</div>
+		<!-- <table class="row">
+			<tr>
+			<td><div class="rhGrid-page">
+		            <span class="disabled ui-corner-4">上一页</span>
+		            <span class="current ui-corner-4">1</span>
+		            <span class="disabled ui-corner-4">下一页</span>
+		            <span class="allNum">共15条</span>
+		            </div>
+		    </td>
+		    <td style="width:5%"></td>
+		    <td><select id = "yema" onchange="fenyeselect()">
+                 <option value="10" selected="selected">10条/页</option>
+                 <option value="1">1条/页</option>
+                 <option value="20">20条/页</option>
+                 <option value="50">50条/页</option>
+                 <option value="100">100条/页</option>
+                 </select></td>
+			</tr>
+			</table> -->
 		</div>
 		<div class="tab-pane fade"  id="tab2">
 			<div

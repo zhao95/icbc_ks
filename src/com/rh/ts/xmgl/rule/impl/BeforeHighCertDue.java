@@ -11,8 +11,8 @@ import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.rule.IRule;
 
 /**
- * datetime之前过期相同序列高级证书 (终止有效期 <= datetime时间参数)
- * 
+ * datetime之前过期相同序列高级证书 (终止有效期 <= datetime时间参数)   
+ *   now:不考虑时间值判断状态
  * @author zjl
  *
  */
@@ -34,7 +34,7 @@ public class BeforeHighCertDue implements IRule {
 			SqlBean sql = new SqlBean();
 
 			obj = new JSONArray(jsonStr);
-			JSONObject jsonObject = obj.getJSONObject(1);
+			/*JSONObject jsonObject = obj.getJSONObject(1);
 
 			String endDate = jsonObject.getString("val"); // 变量值
 			
@@ -52,12 +52,12 @@ public class BeforeHighCertDue implements IRule {
 				//小于等于
 				sql.andLTE("END_DATE", endDate);// 终止有效期 >= endDate
 			}
-			
+			*/
 			
 			//等级level
 			
-			String fuhao2 = obj.getJSONObject(2).getString("code");
-			String dengjicode = obj.getJSONObject(obj.length()-1).getString("code"); // 
+			String fuhao2 = obj.getJSONObject(0).getString("code");
+			String dengjicode = obj.getJSONObject(1).getString("code"); // 
 			if(fuhao2.equals("1")){
 				
 				sql.andGT("CERT_GRADE_CODE", dengjicode);

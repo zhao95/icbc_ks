@@ -67,7 +67,8 @@ function openMyCard(dataId,readOnly,showTab){
 _viewer.getBtn("adds").unbind("click").bind("click",function() {
 	//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
 	var configStr = "TS_XMGL_BM_KSLBK,{'TARGET':'','SOURCE':'KSLBK_NAME~KSLBK_CODE~KSLBK_XL~KSLBK_XL_CODE~KSLBK_MK~KSLBK_MKCODE~KSLBK_TYPE_NAME~KSLBK_TYPE~KSLBK_ID~KSLBK_TIME'," +
-			"'HIDE':'KSLBK_CODE~KSLBK_XL_CODE~KSLBK_MKCODE~KSLBK_TYPE~KSLBK_TIME','EXTWHERE':' and KSLBK_CODE!=^023001^','TYPE':'multi','HTMLITEM':''}";
+			"'HIDE':'KSLBK_CODE~KSLBK_XL_CODE~KSLBK_MKCODE~KSLBK_TYPE~KSLBK_TIME','EXTWHERE':'','TYPE':'multi','HTMLITEM':''}";
+	/*and KSLBK_CODE!=^023001^*/
 	var options = {
 		"config" :configStr,
 		"parHandler":_viewer,

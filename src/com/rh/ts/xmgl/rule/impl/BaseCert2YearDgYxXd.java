@@ -31,7 +31,7 @@ public class BaseCert2YearDgYxXd implements IRule {
 
 			obj = new JSONArray(jsonStr);
 			String codes = "";
-			for(int i=0;i<obj.length()-4;i++){
+			for(int i=0;i<obj.length()-2;i++){
 				if(i==0){
 					codes+=obj.getJSONObject(i).getString("code");
 				}else{
@@ -45,10 +45,10 @@ public class BaseCert2YearDgYxXd implements IRule {
 				sql.andIn("STATION_NO",codearr);// 证书序列编号
 			}
 
-			String endDate = obj.getJSONObject(obj.length()-1).getString("val");
+		/*	String endDate = obj.getJSONObject(obj.length()-1).getString("val");
 			//有效期 判断符号
-			String datefuhaocode = obj.getJSONObject(obj.length()-2).getString("code");
-			if(datefuhaocode.equals("1")){
+			String datefuhaocode = obj.getJSONObject(obj.length()-2).getString("code");*/
+		/*	if(datefuhaocode.equals("1")){
 				
 				sql.andGT("END_DATE", endDate);// 终止有效期 >= endDate
 			}else if(datefuhaocode.equals("2")){
@@ -60,11 +60,11 @@ public class BaseCert2YearDgYxXd implements IRule {
 			}else if(datefuhaocode.equals("4")){
 				//小于等于
 				sql.andLTE("END_DATE", endDate);// 终止有效期 >= endDate
-			}
+			}*/
 			
-			String level =  obj.getJSONObject(obj.length()-3).getString("code");
+			String level =  obj.getJSONObject(obj.length()-1).getString("code");
 			//证书等级判断符号
-			String levelcode = obj.getJSONObject(obj.length()-4).getString("code");
+			String levelcode = obj.getJSONObject(obj.length()-2).getString("code");
 			if(levelcode.equals("1")){
 				sql.andGT("CERT_GRADE_CODE", level);
 				

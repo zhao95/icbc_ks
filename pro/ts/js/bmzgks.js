@@ -123,7 +123,7 @@ function xminfoshow(){
        			if(divtext1==null||divtext1.length==0){//append内容之前判断是否有内容
    				if(FLAG){
    					if(xlcode==STATION_NO_CODE){
-   						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此考试,请撤销再提交或请选择其它考试</div>');
+   						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此类考试,请撤销再提交或请选择其它考试</div>');
    						$("#"+yzjg).append("验证不通过");
    					}else{
    						$("#"+a).append('已报名此考试,请撤销再报名');
@@ -501,9 +501,9 @@ function xminfoshow(){
 		 var ressultids = FireFly.doAct("TS_BMLB_BM","getYibmids",paramb)
 		 var ids = ressultids.ids;
 		 if(resultFlag.flag=="false"){
-		 extWhere="AND KSLBK_ID IN ("+ids+") AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)AND KSLBK_CODE !='023001'";
+		 extWhere="AND KSLBK_ID IN ("+ids+") AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)";
 		 }else{
-		 extWhere="AND KSLBK_ID IN ("+ids+") AND KSLBK_CODE!='"+STATION_TYPE_CODE+"'AND KSLBK_CODE !='023001'";
+		 extWhere="AND KSLBK_ID IN ("+ids+") AND KSLBK_CODE!='"+STATION_TYPE_CODE+"'";
 		 }
 		 var setting={data
 	             :FireFly.getDict('TS_XMGL_BM_KSLBK','KSLBK_PID',extWhere),
@@ -520,10 +520,8 @@ function xminfoshow(){
 	        			}
 	        	}
 	        	if(valid){
-	        		if(item['NAME']=="初级"||item['NAME']=="高级"||item['NAME']=="中级"){
 	        			checked.push(itemjson);
 	        			showFzgList(obj);
-	        		}
 	        	}
 	         },
 	         /*onnodeclick :function (item) {
@@ -964,7 +962,7 @@ function xminfoshow(){
 	       			
 	       			if(divtext1==null||divtext1.length==0){//append内容之前判断是否有内容
 					if(xlcode==STATION_NO_CODE){
-						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此考试,请取消再提交或请选择其它考试</div>');
+						$("#"+a).append('<div class="btn" name="existedbm" type="button" style="color:red;backgroundcolor:lightseagreen">已报名此类考试,请取消再提交或请选择其它考试</div>');
 						$("#"+yzjg).append("验证不通过");
 					}else{
 						$("#"+a).append('已报名此考试,请撤销再报名');

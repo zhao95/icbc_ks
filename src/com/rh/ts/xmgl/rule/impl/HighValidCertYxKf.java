@@ -30,14 +30,14 @@ public class HighValidCertYxKf implements IRule {
 		try {
 			obj = new JSONArray(jsonStr);
 			
-			JSONObject jsonObject = obj.getJSONObject(obj.length()-1);
+			/*JSONObject jsonObject = obj.getJSONObject(obj.length()-1);*/
 			
-			String endDate = jsonObject.getString("val"); //有效期时间
-			
+		/*	String endDate = jsonObject.getString("val"); //有效期时间
+*/			
 			SqlBean sql = new SqlBean();
 			
 			String codes = "";
-			for(int i=0;i<obj.length()-4;i++){
+			for(int i=0;i<obj.length()-2;i++){
 				if(i==0){
 					codes+=obj.getJSONObject(i).getString("code");
 				}else{
@@ -48,7 +48,7 @@ public class HighValidCertYxKf implements IRule {
 			sql.andIn("STATION_TYPE", codes.split(","));// 类别编号
 			sql.and("STU_PERSON_ID", user);// 人员编码
 			//符号变量  1 大于 2 小于  3 = 4大于等于  5小于等于 
-			String fuhao =obj.getJSONObject(obj.length()-2).getString("code");
+			/*String fuhao =obj.getJSONObject(obj.length()-2).getString("code");
 			if(fuhao.equals("1")){
 				sql.andGT("END_DATE", endDate);// 终止有效期 >= endDate
 			}else if(fuhao.equals("2")){
@@ -60,10 +60,10 @@ public class HighValidCertYxKf implements IRule {
 			}else if(fuhao.equals("4")){
 				//小于等于
 				sql.andLTE("END_DATE", endDate);// 终止有效期 >= endDate
-			}
+			}*/
 			
-			String fuhao2 =obj.getJSONObject(obj.length()-4).getString("code");
-			String dengjicode = obj.getJSONObject(obj.length()-3).getString("code"); // 类别code
+			String fuhao2 =obj.getJSONObject(obj.length()-2).getString("code");
+			String dengjicode = obj.getJSONObject(obj.length()-1).getString("code"); // 类别code
 			if(fuhao2.equals("1")){
 				sql.andGT("CERT_GRADE_CODE", dengjicode);
 				// 证书等级编号
