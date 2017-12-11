@@ -28,17 +28,16 @@ function sel(event){
 		seltype = "multi" ;
 	}
 	
-	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'"+seltype+"','sId':'TS_ORG_DEPT','pvlg':'CODE_PATH'}";//single
+	var configStr = "TS_KCGL_GLJG_ODEPT,{'TYPE':'"+seltype+"'}";//single
 
 	var options = {
 			"config" :configStr,
-			"params" : {"USE_SERV_ID":"TS_ORG_DEPT"},
-			"rebackCodes":"DEPT_TYPE",
 			"parHandler":_viewer,
 			"formHandler":_viewer.form,
 			"replaceCallBack":function(idArray,nameArray) {//回调，idArray为选中记录的相应字段的数组集合
 				var codes = idArray;
 				var names = nameArray;
+				
 				$("#TS_KCGL_GLJG-JG_CODE__NAME").val(names);
 				$("#TS_KCGL_GLJG-JG_CODE").val(codes);
 				$("#TS_KCGL_GLJG-JG_NAME").val(names);
@@ -48,10 +47,10 @@ function sel(event){
 					$("#TS_KCGL_GLJG-JG_CODE__NAME").parent().removeAttr("validate_msg").removeClass("blankError").removeClass("errorbox");
 				}
 				
-				var code = idArray[0];
-				FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
-					_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
-				});
+//				var code = idArray[0];
+//				FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
+//					_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
+//				});
 			}
 	};
 	
@@ -88,7 +87,7 @@ _viewer.getBtn("save").unbind("click").bind("click", function(event) {
 			param.JG_FAR = jgFar;
 			
 			//机构类型 1部门 2机构
-			param.JG_TYPE = data.DEPT_TYPE;
+//			param.JG_TYPE = data.DEPT_TYPE;
 			
 			paramArray.push(param);
 			

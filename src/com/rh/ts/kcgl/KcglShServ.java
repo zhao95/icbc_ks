@@ -9,6 +9,7 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.core.util.var.Var;
 
 public class KcglShServ extends CommonServ {
 
@@ -28,16 +29,31 @@ public class KcglShServ extends CommonServ {
 	    paramBean.setQueryExtWhere(" and 1=2");
 	}else{
 	    String roleOrgLv = pvlgBean.getBean("upd").getStr("ROLE_ORG_LV");
+	    String roleDCode = pvlgBean.getBean("upd").getStr("ROLE_DCODE");
+	    
+	    StringBuilder sb1 = new StringBuilder(); 
+	    if(roleDCode != ""){
+		String roleDCodeStr = roleDCode.replace(",", "','");
+		sb1.append("KC_ODEPTCODE in('"+roleDCodeStr+"')");
+	    }
+	    
+	    StringBuilder sb2 = new StringBuilder();
 	    if(roleOrgLv.indexOf("2") != -1){
 		if(roleOrgLv.length() > 2){
-		    paramBean.setQueryExtWhere(" and (odept_level in (1," + roleOrgLv + ") or KC_STATE2 = 1)");
+		    sb2.append(" (odept_level in (1," + roleOrgLv + ") or KC_STATE2 = 1)");
 		}else{
-		    paramBean.setQueryExtWhere(" and (odept_level < 3 or KC_STATE2 = 1)");
+		    sb2.append(" (odept_level < 3 or KC_STATE2 = 1)");
 		}
 	    }else if(!roleOrgLv.isEmpty()){
-//		String odeptCodePath = userBean.getODeptCodePath();
-//		paramBean.setQueryExtWhere(" and odept_level in (" + roleOrgLv + ") and odept_path like '"+odeptCodePath+"%'");
-		paramBean.setQueryExtWhere(" and odept_level in (" + roleOrgLv + ")");
+		sb2.append("odept_level in (" + roleOrgLv + ")");
+	    }
+	    
+	    if (sb1.length() > 0 && sb2.length() > 0) {
+		paramBean.setQueryExtWhere(" and ("+sb1.toString()+") or ("+sb2.toString()+")");
+	    }else if(sb1.length() > 0 && sb2.length() == 0){
+		paramBean.setQueryExtWhere(" and "+sb1.toString());
+	    }else if(sb1.length() == 0 && sb2.length() > 0){
+		paramBean.setQueryExtWhere(" and "+sb2.toString());
 	    }else{
 		paramBean.setQueryExtWhere(" and 1=2");
 	    }
