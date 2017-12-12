@@ -346,14 +346,30 @@ public class ArrangeSeat {
 
 			if (priority == 1) { // 最少场次
 
-				freeZwSize = res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId).size();
+				Bean freeZw = res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId);
+
+				for (Object key : freeZw.keySet()) {
+
+					if (freeZw.get(key) instanceof Bean) {
+
+						freeZwSize++;
+					}
+				}
 
 			} else {
 
-				freeZwSize = res.getFreeKcZwBean().getBean(kcId).getBean(cc).getBean(date).size();
+				Bean freeZw = res.getFreeKcZwBean().getBean(kcId).getBean(cc).getBean(date);
+
+				for (Object key : freeZw.keySet()) {
+
+					if (freeZw.get(key) instanceof Bean) {
+
+						freeZwSize++;
+					}
+				}
 			}
 
-			if (busyZwSize < freeZwSize) { // 安排考生人数少于机器数一半
+			if (busyZwSize <= freeZwSize) { // 安排考生人数少于机器数一半
 
 				// 将当前考场的考生安排 从 已安排资源移除
 				res.getBusyZwBean().remove(kcKey);
@@ -536,9 +552,13 @@ public class ArrangeSeat {
 
 					res.getFreeCcZwBean().getBean(cc).getBean(date).getBean(kcId).remove(zwh);
 
+					log.debug("------------6-|移除空闲座位:" + date + "|" + cc + "|" + zwh + "|" + kcId);
+
 				} else { // 最少考场
 
 					res.getFreeKcZwBean().getBean(kcId).getBean(cc).getBean(date).remove(zwh);
+
+					log.debug("------------6-|移除空闲座位:" + date + "|" + cc + "|" + zwh + "|" + kcId);
 				}
 
 				Bean ks = res.getFreeKsBean().getBean(ksOdept);

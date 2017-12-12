@@ -162,6 +162,11 @@ public class KcapResource {
 	private void loadKs(String xmId, String odept) {
 
 		List<Bean> jkKsList = getKsList(xmId, odept, 2);
+		
+		for (Bean jkBean : jkKsList) {
+			
+			jkBean.set("S_ODEPT", jkBean.getStr("JK_ODEPT"));
+		}
 
 		jkKsBean = ksList2Bean(jkKsList, "S_ODEPT", "BM_KS_TIME", "BM_CODE");
 
