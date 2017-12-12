@@ -1245,7 +1245,7 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		finds.addAll(finds3);
 		for (Bean bean : finds) {
 			ParamBean param = new ParamBean();
-			param.set("xmid", bean.getId());
+			param.set("xmid", bean.getStr("XM_ID"));
 			OutBean out = ServMgr.act("TS_XMGL_BMGL", "getSHState", param);//审核状态数据
 			String state =out.getStr("state");
 		/*	OutBean act = ServMgr.act("TS_XMGL_BMGL","getShowLook", param);
