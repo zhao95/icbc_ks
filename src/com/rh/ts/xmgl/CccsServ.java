@@ -39,15 +39,13 @@ public class CccsServ extends CommonServ {
 			
 //			String where = getWhere(xmId);
 			//取关联机构的所有一级机构
-			String where = getWhereNew(xmId);
+//			String where = getWhereNew(xmId);
+			String where = getWhereNew2(xmId);
 			if (where.length() > 0) {
 			    paramBean.setQueryExtWhere(where);
 			}else{
 			    paramBean.setQueryExtWhere("and 1=2");
 			}
-//			sb.append(" AND DEPT_CODE in (SELECT JG_CODE FROM ").append(VIEW_GLJG);
-//			sb.append(" WHERE XM_ID = '").append(xmId).append("')");
-//			paramBean.setQueryExtWhere(sb.toString());
 		}
 	}
 	
@@ -238,7 +236,8 @@ public class CccsServ extends CommonServ {
 	
 	return outBean.setOk();
     }
-    
+
+/**    
     public String getWhere(String xmId) {
 	ParamBean param = new ParamBean();
 	param.set("_SELECT_", "JG_CODE,JG_TYPE");
@@ -273,9 +272,11 @@ public class CccsServ extends CommonServ {
 	return "";
     }
     
+*/    
     /**
      * 根据项目主键取得所有项目相关的一级机构
      */
+    /**
     public String getWhereNew(String xmId) {
 	ParamBean param = new ParamBean();
 	param.set("_SELECT_", "JG_CODE,JG_TYPE");
@@ -285,14 +286,15 @@ public class CccsServ extends CommonServ {
 	List<Bean> list2 = new ArrayList<Bean>();
 	for (int i = 0; i < list.size(); i++) {
 	    Bean bean = list.get(i);
-	    int type = bean.getInt("JG_TYPE");
-	    if(type == 1){
-		//部门
-		list1.add(bean);
-	    }else{
-		//机构
-		list2.add(bean);
-	    }
+//	    int type = bean.getInt("JG_TYPE");
+//	    if(type == 1){
+//		//部门
+//		list1.add(bean);
+//	    }else{
+//		//机构
+//		list2.add(bean);
+//	    }
+	    list1.add(bean);
 	}
 	
 	String odeptStr1 = getOneLevelOdept(list1);
@@ -310,6 +312,41 @@ public class CccsServ extends CommonServ {
 	}
 	return "";
     }
+    */
+    /**
+     * 根据项目主键,从考场所属机构 取得所有项目相关的一级机构
+     */
+    public String getWhereNew2(String xmId) {
+	ParamBean param = new ParamBean();
+	param.set("_SELECT_", "KC_ODEPTCODE,KC_ODEPTNAME,KC_LEVEL,xm_id");
+	param.set("_WHERE_", "and xm_id = '"+xmId+"'");
+	List<Bean> list = ServDao.finds("TS_XMGL_CCCS_UTIL_V", param);
+
+	Set<String> set = new  HashSet<String>();
+	StringBuilder sb = new StringBuilder();
+	for (int i = 0; i < list.size(); i++) {
+	    Bean bean = list.get(i);
+	    if(bean.getStr("KC_LEVEL").equals("一级")){
+		if(set.add(bean.getStr("KC_ODEPTCODE"))){
+		    sb.append(bean.getStr("KC_ODEPTCODE")+",");
+		}
+	    }else{
+		Bean deptBean = ServDao.find("SY_ORG_DEPT_ALL", bean.getStr("KC_ODEPTCODE"));
+		String codePath = deptBean.getStr("CODE_PATH");
+		String oneOdeptCode = codePath.split("\\^")[1];
+		if(set.add(oneOdeptCode)){
+		    sb.append(oneOdeptCode);
+		}
+	    }
+	}
+	
+	if(sb.length() > 0){
+	    String  odeptStr = sb.toString().replace(",", "','");
+	    String sqlWhere = " AND DEPT_CODE in ('" + odeptStr + "')";
+	    return sqlWhere;
+	}
+	return "";
+    }
     
     /**
      * 根据dept_code 取该部门一级机构的ODEPT_CODE
@@ -318,21 +355,24 @@ public class CccsServ extends CommonServ {
      */
     public String getOneLevelOdept(List<Bean> list) {
 	StringBuilder sb = new StringBuilder();
-	 Set<String> set = new  HashSet<String>(); 
+	Set<String> set = new  HashSet<String>(); 
 	for (int i = 0; i < list.size(); i++) {
 	    String odeptCode = list.get(i).getStr("JG_CODE");
 	    Bean bean = ServDao.find("SY_ORG_DEPT_ALL", odeptCode);
 	    String codePath = bean.getStr("CODE_PATH");
 	    //0010100000^0010100005^0010100317^0010100322^
 	    String[] codeArr = codePath.split("\\^");
-	    if(codeArr.length > 1 && set.add(codeArr[1])){
+	    if(codeArr.length == 1){
 		//特例：总行
-		List<Bean> list2 = ServDao.finds("SY_ORG_DEPT", "and dept_code = '"+codeArr[1]+"' and dept_code != odept_code");
-		if (list2.size() > 0) {
-		    sb.append(codeArr[0]+",");
-		}else{
-		    sb.append(codeArr[1]+",");
-		}
+		sb.append(codeArr[0]+",");
+	    }else if(codeArr.length > 1 && set.add(codeArr[1])){
+		sb.append(codeArr[1]+",");
+//		List<Bean> list2 = ServDao.finds("SY_ORG_DEPT", "and dept_code = '"+codeArr[1]+"' and dept_code != odept_code");
+//		if (list2.size() > 0) {
+//		    sb.append(codeArr[0]+",");
+//		}else{
+//		    sb.append(codeArr[1]+",");
+//		}
 	    }
 	}
 	return sb.toString();
@@ -354,226 +394,7 @@ public class CccsServ extends CommonServ {
 	}
 	return lhMap;
     }
-    
-    public List<Bean> getData(String xmId,List<Bean> list,String deptCode,String deptName,String cjVal, String sjVal){
-	if(cjVal.equals("1")){
-	    Bean bean = new Bean();
-	    bean.set("DEPT_NAME", deptName);
-	    String whereSql = "and xm_id = '"+ xmId + "' and KC_LEVEL = '一级' and KC_ODEPTCODE='"+ deptCode + "'";
-	    List<Bean> kcList = ServDao.finds("TS_XMGL_CCCS_UTIL_V", whereSql);
-	    int kcNum = kcList.size();
-	    bean.set("CC_KC_NUM", kcNum);
-	    if(kcNum > 0){
-		Bean result = getResult(xmId,kcList,cjVal,sjVal);
-		bean.set("CC_COMPUTER_GOODNUM", result.getInt("CC_COMPUTER_GOODNUM"));
-		bean.set("CC_COMPUTER_MAXNUM", result.getInt("CC_COMPUTER_MAXNUM"));
-		bean.set("CC_PEOPLE_NUM", result.getInt("CC_PEOPLE_NUM"));
-		bean.set("CC_GOOD_NUM", result.getInt("CC_GOOD_NUM"));
-		bean.set("CC_MAX_NUM", result.getInt("CC_MAX_NUM"));
-		bean.set("CC_GOOD_SYNUM", result.getInt("CC_GOOD_SYNUM"));
-		bean.set("CC_MAX_SYNUM", result.getInt("CC_MAX_SYNUM"));
-	    }else{
-		bean.set("CC_COMPUTER_GOODNUM", 0);
-		bean.set("CC_COMPUTER_MAXNUM", 0);
-		bean.set("CC_PEOPLE_NUM", 0);
-		bean.set("CC_GOOD_NUM", 0);
-		bean.set("CC_MAX_NUM", 0);
-		bean.set("CC_GOOD_SYNUM", 0);
-		bean.set("CC_MAX_SYNUM", 0);
-	    }
-	    list.add(bean);
-	}else{
-	    //考场数
-	    int kcNumSum = 0;
-	    //报考人数
-	    int peopleNumSum = 0;
-	    //最优计算机数
-	    int computerGoodNumSum = 0;
-	    //最优计算机剩余数
-	    int goodSyNumSum = 0;
-	    //最大计算机数
-	    int computerMaxNumSum = 0;
-	    //最大计算机剩余数
-	    int maxSyNumSum = 0;
-	    //最优计算机场次
-	    int CcGood = 0;
-	    //最大计算机场次
-	    int CcMax = 0;
-	    Bean bean = new Bean();
-	    bean.set("DEPT_NAME", deptName);
-	    //1级考场
-	    String sqlWhere = "and xm_id = '" + xmId+ "' and KC_LEVEL = '一级' and KC_ODEPTCODE='" + deptCode + "'";
-	    List<Bean> kcList = ServDao.finds("TS_XMGL_CCCS_UTIL_V", sqlWhere);
-	    Bean dept1Bean = new Bean();
-	    dept1Bean.set("DEPT_NAME", deptName);
-	    dept1Bean.set("CC_KC_NUM", kcList.size());
-	    if(kcList.size() > 0){
-		kcNumSum += kcList.size();
-		Bean result = getResult(xmId,kcList,cjVal,sjVal);
-		peopleNumSum += result.getInt("CC_PEOPLE_NUM");
-		computerGoodNumSum += result.getInt("CC_COMPUTER_GOODNUM");
-		goodSyNumSum += result.getInt("CC_GOOD_SYNUM");
-		computerMaxNumSum += result.getInt("CC_COMPUTER_MAXNUM");
-		maxSyNumSum += result.getInt("CC_MAX_SYNUM");
-		CcGood = result.getInt("CC_GOOD_NUM");
-		CcMax = result.getInt("CC_MAX_NUM");
-		
-		dept1Bean.set("CC_PEOPLE_NUM", result.getInt("CC_PEOPLE_NUM"));
-		dept1Bean.set("CC_COMPUTER_GOODNUM", result.getInt("CC_COMPUTER_GOODNUM"));
-		dept1Bean.set("CC_GOOD_NUM", result.getInt("CC_GOOD_SYNUM"));
-		dept1Bean.set("CC_GOOD_SYNUM", result.getInt("CC_GOOD_SYNUM"));
-		dept1Bean.set("CC_COMPUTER_MAXNUM", result.getInt("CC_MAX_SYNUM"));
-		dept1Bean.set("CC_MAX_NUM", result.getInt("CC_GOOD_NUM"));
-		dept1Bean.set("CC_MAX_SYNUM", result.getInt("CC_MAX_NUM"));
-	    }else{
-		dept1Bean.set("CC_PEOPLE_NUM", 0);
-		dept1Bean.set("CC_COMPUTER_GOODNUM", 0);
-		dept1Bean.set("CC_GOOD_NUM", 0);
-		dept1Bean.set("CC_GOOD_SYNUM", 0);
-		dept1Bean.set("CC_COMPUTER_MAXNUM", 0);
-		dept1Bean.set("CC_MAX_NUM", 0);
-		dept1Bean.set("CC_MAX_SYNUM", 0);
-	    }
-		
-	    //2级考场
-	    List<Bean> odept3Arr = ServDao.finds("TS_ORG_DEPT","AND DEPT_PCODE = '" + deptCode+ "'");
-	    ArrayList<Bean> dept2List = new ArrayList<Bean>();
-	    if(odept3Arr.size() > 0){
-		for(int i=0;i<odept3Arr.size();i++){
-		    Bean tmpBean = new Bean();
-		    String dept2Code = odept3Arr.get(i).getStr("DEPT_CODE");
-		    String dept2Name = odept3Arr.get(i).getStr("DEPT_NAME");
-		    tmpBean.set("DEPT_NAME", dept2Name);
-		    List<Bean> kcArrTemp = ServDao.finds("TS_XMGL_CCCS_UTIL_V", "and xm_id = '" + xmId+ "' and KC_LEVEL = '二级' and KC_ODEPTCODE='" + dept2Code + "'");
-		    tmpBean.set("CC_KC_NUM", kcArrTemp.size());
-		    if(kcArrTemp.size() > 0){
-			kcNumSum += kcArrTemp.size();
-			Bean result = getResult(xmId,kcArrTemp,cjVal,sjVal);
-			peopleNumSum += result.getInt("CC_PEOPLE_NUM");
-			computerGoodNumSum += result.getInt("CC_COMPUTER_GOODNUM");
-			goodSyNumSum += result.getInt("CC_GOOD_SYNUM");
-			computerMaxNumSum += result.getInt("CC_COMPUTER_MAXNUM");
-			maxSyNumSum += result.getInt("CC_MAX_SYNUM");
-			if(result.getInt("CC_GOOD_NUM") > CcGood){
-			    CcGood = result.getInt("CC_GOOD_NUM");
-			}
-			if(result.getInt("CC_MAX_NUM") > CcMax){
-			    CcMax = result.getInt("CC_MAX_NUM");
-			}
-			
-			tmpBean.set("CC_PEOPLE_NUM", result.getInt("CC_PEOPLE_NUM"));
-			tmpBean.set("CC_COMPUTER_GOODNUM", result.getInt("CC_COMPUTER_GOODNUM"));
-			tmpBean.set("CC_GOOD_NUM", result.getInt("CC_GOOD_NUM"));
-			tmpBean.set("CC_GOOD_SYNUM", result.getInt("CC_GOOD_SYNUM"));
-			tmpBean.set("CC_COMPUTER_MAXNUM", result.getInt("CC_COMPUTER_MAXNUM"));
-			tmpBean.set("CC_MAX_NUM", result.getInt("CC_MAX_NUM"));
-			tmpBean.set("CC_MAX_SYNUM", result.getInt("CC_MAX_SYNUM"));
-			dept2List.add(tmpBean);
-		    }
-		}
-	    }
-	    
-	    bean.set("CC_KC_NUM", kcNumSum);
-	    bean.set("CC_PEOPLE_NUM", peopleNumSum);
-	    bean.set("CC_COMPUTER_GOODNUM", computerGoodNumSum);
-	    bean.set("CC_GOOD_NUM", CcGood);
-	    bean.set("CC_GOOD_SYNUM", goodSyNumSum);
-	    bean.set("CC_COMPUTER_MAXNUM", computerMaxNumSum);
-	    bean.set("CC_MAX_NUM", CcMax);
-	    bean.set("CC_MAX_SYNUM", maxSyNumSum);
-	
-	    list.add(bean);
-	    if(dept2List.size() > 0){
-		list.add(dept1Bean);
-		    for (int i = 0; i < dept2List.size(); i++) {
-			list.add(dept2List.get(i));
-		    }
-	    }
-	}
-	return list;
-    }
-
-    private Bean getResult(String xmId,List<Bean> kcList, String cjVal, String sjVal) {
-	//返回结果
-	Bean res = new Bean();
-	int goodSumNum = 0;
-	int maxSumNum = 0;
-	String jgSum = "";
-	int goodCCNum = 0;
-	int maxCCNum = 0;
-	int goodSyNum = 0;
-	int maxSyNum = 0;
-	int peopleNum = 0;
-	for (int i = 0; i < kcList.size(); i++) {
-	    int goodNum = kcList.get(i).getInt("KC_GOOD");
-	    int maxNum = kcList.get(i).getInt("KC_MAX");
-	    goodSumNum += goodNum;
-	    maxSumNum += maxNum;
-	    //根据考场，得到机构的范围
-	    List<Bean> jgList = ServDao.finds("TS_KCGL_GLJG", "and KC_ID = '"+kcList.get(i).getStr("KC_ID")+"'");
-	    for(int j=0;j<jgList.size();j++){
-		jgSum = jgSum + "," + jgList.get(j).getStr("JG_CODE");
-	    }
-	}
-	if(!jgSum.equals("")){
-	    jgSum = jgSum.substring(1);
-	    jgSum = jgSum.replaceAll(",", "','");
-	}
-//	sjVal = sjVal.replaceAll(",", "','");
-	
-	List<Bean> kcTypesArr = ServDao.finds("TS_XMGL_CCCS_UTIL_TYPE_V","and xm_id = '"+xmId+"'");
-	for (int i = 0; i < kcTypesArr.size(); i++) {
-	    String tmpBmXlCode = kcTypesArr.get(i).getStr("BM_XL_CODE");
-	    String tmpBmMkCode = kcTypesArr.get(i).getStr("BM_MK_CODE");;
-	    String tmpBmType = kcTypesArr.get(i).getStr("BM_TYPE");;
-		String whereSql = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and S_ODEPT in ('"+jgSum+"') and BM_XL_CODE = '"
-			+tmpBmXlCode+"' and BM_MK_CODE = '"+tmpBmMkCode+"' and BM_TYPE = '"+tmpBmType+"'";
-		int tmpPoepleNum = ServDao.count("TS_XMGL_CCCS_KSGL", new ParamBean().setWhere(whereSql));
-		if (tmpPoepleNum != 0 && goodSumNum != 0 && maxSumNum !=0) { //最优场次数 
-			peopleNum += tmpPoepleNum;
-			maxSyNum += maxSumNum-tmpPoepleNum;
-			goodSyNum += goodSumNum-tmpPoepleNum;
-			goodCCNum += (int)Math.ceil((double)tmpPoepleNum/goodSumNum); //最大场次数 
-			maxCCNum += (int)Math.ceil((double)tmpPoepleNum/maxSumNum); //最优剩余机器数 
-		}
-	}
-	res.set("CC_PEOPLE_NUM", peopleNum);
-	res.set("CC_COMPUTER_GOODNUM", goodSumNum);
-	res.set("CC_COMPUTER_MAXNUM", maxSumNum);
-	res.set("CC_GOOD_NUM", goodCCNum);
-	res.set("CC_GOOD_SYNUM", goodSyNum);
-	res.set("CC_MAX_NUM", maxCCNum);
-	res.set("CC_MAX_SYNUM", maxSyNum);
-	
-	/**
-	int poepleNum = ServDao.count("TS_XMGL_CCCS_KSGL", new ParamBean().setWhere("and BM_KS_TIME in ('"+sjVal+"') and S_ODEPT in ('"+jgSum+"')"));
-	
-	res.set("CC_PEOPLE_NUM", poepleNum);
-	res.set("CC_COMPUTER_GOODNUM", goodSumNum);
-	res.set("CC_COMPUTER_MAXNUM", maxSumNum);
-	if (goodSumNum != 0 && maxSumNum != 0) {
-	    //最优场次数
-	    int goodCCNum = (int) Math.ceil((double)poepleNum/goodSumNum);
-	    //最大场次数
-	    int maxCCNum = (int) Math.ceil((double)poepleNum/maxSumNum);
-	    //最优剩余机器数
-	    int goodSyNum = goodCCNum * goodSumNum - poepleNum;
-	    //最大剩余机器数
-	    int maxSyNum = maxCCNum * maxSumNum - poepleNum;
-	    res.set("CC_GOOD_NUM", goodCCNum);
-	    res.set("CC_GOOD_SYNUM", goodSyNum);
-	    res.set("CC_MAX_NUM", maxCCNum);
-	    res.set("CC_MAX_SYNUM", maxSyNum);
-	}else{
-	    res.set("CC_GOOD_NUM", 0);
-	    res.set("CC_GOOD_SYNUM", 0);
-	    res.set("CC_MAX_NUM", 0);
-	    res.set("CC_MAX_SYNUM", 0);
-	}
-	**/
-	return res;
-    }
-    
+        
     /**
      * 根据考场Id 数组 取得影响的部门
      * @param paramBean
@@ -586,12 +407,36 @@ public class CccsServ extends CommonServ {
 	StringBuilder sb = new StringBuilder();
 	for (int i = 0; i < kcIdArr.length; i++) {
 	    if (kcIdArr[i].length() > 0) {
-		sb.append(getOdeptStr(kcIdArr[i]));
+//		sb.append(getOdeptStr(kcIdArr[i]));
+		sb.append(getPathStr(kcIdArr[i]));
 	    }
 	}
 	
-	outBean.set("odeptCodes", sb.toString());
+//	outBean.set("odeptCodes", sb.toString());
+	outBean.set("paths", sb.toString());
 	return outBean;
+    }
+    
+    /**
+     * 根据考场Id 取得关联机构的CodePth
+     * @param kcId
+     * @return
+     */
+    public String getPathStr(String kcId){
+	ParamBean param = new ParamBean();
+	param.set("_SELECT_", "JG_CODE,JG_TYPE,CODE_PATH");
+	param.set("_WHERE_", "and kc_id = '"+kcId+"'");
+	List<Bean> list = ServDao.finds(VIEW_GLJG, param);
+	StringBuilder sb = new StringBuilder();
+	Set<String> set = new  HashSet<String>(); 
+	for (int i = 0; i < list.size(); i++) {
+	    Bean tmpBean = list.get(i);
+	    String tmpPath = tmpBean.getStr("CODE_PATH");
+	    if(set.add(tmpPath)){
+		sb.append(tmpPath+",");
+	    }
+	}
+	return sb.toString();
     }
     
     public String getOdeptStr(String kcId){
@@ -599,23 +444,7 @@ public class CccsServ extends CommonServ {
 	param.set("_SELECT_", "JG_CODE,JG_TYPE");
 	param.set("_WHERE_", "and kc_id = '"+kcId+"'");
 	List<Bean> list = ServDao.finds(VIEW_GLJG, param);
-	List<Bean> list1 = new ArrayList<Bean>();
-	List<Bean> list2 = new ArrayList<Bean>();
-	for (int i = 0; i < list.size(); i++) {
-	    Bean bean = list.get(i);
-	    int type = bean.getInt("JG_TYPE");
-	    if(type == 1){
-		//部门
-		list1.add(bean);
-	    }else{
-		//机构
-		list2.add(bean);
-	    }
-	}
-	
-	String odeptStr1 = getOneLevelOdept(list1);
-	String odeptStr2 = getOneLevelOdept(list2);
-	String odeptStr = odeptStr1 + odeptStr2;
+	String odeptStr = getTwoAllOdept(list);
 	return odeptStr;
     }
     
@@ -697,11 +526,11 @@ public class CccsServ extends CommonServ {
 	    String codePath = bean.getStr("CODE_PATH");
 	    Bean whereBean = new Bean();
 	    whereBean.set("_SELECT_", "DEPT_CODE,ODEPT_CODE");
-	    whereBean.set("_WHERE_", "and DEPT_CODE = ODEPT_CODE and CODE_PATH like '" + codePath +"%'");
+	    whereBean.set("_WHERE_", "and DEPT_TYPE=2 and CODE_PATH like '" + codePath +"%'");
 	    List<Bean> tmpList = ServDao.finds("SY_ORG_DEPT_ALL", whereBean);
 	    for (int j = 0; j < tmpList.size(); j++) {
 		String tmpOdeptCode = tmpList.get(j).getStr("ODEPT_CODE");
-		if (!tmpOdeptCode.isEmpty() && set.add(odeptCode)) {
+		if (!tmpOdeptCode.isEmpty() && set.add(tmpOdeptCode)) {
 		    sb.append(tmpOdeptCode + ",");
 		}
 	    }

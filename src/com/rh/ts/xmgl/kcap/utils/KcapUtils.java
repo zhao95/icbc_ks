@@ -14,7 +14,6 @@ import com.rh.core.base.Bean;
 import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.util.Strings;
 import com.rh.ts.xmgl.kcap.KcapResource;
-import com.rh.ts.xmgl.kcap.arrange.KcapMatch;
 
 public class KcapUtils {
 
@@ -309,13 +308,13 @@ public class KcapUtils {
 
 		if (ksBean == null || ksBean.isEmpty()) {
 
-			log.error(msg + "|0");
+			log.debug(msg + "|0");
 
 		} else {
 
 			for (Object time : ksBean.keySet()) {
 
-				log.error(msg + "|time:" + time.toString() + "|" + ksBean.getBean(time).size());
+				log.debug(msg + "|time:" + time.toString() + "|" + ksBean.getBean(time).size());
 			}
 		}
 	}

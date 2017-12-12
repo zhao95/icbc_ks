@@ -227,6 +227,12 @@
             }
         });
 
+        $('a[id="ayishen"]').on('shown.bs.tab', function (e) {
+            setQjLookFlagTo1(qjList);
+//            e.target; // newly activated tab
+//            e.relatedTarget;// previous active tab
+        });
+
         var currentUserCode = System.getUser("USER_CODE");
 
         /*可申请的请假列表*/
@@ -238,6 +244,8 @@
         //没有可请假的考试，我要请假 置灰
         if (userCanLeaveList._DATA_.length <= 0) {
             $('#wyqj').attr('disabled', 'disabled');
+        } else if (userCanLeaveList._DATA_.length !== 0) {
+            $('#keshen').html('可申请的请假(' + userCanLeaveList._DATA_.length + ')');
         }
         for (var i = 0; i < userCanLeaveList._DATA_.length; i++) {
             var userCanLeave = userCanLeaveList._DATA_[i];
@@ -267,8 +275,10 @@
         setAppliedLeaveList();
     });
 
+    var qjList = [];
+
     /**
-     * 已申请的请假
+     * 获取已申请的请假列表
      **/
     function setAppliedLeaveList() {
         var currentUserCode = System.getUser("USER_CODE");
@@ -279,7 +289,11 @@
         //获取已申请的请假数据
         var data = {_SELECT_: '*', _extWhere: "and USER_CODE='" + currentUserCode + "'", _NOPAGE_: true};
         var qjListBean = FireFly.doAct('TS_QJLB_QJ', 'getAppliedLeaveList', data);
-        var qjList = qjListBean._DATA_;
+        if (qjListBean.FLAG_COUNT !== '0') {
+            $('#yishen').html('已申请的请假(' + qjListBean.FLAG_COUNT + ')');
+        }
+
+        qjList = qjListBean._DATA_;
         for (var i = 0; i < qjList.length; i++) {
             var qj = qjList[i];
             var qjId = qj.QJ_ID;
@@ -299,7 +313,7 @@
             }
 
             var $tr = jQuery([
-                '<tr style="height: 50px">',
+                '<tr style="height: 50px;' + (qj.LOOK_FLAG === '0' ? 'color:red;' : '') + '">',
                 '	<td class="rhGrid-td-hide">',
                 '	    ' + qjId,
                 '	</td>',
@@ -344,6 +358,24 @@
 
             $tr.append($td);
             table1Tbody2.append($tr);
+        }
+    }
+
+    /**
+     * set qj LOOK_FLAG 0 to 1
+     * @params qjList
+     **/
+    function setQjLookFlagTo1(qjList) {
+        for (var i = 0; i < qjList.length; i++) {
+            var qj = qjList[i];
+            if (qj.LOOK_FLAG === '0') {
+                var qjBean = {
+                    QJ_ID: qj.QJ_ID,
+                    _PK_: qj.QJ_ID,
+                    LOOK_FLAG: "1"
+                };
+                FireFly.doAct("TS_QJLB_QJ", "save", qjBean, false, false);
+            }
         }
     }
 

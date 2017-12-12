@@ -52,7 +52,7 @@ public class ArrangeSeat {
 
 		if (ksConstrain == 1) { // 强制安排
 
-			log.error("|||||||||||||||||||||||||||||||||--强制安排--||||||||||||||||||||||||||||||||||");
+			log.debug("|||||||||||||||||||||||||||||||||--强制安排--||||||||||||||||||||||||||||||||||");
 
 			try {
 				// Transaction.begin();
@@ -77,8 +77,8 @@ public class ArrangeSeat {
 
 		// 考生人数少于机器数一半时，考生左右间隔不低于1个座位，前后不低于1个
 		if (res.getRuleBean().containsKey(KcapRuleEnum.R006.getCode())) {
-			
-			log.error("|||||||||||||||||||||||||||||||||--人数少于机器数一半时--||||||||||||||||||||||||||||||||||");
+
+			log.debug("|||||||||||||||||||||||||||||||||--人数少于机器数一半时--||||||||||||||||||||||||||||||||||");
 
 			arrangeR006(res);
 		}
@@ -155,8 +155,8 @@ public class ArrangeSeat {
 
 							Bean odeptKs = res.getGljgKs(kcId);
 
-							log.error("------begin-安排考位-|" + date + "|" + sjCC + "|"
-									+ freeZw.getStr("ZW_ZWH_XT") + "|" + kcId + "|"+ kcName);
+							log.debug("------begin-安排考位-|" + date + "|" + sjCC + "|" + freeZw.getStr("ZW_ZWH_XT") + "|"
+									+ kcId + "|" + kcName);
 
 							KcapUtils.showInfo(odeptKs, "------------1-|机构下总报考人数-报名考生人数|", this.getClass());
 
@@ -182,7 +182,7 @@ public class ArrangeSeat {
 
 								if (oneKs != null && !oneKs.isEmpty()) {
 
-									log.error("------------4-|成功找到安排考生-:" + oneKs.toString());
+									log.debug("------------4-|成功找到安排考生-:" + oneKs.toString());
 
 									saveRes(freeZw, oneKs, odeptKs, res);
 								}
@@ -267,8 +267,8 @@ public class ArrangeSeat {
 
 							Bean odeptKs = res.getGljgKs(kcId);
 
-							log.error("------begin-安排考位-|" + date + "|" + sjCC + "|"
-									+ freeZw.getStr("ZW_ZWH_XT") + "|" + kcId + "|"+ kcName);
+							log.debug("------begin-安排考位-|" + date + "|" + sjCC + "|" + freeZw.getStr("ZW_ZWH_XT") + "|"
+									+ kcId + "|" + kcName);
 
 							KcapUtils.showInfo(odeptKs, "------------1-|机构下总报考人数-报名考生人数|", this.getClass());
 
@@ -295,7 +295,7 @@ public class ArrangeSeat {
 
 								if (oneKs != null && !oneKs.isEmpty()) {
 
-									log.error("------------4-|成功找到安排考生-:" + oneKs.toString());
+									log.debug("------------4-|成功找到安排考生-:" + oneKs.toString());
 
 									saveRes(freeZw, oneKs, odeptKs, res);
 								}
@@ -357,8 +357,8 @@ public class ArrangeSeat {
 
 				// 将当前考场的考生安排 从 已安排资源移除
 				res.getBusyZwBean().remove(kcKey);
-				
-				log.error("------------00-|待重置考生|"+busyZwKc.size());
+
+				log.debug("------------00-|待重置考生|" + busyZwKc.size());
 
 				for (Object zwhKey : busyZwKc.keySet()) { // 遍历座位安排信息
 
@@ -403,7 +403,7 @@ public class ArrangeSeat {
 						resetFiltKs.set(time, temp);
 					}
 				} // busyZwKc.keySet()
-				
+
 				KcapUtils.showInfo(resetFiltKs, "------------01-|已重置考生|", this.getClass());
 
 				try {
@@ -445,11 +445,11 @@ public class ArrangeSeat {
 							resetZw.set("SJ_ID", sjId);
 
 							resetZw.set("CC_ID", ccId);
-							
+
 							Bean resetFiltBean = (Bean) resetFiltKs.clone();
-							
-							log.error("------begin-安排考位-|" + date + "|" + cc + "|"
-									+ resetZw.getStr("ZW_ZWH_XT") + "|" + kcId + "|");
+
+							log.debug("------begin-安排考位-|" + date + "|" + cc + "|" + resetZw.getStr("ZW_ZWH_XT") + "|"
+									+ kcId + "|");
 
 							KcapUtils.showInfo(resetFiltBean, "------------1-|机构下总报考人数-报名考生人数|", this.getClass());
 
@@ -462,8 +462,8 @@ public class ArrangeSeat {
 								try {
 
 									if (resetOneKs != null && !resetOneKs.isEmpty()) {
-										
-										log.error("------------4-|成功找到安排考生-:" + resetOneKs.toString());
+
+										log.debug("------------4-|成功找到安排考生-:" + resetOneKs.toString());
 										// 保存更新 考场、考生的信息
 										saveRes(resetZw, resetOneKs, resetFiltKs, res);
 									}
@@ -529,7 +529,7 @@ public class ArrangeSeat {
 
 			if (!Strings.isBlank(addZw.getId())) {
 
-				log.error("------------5-|成功安排座位：time:" + ksTime + "|odept:" + uCode);
+				log.debug("------------5-|成功安排座位：time:" + ksTime + "|odept:" + uCode);
 
 				// 移除考场资源
 				if (priority == 1) { // 最少场次
@@ -541,37 +541,12 @@ public class ArrangeSeat {
 					res.getFreeKcZwBean().getBean(kcId).getBean(cc).getBean(date).remove(zwh);
 				}
 
-				// for (Object key :
-				// res.getFreeKsBean().getBean(ksOdept).keySet()) {
-				//
-				// log.error(" 删除前--res.getFreeKsBean()： " + key.toString() +
-				// "="
-				// + res.getFreeKsBean().getBean(ksOdept).getBean(key).size());
-				// }
 				Bean ks = res.getFreeKsBean().getBean(ksOdept);
 				// 移除考生资源
-				removeKs(ks.getBean(ksTime), uCode, shId, false);
-
-				// for (Object key :
-				// res.getFreeKsBean().getBean(ksOdept).keySet()) {
-				//
-				// log.error(" 删除后--res.getFreeKsBean()： " + key.toString() +
-				// "="
-				// + res.getFreeKsBean().getBean(ksOdept).getBean(key).size());
-				// }
-
-				// for (Object key : odeptKs.keySet()) {
-				// log.error(" 删除前--odeptKs： " + key.toString() + "=" +
-				// odeptKs.getBean(key).size());
-				// }
+				removeKs(ks.getBean(ksTime), uCode, shId);
 
 				// 从过滤考生(odeptKs)中移除
-				removeKs(odeptKs.getBean(ksTime), uCode, shId, false);
-
-				// for (Object key : odeptKs.keySet()) {
-				// log.error(" 删除后--odeptKs： " + key.toString() + "=" +
-				// odeptKs.getBean(key).size());
-				// }
+				removeKs(odeptKs.getBean(ksTime), uCode, shId);
 
 				Bean busyKc = res.getBusyZwBean().getBean(kcId + "^" + cc + "^" + date);
 
@@ -710,16 +685,13 @@ public class ArrangeSeat {
 	 * @param shId
 	 *            考生审核ID
 	 */
-	private void removeKs(Bean ksBean, String uCode, String shId, boolean showlog) {
+	private void removeKs(Bean ksBean, String uCode, String shId) {
 
 		Object ksObj = ksBean.get(uCode);
 
 		if (ksObj instanceof Bean) {
 
-			if (showlog) {
-
-				log.error("最终删除考生List--uCode:" + uCode + "--shId:" + ksBean.getBean(uCode).getStr("SH_ID"));
-			}
+			log.debug("最终删除考生List--uCode:" + uCode + "--shId:" + ksBean.getBean(uCode).getStr("SH_ID"));
 
 			ksBean.remove(uCode);
 
@@ -737,26 +709,21 @@ public class ArrangeSeat {
 				}
 			}
 
-			if (showlog) {
-				log.error("最终删除考生List--uCode:" + uCode + "--shId:" + shId);
-			}
+			log.debug("最终删除考生List--uCode:" + uCode + "--shId:" + shId);
 
 			ksBean.remove(uCode);
 
 			if (tempList.size() == 1) { // 当前考生还有一个考试
-				if (showlog) {
-					Bean t = tempList.get(0);
+				Bean t = tempList.get(0);
 
-					log.error("最终保留考生List--uCode:" + uCode + "--shId:" + t.getStr("SH_ID"));
-				}
+				log.debug("最终保留考生List--uCode:" + uCode + "--shId:" + t.getStr("SH_ID"));
 
 				ksBean.set(uCode, tempList.get(0)); // 放入未安排考生资源
 
 			} else if (tempList.size() > 1) { // 当前考生还有多个考试
-				if (showlog) {
-					for (Bean t : tempList) {
-						log.error("最终保留考生List--uCode:" + uCode + "--shId:" + t.getStr("SH_ID"));
-					}
+
+				for (Bean t : tempList) {
+					log.debug("最终保留考生List--uCode:" + uCode + "--shId:" + t.getStr("SH_ID"));
 				}
 
 				ksBean.set(uCode, tempList); // 放入未安排考生资源

@@ -292,10 +292,6 @@ public class KcapMatch {
 
 						if (xl.equals(xlCode) && mk.equals(mKCode) && lv.equals(lvCode)) {
 
-							// log.error("-----------------移除Bean--用户:" +
-							// ks.getStr("BM_CODE") + "-序列：" + xlCode + " 模块："
-							// + mKCode + " 级别：" + lvCode);
-							// log.error("-----------------移除Bean---ok bean 1");
 							filtBean.getBean(time).remove(ucode);
 						}
 
@@ -307,9 +303,6 @@ public class KcapMatch {
 
 						List<Bean> tempkslist = new ArrayList<Bean>();
 
-						// log.error("-----------------开始处理List--共:" +
-						// kslist.size() + " 人");
-
 						for (Bean ks : kslist) {
 
 							String xlCode = ks.getStr("BM_XL_CODE");
@@ -320,18 +313,10 @@ public class KcapMatch {
 
 							if (xl.equals(xlCode) && mk.equals(mKCode) && lv.equals(lvCode)) {
 
-								// log.error("-----------------移除List--考生:" +
-								// ks.getStr("BM_CODE") + "-序列：" + xlCode
-								// + " 模块：" + mKCode + " 级别：" + lvCode);
-
 								isdel = true;
 
 							} else {
 
-								// log.error("-----------------保留List--考生:" +
-								// ks.getStr("BM_CODE") + "-序列：" + xlCode + "
-								// 模块："
-								// + mKCode + " 级别：" + lvCode);
 								tempkslist.add(ks);
 							}
 						}
@@ -348,9 +333,6 @@ public class KcapMatch {
 
 								filtBean.getBean(time).set(ucode, tempkslist);
 							}
-
-							// log.error("-----------------结束处理List--保留：" +
-							// tempkslist.size());
 
 						} else {
 							// log.error("-----------------结束处理List--未处理");
@@ -534,11 +516,6 @@ public class KcapMatch {
 
 		Bean cloneBean = (Bean) filtBean.clone();
 
-		// for (Object timeKey : cloneBean.keySet()) {
-		// log.error("---------前farKs--time:" + timeKey + "|filtBean.size():" +
-		// cloneBean.getBean(timeKey).size());
-		// }
-
 		String kcId = freeZw.getStr("KC_ID"); // 考场id
 
 		Bean farKsBean = farBean.getBean(kcId); // 当前考场 距离远的考生
@@ -555,11 +532,6 @@ public class KcapMatch {
 				}
 			}
 		}
-
-		// for (Object timeKey : filtBean.keySet()) {
-		// log.error("---------后farKs--time:" + timeKey + "|filtBean.size():" +
-		// filtBean.getBean(timeKey).size());
-		// }
 
 		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R003-end:", KcapMatch.class);
 
@@ -625,8 +597,6 @@ public class KcapMatch {
 
 				if (!Strings.isBlank(odept)) {
 
-					// log.error("----------------------left-odept:" + odept);
-
 					filtBean = filtR005Ks(filtBean, odept);
 				}
 			}
@@ -644,12 +614,6 @@ public class KcapMatch {
 					filtBean = filtR005Ks(filtBean, odept);
 				}
 			}
-
-			// for (Object time : filtBean.keySet()) {
-			//
-			// log.error("---------------------filtBean-time:" + time + "|" +
-			// filtBean.getBean(time).toString());
-			// }
 
 		} catch (Exception e) {
 
@@ -691,9 +655,6 @@ public class KcapMatch {
 						if (odept.equals(ks.getStr("S_ODEPT"))) {
 
 							filtBean.getBean(time).remove(user);
-
-							// log.error("-----------deleteBean-user:" +
-							// user.toString() + "|" + ks.getStr("BM_NAME");
 						}
 
 					} else if (val instanceof List) { // 当前考生报考多个考试
@@ -705,10 +666,6 @@ public class KcapMatch {
 							if (odept.equals(ks.getStr("S_ODEPT"))) {
 
 								filtBean.getBean(time).remove(user);
-
-								// log.error("-----------deleteList-user:" +
-								// user.toString() + "|" +
-								// ks.getStr("BM_NAME"));
 
 								break;
 							}
