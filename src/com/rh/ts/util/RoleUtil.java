@@ -1,6 +1,7 @@
 package com.rh.ts.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.rh.core.base.Bean;
@@ -72,6 +73,16 @@ public class RoleUtil {
 						String orgsLv = getOrgsByLv(userCode, optPvlg.getStr("ROLE_ORG_LV"));
 						// 关联部门和机构层级合并
 						String orgs = Strings.mergeStr(orgsLv, optPvlg.getStr("ROLE_DCODE"));
+						
+						if (!Strings.isBlank(orgs) && !orgs.equals("0")) {
+							
+							String[] orgsArgs = orgs.split(",");
+							
+							Arrays.sort(orgsArgs);
+							
+							orgs = Strings.toString(orgsArgs);
+							
+						}
 
 						optPvlg.set("ROLE_DCODE", orgs);
 
