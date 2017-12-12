@@ -10,7 +10,7 @@
 <%@page import="com.rh.core.base.Context" %>
 <%
 	request.setCharacterEncoding("UTF-8");
-	String legalDirs = Context.getSyConf("CC_DOWNLOAD_LEGAL_DIRS", "/opt");
+	String legalDirs = Context.getSyConf("CC_DOWNLOAD_LEGAL_DIRS", "/");
 	String[] legalDirArray = legalDirs.split(",");
 	String fileDir = request.getParameter("dir");
 	File dir = null;
