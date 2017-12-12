@@ -47,10 +47,10 @@ function sel(event){
 					$("#TS_KCGL_GLJG-JG_CODE__NAME").parent().removeAttr("validate_msg").removeClass("blankError").removeClass("errorbox");
 				}
 				
-//				var code = idArray[0];
-//				FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
-//					_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
-//				});
+				var code = idArray[0];
+				FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
+					_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
+				});
 			}
 	};
 	
@@ -86,8 +86,8 @@ _viewer.getBtn("save").unbind("click").bind("click", function(event) {
 			
 			param.JG_FAR = jgFar;
 			
-			//机构类型 1部门 2机构
-//			param.JG_TYPE = data.DEPT_TYPE;
+//			机构类型 1部门 2机构
+			param.JG_TYPE = data.DEPT_TYPE;
 			
 			paramArray.push(param);
 			

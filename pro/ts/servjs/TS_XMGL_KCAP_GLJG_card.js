@@ -33,10 +33,10 @@ function sel(event){
 				$("#TS_XMGL_KCAP_GLJG-JG_CODE").val(codes);
 				$("#TS_XMGL_KCAP_GLJG-JG_NAME").val(names);
 				
-//				var code = idArray[0];
-//				FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
-//					_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
-//				});
+				var code = idArray[0];
+				FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
+					_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
+				});
 				
 			}
 	};
@@ -83,7 +83,7 @@ _viewer.getBtn("save").unbind("click").bind("click", function(event) {
 			param.CC_ID = ccId
 			
 			//机构类型 1部门 2机构
-//			param.JG_TYPE = data.DEPT_TYPE;
+			param.JG_TYPE = data.DEPT_TYPE;
 			
 			paramArray.push(param);
 			
