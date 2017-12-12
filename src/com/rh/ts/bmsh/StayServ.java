@@ -23,7 +23,6 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
-import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.ts.util.RoleUtil;
@@ -38,9 +37,26 @@ public class StayServ extends CommonServ {
 	 * @return
 	 */
 	public Bean getUncheckList(Bean paramBean) {
-		String usercode = Context.getUserBean().getCode();
-		//查询当前审核人的流程 绑定的审核机构
 		String xmid= paramBean.getStr("xmid");
+		String usercode = Context.getUserBean().getCode();
+		/*String nowlevel = paramBean.getStr("nowlevel");  //nowlevel 
+		//审核level状态 和当前人的level进行比对    1.逐级  当前层级 相等的人可见 2.越级 当前层及及以上可见
+		//查询当前审核人的流程 绑定的审核机构
+		//查找判断逐级越级 条件
+		String sqltype ="SELECT a.WFS_TYPE FROM TS_WFS_APPLY a LEFT JOIN TS_XMGL_BMSH b ON a.wfs_id = b.wfs_id where b.xm_id='"+xmid+"'";
+		List<Bean> wfslist = Transaction.getExecutor().query(sqltype);
+		String wfstype = ""; // 流程类型 1.逐级  2.越级
+		if(wfslist!=null&&wfslist.size()!=0){
+			wfstype = wfslist.get(0).getStr("WFS_TYPE");
+		}
+		String appendwhere ="";
+		if("1".equals(wfstype)){
+			appendwhere="  SH_LEVEL = '"+nowlevel+"'";
+		}else{
+			//越级   可以审核 状态 数字小 及审核层级低的人
+			appendwhere="  SH_LEVEL >= '"+nowlevel+"'";
+		}*/
+		
 		Bean _PAGE_ = new Bean();
 		Bean outBean = new Bean();
 		String servId = "TS_BMSH_STAY";
@@ -109,8 +125,6 @@ public class StayServ extends CommonServ {
 		if (yushu != 0) {
 			yeshu += 1;
 		}
-
-		
 		_PAGE_.set("ALLNUM", ALLNUM);
 		_PAGE_.set("NOWPAGE", NOWPAGE);
 		_PAGE_.set("PAGES", yeshu);
@@ -130,7 +144,7 @@ public class StayServ extends CommonServ {
 	public Bean getAllData(Bean paramBean) {
 		OutBean out = new OutBean();
 		UserBean user = Context.getUserBean();
-		String user_code = user.getStr("USER_CODE");
+		String user_code = user.getStr("USER_CODE"); 
 		String xmid = paramBean.getStr("xmid");
 		//根据项目id找到流程下的所有节点
 		String belongwhere = "AND XM_ID='"+xmid+"'";
@@ -1406,7 +1420,7 @@ public class StayServ extends CommonServ {
 		List<Bean> SHlist = new ArrayList<Bean>();
 		for (Bean bean : list) {
 			// 根据报名id找到审核数据的状态
-			String id = bean.getId();
+			String id = bean.getStr("XM_ID");
 			// 根据项目id找到流程下的所有节点
 			String belongwhere = "AND XM_ID='" + id + "'";
 			List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);

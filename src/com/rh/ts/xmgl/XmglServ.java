@@ -1090,7 +1090,7 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		List<Bean> SHlist = new ArrayList<Bean>();
 		for (Bean bean : list) {
 			// 根据报名id找到审核数据的状态
-			String id = bean.getId();
+			String id = bean.getStr("XM_ID");
 			ParamBean paramb = new ParamBean();
 			paramb.set("xmid", id);
 			OutBean out = ServMgr.act("TS_XMGL_BMGL", "getSHState", paramb);//审核状态数据
