@@ -526,8 +526,11 @@ function xminfoshow(){
 	        			}
 	        	}
 	        	if(valid){
+	        		if(item.hasOwnProperty("CHILD")){
+	        		}else{
 	        			checked.push(itemjson);
 	        			showFzgList(obj);
+	        		}
 	        	}
 	         },
 	         /*onnodeclick :function (item) {
