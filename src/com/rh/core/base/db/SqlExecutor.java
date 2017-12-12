@@ -1088,7 +1088,7 @@ public abstract class SqlExecutor {
     	boolean filterFlag = Context.getSyConf("SY_SQL_FILTER_INSERT", true);
     	if (filterFlag && sql.startsWith("insert")) {
     		// 过滤掉insert输出
-    		log.info(sql);
+//    		log.info(sql);
     	} else {
     		log.info(sql);
     	}
