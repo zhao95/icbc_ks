@@ -133,52 +133,12 @@ function  jk(pk,xmglId){
 
 //试卷
 function sj(pk,xmglId){
+	var height = jQuery(window).height()-80;
 	var width = jQuery(window).width()-200;
-	var height = jQuery(window).height()-100;
-	var conf={};
-	//var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_BMGL","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,40]};
-	FireFly.doAct("TS_XMGL","finds",{"_WHERE_":" and XM_ID='"+xmglId+"'"},true,false,function(data){
-		var datas = data._DATA_[0].XM_TYPE;
-		if(datas=="资格类考试"){
-    //创建弹出框
-//    var popPrompt = new rh.ui.popPrompt({title:'项目设置试卷'});
-//    popPrompt._layout(event, [100,50], [width,height]);
-//    var dialogObj = jQuery("#" + popPrompt.dialogId);
-//    jQuery(".ui-dialog-buttonpane button",dialogObj.parent()).css("display","none");//去掉确定关闭按钮
-	//getServListDialog(event,"sj_manager","考试试卷",width,height,[100,50]);
-	getServListDialog(event,"sj_manager","考试试卷",width,height,[100,50]);		
-    const ext =  "and XM_ID= '"+xmglId+"'";
-      var params={XM_ID:xmglId,XM_SZ_ID:pk};
-       var conf = {
-			"sId":"TS_XMGL_ZGSJ",
-		    "pCon":jQuery("#sj_manager"),
-//	        "resetHeiWid":_viewer._resetHeiWid,
-	        "parHandler":_viewer,
-//	        "showSearchFlag":"true",
-//	        "showTitleBarFlag":"false",
-//	        "listSonTabFlag":false,
-//	        "readOnly":"false",
-	        "params":params,
-	        "linkWhere":ext
-	    };
-       var listView = new rh.vi.listView(conf);
-       listView.show();
-  
-		}else if(datas=="其他类考试"){
-			getServListDialog(event,"sj_manager","考试试卷",width,height,[100,50]);
-			const ext =  "and XM_ID= '"+xmglId+"'";
-			var params={XM_ID:xmglId,XM_SZ_ID:pk};
-			var conf = {
-					"sId":"TS_XMGL_FZGSJ",
-				    "pCon":jQuery("#sj_manager"),
-			        "parHandler":_viewer,
-			        "params":params,
-			        "linkWhere":ext
-			    };
-		    var listView = new rh.vi.listView(conf);
-		    listView.show();
-		}
-});	 
+	var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_SJES","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100]};
+	temp[UIConst.PK_KEY] = pk;//修改时，必填
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
 	}
 	
 
