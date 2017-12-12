@@ -41,7 +41,9 @@ function run(type){
 			if (scVal != "" && scVal != null) {
 				$("#TS_XMGL_CCCS_V .rhGrid").find("tr").each(function(index, item) {
 					if (index != 0) {
+						
 						var dataId = item.id;
+						var deptName = $(item).find("td[icode='DEPT_NAME']").html();
 						if(dataId == "") return;
 						if (cjVal == "1") {
 							var param = {};
@@ -62,7 +64,7 @@ function run(type){
 								var tmpBean = {};
 								tmpBean["DEPT_CODE"] = dataId;
 								tmpBean["DEPT_NAME"] = deptName;
-								tmpBean["CC_KC_NUM"] = kcArrTemp.length;
+								tmpBean["CC_KC_NUM"] = kcNum;//kcArrTemp.length;
 								tmpBean["CC_PEOPLE_NUM"] = result.CC_PEOPLE_NUM;
 								tmpBean["CC_COMPUTER_GOODNUM"] = result.CC_COMPUTER_GOODNUM;
 								tmpBean["CC_GOOD_NUM"] = result.CC_GOOD_NUM;
@@ -82,8 +84,8 @@ function run(type){
 								$(item).find("td[icode='CC_MAX_SYNUM']").html("0");
 								
 								var tmpBean = {};
-								tmpBean["DEPT_CODE"] = 0;
-								tmpBean["DEPT_NAME"] = 0;
+								tmpBean["DEPT_CODE"] = dataId;
+								tmpBean["DEPT_NAME"] = deptName;
 								tmpBean["CC_KC_NUM"] = 0;
 								tmpBean["CC_PEOPLE_NUM"] = 0;
 								tmpBean["CC_COMPUTER_GOODNUM"] = 0;
