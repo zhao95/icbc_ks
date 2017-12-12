@@ -298,12 +298,14 @@ function getResult(kcArr){
 	}
 	
 	var jgSum = "";
+	var paths = "";
 	FireFly.doAct("TS_XMGL_CCCS_V","getOdetpScope", {"kcIds":kcIds},true,false,function(data){
-		jgSum = data.odeptCodes;
-		if(jgSum != ""){
-			jgSum = jgSum.substring(0,jgSum.length-1);
-			jgSum = jgSum.replace(/,/g, "','");
-		}
+//		jgSum = data.odeptCodes;
+//		if(jgSum != ""){
+//			jgSum = jgSum.substring(0,jgSum.length-1);
+//			jgSum = jgSum.replace(/,/g, "','");
+//		}
+		paths = data.paths;
 	});	
 	var kcTypesArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_TYPE_V","finds",{"_WHERE_":"and xm_id = '"+xmId+"'"},true,false)._DATA_;
 	for(var i = 0; i < kcTypesArr.length; i++){
@@ -311,9 +313,26 @@ function getResult(kcArr){
 		var tmpBmMkCode = kcTypesArr[i].BM_MK_CODE;
 		var tmpBmType = kcTypesArr[i].BM_TYPE;
 		var param = {};
-		param["_WHERE_"] = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and ODEPT_CODE_V in ('"+jgSum+"') and BM_XL_CODE = '"
-			+tmpBmXlCode+"' and BM_MK_CODE = '"+tmpBmMkCode+"' and BM_TYPE = '"+tmpBmType+"'";
-		var tmpPoepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", param)._DATA_;
+//		param["_WHERE_"] = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and ODEPT_CODE_V in ('"+jgSum+"') and BM_XL_CODE = '"
+//			+tmpBmXlCode+"' and BM_MK_CODE = '"+tmpBmMkCode+"' and BM_TYPE = '"+tmpBmType+"'";
+//		var tmpPoepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", param)._DATA_;
+		
+		param["_WHERE_"] = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and BM_XL_CODE = '"
+		+tmpBmXlCode+"' and BM_MK_CODE = '"+tmpBmMkCode+"' and BM_TYPE = '"+tmpBmType+"'";
+		var tmpPoepleNum = 0;
+		var ksList = FireFly.doAct("TS_XMGL_CCCS_KSGL","finds", param)._DATA_;
+		for(var j=0;j<ksList.length;j++){
+			var codePth = ksList[j].CODE_PATH;
+			var pathArr = paths.split(",");
+			for(var k=0;k<pathArr.length;k++){
+				if(pathArr[k] == "")continue;
+				if(codePth.indexOf(pathArr[k]) != -1){
+					tmpPoepleNum++;
+					break;
+				}
+			}
+		}
+		
 		peopleNum += tmpPoepleNum-0;
 		if (tmpPoepleNum != 0 && goodSumNum != 0 && maxSumNum !=0) { //最优场次数 
 //			maxSyNum += maxSumNum-tmpPoepleNum-0;
@@ -389,7 +408,6 @@ function getResult2(kcArr){
 	res["CC_GOOD_SYNUM"] = goodCCNum * goodSumNum - peopleNum; 
 	res["CC_MAX_NUM"] = maxCCNum;
 	res["CC_MAX_SYNUM"] = maxCCNum * maxSumNum - peopleNum; 
-
 	return res;
 }
 // 导出
@@ -398,85 +416,3 @@ _viewer.getBtn("expExcel").unbind("click").bind("click",function(event) {
 	window.open(FireFly.getContextPath() + '/TS_XMGL_CCCS_V.expExcel.do?data=' + 
     		encodeURIComponent(jQuery.toJSON({"xmId":xmId})));
 });
-
-
-function getExplorer() { 
-    if (window.navigator.userAgent.indexOf("MSIE") >= 0) {
-        return 1;
-    } else if (window.navigator.userAgent.indexOf("Firefox") >= 0) {
-        return 0;
-    } else if (window.navigator.userAgent.indexOf("Chrome") >= 0) {
-        return 0;
-    } else if (window.navigator.userAgent.indexOf("Opera") >= 0) {
-        return 0;
-    } else if (window.navigator.userAgent.indexOf("Safari") >= 0) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
-
-function tabletoExcel(tableid) {//整个表格拷贝到EXCEL中
-    if(getExplorer()=='ie')
-    {
-        var curTbl = document.getElementById(tableid);
-        var oXL = new ActiveXObject("Excel.Application");
-
-        //创建AX对象excel 
-        var oWB = oXL.Workbooks.Add();
-        //获取workbook对象 
-        var xlsheet = oWB.Worksheets(1);
-        //激活当前sheet 
-        var sel = document.body.createTextRange();
-        sel.moveToElementText(curTbl);
-        //把表格中的内容移到TextRange中 
-        sel.select();
-        //全选TextRange中内容 
-        sel.execCommand("Copy");
-        //复制TextRange中内容  
-        xlsheet.Paste();
-        //粘贴到活动的EXCEL中       
-        oXL.Visible = true;
-        //设置excel可见属性
-
-        try {
-            var fname = oXL.Application.GetSaveAsFilename("Excel.xls", "Excel Spreadsheets (*.xls), *.xls");
-        } catch (e) {
-            print("Nested catch caught " + e);
-        } finally {
-            oWB.SaveAs(fname);
-
-            oWB.Close(savechanges = false);
-            //xls.visible = false;
-            oXL.Quit();
-            oXL = null;
-            //结束excel进程，退出完成
-            //window.setInterval("Cleanup();",1);
-            idTmr = window.setInterval("Cleanup();", 1);
-
-        }
-
-    }
-    else
-    {
-        tableToExcel(tableid);
-    }
-}
-function Cleanup() {
-    window.clearInterval(idTmr);
-    CollectGarbage();
-}
-
-var tableToExcel = (function() {
-    var uri = 'data:application/vnd.ms-excel;base64,',
-    template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
-    base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) },
-    format = function(s, c) {
-        return s.replace(/{(\w+)}/g,
-        function(m, p) { return c[p]; }) }
-            return function(table, name) {
-                if (!table.nodeType) table = document.getElementById(table)
-                var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
-                window.location.href = uri + base64(format(template, ctx))
-              }
-})();
