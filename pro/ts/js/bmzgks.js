@@ -175,13 +175,19 @@ function xminfoshow(){
        					if(j==0){
        						$("#"+a).append('<div style="height:5px;"></div>');
        					}
+       					
        					if(dataArray[j].VLIDATE=="true"){
-                            $("#"+a).append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'&nbsp;&nbsp<span style="padding:2px 9px" class="btn btn-success" name="'+divid+'" onclick="showinfo(this)">详细</span></div><div style="display:none" id="'+divid+'">'+sss+'</div>');
-                           
-						}
-       					if(dataArray[j].VLIDATE=="false"){
+       						if(dataArray[j].NAME=="证书规则"){
+       							$("#"+a).append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'&nbsp;&nbsp<span style="padding:2px 9px" class="btn btn-success" name="'+divid+'" onclick="showinfo(this)">详细</span></div><div style="display:none" id="'+divid+'">'+sss+'</div>');
+       						}else{
+       						 $("#"+a).append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'&nbsp;&nbsp</div>');
+       						}
+						}else if(dataArray[j].VLIDATE=="false"){
+							if(dataArray[j].NAME=="证书规则"){
 								$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'&nbsp;&nbsp<span style="padding:2px 9px" class="btn btn-success" name="'+divid+'" onclick="showinfo(this)">详细</span></div><div style="display:none" id="'+divid+'">'+sss+'</div>');
-								
+							}else{
+								 $("#"+a).append('<div><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'&nbsp;&nbsp</div>');
+							}
 						}
 						
 						shti=dataArray[j].TISHI;
