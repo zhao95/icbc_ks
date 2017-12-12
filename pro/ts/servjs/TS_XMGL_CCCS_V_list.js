@@ -150,9 +150,6 @@ function run(type){
 							// 2级考场
 							var param2 = {};
 							param2["_SELECT_"] = "DEPT_CODE,DEPT_NAME";
-//							param2["DEPT_PCODE"] = dataId;
-//							param2["DEPT_TYPE"] = "2";
-//							param2["S_FLAG"] = "1";
 							param2["_WHERE_"] = "and (DEPT_PCODE = '"+dataId+"' or dept_code = '"+dataId+"') and DEPT_TYPE=2 and s_flag = 1";
 							var odept3Arr = FireFly.doAct("TS_ORG_DEPT","finds", param2)._DATA_;
 							//二级机构数据
