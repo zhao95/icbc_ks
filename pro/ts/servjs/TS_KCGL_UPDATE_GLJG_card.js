@@ -28,10 +28,10 @@ if($("#TS_KCGL_UPDATE_GLJG-JG_CODE__NAME").hasClass("disabled") == false) {
 					$("#TS_KCGL_UPDATE_GLJG-JG_CODE__NAME").val(names);
 					$("#TS_KCGL_UPDATE_GLJG-JG_CODE").val(codes);
 					$("#TS_KCGL_UPDATE_GLJG-JG_NAME").val(names);
-//					var code = idArray[0];
-//					FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
-//						_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
-//					});
+					var code = idArray[0];
+					FireFly.doAct("SY_ORG_DEPT_ALL","byid",{"_PK_":code},true,false,function(data){
+						_viewer.getItem("JG_TYPE").setValue(data.DEPT_TYPE);
+					});
 					console.log($("#TS_KCGL_UPDATE_GLJG-JG_CODE").val());
 					console.log($("#TS_KCGL_UPDATE_GLJG-JG_NAME").val());
 				}
