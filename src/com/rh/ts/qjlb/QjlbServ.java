@@ -56,9 +56,11 @@ public class QjlbServ extends CommonServ {
 //                }
 //            }
 //        }
+        String currentUserCode = Context.getUserBean().getCode();
+        String lookCountSql = "select count(*) as COUNT from TS_QJLB_QJ where LOOK_FLAG ='0' and USER_CODE ='" + currentUserCode + "'";
+        int lookCount = Transaction.getExecutor().queryOne(lookCountSql).getInt("COUNT");//, page.getNowPage(), page.getShowNum(), null, null
 
         //有审批记录说明已审批 撤回标识为false
-        String currentUserCode = Context.getUserBean().getCode();
         String sql = "select a.*,(case when exists(select '' from ts_comm_mind b where b.DATA_ID=QJ_ID) then 'false' else 'true' end) as canRetract from TS_QJLB_QJ a where a.USER_CODE ='" + currentUserCode + "' order by a.QJ_DATE";
         List<Bean> dataList = Transaction.getExecutor().query(sql);//, page.getNowPage(), page.getShowNum(), null, null
 
@@ -88,6 +90,7 @@ public class QjlbServ extends CommonServ {
 //            outBean.setCount(dataList.size());
 //        }
         outBean.setData(dataList);
+        outBean.set("FLAG_COUNT", lookCount);
 //        outBean.setPage(page);
         return outBean;
     }
@@ -359,8 +362,8 @@ public class QjlbServ extends CommonServ {
         String qjId = qjbean.getStr("QJ_ID");
         qjbean.set("QJ_STATUS", qj_status);
         ServDao.update(TSQJ_SERVID, qjbean);
-        try {
-            if ("2".equals(qj_status) || "3".equals(qj_status)) {
+        if ("2".equals(qj_status) || "3".equals(qj_status)) {
+            try {
                 //流程结束 发送消息
                 //TS_QJ_RESULT_TIP 请假结果提醒语
                 String qjResultMsg = ConfMgr.getConf("TS_QJ_RESULT_TIP", "您的请假申请，有了审批结果，可登录工商银行考试查看。");
@@ -373,10 +376,13 @@ public class QjlbServ extends CommonServ {
                 qjResultTipBean.set("USER_CODE", qjbean.getStr("USER_CODE"));
                 qjResultTipBean.set("tipMsg", qjResultMsg);
                 new KSSendTipMessageServ().sendTipMessageBeanForICBC(qjResultTipBean, "qjResult");
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("请假结果提醒失败，" + "QJ_ID:" + qjId + ",USER_CODE:" + qjbean.getStr("USER_CODE"));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("请假结果提醒失败，" + "QJ_ID:" + qjId + ",USER_CODE:" + qjbean.getStr("USER_CODE"));
+            //修改借考记录状态为未读
+            qjbean.set("LOOK_FLAG", "0");
+            ServDao.update(TSQJ_SERVID, qjbean);
         }
 
         if ("2".equals(qj_status)) {
@@ -412,7 +418,7 @@ public class QjlbServ extends CommonServ {
             //如果在提交场次安排前，请假成功删除考位安排
             String[] split = shIdStr.toString().split(",");
             String xmKcapPublishTime = xmBean.getStr("XM_KCAP_PUBLISH_TIME");//项目场次发布时间
-            if(StringUtils.isBlank(xmKcapPublishTime)){
+            if (StringUtils.isBlank(xmKcapPublishTime)) {
                 //项目场次未发布
                 for (String s : split) {
                     List<Object> values = new ArrayList<Object>();

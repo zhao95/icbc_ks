@@ -376,7 +376,7 @@
             var jk = jkList[i];
             if (jk.LOOK_FLAG === '0') {
                 var jkBean = {
-                    XM_ID: jk.JK_ID,
+                    JK_ID: jk.JK_ID,
                     _PK_: jk.JK_ID,
                     LOOK_FLAG: "1"
                 };
