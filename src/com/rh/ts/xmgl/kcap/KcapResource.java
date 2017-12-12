@@ -124,7 +124,7 @@ public class KcapResource {
 		// 加载其他资源
 		loadOther();
 
-		showResLog();
+//		showResLog();
 	}
 
 	public KcapResource(String xmId, String odept) {
@@ -150,7 +150,7 @@ public class KcapResource {
 		// 加载其他资源
 		loadOther();
 
-		showResLog();
+//		showResLog();
 	}
 
 	/**
@@ -1498,9 +1498,9 @@ public class KcapResource {
 
 	public void showResLog() {
 
-		log.error(">>>>>>>>>>>>>>>>>kcBean>>>>>>>>>>" + this.getKcBean().toString());
+		log.debug(">>>>>>>>>>>>>>>>>kcBean>>>>>>>>>>" + this.getKcBean().toString());
 
-		log.error(">>>>>>>>>>>>>>>>>freeKsBean>>>>>>>>>>" + this.getFreeKsBean().toString());
+		log.debug(">>>>>>>>>>>>>>>>>freeKsBean>>>>>>>>>>" + this.getFreeKsBean().toString());
 
 		if (this.getFreeKsBean() != null) {
 
@@ -1512,12 +1512,12 @@ public class KcapResource {
 
 					Bean timeb = jg.getBean(time);
 
-					log.error("------------------freeKsBean-----" + o + "--------" + time + "------" + timeb.size());
+					log.debug("------------------freeKsBean-----" + o + "--------" + time + "------" + timeb.size());
 				}
 			}
 		}
 
-		log.error(">>>>>>>>>>>>>>>>JkKsBean>>>>>>>>>" + this.getJkKsBean().toString());
+		log.debug(">>>>>>>>>>>>>>>>JkKsBean>>>>>>>>>" + this.getJkKsBean().toString());
 
 		// if (this.getJkKsBean() != null) {
 		//
