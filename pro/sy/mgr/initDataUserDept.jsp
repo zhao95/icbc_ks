@@ -1,5 +1,4 @@
 <%@page import="com.rh.core.icbc.imp.KSNImpDataServ"%>
-<%@page import="com.rh.core.icbc.basedata.serv.KSNImpDataServ"%>
 <%@page import="com.rh.core.util.threadpool.RhThreadTask"%>
 <%@page import="com.rh.core.util.threadpool.RhThreadPool"%>
 <%@page import="com.rh.core.serv.ParamBean"%>
