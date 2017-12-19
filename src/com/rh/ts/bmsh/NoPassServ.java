@@ -92,6 +92,7 @@ public class NoPassServ extends CommonServ {
 					sql3+=" or c.code_path like concat('"+query1.get(i).getId()+"','%')";
 				}
 			}
+			sql3+=" and SH_LEVEL !=0 ";
 			ALLNUM = Transaction.getExecutor().count(sql3);
 			 if(jieshu>ALLNUM){
 				 showpage=ALLNUM-chushi;
@@ -291,7 +292,7 @@ public class NoPassServ extends CommonServ {
 				if (level == 1) {
 					// 不用再去待审核中直接去 审核通过中 且数据无改动
 				} else {
-					if("1".equals(flag)){
+					if("1".equals(flag)){   //越级审核流程不用再去待审核中
 						Bean newBean1 = new Bean();
 						newBean1.copyFrom(bean);
 						newBean1.set("SH_OTHER", allman);

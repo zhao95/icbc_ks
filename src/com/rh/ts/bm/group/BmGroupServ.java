@@ -4,7 +4,9 @@ import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
 import com.rh.core.comm.FileMgr;
+import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
@@ -12,10 +14,12 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
+
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -111,7 +115,6 @@ public class BmGroupServ extends CommonServ {
 
             String code = userBean.getStr("USER_CODE"),
                     name = userBean.getStr("USER_NAME");
-
             if (codeList.contains(code)) {
                 //已包含 continue ：避免重复添加数据
                 continue;
@@ -132,6 +135,19 @@ public class BmGroupServ extends CommonServ {
                     bean.set("GW_XL", syHrmZdstaffposition.getStr("STATION_NO"));
                 }
                 bean.set("USER_DEPT_NAME", name);
+                //保存一二级机构
+                String dept_code = UserMgr.getUser(codeStr).getDeptBean().getCode();//部门编码
+                String[] deptarr = OrgMgr.getDept(dept_code).getCodePath().split("\\^");//五级机构
+                for (int i =0;i< deptarr.length; i++) {
+        			// 最后一个 deptcodename
+        			if(i==0){
+        				String evname = OrgMgr.getDept(deptarr[i]).getName();
+        				bean.set("FIR_LEVEL", evname);
+        			}else if(i==1){
+        				String evname = OrgMgr.getDept(deptarr[i]).getName();
+        				bean.set("SEN_LEVEL", evname);
+        			}
+        		}
                 beans.add(bean);
                 codeList.add(code);
             }

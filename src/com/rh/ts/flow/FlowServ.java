@@ -316,11 +316,13 @@ public class FlowServ extends CommonServ {
 						if(string.equals("0010100000")){
 							s+=bean.getStr("SHR_USERCODE")+",";
 							node_name = bean2.getStr("NODE_NAME");
+							getStep = bean2.getInt("NODE_STEPS");
 							break;
 						}
 						if(string.equals(userBean.getStr("DEPT_CODE"))){
 							s+=bean.getStr("SHR_USERCODE")+",";
 							node_name = bean2.getStr("NODE_NAME");
+							getStep = bean2.getInt("NODE_STEPS");
 							break;
 						}
 						List<DeptBean> childDepts = OrgMgr.getChildDepts(bean2.getStr("S_CMPY"), string);
@@ -328,6 +330,7 @@ public class FlowServ extends CommonServ {
 							if(deptBean.getCode().equals(userBean.getStr("DEPT_CODE"))){
 								s+=bean.getStr("SHR_USERCODE")+",";
 								node_name = bean2.getStr("NODE_NAME");
+								getStep = bean2.getInt("NODE_STEPS");
 							}
 						}
 					}
@@ -363,11 +366,13 @@ public class FlowServ extends CommonServ {
 						if(string.equals("0010100000")){
 							s+=bean.getStr("SHR_USERCODE")+",";
 							node_name = bean2.getStr("NODE_NAME");
+							getStep = bean2.getInt("NODE_STEPS");
 							break;
 						}
 						if(string.equals(userBean.getStr("DEPT_CODE"))){
 							s+=bean.getStr("SHR_USERCODE")+",";
 							node_name = bean2.getStr("NODE_NAME");
+							getStep = bean2.getInt("NODE_STEPS");
 							break;
 						}
 						List<DeptBean> childDepts = OrgMgr.getChildDepts(bean2.getStr("S_CMPY"), string);
@@ -375,13 +380,14 @@ public class FlowServ extends CommonServ {
 							if(deptBean.getCode().equals(userBean.getStr("DEPT_CODE"))){
 								s+=bean.getStr("SHR_USERCODE")+",";
 								node_name = bean2.getStr("NODE_NAME");
+								getStep = bean2.getInt("NODE_STEPS");
 							}
 						}
 					}
 				}
 		}
 			outBean.set("resultlist", newlist);
-			outBean.set("SH_LEVEL",getStep-1);
+			outBean.set("SH_LEVEL",getStep);
 			outBean.set("NODE_NAME", node_name);
 		outBean.set("result", s);
 	    }

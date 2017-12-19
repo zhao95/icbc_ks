@@ -152,7 +152,7 @@ $('#akeshen').click(function () {
     document.getElementById("yishenimage").src = "/ts/image/u984.png";
     document.getElementById("yishen").style.color = "black";
     $("#table tbody").html("");
-    ksqxm();
+    new listPages().gotoPage(1);
     var table = document.getElementById("table");
     rowscolor(table);
 });
@@ -170,7 +170,7 @@ $('#ayishen').click(function () {
 });
 //加载完毕  显示第一个 tab active  显示隐藏
 $(function () {
-
+	new listPages().gotoPage(1);
 	$('#myTab li:eq(1) a').tab('show');
 	selectcreate();
     if(bmbq==1){
@@ -178,7 +178,6 @@ $(function () {
     }else{
     	    var table = document.getElementById("table");
     	    //对每一行 进行  渲染 颜色
-    	    ksqxm();
     }
 });
 //---------------------下拉框生成
@@ -445,39 +444,6 @@ function tijiaoyiyi() {
     new listPage().gotoPage(page);
 }
 
-//报名项目列表调用(初始化后展示)
-function ksqxm() {
-    var param = {};
-    param["user_code"] = user_code;
-    var result = FireFly.doAct("TS_XMGL", "getUserXm", param);
-    var pageEntity = result.list;
-    for (var i = 0; i < pageEntity.length; i++) {
-        var name = pageEntity[i].XM_NAME;
-        //项目中已存在array的  title  数据  将展示在  已报名信息中
-        var id = pageEntity[i].XM_ID;
-        var dept = pageEntity[i].XM_FQDW_NAME;
-        var type = pageEntity[i].XM_TYPE;
-        var state = "未开始";
-        var display = "none";
-
-        //获取报名时间判断  报名状态
-       /* var param1 = {};
-        param1["xmid"] = id;
-        var result1 = FireFly.doAct("TS_XMGL_BMGL", "getBMState", param1);
-        var pageEntity1 = result1.list;*/
-        var startTime = pageEntity[i].START_TIME_BM;
-        var endTime = pageEntity[i].END_TIME_BM;
-        var state = pageEntity[i].STATE_BM;
-        if (state == "待报名") {
-            display = "block";
-        }
-        //append数据
-        var j = i + 1;
-        $("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">' + j + '</td><td class="rhGrid-td-hide" id="BM_TYPE' + i + '" >' + type + '</td><td class="rhGrid-td-hide" id="BM_ID' + i + '" >' + id + '</td><td class="rhGrid-td-left " id="BM_NAME' + i + '" style="text-align: left">' + name + '</td><td class="rhGrid-td-left " id="BM_ODEPT__NAME">' + dept + '</td><td class="rhGrid-td-left " id="S_ATIME">' + endTime + '</td><td  id="BM_STATE__NAME" style="text-align: left">' + state + '</td><td id="BM_OPTIONS"><button class="btn btn-success" type="button" onclick="tiaozhuan(' + i + ')" style="margin-left:30px;display:' + display + ';color:white;font-size:15px;background-color:LightSeaGreen;height:35px;width:70px">报名</button></td></tr>');
-    }
-    var table = document.getElementById("table");
-    rowscolor(table);
-}
 //审核明细
 function formsubmit(obj) {
     var bmid = document.getElementById("baomingid" + obj).innerHTML;
@@ -872,7 +838,7 @@ listPage.prototype.bldTable = function (listData) {
 listPage.prototype.bldPage = function () {
     this._buildPageFlag = true;
     var _self = this;
-    this._page = jQuery(".rhGrid-page");
+    this._page = jQuery("#xmfenyediv2");
     this._page.html('');
     //判断是否构建分页
     if (this._buildPageFlag === "false" || this._buildPageFlag === false) {

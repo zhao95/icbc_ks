@@ -90,6 +90,7 @@ public class PassServ extends CommonServ {
 					sql3+=" or c.code_path like concat('"+query1.get(i).getId()+"','%')";
 				}
 			}
+			sql3+=" and SH_LEVEL !=0 ";
 			ALLNUM = Transaction.getExecutor().count(sql3);
 			 if(jieshu>ALLNUM){
 				 showpage=ALLNUM-chushi;
@@ -489,6 +490,7 @@ public class PassServ extends CommonServ {
 								sql3+=" or c.code_path like concat('"+query1.get(i).getId()+"','%')";
 							}
 						}
+						sql3+=" and SH_LEVEL !=0 ";
 						dataList = Transaction.getExecutor().query(sql3);
 					}else{
 				return new OutBean().setError("空");
@@ -839,26 +841,18 @@ public class PassServ extends CommonServ {
 		OutBean out = new OutBean();
 		String user_code = paramBean.getStr("user_code");
 		UserBean userBean = UserMgr.getUser(user_code);
-		String ss = userBean.getODeptName() + ",";
 		// 获取当前机构;
-		DeptBean oneodeptcode1 = userBean.getODeptBean();
-		String codes = "";
-		if (oneodeptcode1 != null) {
-			// 获取所有逗号分隔的字符串
-			codes = getusercodes(oneodeptcode1, ss);
-		}
-		if("".equals(codes)){
-			codes=ss;
-		}
-		String[] codesarr = codes.split(",");
+		DeptBean oneodeptcode1 = userBean.getDeptBean();
+		String codePath = oneodeptcode1.getCodePath();
+		String[] codepatharr = codePath.split("\\^");
 		
-		for (int i =0;i< codesarr.length; i++) {
+		for (int i =0;i< codepatharr.length; i++) {
 			// 最后一个 deptcodename
 			if(i==0){
-				String evname = codesarr[i];
+				String evname = OrgMgr.getDept(codepatharr[i]).getName();
 				out.set("LEVEL0", evname);
 			}else if(i==1){
-				String evname = codesarr[i];
+				String evname = OrgMgr.getDept(codepatharr[i]).getName();
 				out.set("LEVEL1", evname);
 			}
 		}

@@ -703,6 +703,10 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 	 * @throws ParseException
 	 */
 	public Bean getUserXm(Bean paramBean) throws ParseException {
+		String xmname = paramBean.getStr("xmname");
+		Bean _PAGE_ = new Bean();
+		String NOWPAGE = paramBean.getStr("nowpage");
+		String SHOWNUM = paramBean.getStr("shownum");
 		Bean outBean = new Bean();
 		UserBean userBean = Context.getUserBean();
 		String odeptcode = "";
@@ -790,10 +794,10 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 			}
 		}*/
 
-		String sql1="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,50";
-		String sql2="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,50";
-		String sql3="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='' or c.xm_sz_type='未开启' ))d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,50";
-		String sql4 = "select m.*,n.g_id from (select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END AND ('"+datestr+"'>b.BM_END OR '"+datestr+"'<b.BM_START) order by b.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,50";
+		String sql1="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END and a.xm_name like '%"+xmname+"%' order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,50";
+		String sql2="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END and a.xm_name like '%"+xmname+"%' order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,50";
+		String sql3="select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='' or c.xm_sz_type='未开启' ))d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END and a.xm_name like '%"+xmname+"%' order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,50";
+		String sql4 = "select m.*,n.g_id from (select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END AND ('"+datestr+"'>b.BM_END OR '"+datestr+"'<b.BM_START) and a.xm_name like '%"+xmname+"%' order by b.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,50";
 		/*String sql1 = "select * from ts_xmgl where xm_id in(SELECT XM_ID FROM TS_XMGL_BMGL WHERE '"+datestr+"' BETWEEN BM_TZ_START AND BM_TZ_END order by BM_END ASC)";*/
 		List<Bean> list = Transaction.getExecutor().query(sql1);
 		List<Bean> list2 = Transaction.getExecutor().query(sql2);
@@ -802,6 +806,10 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		list.addAll(list2);
 		list.addAll(list3);
 		list.addAll(list4);
+		
+		
+		
+		/*String pxsql = "select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id)d  on a.xm_id = d.xm_id order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id limit 0,50";*/
 
 
 		/*String s = "";
@@ -843,7 +851,41 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 				kjxm.add(xmarray[a]);
 			}*/
 		}
+		
+		int ALLNUM = lastlist.size();
+		// 计算页数
+		int meiye = Integer.parseInt(SHOWNUM);
+		int yeshu = ALLNUM / meiye;
+		int yushu = ALLNUM % meiye;
+		// 获取总页数
+		if (yushu != 0) {
+			yeshu += 1;
+		}
 
+		int nowpage = Integer.parseInt(NOWPAGE);
+		int showpage = Integer.parseInt(SHOWNUM);
+		// 计算第一项 开始
+		int chushi = (nowpage - 1) * showpage + 1;
+		// 计算结束项
+		int jieshu = (nowpage - 1) * showpage + showpage;
+		// 放到Array中
+		List<Bean> newlist = new ArrayList<Bean>();
+		if (ALLNUM == 0) {
+			// 没有数据
+		} else {
+
+			if (jieshu <= ALLNUM) {
+				// 循环将数据放入list2中返回给前台
+				for (int i = chushi; i <= jieshu; i++) {
+					list2.add(lastlist.get(i - 1));
+				}
+
+			} else {
+				for (int j = chushi; j < ALLNUM + 1; j++) {
+					list2.add(lastlist.get(j - 1));
+				}
+			}
+		}
 
 	/*	// kjxm为可见项目idlist stringlist 为已报名的项目idlist
 	
@@ -857,7 +899,13 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 			}
 		}*/
 
-	
+		_PAGE_.set("ALLNUM", lastlist.size());
+		_PAGE_.set("NOWPAGE", NOWPAGE);
+		_PAGE_.set("PAGES", yeshu);
+		_PAGE_.set("SHOWNUM", SHOWNUM);
+		outBean.set("alllist", list2);
+		outBean.set("_PAGE_", _PAGE_);
+		outBean.set("first", chushi);
 		outBean.set("list",lastlist);
 		return outBean;
 	}
@@ -1060,27 +1108,27 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 	 */
 	public Bean getUncheckList(Bean paramBean) {
 		Bean outBean = new Bean();
-		Bean _PAGE_ = new Bean();
 		String zhuangtai = paramBean.getStr("zhuangtai");
 		String user_code = paramBean.getStr("user_code");
+		Bean _PAGE_ = new Bean();
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
 		String where1 = paramBean.getStr("where");
 		
 		String sql1 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,15";
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,50";
 		List<Bean> list = Transaction.getExecutor().query(sql1);
 		
 		String sql2 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='未开启' or c.xm_sz_type=''))d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,15";
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,50";
 		List<Bean> find2 = Transaction.getExecutor().query(sql2);
 		
 		String sql4 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,15";
+				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,50";
 		List<Bean> find4 = Transaction.getExecutor().query(sql4);
 		
 		String sql3 = " SELECT * FROM(SELECT a.*,b.sh_end FROM ts_xmgl a LEFT JOIN TS_XMGL_BMSH b ON a.xm_id = b.xm_id WHERE b.sh_rgsh=1 AND (NOW()< STR_TO_DATE(b.sh_start,'%Y-%m-%d %H:%i:%s') OR NOW()> STR_TO_DATE(b.sh_end,'%Y-%m-%d %H:%i:%s')) "
-				+where1+" AND b.SH_LOOK =1  ORDER BY b.sh_end ASC)t limit 0,15";
+				+where1+" AND b.SH_LOOK =1  ORDER BY b.sh_end ASC)t limit 0,50";
 		List<Bean> find3 = Transaction.getExecutor().query(sql3);
 		list.addAll(find2);
 		list.addAll(find4);

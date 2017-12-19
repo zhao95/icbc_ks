@@ -108,6 +108,7 @@ if(userBean != null) {
 		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;" src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
 		 <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;报名审核</span>
 	</div>
+	<button class="btn btn-success" data-toggle="modal" style="margin-left:5%;border: none; color: white; height: 30px; width: 150px; background: lightseagreen;" id="expAllfun">导出全部人员清单</button>
 	<table id="myTab" class="nav nav-tabs"
 		style="margin-left: 10px; width: 98%; background-color: white">
 		<tr style="height: 70px">

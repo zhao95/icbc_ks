@@ -213,7 +213,6 @@ public class BmlbServ extends CommonServ {
 	 * @return
 	 */
 	public Bean addZgData(Bean paramBean) {
-		
 		// 获取服务ID
 		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
 		// 获取前台传过来的值
@@ -229,9 +228,11 @@ public class BmlbServ extends CommonServ {
 		String xm_name = paramBean.getStr("XM_NAME");
 		String liststr = paramBean.getStr("BM_LIST");
 		String yzgzstr = paramBean.getStr("YZGZ_LIST");
+		
 		if("".equals(yzgzstr)){
 			yzgzstr="{'none':'true'}";
 		}
+		
 		String dept_code = paramBean.getStr("DEPT_CODE");
 		DeptBean deptbean = OrgMgr.getDept(dept_code);
 		String odept_code = deptbean.getODeptCode();
@@ -414,7 +415,7 @@ public class BmlbServ extends CommonServ {
 						objBean.set("STR1", ryl_mobile);
 						ServDao.save("TS_OBJECT", objBean);
 					}
-
+					
 					// 获取流程相关信息
 					ParamBean param = new ParamBean();
 					param.set("examerUserCode", user_code);
@@ -435,7 +436,6 @@ public class BmlbServ extends CommonServ {
 						node_name = out.getStr("NODE_NAME");
 						SH_LEVEL = out.getInt("SH_LEVEL");
 					}
-
 					// 添加到审核表中
 					beans.set("SH_LEVEL", SH_LEVEL);
 					Bean shBean = new Bean();
@@ -457,6 +457,7 @@ public class BmlbServ extends CommonServ {
 					shBean.set("SH_NODE", node_name);// 目前审核节点
 					shBean.set("SH_USER", allman);// 当前办理人
 					shBean.set("SH_OTHER", allman);// 其他办理人
+					shBean.set("SH_LEVEL", SH_LEVEL);
 					shBean.set("S_ODEPT", bmbean.getStr("S_ODEPT"));
 					shBean.set("S_TDEPT", bmbean.getStr("S_TDEPT"));
 					shBean.set("S_DEPT", bmbean.getStr("S_DEPT"));
@@ -488,12 +489,11 @@ public class BmlbServ extends CommonServ {
 					// 自动加手动
 					if (count == 3) {
 						if (ad_result.equals("1")) {
-							shBean.set("SH_OTHER", "");// 其他办理人
+							shBean.set("SH_OTHER", "");// 其他办理人  不需要其他审核人审核
 							ServDao.save("TS_BMSH_PASS", shBean);
 						}
 						if (ad_result.equals("2")) {
 							shBean.set("SH_OTHER", "");// 其他办理人
-
 							ServDao.save("TS_BMSH_NOPASS", shBean);
 						}
 						if (ad_result.equals("0")) {
@@ -813,6 +813,8 @@ public class BmlbServ extends CommonServ {
 		}
 		outBean.setData(dataList);
 		outBean.setPage(page);
+		int first = (page.getNowPage()-1)*page.getShowNum()+1;
+		outBean.set("first",first);
 		return outBean;
 	}
 

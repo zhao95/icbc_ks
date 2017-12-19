@@ -1361,3 +1361,16 @@ var listPage = function () {
  };
  //默认跳转到第一页
  new listPage().gotoPage(1);
+ $("#expAllfun").click(function(){
+	 var arrstring="";
+	 //定义变量 把id拼成 逗号分隔字符串
+	 //定义 变量 
+	
+	 var whereData={};
+	 var data = {};
+	 data["xmid"]=xmid;
+	 data = jQuery.extend(data,whereData);
+	 
+	 window.open(FireFly.getContextPath() + '/TS_BMSH_STAY.expAllSh.do?data=' + 
+			 encodeURIComponent(jq.toJSON(data)));
+ })

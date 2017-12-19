@@ -838,7 +838,6 @@ function xminfoshow(){
 		    alert('请输入有效的手机号码！'); 
 		    return false; 
 		} 
-
 	})
 	$("#yzinput").blur(function(){
 		//验证 数字 和任职年限 
@@ -1008,7 +1007,6 @@ function xminfoshow(){
 			alert("请先删除或撤销已有的报名");
 			return false;
 		}else{
-			debugger;
 			var motaitable = document.getElementById("motaitable");
 			var rowlength = motaitable.rows.length-1;
 			//选中了 重复的报名需要先删除再提交

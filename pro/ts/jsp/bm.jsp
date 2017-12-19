@@ -127,9 +127,10 @@ String bmbq = request.getParameter("bmbq");
 				style="margin-left: 10px; margin-top: 20px; background-color: LightSeaGreen; height: 45px; font-size: 20px; line-height: 45px; color: white; width: 98%">
 				<span style="margin-left: 50px; padding-top: 10px">可申请的报名</span>
 			</div>
-			<div
-				style="margin-left: 10px; background-color: white; height: 20px; width: 98%"></div>
-			<div id="table1" class="" style="margin-left: 10px; width: 98%">
+			<div style="padding:10px;margin-left: 10px; background-color: white; height: 15px; width: 98%">
+				项目名称  &nbsp;<input id="xmnamesearch" style="height:25px;width:10%"></input>&nbsp;&nbsp;<button class="btn btn-success" id="searchbut" style="width:5%;height:30px;background-color:lightseagreen">查询</button>
+			</div>
+			<div id="table1" class="" style="padding-top:30px;margin-left: 10px; width: 98%">
 				<div class="content-main1">
 					<table class="rhGrid JPadding JColResizer" id="table">
 						<thead id="tem" class="">
@@ -152,9 +153,10 @@ String bmbq = request.getParameter("bmbq");
 				</div>
 
 		</div>
-		<!-- <table class="row">
+		<div id="xmfenye" style="position:absolute;right:5%;padding-bottom:-20px;">
+			<table class="row">
 			<tr>
-			<td><div class="rhGrid-page">
+			<td><div id='xmfenyediv' class="rhGrid-page">
 		            <span class="disabled ui-corner-4">上一页</span>
 		            <span class="current ui-corner-4">1</span>
 		            <span class="disabled ui-corner-4">下一页</span>
@@ -162,7 +164,7 @@ String bmbq = request.getParameter("bmbq");
 		            </div>
 		    </td>
 		    <td style="width:5%"></td>
-		    <td><select id = "yema" onchange="fenyeselect()">
+		    <td><select id = "xmyema" onchange="xmfenye()">
                  <option value="10" selected="selected">10条/页</option>
                  <option value="1">1条/页</option>
                  <option value="20">20条/页</option>
@@ -170,7 +172,8 @@ String bmbq = request.getParameter("bmbq");
                  <option value="100">100条/页</option>
                  </select></td>
 			</tr>
-			</table> -->
+			</table>
+			</div>
 		</div>
 		<div class="tab-pane fade"  id="tab2">
 			<div
@@ -222,7 +225,7 @@ String bmbq = request.getParameter("bmbq");
 			<div id="fenyediiv" style="position:absolute;right:5%;padding-bottom:-20px;">
 			<table class="row">
 			<tr>
-			<td><div class="rhGrid-page">
+			<td><div id="xmfenyediv2" class="rhGrid-page">
 		            <span class="disabled ui-corner-4">上一页</span>
 		            <span class="current ui-corner-4">1</span>
 		            <span class="disabled ui-corner-4">下一页</span>
@@ -392,5 +395,6 @@ String bmbq = request.getParameter("bmbq");
 	} */
 	</script>
 	<script src="<%=CONTEXT_PATH%>/ts/js/baoming.js"></script>
+	<script src="<%=CONTEXT_PATH%>/ts/js/bmxm.js"></script>
 </body>
 </html>
