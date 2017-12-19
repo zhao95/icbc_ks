@@ -1639,30 +1639,28 @@ public class StayServ extends CommonServ {
 	 * 审核人是否有需要审核的数据提醒
 	 */
 	public OutBean getStayList(Bean paramBean){
-				UserBean userBean = Context.getUserBean();
+		UserBean userBean = Context.getUserBean();
 		String user_code = userBean.getCode();
+		//进行中的项目
+		String sql1 = "SELECT a.xm_id FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
+				+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC";
 		
-		String sql1 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,15";
-		List<Bean> list = Transaction.getExecutor().query(sql1);
-		
-		String sql2 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='未开启' or c.xm_sz_type=''))d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,15";
-		List<Bean> find2 = Transaction.getExecutor().query(sql2);
-		
-		String sql4 = "SELECT * FROM(SELECT a.*,d.sh_end,d.xm_sz_type FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC)t1 limit 0,15";
-		List<Bean> find4 = Transaction.getExecutor().query(sql4);
-		
-		String sql3 = " SELECT * FROM(SELECT a.*,b.sh_end FROM ts_xmgl a LEFT JOIN TS_XMGL_BMSH b ON a.xm_id = b.xm_id WHERE b.sh_rgsh=1 AND (NOW()< STR_TO_DATE(b.sh_start,'%Y-%m-%d %H:%i:%s') OR NOW()> STR_TO_DATE(b.sh_end,'%Y-%m-%d %H:%i:%s')) "
-				+" AND b.SH_LOOK =1  ORDER BY b.sh_end ASC)t limit 0,15";
-		List<Bean> find3 = Transaction.getExecutor().query(sql3);
-		list.addAll(find2);
-		list.addAll(find4);
-		list.addAll(find3);
-		
-		List<Bean> SHlist = new ArrayList<Bean>();
+		//可审核的项目
+		String sqlxm = "select m.xm_id from ts_xmgl_bmsh m where wfs_id in(select wfs_id from TS_WFS_BMSHLC a where a.shr_usercode = '"+user_code+"') and m.xm_id in("+sql1+")";
+		List<Bean> list = Transaction.getExecutor().query(sqlxm);
+		String xmids = "";
 		for (Bean bean : list) {
+			xmids+="'"+bean.getStr("XM_ID")+"',";
+		}
+		if(!"".equals(xmids)){
+			xmids=xmids.substring(0,xmids.length()-1);
+		}else{
+			return new OutBean().set("flag", "false");
+		}
+		//可审核的项目 机构
+		String sql = "select distinct dept_code from (select * from TS_WFS_BMSHLC where node_id in (select b.node_id from TS_XMGL_BMSH a left join TS_WFS_NODE_APPLY b on a.wfs_id = b.wfs_id and a.xm_id in("+sqlxm+")))n where n.shr_usercode ='"+user_code+"'";
+		
+		/*for (Bean bean : list) {
 			// 根据报名id找到审核数据的状态
 			String id = bean.getStr("XM_ID");
 			// 根据项目id找到流程下的所有节点
@@ -1682,7 +1680,6 @@ public class StayServ extends CommonServ {
 					List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
 					for (Bean codebean : finds3) {
 						if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
-						
 								SHlist.add(bean);
 								flagstr=true;
 								break;
@@ -1694,9 +1691,8 @@ public class StayServ extends CommonServ {
 					}
 					}
 				}
-
 		}
-		
+		//找到所有可进行审核的项目  id
 		String xmids = "";
 		for (Bean bean : SHlist) {
 			xmids+="'"+bean.getStr("XM_ID")+"',";
@@ -1706,24 +1702,28 @@ public class StayServ extends CommonServ {
 		}else{
 			return new OutBean().set("flag", "false");
 		}
+		
+		//根据项目id找到所有 可审核的机构
 		String sql = "select distinct n.dept_code from (select node_id from(select wfs_id from ts_xmgl_bmsh where xm_id in("+xmids+")) c left join TS_WFS_NODE_APPLY d on c.wfs_id = d.wfs_id) m left join TS_WFS_BMSHLC n on m.node_id = n.node_id  "+
-				"where n.shr_usercode= '"+user_code+"'";
+				"where n.shr_usercode= '"+user_code+"'";*/
 		List<Bean> query = Transaction.getExecutor().query(sql);
 		String dept_code="";
 		String deptcodes = "";
 		for (Bean bean : query) {
-			if(!"".equals(bean.getId())){}
+			if(!"".equals(bean.getId())){
 			//dept_code
 			dept_code=bean.getId();
 			String[] split = dept_code.split(",");
 			for (String string : split) {
 				deptcodes+="'"+string+"',";
 			}
+			}
 		}
+		//找到机构下的所有人
 		int ALLNUM = 0;
 				if(deptcodes.length()>5){
 					deptcodes = deptcodes.substring(0,deptcodes.length()-1);
-			String sqlCode_path = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in("+deptcodes+")) and dept_code in("+deptcodes+")";
+			String sqlCode_path = "select distinct code_path from sy_org_dept where dept_code in("+deptcodes+")";
 					List<Bean> query1 = Transaction.getExecutor().query(sqlCode_path);
 					String  sqlstr= "";
 					sqlstr += "select * from (select a.*,b.code_path from ts_bmsh_stay a left join sy_org_dept b on a.s_dept=b.dept_code where xm_id in("+xmids+")) c ";

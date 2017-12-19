@@ -103,11 +103,7 @@ var listPage = function () {
  };
  listPage.prototype.bldTable = function (listData) {
 	 $("#table tbody").html("");
-	 var data = listData.list;
-	 if(data==null){
-		 return;
-	 }
-	 var pageEntity=JSON.parse(data);
+	 var pageEntity = listData.list;
 	 for(var i=0;i<pageEntity.length;i++){
 		 var strfirst = listData.first;
 		 var first = parseInt(strfirst);
@@ -146,7 +142,7 @@ var listPage = function () {
 				continue
 			}*/
 			//添加一行隐藏的项目id
-			var xuhao = first+i;
+			var xuhao = first+i+1;
  		//为table重新appendtr
 		/*	if(state=="报名审核"){
  			$("#table tbody").append('<tr class="rhGrid-td-left" style="height: 50px"><td class="indexTD" style="text-align: center">'+xuhao+'</td><td class="indexTD" style="text-align: left">'+name+'</td><td class="rhGrid-td-left " icode="BM_ODEPT"style="text-align: left">'+zzdw+'</td><td class="rhGrid-td-left " icode="S_ATIME"style="text-align: left">'+cjsj+'</td><td class="rhGrid-td-left " icode="BM_STATE__NAME"style="text-align: left">'+state+'</td><td class="rhGrid-td-hide" id="XM_ID'+i+'" >'+id+'</td><td class="rhGrid-td-hide" id="XM_TYPE'+i+'">'+xmtype+'</td><td><input class = "btn" type="button" onclick="tiaozhuan('+i+')" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="审核"></input>&nbsp;&nbsp;<input data-toggle="modal" data-target="#bminfo" onclick="chakan('+i+')" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px" value="查看"></input></td></tr>');
