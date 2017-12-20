@@ -2,9 +2,6 @@ package com.rh.ts.bm.group;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
-import com.rh.core.base.TipException;
-import com.rh.core.comm.FileMgr;
-import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.mgr.UserMgr;
@@ -12,19 +9,13 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.core.util.ImpUtils;
 import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
-
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
 import jxl.read.biff.BiffException;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import jxl.write.WriteException;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +33,7 @@ public class BmGroupServ extends CommonServ {
     /**
      * 获取用户所有报名群组编码 (逗号相隔)
      *
-     * @param userCode
+     * @param paramBean
      * @return
      */
     public OutBean getBmGroupCodes(Bean paramBean) {
@@ -77,39 +68,27 @@ public class BmGroupServ extends CommonServ {
      * @param paramBean paramBean G_ID FILE_ID
      * @return outBean
      */
-    public OutBean saveFromExcel(ParamBean paramBean) throws IOException, BiffException {
+    public OutBean saveFromExcel(ParamBean paramBean) throws IOException, BiffException, WriteException {
         OutBean outBean = new OutBean();
-
+        //获取前端传递参数
         String gId = (String) paramBean.get("G_ID"),//报名群组id
                 fileId = (String) paramBean.get("FILE_ID");//文件id
+
+        //*获取文件内容
+        List<Bean> rowBeanList = ImpUtils.getDataFromXls(fileId);
+
+        List<String> codeList = new ArrayList<String>();//避免重复添加数据
+
         //获取项目id（xmId）
         Bean bmGroupBean = ServDao.find(TsConstant.SERV_BM_GROUP, gId);
         String xmId = bmGroupBean.getStr("XM_ID");
 
-        List<Bean> beanList = this.getDataFromXls(fileId);
-        List<String> codeList = new ArrayList<String>();//避免重复添加数据
-
         List<Bean> beans = new ArrayList<Bean>();
-        for (Bean bean : beanList) {
-            String codeStr = bean.getStr(CODE_STR);
-
-            int length = codeStr.trim().length();
-            Bean userBean = null;
-            try {
-                if (length == 9) {
-                    userBean = UserMgr.getUserByLoginName(codeStr);
-                } else if (length == 10) {
-                    userBean = UserMgr.getUser(codeStr);
-                } else if (length > 11) {
-                    List<Bean> userBeanList = ServDao.finds("SY_ORG_USER_ALL", " and USER_IDCARD ='" + codeStr + "'");
-                    if (CollectionUtils.isNotEmpty(userBeanList)) {
-                        userBean = userBeanList.get(0);
-                    }
-                }
-            } catch (Exception e) {
-                userBean = null;
-            }
+        for (Bean rowBean : rowBeanList) {
+            String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");
+            Bean userBean = ImpUtils.getUserBeanByString(colCode);
             if (userBean == null) {
+                rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
                 continue;
             }
 
@@ -117,10 +96,11 @@ public class BmGroupServ extends CommonServ {
                     name = userBean.getStr("USER_NAME");
             if (codeList.contains(code)) {
                 //已包含 continue ：避免重复添加数据
+                rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
                 continue;
             }
 
-            bean.clear();
+            Bean bean = new Bean();
             bean.set("G_ID", gId);
             bean.set("USER_DEPT_CODE", code);
             bean.set("XM_ID", xmId);
@@ -136,58 +116,32 @@ public class BmGroupServ extends CommonServ {
                 }
                 bean.set("USER_DEPT_NAME", name);
                 //保存一二级机构
-                String dept_code = UserMgr.getUser(codeStr).getDeptBean().getCode();//部门编码
-                String[] deptarr = OrgMgr.getDept(dept_code).getCodePath().split("\\^");//五级机构
-                for (int i =0;i< deptarr.length; i++) {
-        			// 最后一个 deptcodename
-        			if(i==0){
-        				String evname = OrgMgr.getDept(deptarr[i]).getName();
-        				bean.set("FIR_LEVEL", evname);
-        			}else if(i==1){
-        				String evname = OrgMgr.getDept(deptarr[i]).getName();
-        				bean.set("SEN_LEVEL", evname);
-        			}
-        		}
+                String deptCode = UserMgr.getUser(colCode).getDeptBean().getCode();//部门编码
+                String[] deptArr = OrgMgr.getDept(deptCode).getCodePath().split("\\^");//五级机构
+                for (int i = 0; i < deptArr.length; i++) {
+                    // 最后一个 deptcodename
+                    if (i == 0) {
+                        String evname = OrgMgr.getDept(deptArr[i]).getName();
+                        bean.set("FIR_LEVEL", evname);
+                    } else if (i == 1) {
+                        String evname = OrgMgr.getDept(deptArr[i]).getName();
+                        bean.set("SEN_LEVEL", evname);
+                    }
+                }
+
                 beans.add(bean);
                 codeList.add(code);
+            } else {
+                rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
             }
         }
         ServDao.creates(TsConstant.SERV_BM_GROUP_USER, beans);
-//        int total = beanList.size();
-        FileMgr.deleteFile(fileId);
-        return outBean.setCount(codeList.size()).setOk("成功导入" + codeList.size() + "条");
-    }
 
-    /**
-     * @param fileId 文件id
-     */
-    private List<Bean> getDataFromXls(String fileId) throws IOException, BiffException {
-        List<Bean> result = new ArrayList<Bean>();
-        Bean fileBean = FileMgr.getFile(fileId);
-        InputStream in = FileMgr.download(fileBean);
-        Workbook workbook = Workbook.getWorkbook(in);
-        try {
-            Sheet sheet1 = workbook.getSheet(0);
-            int rows = sheet1.getRows();
-            for (int i = 0; i < rows; i++) {
-//                if (i != 0) {
-                Cell[] cells = sheet1.getRow(i);
-                String contents0 = cells[0].getContents();
-                if (!StringUtils.isEmpty(contents0)) {
-                    Bean bean = new Bean();
-                    bean.set(CODE_STR, contents0);
-//                        bean.set("name", contents1);
-                    result.add(bean);
-                }
-//                }
-            }
-        } catch (Exception e) {
-            throw new TipException("Excel文件解析错误，请校验！");
-        } finally {
-            workbook.close();
-        }
-        return result;
+        //在excel中设置失败信息
+        String errorFileId = ImpUtils.saveErrorAndReturnErrorFile(fileId, rowBeanList);
+        outBean.set("FILE_ID", errorFileId);
+        return outBean.setCount(codeList.size()).setOk("成功导入" + codeList.size() + "条," +
+                "失败条数：" + (rowBeanList.size() - codeList.size()) + "条");
     }
-
 
 }

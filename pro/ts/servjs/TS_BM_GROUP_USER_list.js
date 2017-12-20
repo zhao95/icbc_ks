@@ -16,18 +16,18 @@ $("#TS_BM_GROUP_USER .rhGrid").find("tr").each(function (index, item) {
     }
 });
 /*
-* 删除前方法执行
-*/
-_viewer.beforeDelete = function(pkArray) {
-	showVerify(pkArray,_viewer);
+ * 删除前方法执行
+ */
+_viewer.beforeDelete = function (pkArray) {
+    showVerify(pkArray, _viewer);
 }
 //绑定的事件     
 function bindCard() {
     //当行删除事件
-    jQuery("td [id='TS_BM_GROUP_USER_delete']").unbind("click").bind("click", function() {
-		var pkCode = jQuery(this).attr("rowpk");
-		rowDelete(pkCode,_viewer);
-	});
+    jQuery("td [id='TS_BM_GROUP_USER_delete']").unbind("click").bind("click", function () {
+        var pkCode = jQuery(this).attr("rowpk");
+        rowDelete(pkCode, _viewer);
+    });
     //查看
     jQuery("td [id='TS_BM_GROUP_USER_look']").unbind("click").bind("click", function () {
         var pkCode = jQuery(this).attr("rowpk");
@@ -74,7 +74,7 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
         "replaceCallBack": function (idArray) {//回调，idArray为选中记录的相应字段的数组集合
             var codes = idArray.USER_CODE.split(",");
             var names = idArray.USER_NAME.split(",");
-            
+
             var paramArray = [];
 
             for (var i = 0; i < codes.length; i++) {
@@ -87,21 +87,21 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
                 param.USER_DEPT_NAME = names[i];
                 //选取类型 1人员
                 param.G_TYPE = 1;
-                
+
                 //岗位类别 序列 
-                var result =  FireFly.byId("SY_HRM_ZDSTAFFPOSITION", codes[i]);
-        		if(result!=null){
-        			param.GW_LB = result.STATION_TYPE;
-        			param.GW_XL= result.STATION_NO;
-        		}
-        		// 一二机构
-        		var paramstr = {};
-        		paramstr["user_code"]=codes[i];
-        		var resultstr = FireFly.doAct("TS_BMSH_PASS","getDept",paramstr);
-        		 param.FIR_LEVEL =resultstr.LEVEL0;
-        		 param.SEN_LEVEL =resultstr.LEVEL1;
-        		paramArray.push(param);
-        		
+                var result = FireFly.byId("SY_HRM_ZDSTAFFPOSITION", codes[i]);
+                if (result != null) {
+                    param.GW_LB = result.STATION_TYPE;
+                    param.GW_XL = result.STATION_NO;
+                }
+                // 一二机构
+                var paramstr = {};
+                paramstr["user_code"] = codes[i];
+                var resultstr = FireFly.doAct("TS_BMSH_PASS", "getDept", paramstr);
+                param.FIR_LEVEL = resultstr.LEVEL0;
+                param.SEN_LEVEL = resultstr.LEVEL1;
+                paramArray.push(param);
+
             }
             var batchData = {};
             batchData.BATCHDATAS = paramArray;
@@ -117,50 +117,50 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
 });
 
 
-_viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
+_viewer.getBtn("impDept").unbind("click").bind("click", function (event) {
 //	var configStr = "TS_ORG_DEPT,{'TARGET':'DEPT_CODE~DEPT_NAME','SOURCE':'DEPT_CODE~DEPT_NAME'," +
 //	"'HIDE':'DEPT_CODE','TYPE':'multi','HTMLITEM':''}";
 
-	var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'multi'}";
+    var configStr = "TS_ORG_DEPT_ALL,{'TYPE':'multi'}";
 
-	var options = {
-			"config" :configStr,
+    var options = {
+        "config": configStr,
 //			"params" : {"_TABLE_":"SY_ORG_USER"},
-			"params" : {"USE_SERV_ID":"TS_ORG_DEPT"},
-			"parHandler":_viewer,
-			"formHandler":_viewer.form,
-			"replaceCallBack":function(idArray,nameArray) {//回调，idArray为选中记录的相应字段的数组集合
+        "params": {"USE_SERV_ID": "TS_ORG_DEPT"},
+        "parHandler": _viewer,
+        "formHandler": _viewer.form,
+        "replaceCallBack": function (idArray, nameArray) {//回调，idArray为选中记录的相应字段的数组集合
 
-				var codes = idArray;
-				var names = nameArray;
-				
-				var paramArray = [];
+            var codes = idArray;
+            var names = nameArray;
 
-				for(var i=0;i<codes.length;i++){
-					var param = {};
-					//群组ID
-					param.G_ID = _viewer.getParHandler()._pkCode;
-					//用户编码
-					param.USER_DEPT_CODE = codes[i];
-					//用户名称
-					param.USER_DEPT_NAME = names[i];
-					//选取类型 1人员
-					param.G_TYPE = 2;
-					
-					paramArray.push(param);
-				}
-				 var batchData = {};
-				 batchData.BATCHDATAS = paramArray;
-				//批量保存
-				var rtn = FireFly.batchSave(_viewer.servId,batchData,null,2,false);
-				
-				_viewer.refresh();
-			}
-	};
-	//2.用系统的查询选择组件 rh.vi.rhSelectListView()
+            var paramArray = [];
+
+            for (var i = 0; i < codes.length; i++) {
+                var param = {};
+                //群组ID
+                param.G_ID = _viewer.getParHandler()._pkCode;
+                //用户编码
+                param.USER_DEPT_CODE = codes[i];
+                //用户名称
+                param.USER_DEPT_NAME = names[i];
+                //选取类型 1人员
+                param.G_TYPE = 2;
+
+                paramArray.push(param);
+            }
+            var batchData = {};
+            batchData.BATCHDATAS = paramArray;
+            //批量保存
+            var rtn = FireFly.batchSave(_viewer.servId, batchData, null, 2, false);
+
+            _viewer.refresh();
+        }
+    };
+    //2.用系统的查询选择组件 rh.vi.rhSelectListView()
 //	var queryView = new rh.vi.rhSelectListView(options);
-	var queryView = new rh.vi.rhDictTreeView(options);
-	queryView.show(event,[],[0,495]);
+    var queryView = new rh.vi.rhDictTreeView(options);
+    queryView.show(event, [], [0, 495]);
 });
 
 
@@ -196,6 +196,7 @@ if (jQuery('#' + IMPORT_FILE_ID).length === 0) {
                 data.G_ID = _viewer.getParHandler()._pkCode;
                 data.FILE_ID = fileId;
                 FireFly.doAct(_viewer.servId, "saveFromExcel", data, false, false, function (data) {
+                    rh.ui.File.prototype.downloadFile(data.FILE_ID, "test");
                     _viewer.refresh();
                     alert(data._MSG_);
                 });
@@ -204,8 +205,8 @@ if (jQuery('#' + IMPORT_FILE_ID).length === 0) {
         file.clear();
     };
 }
-var $importFile = $('#'+IMPORT_FILE_ID);
-$importFile.find('object').css('cursor','pointer');
-$importFile.find('object').css('z-index','999999999');
-$importFile.find('object').css('width','100%');
-$importFile.attr('title','导入文件为excel格式文件，内容为无标题的单列数据，一行数据为一个用户，数据为人力资源编码、统一认证号、身份证号');
+var $importFile = $('#' + IMPORT_FILE_ID);
+$importFile.find('object').css('cursor', 'pointer');
+$importFile.find('object').css('z-index', '999999999');
+$importFile.find('object').css('width', '100%');
+$importFile.attr('title', '导入文件为excel格式文件，内容为无标题的单列数据，一行数据为一个用户，数据为人力资源编码、统一认证号、身份证号');
