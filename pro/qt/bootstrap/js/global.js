@@ -1096,6 +1096,10 @@ global.Fn.InitUploadImage1 = function(container, bmid) {
 				},
 				done : function(e, data) {
 					data = JSON.parse(data.result);
+					if(undefined!=data._MSG_){
+						alert("文件太大");
+						return false;
+					}
 					var s = data["_DATA_"][0].FILE_ID;
 					if (s != "") {
 						var i = 0;

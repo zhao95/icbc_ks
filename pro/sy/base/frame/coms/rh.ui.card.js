@@ -2955,6 +2955,7 @@ rh.ui.File.prototype.getFileData = function() {
 /**
  * 初始化上传组件
  */
+var tobig = "";
 rh.ui.File.prototype.initUpload = function() {
 	var _self = this;
 	if (!this._upload) {
@@ -3097,9 +3098,9 @@ rh.ui.File.prototype.initUpload = function() {
 					this.addPostParam("WF_NI_ID", wfNIId);
 				}
 			}
-
+			
 			// 覆盖上传
-			if (_self._fileNumber == 1 && this.getUploadFiles() == 1) {
+			if (_self._fileNumber == 1 && this.getUploadFiles() == 1&&tobig=="") {
 //				if (confirm("是否覆盖上传？")) {
 				if (confirm(Language.transStatic("rh_ui_card_string14"))) {	
 					var fileId = _self.getFileId()[0];
@@ -3118,17 +3119,25 @@ rh.ui.File.prototype.initUpload = function() {
 		// 上传成功文件数据放到页面上
 		this.numFilesUploaded = 0;
 		this._upload.uploadSuccess = function(serverData) {
-			var fileData = StrToJson(serverData)._DATA_;
-			_self.fillData(fileData);
-
-			_self._tempFileData.push(fileData[0]);
-
-			var status = jQuery("#divStatus_" + _self.time, _self.progressDialog);
+			serverData = JSON.parse(serverData)
+			if(undefined!=serverData._MSG_){
+				alert(serverData._MSG_);
+				tobig = serverData._MSG_;
+			}else{
+				tobig=="";
+				var fileData = serverData._DATA_;
+				_self.fillData(fileData);
+				
+				_self._tempFileData.push(fileData[0]);
+				
+				var status = jQuery("#divStatus_" + _self.time, _self.progressDialog);
 //			status.html(++_self.numFilesUploaded + " 个文件已上传");
-			status.html(++_self.numFilesUploaded + Language.transStatic("rh_ui_card_string15"));
-
-			// 回调上传之后的函数
-			_self.afterUploadCallback.call(_self, fileData);
+				status.html(++_self.numFilesUploaded + Language.transStatic("rh_ui_card_string15"));
+				
+				// 回调上传之后的函数
+				_self.afterUploadCallback.call(_self, fileData);
+				
+			}
 		};
 
 		// 整个队列上传成功
@@ -3226,7 +3235,7 @@ rh.ui.File.prototype.showProgress = function(bool) {
 /**
  * 队列完成
  */
-rh.ui.File.prototype.queueComplete = function(numFilesUploaded) {
+rh.ui.File.prototype.queueComplete = function(numFilesUploaded) {  
 	var _self = this;
 	setTimeout(function(){
 		_self.progressDialog.dialog("close");
@@ -7062,10 +7071,10 @@ rh.ui.Upload = function(options) {
 		upload_url : FireFly.getContextPath() + "/file",
 		post_params : {"jsessionid" : "\"" + FireFly.jsessionid + "\""},
 		use_query_string : true,
-		file_size_limit : "100 MB",
+		file_size_limit : "20 MB",
 		file_types : this._defaultTypes,
 		file_types_description : "All Files",
-		file_upload_limit : 100,
+		file_upload_limit : 20,
 		file_queue_limit : 0,
 		custom_settings : {progressTarget : "fsUploadProgress",cancelButtonId : "btnCancel"},
 		debug: false,

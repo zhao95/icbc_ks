@@ -152,22 +152,27 @@ public class FileServlet extends HttpServlet {
         String model = RequestUtils.getStr(request, "model");
 
         Bean resultBean = null;
+        List<FileItem> items = handleFileUpload(request, param);
+        long filesize = items.get(0).getSize();
         try {
+        	if(filesize>1024*1024*20){
+        		throw new TipException("文件太大");
+        	}
             if (0 < fileId.length()) {
                 Bean fileBean = FileMgr.getFile(fileId);
                 if (fileBean != null) { // update file
                     if (model.equals("saveHist")) {
-                        resultBean = update(request, param, false, fileBean);
+                        resultBean = update(items,request, param, false, fileBean);
                     } else if (model.equals("cropImg")) {
-                        resultBean = cropImg(request, param, fileBean);
+                        resultBean = cropImg(items,request, param, fileBean);
                     } else {
-                        resultBean = update(request, param, true, fileBean);
+                        resultBean = update(items,request, param, true, fileBean);
                     }
                 } else { // create file
-                    resultBean = create(request, param);
+                    resultBean = create(items,request, param);
                 }
             } else {
-                resultBean = create(request, param);
+                resultBean = create(items,request, param);
             }
         } catch (TipException e) { // 不记录Log，直接传递错误信息给界面
             if (log.isDebugEnabled()) { // 调试模式下也输出exception到log中
@@ -467,15 +472,14 @@ public class FileServlet extends HttpServlet {
      * @return out bean
      * @throws IOException IOException
      */
-    private Bean create(HttpServletRequest request, Bean paramBean) throws IOException {
+    private Bean create( List<FileItem> items, HttpServletRequest request, Bean paramBean) throws IOException {
         String fileId = getFileId(request);
         String thum = RequestUtils.getStr(request, FILE_CREATE_URI_PATTERN);
         String retunType = RequestUtils.getStr(request, "return");
         paramBean.set("FILE_ID", fileId);
 
         // handle file uploads param
-        List<FileItem> items = handleFileUpload(request, paramBean);
-
+        
         FileUploadListener listener = this.createListener(paramBean);
 
         if (listener != null) {
@@ -673,13 +677,12 @@ public class FileServlet extends HttpServlet {
      * @return out bean
      * @throws IOException IOException
      */
-    private Bean update(HttpServletRequest request, Bean paramBean, boolean overWrite
+    private Bean update(List<FileItem> items,HttpServletRequest request, Bean paramBean, boolean overWrite
             , Bean fileBean) throws IOException {
         String fileId = getFileId(request);
 
         paramBean.setId(fileId);
         // handle file uploads param
-        List<FileItem> items = handleFileUpload(request, paramBean);
         List<Bean> dataList = new ArrayList<Bean>();
         // upload file from file form
         Iterator<FileItem> iter = items.iterator();
@@ -751,7 +754,7 @@ public class FileServlet extends HttpServlet {
      * @return
      * @throws IOException
      */
-    private Bean cropImg(HttpServletRequest request, Bean paramBean, Bean fileBean) throws IOException {
+    private Bean cropImg(List<FileItem> items,HttpServletRequest request, Bean paramBean, Bean fileBean) throws IOException {
         int x1 = paramBean.getInt("x1");
         int y1 = paramBean.getInt("y1");
         int width = paramBean.getInt("width");

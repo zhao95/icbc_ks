@@ -92,7 +92,6 @@ position: absolute;
 <!--判断用户是否登录  -->
 <%
 String bmbq = request.getParameter("bmbq");
-	String user_code = userBean.getStr("USER_CODE");
 
 			//获取所有项目ID
 
@@ -381,7 +380,6 @@ String bmbq = request.getParameter("bmbq");
 		<input type="hidden" id="bmbq" value ="<%=bmbq %>">
 		<input type="hidden" id="xmid"/>
 		<input type="hidden" id="dijige">
-		<input type="hidden" id="user_code" value="<%=user_code %>">
 	</div>
 	<script>
 	/* function showsize(files){
