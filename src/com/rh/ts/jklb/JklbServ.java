@@ -381,7 +381,7 @@ public class JklbServ extends CommonServ {
                         && (outBean.getStr(Constant.RTN_MSG)).contains(Constant.RTN_MSG_ERROR)) {
                     //有错误回滚
                     Transaction.rollback();
-                    outBean.setError("数据有误审批失败");
+//                    outBean.setError("数据有误审批失败");
                 } else {
                     Transaction.commit();
                 }
@@ -596,7 +596,6 @@ public class JklbServ extends CommonServ {
      */
     private boolean inApplyTime(String xmId) throws ParseException {
         boolean result = false;
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormatString);
 
         List<Bean> xmSzList = ServDao.finds("TS_XMGL_SZ", "and XM_ID ='" + xmId + "' and XM_SZ_NAME ='异地借考'");
         if (xmSzList.size() > 0) {

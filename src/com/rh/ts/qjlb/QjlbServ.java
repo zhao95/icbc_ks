@@ -341,7 +341,7 @@ public class QjlbServ extends CommonServ {
                         && ((String) outBean.get(Constant.RTN_MSG)).indexOf(Constant.RTN_MSG_ERROR) > 0) {
                     //有错误回滚
                     Transaction.rollback();
-                    outBean.setError("数据有误审批失败");
+//                    outBean.setError("数据有误审批失败");
                 } else {
                     Transaction.commit();
                 }

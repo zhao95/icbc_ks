@@ -187,15 +187,8 @@
             var userCode = System.getUser("USER_CODE");
             for (var i = 0; i < listData._DATA_.length; i++) {
                 var item = listData._DATA_[i];
-                var state = '';
+                var state = item.state;
                 var operDiv = jQuery('<div></div>');
-                if (new Date().getTime() > Date.parse(item.XM_END.replace('-','/'))) {
-                    state = '已结束';
-                } else if (item.XM_KCAP_PUBLISH_TIME === '' || item.XM_KCAP_PUBLISH_TIME === null || item.XM_KCAP_PUBLISH_TIME === undefined) {
-                    state = '未发布';
-                } else {
-                    state = '可打印';
-                }
                 if (state === '可打印') {
 //                    var lookBtn = jQuery(
 //                        '<input xm_id="' + item.XM_ID + '" type="button" class="btn" style="border:none;color:white;font-size:13px;background-color:LightSeaGreen;height:30px;width:70px;" value="查看"/>'
@@ -230,7 +223,7 @@
                             true, false, function (response) {
                                 if (response._MSG_.indexOf('ERROR,') >= 0) {
                                     //生成pdf出错
-//                                alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,'), response._MSG_.length));
+//                                alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,')+6, response._MSG_.length));
                                 } else {
                                     var fileId = response.fileId;
                                     var fileName = response.fileName;

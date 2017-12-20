@@ -81,21 +81,23 @@
     //获取用户机构
     String dept_name = userBean.getStr("DEPT_NAME");
 
-//    Bean bean = ServDao.find("SY_ORG_DEPT", dept_code);
-//    String codePath = bean.getStr("CODE_PATH");
-//    String[] splits = codePath.split("\\^");//0010100000^0020000000^0020000087^
-//    StringBuilder deptNameStr = new StringBuilder();
-//    for (String split : splits) {
-//        Bean itemBean = ServDao.find("SY_ORG_DEPT", split);
-//        if (itemBean == null) {
-//            continue;
-//        }
-//        String itemDeptName = itemBean.getStr("DEPT_NAME");
-//        deptNameStr.append("/").append(itemDeptName);
-//    }
-//    if (deptNameStr.length() > 0) {
-//        deptNameStr = new StringBuilder(deptNameStr.substring(1));
-//    }
+    Bean bean = ServDao.find("SY_ORG_DEPT", dept_code);
+    String codePath = bean.getStr("CODE_PATH");
+    String[] splits = codePath.split("\\^");//0010100000^0020000000^0020000087^
+    StringBuilder deptNameStr = new StringBuilder();
+    for (int i = 1; i < splits.length; i++) {
+        String split = splits[i];
+        Bean itemBean = ServDao.find("SY_ORG_DEPT", split);
+        if (itemBean == null) {
+            continue;
+        }
+        String itemDeptName = itemBean.getStr("DEPT_NAME");
+        deptNameStr.append("/").append(itemDeptName);
+    }
+    if (deptNameStr.length() > 0) {
+        deptNameStr = new StringBuilder(deptNameStr.substring(1));
+        dept_name = deptNameStr.toString();
+    }
 
 //    //获取用户性别
 //    String user_sex = userBean.getStr("USER_SEX");
@@ -227,7 +229,7 @@
                             <thead>
                             <tr style="padding-left: 5px;text-align: center">
                                 <td width="35%">考试名称</td>
-                                <td width="35%">考试开始时间</td>
+                                <%--<td width="35%">考试开始时间</td>--%>
                                 <td width="30%">操作</td>
                             </tr>
                             </thead>
@@ -349,7 +351,7 @@
                         <td style="text-align: center" width="10%"></td>
                         <td width="10%" align="center">序号</td>
                         <td width="55%" align="center">名称</td>
-                        <td width="35" align="center" colspan="2">考试时间</td>
+                        <%--<td width="35" align="center" colspan="2">考试时间</td>--%>
                     </tr>
                     </thead>
                     <tbody>
@@ -540,12 +542,12 @@
                 '   </td>',
                 '   <td align="center">' + userCanLeave.title,
                 '   </td>',
-                '   <td style="text-align: center">' + userCanLeave.lbDate,
-                '   </td>',
                 '   <td class="rhGrid-td-hide">' + userCanLeave.BM_ID,
                 '   </td>',
                 '</tr>'
             ].join(''));
+//            '   <td style="text-align: center">' + userCanLeave.lbDate,
+//                '   </td>',
         }
 
 
@@ -559,7 +561,7 @@
             for (var j = 0; j < kslxArray.length; j++) {
                 var kslx = kslxArray[j];
                 if (bmId === kslx.value) {
-                    addToSelectedKSTable(kslx)
+                    addToSelectedKSTable(kslx);
                 }
             }
         }
@@ -590,14 +592,14 @@
         var tds = tr.getElementsByTagName("td");
 //                var xu_hao = tds[1].innerText.trim();
         var jk_name = tds[2].innerText.trim();
-        var ks_date = tds[3].innerText.trim();
-        var bm_id = tds[4].innerText.trim();
+//        var ks_date = tds[3].innerText.trim();
+        var bm_id = tds[3].innerText.trim();
         var jkksTbody = jQuery('#jkks-table tbody');
         jkksTbody.append(
             '<tr data-id="' + bm_id + '">' +
             '<td class="rhGrid-td-hide">' + bm_id + '</td>' +
             '<td align="center" width="35%">' + jk_name + '</td>' +
-            '<td align="center" width="35%">' + ks_date + '</td>' +
+//            '<td align="center" width="35%">' + ks_date + '</td>' +
             '<td align="center" width="35%" >' +
             '   <a style="cursor:pointer;" data-id="' + bm_id + '" onclick="delOne(this)">删除</a>' +
             '</td>' +

@@ -32,6 +32,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -78,6 +79,22 @@ public class XmglAdmissionServ extends CommonServ {
         List<Bean> dataList = Transaction.getExecutor().queryPage(
                 sql, page.getNowPage(), page.getShowNum(), new ArrayList<Object>(values), null);
 
+        for (Bean bean : dataList) {
+            String state = "";
+            String xmEnd = bean.getStr("XM_END");
+            try {
+                if (StringUtils.isNotBlank(xmEnd) && new Date().getTime() > DateUtils.parseDate(xmEnd).getTime()) {
+                    state = "已结束";
+                } else if (StringUtils.isBlank(bean.getStr("XM_KCAP_PUBLISH_TIME"))) {
+                    state = "未发布";
+                } else {
+                    state = "可打印";
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            bean.set("state", state);
+        }
         /*设置数据总数*/
         int count = dataList.size();
         int showCount = page.getShowNum();
@@ -103,6 +120,40 @@ public class XmglAdmissionServ extends CommonServ {
         }
         outBean.setData(dataList);
         outBean.setPage(page);
+        return outBean;
+    }
+
+    /**
+     * 当前用户是否有可打印却未打印的准考证
+     *
+     * @return outBean {hasPrint}
+     */
+    public OutBean getHasCanPrintAdmission() {
+        OutBean outBean = new OutBean();
+
+        String userCode = Context.getUserBean().getCode();
+        List<Object> values = new ArrayList<Object>();
+        values.add(userCode);
+        values.add(userCode);
+
+        String sql = "SELECT a.XM_ID FROM `ts_xmgl` a " +
+                " where exists (" +
+                " select 'X' from ts_bmsh_pass b where a.XM_ID =b.XM_ID and b.BM_CODE=? and b.BM_STATUS not in( '1','3')" +
+                " ) " +
+                //当前时间在项目开始和结束时间之间
+                " and now() BETWEEN " +
+                " str_to_date(a.XM_START, '%Y-%m-%d %H:%i:%s') " +
+                " and str_to_date( a.XM_END, '%Y-%m-%d %H:%i:%s') " +
+                //项目场次发布时间不为空（项目场次已发布）
+                " and a.XM_KCAP_PUBLISH_TIME is not null and a.XM_KCAP_PUBLISH_TIME !='' " +
+                //未打印(不存在 生成准考证时间>项目场次发布时间 当前用户 的准考证)
+                " and not exists(select '' from ts_xmgl_admission_file f where f.XM_ID=a.XM_ID and str_to_date(f.S_ATIME, '%Y-%m-%d %H:%i:%s') > str_to_date(a.XM_KCAP_PUBLISH_TIME, '%Y-%m-%d %H:%i:%s') and f.USER_CODE =?)";
+        List<Bean> dataList = Transaction.getExecutor().query(sql, values);
+        String hasPrint = "false";
+        if (dataList != null && dataList.size() > 0) {
+            hasPrint = "true";
+        }
+        outBean.set("hasPrint", hasPrint);
         return outBean;
     }
 

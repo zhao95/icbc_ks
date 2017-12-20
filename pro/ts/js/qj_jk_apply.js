@@ -11,7 +11,7 @@ function updateData(servId, param) {
     FireFly.doAct(servId, "updateData", param, false, false, function (response) {
         if (response._MSG_.indexOf('ERROR,') >= 0) {
             //发起申请出错
-            alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,'), response._MSG_.length));
+            alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,') + 6, response._MSG_.length));
         } else {
             var $tiJiao = $('#tiJiao');
             if (param.shstatus === '2') {

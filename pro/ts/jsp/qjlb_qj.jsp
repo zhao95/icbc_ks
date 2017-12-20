@@ -1,3 +1,4 @@
+<%@ page import="com.rh.core.serv.ServDao" %>
 <!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
@@ -72,8 +73,29 @@
     String user_code = userBean.getStr("USER_CODE");
     //获取用户名称
     String user_name = userBean.getStr("USER_NAME");
+    //获取用户机构编码
+    String dept_code = userBean.getStr("DEPT_CODE");
     //获取用户机构
     String dept_name = userBean.getStr("DEPT_NAME");
+
+    Bean bean = ServDao.find("SY_ORG_DEPT", dept_code);
+    String codePath = bean.getStr("CODE_PATH");
+    String[] splits = codePath.split("\\^");//0010100000^0020000000^0020000087^
+    StringBuilder deptNameStr = new StringBuilder();
+    for (int i = 1; i < splits.length; i++) {
+        String split = splits[i];
+        Bean itemBean = ServDao.find("SY_ORG_DEPT", split);
+        if (itemBean == null) {
+            continue;
+        }
+        String itemDeptName = itemBean.getStr("DEPT_NAME");
+        deptNameStr.append("/").append(itemDeptName);
+    }
+    if (deptNameStr.length() > 0) {
+        deptNameStr = new StringBuilder(deptNameStr.substring(1));
+        dept_name = deptNameStr.toString();
+    }
+
     //    //获取用户性别
     //    String user_sex = userBean.getStr("USER_SEX");
     //    //获取用户办公电话
@@ -185,7 +207,7 @@
                             <thead>
                             <tr style="padding-left: 5px; text-align: center">
                                 <td width="35%">考试名称</td>
-                                <td width="35%">考试开始时间</td>
+                                <%--<td width="35%">考试开始时间</td>--%>
                                 <td width="30%">操作</td>
                             </tr>
                             </thead>
@@ -339,7 +361,7 @@
                         <td style="text-align: center" width="10%"></td>
                         <td width="10%" align="center">序号</td>
                         <td width="55%" align="center">名称</td>
-                        <td width="35" align="center" colspan="2">考试时间</td>
+                        <%--<td width="35" align="center" colspan="2">考试时间</td>--%>
                     </tr>
                     </thead>
                     <tbody>
@@ -485,13 +507,13 @@
                 '   </td>',
                 '   <td align="center">' + userCanLeave.title,
                 '   </td>',
-                '   <td style="text-align: center">' + userCanLeave.lbDate,
-                '   </td>',
                 '   <td class="rhGrid-td-hide">' + userCanLeave.BM_ID,
                 '   </td>',
                 '</tr>'
             ].join(''));
         }
+//        '   <td style="text-align: center">' + userCanLeave.lbDate,
+//            '   </td>',
 
 
         /*将参数bmId对应的，报名添加到请假的考试列表中*/
@@ -522,9 +544,22 @@
             data.formData = jsonData;
         });
         $fileUpload.fileupload({
+            autoUpload: false,//是否自动上传
+            acceptFileTypes: /(.|\/)(jpe?g|png)$/i,//文件格式限制
+            maxNumberOfFiles: 1,//最大上传文件数目
+            maxFileSize: 5000000,//文件不超过5M
+            sequentialUploads: true,//是否队列上传
             url: '/file',
             dataType: 'json',
             add: function (e, data) {
+
+                var uploadErrors = [];
+
+                var acceptFileTypes = /\/(pdf|xml)$/i;
+                if(data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type'])) {
+                    uploadErrors.push('Tipo de Archivo no Aceptado');
+                }
+
                 for (var i = 0; i < data.files.length; i++) {
                     var obj = data.files[i];
                     var $li = $([
@@ -582,14 +617,14 @@
         var tds = tr.getElementsByTagName("td");
 //                var xu_hao = tds[1].innerText.trim();
         var qj_name = tds[2].innerText.trim();
-        var ks_date = tds[3].innerText.trim();
-        var bm_id = tds[4].innerText.trim();
+//        var ks_date = tds[3].innerText.trim();
+        var bm_id = tds[3].innerText.trim();
         var qjksTbody = jQuery('#qjks-table tbody');
         qjksTbody.append(
             '<tr data-id="' + bm_id + '">' +
             '<td class="rhGrid-td-hide">' + bm_id + '</td>' +
             '<td align="center" width="35%">' + qj_name + '</td>' +
-            '<td align="center" width="35%">' + ks_date + '</td>' +
+//            '<td align="center" width="35%">' + ks_date + '</td>' +
             '<td align="center" width="35%" >' +
             '   <a style="cursor:pointer;" data-id="' + bm_id + '" onclick="delOne(this)">删除</a>' +
             '</td>' +
@@ -740,94 +775,6 @@
         });
     }
 
-</script>
-<script type="text/javascript">
-    //上传资料
-    function upImg(callback) {
-        var formData = new FormData($("#imgformid")[0]);
-        return $.ajax({
-            url: "<%=CONTEXT_PATH%>/sy/base/frame/coms/ueditor/jsp/imageUp.jsp",
-            type: 'POST',
-            data: formData,
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (returndata) {
-                returndata = JSON.parse(returndata.trim().replace(/\'/g, '\"'));
-                if (returndata.url) {
-                    if (callback) {
-                        callback(returndata.url);
-                    }
-                } else {
-                    alert('图片上传失败请重试！');
-                }
-            },
-            error: function (returndata) {
-            }
-        });
-
-        //        var eles = [
-        //            [
-        //                {
-        //                    ele: {
-        //                        type: 'img',
-        //                        id: 'img1',
-        //                        name: 'files',
-        //                        title: '',
-        //                        extendAttr: {filed: 'deatil_img', handle: 'single', url: ''}
-        //                    }
-        //                }
-        //            ]
-        //        ];
-        //        var bsForm = new BSForm({eles: eles, autoLayout: true}).Render('formContainer2', function (bf) {
-        //
-        //            global.Fn.InitPlugin('img', 'formContainer2');
-        //
-        //        });
-
-    }
-    function deleteImage() {
-        $('#preview').css('display', 'none');
-        $('#deleteLocalImag').css('display', 'none');
-
-        var caseImage = document.getElementById('caseImage');
-        caseImage.value = null;
-    }
-
-    function viewImage(file) {
-        $('#preview').css('display', 'block');
-        $('#deleteLocalImag').css('display', 'inline-block');
-
-        var preview = document.getElementById('preview');
-        if (file.files && file.files[0]) {
-            //火狐下
-            preview.style.display = "block";
-            preview.style.width = "88px";
-            preview.style.height = "88px";
-            preview.src = window.URL.createObjectURL(file.files[0]);
-            //            alert(preview.src);
-        } else {
-            //ie下，使用滤镜
-            file.select();
-            var imgSrc = document.selection.createRange().text;
-            var localImagEl = document.getElementById("localImag");
-            //必须设置初始大小
-            localImagEl.style.width = "88px";
-            localImagEl.style.height = "88px";
-            try {
-                localImagEl.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
-                locem("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
-            } catch (e) {
-                alert("您上传的图片格式不正确，请重新选择!");
-                return false;
-            }
-            preview.style.display = 'none';
-            document.selection.empty();
-        }
-        return true;
-    }
-    //    FireFly.doAct()
 </script>
 
 

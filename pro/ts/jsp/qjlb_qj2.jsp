@@ -206,8 +206,8 @@
                             <thead>
                             <tr style="background-color: #f0f0f0;padding-left: 5px;text-align: center">
                                 <td width="35%">考试名称</td>
-                                <td width="35%">考试开始时间</td>
-                                <td width="30%">操作</td>
+                                <%--<td width="35%">考试开始时间</td>--%>
+                                <%--<td width="30%">操作</td>--%>
                             </tr>
                             </thead>
                             <tbody>
@@ -534,12 +534,13 @@
                 '   </td>',
                 '   <td width="35%">' + bmInfo.title,
                 '   </td>',
-                '   <td width="35%">',//+ new Date(bmInfo.lbDate?bmInfo.lbDate:'').format("yyyy-mm-dd"),
-                '   </td>',
-                '   <td class="rhGrid-td-hide"><input type="text" name="lbids" value=""></td>',//'+bmInfo.lbDate+'
-                '   <td></td>',
+
                 '</tr>'
             ].join(''));
+//                '   <td width="35%">',//+ new Date(bmInfo.lbDate?bmInfo.lbDate:'').format("yyyy-mm-dd"),
+//                '   </td>',
+//            '   <td class="rhGrid-td-hide"><input type="text" name="lbids" value=""></td>',//'+bmInfo.lbDate+'
+//                '   <td></td>',
         }
     }
 

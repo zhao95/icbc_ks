@@ -216,7 +216,7 @@
             </div>
 
             <div class="form-group">
-                <label  class="col-sm-2 control-label">
+                <label class="col-sm-2 control-label">
                     借考的考试
                     <span style="color: red;font-weight: bold">*</span>
                 </label>
@@ -226,8 +226,8 @@
                             <thead>
                             <tr style="background-color: #f0f0f0;padding-left: 5px;text-align: center">
                                 <td width="35%">考试名称</td>
-                                <td width="35%">考试开始时间</td>
-                                <td width="30%">操作</td>
+                                <%--<td width="35%">考试开始时间</td>--%>
+                                <%--<td width="30%">操作</td>--%>
                             </tr>
                             </thead>
                             <tbody>
@@ -430,7 +430,7 @@
                                 UserBean user;
                                 try {
                                     user = UserMgr.getUser(shUcode);
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     user = new UserBean(new Bean());
                                 }
                         %>
@@ -554,12 +554,14 @@
                 '   </td>',
                 '   <td width="35%">' + bmInfo.title,
                 '   </td>',
-                '   <td width="35%">',//+ new Date(bmInfo.lbDate?bmInfo.lbDate:'').format("yyyy-mm-dd"),
-                '   </td>',
-                '   <td class="rhGrid-td-hide"><input type="text" name="lbids" value=""></td>',//'+bmInfo.lbDate+'
-                '   <td></td>',
+
                 '</tr>'
             ].join(''));
+//
+//                '   <td width="35%">',//+ new Date(bmInfo.lbDate?bmInfo.lbDate:'').format("yyyy-mm-dd"),
+//                '   </td>',
+//            '   <td class="rhGrid-td-hide"><input type="text" name="lbids" value=""></td>',//'+bmInfo.lbDate+'
+//                '   <td></td>',
         }
     }
 </script>
@@ -609,27 +611,27 @@
     }
 
     /*function fanhui() {
-        if ('<!%=hidden%>' === '') {
-            doPost('jklb.jsp', {});
-        }else{
-            doPost('/<!%=CONTEXT_PATH%>/qt/jsp/todo.jsp', {});
-        }
-    }
+     if ('<!%=hidden%>' === '') {
+     doPost('jklb.jsp', {});
+     }else{
+     doPost('/<!%=CONTEXT_PATH%>/qt/jsp/todo.jsp', {});
+     }
+     }
 
-    function doPost(to, data) {  // to:提交动作（action）,data:参数
-        var myForm = document.createElement("form");
-        myForm.method = "post";
-        myForm.action = to;
-        for (var i in data) {
-            var myInput = document.createElement("input");
-            myInput.setAttribute("name", i);  // 为input对象设置name
-            myInput.setAttribute("value", data[i]);  // 为input对象设置value
-            myForm.appendChild(myInput);
-        }
-        document.body.appendChild(myForm);
-        myForm.submit();
-        document.body.removeChild(myForm);  // 提交后移除创建的form
-    }*/
+     function doPost(to, data) {  // to:提交动作（action）,data:参数
+     var myForm = document.createElement("form");
+     myForm.method = "post";
+     myForm.action = to;
+     for (var i in data) {
+     var myInput = document.createElement("input");
+     myInput.setAttribute("name", i);  // 为input对象设置name
+     myInput.setAttribute("value", data[i]);  // 为input对象设置value
+     myForm.appendChild(myInput);
+     }
+     document.body.appendChild(myForm);
+     myForm.submit();
+     document.body.removeChild(myForm);  // 提交后移除创建的form
+     }*/
 
 </script>
 <script src="<%=CONTEXT_PATH%>/ts/js/qj_jk_apply.js"></script>
