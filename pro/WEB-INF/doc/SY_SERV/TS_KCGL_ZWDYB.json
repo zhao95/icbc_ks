@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"",
-"S_MTIME":"2017-12-06 03:35:15:305",
+"S_MTIME":"2017-12-21 09:50:45:737",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "TABLE_VIEW":"TS_KCGL_ZWDYB",
@@ -75,7 +75,7 @@
 {
 "ITEM_INPUT_MODE":"1",
 "ITEM_CARD_FORMAT":"",
-"S_MTIME":"2017-07-18 14:10:28:767",
+"S_MTIME":"2017-12-21 09:50:45:718",
 "ITEM_VALIDATE_HINT":"",
 "ITEM_USER_FLAG":"0",
 "ITEM_NAME":"考场ID",
@@ -83,7 +83,7 @@
 "ITEM_CARD_ROWS":"1",
 "ITEM_LIST_ORDER":"10",
 "ITEM_LIST_ALIGN":"1",
-"ITEM_UNIQUE_GROUP":"0",
+"ITEM_UNIQUE_GROUP":"1",
 "ITEM_CARD_ORDER":"",
 "ITEM_FIELD_LENGTH":"40",
 "S_FLAG":"1",
@@ -131,7 +131,7 @@
 {
 "ITEM_INPUT_MODE":"1",
 "ITEM_CARD_FORMAT":"",
-"S_MTIME":"2017-12-05 14:44:08:098",
+"S_MTIME":"2017-12-21 09:50:10:539",
 "ITEM_VALIDATE_HINT":"格式：1-1",
 "ITEM_USER_FLAG":"0",
 "ITEM_NAME":"系统座位号",
@@ -139,7 +139,7 @@
 "ITEM_CARD_ROWS":"1",
 "ITEM_LIST_ORDER":"20",
 "ITEM_LIST_ALIGN":"1",
-"ITEM_UNIQUE_GROUP":"0",
+"ITEM_UNIQUE_GROUP":"1",
 "ITEM_CARD_ORDER":"",
 "ITEM_FIELD_LENGTH":"40",
 "S_FLAG":"1",
@@ -187,7 +187,7 @@
 {
 "ITEM_INPUT_MODE":"1",
 "ITEM_CARD_FORMAT":"",
-"S_MTIME":"2017-12-06 03:35:15:291",
+"S_MTIME":"2017-12-20 16:18:47:117",
 "ITEM_VALIDATE_HINT":"",
 "ITEM_USER_FLAG":"0",
 "ITEM_NAME":"实际座位号",
@@ -199,7 +199,7 @@
 "ITEM_CARD_ORDER":"",
 "ITEM_FIELD_LENGTH":"40",
 "S_FLAG":"1",
-"ITEM_TIP":"三位数字，例：001",
+"ITEM_TIP":"",
 "_PK_":"1zABCMitF6f9wv2Nry3T",
 "ITEM_ID":"1zABCMitF6f9wv2Nry3T",
 "ITEM_CODE":"ZW_ZWH_SJ",
@@ -984,6 +984,33 @@
 {
 "ACT_TYPE":"2",
 "ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"save",
+"ACT_MEMO":"",
+"ACT_CODE":"saveAndAdd",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"3kDUYg3bV3lojWsHccLg",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"3kDUYg3bV3lojWsHccLg",
+"SERV_ID":"TS_KCGL_ZWDYB",
+"S_MTIME":"2017-12-19 17:12:25:832",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"55",
+"ACT_GROUP":"2",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"5",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":"保存并添加下一条"
+},
+{
+"ACT_TYPE":"2",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"copy",
 "ACT_MEMO":"",
 "ACT_CODE":"copyNew",
@@ -1003,7 +1030,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"5",
+"_ROWNUM_":"6",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"复制并新建"
@@ -1030,7 +1057,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"6",
+"_ROWNUM_":"7",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"变更历史"
@@ -1057,7 +1084,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"7",
+"_ROWNUM_":"8",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 删 除 "
@@ -1084,7 +1111,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"8",
+"_ROWNUM_":"9",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 入 "
@@ -1111,7 +1138,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"9",
+"_ROWNUM_":"10",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 出 "
@@ -1138,7 +1165,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"10",
+"_ROWNUM_":"11",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 接 收 "
@@ -1165,7 +1192,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"11",
+"_ROWNUM_":"12",
 "ACT_TIP":"zip文件导入",
 "EN_JSON":"",
 "ACT_NAME":"批量导入"
@@ -1192,7 +1219,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"12",
+"_ROWNUM_":"13",
 "ACT_TIP":"zip文件导出",
 "EN_JSON":"",
 "ACT_NAME":"批量导出"
@@ -1219,7 +1246,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"13",
+"_ROWNUM_":"14",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"删除"
