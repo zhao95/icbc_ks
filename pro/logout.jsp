@@ -1,4 +1,13 @@
 <%@ include file="sy/base/view/inHeader.jsp"%>
+<input></input>
 <script type="text/javascript">
-	window.location.href = FireFly.getContextPath() + "/";
+	<%
+	boolean debugMode = Context.getSyConf("PE_LOGIN_DEBUG_MODE", false);
+	%>
+	var debugMode ="<%=debugMode%>";
+	if(debugMode){
+		window.close();
+	}else{
+		window.location.href = FireFly.getContextPath() + "/";
+	}
 </script>
