@@ -3,7 +3,7 @@ var updateId = _viewer.getParHandler().getPKCode();
 var kcId = _viewer.getParHandler().getItem("KC_ID").getValue();
 _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 	var param = {};
-	param["SOURCE"] = "ZW_ZWH_XT~ZW_ZWH_SJ~ZW_ID";
+	param["SOURCE"] = "ZW_ZWH_XT~ZW_ZWH_SJ~ZW_IP~ZW_ID";
 	param["TYPE"] = "multi";
 	param["HIDE"] = "ZW_ID";
 	param["EXTWHERE"] = "and kc_id = '"+kcId+"'";
@@ -23,6 +23,8 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 	    			bean["ZW_ACTION"] = "update";//引入数据默认为修改
 	    			bean["ZW_ZWH_XT"] = data.ZW_ZWH_XT;
 	    			bean["ZW_ZWH_SJ"] = data.ZW_ZWH_SJ;
+	    			bean["ZW_IP"] = data.ZW_IP;
+	    			bean["ZW_DESC"] = data.ZW_DESC;
 	    			bean["ZW_ID"] = data.ZW_ID;
 	    			FireFly.doAct("TS_KCGL_UPDATE_ZWDYB","save",bean);
 	    		});

@@ -9,7 +9,6 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
-import com.rh.core.util.var.Var;
 
 public class KcglShServ extends CommonServ {
 
@@ -94,9 +93,9 @@ public class KcglShServ extends CommonServ {
 
 	// 相关子表
 	String[] tables1 = { "TS_KCGL_UPDATE_GLY", "TS_KCGL_UPDATE_JKIP", "TS_KCGL_UPDATE_IPSCOPE",
-		"TS_KCGL_UPDATE_IPZWH", "TS_KCGL_UPDATE_GLJG", "TS_KCGL_UPDATE_ZWDYB" };
-	String[] tables2 = { "TS_KCGL_GLY", "TS_KCGL_JKIP", "TS_KCGL_IPSCOPE", "TS_KCGL_IPZWH", "TS_KCGL_GLJG",
-		"TS_KCGL_ZWDYB" };
+		 "TS_KCGL_UPDATE_GLJG", "TS_KCGL_UPDATE_ZWDYB" };//"TS_KCGL_UPDATE_IPZWH",
+	String[] tables2 = { "TS_KCGL_GLY", "TS_KCGL_JKIP", "TS_KCGL_IPSCOPE",  "TS_KCGL_GLJG",
+		"TS_KCGL_ZWDYB" };//"TS_KCGL_IPZWH",
 	for (int i = 0; i < tables1.length; i++) {
 	    List<Bean> listTmp = ServDao.finds(tables1[i], "and UPDATE_ID = '" + pkCode + "'");
 	    for (int j = 0; j < listTmp.size(); j++) {
@@ -112,13 +111,13 @@ public class KcglShServ extends CommonServ {
 		case 2:
 		    actionCode = "IPS_ACTION";
 		    break;
+//		case 3:
+//		    actionCode = "IPZ_ACTION";
+//		    break;
 		case 3:
-		    actionCode = "IPZ_ACTION";
-		    break;
-		case 4:
 		    actionCode = "JG_ACTION";
 		    break;
-		case 5:
+		case 4:
 		    actionCode = "ZW_ACTION";
 		    break;
 		}
