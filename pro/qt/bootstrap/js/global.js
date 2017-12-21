@@ -1074,11 +1074,21 @@ global.Fn.InitUploadImage1 = function(container, bmid) {
 	var $fileUpload = $(':file', $upload);
 	// data赋值
 	$fileUpload.bind('fileuploadsubmit', function(e, data) {
+		var arr = data.files[0].name.split(".");
+		var size = data.files[0].size;
+		if (arr[1] != "xls" && arr[1] != "xlsx") {
+			alert("请选择excel文件");
+			return false;
+		} else if(size>1024*1024*20){
+			alert("文件不能超过20M");
+			return false;
+		}else{
 		// console.log(data);
 		var jsonData = {};
 		jsonData["DATA_ID"] = bmid;
 		jsonData["SERV_ID"] = "TS_BMSH_STAY";
 		data.formData = jsonData;
+		}
 	});
 	$fileUpload
 			.fileupload({
@@ -1104,11 +1114,6 @@ global.Fn.InitUploadImage1 = function(container, bmid) {
 					if (s != "") {
 						var i = 0;
 						i++;
-						var arr = s.split(".");
-						if (arr[1] != "xls" && arr[1] != "xlsx") {
-							alert("请选择excel文件");
-							deletefiles(s);
-						} else {
 							$(".upload-list>ul", $upload)
 									.append(
 											'<div width:"100px" id='
@@ -1119,7 +1124,6 @@ global.Fn.InitUploadImage1 = function(container, bmid) {
 													+ s
 													+ '</a>&nbsp;&nbsp;&nbsp;&nbsp;<a style="font-size:13px" href="#" onclick=deletefile(this)>删除</a></li></div>');
 							
-						}
 					} else {
 						global.Fn.ShowMsg({
 							type : 'alert:error',

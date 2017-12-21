@@ -1938,10 +1938,10 @@ public class BmlbServ extends CommonServ {
 		List<Bean> query = Transaction.getExecutor().query(sql);*/
 			List<Bean> list = ServDao.finds("TS_BMLB_BM", "AND BM_CODE = '"+code+"' and XM_ID='"+xmid+"' AND BM_STATE = 1");
 			//删除已报名的  kslbk_id
-			for (Bean bean : list) {
+			/*for (Bean bean : list) {
 				//已报名的考试类别   
-				/*String KSLB_ID = bean.getStr("KSLBK_ID");//因为有重复的考试  所以  不用考试类别库id
-*/				String KSLB_CODE = bean.getStr("BM_LB_CODE");
+				String KSLB_ID = bean.getStr("KSLBK_ID");//因为有重复的考试  所以  不用考试类别库id
+				String KSLB_CODE = bean.getStr("BM_LB_CODE");
 				String KSLB_XL = bean.getStr("BM_XL_CODE");
 				String KSLB_MK = bean.getStr("BM_MK_CODE");
 				String KSLB_TYPE = bean.getStr("BM_TYPE");
@@ -1955,7 +1955,26 @@ public class BmlbServ extends CommonServ {
 					query.remove(i);
 				}
 				}
-			}
+			}*/
+			//考试类别库考试
+			for(int i = 0;i<query.size();i++){
+				String kslbk_code = query.get(i).getStr("KSLB_CODE");
+				String kslb_xl = query.get(i).getStr("KSLB_XL_CODE");
+				String kslb_mk = query.get(i).getStr("KSLB_MK_CODE");
+				String kslb_type = query.get(i).getStr("KSLB_TYPE");
+				for (Bean bean : list) {
+					//已报名的考试类别   
+					/*String KSLB_ID = bean.getStr("KSLBK_ID");//因为有重复的考试  所以  不用考试类别库id
+	*/				String KSLB_CODE = bean.getStr("BM_LB_CODE");
+					String KSLB_XL = bean.getStr("BM_XL_CODE");
+					String KSLB_MK = bean.getStr("BM_MK_CODE");
+					String KSLB_TYPE = bean.getStr("BM_TYPE");
+					if(KSLB_CODE.equals(kslbk_code)&&KSLB_XL.equals(kslb_xl)&&KSLB_MK.equals(kslb_mk)&&KSLB_TYPE.equals(kslb_type)){
+						query.remove(i);
+						i--;
+					}
+				}
+				}
 			//最后的
 			String ids = "";
 			for(int i = 0;i<query.size();i++){
