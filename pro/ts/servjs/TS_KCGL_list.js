@@ -28,20 +28,22 @@ $("#TS_KCGL .rhGrid").find("tr").each(function(index, item) {
 		
 		var state = $(item).find("td[icode='KC_STATE']").attr("title");
 		
-		$(item).find("td[icode='BUTTONS']").append("<div operCode='option' rowpk='"+dataId+"'><font size='3'>···</font></div>");
-		
+		$(item).find("td[icode='BUTTONS']").append("<span operCode='option' rowpk='"+dataId+"'><font size='3'>···</font></span>");
 		var abtns = ''+
-		'<a class="rhGrid-td-rowBtnObj" operCode="optIPScopeBtn" rowpk="'+dataId+'" style="cursor:pointer">&nbsp考场IP段设置&nbsp</span></a>'+
-		'<a class="rhGrid-td-rowBtnObj" operCode="optIPZwhBtn" rowpk="'+dataId+'" style="cursor:pointer">考场IP座位号&nbsp</a>'+
-		'<a class="rhGrid-td-rowBtnObj" operCode="optSeatBtn" rowpk="'+dataId+'" style="cursor:pointer">系统对应座位号&nbsp</a>'+
-		'<a class="rhGrid-td-rowBtnObj" operCode="optJgBtn" rowpk="'+dataId+'" style="cursor:pointer">关联机构&nbsp</a>'+
-		'<a class="rhGrid-td-rowBtnObj" operCode="optCopyBtn" rowpk="'+dataId+'" style="cursor:pointer">复制&nbsp</a>';
+//		'<a class="rhGrid-td-rowBtnObj" operCode="optIPScopeBtn" rowpk="'+dataId+'" style="cursor:pointer">&nbsp考场IP段设置&nbsp</span></a>'+
+//		'<a class="rhGrid-td-rowBtnObj" operCode="optIPZwhBtn" rowpk="'+dataId+'" style="cursor:pointer">考场IP座位号&nbsp</a>'+
+//		'<a class="rhGrid-td-rowBtnObj" operCode="optSeatBtn" rowpk="'+dataId+'" style="cursor:pointer">系统对应座位号&nbsp</a>'+
+//		'<a class="rhGrid-td-rowBtnObj" operCode="optJgBtn" rowpk="'+dataId+'" style="cursor:pointer">关联机构&nbsp</a>'+
+		'<a class="rhGrid-td-rowBtnObj" operCode="optCopyBtn" rowpk="'+dataId+'" style="cursor:pointer">&nbsp&nbsp复制&nbsp</a>';
 //		'<a class="rhGrid-td-rowBtnObj" operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>';
 		
 		if(state < 5){
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">垃圾箱&nbsp</a>';
 		}else{
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optBackTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">撤销&nbsp</a>';
+		}
+		if(state == 5){
+			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optUpdateApplyBtn" rowpk="'+dataId+'" style="cursor:pointer">变更申请&nbsp</a>';
 		}
 		abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optEditBtn" rowpk="'+dataId+'" style="cursor:pointer">编辑&nbsp</a>';
 		abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optLookBtn" rowpk="'+dataId+'" style="cursor:pointer">查看&nbsp</a>';
@@ -102,7 +104,8 @@ function bindCard(){
 		$(".hoverDiv").css('display','none');
 		var a=FireFly.doAct("TS_UTIL","copy",{"servId":_viewer.servId,"pkCode":pkCode,"primaryColCode":"KC_ID"},true,false,function(data){
 			if(data._MSG_.indexOf("OK")!= -1){;
-				window.location.reload();
+//				window.location.reload();
+				_viewer.refreshGrid();
 			}
 		});
 		console.log(a);
@@ -116,14 +119,30 @@ function bindCard(){
 		 openMyCard(pkCode);
 	});
 	
+	jQuery(".hoverDiv [operCode='optUpdateApplyBtn']").unbind("click").bind("click", function(){
+		var pkCode = jQuery(this).attr("rowpk");
+		$(".hoverDiv").css('display','none');
+
+		var temp = {
+				"act" : UIConst.ACT_CARD_ADD,
+				"sId" : "TS_KCGL_UPDATE",
+				"parHandler" : _viewer,
+				"kcId":pkCode,
+				"widHeiArray" : [ width, height ],
+				"xyArray" : [ 100, 100 ]
+		};
+		var cardView = new rh.vi.cardView(temp);
+		cardView.show();
+	});
+	
 	//放入垃圾箱
 	jQuery(".hoverDiv [operCode='optTrashBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
 		FireFly.doAct("TS_UTIL","trash",{"servId":_viewer.servId,"pkCodes":pkCode,"stateColCode":"KC_STATE","action":"add"},true,false,function(data){
 			if(data._MSG_.indexOf("OK")!= -1){
-//				_viewer.onRefreshGridAndTree();
-				window.location.reload();
+				_viewer.refreshGrid();
+//				window.location.reload();
 			}
 		});
 	});
@@ -133,7 +152,8 @@ function bindCard(){
 		$(".hoverDiv").css('display','none');
 		FireFly.doAct("TS_UTIL","trash",{"servId":_viewer.servId,"pkCodes":pkCode,"stateColCode":"KC_STATE","action":"del"},true,false,function(data){
 			if(data._MSG_.indexOf("OK")!= -1){
-				window.location.reload();
+//				window.location.reload();
+				_viewer.refreshGrid();
 			}
 		});
 	});
@@ -175,7 +195,8 @@ _viewer.getBtn("trash").unbind("click").bind("click", function(event) {
 
 	FireFly.doAct("TS_UTIL","trash",{"servId":_viewer.servId,"pkCodes":pkArray.join(),"stateColCode":"KC_STATE","action":"add"},true,false,function(data){
 		if(data._MSG_.indexOf("OK")!= -1){
-			window.location.reload();
+//			window.location.reload();
+			_viewer.refreshGrid();
 		}
 	});
 });

@@ -3,12 +3,20 @@ $(".rhGrid").find("tr").unbind("dblclick");
 //每一行添加编辑和删除
 $("#TS_KCGL_JY .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
-		var dataId = item.id;		
-		$(item).find("td[icode='BUTTONS']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_JY-update" actcode="update" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_JY-stop" actcode="stop" rowpk="'+dataId+'"><span class="rh-icon-inner">禁用</span><span class="rh-icon-img btn-edit"></span></a>'+
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_JY-open" actcode="open" rowpk="'+dataId+'"><span class="rh-icon-inner">解禁</span><span class="rh-icon-img btn-edit"></span></a>'
-		);
+		var dataId = item.id;
+		var state = $(item).find("td[icode='KC_STATE']").html();
+		if(state == 5){
+			$(item).find("td[icode='BUTTONS']").append(
+					'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_JY-update" actcode="update" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+
+					'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_JY-stop" actcode="stop" rowpk="'+dataId+'"><span class="rh-icon-inner">禁用</span><span class="rh-icon-img btn-edit"></span></a>'
+			);
+		}else{
+			$(item).find("td[icode='BUTTONS']").append(
+					'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_JY-update" actcode="update" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+
+					'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_KCGL_JY-open" actcode="open" rowpk="'+dataId+'"><span class="rh-icon-inner">启用</span><span class="rh-icon-img btn-edit"></span></a>'
+			);
+		}
+		
 		// 为每个按钮绑定卡片
 		bindCard();
 	}
@@ -60,7 +68,7 @@ function bindCard(){
 		var param = {};
 		param["_PK_"] = pkCode;
 		param["KC_STATE"] = 5;
-		if (confirm("确定开放此考场？") == true) {
+		if (confirm("确定启用此考场？") == true) {
 			FireFly.doAct(_viewer.servId, "save", param, true, false,function(data) {
 				if (true) {
 					_viewer.refreshGrid();

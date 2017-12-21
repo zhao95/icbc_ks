@@ -1,5 +1,10 @@
 var _viewer = this;
-var kcId = _viewer.getParHandler().getParHandler().getPKCode();
+var kcId = "";
+if(_viewer.getParHandler().servId == "TS_KCGL"){
+	kcId = _viewer.opts.kcId;
+}else{
+	kcId = _viewer.getParHandler().getParHandler().getPKCode();
+}
 var pkCode = _viewer.getPKCode();
 if (_viewer._actVar == "cardAdd") {
 	if(_viewer.getItem("KC_ID").getValue() == ""){
@@ -21,9 +26,18 @@ _viewer.getBtn("commit").unbind("click").bind("click", function(event) {
 	}
 	_viewer.getItem("KC_COMMIT").setValue(1);
 	_viewer._saveForm();
+	setTimeout(function(){
+		jQuery("#TS_KCGL_UPDATE-winDialog").dialog("close");
+	}, 200);
 });
 
-var servId = _viewer.getParHandler().getParHandler().servId;
+var servId = "";
+if(_viewer.getParHandler().servId == "TS_KCGL"){
+	servId = "TS_KCGL";
+}else{
+	servId = _viewer.getParHandler().getParHandler().servId;
+}	
+
 if (servId == "TS_KCGL_SH") {
 	_viewer.getBtn("commit").hide();
 } else {
@@ -38,15 +52,22 @@ _viewer.getBtn("shTgBtn").unbind("click").bind("click", function(event) {
 			
 		});
 		_viewer._saveForm();
+		setTimeout(function(){
+			_viewer.getParHandler().refreshGrid();
+			jQuery("#TS_KCGL_UPDATE-winDialog").dialog("close");
+		}, 200);
 	} else {
 		alert("已审核过");
 	}
-
 });
 _viewer.getBtn("shBtgBtn").unbind("click").bind("click", function(event) {
 	if (_viewer.getItem("UPDATE_AGREE").getValue() == 0) {
 		_viewer.getItem("UPDATE_AGREE").setValue(2);
 		_viewer._saveForm();
+		setTimeout(function(){
+			_viewer.getParHandler().refreshGrid();
+			jQuery("#TS_KCGL_UPDATE-winDialog").dialog("close");
+		}, 200);
 	} else {
 		alert("已审核过");
 	}
