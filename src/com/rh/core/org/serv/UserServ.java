@@ -26,6 +26,7 @@ import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.Constant;
 import com.rh.core.util.EncryptUtils;
 import com.rh.core.util.UserName2PinyinUtils;
+import com.rh.ts.pvlg.PvlgUtils;
 
 /**
  * 用户服务类
@@ -397,4 +398,19 @@ public class UserServ extends CommonServ {
         b.remove("ODEPT_CODE");
         b.remove("_OLDBEAN_");
     }
+    
+    /**
+	 * 查询之前的拦截方法，由子类重载
+	 * 
+	 * @param paramBean
+	 *            参数信息
+	 */
+  	protected void beforeQuery(ParamBean paramBean) {
+  			ParamBean param = new ParamBean();
+  			param.set("paramBean", paramBean);
+//  			param.set("ctlgModuleName", ctlgModuleName);
+  			param.set("fieldName","DEPT_CODE");
+  			param.set("serviceName", paramBean.getServId());
+  			PvlgUtils.setOrgPvlgWhere(param);	
+  		}
 }
