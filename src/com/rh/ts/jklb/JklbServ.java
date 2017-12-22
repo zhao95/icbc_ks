@@ -10,6 +10,7 @@ import com.rh.core.icbc.basedata.KSSendTipMessageServ;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
+import com.rh.core.serv.bean.PageBean;
 import com.rh.core.util.Constant;
 import com.rh.ts.util.BMUtil;
 import com.rh.ts.util.TsConstant;
@@ -44,20 +45,20 @@ public class JklbServ extends CommonServ {
      */
     public OutBean getAppliedJkList(ParamBean paramBean) {
               /*分页参数处理*/
-//        PageBean page = paramBean.getQueryPage();
-//        int rowCount = paramBean.getShowNum(); //通用分页参数优先级最高，然后是查询的分页参数
-//        if (rowCount > 0) { //快捷参数指定的分页信息，与finds方法兼容
-//            page.setShowNum(rowCount); //从参数中获取需要取多少条记录，如果没有则取所有记录
-//            page.setNowPage(paramBean.getNowPage());  //从参数中获取第几页，缺省为第1页
-//        } else {
-//            if (!page.contains(Constant.PAGE_SHOWNUM)) { //初始化每页记录数设定
-//                if (paramBean.getQueryNoPageFlag()) { //设定了不分页参数
-//                    page.setShowNum(0);
-//                } else { //没有设定不分页，取服务设定的每页记录数
-//                    page.setShowNum(50);
-//                }
-//            }
-//        }
+        PageBean page = paramBean.getQueryPage();
+        int rowCount = paramBean.getShowNum(); //通用分页参数优先级最高，然后是查询的分页参数
+        if (rowCount > 0) { //快捷参数指定的分页信息，与finds方法兼容
+            page.setShowNum(rowCount); //从参数中获取需要取多少条记录，如果没有则取所有记录
+            page.setNowPage(paramBean.getNowPage());  //从参数中获取第几页，缺省为第1页
+        } else {
+            if (!page.contains(Constant.PAGE_SHOWNUM)) { //初始化每页记录数设定
+                if (paramBean.getQueryNoPageFlag()) { //设定了不分页参数
+                    page.setShowNum(0);
+                } else { //没有设定不分页，取服务设定的每页记录数
+                    page.setShowNum(50);
+                }
+            }
+        }
 
 //        select count
         String currentUserCode = Context.getUserBean().getCode();
@@ -68,34 +69,34 @@ public class JklbServ extends CommonServ {
         String sql = "select a.*,(case when exists(select '' from ts_comm_mind b where b.DATA_ID=JK_ID) then 'false' else 'true' end) as canRetract from TS_JKLB_JK a where a.USER_CODE ='" + currentUserCode + "' order by a.JK_DATE";
         List<Bean> dataList = Transaction.getExecutor().query(sql);//, page.getNowPage(), page.getShowNum(), null, null
 
-//        String countSql = "select count(*) as count " + sql.substring(sql.indexOf("from TS_QJLB_QJ a"));
-//        /*设置数据总数*/
-//        int count = dataList.size();
-//        int showCount = page.getShowNum();
-//        boolean bCount; //是否计算分页
-//        if ((showCount == 0) || paramBean.getQueryNoPageFlag()) {
-//            bCount = false;
-//        } else {
-//            bCount = true;
-//        }
+        String countSql = "select count(*) as count " + sql.substring(sql.indexOf("from TS_JKLB_JK a"));
+        /*设置数据总数*/
+        int count = dataList.size();
+        int showCount = page.getShowNum();
+        boolean bCount; //是否计算分页
+        if ((showCount == 0) || paramBean.getQueryNoPageFlag()) {
+            bCount = false;
+        } else {
+            bCount = true;
+        }
         OutBean outBean = new OutBean();
-//        if (bCount) { //进行分页处理
-//            if (!page.contains(Constant.PAGE_ALLNUM)) { //如果有总记录数就不再计算
-//                int allNum;
-//                if ((page.getNowPage() == 1) && (count < showCount)) { //数据量少，无需计算分页
-//                    allNum = count;
-//                } else {
-//                    allNum = Transaction.getExecutor().queryOne(countSql).getInt("COUNT");
-//                }
-//                page.setAllNum(allNum);
-//            }
-//            outBean.setCount(page.getAllNum()); //设置为总记录数
-//        } else {
-//            outBean.setCount(dataList.size());
-//        }
+        if (bCount) { //进行分页处理
+            if (!page.contains(Constant.PAGE_ALLNUM)) { //如果有总记录数就不再计算
+                int allNum;
+                if ((page.getNowPage() == 1) && (count < showCount)) { //数据量少，无需计算分页
+                    allNum = count;
+                } else {
+                    allNum = Transaction.getExecutor().queryOne(countSql).getInt("COUNT");
+                }
+                page.setAllNum(allNum);
+            }
+            outBean.setCount(page.getAllNum()); //设置为总记录数
+        } else {
+            outBean.setCount(dataList.size());
+        }
         outBean.setData(dataList);
         outBean.set("FLAG_COUNT", lookCount);
-//        outBean.setPage(page);
+        outBean.setPage(page);
         return outBean;
     }
 
@@ -571,10 +572,11 @@ public class JklbServ extends CommonServ {
                 //请假了不能借考
                 " where now() BETWEEN str_to_date(XM_START,'%Y-%m-%d %H:%i:%s') and str_to_date(XM_END,'%Y-%m-%d %H:%i:%s') " +
                 "and exists( " +
-                "select * from TS_BMSH_PASS pass " +
-                "where not EXISTS(select '' from ts_jklb_jk jk where jk.JK_KSNAME like CONCAT('%',pass.BM_ID,'%') and jk.JK_STATUS in('1','2')) " +
-                " and not EXISTS(select '' from TS_QJLB_QJ qj where qj.QJ_KSNAME like CONCAT('%',pass.BM_ID,'%') and qj.QJ_STATUS in('1','2')) " +
-                " and pass.BM_ID !='' and pass.BM_ID is not null and a.XM_ID =pass.XM_ID and BM_CODE ='" + userCode + "')");
+                " select * from TS_BMSH_PASS pass " +
+                " where pass.BM_ID !='' and pass.BM_ID is not null and a.XM_ID =pass.XM_ID and BM_CODE ='" + userCode + "'" +
+                "  and not EXISTS(select '' from ts_jklb_jk jk where jk.JK_KSNAME like CONCAT('%',pass.BM_ID,'%') and jk.JK_STATUS in('1','2')) " +
+                "  and not EXISTS(select '' from TS_QJLB_QJ qj where qj.QJ_KSNAME like CONCAT('%',pass.BM_ID,'%') and qj.QJ_STATUS in('1','2')) " +
+                " )");
 
         for (Iterator<Bean> iterator = xmBeanList.iterator(); iterator.hasNext(); ) {
             Bean xmBean = iterator.next();

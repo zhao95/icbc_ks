@@ -153,6 +153,20 @@
                     </tbody>
                 </table>
 
+                <%--每页显示条数--%>
+                <select class="showNumSelect"
+                        style="padding:3px;height: 29px;border:#8db5d7 1px solid;border-radius: 3px;margin: 20px 10px 20px 0;float: right;"
+                        title="">
+                    <option value="10">10 条/页</option>
+                    <option value="20">20 条/页</option>
+                    <option value="30">30 条/页</option>
+                    <option value="40">40 条/页</option>
+                    <option value="50">50 条/页</option>
+                </select>
+
+                <%--分页--%>
+                <div class='rhGrid-page'></div>
+
             </div>
         </div>
     </div>
@@ -220,7 +234,8 @@
                         //撤回出错
                         alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,') + 6, response._MSG_.length));
                     } else {
-                        setAppliedJkList();
+                        listPage.search();
+//                        setAppliedJkList();
                         alert('撤回成功');
                     }
                     $("#retractModal").find('button[class="btn btn-success"]').attr('id', '');
@@ -230,7 +245,8 @@
 
 
         $('a[id="ayishen"]').on('shown.bs.tab', function (e) {
-            setJkLookFlagTo1(jkList);
+            listPage.search();
+//            setJkLookFlagTo1(jkList);
 //            e.target; // newly activated tab
 //            e.relatedTarget;// previous active tab
         });
@@ -238,7 +254,7 @@
         var currentUserCode = System.getUser("USER_CODE");
 
         /*可申请的借考列表*/
-        var table1Tbody = jQuery('#ybmtable1 tbody');
+        var table1Tbody = jQuery('#ybmtable1').find('tbody');
         table1Tbody.html('');
         //获取可申请的借考数据
         var data = {USER_CODE: currentUserCode};
@@ -273,11 +289,298 @@
                 '</tr>'
             ].join(''));
         }
-
-        setAppliedJkList();
+        listPage = new ListPage();
+        //变更每页显示条数时，重新获取数据
+        jQuery('#table2').find('.showNumSelect').on('change', function () {
+            listPage.search();
+        });
+//        setAppliedJkList();
     });
 
     var jkList = [];
+    var listPage;
+
+    var ListPage = function () {
+        // 构建页码所需参数
+        this.showPageNum = 5; // 最多显示的页码
+        this.startNum = 1; // 中间页码的第一个页码
+        this.endNum = this.startNum; // 中间页码的最后一个页码
+    };
+    /*获取搜索条件 where语句*/
+    ListPage.prototype.getExtWhere = function () {
+        return "";
+    };
+    /*根据条件获取数据*/
+    ListPage.prototype.getListData = function (num) {
+        //获取已申请的请假数据
+        var showNum = parseInt(jQuery('#table2').find('.showNumSelect').find("option:selected").val());
+        var data = {_SELECT_: '*'};
+        data["_PAGE_"] = {"NOWPAGE": num, "SHOWNUM": showNum};
+        data["_extWhere"] = this.getExtWhere();
+        return FireFly.doAct('TS_JKLB_JK', 'getAppliedJkList', data);
+    };
+
+    /*根据listdata构建表格*/
+    ListPage.prototype.bldTable = function (listData) {
+        /*已申请的借考*/
+        var table1Tbody2 = jQuery('#ybmtable2').find('tbody');
+        table1Tbody2.html('');
+        //获取已申请的借考数据
+        if (listData.FLAG_COUNT !== '0') {
+            $('#yishen').html('已申请的借考(' + listData.FLAG_COUNT + ')');
+        }
+        jkList = listData._DATA_;
+        for (var i = 0; i < jkList.length; i++) {
+            var jk = jkList[i];
+            var jkId = jk.JK_ID;
+            var jkName = jk.JK_NAME;
+            var jkTitle = jk.JK_TITLE;
+            var jkDept = jk.JK_DEPT;
+            var jkDate = jk.JK_DATE;
+            var jkStatus = jk.JK_STATUS;
+            var yjfh = jk.JK_YJFH;
+            var yjfhDept = FireFly.doAct("SY_ORG_DEPT_ALL", "byid", {"_PK_": yjfh}, false, false);
+            if (jkStatus === "1") {
+                jkStatus = "审核中";
+            } else if (jkStatus === "2") {
+                jkStatus = "已通过";
+            } else if (jkStatus === "3") {
+                jkStatus = "未通过";
+            } else if (jkStatus === "4") {
+                jkStatus = "已撤回";
+            }
+            var $tr = jQuery([
+                '<tr style="height: 50px;' + (jk.LOOK_FLAG === '0' ? 'color:red;' : '') + '">',
+                '	<td class="rhGrid-td-hide">',
+                '	    ' + jkId,
+                '	</td>',
+                '	<td style="padding-left: 10px;text-align: left;">',
+                '	    ' + (i + 1),
+                '	</td>',
+                '	<td>',
+                '	    ' + jkTitle,
+                '	</td>',
+                '	<td>',
+                '	    ' + jkDept,
+                '	</td>',
+                '	<td>',
+                '	    ' + jkName,
+                '	</td>',
+                '	<td>',
+                '	    ' + yjfhDept.DEPT_NAME,
+                '	</td>',
+                '	<td>',
+                '	    ' + jkDate,
+                '	</td>',
+                '	<td>',
+                '	    ' + jkStatus,
+                '	</td>',
+                '</tr>',
+            ].join(''));
+
+            var $td = jQuery(['	<td>',
+                '	    <input type="button" onclick="chakan(this)" value="查看"',
+                '	        style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"/>',
+                '	</td>'].join(''));
+
+            var $retract = jQuery(['<input type="button" id="' + jkId + '" value="撤回"',
+                ' style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"/>'
+            ].join(''));
+            $retract.unbind('click').bind('click', function () {
+                var jkId = $(this).attr('id');
+                var $retractModal = $("#retractModal");
+                $retractModal.find('button[class="btn btn-success"]').attr('id', jkId);
+                $retractModal.modal({backdrop: false, show: true});
+            });
+            if (jk.CANRETRACT === 'true' && jk.JK_STATUS !== "4") {
+                $td.append($retract);
+            }
+
+            $tr.append($td);
+            table1Tbody2.append($tr);
+        }
+        setJkLookFlagTo1(jkList);
+    };
+    /*构建主体内容（表格和分页）*/
+    ListPage.prototype._bldBody = function (num) {
+        var listData = this.getListData(num);
+        this._lPage = listData._PAGE_;
+        this._lData = listData._DATA_;
+        this.bldTable(listData);
+        this.bldPage(/*listData._PAGE_*/);
+    };
+    /*查询更新*/
+    ListPage.prototype.search = function () {
+        this.gotoPage(1);
+    };
+    /*跳转到指定页*/
+    ListPage.prototype.gotoPage = function (num) {
+        this._bldBody(num);
+    };
+    /*上一页*/
+    ListPage.prototype.prePage = function () {
+        var prePage = parseInt(this._lPage.NOWPAGE) - 1;
+        var nowPage = "" + ((prePage > 0) ? prePage : 1);
+        this.gotoPage(nowPage);
+    };
+    /*下一页*/
+    ListPage.prototype.nextPage = function () {
+        var nextPage = parseInt(this._lPage.NOWPAGE) + 1;
+        var pages = parseInt(this._lPage.PAGES);
+        var nowPage = "" + ((nextPage > pages) ? pages : nextPage);
+        this.gotoPage(nowPage);
+    };
+    /*首页*/
+    ListPage.prototype.firstPage = function () {
+        this.gotoPage(1);
+    };
+    /*末页*/
+    ListPage.prototype.lastPage = function () {
+        this.gotoPage(this._lPage.PAGES);
+    };
+    /*构建分页*/
+    ListPage.prototype.bldPage = function () {
+        this._buildPageFlag = true;
+        var _self = this;
+//            this._page = jQuery("<div class='rhGrid-page'></div>");
+        this._page = jQuery(".rhGrid-page");
+        this._page.html('');
+        //判断是否构建分页
+        if (this._buildPageFlag === "false" || this._buildPageFlag === false) {
+            this._page.addClass("rhGrid-page-none");
+        } else if (this._lPage.PAGES === null) {//没有总条数的情况
+            if (this._lPage.NOWPAGE > 1) {//上一页 {"ALLNUM":"1","SHOWNUM":"1000","NOWPAGE":"1","PAGES":"1"}
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
+                    _self.prePage();
+                }));
+            } else {
+//			this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
+                this._page.append("<span class='disabled ui-corner-4'><</span>");
+            }
+            this._page.append("<span class='current ui-corner-4'>" + this._lPage.NOWPAGE + "</span>");	//当前页
+            if (this._lData.length === this._lPage.SHOWNUM) {//下一页
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+                    _self.nextPage();
+                }));
+            } else {
+//			this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
+                this._page.append("<span class='disabled ui-corner-4'>></span>");
+            }
+        } else if (!jQuery.isEmptyObject(this._lPage)) {
+            // 当前页码
+            var currentPageNum = parseInt(this._lPage.NOWPAGE);
+            // 总页数
+            var sumPage = parseInt(this._lPage.PAGES);
+
+            if (this.startNum + this.showPageNum < sumPage) {
+                this.endNum = this.startNum + this.showPageNum
+            } else {
+                this.endNum = sumPage;
+            }
+
+            // 总条数
+            var allNum = parseInt(this._lPage.ALLNUM);
+            // 显示上一页
+            if (currentPageNum !== 1) {
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
+                    _self.prePage();
+                }));
+            } else {
+//			this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
+                this._page.append("<span class='disabled ui-corner-4'><</span>");
+            }
+            // 移动页码
+            if (currentPageNum > this.startNum + Math.floor((this.endNum - this.startNum) / 2)) {// 如果点击了后面的页码，则后移
+                if (currentPageNum === sumPage) {// 点击了最后一页
+                    this.endNum = sumPage;
+
+                    if (this.endNum - this.showPageNum > 0) {
+                        this.startNum = this.endNum - this.showPageNum;
+                    } else {
+                        this.startNum = 1;
+                    }
+                } else {
+                    if (currentPageNum > this.showPageNum) {
+                        this.endNum = currentPageNum + 1;
+                        this.startNum = currentPageNum - this.showPageNum + 1;
+                    }
+                }
+            } else {// 否则前移
+                if (currentPageNum === 1) {// 点击了第一页
+                    this.startNum = 1;
+                } else {
+                    this.startNum = currentPageNum - 1;
+                }
+                if (this.startNum + this.showPageNum < sumPage) {
+                    this.endNum = this.startNum + this.showPageNum;
+                } else {
+                    this.endNum = sumPage;
+                }
+            }
+            // 显示首页
+            if (this.startNum !== 1) {
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>1</a>").click(function () {
+                    _self.gotoPage(parseInt(jQuery(this).html()));
+                })).append("...");
+            }
+            // 如果总页数小于本页显示的最大页码
+            if (sumPage < this.endNum) {
+                this.endNum = sumPage;
+            }
+            // 显示中间页码
+            for (var i = this.startNum; i <= this.endNum; i++) {
+                if (i === currentPageNum) {// 构建当前页
+                    this._page.append("<span class='current ui-corner-4'>" + i + "</span>");
+                } else {
+                    this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + i + "</a>").click(function () {
+                        _self.gotoPage(parseInt(jQuery(this).html()));
+                    }));
+                }
+            }
+            // 显示尾页
+            if (sumPage > this.endNum) {
+                this._page.append("...").append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + sumPage + "</a>").click(function () {
+                    _self.lastPage();
+                }));
+            }
+            // 显示下一页
+            if (currentPageNum !== sumPage) {
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+                    _self.nextPage();
+                }));
+            } else {
+//			this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
+                this._page.append("<span class='disabled ui-corner-4'>></span>");
+            }
+            // 显示跳转到指定页码
+            if (sumPage > 6) {
+                this._page.append("<input class='toPageNum ui-corner-4' type='text' value=''/>").append(jQuery("<input class='toPageBtn' type='button' value='GO' />").click(function () {
+                    try {
+                        var val = parseInt(jQuery(this).prev().val());
+                        if (val >= 1 && val <= sumPage) {
+                            _self.gotoPage(val);
+                        }
+                    } catch (e) {
+                        // 页码转换异常，忽略
+                    }
+                }));
+            }
+            //总条数显示
+//		jQuery("<span class='allNum'></span>").text("共" + allNum + "条").appendTo(this._page);
+//                jQuery("<span class='allNum'></span>").text(Language.transArr("rh_ui_grid_L1", [allNum])).appendTo(this._page);
+        }
+        // _PAGE_ :{ALLNUM: "2", NOWPAGE: "1", PAGES: "1", SHOWNUM: "50"}
+        //上一页
+//            if () {
+//            }
+//            pageBean.NOWPAGE;
+//            pageBean.PAGES;
+        return this._page;
+    };
 
     /**
      * 获取已申请的借考列表

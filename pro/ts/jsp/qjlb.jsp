@@ -152,6 +152,20 @@
                     </tbody>
                 </table>
 
+                <%--每页显示条数--%>
+                <select class="showNumSelect"
+                        style="padding:3px;height: 29px;border:#8db5d7 1px solid;border-radius: 3px;margin: 20px 10px 20px 0;float: right;"
+                        title="">
+                    <option value="10">10 条/页</option>
+                    <option value="20">20 条/页</option>
+                    <option value="30">30 条/页</option>
+                    <option value="40">40 条/页</option>
+                    <option value="50">50 条/页</option>
+                </select>
+
+                <%--分页--%>
+                <div class='rhGrid-page'></div>
+
             </div>
         </div>
     </div>
@@ -219,7 +233,8 @@
                         //撤回出错
                         alert(response._MSG_.substring(response._MSG_.indexOf('ERROR,') + 6, response._MSG_.length));
                     } else {
-                        setAppliedLeaveList();
+                        listPage.search();
+//                        setAppliedLeaveList();
                         alert('撤回成功');
                     }
                     $("#retractModal").find('button[class="btn btn-success"]').attr('id', '');
@@ -228,7 +243,8 @@
         });
 
         $('a[id="ayishen"]').on('shown.bs.tab', function (e) {
-            setQjLookFlagTo1(qjList);
+            listPage.search();
+//            setQjLookFlagTo1(qjList);
 //            e.target; // newly activated tab
 //            e.relatedTarget;// previous active tab
         });
@@ -271,11 +287,293 @@
             ].join(''));
         }
         // <a id="' + userCanLeave.XM_ID + '" onclick="qingjia2(this)">请假</a>',//id 为项目id
-
-        setAppliedLeaveList();
+        listPage = new ListPage();
+        //变更每页显示条数时，重新获取数据
+        jQuery('#table2').find('.showNumSelect').on('change', function () {
+            listPage.search();
+        });
+//        setAppliedLeaveList();
     });
 
     var qjList = [];
+    var listPage;
+
+    var ListPage = function () {
+        // 构建页码所需参数
+        this.showPageNum = 5; // 最多显示的页码
+        this.startNum = 1; // 中间页码的第一个页码
+        this.endNum = this.startNum; // 中间页码的最后一个页码
+    };
+    /*获取搜索条件 where语句*/
+    ListPage.prototype.getExtWhere = function () {
+        return "";
+    };
+    /*根据条件获取数据*/
+    ListPage.prototype.getListData = function (num) {
+        //获取已申请的请假数据
+        var showNum = parseInt(jQuery('#table2').find('.showNumSelect').find("option:selected").val());
+        var data = {_SELECT_: '*'};
+        data["_PAGE_"] = {"NOWPAGE": num, "SHOWNUM": showNum};
+        data["_extWhere"] = this.getExtWhere();
+        return FireFly.doAct('TS_QJLB_QJ', 'getAppliedLeaveList', data);
+    };
+
+    /*根据listdata构建表格*/
+    ListPage.prototype.bldTable = function (listData) {
+        /*已申请的请假*/
+        var table1Tbody2 = jQuery('#ybmtable2').find('tbody');
+        table1Tbody2.html('');
+//        listData.
+        if (listData.FLAG_COUNT !== '0') {
+            $('#yishen').html('已申请的请假(' + qjListBean.FLAG_COUNT + ')');
+        }
+        qjList = listData._DATA_;
+        for (var i = 0; i < qjList.length; i++) {
+            var qj = qjList[i];
+            var qjId = qj.QJ_ID;
+            var qjName = qj.QJ_NAME;
+            var qjTitle = qj.QJ_TITLE;
+            var qjDanwei = qj.QJ_DANWEI;
+            var qjDate = qj.QJ_DATE;
+            var qjStatus = qj.QJ_STATUS;
+            if (qjStatus === "1") {
+                qjStatus = "审核中";
+            } else if (qjStatus === "2") {
+                qjStatus = "已通过";
+            } else if (qjStatus === "3") {
+                qjStatus = "未通过";
+            } else if (qjStatus === "4") {
+                qjStatus = "已撤回";
+            }
+
+            var $tr = jQuery([
+                '<tr style="height: 50px;' + (qj.LOOK_FLAG === '0' ? 'color:red;' : '') + '">',
+                '	<td class="rhGrid-td-hide">',
+                '	    ' + qjId,
+                '	</td>',
+                '	<td style="padding-left: 10px;text-align: left;">',
+                '	    ' + (i + 1),
+                '	</td>',
+                '	<td>',
+                '	    ' + qjTitle,
+                '	</td>',
+                '	<td>',
+                '	    ' + qjDanwei,
+                '	</td>',
+                '	<td>',
+                '	    ' + qjName,
+                '	</td>',
+                '	<td>',
+                '	    ' + qjDate,
+                '	</td>',
+                '	<td  style="text-align: center">',
+                '	    ' + qjStatus,
+                '	</td>',
+                '</tr>'
+            ].join(''));
+
+            var $retract = jQuery(['<input type="button" id="' + qjId + '" value="撤回"',
+                ' style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"/>'
+            ].join(''));
+            $retract.unbind('click').bind('click', function () {
+                var qjId = $(this).attr('id');
+                var $retractModal = $('#retractModal');
+                $retractModal.find('button[class="btn btn-success"]').attr('id', qjId);
+                $retractModal.modal({backdrop: false, show: true});
+            });
+
+            var $td = jQuery(['	<td style="text-align: center">',
+                '	    <input type="button" onclick="chakan(this)" value="查看"',
+                '	        style="color:white;font-size:15px;background-color:LightSeaGreen;height:30px;width:70px"/>',
+                '	</td>'].join(''));
+            if (qj.CANRETRACT === 'true' && qj.QJ_STATUS !== "4") {
+                $td.append($retract);
+            }
+            $tr.append($td);
+            table1Tbody2.append($tr);
+        }
+        setQjLookFlagTo1(qjList)
+    };
+    /*构建主体内容（表格和分页）*/
+    ListPage.prototype._bldBody = function (num) {
+        var listData = this.getListData(num);
+        this._lPage = listData._PAGE_;
+        this._lData = listData._DATA_;
+        this.bldTable(listData);
+        this.bldPage(/*listData._PAGE_*/);
+    };
+    /*查询更新*/
+    ListPage.prototype.search = function () {
+        this.gotoPage(1);
+    };
+    /*跳转到指定页*/
+    ListPage.prototype.gotoPage = function (num) {
+        this._bldBody(num);
+    };
+    /*上一页*/
+    ListPage.prototype.prePage = function () {
+        var prePage = parseInt(this._lPage.NOWPAGE) - 1;
+        var nowPage = "" + ((prePage > 0) ? prePage : 1);
+        this.gotoPage(nowPage);
+    };
+    /*下一页*/
+    ListPage.prototype.nextPage = function () {
+        var nextPage = parseInt(this._lPage.NOWPAGE) + 1;
+        var pages = parseInt(this._lPage.PAGES);
+        var nowPage = "" + ((nextPage > pages) ? pages : nextPage);
+        this.gotoPage(nowPage);
+    };
+    /*首页*/
+    ListPage.prototype.firstPage = function () {
+        this.gotoPage(1);
+    };
+    /*末页*/
+    ListPage.prototype.lastPage = function () {
+        this.gotoPage(this._lPage.PAGES);
+    };
+    /*构建分页*/
+    ListPage.prototype.bldPage = function () {
+        this._buildPageFlag = true;
+        var _self = this;
+//            this._page = jQuery("<div class='rhGrid-page'></div>");
+        this._page = jQuery(".rhGrid-page");
+        this._page.html('');
+        //判断是否构建分页
+        if (this._buildPageFlag === "false" || this._buildPageFlag === false) {
+            this._page.addClass("rhGrid-page-none");
+        } else if (this._lPage.PAGES === null) {//没有总条数的情况
+            if (this._lPage.NOWPAGE > 1) {//上一页 {"ALLNUM":"1","SHOWNUM":"1000","NOWPAGE":"1","PAGES":"1"}
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
+                    _self.prePage();
+                }));
+            } else {
+//			this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
+                this._page.append("<span class='disabled ui-corner-4'><</span>");
+            }
+            this._page.append("<span class='current ui-corner-4'>" + this._lPage.NOWPAGE + "</span>");	//当前页
+            if (this._lData.length === this._lPage.SHOWNUM) {//下一页
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+                    _self.nextPage();
+                }));
+            } else {
+//			this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
+                this._page.append("<span class='disabled ui-corner-4'>></span>");
+            }
+        } else if (!jQuery.isEmptyObject(this._lPage)) {
+            // 当前页码
+            var currentPageNum = parseInt(this._lPage.NOWPAGE);
+            // 总页数
+            var sumPage = parseInt(this._lPage.PAGES);
+
+            if (this.startNum + this.showPageNum < sumPage) {
+                this.endNum = this.startNum + this.showPageNum
+            } else {
+                this.endNum = sumPage;
+            }
+
+            // 总条数
+            var allNum = parseInt(this._lPage.ALLNUM);
+            // 显示上一页
+            if (currentPageNum !== 1) {
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
+                    _self.prePage();
+                }));
+            } else {
+//			this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
+                this._page.append("<span class='disabled ui-corner-4'><</span>");
+            }
+            // 移动页码
+            if (currentPageNum > this.startNum + Math.floor((this.endNum - this.startNum) / 2)) {// 如果点击了后面的页码，则后移
+                if (currentPageNum === sumPage) {// 点击了最后一页
+                    this.endNum = sumPage;
+
+                    if (this.endNum - this.showPageNum > 0) {
+                        this.startNum = this.endNum - this.showPageNum;
+                    } else {
+                        this.startNum = 1;
+                    }
+                } else {
+                    if (currentPageNum > this.showPageNum) {
+                        this.endNum = currentPageNum + 1;
+                        this.startNum = currentPageNum - this.showPageNum + 1;
+                    }
+                }
+            } else {// 否则前移
+                if (currentPageNum === 1) {// 点击了第一页
+                    this.startNum = 1;
+                } else {
+                    this.startNum = currentPageNum - 1;
+                }
+                if (this.startNum + this.showPageNum < sumPage) {
+                    this.endNum = this.startNum + this.showPageNum;
+                } else {
+                    this.endNum = sumPage;
+                }
+            }
+            // 显示首页
+            if (this.startNum !== 1) {
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>1</a>").click(function () {
+                    _self.gotoPage(parseInt(jQuery(this).html()));
+                })).append("...");
+            }
+            // 如果总页数小于本页显示的最大页码
+            if (sumPage < this.endNum) {
+                this.endNum = sumPage;
+            }
+            // 显示中间页码
+            for (var i = this.startNum; i <= this.endNum; i++) {
+                if (i === currentPageNum) {// 构建当前页
+                    this._page.append("<span class='current ui-corner-4'>" + i + "</span>");
+                } else {
+                    this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + i + "</a>").click(function () {
+                        _self.gotoPage(parseInt(jQuery(this).html()));
+                    }));
+                }
+            }
+            // 显示尾页
+            if (sumPage > this.endNum) {
+                this._page.append("...").append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + sumPage + "</a>").click(function () {
+                    _self.lastPage();
+                }));
+            }
+            // 显示下一页
+            if (currentPageNum !== sumPage) {
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+                    _self.nextPage();
+                }));
+            } else {
+//			this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
+                this._page.append("<span class='disabled ui-corner-4'>></span>");
+            }
+            // 显示跳转到指定页码
+            if (sumPage > 6) {
+                this._page.append("<input class='toPageNum ui-corner-4' type='text' value=''/>").append(jQuery("<input class='toPageBtn' type='button' value='GO' />").click(function () {
+                    try {
+                        var val = parseInt(jQuery(this).prev().val());
+                        if (val >= 1 && val <= sumPage) {
+                            _self.gotoPage(val);
+                        }
+                    } catch (e) {
+                        // 页码转换异常，忽略
+                    }
+                }));
+            }
+            //总条数显示
+//		jQuery("<span class='allNum'></span>").text("共" + allNum + "条").appendTo(this._page);
+//                jQuery("<span class='allNum'></span>").text(Language.transArr("rh_ui_grid_L1", [allNum])).appendTo(this._page);
+        }
+        // _PAGE_ :{ALLNUM: "2", NOWPAGE: "1", PAGES: "1", SHOWNUM: "50"}
+        //上一页
+//            if () {
+//            }
+//            pageBean.NOWPAGE;
+//            pageBean.PAGES;
+        return this._page;
+    };
 
     /**
      * 获取已申请的请假列表
@@ -399,6 +697,7 @@
     function qingjia2(e) {
         var xmId = $(e).attr('id');
         var xmSzBean = FireFly.doAct('ts_xmgl_sz', 'query', {_extWhere: " and XM_ID = '" + xmId + "' and XM_SZ_NAME ='考场安排'"});
+        debugger;
         if (xmSzBean._DATA_.length > 0 && (xmSzBean._DATA_[0].XM_SZ_TYPE === '未开启' || xmSzBean._DATA_[0].XM_SZ_TYPE === '')) {
             alert('考场安排未开始，您可在我的报名已申请报名页面撤销报名');
         } else {
