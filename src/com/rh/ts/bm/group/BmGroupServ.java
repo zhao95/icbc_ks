@@ -68,15 +68,13 @@ public class BmGroupServ extends CommonServ {
      * @param paramBean paramBean G_ID FILE_ID
      * @return outBean
      */
-    public OutBean saveFromExcel(ParamBean paramBean) throws IOException, BiffException, WriteException {
+    public OutBean savedata(ParamBean paramBean){
         OutBean outBean = new OutBean();
         //获取前端传递参数
-        String gId = (String) paramBean.get("G_ID"),//报名群组id
-                fileId = (String) paramBean.get("FILE_ID");//文件id
+        String gId = (String) paramBean.get("G_ID");//报名群组id
 
         //*获取文件内容
-        List<Bean> rowBeanList = ImpUtils.getDataFromXls(fileId);
-
+        List<Bean> rowBeanList = paramBean.getList("datalist");
         List<String> codeList = new ArrayList<String>();//避免重复添加数据
 
         //获取项目id（xmId）
@@ -136,12 +134,18 @@ public class BmGroupServ extends CommonServ {
             }
         }
         ServDao.creates(TsConstant.SERV_BM_GROUP_USER, beans);
-
+        
+        return outBean.set("alllist", rowBeanList).set("successlist", codeList);
         //在excel中设置失败信息
-        String errorFileId = ImpUtils.saveErrorAndReturnErrorFile(fileId, rowBeanList);
-        outBean.set("FILE_ID", errorFileId);
-        return outBean.setCount(codeList.size()).setOk("成功导入" + codeList.size() + "条," +
-                "失败条数：" + (rowBeanList.size() - codeList.size()) + "条");
     }
-
+    /**
+     * 导入方法开始的入口
+     */
+    public OutBean saveFromExcel(ParamBean paramBean){
+    	String fileId = paramBean.getStr("FILE_ID");
+    	 //方法入口
+    	paramBean.set("SERVMETHOD", "savedata");
+       String finalfileid =ImpUtils.getDataFromXls(fileId,paramBean);
+       return new OutBean().set("FILE_ID",finalfileid);
+    }
 }
