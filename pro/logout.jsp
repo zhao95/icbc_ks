@@ -1,5 +1,4 @@
 <%@ include file="sy/base/view/inHeader.jsp"%>
-<input></input>
 <script type="text/javascript">
 	<%
 	boolean debugMode = Context.getSyConf("PE_LOGIN_DEBUG_MODE", false);
