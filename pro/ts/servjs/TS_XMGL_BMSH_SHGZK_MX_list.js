@@ -786,12 +786,12 @@ function bindCard() {
 							mx_name+=nameArg[nameArg.length-3];
 							mx_name+="#select#";
 							arr1[index]=$(this).val();
-							jsons+='{"vari":"select","val":"'+$(this).find("option:selected").text()+'","type":"select","code":"'+$(this).val()+'"},';
+							jsons+='{"vari":"select","val":"'+$(this).find("option:selected").text()+'","type":"select","code":"'+$(this).val()+'"}';
 						}
 					});
 				/*	mx_name+="#select#";*/
 					mx_name+=nameArg[nameArg.length-1];
-					jsons+='{"vari":"select","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"date"}]';
+					jsons+=']';
 					saveRuleVarCode(dataId,arr,arr1,jsons,mx_name);
 				}else if(obj2[0].type=='muty'){
 					//保存 序列

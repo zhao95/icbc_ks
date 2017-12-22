@@ -2,7 +2,6 @@ package com.rh.ts.xmgl.rule.impl;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.ServDao;
