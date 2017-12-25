@@ -25,6 +25,8 @@ if ((_viewer._actVar == UIConst.ACT_CARD_ADD)) {//添加
 			}else{
 				jQuery("#" + _viewer.dialogId).dialog("close");
 			}
+		}else{
+			jQuery("#" + _viewer.dialogId).dialog("close");
 		}
 	});
 }
