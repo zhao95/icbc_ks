@@ -23,5 +23,16 @@ if(_viewer.getItem("BM_STATUS").getValue() == ""){
 	_viewer.getItem("BM_STATUS").setValue(0)
 }
 
-console.log("S_ODEPT",_viewer.getItem("S_ODEPT").getValue());
-console.log("S_DEPT",_viewer.getItem("S_DEPT").getValue());
+_viewer.getBtn("addNext").unbind("click").bind("click",function(){
+	var bmName = _viewer.getItem("BM_NAME").getValue();
+	var bmlb = _viewer.getItem("BM_LB").getValue();
+	if(bmName == "" || bmlb == ""){
+		_viewer.cardBarTipError("校验未通过");
+	}else{
+		_viewer._saveForm();
+		setTimeout(function(){ 
+			jQuery("#" + _viewer.dialogId).dialog("close");
+			$("#TS_XMGL_CCCS_KSGL-add").click();
+		}, 200);
+	}
+});

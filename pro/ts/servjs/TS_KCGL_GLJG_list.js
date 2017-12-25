@@ -59,4 +59,36 @@ function openMyCard(dataId,readOnly,showTab){
 //如果父页面是只读的，则隐藏编辑行按钮
 if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly){
 	$("a#TS_KCGL_GLJG_edit").hide();
+	_viewer.getBtn("far").hide();
+	_viewer.getBtn("near").hide();
 }
+
+//1远2近
+_viewer.getBtn("far").unbind("click").bind("click",function() {
+	var pkCodes = _viewer.grid.getSelectPKCodes();//获取主键值
+	for(var i=0;i<pkCodes.length;i++){
+		var dataId = pkCodes[i];
+		var param = {};
+		param["JG_FAR"] = 1;
+		param["_PK_"] = dataId;
+		FireFly.doAct("TS_KCGL_GLJG","save",param);
+	}
+	if(pkCodes.length > 0){
+		_viewer.refreshGrid();
+	}
+});
+
+_viewer.getBtn("near").unbind("click").bind("click",function() {
+	var pkCodes = _viewer.grid.getSelectPKCodes();//获取主键值
+	for(var i=0;i<pkCodes.length;i++){
+		var dataId = pkCodes[i];
+		var param = {};
+		param["JG_FAR"] = 2;
+		param["_PK_"] = dataId;
+		FireFly.doAct("TS_KCGL_GLJG","save",param);
+	}
+	if(pkCodes.length > 0){
+		_viewer.refreshGrid();
+	}
+});
+
