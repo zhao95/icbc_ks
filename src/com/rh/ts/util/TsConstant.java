@@ -118,7 +118,11 @@ public class TsConstant {
 
 	/** 考场管理 准考证 */
 	public static final String SERV_XMGL_ADMISSION_FILE = "TS_XMGL_ADMISSION_FILE";
-
+	
+	/**报名流程节点*/
+	public static final String SERV_WFS_BMSHLC = "TS_WFS_BMSHLC";
+	/**节点*/
+	public static final String SERV_WFS_NODE_APPLY= "TS_WFS_NODE_APPLY";
 	/**************************** 字典分隔线 **********************************************/
 
 	/** 字典 角色模块定义 */
@@ -127,4 +131,5 @@ public class TsConstant {
 	/** 字典 目录类型定义 */
 	public static final String DICT_CTLG_MOD = "TS_MODULE_CATALOG";
 
+	
 }

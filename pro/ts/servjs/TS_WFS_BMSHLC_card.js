@@ -30,6 +30,45 @@ if ((_viewer._actVar == UIConst.ACT_CARD_ADD)) {//添加
 		}
 	});
 }
+
+
+//保存之前做校验						
+_viewer.beforeSave = function() {						
+	var userCode=_viewer.getItem("SHR_USERCODE").getValue();//人力资源编码					
+	var shrName=_viewer.getItem("BMSHLC_SHR").getValue();//审核人					
+	var shDepts=_viewer.getItem("DEPT_CODE").getValue();					
+	var nodeId=_viewer.getItem("NODE_ID").getValue();					
+						
+	var  WHERE="and SHR_USERCODE='"+userCode+"'and BMSHLC_SHR='"+shrName+"' and DEPT_CODE='"+shDepts+"' and NODE_ID='"+nodeId+"'";					
+	FireFly.doAct(_viewer.servId,"count",{"_WHERE_":WHERE},true,false,function(data){					
+		if(data._DATA_ > 0){				
+			_viewer.getItem("BMSHLC_SHR").clear();//审核人			
+			_viewer.getItem("DEPT_CODE").clear();			
+			alert("数据有重复");			
+		}				
+	});					
+}						
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {//修改
 //	   if (jQuery.isEmptyObject(_self.getChangeData())) {
 //	   } else {
