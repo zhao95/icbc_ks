@@ -11,10 +11,11 @@ var xmId = _viewer.getParHandler().getParHandler().getParHandler()._pkCode;
 var width = jQuery(window).width()-100;
 var height = jQuery(window).height()-50;
 _viewer.getBtn("myAdd").unbind("click").bind("click", function(event) {
+	var odeptCode = System.getVar("@ODEPT_CODE@");
 	var param = {};
 	param["SOURCE"] = "ARR_CC~ARR_START~ARR_END";
 	param["TYPE"] = "multi";
-	param["EXTWHERE"] = "and ARR_STATE = 1 and XM_ID = '"+xmId+"'";
+	param["EXTWHERE"] = "and ARR_STATE = 1 and XM_ID = '"+xmId+"' and (ARR_ODEPT_CODES = '' or ARR_ODEPT_CODES = '"+odeptCode+"')";
 	var configStr = "TS_XMGL_CCCS_ARRANGE,"+JsonToStr(param);
 	var options = {
 		"config" :configStr,

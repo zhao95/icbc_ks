@@ -3,7 +3,7 @@ $(".rhGrid").find("tr").unbind("dblclick");
 _viewer.getBtn("impKczgl").unbind("click").bind("click",function(event){
 	//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
 	var configStr = "TS_KCZGL,{'TARGET':'','SOURCE':'KCZ_ID~KCZ_NAME~KCZ_CREATOR~KCZ_DATE'," +
-			"'HIDE':'','TYPE':'multi','HTMLITEM':''}";
+			"'HIDE':'KCZ_ID','TYPE':'multi','HTMLITEM':''}";
 	var options = {
 		"config" :configStr,
 		"parHandler":_viewer,

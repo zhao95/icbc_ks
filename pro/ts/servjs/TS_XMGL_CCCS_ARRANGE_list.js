@@ -35,3 +35,29 @@ _viewer.getBtn("publish").unbind("click").bind("click", function(event) {
 rh.vi.listView.prototype.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 };
+
+$("#TS_XMGL_CCCS_ARRANGE").find("th[icode='BUTTONS']").html("操作");
+_viewer.grid.getBtn("BUTTONS").unbind("click").bind("click",function() {
+	var pk = jQuery(this).attr("rowpk");//获取主键信息
+	var configStr = "TS_KCGL_GLJG_ODEPT,{'TYPE':'single'}";
+	var options = {
+			"config" :configStr,
+			"parHandler":_viewer,
+			"formHandler":_viewer.form,
+			"replaceCallBack":function(idArray,nameArray) {
+				//回调，idArray为选中记录的相应字段的数组集合
+				var codes = idArray[0];
+//				var names = nameArray;
+				if(codes == "")return;
+				var param = {};
+				param["ARR_ODEPT_CODES"] = codes;
+				param["_PK_"] = pk;
+				FireFly.doAct("TS_XMGL_CCCS_ARRANGE","save",param,true,false,function(data){
+					_viewer.refreshGrid();
+				});
+			}
+	};
+	
+	var queryView = new rh.vi.rhDictTreeView(options);
+	queryView.show(event,[],[0,495]);
+});
