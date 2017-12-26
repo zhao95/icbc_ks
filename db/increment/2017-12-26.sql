@@ -1,0 +1,2 @@
+-- ts_jklb_jk 表添加字段 LOOK_FLAG
+-- ALTER TABLE `ts_jklb_jk` ADD COLUMN `LOOK_FLAG`  varchar(1) NULL;
