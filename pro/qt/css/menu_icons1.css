@@ -1,0 +1,17 @@
+.bg{
+	display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+.bg-Home1 {
+    width: 20px; height: 20px;
+    background: url('/qt/css/images/menu_icons1.png') -10px -10px;
+}
+
+.bg-Home2 {
+    width: 20px; height: 20px;
+    background: url('/qt/css/images/menu_icons1.png') -50px -10px;
+}
