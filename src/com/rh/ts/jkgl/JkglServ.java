@@ -1,5 +1,6 @@
 package com.rh.ts.jkgl;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
@@ -30,19 +31,24 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.dict.DictMgr;
+import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
+import com.rh.core.util.ImpUtils;
 import com.rh.core.util.Strings;
+import com.rh.ts.util.TsConstant;
 
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.format.Alignment;
 import jxl.format.Colour;
+import jxl.read.biff.BiffException;
 import jxl.write.Label;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 
 public class JkglServ extends CommonServ {
 
@@ -367,5 +373,251 @@ public class JkglServ extends CommonServ {
         FileMgr.deleteFile(fileBean); //最后删除临时上传的文件
         return outBean;
     }
+    
+    
+    
+    /**
+	 * @param paramBean
+	 *            paramBean G_ID FILE_ID
+	 * @return outBean
+	 */
+    /**
+     * 导入方法开始的入口
+     */
+    public OutBean saveFromExcel(ParamBean paramBean) {
+        String fileId = paramBean.getStr("FILE_ID");
+//        //保存方法入口
+//        paramBean.set(ImpUtils.SERV_METHOD_NAME, "impDataSave");
+//        String finalfileid = ImpUtils.getDataFromXls(fileId, paramBean);
+//        return new OutBean().set("FILE_ID", finalfileid);
+       // String fileId = paramBean.getStr("FILE_ID");
+   	 //方法入口
+   	paramBean.set("SERVMETHOD", "savedata");
+      OutBean out =ImpUtils.getDataFromXls(fileId,paramBean);
+      String failnum = out.getStr("failernum");
+      String successnum = out.getStr("oknum");
+      //返回导入结果
+      return new OutBean().set("FILE_ID",out.getStr("fileid")).set("_MSG_", "导入成功："+successnum+"条,导入失败："+failnum+"条");
+   }  
+    
+    
+    
+    /**
+     * 导入保存方法
+     *
+     * @param paramBean
+     * @return
+     */
+    public OutBean savedata(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        // 获取前端传递参数
+        //*获取文件内容
+        List<Bean> rowBeanList = paramBean.getList("datalist");
+       // List<Bean> rowBeanList = paramBean.getList(ImpUtils.DATA_LIST);
+        List<String> codeList = new ArrayList<String>();// 避免重复添加数据
+        List<Bean> beans = new ArrayList<Bean>();
+        for (int j = 0; j < rowBeanList.size(); j++) {
+            Bean rowBean = rowBeanList.get(j);
+            String colCode = rowBean.getStr(ImpUtils.COL_NAME + "2");//人力资源编码
+			String jkType = rowBean.getStr(ImpUtils.COL_NAME + "4");//获取禁考类型
+			String jkStartTime = rowBean.getStr(ImpUtils.COL_NAME + "5");//获取禁考开始时间
+			String jkEndTime = rowBean.getStr(ImpUtils.COL_NAME + "6");//获取禁考开始时间
+			
+            Bean userBean = ImpUtils.getUserBeanByString(colCode);
+            if (userBean == null) {
+                rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
+                continue;
+            }
 
+            String code = userBean.getStr("USER_CODE"), name = userBean.getStr("USER_NAME"),
+                    userDeptCode = userBean.getStr("DEPT_CODE");
+            if (codeList.contains(code)) {
+                // 已包含 continue ：避免重复添加数据
+                rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
+                continue;
+            }
+
+            Bean bean = new Bean();
+            bean.set("JKGL_USER_NAME", name);
+			bean.set("JKGL_RLZY", code);// 人资源编码
+			bean.set("JKGL_ORG", userDeptCode);// 禁考人机构
+			bean.set("JKGL_TYPE", jkType);// 禁考类型
+			bean.set("JKGL_START_DATE", jkStartTime);// 禁考开始时间
+			bean.set("JKGL_END_DATE", jkEndTime);// 禁考结束时间
+            // bean.set("G_TYPE", 1);//选取类型 1人员
+            if (ServDao.count(TsConstant.SERV_JKGL, bean) <= 0) {
+                // 先查询避免重复添加col3=总行/广东分行营业部,总行/福建分行,
+//                bean.set("BMSHLC_SHR", name);
+//                String[] colDeptCode = colDeptCodes.split(",");
+//                String deptcode = "";
+//                for (int i = 0; i < colDeptCode.length; i++) {
+//                    String getDept = colDeptCode[i];
+//                    String[] colDeptNAME = getDept.split("/");
+//                    String deptName = colDeptNAME[1];// 名称
+//                    String where = "AND DEPT_NAME='" + deptName + "'";
+//                    List<Bean> deptBean = ServDao.finds("TS_ORG_DEPT", where);
+//                    if (deptBean != null && !deptBean.isEmpty()) {
+//                        Bean deptCodeBean = deptBean.get(0);
+//
+//                        deptcode += deptCodeBean.getStr("DEPT_CODE");
+//                        deptcode += ",";
+//                    } else {
+//                        rowBean.set(ImpUtils.ERROR_NAME, "找不到审核机构名称对应的编码");
+//                        continue;
+//                    }
+//
+//                }
+                //bean.set("DEPT_CODE", deptcode.substring(0, deptcode.length() - 1));
+                beans.add(bean);
+                codeList.add(code);
+            } else {
+                rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
+            }
+        }
+        ServDao.creates(TsConstant.SERV_JKGL, beans);
+
+      //  return outBean.set(ImpUtils.ALL_LIST, rowBeanList).set("successlist", codeList);
+        return outBean.set("alllist", rowBeanList).set("successlist", codeList);
+  
+    }
+
+    
+    
+	/**public OutBean saveFromExcel(ParamBean paramBean) throws IOException, BiffException, WriteException {
+		OutBean outBean = new OutBean();
+		// 获取前端传递参数
+		//String nodeId = (String) paramBean.get("NODE_ID"), // 节点id
+
+		String	fileId = (String) paramBean.get("FILE_ID");// 文件id
+
+		// *获取文件内容
+		//List<Bean> rowBeanList = ImpUtils.getDataFromXls(fileId);
+		List<Bean> rowBeanList = paramBean.getList("datalist");
+		List<String> codeList = new ArrayList<String>();// 避免重复添加数据
+
+		// 获取流程id（xmId）
+		//Bean bmGroupBean = ServDao.find(TsConstant.SERV_WFS_NODE_APPLY, nodeId);
+		//String wfsId = bmGroupBean.getStr("WFS_ID");
+
+		List<Bean> beans = new ArrayList<Bean>();
+		for (int index = 1; index < rowBeanList.size(); index++) {
+			Bean rowBean = rowBeanList.get(index);
+			String colCode = rowBean.getStr(ImpUtils.COL_NAME + "2");
+			String jkType = rowBean.getStr(ImpUtils.COL_NAME + "4");//获取禁考类型
+			String jkStartTime = rowBean.getStr(ImpUtils.COL_NAME + "5");//获取禁考开始时间
+			String jkEndTime = rowBean.getStr(ImpUtils.COL_NAME + "6");//获取禁考开始时间
+			Bean userBean = ImpUtils.getUserBeanByString(colCode);
+			if (userBean == null) {
+				rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
+				continue;
+			}
+
+			String code = userBean.getStr("USER_CODE"), 
+					name = userBean.getStr("USER_NAME"),
+					userDeptCode = userBean.getStr("DEPT_CODE");
+			if (codeList.contains(code)) {
+				// 已包含 continue ：避免重复添加数据
+				rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
+				continue;
+			}
+
+			Bean bean = new Bean();
+			//bean.set("NODE_ID", nodeId);
+			//bean.set("WFS_ID", wfsId);
+			bean.set("JKGL_USER_NAME", name);
+			bean.set("JKGL_RLZY", code);// 人资源编码
+			bean.set("JKGL_ORG", userDeptCode);// 禁考人机构
+			bean.set("JKGL_TYPE", jkType);// 禁考类型
+			bean.set("JKGL_START_DATE", jkStartTime);// 禁考开始时间
+			bean.set("JKGL_END_DATE", jkEndTime);// 禁考结束时间
+			// bean.set("G_TYPE", 1);//选取类型 1人员
+			if (ServDao.count(TsConstant.SERV_JKGL, bean) <= 0) {
+				// 先查询避免重复
+//				String[] colDeptCode = colDeptCodes.split(",");
+//				String deptcode = "";
+//				for (int i = 0; i < colDeptCode.length; i++) {
+//					String getDept = colDeptCode[i];
+//					String[] colDeptNAME = getDept.split("/");
+//					String deptName = colDeptNAME[1];// 名称
+//					String where = "AND DEPT_NAME='" + deptName + "'";
+//					List<Bean> deptBean = ServDao.finds("TS_ORG_DEPT", where);
+//					if (deptBean != null && !deptBean.isEmpty()) {
+//						Bean deptCodeBean = deptBean.get(0);
+//
+//						deptcode += deptCodeBean.getStr("DEPT_CODE");
+//						deptcode += ",";
+					//} else {
+						//rowBean.set(ImpUtils.ERROR_NAME, "禁考重复");
+						//continue;
+					//}
+
+				//}
+				//bean.set("DEPT_CODE", deptcode.substring(0, deptcode.length() - 1));
+				beans.add(bean);
+				codeList.add(code);
+			} else {
+				rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
+			}
+		}
+		ServDao.creates(TsConstant.SERV_WFS_BMSHLC, beans);
+
+		// 在excel中设置失败信息
+		//String errorFileId = ImpUtils.saveErrorAndReturnErrorFile(fileId, rowBeanList);
+		//outBean.set("FILE_ID", errorFileId);
+		return outBean.setCount(codeList.size())
+				.setOk("成功导入" + codeList.size() + "条," + "失败条数：" + (rowBeanList.size() - codeList.size() - 1) + "条");
+	}
+	 /**每次获取数据条数*/
+   /** private static final int ONETIME_EXP_NUM = 20000;
+//导出模板
+	 public OutBean outExcelMould(ParamBean paramBean) {
+	      String servId = paramBean.getServId();
+	        ServDefBean serv = ServUtils.getServDef(servId);
+	        long count = 0;
+	        long times = 0;
+	        paramBean.setQueryPageShowNum(ONETIME_EXP_NUM); // 设置每页最大导出数据量
+	        beforeExp(paramBean); //执行监听方法
+	        if (paramBean.getId().length() > 0) { //支持指定记录的导出（支持多选）
+	            String searchWhere = " and " + serv.getPKey() + " in ('" 
+	                    + paramBean.getId().replaceAll(",", "','") + "')";
+	            paramBean.setQuerySearchWhere(searchWhere);
+	        }
+	        ExportExcel expExcel = new ExportExcel(serv);
+	        try {
+	        OutBean outBean = queryExp(paramBean);
+	            count = outBean.getCount();
+	            //总数大于excel可写最大值
+	          /*  if (count > EXCEL_MAX_NUM) {
+	                return new OutBean().setError("导出数据总条数大于Excel最大行数：" + EXCEL_MAX_NUM);
+	            }*/
+	            //导出第一次查询数据
+	           /** paramBean.setQueryPageNowPage(1); //导出当前第几页
+	            afterExp(paramBean, outBean);   //执行导出查询后扩展方法
+	            expExcel.createHeader(outBean.getCols());
+	            expExcel.appendData(outBean.getDataList(), paramBean);
+	        
+	            // 存在多页数据
+	            if (ONETIME_EXP_NUM < count) {
+	                times = count / ONETIME_EXP_NUM;
+	                // 如果获取的是整页数据
+	                if (ONETIME_EXP_NUM * times == count && count != 0) {
+	                    times = times - 1;
+	                        }
+	                for (int i = 1; i <= times; i++) {
+	                    paramBean.setQueryPageNowPage(i + 1); // 导出当前第几页
+	                    OutBean out = query(paramBean);
+	                    afterExp(paramBean, out); // 执行导出查询后扩展方法
+	                    expExcel.appendData(out.getDataList(), paramBean);
+	                    }
+	                }
+	            expExcel.addSumRow();
+	        } catch (Exception e) {
+	            log.error("导出Excel文件异常" + e.getMessage(), e);
+	        } finally {
+	            expExcel.close();
+	            }
+	        return new OutBean().setOk();
+	        }*/
+	
+	
 }

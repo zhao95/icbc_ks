@@ -48,7 +48,7 @@ public class FlowBmlcServ extends CommonServ {
         String wfsId = bmGroupBean.getStr("WFS_ID");
 
         List<Bean> beans = new ArrayList<Bean>();
-        for (int index = 1; index < rowBeanList.size(); index++) {
+        for (int index = 0; index < rowBeanList.size(); index++) {
             Bean rowBean = rowBeanList.get(index);
             String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");
             String colDeptCodes = rowBean.getStr(ImpUtils.COL_NAME + "3");
