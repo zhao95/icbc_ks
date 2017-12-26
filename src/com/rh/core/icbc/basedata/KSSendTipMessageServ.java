@@ -39,7 +39,7 @@ public class KSSendTipMessageServ {
             Bean pBean = new Bean();
             pBean.set("tipMsg", tipMsg);
             //String confTipType = ConfMgr.getConf("TS_TIP_QJ_START_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
-            String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+            String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
             if (confTipType.equals("EMAIL")) {
                 //发送邮件包含的网页页面
                 sendMail(USER_CODE, "请假开始提醒", tipMsg);
@@ -54,7 +54,7 @@ public class KSSendTipMessageServ {
             //创建bean存储网页模板生成所需要的数据。
 //            Bean pBean = new Bean();
 //            pBean.set("tipMsg", tipMsg);
-            String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+            String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
             if (confTipType.equals("EMAIL")) {
                 //发送邮件包含的网页页面
                 sendMail(USER_CODE, "请假结果提醒", tipMsg);
@@ -65,7 +65,7 @@ public class KSSendTipMessageServ {
             //创建bean存储网页模板生成所需要的数据。
 //            Bean pBean = new Bean();
 //            pBean.set("tipMsg", tipMsg);
-            String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+            String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
             if (confTipType.equals("EMAIL")) {
                 //发送邮件包含的网页页面
                 sendMail(USER_CODE, "借考开始提醒", tipMsg);
@@ -76,7 +76,7 @@ public class KSSendTipMessageServ {
             //创建bean存储网页模板生成所需要的数据。
 //            Bean pBean = new Bean();
 //            pBean.set("tipMsg", tipMsg);
-            String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+            String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
             if (confTipType.equals("EMAIL")) {
                 //发送邮件包含的网页页面
                 sendMail(USER_CODE, "借考结果提醒", tipMsg);
@@ -87,7 +87,7 @@ public class KSSendTipMessageServ {
             //创建bean存储网页模板生成所需要的数据。
 //            Bean pBean = new Bean();
 //            pBean.set("tipMsg", tipMsg);
-            String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+            String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
             if (confTipType.equals("EMAIL")) {
                 //发送邮件包含的网页页面
                 sendMail(USER_CODE, "报名开始提醒", tipMsg);
@@ -98,7 +98,7 @@ public class KSSendTipMessageServ {
             //创建bean存储网页模板生成所需要的数据。
 //            Bean pBean = new Bean();
 //            pBean.set("tipMsg", tipMsg);
-            String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+            String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
             if (confTipType.equals("EMAIL")) {
                 //发送邮件包含的网页页面
                 sendMail(USER_CODE, "报名截止提醒", tipMsg);
@@ -109,7 +109,7 @@ public class KSSendTipMessageServ {
             //创建bean存储网页模板生成所需要的数据。
 //            Bean pBean = new Bean();
 //            pBean.set("tipMsg", tipMsg);
-            String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+            String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
             if (confTipType.equals("EMAIL")) {
                 //发送邮件包含的网页页面
                 sendMail(USER_CODE, "考场座位公示提醒", tipMsg);
@@ -120,7 +120,7 @@ public class KSSendTipMessageServ {
             //创建bean存储网页模板生成所需要的数据。
 //            Bean pBean = new Bean();
 //            pBean.set("tipMsg", tipMsg);
-            String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+            String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
             if (confTipType.equals("EMAIL")) {
                 //发送邮件包含的网页页面
                 sendMail(USER_CODE, "准考证开始打印提醒", tipMsg);
@@ -153,7 +153,7 @@ public class KSSendTipMessageServ {
             for (Bean aTipList : tipList) {
                 String USER_CODE = aTipList.getStr("USER_CODE");
                 String tipMsg = aTipList.getStr("tipMsg");
-                String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+                String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
                 if (confTipType.equals("EMAIL")) {
                     //发送邮件包含的网页页面
                     sendMail(USER_CODE, "请假开始提醒", tipMsg);
@@ -166,7 +166,7 @@ public class KSSendTipMessageServ {
             for (Bean aTipList : tipList) {
                 String USER_CODE = aTipList.getStr("USER_CODE");
                 String tipMsg = aTipList.getStr("tipMsg");
-                String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+                String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
                 if (confTipType.equals("EMAIL")) {
                     //发送邮件包含的网页页面
                     sendMail(USER_CODE, "请假结果提醒", tipMsg);
@@ -179,7 +179,7 @@ public class KSSendTipMessageServ {
             for (Bean aTipList : tipList) {
                 String USER_CODE = aTipList.getStr("USER_CODE");
                 String tipMsg = aTipList.getStr("tipMsg");
-                String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+                String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
                 if (confTipType.equals("EMAIL")) {
                     //发送邮件包含的网页页面
                     sendMail(USER_CODE, "借考开始提醒", tipMsg);
@@ -192,7 +192,7 @@ public class KSSendTipMessageServ {
             for (Bean aTipList : tipList) {
                 String USER_CODE = aTipList.getStr("USER_CODE");
                 String tipMsg = aTipList.getStr("tipMsg");
-                String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+                String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
                 if (confTipType.equals("EMAIL")) {
                     //发送邮件包含的网页页面
                     sendMail(USER_CODE, "借考结果提醒", tipMsg);
@@ -205,7 +205,7 @@ public class KSSendTipMessageServ {
             for (Bean aTipList : tipList) {
                 String USER_CODE = aTipList.getStr("USER_CODE");
                 String tipMsg = aTipList.getStr("tipMsg");
-                String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+                String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
                 if (confTipType.equals("EMAIL")) {
                     //发送邮件包含的网页页面
                     sendMail(USER_CODE, "报名开始提醒", tipMsg);
@@ -218,7 +218,7 @@ public class KSSendTipMessageServ {
             for (Bean aTipList : tipList) {
                 String USER_CODE = aTipList.getStr("USER_CODE");
                 String tipMsg = aTipList.getStr("tipMsg");
-                String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+                String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
                 if (confTipType.equals("EMAIL")) {
                     //发送邮件包含的网页页面
                     sendMail(USER_CODE, "报名截止提醒", tipMsg);
@@ -231,7 +231,7 @@ public class KSSendTipMessageServ {
             for (Bean aTipList : tipList) {
                 String USER_CODE = aTipList.getStr("USER_CODE");
                 String tipMsg = aTipList.getStr("tipMsg");
-                String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+                String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
                 if (confTipType.equals("EMAIL")) {
                     //发送邮件包含的网页页面
                     sendMail(USER_CODE, "考场座位公示提醒", tipMsg);
@@ -244,7 +244,7 @@ public class KSSendTipMessageServ {
             for (Bean aTipList : tipList) {
                 String USER_CODE = aTipList.getStr("USER_CODE");
                 String tipMsg = aTipList.getStr("tipMsg");
-                String confTipType = "EMAIL";//获取系统配置的提醒方式，缺省为邮件
+                String confTipType = Context.getSyConf("TIP_SEND_TYPE", "EMAIL");//获取系统配置的提醒方式，缺省为邮件
                 if (confTipType.equals("EMAIL")) {
                     //发送邮件包含的网页页面
                     sendMail(USER_CODE, "准考证开始打印提醒", tipMsg);

@@ -4,9 +4,9 @@
 	boolean debugMode = Context.getSyConf("PE_LOGIN_DEBUG_MODE", false);
 	%>
 	var debugMode ="<%=debugMode%>";
-	if(debugMode){
+	if(!debugMode){
 		window.close();
 	}else{
-		window.location.href = FireFly.getContextPath() + "/";
+		window.location.href = FireFly.getContextPath() + "/ksgogogo.jsp";
 	}
 </script>
