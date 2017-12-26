@@ -495,8 +495,16 @@ public class QjlbServ extends CommonServ {
         flowParamBean.set("xmId", xmId);
         flowParamBean.set("flowName", 3); //1:报名审核流程 2:异地借考流程 3:请假审核流程
         OutBean shBean = ServMgr.act("TS_WFS_APPLY", "backFlow", flowParamBean);
-//        new FlowServ().backFlow(flowParamBean);
-        List<Bean> shList = shBean.getList("result");
+        String result = shBean.getStr("result");
+        String[] split = result.split(",");
+        List<Bean> shList = new ArrayList<Bean>();
+        for (String shUserCode : split) {
+            Bean bean = new Bean();
+            bean.set("SHR_USERCODE",shUserCode);
+            bean.set("SHR_NAME",UserMgr.getUser(shrUserCode).getName());
+            shList.add(bean);
+        }
+//        List<Bean> shList = shBean.getList("result");
         outBean.putAll(shBean);
         if (shBean.getMsg().contains(Language.trans("未绑定流程"))) {
             //未绑定流程，默认审批通过

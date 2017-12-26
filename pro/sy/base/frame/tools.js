@@ -2525,20 +2525,20 @@ function showRHDialog(title, content, func, handler, widHeiArray, event, areaId,
 var Debug = {
 	handler : null,
 	add : function(text, event) {
-		if (System.getUser("USER_NAME") == "系统管理员") {
-			if (this.handler == null) {
-				var debug = new rh.ui.popPrompt({
-					"id" : "debug",
-//					"title" : "调试信息"
-					"title" : Language.transStatic("tools_string20")
-				});
-				debug.render(event, null, [ 400, 300 ]);
-				debug.display(text);
-				this.handler = debug;
-			} else {
-
-			}
-		}
+// 		if (System.getUser("USER_NAME") == "系统管理员") {
+// 			if (this.handler == null) {
+// 				var debug = new rh.ui.popPrompt({
+// 					"id" : "debug",
+// //					"title" : "调试信息"
+// 					"title" : Language.transStatic("tools_string20")
+// 				});
+// 				debug.render(event, null, [ 400, 300 ]);
+// 				debug.display(text);
+// 				this.handler = debug;
+// 			} else {
+//
+// 			}
+// 		}
 	},
 	clear : function() {
 
@@ -4338,7 +4338,7 @@ function getListPvlg(item,user_pvlg,filed) {
 	//var CurrentUser = System.getUser("USER_CODE");
 	var arr=null;
 	var i=0;
-	for(let key in user_pvlg){
+	for(var key in user_pvlg){
 		if(arr==null){
 			if(user_pvlg[key].ROLE_DCODE){
 
