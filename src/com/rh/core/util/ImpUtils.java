@@ -42,13 +42,15 @@ public class ImpUtils {
 
     public final static String ERROR_NAME = "error";
 
-    /**
-     * 1、fileId
-     * 2、读取信息  只读取第一个sheet
-     * 3、beanList 错误
-     * 4、save
-     * 5、下载
-     */
+    public final static String DATA_LIST = "datalist";
+
+    public final static String ALL_LIST = "alllist";
+
+    //服务id标识符
+    public final static String SERV_ID = "SERV_ID";
+
+    //服务id对应类方法名称
+    public final static String SERV_METHOD_NAME = "SERVMETHOD";
 
     /**
      * 在excel中设置失败信息，返回fileId
@@ -169,8 +171,12 @@ public class ImpUtils {
     	 List<Bean> result = new ArrayList<Bean>();
     	 int successnum = 0;
     	 int failernum = 0;
-       String servId =  paramBean.getServId();//服务名
-       String method = paramBean.getStr("SERVMETHOD");//方法名
+        String servId = paramBean.getStr(SERV_ID);
+        if (StringUtils.isBlank(servId)) {
+            servId = paramBean.getServId();//服务名
+        }
+
+        String method = paramBean.getStr(SERV_METHOD_NAME);//方法名
         InputStream in = null;
         OutputStream os = null;
         TempFile tempFile = null;
@@ -210,9 +216,9 @@ public class ImpUtils {
                 if(rows<500){
                 	if(i==rows-1){
                 		//每五百条进行  一次轮询   对数据进行处理
-                		paramBean.set("datalist", result);
+                		paramBean.set(DATA_LIST, result);
                 		Bean resultres = ServMgr.act(servId,method,paramBean);
-                		List<Bean> rowBeanList = resultres.getList("alllist");
+                		List<Bean> rowBeanList = resultres.getList(ALL_LIST);
                 		List<Object> successlist = resultres.getList("successlist");
                 		successnum+=successlist.size();
                 		failernum+=rowBeanList.size()-successlist.size();
@@ -221,9 +227,9 @@ public class ImpUtils {
                 }else if(rows>=500){
                 	if(result.size()==500){
                 		//每五百条进行  一次轮询   对数据进行处理
-                    	paramBean.set("datalist", result);
+                    	paramBean.set(DATA_LIST, result);
                     	Bean resultres = ServMgr.act(servId,method,paramBean);
-                    	List<Bean> rowBeanList = resultres.getList("alllist");
+                    	List<Bean> rowBeanList = resultres.getList(ALL_LIST);
                     	List<Object> successlist = resultres.getList("successlist");
                     	successnum+=successlist.size();
                     	failernum+=rowBeanList.size()-successlist.size();
@@ -232,9 +238,9 @@ public class ImpUtils {
                     	result= new ArrayList<Bean>();
                 	}else if(i==rows-1){
                 		//每五百条进行  一次轮询   对数据进行处理
-                    	paramBean.set("datalist", result);
+                    	paramBean.set(DATA_LIST, result);
                     	Bean resultres = ServMgr.act(servId,method,paramBean);
-                    	List<Bean> rowBeanList = resultres.getList("alllist");
+                    	List<Bean> rowBeanList = resultres.getList(ALL_LIST);
                     	List<Object> successlist = resultres.getList("successlist");
                     	successnum+=successlist.size();
                     	failernum+=rowBeanList.size()-successlist.size();

@@ -20,8 +20,12 @@ public class FlowBmlcServ extends CommonServ {
         String fileId = paramBean.getStr("FILE_ID");
         //保存方法入口
         paramBean.set(ImpUtils.SERV_METHOD_NAME, "impDataSave");
-        String finalfileid = ImpUtils.getDataFromXls(fileId, paramBean);
-        return new OutBean().set("FILE_ID", finalfileid);
+        OutBean out =ImpUtils.getDataFromXls(fileId,paramBean);
+        String failnum = out.getStr("failernum");
+        String successnum = out.getStr("oknum");
+        //返回导入结果
+        return new OutBean().set("FILE_ID",out.getStr("fileid")).set("_MSG_", "导入成功："+successnum+"条,导入失败："+failnum+"条");
+
     }
 
     /**
