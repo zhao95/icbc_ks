@@ -33,9 +33,9 @@ $("#TS_KCZGL_KCGL .rhGrid").find("tr").each(function(index, item) {
 		$(item).find("td[icode='BUTTONS']").append("<div operCode='option' rowpk='"+dataId+"'><font size='3'>···</font></div>");
 
 		var abtns = '<a class="rhGrid-td-rowBtnObj " operCode="optLookBtn" rowpk="'+dataId+'" style="cursor:pointer">&nbsp查看&nbsp</a>'+	
-		'<a class="rhGrid-td-rowBtnObj " operCode="optIPScopeBtn" rowpk="'+dataId+'" style="cursor:pointer">考场IP段设置&nbsp</a>'+
+//		'<a class="rhGrid-td-rowBtnObj " operCode="optIPScopeBtn" rowpk="'+dataId+'" style="cursor:pointer">考场IP段设置&nbsp</a>'+
 //		'<a class="rhGrid-td-rowBtnObj " operCode="optIPZwhBtn" rowpk="'+dataId+'" style="cursor:pointer">考场IP座位号&nbsp</a>'+
-		'<a class="rhGrid-td-rowBtnObj " operCode="optJgBtn" rowpk="'+dataId+'" style="cursor:pointer">关联机构&nbsp</a>'+
+//		'<a class="rhGrid-td-rowBtnObj " operCode="optJgBtn" rowpk="'+dataId+'" style="cursor:pointer">关联机构&nbsp</a>'+
 		'<a class="rhGrid-td-rowBtnObj " operCode="optEditBtn" rowpk="'+dataId+'" style="cursor:pointer">编辑&nbsp</a>'
 //		'<a class="rhGrid-td-rowBtnObj " operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>';
 		
