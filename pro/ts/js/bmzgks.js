@@ -7,9 +7,6 @@ var maxnum = FireFly.getConfig("TS_BM_MIDDLE_MAXNUM").CONF_VALUE;//配置中级�
 var maxhigh = FireFly.getConfig("TS_BM_HIGH_MAXNUM").CONF_VALUE;//配置高级最大数
 var param = {};
 param["user_code"]=user_code;
-var resultphone = FireFly.doAct("TS_BMLB_BM","getPhone",param);
-var user_office_phone=resultphone.phone;
-$("#user_mobile1").val(user_office_phone);
 var user_cmpy_date = System.getVar("@USER_CMPY_DATE@");
 var xm_id  = $("#xmidval").val();
 
@@ -294,7 +291,6 @@ function xminfoshow(){
 
 		is_confirm=false;
 		//获取手机号码
-		var ryl_mobile = document.getElementById("user_mobile2").value
 		//获取到资格考试类型主键id
 		var zgArray = document.getElementsByName("zgksname");
 		var zglb="";
@@ -343,8 +339,6 @@ function xminfoshow(){
 		param["USER_NAME"] = user_name;
 		param["USER_SEX"] = user_sex;
 		param["ODEPT_NAME"] = odept_name;
-		param["USER_OFFICE_PHONE"] = user_office_phone;
-		param["USER_MOBILE"] = ryl_mobile;
 		param["USER_CMPY_DATE"] = user_cmpy_date;
 		param["XM_ID"] = xm_id;
 		param["BM_START"] = bm_start;
@@ -363,18 +357,18 @@ function xminfoshow(){
 				alert("您没有选择考试")
 			}
 			if (bxlrows != 1 || kxlrows != 1) {
-				if (ryl_mobile == "") {
+				/*if (ryl_mobile == "") {
 					alert("手机号码不能为空");
 				}
 				if (ryl_mobile != "" && ryl_mobile != null) {
-					$("#loading").modal("show");
-					FireFly.doAct("TS_BMLB_BM", "addZgData", param,
-							true, true,function(data){
-						$("#bmbq").val("1");
-						$("#form1").submit();
-					});
-					
-				}
+				}*/
+				$("#loading").modal("show");//不再进行手机号校验
+				FireFly.doAct("TS_BMLB_BM", "addZgData", param,
+						true, true,function(data){
+					$("#bmbq").val("1");
+					$("#form1").submit();
+				});
+				
 			}
 	})
 	
@@ -882,11 +876,6 @@ function xminfoshow(){
 		if(bdyz==true){
 			return;
 		}
-		if($("#user_mobile1").val()==""){
-			alert("请填写手机号");
-			$("#tjbt").attr("data-target","");
-			return ;
-		}
 		
 		
 		if($("input[name=checkboxaa]:checked").length==0){
@@ -1077,8 +1066,6 @@ function xminfoshow(){
 				return;
 			}
 			
-			//获取手机号码
-			var ryl_mobile = document.getElementById("user_mobile2").value=document.getElementById("user_mobile1").value; 
 			//获取 当前页面中checkbox选中的数据
 			//判断是否已经 进行了资格验证
 			var arrChk=$("input[name='checkboxaa']:checked"); 

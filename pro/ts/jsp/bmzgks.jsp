@@ -107,9 +107,9 @@ position: absolute;
 		//获取用户机构
 		String odept_name = userBean.getODeptName();
 		//获取用户办公电话
-		String user_office_phone = userBean.getStr("USER_OFFICE_PHONE");
+		String user_office_phone = userBean.getOfficePhone();
 		//获取用户手机号码
-		String user_mobile = userBean.getStr("USER_MOBILE");
+		String user_mobile=userBean.getMobile();
 		//获取用户入行时间
 		String user_cmpy_date =userBean.getStr("USER_CMPY_DATE");
 		%>
@@ -191,10 +191,9 @@ position: absolute;
 							<td width="16.5%"><%=user_cmpy_date%></td>
 							<td width="16.5%" style="color:#00C2C2">办公电话</td>
 							<td width="16.5%"><%=user_office_phone %></td>
-							<td width="16.5%" style="color:#00C2C2">手机号码(<span style="color: red;">融e联绑定的手机号</span>)
+							<td width="16.5%" style="color:#00C2C2">手机号码
 							</td>
-							<td width="17.5%"><input type="text" id="user_mobile1"
-								value=""></td>
+							<td width="17.5%"><%=user_mobile %></td>
 						</tr>
 					</table>
 				</div>
