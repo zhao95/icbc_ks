@@ -289,7 +289,7 @@ public class FlowServ extends CommonServ {
 	//审核类型  1:逐级审核  2:越级审核
 	int wfsType = wfsBean.getInt("WFS_TYPE");
 	int wfsSteps = wfsBean.getInt("WFS_STEPS");
-	if (flowName == 1) {
+	if (flowName == 1 || flowName == 3) {
 	    //报名审核
 	    if(wfsType == 1){
 	    	String s = "";
