@@ -69,35 +69,31 @@ public class FlowBmlcServ extends CommonServ {
             Bean bean = new Bean();
             bean.set("NODE_ID", nodeId);
             bean.set("WFS_ID", wfsId);
-
             bean.set("SHR_USERCODE", code);// 审核人资源编码
             bean.set("BMSHLC_DEPT", userDeptCode);// 审核人机构
+            // 先查询避免重复添加col3=总行/广东分行营业部,总行/福建分行,
+            bean.set("BMSHLC_SHR", name);
+            String[] colDeptCode = colDeptCodes.split(",");
+            String deptcode = "";
+            for (int i = 0; i < colDeptCode.length; i++) {
+                String getDept = colDeptCode[i];
+                String[] colDeptNAME = getDept.split("/");
+                String deptName = colDeptNAME[1];// 名称
+                String where = "AND DEPT_NAME='" + deptName + "'";
+                List<Bean> deptBean = ServDao.finds("TS_ORG_DEPT", where);
+                if (deptBean != null && !deptBean.isEmpty()) {
+                    Bean deptCodeBean = deptBean.get(0);
 
-            // bean.set("G_TYPE", 1);//选取类型 1人员
-
-            if (ServDao.count(TsConstant.SERV_WFS_BMSHLC, bean) <= 0) {
-                // 先查询避免重复添加col3=总行/广东分行营业部,总行/福建分行,
-                bean.set("BMSHLC_SHR", name);
-                String[] colDeptCode = colDeptCodes.split(",");
-                String deptcode = "";
-                for (int i = 0; i < colDeptCode.length; i++) {
-                    String getDept = colDeptCode[i];
-                    String[] colDeptNAME = getDept.split("/");
-                    String deptName = colDeptNAME[1];// 名称
-                    String where = "AND DEPT_NAME='" + deptName + "'";
-                    List<Bean> deptBean = ServDao.finds("TS_ORG_DEPT", where);
-                    if (deptBean != null && !deptBean.isEmpty()) {
-                        Bean deptCodeBean = deptBean.get(0);
-
-                        deptcode += deptCodeBean.getStr("DEPT_CODE");
-                        deptcode += ",";
-                    } else {
-                        rowBean.set(ImpUtils.ERROR_NAME, "找不到审核机构名称对应的编码");
-                        continue;
-                    }
-
+                    deptcode += deptCodeBean.getStr("DEPT_CODE");
+                    deptcode += ",";
+                } else {
+                    rowBean.set(ImpUtils.ERROR_NAME, "找不到审核机构名称对应的编码");
+                    continue;
                 }
-                bean.set("DEPT_CODE", deptcode.substring(0, deptcode.length() - 1));
+
+            }
+            bean.set("DEPT_CODE", deptcode.substring(0, deptcode.length() - 1));
+            if (ServDao.count(TsConstant.SERV_WFS_BMSHLC, bean) <= 0) {
                 beans.add(bean);
                 codeList.add(code);
             } else {
