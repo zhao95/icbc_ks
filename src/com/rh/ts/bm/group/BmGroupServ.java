@@ -12,10 +12,7 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.util.ImpUtils;
 import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
-import jxl.read.biff.BiffException;
-import jxl.write.WriteException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +22,6 @@ import java.util.List;
  * @author root
  */
 public class BmGroupServ extends CommonServ {
-
-
-    private static String CODE_STR = "codeStr";
-
 
     /**
      * 获取用户所有报名群组编码 (逗号相隔)
@@ -68,13 +61,13 @@ public class BmGroupServ extends CommonServ {
      * @param paramBean paramBean G_ID FILE_ID
      * @return outBean
      */
-    public OutBean savedata(ParamBean paramBean){
+    public OutBean savedata(ParamBean paramBean) {
         OutBean outBean = new OutBean();
         //获取前端传递参数
         String gId = (String) paramBean.get("G_ID");//报名群组id
 
         //*获取文件内容
-        List<Bean> rowBeanList = paramBean.getList("datalist");
+        List<Bean> rowBeanList = paramBean.getList(ImpUtils.DATA_LIST);
         List<String> codeList = new ArrayList<String>();//避免重复添加数据
 
         //获取项目id（xmId）
@@ -134,18 +127,19 @@ public class BmGroupServ extends CommonServ {
             }
         }
         ServDao.creates(TsConstant.SERV_BM_GROUP_USER, beans);
-        
-        return outBean.set("alllist", rowBeanList).set("successlist", codeList);
+
+        return outBean.set(ImpUtils.ALL_LIST, rowBeanList).set("successlist", codeList);
         //在excel中设置失败信息
     }
+
     /**
      * 导入方法开始的入口
      */
-    public OutBean saveFromExcel(ParamBean paramBean){
-    	String fileId = paramBean.getStr("FILE_ID");
-    	 //方法入口
-    	paramBean.set("SERVMETHOD", "savedata");
-       String finalfileid =ImpUtils.getDataFromXls(fileId,paramBean);
-       return new OutBean().set("FILE_ID",finalfileid);
+    public OutBean saveFromExcel(ParamBean paramBean) {
+        String fileId = paramBean.getStr("FILE_ID");
+        //方法入口
+        paramBean.set(ImpUtils.SERV_METHOD_NAME, "savedata");
+        String finalfileid = ImpUtils.getDataFromXls(fileId, paramBean);
+        return new OutBean().set("FILE_ID", finalfileid);
     }
 }
