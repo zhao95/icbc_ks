@@ -30,7 +30,7 @@ public class EverHasCret implements IRule {
 			
 			sql.and("STU_PERSON_ID", user);// 人员编码
 
-			sql.and("CERT_GRADE_CODE", a);
+			sql.andGTE("CERT_GRADE_CODE", a);
 			//
 			sql.and("STATION_TYPE", LB);// 序列编号
 			
