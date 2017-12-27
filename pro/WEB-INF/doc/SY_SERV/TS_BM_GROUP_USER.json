@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"AND G_TYPE='1'",
-"S_MTIME":"2017-12-19 10:18:40:415",
+"S_MTIME":"2017-12-27 10:06:58:282",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "TABLE_VIEW":"TS_BM_GROUP_USER_DEPT",
@@ -1130,14 +1130,14 @@
 "ACT_CSS":"exp",
 "ACT_MEMO":"",
 "ACT_CODE":"modify",
-"S_FLAG":"2",
+"S_FLAG":"1",
 "ACT_WS_FLAG":"2",
 "_PK_":"3kF46QX1lbkWDbRM6VYB",
 "ACT_LOG_FLAG":"2",
 "ACT_HOT_KEY":"",
 "ACT_ID":"3kF46QX1lbkWDbRM6VYB",
 "SERV_ID":"TS_BM_GROUP_USER",
-"S_MTIME":"2017-12-19 10:18:31:357",
+"S_MTIME":"2017-09-27 18:10:35:057",
 "ACT_EXPRESSION":"",
 "ACT_WS_RESULT":"",
 "ACT_MOBILE_FLAG":"1",
@@ -1211,14 +1211,14 @@
 "ACT_CSS":"save",
 "ACT_MEMO":"",
 "ACT_CODE":"save",
-"S_FLAG":"2",
+"S_FLAG":"1",
 "ACT_WS_FLAG":"2",
 "_PK_":"3ZHwEn7SzV0yqAoR1F6l",
 "ACT_LOG_FLAG":"2",
 "ACT_HOT_KEY":"",
 "ACT_ID":"3ZHwEn7SzV0yqAoR1F6l",
 "SERV_ID":"TS_BM_GROUP_USER",
-"S_MTIME":"2017-12-19 10:18:40:375",
+"S_MTIME":"2017-09-27 18:10:34:393",
 "ACT_EXPRESSION":"",
 "ACT_WS_RESULT":"",
 "ACT_MOBILE_FLAG":"1",
@@ -1289,6 +1289,33 @@
 {
 "ACT_TYPE":"1",
 "ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"download",
+"ACT_MEMO":"",
+"ACT_CODE":"impFile",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"3hKeyqXvpbIFLP1wBr2W",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"3hKeyqXvpbIFLP1wBr2W",
+"SERV_ID":"TS_BM_GROUP_USER",
+"S_MTIME":"2017-12-27 10:06:58:224",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"80",
+"ACT_GROUP":"2",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"8",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":"导入模板"
+},
+{
+"ACT_TYPE":"1",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"delete",
 "ACT_MEMO":"",
 "ACT_CODE":"delete",
@@ -1308,7 +1335,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"8",
+"_ROWNUM_":"9",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 删 除 "
@@ -1335,7 +1362,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"9",
+"_ROWNUM_":"10",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 入 "
@@ -1346,14 +1373,14 @@
 "ACT_CSS":"exp",
 "ACT_MEMO":"@{\"_SELECT_\":\"*\"}",
 "ACT_CODE":"exp",
-"S_FLAG":"1",
+"S_FLAG":"2",
 "ACT_WS_FLAG":"2",
 "_PK_":"2vO08Dk0t8FbJcDyAP9I",
 "ACT_LOG_FLAG":"2",
 "ACT_HOT_KEY":"",
 "ACT_ID":"2vO08Dk0t8FbJcDyAP9I",
 "SERV_ID":"TS_BM_GROUP_USER",
-"S_MTIME":"2017-12-03 19:13:04:844",
+"S_MTIME":"2017-09-27 18:10:34:264",
 "ACT_EXPRESSION":"",
 "ACT_WS_RESULT":"",
 "ACT_MOBILE_FLAG":"1",
@@ -1362,7 +1389,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"10",
+"_ROWNUM_":"11",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 出 "
@@ -1389,7 +1416,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"11",
+"_ROWNUM_":"12",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 接 收 "
@@ -1416,7 +1443,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"12",
+"_ROWNUM_":"13",
 "ACT_TIP":"zip文件导入",
 "EN_JSON":"",
 "ACT_NAME":"批量导入"
@@ -1443,7 +1470,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"13",
+"_ROWNUM_":"14",
 "ACT_TIP":"zip文件导出",
 "EN_JSON":"",
 "ACT_NAME":"批量导出"
