@@ -42,6 +42,10 @@ public class UserBean extends Bean {
     private DeptBean tDeptBean = null;
     private DeptBean deptBean = null;
     private CmpyBean cmpyBean = null;
+    
+    private DeptBean oDeptBeanM = null;
+    private DeptBean tDeptBeanM = null;
+    private DeptBean deptBeanM = null;
 
     /**
      * 构造方法
@@ -1069,4 +1073,206 @@ public class UserBean extends Bean {
    	public String getTempPassword(){
    		return this.getStr("USER_TEMP_PASSWORD");
    	}
+   	
+   	/**
+   	 * 是否多机构
+   	 * @return
+   	 */
+   	public boolean isMultiDept() {
+   		
+   		if(this.getInt("_MULTI_DEPT")==1) { //多机构
+   			return true;
+   		} else {
+   			return false;
+   		}
+   	}
+   	
+   	/**
+   	 * 所有次机构编码
+   	 * @return
+   	 */
+   	public String getDeptCodeSecond() {
+   		
+   		return this.getStr("DEPT_CODES_SECOND");
+   	}
+   	
+   	/**
+   	 * 所有次机构名称
+   	 * @return
+   	 */
+   	public String getDeptNameSecond() {
+   		
+   		return this.getStr("DEPT_NAMES_SECOND");
+   	}
+   	
+   	/**
+     * 获取 主部门编码（处室）
+     * @return 主部门编码（处室）
+     */
+    public String getDeptCodeM() {
+    	
+    	if(this.getInt("_MULTI_DEPT")==1) { //多机构
+    		
+    		return this.getStr("DEPT_CODE_M");
+    	} else {
+    		return this.getDeptCode();
+    	}
+    }
+
+    /**
+     * 获取主有效部门编码
+     * 
+     * @return 主有效部门编码
+     */
+    public String getTDeptCodeM() {
+    	
+    	if(this.getInt("_MULTI_DEPT")==1) { //多机构
+    		
+    		return this.getStr("TDEPT_CODE_M");
+    	} else {
+    		return this.getTDeptCode();
+    	}
+    }
+
+    /**
+     * 获取主机构部门编码
+     * @return 主机构部门编码
+     */
+    public String getODeptCodeM() {
+    	
+    	if(this.getInt("_MULTI_DEPT")==1) { //多机构
+    		
+    		return this.getStr("ODEPT_CODE_M");
+    	} else {
+    		return this.getODeptCode();
+    	}
+    }
+
+    /**
+     * 获取主部门层级码
+     * @return 主机构部门层级码
+     */
+    public String getCodePathM() {
+    	
+    	if(this.getInt("_MULTI_DEPT")==1) { //多机构
+    		
+    		return this.getStr("CODE_PATH_M");
+    	} else {
+    		
+    		return this.getCodePath();
+    	}
+    }
+    
+    /**
+     * 获取主部门信息
+     * 
+     * @return 主部门信息对象
+     */
+    public synchronized DeptBean getDeptBeanM() {
+        if (deptBeanM == null) {
+            deptBeanM = OrgMgr.getDept(this.getDeptCodeM());
+            if (deptBeanM == null) {
+                return new DeptBean(new Bean());
+            }
+        }
+        return deptBeanM;
+    }
+    
+    public synchronized void destroyDeptBeanM() {
+        this.deptBeanM = null;
+    }
+
+    /**
+     * 获取主有效部门信息
+     * 
+     * @return 主有效部门
+     */
+    public synchronized DeptBean getTDeptBeanM() {
+        if (tDeptBeanM == null) {
+            String tDeptCodeM = getTDeptCodeM();
+            if (tDeptCodeM.length() == 0) {
+                tDeptCodeM = this.getDeptCodeM();
+            }
+            tDeptBeanM = OrgMgr.getDept(tDeptCodeM);
+            if (tDeptBeanM == null) {
+                tDeptBeanM = new DeptBean(new Bean());
+            }
+        }
+        return tDeptBeanM;
+    }
+    
+    public synchronized void destroyTDeptBeanM() {
+        this.tDeptBeanM = null;
+    }
+
+    /**
+     * 获取主机构部门信息
+     * 
+     * @return 主机构部门
+     */
+    public synchronized DeptBean getODeptBeanM() {
+        if (oDeptBeanM == null) {
+            String oDeptCodeM = getODeptCodeM();
+            if (oDeptCodeM.length() == 0) {
+                oDeptCodeM = this.getDeptCodeM();
+            }
+            oDeptBeanM = OrgMgr.getDept(oDeptCodeM);
+            if (oDeptBeanM == null) {
+                oDeptBeanM = new DeptBean(new Bean());
+            }
+        }
+        return oDeptBeanM;
+    }
+    
+    public synchronized void destroyODeptBeanM() {
+        this.oDeptBeanM = null;
+    }
+    
+    /**
+     * 获取主部门名称
+     * 
+     * @return 主部门名称
+     */
+    public String getDeptNameM() {
+    	
+    	if(this.getInt("_MULTI_DEPT")==1) { //多机构
+
+			return this.getDeptBeanM().getName();
+		} else {
+
+			return this.getDeptName();
+		}
+    }
+
+    /**
+     * 获取主有效部门名称
+     * 
+     * @return 主有效部门名称
+     */
+    public String getTDeptNameM() {
+    	
+    	if(this.getInt("_MULTI_DEPT")==1) { //多机构
+
+			return this.getTDeptBeanM().getName();
+		} else {
+
+			return this.getTDeptName();
+		}
+    }
+
+    /**
+     * 获取所在主机构名称（部门类型为机构）
+     * 
+     * @return 主机构名称
+     */
+    public String getODeptNameM() {
+    	
+    	if(this.getInt("_MULTI_DEPT")==1) { //多机构
+
+			return this.getODeptBeanM().getName();
+		} else {
+
+			return this.getODeptName();
+		}
+    }
 }

@@ -14,6 +14,16 @@ $(function () {
 function userInfo() {
     var userName = System.getVar("@USER_NAME@");
     var odeptName = System.getVar("@ODEPT_NAME@");
+    
+    var deptName = System.getVar("@DEPT_NAME@");
+    var deptCode = System.getVar("@DEPT_CODE@");
+    
+    var deptNameM = System.getVar("@DEPT_NAME_M@");
+    var deptCodeM = System.getVar("@DEPT_CODE_M@");
+    
+    var deptCSecond = System.getVar("@DEPT_CODES_SECOND@");
+    var deptNSecond = System.getVar("@DEPT_NAMES_SECOND@");
+    
     $("#userInfo").append("<div>" + userName + "</div>").append(
         "<div>" + odeptName + "</div>");
 //	var perImg1 = FireFly.getContextPath() +""+ System.getUser("USER_IMG_SRC");
@@ -31,6 +41,50 @@ function userInfo() {
         $("#userImg2").attr('src', perImg2);
     }
     $("#userImg3").attr('src', perImg2);
+    
+    //多机构用户切换身份
+    if(deptCSecond.length > 0) {
+    	
+    	$("#mulitLi").css({"display":"block"});
+    	
+	    $("#mulitDepts").append("<span class='hidden-xs' style='font-family: '黑体 Bold', '黑体 Regular', '黑体';font-weight: 700;font-style: normal;font-size: 16px;color: #FFFFFF;text-align: center;'>" + deptName + "</span>");
+	
+	    $("#mulitDepts").append("<span class='hidden-xs' style='margin-left:10px;'><i class='fa fa-chevron-circle-down'></i></span>");
+    	
+    	var deptCArg = deptCSecond.split(",");
+    	var deptNArg = deptNSecond.split(",");
+    	
+    	console.log("DEPT_CODE",deptCode);
+    	console.log("DEPT_NAME",deptName);
+    	console.log("DEPT_CODE_M",deptCodeM);
+    	console.log("DEPT_NAME_M",deptNameM);
+    	
+    	if(deptCode != deptCodeM) {
+    		$("#mulitList").append("<li><a href='#' id='"+deptCodeM+"'><i class='fa fa-user-o fa-fw'></i>"+deptNameM+"</a></li>");
+    		
+    		$("#"+deptCodeM).unbind("click").bind("click",function() {
+    			
+    			FireFly.doAct("TS_COMM_USER_RELOGIN", "relogin", {"DEPT_CODE": $(this).attr("id")}, true,false,function(data) {
+		    		location.reload();
+		    	});	
+    		});
+    	}
+    	
+    	for(var dn in deptNArg) {
+    		
+    		if(deptCode != deptCArg[dn]) {
+    	     
+	    		$("#mulitList").append("<li><a href='#' id='"+deptCArg[dn]+"'><i class='fa fa-user-o fa-fw'></i>"+deptNArg[dn]+"</a></li>");
+	    		
+	    		$("#"+deptCArg[dn]).unbind("click").bind("click",function() {
+	    			
+	    			FireFly.doAct("TS_COMM_USER_RELOGIN", "relogin", {"DEPT_CODE": $(this).attr("id")}, true,false,function(data) {
+			    		location.reload();
+			    	});	
+	    		});
+    		}
+    	}
+    }
 }
 
 /**

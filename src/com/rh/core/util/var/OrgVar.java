@@ -111,32 +111,22 @@ public class OrgVar implements Var {
                 vars.put("@urlPath@", Context.appStr(Context.APP.CONTEXTPATH)); //虚路径变量
                 vars.put("@USER_WORK_NUM@", userBean.getStr("USER_WORK_NUM")); //用户工号
                 vars.put("@S_MTIME@", userBean.getStr("S_MTIME"));
-                vars.put("@_MULTI_DEPT@", userBean.getStr("_MULTI_DEPT"));
                 
-                List<Bean> list = userBean.getList("MULTI_DEPT_LIST");
+                /**
+                 * 多机构处理
+                 */
+                vars.put("@_MULTI_DEPT@", userBean.getStr("_MULTI_DEPT")); //多机构 1是 ，0否
                 
-                StringBuffer oDeptCode = new StringBuffer(userBean.getODeptCode()).insert(0, "'").append("'");
-                StringBuffer oDeptName = new StringBuffer(userBean.getODeptName()).insert(0, "'").append("'");
-                StringBuffer tDeptCode = new StringBuffer(userBean.getTDeptCode()).insert(0, "'").append("'");
-                StringBuffer tDeptName = new StringBuffer(userBean.getTDeptName()).insert(0, "'").append("'");
-                StringBuffer deptCode = new StringBuffer(userBean.getDeptCode()).insert(0, "'").append("'");
-                StringBuffer deptName = new StringBuffer(userBean.getDeptName()).insert(0, "'").append("'");
+                vars.put("@ODEPT_CODE_M@", userBean.getODeptCodeM()); //主机构编码
+                vars.put("@ODEPT_NAME_M@", userBean.getODeptNameM()); //主机构名称
+                vars.put("@TDEPT_CODE_M@", userBean.getTDeptCodeM()); //主上级部门编码
+                vars.put("@TDEPT_NAME_M@", userBean.getTDeptNameM()); //主上级部门名称
+                vars.put("@DEPT_CODE_M@", userBean.getDeptCodeM());   //主部门编码
+                vars.put("@DEPT_NAME_M@", userBean.getDeptNameM());   //主部门名称
+                vars.put("@CODE_PATH_M@", userBean.getCodePathM());   //主账户codePath
                 
-                for (Bean bean : list) {
-					oDeptCode.append(",'").append(bean.getStr("ODEPT_CODE")).append("'");
-					oDeptName.append(",'").append(bean.getStr("ODEPT_NAME")).append("'");
-					tDeptCode.append(",'").append(bean.getStr("TDEPT_CODE")).append("'");
-					tDeptName.append(",'").append(bean.getStr("TDEPT_NAME")).append("'");
-					deptCode.append(",'").append(bean.getStr("DEPT_CODE")).append("'");
-					deptName.append(",'").append(bean.getStr("DEPT_NAME")).append("'");
-                }
-                
-                vars.put("@ODEPT_CODE_M@", oDeptCode.toString()); //机构编码(包含兼岗) 单引号包含，逗号分隔
-                vars.put("@ODEPT_NAME_M@", oDeptName.toString()); //机构名称(包含兼岗) 单引号包含，逗号分隔
-                vars.put("@TDEPT_CODE_M@", tDeptCode.toString()); //上级部门编码(包含兼岗) 单引号包含，逗号分隔
-                vars.put("@TDEPT_NAME_M@", tDeptName.toString()); //上级部门名称(包含兼岗) 单引号包含，逗号分隔
-                vars.put("@DEPT_CODE_M@", deptCode.toString());   //部门编码(包含兼岗) 单引号包含，逗号分隔
-                vars.put("@DEPT_NAME_M@", deptName.toString());   //部门名称(包含兼岗) 单引号包含，逗号分隔
+                vars.put("@DEPT_CODES_SECOND@", userBean.getDeptCodeSecond());//所有次机构编码
+                vars.put("@DEPT_NAMES_SECOND@", userBean.getDeptNameSecond());//所有次机构编码
                 
 //                initUserPortalTempl(vars, userBean); //初始化用户对应模版
 //                UserMgr.setCacheVarMap(userCode, vars);

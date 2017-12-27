@@ -114,7 +114,7 @@ public class PasswordLoginModule extends AbstractLoginModule {
         			userBean.set("STRU_FLAG", 1);
         			userBean.set("DEPT_LEVEL", dept.getStr("DEPT_LEVEL"));
         			userBean.set("DEPT_SORT", dept.getStr("DEPT_SORT"));
-        			userBean.set("DEPT_CODE_M", dept.getStr("DEPT_CODE"));
+//        			userBean.set("DEPT_CODE_M", dept.getStr("DEPT_CODE"));
         			Context.setOnlineUser(userBean);
         		}
 			}

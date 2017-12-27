@@ -72,6 +72,14 @@
 
 				<div class="navbar-custom-menu">
 					<ul class="nav navbar-nav">
+						<!-- 多机构用户切换身份 -->
+						<li class="dropdown user user-menu" id="mulitLi" style="display:none">
+							<a id="mulitDepts" href="#"	class="dropdown-toggle" data-toggle="dropdown" style="height:60px;width:200px;text-align: center; border-left:0px"></a>
+							<ul id="mulitList" class="dropdown-menu" style="width:200px;">
+ 								
+							</ul>
+						</li>
+							
 						<li id="btnToHT" style="display:none"><a href="#" onclick="window.open('<%=ServerLink%>','_blank');" style="height: 60px;border-left: 0px;">
     						<img title="进入后台管理" src="qt/css/images/to_ht.png" style="cursor: pointer;">
     						</a>
@@ -91,7 +99,7 @@
 							class="dropdown-toggle" data-toggle="dropdown" style="height:60px;width:160px;text-align: center; border-left:0px">
 							<img id= "userImg2" onerror="this.src='/sy/theme/default/images/common/user0.png'" 
 								class="user-image"
-								alt="User Image" style="margin-right: 2px;">
+								alt="" style="margin-right: 2px;">
 								<!-- <span class="hidden-xs">Alexander Pierce</span> -->
 						</a>
 							<ul class="dropdown-menu" style="width:160px;">

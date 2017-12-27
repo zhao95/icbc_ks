@@ -81,25 +81,66 @@ public class UserMgr {
      * @param userCode 用户Code
      * @return 用户Bean对象
      */
-    public static UserBean getUser(String userCode) {
-        UserBean userBean = getCacheUser(userCode);
-        if (userBean == null) {
-        	Assert.hasText(userCode, "Argument 'userCode' can not be empty.");
-        	
-        	List<Bean> userList = findUsers(userCode);
-            if (userList == null || userList.size() == 0) {
-                throw new TipException(Context.getSyMsg("SY_USER_NOT_FOUND", userCode));
-            } else {
+	public static UserBean getUser(String userCode) {
+		UserBean userBean = getCacheUser(userCode);
+		if (userBean == null) {
+			Assert.hasText(userCode, "Argument 'userCode' can not be empty.");
+
+			List<Bean> userList = findUsers(userCode);
+			if (userList == null || userList.size() == 0) {
+				throw new TipException(Context.getSyMsg("SY_USER_NOT_FOUND", userCode));
+			} else {
 				userBean = new UserBean(userList.get(0));
-				if (userList.size() > 1) {
+
+				if (userList.size() > 1) { // 多机构用户
+
+					String mulitDeptCodes = ""; //所有次机构编码，多个都好隔开
+					
+					String mulitDeptNames = "";//所有次机构名称，多个都好隔开
+
+					UserBean main = null;
+
+					for (Bean u : userList) {
+						
+						int struFlag = u.getInt("STRU_FLAG");
+
+						if (struFlag == 1) { // 次机构
+
+							userBean = new UserBean(u);
+
+							if (Strings.isBlank(mulitDeptCodes)) {
+
+								mulitDeptCodes = userBean.getDeptCode();
+								mulitDeptNames = userBean.getDeptName();
+							} else {
+								mulitDeptCodes += "," + userBean.getDeptCode();
+								mulitDeptNames += "," + userBean.getDeptName();
+							}
+
+						} else if (struFlag == 0) { // 主机构
+
+							main = new UserBean(u);
+						}
+					}
 					log.debug("Set user _MULTI_DEPT, " + userCode);
 					userBean.set("_MULTI_DEPT", 1);
+
+					if (main != null) {
+
+						userBean.set("DEPT_CODE_M", main.getDeptCode()); //主部门
+						userBean.set("TDEPT_CODE_M", main.getTDeptCode());//主有效部门
+						userBean.set("ODEPT_CODE_M", main.getODeptCode());//主机构
+						userBean.set("CODE_PATH_M", main.getCodePathM());//主codePath
+
+						userBean.set("DEPT_CODES_SECOND", mulitDeptCodes);//所有次机构编码，多个都好隔开
+						userBean.set("DEPT_NAMES_SECOND", mulitDeptNames);//所有次机构编码，多个都好隔开
+					}
 				}
-                updateUserBeanCache(userCode, userBean);
-            }
-        }
-        return userBean;
-    }
+				updateUserBeanCache(userCode, userBean);
+			}
+		}
+		return userBean;
+	}
     
     public static List<Bean> findUsers(String userCode) {
 		SqlBean sqlBean = new SqlBean();
