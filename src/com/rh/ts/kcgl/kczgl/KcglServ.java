@@ -94,7 +94,10 @@ public class KcglServ extends CommonServ{
 	    List<Bean> list = ServDao.finds("SY_SERV_LINK", "and SERV_ID = 'TS_KCZGL_KCGL' and S_FLAG = 1");
 	    for (int j = 0; j < list.size(); j++) {
 		String linkServId = list.get(j).getStr("LINK_SERV_ID");
-		List<Bean> linkList = ServDao.finds(linkServId, "and KC_ID = '"+dataId+"'");
+		if (linkServId == "TS_XMGL_KCAP_DAPCC") {
+		    continue;
+		}
+		List<Bean> linkList = ServDao.finds(linkServId, "and KC_ID = '"+COPY_ID+"'");
 		for (int k = 0; k < linkList.size(); k++) {
 		    Bean linkBean = linkList.get(k);
 		    linkBean = delSysCol(linkBean);
