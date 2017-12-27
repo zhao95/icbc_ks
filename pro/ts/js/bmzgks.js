@@ -3,8 +3,8 @@ var user_name = System.getVar("@USER_NAME@");
 var user_sex = System.getVar("@USER_SEX@");
 var odept_name = System.getVar("@ODEPT_NAME@");
 var dept_code = System.getVar("@DEPT_CODE@");
-var maxnum = FireFly.getConfig("TS_BM_MIDDLE_MAXNUM").CONF_VALUE;//配置中级最大数
-var maxhigh = FireFly.getConfig("TS_BM_HIGH_MAXNUM").CONF_VALUE;//配置高级最大数
+var maxnum = FireFly.getConfig("TS_BM_MIDDLE_MAXNUM").CONF_VALUE;
+var maxhigh = FireFly.getConfig("TS_BM_HIGH_MAXNUM").CONF_VALUE;
 var param = {};
 param["user_code"]=user_code;
 var user_cmpy_date = System.getVar("@USER_CMPY_DATE@");
@@ -13,17 +13,17 @@ var xm_id  = $("#xmidval").val();
 var paramstrs = {};
 paramstrs["XM_ID"]=xm_id;
 var resultcount = FireFly.doAct("TS_BMLB_BM","getShState",paramstrs);
-var countflag = resultcount.count//判断是什么 审核   0 无 2 自动
+var countflag = resultcount.count;
 if(resultcount.count==0){
 	$("#zgyzbt").attr("disabled","disabled");
 }else if(resultcount.count==2){
 	$("#zgyzbt").attr("disabled","disabled");
 }
 
-var bm_start="";//报名开始时间
-var bm_end = "";//报名结束时间
-var xm_name = "";//项目名称
-var successinfo = "";//报名成功提示
+var bm_start="";
+var bm_end = "";
+var xm_name = "";
+var successinfo = "";
 var yiyistate = "0";
 //项目信息进行展示
 function xminfoshow(){
@@ -35,21 +35,17 @@ function xminfoshow(){
 	    xm_name = data.xmname;
 		var bm_id = bminfojson[0].BM_ID;
 		var bm_ksxzs = bminfojson[0].BM_KSXZ;
-		//将/n替换为  br  /s/g   全部替换
 		var bm_ksxz=bm_ksxzs.replace(/\n/g,"<br>");
 		 bm_start = bminfojson[0].BM_START;
 		 bm_end = bminfojson[0].BM_END;
 		var bm_name = bminfojson[0].BM_NAME;
 		successinfo = data.SH_TGTSY;
 		failerinfo = data.SH_BTGTSY;
-		//给jsp赋值
 		$("#xmnamecon").html(xm_name);
 		$("#ksxzcon").html(bm_ksxz);
 	});
 }
-//进行资格验证
 	function checky(){
-		//加载状态为complete时移除loading效果
 		var param = {};
 		var bminfo={};//将bminfo放入param中  
 		bminfo['XM_ID'] = xm_id;
@@ -71,12 +67,11 @@ function xminfoshow(){
 		var checkArray = $("input[name=checkboxaa]");
 		
 		var checkeddata = [];
-		for(var m=0;m<checkArray.length;m++){//匹配选中的考试
+		for(var m=0;m<checkArray.length;m++){
 			for(var n=0;n<neAry.length;n++){
 			var length= $($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("div").length;
 			if(length<2){
 				if(neAry[n].ID==$($(checkArray[m].parentNode.parentNode).find("td").eq(6)).find("div").eq(0).attr("id")){
-					//只提交选中的考试
 					checkeddata.push(neAry[n]);
 				}
 			}

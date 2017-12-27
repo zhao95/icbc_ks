@@ -25,7 +25,9 @@ import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
+import com.rh.core.util.ImpUtils;
 import com.rh.ts.util.RoleUtil;
+import com.rh.ts.util.TsConstant;
 
 
 public class StayServ extends CommonServ {
@@ -777,12 +779,21 @@ public class StayServ extends CommonServ {
 			String where1 = "AND USER_CODE is null limit 0,5";
 			pxdatalist1 = ServDao.finds("TS_BMSH_PX", where1);
 		}
+		
+		Bean BmIdBean = new Bean();
+		BmIdBean.set("SAFE_HTML", "");
+		BmIdBean.set("ITEM_LIST_FLAG", "1");
+		BmIdBean.set("ITEM_CODE", "BMID");
+		BmIdBean.set("EN_JSON", "");
+		BmIdBean.set("ITEM_NAME", "报名编码");
+		cols.put("BMID", BmIdBean);
 		// 查询出所有的 待审核记录
 		OutBean outBean = query(paramBean);
 		for (Bean bean : dataList) {
 			String work_num = bean.getStr("BM_CODE");
 			Bean userBean = getUserInfo1(work_num);
 			Bean newBean = new Bean();
+			newBean.set("BMID", bean.getStr("BM_ID"));
 			// for循环排序bean
 			for (Bean pxbean : pxdatalist1) {
 				String aa = pxbean.getStr("PX_NAME");
@@ -1871,12 +1882,21 @@ public class StayServ extends CommonServ {
 					String where1 = "AND USER_CODE is null ";
 					pxdatalist1 = ServDao.finds("TS_BMSH_PX", where1);
 				}
+				
+				Bean BmIdBean = new Bean();
+				BmIdBean.set("SAFE_HTML", "");
+				BmIdBean.set("ITEM_LIST_FLAG", "1");
+				BmIdBean.set("ITEM_CODE", "BMID");
+				BmIdBean.set("EN_JSON", "");
+				BmIdBean.set("ITEM_NAME", "报名编码");
+				cols.put("BMID", BmIdBean);
 				// 查询出所有的 待审核记录
 				OutBean outBean = query(paramBean);
 				for (Bean bean : dataList) {
 					String work_num = bean.getStr("BM_CODE");
 					Bean userBean = getUserInfo1(work_num);
 					Bean newBean = new Bean();
+					newBean.set("BMID", bean.getStr("BM_ID"));
 					// for循环排序bean
 					for (Bean pxbean : pxdatalist1) {
 						String aa = pxbean.getStr("PX_NAME");
@@ -1986,6 +2006,120 @@ public class StayServ extends CommonServ {
 				
 	}
 	
-	
+	/**
+	 * 通过excl文件获取试卷相关信息
+	 *
+	 * @param fileId
+	 *            文件id
+	 */
+	public OutBean savedata(Bean paramBean){
+		 OutBean outBean = new OutBean();
+	        //获取前端传递参数
+	        //*获取文件内容
+	        List<Bean> rowBeanList = paramBean.getList("datalist");
+	        List<String> codeList = new ArrayList<String>();//避免重复添加数据
+
+	        List<Bean> beans = new ArrayList<Bean>();
+	        for (Bean rowBean : rowBeanList) {
+	            String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");
+	            if("".equals(colCode)){
+	            	 rowBean.set(ImpUtils.ERROR_NAME, "编码错误，没有此报名数据");
+		                continue;
+	            }
+	            Bean bmbean = ServDao.find("TS_BMLB_BM", colCode);
+	            if (bmbean == null) {
+	                rowBean.set(ImpUtils.ERROR_NAME, "编码错误，没有此报名数据");
+	                continue;
+	            }
+
+	            if (codeList.contains(colCode)) {
+	                //已包含 continue ：避免重复添加数据
+	                rowBean.set(ImpUtils.ERROR_NAME, "EXCEL重复数据：" + colCode);
+	                continue;
+	            }
+
+	          //将审核通过的数据   导入到待不通过表中   
+	            List<Bean> shlist = ServDao.finds("TS_BMSH_STAY", " and BM_ID = '"+colCode+"'");
+	            if (shlist != null&&shlist.size()!=0) {
+	                rowBean.set(ImpUtils.ERROR_NAME, "重复数据，报名数据已存在，不需导入");
+	                continue;
+	            }
+	            //将审核通过的数据导入到不通过表中       
+		           List<Bean> passlist = ServDao.finds("TS_BMSH_NOPASS", " and BM_ID = '"+colCode+"'");
+		           List<Bean> nopasslist = ServDao.finds("TS_BMSH_PASS", " and BM_ID = '"+colCode+"'");
+		           if(passlist!=null&&passlist.size()!=0){
+		        	   Bean passbean = passlist.get(0);
+		        	   //删除通过数据   或待审核数据
+		        	   Bean whereBean = new Bean();
+		        	   whereBean.set("_WHERE_"," and BM_ID = '"+colCode+"'");
+		        	   ServDao.delete("TS_BMSH_NOPASS", whereBean);
+		        	   ServDao.delete("TS_BMSH_PASS", whereBean);
+		        	   //复制审核通过bean  到审核不通过中
+		        	   passbean.remove("SH_ID");
+		        	   passbean.remove("S_CMPY");
+		        	   passbean.remove("S_ATIME");
+		        	   passbean.remove("S_MTIME");
+		        	   passbean.remove("S_FLAG");
+		        	   passbean.remove("_PK_");
+		        	   passbean.remove("ROW_NUM_");
+						Bean newBean = new Bean();
+						newBean.copyFrom(passbean);
+						beans.add(newBean);
+						codeList.add(colCode);
+						//更新报名状态
+						bmbean.set("BM_SH_STATE", "0");
+						ServDao.save("TS_BMLB_BM", bmbean);
+		           }else if(nopasslist!=null&&nopasslist.size()!=0){
+		        	   //审核不通过中没有报名数据   
+		        	   //去待审核中查找 
+		        	   Bean nopassbean = nopasslist.get(0);
+		        	   //删除不通过数据   或待审核数据
+		        	   Bean whereBean = new Bean();
+		        	   whereBean.set("_WHERE_"," and BM_ID = '"+colCode+"'");
+		        	   ServDao.delete("TS_BMSH_PASS", whereBean);
+		        	   ServDao.delete("TS_BMSH_NOPASS", whereBean);
+		        	   //复制审核不同通过bean  到审核通过中
+		        	   nopassbean.remove("SH_ID");
+		        	   nopassbean.remove("S_CMPY");
+		        	   nopassbean.remove("S_ATIME");
+		        	   nopassbean.remove("S_MTIME");
+		        	   nopassbean.remove("S_FLAG");
+		        	   nopassbean.remove("_PK_");
+		        	   nopassbean.remove("ROW_NUM_");
+						Bean newBean = new Bean();
+						newBean.copyFrom(nopassbean);
+						beans.add(newBean);
+						codeList.add(colCode);
+						//更新报名状态
+						bmbean.set("BM_SH_STATE", "0");
+						ServDao.save("TS_BMLB_BM", bmbean);
+		           }else{
+		        	   //没有 报名 数据
+		        	   rowBean.set(ImpUtils.ERROR_NAME, "审核模块中没有此报名数据");
+		           }
+	        }
+	        ServDao.creates("TS_BMSH_STAY", beans);
+	        
+	        return outBean.set("alllist", rowBeanList).set("successlist", codeList);
+	}
+
+	/**
+	 * 从excel文件中读取审核数据，并保存
+	 *
+	 * @param paramBean
+	 *            paramBean
+	 * @return outBean
+	 */
+	public OutBean saveFromExcel(ParamBean paramBean) {
+		String fileId = paramBean.getStr("FILE_ID");
+   	 //方法入口
+   	  paramBean.set("SERVMETHOD", "savedata");
+   	 OutBean out =ImpUtils.getDataFromXls(fileId,paramBean);
+     String failnum = out.getStr("failernum");
+     String successnum = out.getStr("oknum");
+     //返回导入结果
+     return new OutBean().set("FILE_ID",out.getStr("fileid")).set("_MSG_", "导入成功："+successnum+"条， 导入失败："+failnum+"条");
+  }
+
 	
 }

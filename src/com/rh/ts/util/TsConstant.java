@@ -130,6 +130,9 @@ public class TsConstant {
 
 	/** 字典 目录类型定义 */
 	public static final String DICT_CTLG_MOD = "TS_MODULE_CATALOG";
+	
+	/** 报名审核通过定义*/
+	public static final String TS_BMSH_PASS = "TS_BMSH_PASS";
 
 	
 }

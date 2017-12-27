@@ -789,10 +789,12 @@ $("#excelimp").click(function(){
 	 if(linum==0){
 		 alert("文件不能为空");
 	 }else{
+		 $(this).unbind("click");
+		 $("#loading").modal("show");
 		 var servid="";
 		 var param = {};
 		 var s = document.getElementById("shanchu").innerHTML;
-		 param["fileId"]=s;
+		 param["FILE_ID"]=s;
 		 if(tabnum==1){
 			  servid = "TS_BMSH_STAY";
 		 }else if(tabnum==2){
@@ -801,12 +803,15 @@ $("#excelimp").click(function(){
 			 servid="TS_BMSH_NOPASS"
 		 }
 		 param["serv_id"]=servid;
-		 FireFly.doAct("TS_BMLB_BM","getDataFromXls",param,false,true);
+		 FireFly.doAct(servid,"saveFromExcel",param,false,true,function (result) {
+		 alert(result._MSG_);
+		 window.open("/file/"+result.FILE_ID);
 		 $("#excleupload").modal('hide');
-		 deletefiles();	
 		 var parents = document.getElementById("shanchu").parentNode.parentNode;
 		 parents.parentNode.removeChild(parents);
 		 new listPage().gotoPage(1);
+		 $("#loading").modal("hide");
+	 });
 	 }
 });
 //验证不是xls 或  xl 删除 

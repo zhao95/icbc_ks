@@ -51,6 +51,23 @@ if(userBean != null) {
 			 String xmid = request.getParameter("zgtz");
 			 %>
 <style>
+
+	#loading .modal-dialog{
+	position: absolute; 
+    top: 20%; 
+    bottom: 200px; 
+    left: 24%; 
+    right: 0; 
+	}
+	#loadingdialog{
+	 font-family: Arial;
+	 border: 2px solid black;
+	 border-radius: 10px;
+	 padding: 30px 30px;
+	 width: 330px;
+	}
+
+
 	.btn-default{
 	color: WHITE;
 	border-color:#245580;
@@ -529,7 +546,17 @@ if(userBean != null) {
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-			
+			<div class="modal fade" id="loading" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div  class="modal-dialog" style="width:700px;">
+			<div id="loadingdialog" class="modal-content" style="position:absoluate;background:white;height:100px;width:50%">
+				<div style="color:lightseagreen;padding-left:30%;padding-top:10px;font-size:16px;">&nbsp;&nbsp;<B>正在导入请稍候.....</B></div>
+				<div id="loadiv" style="position:relative;top:-80%;left:15%;font-size:16px;"><img src="<%=CONTEXT_PATH%>/ts/image/loading.gif"></img></div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
 			<form id="form2" style="display:none" method="post" action="baomingglf.jsp">
 				<input id = "fzgtz" name="fzgtz"></input>
 			</form>

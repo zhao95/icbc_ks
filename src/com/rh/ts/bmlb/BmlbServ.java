@@ -12,6 +12,10 @@ import java.util.List;
 
 
 
+
+
+
+
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
 
@@ -36,6 +40,7 @@ import com.rh.core.comm.FileMgr;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
+import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -43,17 +48,14 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
+import com.rh.core.util.ImpUtils;
 import com.rh.ts.util.RoleUtil;
+import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.XmglMgr;
 
 public class BmlbServ extends CommonServ {
 	 protected Log log = LogFactory.getLog(this.getClass());
-	/**
-	 * 非资格考试的新增
-	 *
-	 * @param paramBean
-	 * @return
-	 */
+	
 	public void addData(Bean paramBean) {
 		UserBean userBean = Context.getUserBean();
 		String odept_code = "";
@@ -206,14 +208,8 @@ public class BmlbServ extends CommonServ {
 
 	}
 
-	/**
-	 * 资格考试的新增
-	 *
-	 * @param paramBean
-	 * @return
-	 */
+	
 	public Bean addZgData(Bean paramBean) {
-		// 获取服务ID
 		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
 		// 获取前台传过来的值
 		String user_code = paramBean.getStr("USER_CODE");
@@ -300,11 +296,9 @@ public class BmlbServ extends CommonServ {
 							}
 						}
 						if (flag != 0) {
-							// 验证不通过
 							ad_result = "2";
 						}
 						if (flag == 0) {
-							// 验证通过
 							ad_result = "1";
 						}
 						// 0无审核,1自动审核, 2人工审核, 3自动+人工审核
@@ -388,9 +382,7 @@ public class BmlbServ extends CommonServ {
 					}
 					Bean bmbean = ServDao.create(servId, beans);
 
-					// 获取到报名主键id
 					String bm_id = bmbean.getStr("BM_ID");
-					// 验证信息添加
 					Bean yzBean = new Bean();
 					yzBean.set("BM_ID", bm_id);
 					yzBean.set("AD_NAME", back_All);
@@ -400,7 +392,6 @@ public class BmlbServ extends CommonServ {
 					yzBean.set("AD_UNAME", user_name);
 					ServDao.save("TS_BMSH_AUDIT", yzBean);
 
-					// 添加公共表
 					String struc = "AND DATA_ID=" + "'" + user_code
 							+ "' AND SERV_ID = 'ts_bmlb_bm'";
 					List<Bean> ucList = ServDao.finds("TS_OBJECT", struc);
@@ -416,7 +407,6 @@ public class BmlbServ extends CommonServ {
 						ServDao.save("TS_OBJECT", objBean);
 					}
 					
-					// 获取流程相关信息
 					ParamBean param = new ParamBean();
 					param.set("examerUserCode", user_code);
 					param.set("level", 0);
@@ -436,7 +426,6 @@ public class BmlbServ extends CommonServ {
 						node_name = out.getStr("NODE_NAME");
 						SH_LEVEL = out.getInt("SH_LEVEL");
 					}
-					// 添加到审核表中
 					beans.set("SH_LEVEL", SH_LEVEL);
 					Bean shBean = new Bean();
 					shBean.set("RZ_YEAR", rz_year);
@@ -467,7 +456,6 @@ public class BmlbServ extends CommonServ {
 						shBean.set("SH_OTHER", user_code);
 						ServDao.save("TS_BMSH_PASS", shBean);
 					}
-					// 自动审核 无手动
 					if (count == 1) {
 						if (ad_result.equals("1")) {
 							shBean.set("SH_OTHER", "");// 其他办理人
@@ -479,14 +467,12 @@ public class BmlbServ extends CommonServ {
 							ServDao.save("TS_BMSH_PASS", shBean);
 						}
 					}
-					// 只有手动审核
 					if (count == 2) {
 						if ("".equals(allman)) {
 							return new OutBean().setError("报名失败没有审核人");
 						}
 						ServDao.save("TS_BMSH_STAY", shBean);
 					}
-					// 自动加手动
 					if (count == 3) {
 						if (ad_result.equals("1")) {
 							shBean.set("SH_OTHER", "");// 其他办理人  不需要其他审核人审核
@@ -500,7 +486,6 @@ public class BmlbServ extends CommonServ {
 							ServDao.save("TS_BMSH_STAY", shBean);
 						}
 					}
-					// 自动审核保存到 报名明细中
 					Bean mindbean = new Bean();
 					mindbean.set("SH_LEVEL", "自动审核");
 					mindbean.set("SH_MIND", mind);
@@ -527,12 +512,7 @@ public class BmlbServ extends CommonServ {
 		return outBean;
 	}
 
-	/**
-	 * 资格考试报名模块与等级的设置
-	 *
-	 * @param paramBean
-	 * @return
-	 */
+	
 	public Bean getMkvalue(Bean paramBean) {
 		String MK = paramBean.getStr("MK");
 		String XL = paramBean.getStr("xlname");
@@ -562,7 +542,6 @@ public class BmlbServ extends CommonServ {
 		String STATION_NO_CODE = paramBean.getStr("xlcode");
 		UserBean userBean = Context.getUserBean();
 		String code = userBean.getCode();
-		// 获取到所有的模块 但可能重复
 		List<Bean> finds = ServDao.finds("TS_BMLB_BM", "and BM_XL_CODE='"+STATION_NO_CODE+"' and BM_LB_CODE='"+STATION_TYPE_CODE+"' and xm_id='"+XM_ID+"' and BM_STATE='1' and BM_CODE ='"+code+"'");
 		for (Bean bean : finds) {
 			for(int i=0;i<list.size();i++){
@@ -646,11 +625,7 @@ public class BmlbServ extends CommonServ {
 	 * }
 	 */
 
-	/**
-	 * 获取项目下 已经报考的考试
-	 * @param paramBean id(项目id),user_code(用户编码)
-	 * @return
-	 */
+	
 	public Bean getList(Bean paramBean) {
 		String servId = "TS_BMLB_BM";
 		String id = paramBean.getStr("id");
@@ -676,12 +651,6 @@ public class BmlbServ extends CommonServ {
 		return outBean;
 	}
 
-	/**
-	 * 获取 已经报考的考试
-	 *
-	 * @param paramBean
-	 * @return
-	 */
 	public Bean getAllList(Bean paramBean) {
 		String servId = "TS_BMLB_BM";
 		String user_code = paramBean.getStr("user_code");
@@ -692,12 +661,7 @@ public class BmlbServ extends CommonServ {
 		return outBean;
 	}
 
-	/**
-	 * 根据条件 三级联动进行筛选
-	 *
-	 * @param paramBean
-	 * @return
-	 */
+	
 	public Bean getSelectData(Bean paramBean) {
 		String servId = "TS_BMLB_BM";
 		String user_code = paramBean.getStr("user_code");
@@ -723,11 +687,7 @@ public class BmlbServ extends CommonServ {
 		return outBean;
 	}
 
-	/**
-	 * 分页查询 有下拉框查询
-	 * @param paramBean
-	 * @return
-	 */
+	
 	public OutBean getSelectedData(ParamBean paramBean) {
 		OutBean outBean = new OutBean();
 
@@ -818,11 +778,6 @@ public class BmlbServ extends CommonServ {
 		return outBean;
 	}
 
-	/**
-	 * 撤销时将已报名的数据状态 改为已撤销（多条）
-	 *
-	 * @param paramBean
-	 */
 	public void deletebm(Bean paramBean) {
 		String servId = "TS_BMLB_BM";
 		String id = paramBean.getStr("id");
@@ -837,28 +792,21 @@ public class BmlbServ extends CommonServ {
 		}
 	}
 
-	/**
-	 * 撤销时将已报名的数据状态 改为已撤销(单条)
-	 *
-	 * @param paramBean
-	 * @return OutBean 删除成功信息
-	 */
+	
 	public OutBean cxupdate(Bean paramBean) {
 		
 		OutBean out = new OutBean();
 		
-		// 判断是否已经手动审核
 		String servId = "TS_BMLB_BM";
 		
 		String id = paramBean.getStr("id");
 		
 		
 		String where1 = "AND DATA_ID = '" + id + "' AND SH_TYPE='1'";
-		List<Bean> relist = ServDao.finds("TS_COMM_MIND", where1);//单条数据审核记录
+		List<Bean> relist = ServDao.finds("TS_COMM_MIND", where1);
 		
 		String where = "AND BM_ID=" + "'" + id + "'";
-		List<Bean> list = ServDao.finds(servId, where);//data数据
-		
+		List<Bean> list = ServDao.finds(servId, where);
 		for (int i = 0; i < list.size(); i++) {
 			
 			boolean flag = false;
@@ -892,7 +840,6 @@ public class BmlbServ extends CommonServ {
 		}
 		
 			Bean queryUserbm = new Bean().set("BM_ID", id);//删除条件的bean :报名数据
-			// 删除 审核中 审核通过 审核未通过数据
 			ServDao.delete("TS_BMSH_STAY", queryUserbm);
 			ServDao.delete("TS_BMSH_PASS", queryUserbm);
 			ServDao.delete("TS_BMSH_NOPASS", queryUserbm);
@@ -917,9 +864,7 @@ public class BmlbServ extends CommonServ {
 		return outBean;
 	}
 
-	/**
-	 * 分页查询没有 下拉框 查询
-	 */
+	
 	public OutBean getFenYe(Bean paramBean) {
 		// {_PAGE_={NOWPAGE=6, PAGES=100, ALLNUM=4993, SHOWNUM=50},
 		// serv=SY_COMM_FILE, act=query, frameId=SY_COMM_FILE-tabFrame,
@@ -950,10 +895,8 @@ public class BmlbServ extends CommonServ {
 		int chushi = (nowpage - 1) * showpage + 1;
 		// 计算结束项
 		int jieshu = (nowpage - 1) * showpage + showpage;
-		// 放到Array中
 		List<Bean> list2 = new ArrayList<Bean>();
 		if (ALLNUM == 0) {
-			// 没有数据
 		} else {
 
 			if (jieshu <= ALLNUM) {
@@ -1110,100 +1053,7 @@ public class BmlbServ extends CommonServ {
 		return outBean;
 	}
 
-	/**
-	 * 通过excl文件获取试卷相关信息
-	 *
-	 * @param fileId
-	 *            文件id
-	 */
-	public OutBean getDataFromXls(Bean paramBean) throws IOException,
-			BiffException {
-		List<Bean> result = new ArrayList<Bean>();
-		String fileId = paramBean.getStr("fileId");
-		String servid = paramBean.getStr("serv_id");
-		String where = "AND SERV_ID=" + "'" + servid + "'";
-		List<Bean> listcolumn = ServDao.finds("SY_SERV_ITEM", where);
-		// 查询表字段和注释
-		/* String where = "AND " */
-		Bean fileBean = FileMgr.getFile(fileId);
-		InputStream in = FileMgr.download(fileBean);
-		Workbook workbook = Workbook.getWorkbook(in);
-		try {
-			// 查找服务名称
-			String whereser = "AND SERV_ID=" + "'" + servid + "'";
-			List<Bean> serlist = ServDao.finds("SY_SERV", whereser);
-			Sheet sheet1 = workbook
-					.getSheet(serlist.get(0).getStr("SERV_NAME"));
-			int rows = sheet1.getRows();
-			List<String> newlist = new ArrayList<String>();
-			for (int i = 0; i < rows; i++) {
-				if (i == 0) {
-					// 获取第一行单元格
-					Cell[] cells = sheet1.getRow(0);
-					for (Cell cell : cells) {
-						int zz = newlist.size();
-						for (Bean columnbean : listcolumn) {
-							if (cell.getContents().equals(
-									columnbean.getStr("ITEM_NAME"))) {
-								newlist.add(columnbean.getStr("ITEM_CODE"));
-							}
-						}
-						if (zz == newlist.size()) {
-							newlist.add("");
-						}
-					}
-
-				}
-				if (i != 0) {
-					// 获取字段对应的名字 和字段 循环判断 是否对应 然后赋值 将 其组成key value
-					// 获的排序好的字段 的list
-					Cell[] cells = sheet1.getRow(i);
-					Bean bean = new Bean();
-					for (int j = 0; j < cells.length; j++) {
-						if (!"".equals(newlist.get(j))) {
-							if (!StringUtils.isEmpty(cells[j].getContents())) {
-								// 需要保存到数据库的字段
-								bean.set(newlist.get(j), cells[j].getContents());
-							}
-						}
-					}
-					result.add(bean);
-
-				}
-			}
-		} catch (Exception e) {
-			throw new TipException("Excel文件解析错误，请校验！");
-		} finally {
-			workbook.close();
-		}
-
-		OutBean outBean = saveFromExcel(result, servid);
-		return outBean;
-	}
-
-	/**
-	 * 从excel文件中读取审核数据，并保存
-	 *
-	 * @param paramBean
-	 *            paramBean
-	 * @return outBean
-	 */
-	public OutBean saveFromExcel(List<Bean> list, String servid) {
-		OutBean outBean = new OutBean();
-		Bean queryBean = new Bean();
-		int count = 0;
-		if (list.size() != 0) {
-			for (Bean bean : list) {
-				queryBean.copyFrom(bean);
-				if (ServDao.count(servid, queryBean) <= 0) {
-					ServDao.save(servid, bean);
-				}
-				count++;
-			}
-		}
-		return outBean.setCount(count).setMsg("添加成功").setOk();
-	}
-
+	
 	/**
 	 * 点击查看 展示报名信息
 	 */
