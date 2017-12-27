@@ -501,7 +501,7 @@ public class QjlbServ extends CommonServ {
         for (String shUserCode : split) {
             Bean bean = new Bean();
             bean.set("SHR_USERCODE",shUserCode);
-            bean.set("SHR_NAME",UserMgr.getUser(shrUserCode).getName());
+            bean.set("SHR_NAME",UserMgr.getUser(shUserCode).getName());
             shList.add(bean);
         }
 //        List<Bean> shList = shBean.getList("result");
@@ -528,7 +528,7 @@ public class QjlbServ extends CommonServ {
 
             afterApply(outBean, qjbean, "2");//2 审批通过
         } else if (CollectionUtil.isEmpty(shList)) {
-            if (shList != null && shList.size() == 0) {
+            if (shList.size() == 0) {
                 outBean.setError("没有审核人，请联系管理员！");
             }
         } else {

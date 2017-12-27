@@ -108,7 +108,7 @@ public class TsTodoServ extends CommonServ {
                 " select '' from ts_comm_todo a" +
                 " left join ts_qjlb_qj b on b.QJ_ID=a.DATA_ID " +
                 " left join ts_jklb_jk c on c.JK_ID=a.DATA_ID " +
-                " where a.OWNER_CODE='" + Context.getUserBean().getCode() + "' AND (c.XM_ID = xm.XM_ID or b.XM_ID = xm.XM_ID) " + whereSql +
+                " where a.OWNER_CODE='" + Context.getUserBean().getCode() + "' AND (c.XM_ID = xm.XM_ID or b.XM_ID = xm.XM_ID) and " + whereSql +
                 " )";
 
         List<Bean> xmList = Transaction.getExecutor().query(sql);
