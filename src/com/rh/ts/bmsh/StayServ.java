@@ -282,11 +282,18 @@ public class StayServ extends CommonServ {
 						// 流程最后一次审核
 						ServDao.delete("TS_BMSH_STAY", id);
 					} else {
-						// 更新
-						bean.set("SH_LEVEL", sh_level);
+						// 更新    逐级  可以确定  ，越级 当前层级
+						if(flag.equals("1")){
+						bean.set("SH_LEVEL", outbean.getStr("NODE_STEPS"));
 						bean.set("SH_USER", allman);
 						bean.set("SH_OTHER", allman);
 						ServDao.save("TS_BMSH_STAY", bean);
+						}else{
+							bean.set("SH_LEVEL", level);
+							bean.set("SH_USER", allman);
+							bean.set("SH_OTHER", allman);
+							ServDao.save("TS_BMSH_STAY", bean);
+						}
 					}
 
 					// 审核通过里面数据进行修改 同步
