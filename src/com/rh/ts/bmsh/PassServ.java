@@ -492,6 +492,11 @@ public class PassServ extends CommonServ {
 							}
 						}
 						sql3+=" and SH_LEVEL !=0 ";
+						int count2 = Transaction.getExecutor().count(sql3);
+						if (count2 > EXCEL_MAX_NUM) {
+							return new OutBean().setError("导出数据总条数大于Excel最大行数："
+									+ EXCEL_MAX_NUM);
+						}
 						dataList = Transaction.getExecutor().query(sql3);
 					}else{
 				return new OutBean().setError("空");
@@ -524,7 +529,6 @@ public class PassServ extends CommonServ {
 		BmIdBean.set("ITEM_NAME", "报名编码");
 		cols.put("BMID", BmIdBean);
 		// 查询出所有的 待审核记录
-		OutBean outBean = query(paramBean);
 		for (Bean bean : dataList) {
 			String work_num = bean.getStr("BM_CODE");
 			Bean userBean = getUserInfo1(work_num);
@@ -597,7 +601,6 @@ public class PassServ extends CommonServ {
 		ExportExcel expExcel = new ExportExcel(serv);
 		try {
 			// 查询出 要导出的数据
-			count = outBean.getCount();
 			// 总数大于excel可写最大值
 			/*if (count > EXCEL_MAX_NUM) {
 				return new OutBean().setError("导出数据总条数大于Excel最大行数："
@@ -605,7 +608,6 @@ public class PassServ extends CommonServ {
 			}*/
 			// 导出第一次查询数据
 			paramBean.setQueryPageNowPage(1); // 导出当前第几页
-			afterExp(paramBean, outBean); // 执行导出查询后扩展方法
 			// 查询出表头 查询出 对应数据 hashmaplist
 			expExcel.createHeader(cols);
 			expExcel.appendData1(finalList, paramBean);
@@ -921,6 +923,11 @@ public class PassServ extends CommonServ {
 					DeptBean dept = OrgMgr.getDept(dept_code);
 					String codepath = dept.getCodePath();
 					String sql = "select * from TS_BMSH_PASS a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') and xm_id='"+xmid+"'";
+					int count2 = Transaction.getExecutor().count(sql);
+					if (count2 > EXCEL_MAX_NUM) {
+						return new OutBean().setError("导出数据总条数大于Excel最大行数："
+								+ EXCEL_MAX_NUM);
+					}
 					dataList = Transaction.getExecutor().query(sql);
 					  
 				}
@@ -948,7 +955,6 @@ public class PassServ extends CommonServ {
 				BmIdBean.set("ITEM_NAME", "报名编码");
 				cols.put("BMID", BmIdBean);
 				// 查询出所有的 待审核记录
-				OutBean outBean = query(paramBean);
 				for (Bean bean : dataList) {
 					String work_num = bean.getStr("BM_CODE");
 					Bean userBean = getUserInfo1(work_num);
@@ -1025,15 +1031,10 @@ public class PassServ extends CommonServ {
 				ExportExcel expExcel = new ExportExcel(serv);
 				try {
 					// 查询出 要导出的数据
-					count = outBean.getCount();
 					// 总数大于excel可写最大值
-					if (count > EXCEL_MAX_NUM) {
-						return new OutBean().setError("导出数据总条数大于Excel最大行数："
-								+ EXCEL_MAX_NUM);
-					}
+					
 					// 导出第一次查询数据
 					paramBean.setQueryPageNowPage(1); // 导出当前第几页
-					afterExp(paramBean, outBean); // 执行导出查询后扩展方法
 					// 查询出表头 查询出 对应数据 hashmaplist
 					expExcel.createHeader(cols);
 					expExcel.appendData1(finalList, paramBean);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.db.Transaction;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -47,7 +48,7 @@ public class DataServ extends CommonServ {
 		int i=0;
 		int j=0;
 		int a = 0;
-		String sql = "SELECT DISTINCT CODE_PATH,DEPT_CODE FROM SY_ORG_DEPT WHERE DEPT_LEVEL = '2'";
+		String sql = "SELECT DISTINCT CODE_PATH,DEPT_CODE FROM SY_ORG_DEPT WHERE dept_code =''";
 		List<Bean> odeptlist = Transaction.getExecutor().query(sql);
 		
 		List bmlistbean = new ArrayList<Bean>();
@@ -610,7 +611,7 @@ public class DataServ extends CommonServ {
 		int i = 0;
 		int j = 0;
 		int a = 0;
-		String sql = "SELECT DISTINCT CODE_PATH,DEPT_CODE FROM SY_ORG_DEPT  where dept_code in('0110200000','0230100000','0162000000','0111800000','0060100000','0130100000')";
+		String sql = "SELECT CODE_PATH,DEPT_CODE FROM SY_ORG_DEPT  where dept_code ='0020000000'";
 		List<Bean> odeptlist = Transaction.getExecutor().query(sql);
 		for (Bean ODEPTBEAN : odeptlist) {
 			Transaction.begin();
@@ -619,30 +620,11 @@ public class DataServ extends CommonServ {
 			List<Bean> DEPTLIST = ServDao.finds("SY_ORG_DEPT", "AND CODE_PATH LIKE CONCAT('" + deptcode + "','%') and DEPT_LEVEL =3");
 			for (Bean bean : DEPTLIST) {
 				String odept_code = bean.getStr("DEPT_CODE");
-				List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '" + bean.getStr("DEPT_CODE") + "' limit 0,5");
+				List<Bean> finds2 = ServDao.finds("SY_ORG_USER", " AND ODEPT_CODE =  '" + bean.getStr("DEPT_CODE") + "' limit 0,10");
 				if (finds2 != null && finds2.size() != 0) {
 
 					//向报名列表中插数据
 					for (Bean userBean : finds2) {
-						String user_code = userBean.getStr("USER_CODE");
-						String dept_code = userBean.getStr("dept_code");
-						ParamBean param = new ParamBean();
-						param.set("examerUserCode", user_code);
-						param.set("level", 0);
-						param.set("deptCode", dept_code);
-						param.set("odeptCode", odept_code);
-						param.set("xmId", xmid);
-						param.set("flowName", 1);
-						param.set("shrUserCode", user_code);
-						OutBean out = ServMgr
-								.act("TS_WFS_APPLY", "backFlow", param);
-						String blist = out.getStr("result");
-						String allman = "";
-						String node_name = "";
-						if (!"".equals(blist)) {
-							allman = blist.substring(0, blist.length() - 1);
-							node_name = out.getStr("NODE_NAME");
-						}
 
 						String STATION_TYPE_CODE = userBean.getStr("STATION_TYPE_CODE");
 						String STATION_NO = userBean.getStr("STATION_NO_CODE");
@@ -668,13 +650,13 @@ public class DataServ extends CommonServ {
 							}
 							a = j;
 						}
-						List<Bean> kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr + " AND XM_ID='" + xmid + "' limit " + a + "," + 2);
+						List<Bean> kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr + " AND XM_ID='" + xmid + "' limit " + a + "," + 3);
 						if (cengji >= 3 && kslbklist.size() == 0) {
 							wherestr = " AND  (KSLB_TYPE = '2' or KSLB_TYPE=1) ";
 							if (a > kslbklist2.size() - 3) {
 								a = 0;
 							}
-							kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr + " AND XM_ID='" + xmid + "' limit " + a + "," + 2);
+							kslbklist = ServDao.finds("TS_XMGL_BM_KSLB", wherestr + " AND XM_ID='" + xmid + "' limit " + a + "," + 3);
 						}
 
 						for (Bean kslbkbean : kslbklist) {
@@ -733,9 +715,7 @@ public class DataServ extends CommonServ {
 							shBean.set("BM_XL_CODE", kslbkbean.getStr("KSLB_XL_CODE"));
 							shBean.set("BM_MK_CODE", kslbkbean.getStr("KSLB_MK_CODE"));
 							shBean.set("BM_TYPE_NAME", kslbkbean.getStr("KSLB_TYPE_NAME"));
-							shBean.set("SH_NODE", node_name);// 目前审核节点
 							shBean.set("SH_USER", "");// 当前办理人
-							shBean.set("SH_OTHER", allman);// 其他办理人
 							shBean.set("S_ODEPT", userBean.getStr("ODEPT_CODE"));
 							shBean.set("S_TDEPT", userBean.getStr("TDEPT_CODE"));
 							shBean.set("S_DEPT", userBean.getStr("DEPT_CODE"));

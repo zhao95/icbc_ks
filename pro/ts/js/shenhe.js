@@ -1377,6 +1377,7 @@ var listPage = function () {
 	 var whereData={};
 	 var data = {};
 	 data["xmid"]=xmid;
+	 data["nowlevel"]=nowlevel;
 	 data = jQuery.extend(data,whereData);
 	 
 	 window.open(FireFly.getContextPath() + '/TS_BMSH_STAY.expAllSh.do?data=' + 
