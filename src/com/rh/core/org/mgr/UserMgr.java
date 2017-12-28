@@ -93,6 +93,19 @@ public class UserMgr {
 				userBean = new UserBean(userList.get(0));
 
 				if (userList.size() > 1) { // 多机构用户
+					
+					String slaveDept = "";
+					
+					if (userList.size() > 2) { // 包含2个以上次机构
+						
+						String where = " AND PERSON_ID='" + userCode + "' AND STRU_FLAG='1' ORDER BY S_MTIME DESC";
+						
+						List<Bean> slavelist = ServDao.finds("SY_HRM_ZDSTAFFSTRU", where);
+				        
+						Bean slave = slavelist.get(0);
+				        
+						slaveDept = slave.getStr("STRU_ID");
+					}
 
 					String mulitDeptCodes = ""; //所有次机构编码，多个都好隔开
 					
@@ -105,16 +118,23 @@ public class UserMgr {
 						int struFlag = u.getInt("STRU_FLAG");
 
 						if (struFlag == 1) { // 次机构
+							
+							if (Strings.isBlank(slaveDept)) {
 
-							userBean = new UserBean(u);
+								userBean = new UserBean(u);
+
+							} else if (slaveDept.equals(u.getStr("DEPT_CODE"))) {
+
+								userBean = new UserBean(u);
+							}
 
 							if (Strings.isBlank(mulitDeptCodes)) {
 
-								mulitDeptCodes = userBean.getDeptCode();
-								mulitDeptNames = userBean.getDeptName();
+								mulitDeptCodes = u.getStr("DEPT_CODE");
+								mulitDeptNames = u.getStr("DEPT_NAME");
 							} else {
-								mulitDeptCodes += "," + userBean.getDeptCode();
-								mulitDeptNames += "," + userBean.getDeptName();
+								mulitDeptCodes += "," + u.getStr("DEPT_CODE");
+								mulitDeptNames += "," + u.getStr("DEPT_NAME");
 							}
 
 						} else if (struFlag == 0) { // 主机构

@@ -67,6 +67,8 @@ public class CtlgSyncUtils {
 			log.error("----------stop-----------" + mod + "-" + sw.toString());
 			sw.stop();
 		}
+		
+		log.error("----------finish-----------" + mods);
 
 	}
 
