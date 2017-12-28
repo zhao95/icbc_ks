@@ -58,6 +58,8 @@ function userInfo() {
     	console.log("DEPT_NAME",deptName);
     	console.log("DEPT_CODE_M",deptCodeM);
     	console.log("DEPT_NAME_M",deptNameM);
+    	console.log("DEPT_CODES_SECOND",deptCArg);
+    	console.log("DEPT_NAMES_SECOND",deptNArg);
     	
     	if(deptCode != deptCodeM) {
     		$("#mulitList").append("<li><a href='#' id='"+deptCodeM+"'><i class='fa fa-user-o fa-fw'></i>"+deptNameM+"</a></li>");
