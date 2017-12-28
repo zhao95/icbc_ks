@@ -404,7 +404,6 @@ $(function() {
 			}else{
 				var jdtNum="0";
 				var jdtName="您暂时未报名资格考试！";
-				debugger;
 				if(jdtName==undefined){
 					jdtName="您暂时未报名资格考试！";
 				}
