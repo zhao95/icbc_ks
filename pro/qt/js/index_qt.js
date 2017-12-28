@@ -115,15 +115,15 @@ function showMenu() {
                 //不显示
                 continue;
             }
-            if (data.menuList[i].MENU_NAME == "报名审核") {
+           /* if (data.menuList[i].MENU_NAME == "报名审核") {
                 var menu_url = MENU_URL;
                 //报名审核 数据  是否有 待审核的数据
-                /*  var xmids = "";
+                  var xmids = "";
                  for(var j=0;j<list.length;j++){
                  xmids+=list[j].XM_ID+",";
                  }
                  var paramstay = {};
-                 paramstay["ids"]=xmids;*/
+                 paramstay["ids"]=xmids;
                 var MENU_IMG = data.menuList[i].MENU_IMG;
                 var MENU_NAME = data.menuList[i].MENU_NAME;
                 FireFly.doAct("TS_BMSH_STAY", "getStayList", "", true, true, function (result) {
@@ -146,7 +146,7 @@ function showMenu() {
                     }
                 });
 
-            } else if (data.menuList[i].MENU_NAME == "查看辖内报名" && lookflag == "false") {
+            } else */if (data.menuList[i].MENU_NAME == "查看辖内报名" && lookflag == "false") {
                 continue;
             } else if (data.menuList[i].MENU_NAME == "首页") {
 

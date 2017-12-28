@@ -543,6 +543,7 @@ function firall(){
 				var data = {"_PK_":arrstring};
 				data["where"]=where5+where6;
 				data["xmid"]=xmid;
+				data["nowlevel"]=nowlevel;
 				data = jQuery.extend(data,whereData);
 				window.open(FireFly.getContextPath() + '/' + obj + '.exp.do?data=' + 
 				encodeURIComponent(jq.toJSON(data)));

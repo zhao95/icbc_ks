@@ -675,6 +675,26 @@ public class StayServ extends CommonServ {
 	 */
 	@Override
 	public OutBean exp(ParamBean paramBean) {
+		String xmid= paramBean.getStr("xmid");
+		//导出时  判断 审核流程
+		String nowlevel = paramBean.getStr("nowlevel");  //nowlevel 
+		//审核level状态 和当前人的level进行比对    1.逐级  当前层级 相等的人可见 2.越级 当前层及及以上可见
+		//查询当前审核人的流程 绑定的审核机构
+		//查找判断逐级越级 条件
+		String sqltype ="SELECT a.WFS_TYPE FROM TS_WFS_APPLY a LEFT JOIN TS_XMGL_BMSH b ON a.wfs_id = b.wfs_id where b.xm_id='"+xmid+"'";
+		List<Bean> wfslist = Transaction.getExecutor().query(sqltype);
+		String wfstype = ""; // 流程类型 1.逐级  2.越级
+		if(wfslist!=null&&wfslist.size()!=0){
+			wfstype = wfslist.get(0).getStr("WFS_TYPE");
+		}
+		String appendwhere ="";
+		if("1".equals(wfstype)){
+			appendwhere="  SH_LEVEL = '"+nowlevel+"'";
+		}else{
+			//越级   可以审核 状态 数字小 及审核层级低的人
+			appendwhere="  SH_LEVEL >= '"+nowlevel+"'";
+		}
+		
 		if("true".equals(paramBean.getStr("within"))){
 			expwithdata(paramBean);
 			return new OutBean().setOk();
@@ -707,7 +727,6 @@ public class StayServ extends CommonServ {
 		}else{ // 导出所有记录
 			String usercode = Context.getUserBean().getCode();
 			//查询当前审核人的流程 绑定的审核机构
-			String xmid= paramBean.getStr("xmid");
 			String sql = "select n.dept_code from (select node_id from(select wfs_id from ts_xmgl_bmsh where xm_id='"+xmid+"') c left join TS_WFS_NODE_APPLY d on c.wfs_id = d.wfs_id) m left join TS_WFS_BMSHLC n on m.node_id = n.node_id  "+
 					"where n.shr_usercode= '"+usercode+"'";
 			List<Bean> query = Transaction.getExecutor().query(sql);
@@ -727,7 +746,7 @@ public class StayServ extends CommonServ {
 				String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+deptcodes+")) and dept_code in("+deptcodes+")";
 						List<Bean> query1 = Transaction.getExecutor().query(sql1);
 						String sql3 = "";
-						sql3 += "select * from (select a.*,b.code_path from ts_bmsh_stay a left join sy_org_dept b on a.s_dept=b.dept_code where xm_id = '"+xmid+"') c ";
+						sql3 += "select * from (select a.*,b.code_path from ts_bmsh_stay a left join sy_org_dept b on a.s_dept=b.dept_code where "+ appendwhere +" AND xm_id = '"+xmid+"') c ";
 						for (int i=0;i<query1.size();i++) {
 							//判断哪些考生部门 在此codepath 下
 							if(i==0){
@@ -764,7 +783,6 @@ public class StayServ extends CommonServ {
 		BmIdBean.set("ITEM_NAME", "报名编码");
 		cols.put("BMID", BmIdBean);
 		// 查询出所有的 待审核记录
-		OutBean outBean = query(paramBean);
 		for (Bean bean : dataList) {
 			String work_num = bean.getStr("BM_CODE");
 			Bean userBean = getUserInfo1(work_num);
@@ -840,16 +858,12 @@ public class StayServ extends CommonServ {
 		ExportExcel expExcel = new ExportExcel(serv);
 		try {
 			// 查询出 要导出的数据
-			count = outBean.getCount();
 			// 总数大于excel可写最大值
-			if (count > EXCEL_MAX_NUM) {
-				return new OutBean().setError("导出数据总条数大于Excel最大行数："
-						+ EXCEL_MAX_NUM);
-			}
+			
 			// 导出第一次查询数据
 			paramBean.setQueryPageNowPage(1); // 导出当前第几页
-			afterExp(paramBean, outBean); // 执行导出查询后扩展方法
-			// 查询出表头 查询出 对应数据 hashmaplist
+			/*afterExp(paramBean, outBean); // 执行导出查询后扩展方法
+*/			// 查询出表头 查询出 对应数据 hashmaplist
 			expExcel.createHeader(cols);
 			
 			expExcel.appendData1(finalList, paramBean);
