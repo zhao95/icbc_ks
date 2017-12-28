@@ -825,7 +825,7 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		list.addAll(list2);
 		list.addAll(list3);
 		list.addAll(list4);*/
-		String sqlxm = "select * from ts_xmgl where xm_id in ("+sql1+") or xm_id in("+sql2+") or xm_id in ("+sql3+") or xm_id in ("+sql4+")"; 
+		String sqlxm = "select a.*,b.BM_END from ts_xmgl a left join ts_xmgl_bmgl b  on a.xm_id = b.xm_id where  a.xm_id in ("+sql1+") or a.xm_id in("+sql2+") or a.xm_id in ("+sql3+") or a.xm_id in ("+sql4+") order by b.bm_end asc"; 
 		ALLNUM = Transaction.getExecutor().count(sqlxm);
 		 if(jieshu>ALLNUM){
 			 showpage=ALLNUM-chushi;
