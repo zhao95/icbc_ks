@@ -1148,16 +1148,25 @@ public class BmlbServ extends CommonServ {
 	// 获取统计数据 针对中级考试 已通过 或待审核
 	public OutBean getBmNum(Bean paramBean) {
 		OutBean out = new OutBean();
-		String user_code = paramBean.getStr("user_code");
+		String user_code = Context.getUserBean().getStr("USER_CODE");
 		String xl_code = paramBean.getStr("xlcode");
 		String lb_code = paramBean.getStr("lbcode");
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 		String strdate = sdf.format(date);
 		// 跨序列高级考试  本年度
-		String highwhere = "AND BM_CODE=" + "'" + user_code+
-				"' AND YEAR(BM_ENDDATE) = '"+strdate+"'"
-				+ " AND BM_TYPE=3  AND BM_STATE='1'";
+		String highwhere="";
+		if(lb_code.equals("023001")||lb_code.equals("023002")||lb_code.equals("023003")){
+			//管理类   销售类  专业类     报考的  低级 考试   向下偏移 
+			 highwhere = "AND BM_CODE=" + "'" + user_code+
+					"' AND YEAR(BM_ENDDATE) = '"+strdate+"'"
+					+ " AND BM_TYPE=3  AND BM_STATE='1' and BM_LB_CODE not in ('023004','023005') and BM_XL_CODE <>'"+xl_code+"'";
+		}else{
+			 highwhere = "AND BM_CODE=" + "'" + user_code+
+						"' AND YEAR(BM_ENDDATE) = '"+strdate+"'"
+						+ " AND BM_TYPE=3  AND BM_STATE='1' and BM_XL_CODE <>'"+xl_code+"'";
+		}
+		
 		List<Bean> highlist = ServDao.finds("TS_BMLB_BM", highwhere);
 		// 查询出 通过了但请假没考的 的数据 这些数据不算
 		for (Bean bean : highlist) {
@@ -1171,9 +1180,17 @@ public class BmlbServ extends CommonServ {
 		}
 		out.set("highnum", highlist.size());
 		// 夸序列中级考试
-		String where = "AND BM_CODE=" + "'" + user_code+
-				"' AND YEAR(BM_ENDDATE) = '"+strdate+"'"
-				+" AND BM_TYPE=2 AND BM_STATE='1'";
+		String where = "";
+		if(lb_code.equals("023001")||lb_code.equals("023002")||lb_code.equals("023003")){
+			//管理类   销售类  专业类     报考的  低级 考试   向下偏移 
+			 where = "AND BM_CODE=" + "'" + user_code+
+					"' AND YEAR(BM_ENDDATE) = '"+strdate+"'"
+					+" AND BM_TYPE=2 AND BM_STATE='1' and BM_LB_CODE not in ('023004','023005') and BM_XL_CODE <>'"+xl_code+"'";
+		}else{
+			where = "AND BM_CODE=" + "'" + user_code+
+						"' AND YEAR(BM_ENDDATE) = '"+strdate+"'"
+						+ " AND BM_TYPE=3  AND BM_STATE='1' and BM_XL_CODE <>'"+xl_code+"'";
+		}
 		List<Bean> list = ServDao.finds("TS_BMLB_BM", where);
 		for (Bean bean : list) {
 			String bmid = bean.getStr("BM_ID");
