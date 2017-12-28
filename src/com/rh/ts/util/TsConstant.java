@@ -123,6 +123,10 @@ public class TsConstant {
 	public static final String SERV_WFS_BMSHLC = "TS_WFS_BMSHLC";
 	/**节点*/
 	public static final String SERV_WFS_NODE_APPLY= "TS_WFS_NODE_APPLY";
+	/**节点管理者*/
+	public static final String SERV_WFS_NODEAPPLY_ADMINER= "TS_WFS_NODEAPPLY_ADMINER";
+	/**请假流程节点*/
+	public static final String SERV_WFS_QJKLC= "TS_WFS_QJKLC";
 	/**************************** 字典分隔线 **********************************************/
 
 	/** 字典 角色模块定义 */
