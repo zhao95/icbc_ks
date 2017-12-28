@@ -271,9 +271,19 @@ $(".rh-advSearch-val").unbind("click").bind("click",function() {
 oldStyle=$(this).find("option:selected").html();
 name =$(this).parent().parent().find("td[icode='XM_SZ_NAME']").html();
 });
+var  typeName="";
 //获取状态值放入数据库对应的位置
 $(".rh-advSearch-val").on("change", function() {
   	var options=$(this).find("option:selected").val();//改变后的状态
+  	    if(options=="进行中"){
+  	    	typeName=1;
+  	    }
+  	  if(options=="未开启"){
+	    	typeName=2;
+	    }
+  	  if(options=="已结束"){
+	    	typeName=3;
+	    }
 		if(!confirm(name+"设置确定要改成'"+options+"'状态吗？")){
 		options=oldStyle;
 		_viewer.refresh();
@@ -284,6 +294,7 @@ $(".rh-advSearch-val").on("change", function() {
 	var param={};
 	param["_PK_"]=sz_id;
 	param["XM_SZ_TYPE"]=options;
+	param["XM_SZ_TYPENUM"]=typeName;
 	FireFly.doAct(_viewer.servId,"save",param,true);
 	
 });

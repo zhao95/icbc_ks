@@ -70,9 +70,9 @@ public class FlowBmlcServ extends CommonServ {
             bean.set("NODE_ID", nodeId);
             bean.set("WFS_ID", wfsId);
             bean.set("SHR_USERCODE", code);// 审核人资源编码
-            bean.set("BMSHLC_DEPT", userDeptCode);// 审核人机构
+           
             // 先查询避免重复添加col3=总行/广东分行营业部,总行/福建分行,
-            bean.set("BMSHLC_SHR", name);
+           
             String[] colDeptCode = colDeptCodes.split(",");
             String deptcode = "";
             for (int i = 0; i < colDeptCode.length; i++) {
@@ -94,6 +94,8 @@ public class FlowBmlcServ extends CommonServ {
             }
             bean.set("DEPT_CODE", deptcode.substring(0, deptcode.length() - 1));
             if (ServDao.count(TsConstant.SERV_WFS_BMSHLC, bean) <= 0) {
+            	 bean.set("BMSHLC_SHR", name);
+            	 bean.set("BMSHLC_DEPT", userDeptCode);// 审核人机构
                 beans.add(bean);
                 codeList.add(code);
             } else {

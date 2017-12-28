@@ -53,41 +53,18 @@ public class FlowNodeApplyAdminerServ extends CommonServ {
                 continue;
             }
 
-            String code = userBean.getStr("USER_CODE"), name = userBean.getStr("USER_NAME");
+            String code = userBean.getStr("USER_CODE");
+            String name = userBean.getStr("USER_NAME");
             if (codeList.contains(code)) {
                 // 已包含 continue ：避免重复添加数据
                 rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
                 continue;
             }
-
             Bean bean = new Bean();
             bean.set("NODE_ID", nodeId);
-           
             bean.set("ADMINER_UWERCODE", code);// 审核人资源编码
-            
-            // 先查询避免重复添加col3=总行/广东分行营业部,总行/福建分行,
-            bean.set("ADMINER_NAME", name);
-           
-            //String deptcode = "";
-           /** for (int i = 0; i < colDeptCode.length; i++) {
-                String getDept = colDeptCode[i];
-                String[] colDeptNAME = getDept.split("/");
-                String deptName = colDeptNAME[1];// 名称
-                String where = "AND DEPT_NAME='" + deptName + "'";
-                List<Bean> deptBean = ServDao.finds("TS_ORG_DEPT", where);
-                if (deptBean != null && !deptBean.isEmpty()) {
-                    Bean deptCodeBean = deptBean.get(0);
-
-                    deptcode += deptCodeBean.getStr("DEPT_CODE");
-                    deptcode += ",";
-                } else {
-                    rowBean.set(ImpUtils.ERROR_NAME, "找不到审核机构名称对应的编码");
-                    continue;
-                }
-
-            }*/
-           // bean.set("DEPT_CODE", deptcode.substring(0, deptcode.length() - 1));
             if (ServDao.count(TsConstant.SERV_WFS_NODEAPPLY_ADMINER, bean) <= 0) {
+            	 bean.set("ADMINER_NAME", name);
                 beans.add(bean);
                 codeList.add(code);
             } else {

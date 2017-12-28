@@ -105,7 +105,7 @@ $('#'+xmKsEndData._opts.id+"_div").css('min-height','32px');
 
 // 下一步按钮
 // 1把数据保存到数据库
-_viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {debugger;
+_viewer.getBtn("nextbtn").unbind("click").bind("click",function(event) {
 	var xmStart=_viewer.getItem("XM_START").getValue();//项目开始时间
 	var xmEnd=_viewer.getItem("XM_END").getValue();//项目截至时间
 	var xmKsStartData=_viewer.getItem("XM_KSSTARTDATA").getValue();//考试开始时间
