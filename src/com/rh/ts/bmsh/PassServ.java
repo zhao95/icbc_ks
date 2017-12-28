@@ -68,12 +68,13 @@ public class PassServ extends CommonServ {
 		String dept_code="";
 		String deptcodes = "";
 		for (Bean bean : query) {
-			if(!"".equals(bean.getId())){}
-			//dept_code
-			dept_code=bean.getId();
-			String[] split = dept_code.split(",");
-			for (String string : split) {
-				deptcodes+="'"+string+"',";
+			if(!"".equals(bean.getId())){
+				//dept_code
+				dept_code=bean.getId();
+				String[] split = dept_code.split(",");
+				for (String string : split) {
+					deptcodes+="'"+string+"',";
+				}
 			}
 		}
 		
@@ -109,8 +110,6 @@ public class PassServ extends CommonServ {
 		if (yushu != 0) {
 			yeshu += 1;
 		}
-
-		
 		outBean.set("list",list);
 		
 		_PAGE_.set("ALLNUM", ALLNUM);

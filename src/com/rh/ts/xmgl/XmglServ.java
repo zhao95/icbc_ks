@@ -1125,7 +1125,6 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		
 		/*String sql = "SELECT * FROM TS_XMGL WHERE XM_ID IN(select XM_ID from TS_XMGL_BMSH WHERE SH_RGSH = '1') "+where1;
 		List<Bean> list = Transaction.getExecutor().query(sql);*/
-		List<Bean> SHlist = new ArrayList<Bean>();
 		for (Bean bean : list) {
 			// 根据报名id找到审核数据的状态
 			String id = bean.getStr("XM_ID");
