@@ -35,10 +35,6 @@ public class CtlgSyncUtils {
 
 		String[] modsArg = mods.split(",");
 
-		StopWatch sw = new StopWatch();
-
-		sw.start();
-
 		DeptBean deptBean = null;
 
 		if (Strings.isBlank(dept)) {
@@ -52,6 +48,10 @@ public class CtlgSyncUtils {
 		}
 
 		for (String mod : modsArg) {
+			
+			StopWatch sw = new StopWatch();
+			sw.start();
+			log.error("---------start------------" + mod);
 
 			if (deptBean.getODeptCode().equals(dept) || Strings.isBlank(dept)) {
 
@@ -63,10 +63,10 @@ public class CtlgSyncUtils {
 			}
 
 			DictMgr.clearCache("TS_CTLG_TREE_" + mod);
+			
+			log.error("----------stop-----------" + mod + "-" + sw.toString());
+			sw.stop();
 		}
-
-		System.out.println(sw.toString());
-		sw.stop();
 
 	}
 
@@ -139,14 +139,7 @@ public class CtlgSyncUtils {
 
 		sql.appendWhere(sb.toString(), mod, dept.getODeptCode(), 1);
 
-		StopWatch sw = new StopWatch();
-		sw.start();
-		log.error("---------start------------");
-
 		List<Bean> list = ServDao.finds(ServMgr.SY_ORG_DEPT, sql);
-
-		log.error("----------stop-----------" + sw.toString());
-		sw.stop();
 
 		if (list == null) {
 
