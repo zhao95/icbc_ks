@@ -882,7 +882,11 @@ var listPage = function () {
     this.endNum = this.startNum; // 中间页码的最后一个页码
 };
  listPage.prototype.getListData = function (num) {
-	 
+	 var param = {};
+	 param["xmid"]=xmid;
+	 var result2 = FireFly.doAct("TS_BMSH_STAY","getAllData",param);
+  	 nowlevel=result2.level;
+  	 nodeid=result2.node_id;
 	 var servid = "";
 	 var myts="";
 	 var where3 = "";
@@ -920,6 +924,7 @@ var listPage = function () {
 	 param["shownum"]=myts;
 	 param["nowpage"]=num;
 	 param["xmid"]=xmid;
+	 param["nowlevel"]=nowlevel;
 	 param["user_code"]=user_code;
 	 param["where"]=where5+where6+where3;
      return FireFly.doAct(servid,"getUncheckList",param);
@@ -1120,10 +1125,7 @@ var listPage = function () {
 	 param["where"]=where5+where6;
 	 param["xmid"]=xmid;
 	 param["user_code"]=user_code;
-	 var result2 = FireFly.doAct("TS_BMSH_STAY","getAllData",param);
-  	 nowlevel=result2.level;
-  	 nodeid=result2.node_id;
-  	 
+	
 	 var pageEntity = listData.list;
 		$("#"+table+" tbody").html("");
 		

@@ -210,6 +210,7 @@ public class StayServ extends CommonServ {
 		String flag = "";
 		String wherewfs = "AND XM_ID = '"+xmid+"'";
 		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", wherewfs);
+		String sh_level = "0";
 		for (Bean bean2 : finds) {
 		String wfsid = 	bean2.getStr("WFS_ID");
 		Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
@@ -225,6 +226,7 @@ public class StayServ extends CommonServ {
 			for (Bean codebean : finds3) {
 				if (shenuser.equals(codebean.getStr("SHR_USERCODE"))) {
 					node_name= nodebean.getStr("NODE_NAME");
+					sh_level=nodebean.getStr("NODE_STEPS");
 					flagstr = true;
 					break;
 				}
@@ -251,9 +253,13 @@ public class StayServ extends CommonServ {
 				String bmid = bean.getStr("BM_ID");
 				// 获取审核人信息
 				int flowname = 1;
+				int flowlevel = 0;
+				if(flag.equals("1")){
+					flowlevel=level;
+				}
 				ParamBean parambean = new ParamBean();
 				parambean.set("examerUserCode", bean.getStr("BM_CODE"));
-				parambean.set("level", level);
+				parambean.set("level", flowlevel);
 				parambean.set("deptCode", bean.getStr("S_DEPT"));
 				parambean.set("odeptCode", bean.getStr("S_ODEPT"));
 				parambean.set("shrUserCode", shenuser);
@@ -272,12 +278,12 @@ public class StayServ extends CommonServ {
 				// 审核通过
 				if (state.equals("1")) {
 					// 查找下一层级的人当前人力资源编码
-					if (level == 1) {
+					if ("1".equals(sh_level)) {
 						// 流程最后一次审核
 						ServDao.delete("TS_BMSH_STAY", id);
 					} else {
 						// 更新
-						bean.set("SH_LEVEL", level);
+						bean.set("SH_LEVEL", sh_level);
 						bean.set("SH_USER", allman);
 						bean.set("SH_OTHER", allman);
 						ServDao.save("TS_BMSH_STAY", bean);
@@ -308,18 +314,9 @@ public class StayServ extends CommonServ {
 							newBean.set("SH_OTHER", newother);
 						}else{
 							//越级  所有人可见
-							ParamBean parambean1 = new ParamBean();
-							parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
-							parambean1.set("level", 0);
-							parambean.set("deptCode", bean.getStr("S_DEPT"));
-							parambean.set("odeptCode", bean.getStr("S_ODEPT"));
-							parambean1.set("shrUserCode", shenuser);
-							parambean1.set("flowName", flowname);
-							parambean1.set("xmId", xmid);
-							OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
-									parambean1);
+							
 							String allman1 = "";
-							String blist1 = outbean1.getStr("result");
+							String blist1 = outbean.getStr("result");
 
 							if(!"".equals(blist1)){
 								allman1= blist1.substring(0,blist1.length()-1);
@@ -346,19 +343,8 @@ public class StayServ extends CommonServ {
 							newBean.set("SH_OTHER", shenuser);
 						}else{
 							//越级  所有人可见
-							ParamBean parambean1 = new ParamBean();
-							parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
-							parambean1.set("level", 0);
-							parambean.set("deptCode", bean.getStr("S_DEPT"));
-							parambean.set("odeptCode", bean.getStr("S_ODEPT"));
-							parambean1.set("shrUserCode", shenuser);
-							parambean1.set("flowName", flowname);
-							parambean1.set("xmId", xmid);
-							OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
-									parambean1);
-
 							String allman1 = "";
-							String blist1 = outbean1.getStr("result");
+							String blist1 = outbean.getStr("result");
 
 							if(!"".equals(blist1)){
 								allman1= blist1.substring(0,blist1.length()-1);
@@ -410,19 +396,9 @@ public class StayServ extends CommonServ {
 					}else{
 					
 						//越级  所有人可见
-						ParamBean parambean1 = new ParamBean();
-						parambean1.set("examerUserCode", bean.getStr("BM_CODE"));
-						parambean1.set("level", 0);
-						parambean.set("deptCode", bean.getStr("S_DEPT"));
-						parambean.set("odeptCode", bean.getStr("S_ODEPT"));
-						parambean1.set("shrUserCode", shenuser);
-						parambean1.set("flowName", flowname);
-						parambean1.set("xmId", xmid);
-						OutBean outbean1 = ServMgr.act("TS_WFS_APPLY", "backFlow",
-								parambean1);
 
 						String allman1 = "";
-						String blist1 = outbean1.getStr("result");
+						String blist1 = outbean.getStr("result");
 
 						if(!"".equals(blist1)){
 							allman1= blist1.substring(0,blist1.length()-1);
@@ -1650,6 +1626,7 @@ public class StayServ extends CommonServ {
 	 * 审核人是否有需要审核的数据提醒
 	 */
 	public OutBean getStayList(Bean paramBean){
+		
 		UserBean userBean = Context.getUserBean();
 		String user_code = userBean.getCode();
 		//进行中的项目
@@ -1765,8 +1742,46 @@ public class StayServ extends CommonServ {
 	 */
 	public OutBean getsingxmnum(Bean paramBean){
 		String str = paramBean.getStr("xmid");
-		UserBean userBean = Context.getUserBean();
-		String user_code = userBean.getCode();
+		
+
+		OutBean out = new OutBean();
+		UserBean user = Context.getUserBean();
+		String user_code = user.getStr("USER_CODE"); 
+		String xmid = paramBean.getStr("xmid");
+		//根据项目id找到流程下的所有节点
+		String belongwhere = "AND XM_ID='"+xmid+"'";
+		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
+		String level = "0";
+		String wherestr = "";
+		if(finds.size()!=0){
+			String wfsid = 	finds.get(0).getStr("WFS_ID");
+			Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
+			String flag = find.getStr("WFS_TYPE");
+			if("1".equals(flag)){
+				String wfswhere = "AND WFS_ID='" + wfsid + "'  ORDER BY NODE_STEPS ASC";
+				List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+				for (Bean nodebean : finds2) {
+					boolean flagstr = false;
+					// 根据流程id获取 流程绑定的人和审核机构
+					String nodeids = nodebean.getStr("NODE_ID");
+					String nodewhere = "AND NODE_ID='" + nodeids + "'";
+					List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
+					for (Bean codebean : finds3) {
+						if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
+							level=codebean.getStr("NODE_STEPS");
+							wherestr=" AND a.SH_LEVEL ='"+level+"'";
+							break;
+						}
+						
+					}
+					if(flagstr){
+						break;
+					}
+				}
+			}
+			
+		}
+		
 		String sql = "select n.dept_code from (select node_id from(select wfs_id from ts_xmgl_bmsh where xm_id='"+str+"') c left join TS_WFS_NODE_APPLY d on c.wfs_id = d.wfs_id) m left join TS_WFS_BMSHLC n on m.node_id = n.node_id  "+
 				"where n.shr_usercode= '"+user_code+"'";
 		List<Bean> query = Transaction.getExecutor().query(sql);
@@ -1787,7 +1802,7 @@ public class StayServ extends CommonServ {
 			String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+deptcodes+")) and dept_code in("+deptcodes+")";
 					List<Bean> query1 = Transaction.getExecutor().query(sql1);
 					String sql3 = "";
-					sql3 += "select * from (select a.*,b.code_path from ts_bmsh_stay a left join sy_org_dept b on a.s_dept=b.dept_code where xm_id = '"+str+"') c ";
+					sql3 += "select * from (select a.*,b.code_path from ts_bmsh_stay a left join sy_org_dept b on a.s_dept=b.dept_code where xm_id = '"+str+"'"+wherestr+") c ";
 					for (int i=0;i<query1.size();i++) {
 						//判断哪些考生部门 在此codepath 下
 						if(i==0){
@@ -1798,7 +1813,6 @@ public class StayServ extends CommonServ {
 					}
 					ALLNUM = Transaction.getExecutor().count(sql3);
 					 }
-		OutBean out = new OutBean();
 		if(ALLNUM==0){
 			out.set("num", "");
 			return  out.set("flag", "false");
