@@ -496,12 +496,20 @@ public class QjlbServ extends CommonServ {
         flowParamBean.set("flowName", 3); //1:报名审核流程 2:异地借考流程 3:请假审核流程
         OutBean shBean = ServMgr.act("TS_WFS_APPLY", "backFlow", flowParamBean);
         String result = shBean.getStr("result");
-        String[] split = result.split(",");
+        String[] split;
+        if (StringUtils.isNotBlank(result)) {
+            split = result.split(",");
+        } else {
+            split = new String[]{};
+        }
         List<Bean> shList = new ArrayList<Bean>();
         for (String shUserCode : split) {
             Bean bean = new Bean();
-            bean.set("SHR_USERCODE",shUserCode);
-            bean.set("SHR_NAME",UserMgr.getUser(shUserCode).getName());
+            if (StringUtils.isBlank(shUserCode)) {
+                continue;
+            }
+            bean.set("SHR_USERCODE", shUserCode);
+            bean.set("SHR_NAME", UserMgr.getUser(shUserCode).getName());
             shList.add(bean);
         }
 //        List<Bean> shList = shBean.getList("result");

@@ -101,14 +101,14 @@ public class TsTodoServ extends CommonServ {
         String type = paramBean.getStr("TYPE");
         String whereSql = " ";
         if (StringUtils.isNotBlank(type)) {
-            whereSql += "a.TYPE = '" + type + "'";
+            whereSql += " and a.TYPE = '" + type + "'";
         }
 
         String sql = "select xm.XM_ID,xm.XM_NAME from ts_xmgl xm where exists(" +
                 " select '' from ts_comm_todo a" +
                 " left join ts_qjlb_qj b on b.QJ_ID=a.DATA_ID " +
                 " left join ts_jklb_jk c on c.JK_ID=a.DATA_ID " +
-                " where a.OWNER_CODE='" + Context.getUserBean().getCode() + "' AND (c.XM_ID = xm.XM_ID or b.XM_ID = xm.XM_ID) and " + whereSql +
+                " where a.OWNER_CODE='" + Context.getUserBean().getCode() + "' AND (c.XM_ID = xm.XM_ID or b.XM_ID = xm.XM_ID)" + whereSql +
                 " )";
 
         List<Bean> xmList = Transaction.getExecutor().query(sql);
