@@ -98,7 +98,13 @@ public class BmlbServ extends CommonServ {
 			}else{
 				continue;
 			}
+			int count = XmglMgr.existSh(xm_id);
 			Bean beans = new Bean();
+			if (count == 0 || count == 1) {
+				beans.set("BM_SH_STATE", 1);
+			}else{
+				beans.set("BM_SH_STATE", 0);
+			}
 			beans.set("KSLBK_ID", string);
 			beans.set("ODEPT_CODE", odept_code);
 			beans.set("BM_CODE", user_code);
@@ -111,10 +117,8 @@ public class BmlbServ extends CommonServ {
 			beans.set("BM_STARTDATE", fzgks_date1);
 			beans.set("BM_ENDDATE", fzgks_date2);
 			beans.set("BM_TITLE", fzgks_name);
-			beans.set("BM_SH_STATE", 1);
 			beans.set("XM_ID", xm_id);
 			Bean bmbean = ServDao.create(servId, beans);
-			int count = XmglMgr.existSh(xm_id);
 
 			if (count == 0 || count == 1) {
 
@@ -137,6 +141,7 @@ public class BmlbServ extends CommonServ {
 				String bm_idS = bmbean.getStr("BM_ID");
 				// 添加到审核表中
 				Bean shBean = new Bean();
+				shBean.set("KSLBK_ID", string);
 				shBean.set("XM_ID", xm_id);
 				shBean.set("BM_ID", bm_idS);
 				shBean.set("BM_NAME", user_name);
@@ -165,6 +170,7 @@ public class BmlbServ extends CommonServ {
 				}
 				// 添加到审核表中
 				Bean shBean = new Bean();
+				shBean.set("KSLBK_ID", string);
 				shBean.set("XM_ID", xm_id);
 				shBean.set("BM_ID", bm_id);
 				shBean.set("BM_NAME", user_name);

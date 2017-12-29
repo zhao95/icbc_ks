@@ -40,6 +40,20 @@
 	color: WHITE;
 	border-color:#245580;
 	}
+	 #loadingdialog{
+ font-family: Arial;
+ border: 2px solid #379082;
+ border-radius: 20px;
+ padding: 30px 30px;
+ width: 330px;
+}
+#tjloading .modal-dialog{
+position: absolute; 
+    top: 20%; 
+    bottom: 200px; 
+    left: 20%; 
+    right: 0; 
+}
 	</style>
 	<style>.a table td{padding-left: 20px;}</style>
 		<% 
@@ -68,7 +82,7 @@
 		 bm_end = bmglList.get(0).getStr("BM_END");
 		}
 		//获取非资格列表
-		String where2 = "AND BM_ID="+"'"+bm_id+"'";
+		String where2 = "AND BM_ID="+"'"+bm_id+"' and XM_ID = '"+xm_id+"'";
 		List<Bean> fzgbean =ServDao.finds("TS_XMGL_BM_FZGKS", where2);
 		if(fzgbean!=null && fzgbean.size()>0){
 		 fzgbean = ServDao.finds("TS_XMGL_BM_FZGKS", where2);
@@ -139,7 +153,7 @@
 							<td width="16.5%"><%=user_cmpy_date%></td>
 							<td width="16.5%">办公电话</td>
 							<td width="16.5%"><%=user_office_phone %></td>
-							<td width="16.5%">手机号码(<span style="color: red;">融e联绑定的手机号</span>)
+							<td width="16.5%">手机号码
 							</td>
 							<td width="17.5%"><input type="text" id="user_mobile1"
 								value=""></td>
@@ -242,6 +256,21 @@
 		</div>
 		</div>
     </div>	
+    <div class="modal fade" id="tjloading" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div  class="modal-dialog" style="width:700px;">
+			<div id="loadingdialog" class="modal-content" style="position:absoluate;background:white;height:100px;width:50%">
+				<div style="color:lightseagreen;padding-left:30%;padding-top:10px;font-size:16px;">&nbsp;&nbsp;<B>正在提交数据请稍候.....</B></div>
+				<div id="loadiv" style="position:relative;top:-80%;left:15%;font-size:16px;"><img src="<%=CONTEXT_PATH%>/ts/image/loading.gif"></img></div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+    <form id="form1" style="display:none" method="post" action="bm.jsp">
+				<input id = "bmbq" name="bmbq"></input><!--报名标签，是否选中第二个标签  -->
+				<input type="submit" name="Submit" value="提交">
+			</form>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
@@ -335,8 +364,8 @@
 		
 		//提交所有数据
 		function mttijiao(){
+			$("#tjloading").modal("show");
 			//获取手机号码
-			
 				var param={};
 				param["bmCodes"] = bmlb;
 				param["USER_CODE"]="<%=user_code%>";
@@ -344,11 +373,11 @@
 				param["USER_SEX"] = "<%=user_sex%>";
 				param["ODEPT_NAME"] = "<%=odept_name%>";
 				param["USER_OFFICE_PHONE"] = "<%=user_office_phone%>";
-				param["USER_MOBILE"] = ryl_mobile;
 				param["USER_CMPY_DATE"] = "<%=user_cmpy_date%>";
 				param["XM_ID"] = "<%=xm_id%>";
 				FireFly.doAct("TS_BMLB_BM", "addData", param,true,false);
-				window.location.href = "bm.jsp";
+				 $("#bmbq").val("1");
+				$("#form1").submit(); 
 			}
 		  
 	</script>

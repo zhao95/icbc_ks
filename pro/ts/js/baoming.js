@@ -757,7 +757,7 @@ listPage.prototype.bldTable = function (listData) {
                     		$operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
                     		$tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:red">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
                     	}else{
-                    		$operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
+                    		$operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp;&nbsp;<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
                     		$tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;">' + sh_state_str + '</td><td style="text-align: center">' + flagstate + '</td>');
                     	}
                     }
@@ -826,7 +826,6 @@ listPage.prototype.bldTable = function (listData) {
         $ybmTableTbody.append($tr);
 
         if(pageEntity[i].CANRETRACT ==='false'){
-            debugger;
             $('#chexiao' + i).css('display','none');
         }
 

@@ -857,7 +857,14 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 			bean.set("START_TIME_BM", act2.getStr("START_TIME"));
 			bean.set("END_TIME_BM", act2.getStr("END_TIME"));
 			bean.set("STATE_BM", act2.getStr("state"));
-			lastlist.add(bean);
+			if("待报名".equals(act2.getStr("state"))){
+				lastlist.add(bean);
+			}
+		}
+		for (Bean bean :list) {
+			if(!"待报名".equals(bean.getStr("STATE_BM"))){
+				lastlist.add(bean);
+			}
 		}
 		// 计算页数
 		int yeshu = ALLNUM / meiye;
