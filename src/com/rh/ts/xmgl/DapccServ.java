@@ -9,13 +9,16 @@ import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.serv.bean.PageBean;
+import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.Constant;
 import com.rh.core.util.DateUtils;
 import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.BMUtil;
+import com.rh.ts.util.RoleUtil;
 import com.rh.ts.util.TsConstant;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
@@ -239,7 +242,7 @@ public class DapccServ extends CommonServ {
         configMap.put("XM_ID", "XM_ID = ?");
         configMap.put("containDeptCode", "c.CODE_PATH like ?");
 //        configMap.put("containDeptCode", "CODE_PATH like ?");
-        configMap.put("equalDeptCode", "b.DEPT_CODE = ?");
+        configMap.put("equalDeptCode", "a.S_DEPT = ?");
         configMap.put("searchName", "USER_NAME like ?");
         configMap.put("searchLoginName", "USER_LOGIN_NAME like ?");
         configMap.put("searchBmXl", "BM_XL like ?");
@@ -324,8 +327,8 @@ public class DapccServ extends CommonServ {
                 + ",(select COUNT(*) from TS_BMSH_PASS a2 where a2.BM_CODE=a.BM_CODE and a2.XM_ID=a.XM_ID AND a2.BM_STATUS NOT IN ('1', '3') ) as count" +
                 ",(case a.BM_STATUS when '2' then '借考' else '' end) as status "
                 + "from TS_BMSH_PASS a "
-                + "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE "
-                + "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE "
+                + "left join SY_ORG_USER b on b.USER_CODE = a.BM_CODE "
+                + "LEFT JOIN SY_ORG_DEPT c ON c.DEPT_CODE = a.S_DEPT "
                 + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
                 + "where 1=1 "
                 + whereSql + " order by a.BM_CODE";//,c.DEPT_CODE
@@ -522,9 +525,11 @@ public class DapccServ extends CommonServ {
      */
     public OutBean getTjOrPublish(ParamBean paramBean) {
         OutBean outBean = new OutBean();
-        String xmId = paramBean.getStr("XM_ID");
+
         String deptCodeStr = paramBean.getStr("deptCodeStr");//用户场次安排权限
 //        String deptCode = Context.getUserBean().getODeptCode();
+        String xmId = paramBean.getStr("XM_ID");
+
         Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
         String xmFqdwCode = xmBean.getStr("XM_FQDW_CODE");//项目所属机构
         String sql = "select * from sy_org_dept where DEPT_CODE =? ";
@@ -657,7 +662,7 @@ public class DapccServ extends CommonServ {
     private Bean getDeptByCode(String code, Map<String, Bean> cache) {
         Bean result;
         if (cache == null || cache.get(code) == null) {
-            result = new Bean(ServDao.find("SY_ORG_DEPT", code));
+            result = new Bean(ServDao.find(ServMgr.SY_ORG_DEPT, code));
         } else {
             result = cache.get(code);
         }
@@ -685,7 +690,7 @@ public class DapccServ extends CommonServ {
 //        List<Object> values = new ArrayList<Object>();
 //        values.add(deptCode);
 
-        Bean bean = ServDao.find("SY_ORG_DEPT", deptCode);
+        Bean bean = ServDao.find(ServMgr.SY_ORG_DEPT, deptCode);
 //        Bean bean = Transaction.getExecutor().queryOne("select * from sy_org_dept where DEPT_CODE = ?", values);
         String codePath = bean.getStr("CODE_PATH");
 
@@ -951,7 +956,7 @@ public class DapccServ extends CommonServ {
 
             String sql = "SELECT count(*) as count from TS_BMSH_PASS a  " +
                     "left join SY_ORG_USER b on a.BM_CODE = b.USER_CODE " +
-                    "LEFT JOIN SY_ORG_DEPT c ON b.DEPT_CODE = c.DEPT_CODE " +
+                    "LEFT JOIN SY_ORG_DEPT c ON c.DEPT_CODE = a.S_DEPT " +
                     "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT " +
                     "WHERE xm_id = ? " +
                     "and (" +
@@ -1002,7 +1007,7 @@ public class DapccServ extends CommonServ {
 //      user dept-codepath like roleDeptCode
         String outJkSql = "select b.USER_CODE,b.USER_NAME,c.DEPT_NAME,d.DEPT_NAME as jk_dept_name from ts_bmsh_pass a " +
                 " left join sy_org_user b on b.USER_CODE = a.BM_CODE " +
-                " left join sy_org_dept c on c.DEPT_CODE = b.DEPT_CODE " +
+                " left join sy_org_dept c on c.DEPT_CODE = a.S_DEPT " +
                 " left join sy_org_dept d on d.DEPT_CODE = a.JK_ODEPT " +
                 " where a.XM_ID =? " +
                 "and a.BM_STATUS in ('2','3') ";
@@ -1028,7 +1033,7 @@ public class DapccServ extends CommonServ {
         String inJkSql = "SELECT b.USER_CODE,b.USER_NAME,d.DEPT_NAME,c.DEPT_NAME as jk_dept_name FROM ts_bmsh_pass a " +
                 "LEFT JOIN sy_org_user b ON b.USER_CODE = a.BM_CODE " +
                 "LEFT JOIN sy_org_dept c ON c.DEPT_CODE = a.JK_ODEPT " +
-                "LEFT JOIN sy_org_dept d ON d.DEPT_CODE = b.DEPT_CODE " +
+                "LEFT JOIN sy_org_dept d ON d.DEPT_CODE = a.S_DEPT " +
 
                 "where c.CODE_PATH is not null " +
                 "and a.XM_ID = ? " +
@@ -1042,7 +1047,7 @@ public class DapccServ extends CommonServ {
         //是否是总行
         boolean isRootDept = false;
         for (String deptCode : split) {
-            Bean deptBean = ServDao.find("SY_ORG_DEPT", deptCode);
+            Bean deptBean = ServDao.find(ServMgr.SY_ORG_DEPT, deptCode);
             String codePath = deptBean.getStr("CODE_PATH");
             int i1 = codePath.indexOf("^");
             int i2 = codePath.indexOf("^", (i1 + 1));
@@ -1075,7 +1080,6 @@ public class DapccServ extends CommonServ {
             }
             String inJkWhereSql = " and (" + inJkdDeptSql.toString().substring(0, inJkdDeptSql.toString().length() - 3) + ")";
             inJkSql += inJkWhereSql;
-            inJkValues.add(xmId);
         }
         inJkKsList = Transaction.getExecutor().query(inJkSql, inJkValues);
 
@@ -1085,4 +1089,35 @@ public class DapccServ extends CommonServ {
         return outBean;
     }
 
+    /**
+     * 是否有安排这个机构的权限
+     *
+     * @param paramBean paramBean DEPT_CODE
+     * @return OutBean flag
+     */
+    public OutBean deptContainFlag(ParamBean paramBean) {
+        String result = "false";
+
+        String deptCode = paramBean.getStr("DEPT_CODE");
+
+        String servId = "TS_XMGL_KCAP_YAPZW";
+        Bean tsXmglKcapYapzwPvlg = RoleUtil.getPvlgRole(Context.getUserBean().getCode(), servId);
+        Bean auto = tsXmglKcapYapzwPvlg.getBean(servId + "_PVLG").getBean("auto");
+        String roleDcode = auto.getStr("ROLE_DCODE");
+        String[] deptCodes = roleDcode.split(",");
+        SqlBean sqlBean = new SqlBean();
+        sqlBean.and("DEPT_CODE", deptCode);
+        List<Bean> deptList = ServDao.finds(ServMgr.SY_ORG_DEPT, sqlBean);
+        if (CollectionUtils.isNotEmpty(deptList)) {
+            Bean bean = deptList.get(0);
+            String codePath = bean.getStr("CODE_PATH");
+            for (String code : deptCodes) {
+                if (StringUtils.isNotBlank(code) && codePath.contains(code)) {
+                    result = "true";
+                    break;
+                }
+            }
+        }
+        return new OutBean().set("flag", result);
+    }
 }

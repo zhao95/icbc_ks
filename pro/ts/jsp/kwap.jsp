@@ -166,6 +166,10 @@
 
     <header class="main-header">
         <div class="rhGrid-btnBar" style="height: 40px;background-color: #2398de;">
+            <a class="rh-icon rhGrid-btnBar-a" id="changeArrangeOrg" actcode="changeArrangeOrg" title="">
+                <span class="rh-icon-inner">更改分配机构</span>
+                <span class="rh-icon-img btn-change"></span>
+            </a>
             <a class="rh-icon rhGrid-btnBar-a" id="zdfpcc" actcode="zdfpcc" title="">
                 <span class="rh-icon-inner">自动分配场次</span>
                 <span class="rh-icon-img btn-option"></span>
@@ -360,6 +364,40 @@
     </div>
 </div>
 
+<%--更改分配机构 changeArrangeOrgModal--%>
+<div class="modal" id="changeArrangeOrgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h5 class="modal-title">
+                    更改分配机构
+                </h5>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <div class="row">
+                    <div class="col-sm-12 _scrollbar" style="height: 350px;overflow: auto;">
+                        <div id="changeArrangeOrgTree"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button type="button" class="btn btn-success" onclick="ChangeArrangeOrgModal.ensure();"
+                        style="width:100px;background-color: #00c2c2;">
+                    确定
+                </button>
+                <button type="button" class="btn btn-default" onclick=""
+                        data-dismiss="modal" style="width:100px;background-color: #fff;">
+                    取消
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
 <%--更改场次 updateccModal--%>
 <div class="modal" id="updateccModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -528,8 +566,12 @@
             <div class="modal-body" style="padding: 24px;">
                 <div class="row">
                     <div class="col-sm-6">
-                        <input id="select-org-tree-search-name" type="text" title=""
-                               class="form-control">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="width: 28px;">
+                                <span class="rh-icon-img btn-search" style="margin: 9px 6px;"></span>
+                            </span>
+                            <input id="select-org-tree-search-name" type="text" title="" class="form-control">
+                        </div>
                         <%-- <button id="select-org-tree-search" class="btn btn-default" value="查询"
                                  style="margin:5px;float:left;background:linear-gradient(180deg,rgb(123,202,249)0%,rgb(136,218,236)2%,rgba(148,221,245,1)3%,rgb(75,189,239)93%,rgb(91,200,218)96%,rgb(155,214,243)100%);background-color:#5bc8da;color:#fff;padding:2px 11px;">
                              查询

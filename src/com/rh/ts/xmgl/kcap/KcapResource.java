@@ -1284,7 +1284,7 @@ public class KcapResource {
 		if (status == 2) {
 			sb.append("LEFT JOIN SY_ORG_DEPT c ON c.DEPT_CODE = a.JK_ODEPT ");
 		} else {
-			sb.append("LEFT JOIN SY_ORG_DEPT c ON c.DEPT_CODE = b.DEPT_CODE ");
+			sb.append("LEFT JOIN SY_ORG_DEPT c ON c.DEPT_CODE = a.S_DEPT ");
 		}
 		sb.append("LEFT JOIN SY_HRM_ZDSTAFFPOSITION p ON a.BM_CODE = p.PERSON_ID ");
 

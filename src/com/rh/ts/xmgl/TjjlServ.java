@@ -2,9 +2,13 @@ package com.rh.ts.xmgl;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.db.Transaction;
+import com.rh.core.org.DeptBean;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
+import com.rh.core.serv.ServDao;
+import com.rh.core.serv.bean.SqlBean;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -16,6 +20,14 @@ import java.util.*;
  */
 public class TjjlServ extends CommonServ {
 
+    /**/
+
+    /**
+     * 获取项目场次安排提交情况
+     *
+     * @param paramBean paramBean {XM_ID pvlgDeptCodeStr}
+     * @return outBean
+     */
     public OutBean getKcOrgStatus(ParamBean paramBean) {
         List<Bean> result = new ArrayList<Bean>();
 
@@ -26,6 +38,9 @@ public class TjjlServ extends CommonServ {
         List<Object> values = new ArrayList<Object>();
         values.add(xmId);
         //根据用户权限code（deptCodeStr）过滤考场
+        if (StringUtils.isBlank(pvlgDeptCodeStr)) {
+            pvlgDeptCodeStr ="no-pvlgDeptCodeStr";
+        }
         String[] splitDeptCode = pvlgDeptCodeStr.split(",");
         StringBuilder deptBuilder = new StringBuilder(" and ( ");
         for (String deptCode : splitDeptCode) {
@@ -91,5 +106,66 @@ public class TjjlServ extends CommonServ {
         outBean.set("noCount", noCount);
         outBean.set("totalCount", result.size());
         return outBean;
+    }
+
+    /**
+     * @param paramBean
+     * @return
+     */
+    public OutBean getCanDraggable(ParamBean paramBean) {
+        OutBean outBean = new OutBean();
+        String result = "";
+
+        String deptCodeStr = paramBean.getStr("deptCodeStr");
+        String xmId = paramBean.getStr("XM_ID");
+
+        if (StringUtils.isBlank(deptCodeStr)) {
+            result = "false";
+        } else {
+            List<String> deptCodeList = Arrays.asList(deptCodeStr.split(","));
+            List<String> tjDeptCodeList = new ArrayList<String>();
+            SqlBean sqlBean = new SqlBean();
+            sqlBean.and("XM_ID", xmId);
+            List<Bean> beanList = ServDao.finds(paramBean.getServId(), sqlBean);
+            for (Bean bean : beanList) {
+                tjDeptCodeList.add(bean.getStr("TJ_DEPT_CODE"));
+            }
+
+            boolean containsFlag = getContainsFlag(deptCodeList, tjDeptCodeList);
+            result = containsFlag ? "true" : "false";
+        }
+
+        outBean.set("flag", result);
+        return outBean;
+    }
+
+    /**
+     * @param deptCodeList
+     * @param deptCodeList2
+     * @return true/false
+     */
+    private boolean getContainsFlag(List<String> deptCodeList, List<String> deptCodeList2) {
+        boolean result = true;
+
+        for (String deptCode2 : deptCodeList2) {
+            //deptCode2  包含(deptCodeList)  ->  false
+            boolean bol = true;
+            for (String deptCode : deptCodeList) {
+                DeptBean dept = OrgMgr.getDept(deptCode);
+                if (dept != null) {
+                    String codePath = dept.getCodePath();
+                    if (codePath.contains(deptCode2)) {
+                        bol = true;
+                    } else {
+                        bol = false;
+                        break;
+                    }
+                }
+            }
+            if (bol) {
+                result = false;
+            }
+        }
+        return result;
     }
 }
