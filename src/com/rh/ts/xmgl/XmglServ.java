@@ -1098,10 +1098,10 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		
 		//进行中的项目
 		String sql1 = "SELECT a.xm_id FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() BETWEEN STR_TO_DATE(d.sh_start,'%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC";
+				 +where1+" AND d.SH_LOOK =1 ";
 		//已结束的项目
 		String sql4 = "SELECT a.xm_id FROM ts_xmgl a LEFT JOIN (select b.sh_rgsh,b.sh_start,b.sh_end,b.sh_look,b.xm_id,c.xm_sz_type from TS_XMGL_BMSH b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id)d ON a.xm_id = d.xm_id WHERE d.sh_rgsh=1 AND NOW() > STR_TO_DATE(d.sh_end,'%Y-%m-%d %H:%i:%s') "
-				 +where1+" AND d.SH_LOOK =1 ORDER BY d.sh_end ASC";
+				 +where1+" AND d.SH_LOOK =1 ";
 		
 		//可审核的项目 
 		String sqlxm = "";
@@ -1119,12 +1119,14 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		 if(jieshu>ALLNUM){
 			 showpage=ALLNUM-chushi;
 		 }
-		 sqlxm =  "select * from ts_xmgl where xm_id in("+sqlxm+")";
-		 sqlxm+=" limit "+chushi+","+showpage;
-		List<Bean> list = Transaction.getExecutor().query(sqlxm);
+		 
+		 String lastsql = "select * from (select c.*,d.sh_end from (select a.*,b.xm_sz_typenum,b.xm_sz_id from ts_xmgl a left join ts_xmgl_sz b on a.xm_id = b.xm_id where b.xm_sz_name = '审核')c left join ts_xmgl_bmsh d on c.xm_sz_id = d.xm_sz_id)e where e.xm_id in ("+sqlxm+") order by e.xm_sz_typenum,e.sh_end asc";
+		 lastsql+=" limit "+chushi+","+showpage;
+		List<Bean> list = Transaction.getExecutor().query(lastsql);
 		
 		/*String sql = "SELECT * FROM TS_XMGL WHERE XM_ID IN(select XM_ID from TS_XMGL_BMSH WHERE SH_RGSH = '1') "+where1;
 		List<Bean> list = Transaction.getExecutor().query(sql);*/
+		List<Bean> pxlist = new ArrayList<Bean>();
 		for (Bean bean : list) {
 			// 根据报名id找到审核数据的状态
 			String id = bean.getStr("XM_ID");
@@ -1138,6 +1140,14 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 			String END_TIME =out.getStr("END_TIME");
 			bean.set("endtimestr", END_TIME);
 			bean.set("shstatestr", state);
+			if("待报名".equals(state)){
+				pxlist.add(bean);
+			}
+		}
+		for (Bean bean : list) {
+			if(!"待报名".equals(bean.getStr("shstatestr"))){
+				pxlist.add(bean);
+			}
 		}
 
 		// 计算页数
@@ -1153,8 +1163,8 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		_PAGE_.set("NOWPAGE", NOWPAGE);
 		_PAGE_.set("PAGES", yeshu);
 		_PAGE_.set("SHOWNUM", SHOWNUM);
-		outBean.set("list", list);
-		outBean.set("alllist", list);
+		outBean.set("list", pxlist);
+		outBean.set("alllist", pxlist);
 		outBean.set("_PAGE_", _PAGE_);
 		outBean.set("first", chushi);
 		return outBean;

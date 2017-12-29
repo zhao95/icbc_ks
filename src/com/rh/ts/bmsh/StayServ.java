@@ -1803,6 +1803,9 @@ public class StayServ extends CommonServ {
 		if(finds.size()!=0){
 			String wfsid = 	finds.get(0).getStr("WFS_ID");
 			Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
+			if(find==null){
+				return new OutBean().setError("没有绑定流程");
+			}
 			String flag = find.getStr("WFS_TYPE");
 			if("1".equals(flag)){
 				String wfswhere = "AND WFS_ID='" + wfsid + "'  ORDER BY NODE_STEPS ASC";

@@ -216,7 +216,7 @@
 
 						</tbody>
 					</table>
-					<table>
+					<!-- <table>
 						<tr style="height: 100px; font-size: 15px">
 							<td style="width: 35%; color: red;" align="right">融e联绑定的手机号</td>
 							<td style="width: 3%"></td>
@@ -230,7 +230,7 @@
 							</td>
 						</tr>
 
-					</table>
+					</table> -->
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" onclick="mttijiao()">提交</button>
@@ -336,12 +336,7 @@
 		//提交所有数据
 		function mttijiao(){
 			//获取手机号码
-			var ryl_mobile = document.getElementById("user_mobile2").value
 			
-					if (ryl_mobile == "") {
-						alert("手机号码不能为空");
-					}
-			  var user_mobile = document.getElementById("user_mobile1").value;
 				var param={};
 				param["bmCodes"] = bmlb;
 				param["USER_CODE"]="<%=user_code%>";
