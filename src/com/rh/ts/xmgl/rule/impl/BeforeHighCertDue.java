@@ -2,7 +2,6 @@ package com.rh.ts.xmgl.rule.impl;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.ServDao;
@@ -11,7 +10,7 @@ import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.rule.IRule;
 
 /**
- * datetime之前过期相同序列高级证书 (终止有效期 <= datetime时间参数)   
+ * datetime之前过期相同序列高级证书 (终止有效期 <= datetime时间参数)      本序列证书规则
  *   now:不考虑时间值判断状态
  * @author zjl
  *
@@ -26,7 +25,17 @@ public class BeforeHighCertDue implements IRule {
 		// 报名序列编码
 		String xl = param.getStr("BM_XL");
 
+		Bean zwbean = ServDao.find("SY_HRM_ZDSTAFFPOSITION", user);
+		
+		String user_xl = zwbean.getStr("STATION_NO_CODE");
+		
 		String jsonStr = param.getStr("MX_VALUE2");
+		
+		if(xl.equals(user_xl)){
+			//本序列
+		}else{
+			return false;
+		}
 
 		JSONArray obj;
 

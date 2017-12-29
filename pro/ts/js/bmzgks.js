@@ -83,7 +83,7 @@ function xminfoshow(){
 		}
 			param['BM_INFO'] = JSON.stringify(bminfo);
 			param['BM_LIST'] = JSON.stringify(checkeddata);
-		
+			
 			var parambm = {};	//已报名的考试
 			parambm["user_code"]=user_code;
 			parambm["xmid"]=xm_id;
@@ -745,6 +745,7 @@ function xminfoshow(){
 			    	   ks_time="0";
 			       }
 			       xk['BM_KS_TIME']=ks_time;
+			       xk['KSLBK_TYPE_LEVEL']=alldata[i].KSLBK_TYPE_LEVEL;
 			       xkArg.push(xk);
 			}
 		}
