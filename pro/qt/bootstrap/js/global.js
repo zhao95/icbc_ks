@@ -1230,11 +1230,17 @@ global.Fn.InitUploadImage = function(container, bmid) {
 	var $fileUpload = $(':file', $upload);
 	// data赋值
 	$fileUpload.bind('fileuploadsubmit', function(e, data) {
+		var size = data.files[0].size;
+	 if(size>1024*1024*20){
+			alert("文件不能超过20M");
+			return false;
+		}else{
 		// console.log(data);
 		var jsonData = {};
 		jsonData["DATA_ID"] = bmid;
 		jsonData["SERV_ID"] = "TS_BMLB_BM";
 		data.formData = jsonData;
+		}
 	});
 
 	$fileUpload
