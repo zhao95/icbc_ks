@@ -1,7 +1,6 @@
 package com.rh.ts.bmlb;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,12 +18,7 @@ import java.util.List;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
 
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.JsonProcessingException;
@@ -35,12 +29,9 @@ import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
-import com.rh.core.base.TipException;
-import com.rh.core.comm.FileMgr;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
-import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -48,19 +39,16 @@ import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
-import com.rh.core.util.ImpUtils;
 import com.rh.ts.util.RoleUtil;
-import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.XmglMgr;
 
 public class BmlbServ extends CommonServ {
 	 protected Log log = LogFactory.getLog(this.getClass());
 	
-	public void addData(Bean paramBean) {
+	public OutBean addData(Bean paramBean) {
 		UserBean userBean = Context.getUserBean();
 		String odept_code = "";
 		if (userBean.isEmpty()) {
-
 		} else {
 			odept_code = userBean.getODeptCode();
 		}
@@ -79,6 +67,25 @@ public class BmlbServ extends CommonServ {
 		String xm_id = paramBean.getStr("XM_ID");
 		String bmcode = paramBean.getStr("bmCodes");
 		String[] bmcodes = bmcode.split(",");
+		
+		//判断有没有审核人
+		ParamBean param = new ParamBean();
+		param.set("examerUserCode", user_code);
+		param.set("level", 0);
+		param.set("xmId", xm_id);
+		param.set("flowName", 1);
+		param.set("shrUserCode", user_code);
+		/* List<Bean> blist = (List<Bean>) out.get("result"); */
+		String allman = "";
+		String node_name = "";
+		OutBean out = ServMgr.act("TS_WFS_APPLY", "backFlow", param);
+		String blist = out.getStr("result");
+		if (!"".equals(blist)) {
+			allman = blist.substring(0, blist.length() - 1);
+			node_name = out.getStr("NODE_NAME");
+		}else{
+			return new OutBean().set("_MSG_","报名失败,没有审核人");
+		}
 		for (String string : bmcodes) {
 			if("".equals(string)){
 				continue;
@@ -153,21 +160,6 @@ public class BmlbServ extends CommonServ {
 				// 获取到报名id
 				String bm_id = bmbean.getStr("BM_ID");
 				beans.set("BM_SH_STATE", 0);
-				ParamBean param = new ParamBean();
-				param.set("examerUserCode", user_code);
-				param.set("level", 0);
-				param.set("xmId", xm_id);
-				param.set("flowName", 1);
-				param.set("shrUserCode", user_code);
-				/* List<Bean> blist = (List<Bean>) out.get("result"); */
-				String allman = "";
-				String node_name = "";
-				OutBean out = ServMgr.act("TS_WFS_APPLY", "backFlow", param);
-				String blist = out.getStr("result");
-				if (!"".equals(blist)) {
-					allman = blist.substring(0, blist.length() - 1);
-					node_name = out.getStr("NODE_NAME");
-				}
 				// 添加到审核表中
 				Bean shBean = new Bean();
 				shBean.set("KSLBK_ID", string);
@@ -211,7 +203,7 @@ public class BmlbServ extends CommonServ {
 			objBean.set("STR1", ryl_mobile);
 			ServDao.save("TS_OBJECT", objBean);
 		}
-
+		return new OutBean().set("_MSG_","");
 	}
 
 	
@@ -1349,7 +1341,8 @@ public class BmlbServ extends CommonServ {
 		sql.and("KSLBK_TYPE", paramBean.getStr("BM_TYPE"));
 		Bean find = ServDao.find("TS_XMGL_BM_KSLBK", sql);
 		if (find != null) {
-			return new OutBean().set("kslbk_id", find.getId());
+			
+			return new OutBean().set("kslbk_id", find.getId()).set("KSLBK_TYPE_LEVEL", find.getStr("KSLBK_TYPE_LEVEL"));
 		}
 		return new OutBean();
 	}

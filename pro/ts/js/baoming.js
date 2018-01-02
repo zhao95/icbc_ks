@@ -372,7 +372,6 @@ function tjyiyi(i) {
     });
     idcode = i;
 
-
 }
 //关闭上传模态页面
 function closemotai() {
@@ -425,6 +424,7 @@ function deletefile(obj) {
 }
 //提交异议
 function tijiaoyiyi() {
+	var page = $("span[class='current ui-corner-4']").html();
 
     //将数据从审核未通过中删除
     //加入到待审核中
@@ -440,7 +440,6 @@ function tijiaoyiyi() {
     param["bmid"] = bmid
     param["liyou"] = liyou;
     FireFly.doAct("TS_BMSH_NOPASS", "yiyi", param);
-    var page = $("span[class='current ui-corner-4']").text();
     new listPage().gotoPage(page);
 }
 
@@ -825,9 +824,9 @@ listPage.prototype.bldTable = function (listData) {
         $tr.append('<td class="rhGrid-td-hide" id="baomingid' + i + '">' + BM_ID + '</td><td class="rhGrid-td-hide" id="XMID' + i + '">' + XM_ID + '</td>');
         $ybmTableTbody.append($tr);
 
-        if(pageEntity[i].CANRETRACT ==='false'){
+     /*   if(pageEntity[i].CANRETRACT ==='false'){
             $('#chexiao' + i).css('display','none');
-        }
+        }*/
 
     }
     var table = document.getElementById("ybmtable");
@@ -999,6 +998,7 @@ function yanzheng(obj) {
     $("#loading").modal("show");
 }
 function yanzh(obj) {
+	 var page = $("span[class='current ui-corner-4']").html();
 //	debugger;
     var xmeleid = "XMID" + obj;
     var bmeleid = "baomingid" + obj;
@@ -1036,6 +1036,7 @@ function yanzh(obj) {
         leibie["BM_XL"] = result.BM_XL_CODE;
         var data = FireFly.doAct("TS_BMLB_BM", "getOneKslbk", param);
         leibie["ID"] = data.kslbk_id;
+        leibie["KSLBK_TYPE_LEVEL"]=data.KSLBK_TYPE_LEVEL;
         bmlist.push(leibie);
     }
     var params = {};
@@ -1127,7 +1128,7 @@ function yanzh(obj) {
         }
 
     });
-    var page = $("span[class='current ui-corner-4']").text();
+   
     new listPage().gotoPage(page);
 }
 var paramyzxx = {};

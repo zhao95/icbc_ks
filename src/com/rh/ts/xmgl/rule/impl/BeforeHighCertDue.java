@@ -86,9 +86,10 @@ public class BeforeHighCertDue implements IRule {
 			sql.and("STU_PERSON_ID", user);// 人员编码
 
 			sql.and("STATION_NO", xl);// 序列编号
-
 			
 			sql.and("S_FLAG", 1);
+			
+			sql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
 
 			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sql);
 

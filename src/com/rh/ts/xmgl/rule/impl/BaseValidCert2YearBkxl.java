@@ -30,6 +30,8 @@ public class BaseValidCert2YearBkxl implements IRule {
 		String xl = param.getStr("BM_XL");//考试序列非
 		
 		String lblevel = param.getStr("KSLBK_TYPE_LEVEL");//考试类别层级
+		
+		
 		int lblevelin = Integer.parseInt(lblevel);
 		
 		String user_code = param.getStr("BM_CODE");

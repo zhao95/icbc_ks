@@ -375,7 +375,11 @@ position: absolute;
 				param["USER_OFFICE_PHONE"] = "<%=user_office_phone%>";
 				param["USER_CMPY_DATE"] = "<%=user_cmpy_date%>";
 				param["XM_ID"] = "<%=xm_id%>";
-				FireFly.doAct("TS_BMLB_BM", "addData", param,true,false);
+				var result = FireFly.doAct("TS_BMLB_BM", "addData", param,true,false);
+				if(""!=result._MSG_){
+					alert(result._MSG_);
+					
+				}
 				 $("#bmbq").val("1");
 				$("#form1").submit(); 
 			}
