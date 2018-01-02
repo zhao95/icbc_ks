@@ -155,7 +155,8 @@
                         <th class="" style="width: 10%;">类型</th>
                         <th class="" style="width: 10%;">送交人</th>
                         <th class="" style="width: 20%;">送交人所在单位</th>
-                        <th class="" style="width: 20%;">送交时间</th>
+                        <th class="" style="width: 15%;">送交时间</th>
+                        <th class="" style="width: 15%;text-align: center">操作</th>
                     </tr>
                     </thead>
                     <tbody class="grid-tbody">
@@ -503,8 +504,17 @@
                 tr.append('<td style="text-align: center;">' + (i + 1) + '</td>');
 
                 var td = jQuery('<td></td>');
-                var a = jQuery('<a id="' + item.TODO_ID + '"type_value ="' + item.TYPE + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>');
-                a.unbind('click').bind('click', function () {
+                var a = jQuery('<a>' + item.TITLE + '</a>');
+                td.append(a);
+                tr.append(td);
+
+                tr.append('<td>' + typeNameMap[item.TYPE] + '</td>');
+                tr.append('<td>' + item.SEND_NAME + '</td>');
+                tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
+                tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');
+                var $btnTd = jQuery('<td></td>');
+                var $btn = jQuery('<button id="' + item.TODO_ID + '"type_value ="' + item.TYPE + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer;margin-left:30%;display:block;color:white;text-align: center;line-height: 35px;font-size:15px;background-color:LightSeaGreen;height:35px;width:70px">'+'审核</button>');
+                $btn.unbind('click').bind('click', function () {
                     var todoId = $(this).attr('id');
                     var dataId = $(this).attr('data-id');
                     var typeValue = $(this).attr('type_value');
@@ -514,13 +524,8 @@
                         doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId, hidden: '2'});
                     }
                 });
-                td.append(a);
-                tr.append(td);
-
-                tr.append('<td>' + typeNameMap[item.TYPE] + '</td>');
-                tr.append('<td>' + item.SEND_NAME + '</td>');
-                tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
-                tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');
+                $btnTd.append($btn);
+                tr.append($btnTd);
                 rhGridTBody.append(tr);
             }
             Utils.addTableCheckboxChangeEvent("todo-table");
