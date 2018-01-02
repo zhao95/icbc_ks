@@ -1838,6 +1838,7 @@ public class BmlbServ extends CommonServ {
 					if(KSLB_CODE.equals(kslbk_code)&&KSLB_XL.equals(kslb_xl)&&KSLB_MK.equals(kslb_mk)&&KSLB_TYPE.equals(kslb_type)){
 						query.remove(i);
 						i--;
+						break;
 					}
 				}
 				}
