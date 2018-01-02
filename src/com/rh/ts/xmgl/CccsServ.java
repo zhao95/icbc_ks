@@ -537,4 +537,68 @@ public class CccsServ extends CommonServ {
 	}
 	return sb.toString();
     } 
+    
+    /*******************************************************************/
+    public OutBean getKsList(ParamBean paramBean){
+	OutBean outBean = new OutBean();
+	String xmId = paramBean.getStr("xmId");
+	String sjVal = paramBean.getStr("sjVal");
+	//所有符合考生
+	List<Bean> ksList = ServDao.finds("TS_XMGL_CCCS_KSGL", "and xm_id = '"+xmId+"' and bm_ks_time in ("+sjVal+")");
+	//所有不符合的考生
+	List<Bean> nonKsList = ServDao.finds("TS_XMGL_CCCS_KSGL", "and xm_id = '"+xmId+"' and bm_ks_time not in ("+sjVal+")");
+	//所有考试
+	List<Bean> typeList = ServDao.finds("TS_XMGL_CCCS_UTIL_TYPE_V", "and xm_id = '"+xmId+"'");
+	/**
+	//各种考试，考生的集合
+	ArrayList<Bean> arrayList = new ArrayList<Bean>();
+	//需要移除的考生
+	ArrayList<Bean> rmList = new ArrayList<Bean>();
+	for (int i = 0; i < typeList.size(); i++) {
+	    String BM_XL_CODE = typeList.get(i).getStr("BM_XL_CODE");
+	    String BM_MK_CODE = typeList.get(i).getStr("BM_MK_CODE");
+	    String BM_TYPE = typeList.get(i).getStr("BM_TYPE");
+	    Bean bean = new Bean();
+	    bean.set("BM_XL_CODE", BM_XL_CODE);
+	    bean.set("BM_MK_CODE", BM_MK_CODE);
+	    bean.set("BM_TYPE", BM_TYPE);
+	    ArrayList<Bean> userList = new ArrayList<Bean>();
+	    for (int j = 0; j < ksList.size(); j++) {
+		String pxl = ksList.get(j).getStr("BM_XL_CODE");
+		String pmk = ksList.get(j).getStr("BM_MK_CODE");
+		String ptype = ksList.get(j).getStr("BM_TYPE");
+		
+		if(BM_XL_CODE.equals(pxl) && BM_MK_CODE.equals(pmk) && BM_TYPE.equals(ptype)){
+		    userList.add(ksList.get(j));
+		    rmList.add(ksList.get(j));
+		}
+	    }
+	    bean.set("userList", userList);
+	    arrayList.add(bean);
+	}
+	
+	for (int i = 0; i < rmList.size(); i++) {
+	    ksList.remove(rmList.get(i));
+	}
+	nonKsList.addAll(ksList);
+	outBean.set("nonKsList", nonKsList);
+	outBean.set("all", arrayList);
+	**/
+	outBean.set("typeList", typeList);
+	outBean.set("nonKsList", nonKsList);
+	outBean.set("all", ksList);
+	return outBean;
+    }
+    
+    /**
+     * sumJgArr 所有的关联机构
+     * allks 所有的考生
+     * alltype 所有的考试类型
+     * @return
+     */
+    public OutBean oneLevel(ParamBean paramBean){
+	OutBean outBean = new OutBean();
+	
+	return outBean;
+    }
 }

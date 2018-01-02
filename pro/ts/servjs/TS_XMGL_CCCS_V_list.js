@@ -17,6 +17,8 @@ var sjVal = Cookie.get("sjVal");
 var cjVal = Cookie.get("cjVal");// 层级
 var runVal = Cookie.get("runVal");
 
+var notInArray = new Array();
+
 if(runVal == "1"){
 	Cookie.set("runVal", 0, 1);
 	run();
@@ -29,14 +31,25 @@ _viewer.getBtn("run").unbind("click").bind("click", function(event) {
 	run();
 });
 
-function run(type){
-
+function run(){
 	_viewer.refreshGrid();
 	var allArray = new Array();
 	var myloadbar = new rh.ui.loadbar({"id":"my-loadbar"});
 	myloadbar.show();
 
 	setTimeout(function(){
+		//符合计算条件的考生
+		var all = new Array();
+		//不符合计算条件的考生
+		var non = new Array();
+		//所有考试类型
+		var alltype = new Array();
+		FireFly.doAct("TS_XMGL_CCCS_V","getKsList", {"xmId":xmId,"sjVal":sjVal},true,false,function(data){
+			all = data.all;
+			non = data.nonKsList;
+			alltype = data.typeList;
+		});	
+		
 		try{
 			if (scVal != "" && scVal != null) {
 				$("#TS_XMGL_CCCS_V .rhGrid").find("tr").each(function(index, item) {
@@ -48,11 +61,13 @@ function run(type){
 						if (cjVal == "1") {
 							var param = {};
 							param["_WHERE_"] = "and xm_id = '"+ xmId + "' and KC_LEVEL = '一级' and KC_ODEPTCODE='"+ dataId + "'";
+							//符合条件考场集合
 							var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", param)._DATA_;
 							if (kcArr.length > 0) {								
 								var kcNum = kcArr.length;
 								$(item).find("td[icode='CC_KC_NUM']").html(kcNum);
-								var result = getResult(kcArr);
+								var result = getResult(kcArr,all,alltype);
+								all = result.syKsArray;
 								$(item).find("td[icode='CC_COMPUTER_GOODNUM']").html(result.CC_COMPUTER_GOODNUM);
 								$(item).find("td[icode='CC_COMPUTER_MAXNUM']").html(result.CC_COMPUTER_MAXNUM);
 								$(item).find("td[icode='CC_PEOPLE_NUM']").html(result.CC_PEOPLE_NUM);
@@ -114,45 +129,12 @@ function run(type){
 							var CcGood = 0;
 							// 最大计算机场次
 							var CcMax = 0;
-							// 1级考场
-							var param = {};
-							param["_WHERE_"] = "and xm_id = '" + xmId+ "' and KC_LEVEL = '一级' and KC_ODEPTCODE='" + dataId + "'";
-							var deptName = $(item).find("td[icode='DEPT_NAME']").html();
-							var deptNameA = "<a id='deptNameA"+dataId+"' class='deptNameA' myType='1'>"+ deptName + "</>";
-							$(item).find("td[icode='DEPT_NAME']").html(deptNameA);
-							
-							var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", param)._DATA_;
-							
-							if(kcArr.length > 0){
-								kcNumSum += kcArr.length;
-								var result = getResult(kcArr);
-								peopleNumSum += (result.CC_PEOPLE_NUM-0);
-								computerGoodNumSum += result.CC_COMPUTER_GOODNUM;
-								goodSyNumSum += result.CC_GOOD_SYNUM;
-								computerMaxNumSum += result.CC_COMPUTER_MAXNUM;
-								maxSyNumSum += result.CC_MAX_SYNUM;
-								CcGood = result.CC_GOOD_NUM;
-								CcMax = result.CC_MAX_NUM;
-								
-								var tmpBean = {};
-								tmpBean["DEPT_CODE"] = dataId;
-								tmpBean["DEPT_NAME"] = deptName;
-								tmpBean["CC_KC_NUM"] = kcArr.length;
-								tmpBean["CC_PEOPLE_NUM"] = result.CC_PEOPLE_NUM;
-								tmpBean["CC_COMPUTER_GOODNUM"] = result.CC_COMPUTER_GOODNUM;
-								tmpBean["CC_GOOD_NUM"] = result.CC_GOOD_NUM;
-								tmpBean["CC_GOOD_SYNUM"] = result.CC_GOOD_SYNUM;
-								tmpBean["CC_COMPUTER_MAXNUM"] = result.CC_COMPUTER_MAXNUM;
-								tmpBean["CC_MAX_NUM"] = result.CC_MAX_NUM;
-								tmpBean["CC_MAX_SYNUM"] = result.CC_MAX_SYNUM;
-								
-								twoLevelArray.push(tmpBean);
-							}
 							
 							// 2级考场
 							var param2 = {};
 							param2["_SELECT_"] = "DEPT_CODE,DEPT_NAME";
-							param2["_WHERE_"] = "and (DEPT_PCODE = '"+dataId+"' or dept_code = '"+dataId+"') and DEPT_TYPE=2 and s_flag = 1";
+//							param2["_WHERE_"] = "and (DEPT_PCODE = '"+dataId+"' or dept_code = '"+dataId+"') and DEPT_TYPE=2 and s_flag = 1";
+							param2["_WHERE_"] = "and (DEPT_PCODE = '"+dataId+"') and DEPT_TYPE=2 and s_flag = 1";
 							var odept3Arr = FireFly.doAct("TS_ORG_DEPT","finds", param2)._DATA_;
 							//二级机构数据
 							if(odept3Arr.length > 0){
@@ -165,7 +147,8 @@ function run(type){
 									if(kcArrTemp.length > 0){
 										
 										kcNumSum += kcArrTemp.length;
-										var result = getResult2(kcArrTemp);
+										var result = getResult(kcArrTemp,all,alltype);
+										all = result.syKsArray;
 										peopleNumSum += (result.CC_PEOPLE_NUM-0);
 										computerGoodNumSum += result.CC_COMPUTER_GOODNUM;
 										goodSyNumSum += result.CC_GOOD_SYNUM;
@@ -192,6 +175,44 @@ function run(type){
 									}
 								}
 							}
+							
+							// 1级考场
+							var param = {};
+							param["_WHERE_"] = "and xm_id = '" + xmId+ "' and KC_LEVEL = '一级' and KC_ODEPTCODE='" + dataId + "'";
+							var deptName = $(item).find("td[icode='DEPT_NAME']").html();
+							var deptNameA = "<a id='deptNameA"+dataId+"' class='deptNameA' myType='1'>"+ deptName + "</>";
+							$(item).find("td[icode='DEPT_NAME']").html(deptNameA);
+							
+							var kcArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_V", "finds", param)._DATA_;
+							
+							if(kcArr.length > 0){
+								kcNumSum += kcArr.length;
+								var result = getResult(kcArr,all,alltype);
+								all = result.syKsArray;
+								peopleNumSum += (result.CC_PEOPLE_NUM-0);
+								computerGoodNumSum += result.CC_COMPUTER_GOODNUM;
+								goodSyNumSum += result.CC_GOOD_SYNUM;
+								computerMaxNumSum += result.CC_COMPUTER_MAXNUM;
+								maxSyNumSum += result.CC_MAX_SYNUM;
+								CcGood = result.CC_GOOD_NUM;
+								CcMax = result.CC_MAX_NUM;
+								
+								var tmpBean = {};
+								tmpBean["DEPT_CODE"] = dataId;
+								tmpBean["DEPT_NAME"] = deptName;
+								tmpBean["CC_KC_NUM"] = kcArr.length;
+								tmpBean["CC_PEOPLE_NUM"] = result.CC_PEOPLE_NUM;
+								tmpBean["CC_COMPUTER_GOODNUM"] = result.CC_COMPUTER_GOODNUM;
+								tmpBean["CC_GOOD_NUM"] = result.CC_GOOD_NUM;
+								tmpBean["CC_GOOD_SYNUM"] = result.CC_GOOD_SYNUM;
+								tmpBean["CC_COMPUTER_MAXNUM"] = result.CC_COMPUTER_MAXNUM;
+								tmpBean["CC_MAX_NUM"] = result.CC_MAX_NUM;
+								tmpBean["CC_MAX_SYNUM"] = result.CC_MAX_SYNUM;
+								
+								twoLevelArray.push(tmpBean);
+							}
+							
+							
 							$(item).find("td[icode='CC_KC_NUM']").html(kcNumSum);
 							$(item).find("td[icode='CC_PEOPLE_NUM']").html(peopleNumSum);
 							$(item).find("td[icode='CC_COMPUTER_GOODNUM']").html(computerGoodNumSum);
@@ -231,7 +252,7 @@ function run(type){
 			var userCode = System.getVar("@USER_CODE@");
 			//FireFly.doAct("TS_XMGL_CCCS_EXP","delete",{"_WHERE_":"and s_user = '"+userCode+"' and xm_id='"+xmId+"'"},false,true);
 			FireFly.doAct("TS_XMGL_CCCS_EXP","save",expData,false);
-			
+			notInArray = non.concat(all);
 		} catch(e) {
 			console.log("error",e);
 			myloadbar.hideDelayed();
@@ -267,10 +288,104 @@ function showDetail(dataId,childArr) {
 
 
 /**
- * @param kcList
- *            考场别表
+ * @param kcArr 考场数组 allks:未安排的考生 alltype:所有的考试类型
  * @return res
  */
+function getResult(kcArr,allks,alltype){
+	// 返回结果
+	var res = {};
+	var goodSumNum = 0;
+	var maxSumNum = 0;
+	var goodCCNum = 0;
+	var maxCCNum = 0;
+	var goodSyNum = 0;
+	var maxSyNum = 0;
+	var peopleNum = 0;
+	var sumJgArr = new Array();
+	for (var i = 0; i < kcArr.length; i++) {
+		var goodNum = kcArr[i].KC_GOOD - 0;
+		var maxNum = kcArr[i].KC_MAX - 0;
+		goodSumNum += goodNum;
+		maxSumNum += maxNum;
+		// 根据考场，得到机构的范围
+		var jgArr = FireFly.doAct("TS_KCGL_GLJG_V","finds", {"_SELECT_":"jg_code,jg_type,code_path","_WHERE_":"and KC_ID = '"+kcArr[i].KC_ID+"'"})._DATA_;
+		sumJgArr = sumJgArr.concat(jgArr);
+	}
+	
+	//关联机构范围内的考生
+	var scopeKs = new Array();
+	//得出在关联机构范围内的考生
+	for(var i = 0; i < allks.length; i++){
+			var ks_odept = allks[i].ODEPT_CODE_V;
+			var ks_path = allks[i].CODE_PATH;
+			
+			for(var j = 0; j < sumJgArr.length; j++){
+				var jg_code = sumJgArr[j].JG_CODE;
+				var jg_type = sumJgArr[j].CODE_TYPE;
+				var code_path = sumJgArr[j].CODE_PATH;
+				if(jg_type == 1){
+					//本机构
+					if(ks_odept == jg_code){
+						scopeKs.push(allks[i]);
+						break;
+					}
+				}else{
+					//本机构及下级机构
+					if(ks_path.indexOf(code_path) != -1){
+						scopeKs.push(allks[i]);
+						break;
+					}
+				}
+			}
+	}
+	
+	//得出不在本考场关联机构范围的的考生
+	var syKsArray = new Array();
+	
+	for(var i = 0; i < allks.length; i++){
+		var flag = true;
+		for(var j = 0; j < scopeKs.length; j++){
+			if(allks[i] == scopeKs[j]){
+				flag = false;
+				break;
+			}
+		}
+		if(flag){
+			syKsArray.push(allks[i]);
+		}
+	}
+
+	
+	for(var i = 0; i < alltype.length; i++){
+		var tmpBmXlCode = alltype[i].BM_XL_CODE;
+		var tmpBmMkCode = alltype[i].BM_MK_CODE;
+		var tmpBmType = alltype[i].BM_TYPE;
+		var userArray = new Array();
+		for(var j=0;j<scopeKs.length;j++){
+			if(tmpBmXlCode == scopeKs[j].BM_XL_CODE&&tmpBmMkCode == scopeKs[j].BM_MK_CODE&&tmpBmType == scopeKs[j].BM_TYPE){
+				userArray.push(scopeKs[j]);
+			}
+		}
+		var userArrayLength = userArray.length;
+		if(userArrayLength > 0){
+			goodCCNum += Math.ceil(userArrayLength/goodSumNum); //最大场次数 
+			maxCCNum += Math.ceil(userArrayLength/maxSumNum); //最优场次数 
+		}
+	}
+	
+	peopleNum = scopeKs.length;
+	res["CC_PEOPLE_NUM"] = peopleNum;
+	res["CC_COMPUTER_GOODNUM"] = goodSumNum;
+	res["CC_COMPUTER_MAXNUM"] = maxSumNum; 
+	res["CC_GOOD_NUM"] = goodCCNum;
+	res["CC_GOOD_SYNUM"] = goodCCNum * goodSumNum - peopleNum; ; 
+	res["CC_MAX_NUM"] = maxCCNum;
+	res["CC_MAX_SYNUM"] = maxCCNum * maxSumNum - peopleNum; 
+	res["syKsArray"] = syKsArray;
+	return res;
+}
+
+/**
 function getResult(kcArr){
 	// 返回结果
 	var res = {};
@@ -349,7 +464,9 @@ function getResult(kcArr){
 	res["CC_MAX_SYNUM"] = maxCCNum * maxSumNum - peopleNum; 
 	return res;
 }
+**/
 
+/**
 function getResult2(kcArr){
 	// 返回结果
 	var res = {};
@@ -394,8 +511,6 @@ function getResult2(kcArr){
 		var tmpPoepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", param)._DATA_;
 		if (tmpPoepleNum != 0 && goodSumNum != 0 && maxSumNum !=0) { //最优场次数 
 			peopleNum += tmpPoepleNum-0;
-			//maxSyNum += maxSumNum-tmpPoepleNum-0;
-			//goodSyNum += goodSumNum-tmpPoepleNum-0;
 			goodCCNum += Math.ceil(tmpPoepleNum/goodSumNum); //最大场次数 
 			maxCCNum += Math.ceil(tmpPoepleNum/maxSumNum); //最优剩余机器数 
 		}
@@ -409,9 +524,13 @@ function getResult2(kcArr){
 	res["CC_MAX_SYNUM"] = maxCCNum * maxSumNum - peopleNum; 
 	return res;
 }
+**/
 // 导出
 _viewer.getBtn("expExcel").unbind("click").bind("click",function(event) {
-//	tabletoExcel("JColResizer2");
 	window.open(FireFly.getContextPath() + '/TS_XMGL_CCCS_V.expExcel.do?data=' + 
     		encodeURIComponent(jQuery.toJSON({"xmId":xmId})));
+});
+
+_viewer.getBtn("notInBtn").unbind("click").bind("click",function(event) {
+	alert(notInArray.length);
 });
