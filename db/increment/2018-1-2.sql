@@ -1,3 +1,8 @@
+-- 更新考试类别库
+UPDATE ts_xmgl_bm_kslbk set kslbk_type_name = '高级',KSLBK_IDVALUE='高级' WHERE kslbk_type_name = '高级-投行顾问（TH）';
+-- 删除未在使用的类别
+DELETE FROM ts_xmgl_bm_kslbk WHERE kslbk_type_name='高级-投行顾问（ZT）';
+
 -- 更改数据库配置项表，以适配邮件提醒信息
 UPDATE `sy_comm_config` SET `CONF_ID`='01J3NJtKhaYbKiOuFBAx', `CONF_NAME`='借考开启提醒语', `CONF_KEY`='TS_JK_START_TIP', `CONF_VALUE`='您#XM_NAME##BM_LB#的考试，可在：#JK_STARTDATE#到#JK_ENDDATE#进行异地借考申请。具体情况详见工商银行考试系统首页，或关注融e联、微信“我爱考拉”公众号获取相关信息。【工商银行】', `CONF_FLAG`='1', `CONF_ORDER`='0', `CONF_MEMO`='请按照以下格式编写提示语，注：#XM_NAME#和#BM_LB#等为系统所用编码名称，请不要缺失或修改。\n格式为：您#XM_NAME##BM_LB#的考试，可在：#JK_STARTDATE#到#JK_ENDDATE#进行异地借考申请。', `S_FLAG`='1', `S_CMPY`='icbc', `S_PUBLIC`='1', `S_MTIME`='2017-11-10 18:34:11:906' WHERE (`CONF_ID`='01J3NJtKhaYbKiOuFBAx');
 UPDATE `sy_comm_config` SET `CONF_ID`='0e8yWXDe5fOEuVfxJt8c', `CONF_NAME`='考场公示提示语', `CONF_KEY`='TS_KCGS_START_TIP', `CONF_VALUE`='您报名的#XM_NAME#考试开始公示考场，请登录工商银行考试系统查看详情。具体情况详见工商银行考试系统首页，或关注融e联、微信“我爱考拉”公众号获取相关信息。【工商银行】', `CONF_FLAG`='1', `CONF_ORDER`='0', `CONF_MEMO`='请按照以下格式编写提示语，注：#QJ_TITLE#和#QJ_RESULT#等为系统所用编码名称，请不要缺失或修改。\n格式为：您报名的#XM_NAME#考试开始公示考场，请登录工商银行考试系统查看详情。', `S_FLAG`='1', `S_CMPY`='icbc', `S_PUBLIC`='1', `S_MTIME`='2017-11-10 18:39:38:192' WHERE (`CONF_ID`='0e8yWXDe5fOEuVfxJt8c');
