@@ -15,8 +15,16 @@ import java.util.List;
 
 
 
+
+
+
+
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
+
+
+
+
 
 
 import org.apache.commons.logging.Log;
@@ -1869,6 +1877,40 @@ public class BmlbServ extends CommonServ {
 			newids+=","+ids;
 			return new OutBean().set("ids", newids);
 	}
-	
-	
+	/**
+	 * 判断人力资源管理  是否重复选择
+	 * @param paramBean
+	 * @return
+	 * @throws JSONException 
+	 */
+	public OutBean rlZyPd(ParamBean paramBean) throws JSONException{
+		String  kslbk_id= paramBean.getStr("kslbk_id");
+		String typeliststr = paramBean.getStr("mk");
+		 if("".equals(typeliststr)){
+			 return new OutBean().set("flag", "false");
+		 }
+		JSONArray typelist= new JSONArray(typeliststr);
+		
+		String type = paramBean.getStr("type");
+			Bean find = ServDao.find("TS_XMGL_BM_KSLBK", kslbk_id);
+			if(find!=null){
+				if("02200401".equals(find.getStr("KSLBK_MKCODE"))||"02200402".equals(find.getStr("KSLBK_MKCODE"))){
+				for(int i =0;i<typelist.length();i++){
+					
+					if(!typelist.getJSONObject(i).getString("mk").equals(find.getStr("KSLBK_MK"))){
+						if(typelist.getJSONObject(i).getString("type").equals(type)){
+							return new OutBean().set("flag", "true");
+						}
+					}
+				}
+						
+				}else{
+					//无需判断
+					return new OutBean().set("flag", "false");
+				}
+			}
+			
+			return new OutBean().set("flag", "false");
+					
+	}	
 }

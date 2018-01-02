@@ -368,6 +368,7 @@ function xminfoshow(){
 	})
 	
 	function showFzgList(showList){
+		rlzyglmk=[];
 		jQuery('#ksxxId').html('');
 		var strchecked = checked.join(",");
 			//已选中的
@@ -388,7 +389,13 @@ function xminfoshow(){
 				       var kslb_xl_code=alldata[i].KSLBK_XL_CODE;
 				       var kslb_mk_code=alldata[i].KSLBK_MKCODE;
 				       var kslb_type = alldata[i].KSLBK_TYPE;
-				      
+				       if("02200401"==kslb_mk_code||"02200402"==kslb_mk_code){
+				    	   //模块code
+				    	   var paramstr = {};
+				    	   paramstr["mk"]=alldata[i].KSLBK_MK;
+				    	   paramstr["type"]=kslb_type_name;
+				    	   rlzyglmk.push(paramstr);
+				       }
 				       jQuery('#ksxxId').append([
 				                         		'<tr style="height:30px">',
 				                         		'<td style="text-align: center" width="10%"><image src="/ts/image/u4719.png"></image></td>',
@@ -442,7 +449,7 @@ function xminfoshow(){
 		}*/
 	}
 	
-
+	var rlzyglmk = [];
 	var checked = [];
 	var yk={};
 	var xkArg=[];//考试结果
@@ -504,6 +511,18 @@ function xminfoshow(){
 	             :FireFly.getDict('TS_XMGL_BM_KSLBK','KSLBK_PID',extWhere),
 	         dictId:"TS_XMGL_BM_KSLBK",expandLevel:1,
 	         oncheckboxclick: function(item, s, id) {
+	        	 //人力资源管理 两个模块 只能选中一个
+	        	 if(rlzyglmk!=""){
+	        		 var paramRl = {};
+	        		 paramRl["mk"] = JSON.stringify(rlzyglmk);
+	        		 paramRl["type"] = item['NAME'];
+	        		 paramRl["kslbk_id"] = item['ID'];
+	        		 var result = FireFly.doAct("TS_BMLB_BM","rlZyPd",paramRl);
+	        		 if(result.flag=="true"){
+	        			 alert("人力资源管理序列只能选择一个模块,请取消在进行选择");
+	        			 return false;
+	        		 }
+	        	 }
 	        	var itemjson =  item['ID'];
 	        	var valid  = true;
 	        	for(var i=0;i<checked.length;i++){
