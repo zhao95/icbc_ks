@@ -36,12 +36,12 @@ function run(){
 	var allArray = new Array();
 	var myloadbar = new rh.ui.loadbar({"id":"my-loadbar"});
 	myloadbar.show();
+	//符合计算条件的考生
+	var all = new Array();
+	//不符合计算条件的考生
+	var non = new Array();
 
 	setTimeout(function(){
-		//符合计算条件的考生
-		var all = new Array();
-		//不符合计算条件的考生
-		var non = new Array();
 		//所有考试类型
 		var alltype = new Array();
 		FireFly.doAct("TS_XMGL_CCCS_V","getKsList", {"xmId":xmId,"sjVal":sjVal},true,false,function(data){
@@ -253,6 +253,7 @@ function run(){
 			//FireFly.doAct("TS_XMGL_CCCS_EXP","delete",{"_WHERE_":"and s_user = '"+userCode+"' and xm_id='"+xmId+"'"},false,true);
 			FireFly.doAct("TS_XMGL_CCCS_EXP","save",expData,false);
 			notInArray = non.concat(all);
+			notInTable(notInArray);
 		} catch(e) {
 			console.log("error",e);
 			myloadbar.hideDelayed();
@@ -385,152 +386,43 @@ function getResult(kcArr,allks,alltype){
 	return res;
 }
 
-/**
-function getResult(kcArr){
-	// 返回结果
-	var res = {};
-	var goodSumNum = 0;
-	var maxSumNum = 0;
-	var jgSum = "";
-	var goodCCNum = 0;
-	var maxCCNum = 0;
-	var goodSyNum = 0;
-	var maxSyNum = 0;
-	var peopleNum = 0;
-	var kcIds = "";
-	for (var i = 0; i < kcArr.length; i++) {
-		var goodNum = kcArr[i].KC_GOOD - 0;
-		var maxNum = kcArr[i].KC_MAX - 0;
-		goodSumNum += goodNum;
-		maxSumNum += maxNum;
-		// 根据考场，得到机构的范围
-//		var jgArr = FireFly.doAct("TS_KCGL_GLJG_V","finds", {"_WHERE_":"and KC_ID = '"+kcArr[i].KC_ID+"'"})._DATA_;
-//		for(var j=0;j<jgArr.length;j++){
-//			jgSum = jgSum + "," + jgArr[j].JG_CODE;
-//		}
-		kcIds += kcArr[i].KC_ID + ","
-	}
-	
-	var jgSum = "";
-	var paths = "";
-	FireFly.doAct("TS_XMGL_CCCS_V","getOdetpScope", {"kcIds":kcIds},true,false,function(data){
-//		jgSum = data.odeptCodes;
-//		if(jgSum != ""){
-//			jgSum = jgSum.substring(0,jgSum.length-1);
-//			jgSum = jgSum.replace(/,/g, "','");
-//		}
-		paths = data.paths;
-	});	
-	var kcTypesArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_TYPE_V","finds",{"_WHERE_":"and xm_id = '"+xmId+"'"},true,false)._DATA_;
-	for(var i = 0; i < kcTypesArr.length; i++){
-		var tmpBmXlCode = kcTypesArr[i].BM_XL_CODE;
-		var tmpBmMkCode = kcTypesArr[i].BM_MK_CODE;
-		var tmpBmType = kcTypesArr[i].BM_TYPE;
-		var param = {};
-//		param["_WHERE_"] = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and ODEPT_CODE_V in ('"+jgSum+"') and BM_XL_CODE = '"
-//			+tmpBmXlCode+"' and BM_MK_CODE = '"+tmpBmMkCode+"' and BM_TYPE = '"+tmpBmType+"'";
-//		var tmpPoepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", param)._DATA_;
-		
-		param["_WHERE_"] = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and BM_XL_CODE = '"
-		+tmpBmXlCode+"' and BM_MK_CODE = '"+tmpBmMkCode+"' and BM_TYPE = '"+tmpBmType+"'";
-		var tmpPoepleNum = 0;
-		var ksList = FireFly.doAct("TS_XMGL_CCCS_KSGL","finds", param)._DATA_;
-		for(var j=0;j<ksList.length;j++){
-			var codePth = ksList[j].CODE_PATH;
-			var pathArr = paths.split(",");
-			for(var k=0;k<pathArr.length;k++){
-				if(pathArr[k] == "")continue;
-				if(codePth.indexOf(pathArr[k]) != -1){
-					tmpPoepleNum++;
-					break;
-				}
-			}
-		}
-		
-		peopleNum += tmpPoepleNum-0;
-		if (tmpPoepleNum != 0 && goodSumNum != 0 && maxSumNum !=0) { //最优场次数 
-//			maxSyNum += maxSumNum-tmpPoepleNum-0;
-//			goodSyNum += goodSumNum-tmpPoepleNum-0;
-			goodCCNum += Math.ceil(tmpPoepleNum/goodSumNum); //最大场次数 
-			maxCCNum += Math.ceil(tmpPoepleNum/maxSumNum); //最优剩余机器数 
-		}
-	}
-	res["CC_PEOPLE_NUM"] = peopleNum;
-	res["CC_COMPUTER_GOODNUM"] = goodSumNum;
-	res["CC_COMPUTER_MAXNUM"] = maxSumNum; 
-	res["CC_GOOD_NUM"] = goodCCNum;
-	res["CC_GOOD_SYNUM"] = goodCCNum * goodSumNum - peopleNum; ; 
-	res["CC_MAX_NUM"] = maxCCNum;
-	res["CC_MAX_SYNUM"] = maxCCNum * maxSumNum - peopleNum; 
-	return res;
-}
-**/
-
-/**
-function getResult2(kcArr){
-	// 返回结果
-	var res = {};
-	var goodSumNum = 0;
-	var maxSumNum = 0;
-	var jgSum = "";
-	var goodCCNum = 0;
-	var maxCCNum = 0;
-	var goodSyNum = 0;
-	var maxSyNum = 0;
-	var peopleNum = 0;
-	var kcIds = "";
-	for (var i = 0; i < kcArr.length; i++) {
-		var goodNum = kcArr[i].KC_GOOD - 0;
-		var maxNum = kcArr[i].KC_MAX - 0;
-		goodSumNum += goodNum;
-		maxSumNum += maxNum;
-		// 根据考场，得到机构的范围
-//		var jgArr = FireFly.doAct("TS_KCGL_GLJG_V","finds", {"_WHERE_":"and KC_ID = '"+kcArr[i].KC_ID+"'"})._DATA_;
-//		for(var j=0;j<jgArr.length;j++){
-//			jgSum = jgSum + "," + jgArr[j].JG_CODE;
-//		}
-		kcIds += kcArr[i].KC_ID + ","
-	}
-	
-	var jgSum = "";
-	FireFly.doAct("TS_XMGL_CCCS_V","get2OdetpScope", {"kcIds":kcIds},true,false,function(data){
-		jgSum = data.odeptCodes;
-		if(jgSum != ""){
-			jgSum = jgSum.substring(0,jgSum.length-1);
-			jgSum = jgSum.replace(/,/g, "','");
-		}
-	});	
-	var kcTypesArr = FireFly.doAct("TS_XMGL_CCCS_UTIL_TYPE_V","finds",{"_WHERE_":"and xm_id = '"+xmId+"'"},true,false)._DATA_;
-	for(var i = 0; i < kcTypesArr.length; i++){
-		var tmpBmXlCode = kcTypesArr[i].BM_XL_CODE;
-		var tmpBmMkCode = kcTypesArr[i].BM_MK_CODE;
-		var tmpBmType = kcTypesArr[i].BM_TYPE;
-		var param = {};
-		param["_WHERE_"] = "and xm_Id = '"+xmId+"' and BM_KS_TIME in ("+sjVal+") and ODEPT_CODE_V in ('"+jgSum+"') and BM_XL_CODE = '"
-			+tmpBmXlCode+"' and BM_MK_CODE = '"+tmpBmMkCode+"' and BM_TYPE = '"+tmpBmType+"'";
-		var tmpPoepleNum = FireFly.doAct("TS_XMGL_CCCS_KSGL","count", param)._DATA_;
-		if (tmpPoepleNum != 0 && goodSumNum != 0 && maxSumNum !=0) { //最优场次数 
-			peopleNum += tmpPoepleNum-0;
-			goodCCNum += Math.ceil(tmpPoepleNum/goodSumNum); //最大场次数 
-			maxCCNum += Math.ceil(tmpPoepleNum/maxSumNum); //最优剩余机器数 
-		}
-	}
-	res["CC_PEOPLE_NUM"] = peopleNum;
-	res["CC_COMPUTER_GOODNUM"] = goodSumNum;
-	res["CC_COMPUTER_MAXNUM"] = maxSumNum; 
-	res["CC_GOOD_NUM"] = goodCCNum;
-	res["CC_GOOD_SYNUM"] = goodCCNum * goodSumNum - peopleNum; 
-	res["CC_MAX_NUM"] = maxCCNum;
-	res["CC_MAX_SYNUM"] = maxCCNum * maxSumNum - peopleNum; 
-	return res;
-}
-**/
 // 导出
 _viewer.getBtn("expExcel").unbind("click").bind("click",function(event) {
 	window.open(FireFly.getContextPath() + '/TS_XMGL_CCCS_V.expExcel.do?data=' + 
     		encodeURIComponent(jQuery.toJSON({"xmId":xmId})));
 });
 
-_viewer.getBtn("notInBtn").unbind("click").bind("click",function(event) {
-	alert(notInArray.length);
-});
+function notInTable(array){
+	var main = $("#TS_XMGL_CCCS_V .content-mainCont");
+	$("#mytable").remove();
+	
+	var htmlStr = '<table border="1" class="rhGrid JPadding JColResizer" id="mytable" style="margin:0px 8px 15px 8px;width:0%">';
+	htmlStr += '<caption align="left">不符合条件考生：</caption>';
+	htmlStr += '<thead class="rhGrid-thead"><tr><th class="rhGrid-thead-num" style="width: 3.3%;"></th><th icode="BM_NAME" class="rhGrid-thead-th" style="width: 15.7%;">姓名</th><th icode="BM_CODE" class="rhGrid-thead-th" style="width: 15.7%;">人力资源编码</th><th icode="BM_XL" class="rhGrid-thead-th" style="width: 15.7%;">序列</th><th icode="BM_MK" class="rhGrid-thead-th" style="width: 15.7%;">模块</th><th icode="BM_TYPE_NAME" class="rhGrid-thead-th" style="width: 5.9%;">级别</th><th icode="BM_KS_TIME" class="rhGrid-thead-th" style="width: 10%;">考试时长</th><th icode="ODEPT_CODE_V__NAME" class="rhGrid-thead-th" style="width: 16%;">机构</th></tr></thead>';
+	htmlStr += '<tbody class="rhGrid-tbody">';
+	for(var i=0;i<array.length;i++){
+		var num = i+1;
+		var BM_NAME = array[i].BM_NAME;
+		var BM_CODE = array[i].BM_CODE;
+		var BM_XL = array[i].BM_XL;
+		var BM_MK = array[i].BM_MK;
+		var BM_TYPE_NAME = array[i].BM_TYPE_NAME;
+		var BM_KS_TIME = array[i].BM_KS_TIME;
+		var ODEPT_CODE_V = array[i].ODEPT_CODE_V;
+		var odeptName = FireFly.doAct("TS_XMGL_CCCS_V","getDictItemName", {"dictId":"SY_ORG_ODEPT_ALL","itemCode":ODEPT_CODE_V},true,false).ITEM_NAME;
+		htmlStr += '<tr class="tBody-tr tBody-trOdd>';
+		htmlStr += '<td class="indexTD"></td>';
+		htmlStr += '<td class="indexTD" icode="num">'+num+'</td>';
+		htmlStr += '<td class="rhGrid-td-left " icode="BM_NAME">'+BM_NAME+'</td>';
+		htmlStr += '<td class="rhGrid-td-left " icode="BM_CODE">'+BM_CODE+'</td>';
+		htmlStr += '<td class="rhGrid-td-left " icode="BM_XL">'+BM_XL+'</td>';
+		htmlStr += '<td class="rhGrid-td-left " icode="BM_MK">'+BM_MK+'</td>';
+		htmlStr += '<td class="rhGrid-td-left " icode="BM_TYPE_NAME">'+BM_TYPE_NAME+'</td>';
+		htmlStr += '<td class="rhGrid-td-left " icode="BM_TYPE_NAME">'+BM_KS_TIME+'</td>';
+		htmlStr += '<td class="rhGrid-td-left " icode="ODEPT_CODE_V__NAME">'+odeptName+'</td>';
+		htmlStr += '</tr>';
+	}
+
+	htmlStr += '</tbody></table>';
+	main.append(htmlStr);
+}

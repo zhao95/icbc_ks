@@ -15,6 +15,7 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServDefBean;
+import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.JsonUtils;
@@ -599,6 +600,15 @@ public class CccsServ extends CommonServ {
     public OutBean oneLevel(ParamBean paramBean){
 	OutBean outBean = new OutBean();
 	
+	return outBean;
+    }
+    
+    public OutBean getDictItemName(ParamBean paramBean){
+	OutBean outBean = new OutBean();
+	String dict = paramBean.getStr("dictId");
+	String itemCode = paramBean.getStr("itemCode");
+	String itemName = DictMgr.getFullName(dict, itemCode);
+	outBean.set("ITEM_NAME", itemName);
 	return outBean;
     }
 }
