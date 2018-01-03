@@ -403,9 +403,9 @@ $(function() {
 				
 			}else{
 				var jdtNum="0";
-				var jdtName="您暂时未报名资格考试！";
+				var jdtName="您暂时未参加任何考试！";
 				if(jdtName==undefined){
-					jdtName="您暂时未报名资格考试！";
+					jdtName="您暂时未参加任何考试！";
 				}
 				if (jdtNum == undefined) {
 					jdtNum = "0";

@@ -203,6 +203,7 @@
                             <th class="" style="width: 20%;">送交时间</th>
                             <th class="" style="width: 10%;">处理结果</th>
                             <th class="" style="width: 10%;">终审结果</th>
+                            <th class="" style="width: 10%;text-align: center">操作</th>
                         </tr>
                         </thead>
                         <tbody class="grid-tbody">
@@ -504,7 +505,7 @@
                 tr.append('<td style="text-align: center;">' + (i + 1) + '</td>');
 
                 var td = jQuery('<td></td>');
-                var a = jQuery('<a>' + item.TITLE + '</a>');
+                var a = jQuery('<td>' + item.TITLE + '</td>');
                 td.append(a);
                 tr.append(td);
 
@@ -764,9 +765,29 @@
 
                 tr.append('<td style="text-align: center;height:50px;">' + (i + 1) + '</td>');
 
-                var td = jQuery('<td></td>');
-                var a = jQuery('<a  id="' + item.TODO_ID + '"type_value ="' + item.TYPE + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer">' + item.TITLE + '</a>')
+                var td = jQuery('<td>' + item.TITLE + '</td>');
+//                 var tda = jQuery('<td>' + item.TITLE + '</a>');
+                
+//                } else if (item.TYPE === '2') {
+//                    a.unbind('click').bind('click', function () {
+//                        var todoId = $(this).attr('id');
+//                        var dataId = $(this).attr('data-id');
+//                    });
+//                }
 
+
+//                 td.append(tda);
+
+                tr.append(td);
+                tr.append('<td>' + typeNameMap[item.TYPE] + '</td>');
+                tr.append('<td>' + item.SEND_NAME + '</td>');
+                tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
+                tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');
+                tr.append('<td>' + ( item.SH_STATUS === '2' ? '不同意' : '同意' ) + '</td>');
+                tr.append('<td>' + ( item.ZH_STATUS === '2' ? '通过' : (item.ZH_STATUS === '3' ? '不通过' : '') ) + '</td>');
+                var a =  jQuery('<button  id="' + item.TODO_ID + '"type_value ="' + item.TYPE + '" data-id="' + item.DATA_ID + '" style="cursor: pointer;margin-left:19%;display:block;color:white;text-align: center;line-height: 35px;font-size:15px;background-color:LightSeaGreen;height:35px;width:70px">' + '查看</button>');
+                var tda2 = jQuery("<td></td>");
+                tda2.append(a);
                 a.unbind('click').bind('click', function () {
                     var todoId = $(this).attr('id');
                     var dataId = $(this).attr('data-id');
@@ -777,23 +798,7 @@
                         doPost("/ts/jsp/jklb_jk2.jsp", {/*todoid: item.TODO_ID,*/ jkid: dataId});
                     }
                 });
-//                } else if (item.TYPE === '2') {
-//                    a.unbind('click').bind('click', function () {
-//                        var todoId = $(this).attr('id');
-//                        var dataId = $(this).attr('data-id');
-//                    });
-//                }
-
-
-                td.append(a);
-
-                tr.append(td);
-                tr.append('<td>' + typeNameMap[item.TYPE] + '</td>');
-                tr.append('<td>' + item.SEND_NAME + '</td>');
-                tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
-                tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');
-                tr.append('<td>' + ( item.SH_STATUS === '2' ? '不同意' : '同意' ) + '</td>');
-                tr.append('<td>' + ( item.ZH_STATUS === '2' ? '通过' : (item.ZH_STATUS === '3' ? '不通过' : '') ) + '</td>');
+                tr.append(tda2);
                 rhGridTBody.append(tr);
             }
         };
