@@ -31,6 +31,9 @@ public class BaseValidCert2YearBkxl implements IRule {
 		
 		String lblevel = param.getStr("KSLBK_TYPE_LEVEL");//考试类别层级
 		
+		if("".equals(lblevel)){
+			return false;
+		}
 		
 		int lblevelin = Integer.parseInt(lblevel);
 		
