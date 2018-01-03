@@ -106,7 +106,7 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
             var batchData = {};
             batchData.BATCHDATAS = paramArray;
             //批量保存
-            var rtn = FireFly.batchSave(_viewer.servId, batchData, null, 2, false);
+            var rtn = FireFly.batchSave(_viewer.servId, batchData, null, true, false);
 
             _viewer.refresh();
         }

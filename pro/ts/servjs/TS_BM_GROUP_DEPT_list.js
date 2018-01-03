@@ -81,9 +81,9 @@ _viewer.getBtn("impDept").unbind("click").bind("click", function(event) {
 				
 				for(var i=0;i<codes.length;i++){
 					if(i==0){
-						codestr="'"+codes[i]+"'";
+						codestr=""+codes[i]+"";
 					}else{
-						codestr+=",'"+codes[i]+"'";
+						codestr+=","+codes[i]+"";
 					}
 				}
 				var paramstr = {};

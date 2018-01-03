@@ -19,8 +19,12 @@ import java.util.List;
 
 
 
+
+
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
+
+
 
 
 
@@ -1781,11 +1785,43 @@ public class BmlbServ extends CommonServ {
 		List<Bean> list = ServDao.finds("TS_BM_GROUP_USER", "AND G_ID='"+G_ID+"' AND G_TYPE='2'");
 		String dept_code = "";
 		for (Bean bean : list) {
-			 dept_code += ",'"+bean.getStr("USER_DEPT_CODE")+"'";
+			 dept_code += ","+bean.getStr("USER_DEPT_CODE")+"";
 		}
-		codes+=dept_code;
+		//通过codepath比较部门是否存在包含关系
+		List<Bean> newdeptlist = new ArrayList<Bean>();
 		
-		String sql = "SELECT dept_code,dept_name FROM sy_org_dept WHERE dept_level =(SELECT Min(dept_level) FROM sy_org_dept WHERE dept_code IN ("+codes+"))AND dept_code IN("+codes+")";
+		codes+=dept_code;
+		String[] deptarr = codes.split(",");
+		//将codepath存到list中
+		for (String string : deptarr) {
+			if(!"".equals(string)){
+				Bean deptbean = new Bean();
+				DeptBean dept = OrgMgr.getDept(string);
+				String codePath = dept.getCodePath();
+				deptbean.set("deptcode", string);
+				deptbean.set("codepath", codePath);
+				newdeptlist.add(deptbean);
+			}
+		}
+		//循环判断 将    符合条件的数据放入 需要保存的list中
+		for(int i=0;i<newdeptlist.size();i++){
+			for(int j=i+1;j<newdeptlist.size();j++){
+				if(newdeptlist.get(i).getStr("codepath").indexOf(newdeptlist.get(j).getStr("codepath"))>-1){
+				//存在包含关系的只加最大的dept
+					newdeptlist.get(i).set("deptcode", "");
+				}else if(newdeptlist.get(j).getStr("codepath").indexOf(newdeptlist.get(i).getStr("codepath"))>-1){
+					newdeptlist.get(j).set("deptcode", "");
+				}
+			}
+		}
+		String codestrs = "";
+		for(int i=0;i<newdeptlist.size();i++){
+			if(!"".equals(newdeptlist.get(i).getStr("codepath"))){
+				codestrs+="'"+newdeptlist.get(i).getStr("deptcode")+"',";
+			}
+		}
+		codestrs = codestrs.substring(0,codestrs.length()-1);
+		String sql = "SELECT dept_code,dept_name FROM sy_org_dept where dept_code IN("+codestrs+")";
 		List<Bean> list2 = Transaction.getExecutor().query(sql);
 		String sql1 = "DELETE FROM TS_BM_GROUP_USER_DEPT WHERE G_ID='"+G_ID+"' AND G_TYPE='2'";
 		Transaction.getExecutor().execute(sql1);
