@@ -59,6 +59,20 @@ if(userBean != null) {
     left: 24%; 
     right: 0; 
 	}
+	#shloadingdialog{
+	 font-family: Arial;
+	 border: 2px solid black;
+	 border-radius: 10px;
+	 padding: 30px 30px;
+	 width: 330px;
+	}
+	#shloading .modal-dialog{
+	position: absolute; 
+    top: 20%; 
+    bottom: 200px; 
+    left: 24%; 
+    right: 0; 
+	}
 	#loadingdialog{
 	 font-family: Arial;
 	 border: 2px solid black;
@@ -66,7 +80,6 @@ if(userBean != null) {
 	 padding: 30px 30px;
 	 width: 330px;
 	}
-
 
 	.btn-default{
 	color: WHITE;
@@ -557,9 +570,21 @@ if(userBean != null) {
 		</div>
 		<!-- /.modal -->
 	</div>
+	<div class="modal fade" id="shloading" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div  class="modal-dialog" style="width:700px;">
+			<div id="shloadingdialog" class="modal-content" style="position:absoluate;background:white;height:100px;width:50%">
+				<div style="color:lightseagreen;padding-left:30%;padding-top:10px;font-size:16px;">&nbsp;&nbsp;<B>正在审核请稍候.....</B></div>
+				<div id="loadiv" style="position:relative;top:-80%;left:15%;font-size:16px;"><img src="<%=CONTEXT_PATH%>/ts/image/loading.gif"></img></div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
 			<form id="form2" style="display:none" method="post" action="baomingglf.jsp">
 				<input id = "fzgtz" name="fzgtz"></input>
 			</form>
+			
 		
 		<input type="hidden" id="xmid" value="<%=xmid %>"/>
 		<input type="hidden" id="dijige">

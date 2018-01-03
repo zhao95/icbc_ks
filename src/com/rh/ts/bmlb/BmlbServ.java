@@ -83,6 +83,7 @@ public class BmlbServ extends CommonServ {
 		//判断有没有审核人
 		String allman = "";
 		String node_name = "";
+		int SH_LEVEL = 0;
 		if (count == 2 || count == 3) {
 		ParamBean param = new ParamBean();
 		param.set("examerUserCode", user_code);
@@ -96,6 +97,7 @@ public class BmlbServ extends CommonServ {
 		if (!"".equals(blist)) {
 			allman = blist.substring(0, blist.length() - 1);
 			node_name = out.getStr("NODE_NAME");
+			SH_LEVEL = out.getInt("SH_LEVEL");
 		}else{
 			return new OutBean().setError("报名失败,没有审核人");
 		}
@@ -168,6 +170,7 @@ public class BmlbServ extends CommonServ {
 				shBean.set("BM_NAME", user_name);
 				shBean.set("BM_CODE", user_code);
 				shBean.set("ODEPT_CODE", odept_code);
+				shBean.set("BM_TITLE", fzgks_name);
 				ServDao.save("TS_BMSH_PASS", shBean);
 
 			} else {
@@ -186,6 +189,8 @@ public class BmlbServ extends CommonServ {
 				shBean.set("SH_NODE", node_name);// 目前审核节点
 				shBean.set("SH_USER", allman);// 当前办理人
 				shBean.set("SH_OTHER", allman);// 其他办理人
+				shBean.set("SH_LEVEL", SH_LEVEL);// 其他办理人
+				shBean.set("BM_TITLE", fzgks_name);
 				ServDao.save("TS_BMSH_STAY", shBean);
 				// 自动审核保存到 报名明细中
 				Bean mindbean = new Bean();
@@ -441,6 +446,7 @@ public class BmlbServ extends CommonServ {
 					}
 					beans.set("SH_LEVEL", SH_LEVEL);
 					Bean shBean = new Bean();
+					shBean.set("BM_TITLE", xm_name);
 					shBean.set("RZ_YEAR", rz_year);
 					shBean.set("XM_ID", xm_id);
 					shBean.set("ODEPT_CODE", odept_code);

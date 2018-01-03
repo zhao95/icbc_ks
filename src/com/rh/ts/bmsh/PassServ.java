@@ -44,6 +44,7 @@ public class PassServ extends CommonServ {
 	 * @returnge
 	 */
 	public Bean getUncheckList(Bean paramBean) {
+		//逐级 可查看当前层级以上的人  越级可以查看所有人
 		String usercode = Context.getUserBean().getCode();
 		//查询当前审核人的流程 绑定的审核机构
 		String xmid= paramBean.getStr("xmid");
@@ -255,14 +256,7 @@ public class PassServ extends CommonServ {
 				// 将数据删除 若存在的话在stay中 因为不会再往下推送 所以审核 级数不会变
 				String bmid = bean.getStr("BM_ID");
 				// 获取 stay里对象
-				String where = "AND BM_ID=" + "'" + bmid + "'";
-				List<Bean> list = ServDao.finds("TS_BMSH_STAY", where);
-				if (list.size() == 0) {
-					// 因为审核到了最高级所以把数据删了 审核级数不会再变
-				} else {
-					// 审核
-					ServDao.delete("TS_BMSH_STAY", list.get(0));
-				}
+					ServDao.delete("TS_BMSH_STAY", bmid);
 
 				bean.remove("SH_ID");
 				bean.remove("S_CMPY");

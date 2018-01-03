@@ -297,6 +297,7 @@ function firall(){
 		}
 		}
 		function mttijiao(){
+			
 			//提交审核
 			var mokuai = document.getElementById("mokuai").value;
 			var  s = "";
@@ -313,6 +314,8 @@ function firall(){
 						  s+=","+aa;
 					  }
 				  });
+				  $('#tiJiao').modal('hide');
+				  $("#shloading").modal("show");
 					  var radiovalue = $('input:radio:checked').val();
 					  var liyou = document.getElementById("liyou").value;
 					  param["user_code"]=user_code;
@@ -322,9 +325,8 @@ function firall(){
 					  param["xmid"]=xmid;
 					  param["level"]=nowlevel;
 					  param["nodeid"]=nodeid;
-					  FireFly.doAct("TS_BMSH_STAY","update",param);
-					  $('#tiJiao').modal('hide');
-					  dsha();
+					var res =   FireFly.doAct("TS_BMSH_STAY","update",param,true,false);
+					  setTimeout("stayBack()", 1000);
 			}else if(mokuai=="B"){
 				//获取第一个 tab  选中的checkbox
 				  $('input:checkbox[name=checkboxb]:checked').each(function(){
@@ -342,6 +344,8 @@ function firall(){
 					  if(radiovalue==1){
 					  alert("状态未改变");
 					  }else{
+					  $('#tiJiao').modal('hide');
+					  $("#shloading").modal("show");
 					  var liyou = document.getElementById("liyou").value;
 					  param["user_code"]=user_code;
 					  param["checkedid"]=s;
@@ -350,11 +354,9 @@ function firall(){
 					  param["xmid"]=xmid;
 					  param["level"]=nowlevel;
 					  param["nodeid"]=nodeid;
-					  FireFly.doAct("TS_BMSH_PASS","update",param);
-					  //局部刷新
-					   $('#tiJiao').modal('hide');
-						 shtga();
-			   }
+					  var res = FireFly.doAct("TS_BMSH_PASS","update",param,true,false);
+					  setTimeout("passRefresh()", 1000);
+					  }
 			}else if(mokuai=="C"){
 				//获取第一个 tab  选中的checkbox
 				  $('input:checkbox[name=checkboxc]:checked').each(function(){
@@ -369,7 +371,8 @@ function firall(){
 						  });
 					  var radiovalue = $('input:radio:checked').val();
 					  if(radiovalue==1){
-						  
+						  $('#tiJiao').modal('hide');
+						  $("#shloading").modal("show");
 					  var liyou = document.getElementById("liyou").value;
 					  param["user_code"]=user_code;
 					  param["checkedid"]=s;
@@ -378,14 +381,31 @@ function firall(){
 					  param["xmid"]=xmid;
 					  param["level"]=nowlevel;
 					  param["nodeid"]=nodeid;
-					  FireFly.doAct("TS_BMSH_NOPASS","update",param);
-					  $('#tiJiao').modal('hide');
-					  shwtda();
+					  var res = FireFly.doAct("TS_BMSH_NOPASS","update",param,true,false);
+					  setTimeout("noPassBack()", 1000);
+					 
 					  }else{
 						  alert("状态未改变");
 					  }
 					  
 					}
+			//显示框loading
+			
+			
+		}
+		//审核窗口关闭时提示loading
+		function passRefresh(){
+			  $("#shloading").modal("hide");
+			  //局部刷新
+				 shtga();
+		}
+		function noPassBack(){
+			 $("#shloading").modal("hide");
+			  shwtda();
+		}
+		function stayBack(){
+			$("#shloading").modal("hide");
+			 dsha();
 		}
 		//第二个tab 
 		function shenheB(){

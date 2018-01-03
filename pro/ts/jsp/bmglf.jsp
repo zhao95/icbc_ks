@@ -377,7 +377,6 @@ position: absolute;
 				param["XM_ID"] = "<%=xm_id%>";
 				var result = FireFly.doAct("TS_BMLB_BM", "addData", param,true,false);
 				setTimeout("fanhui()", 1000);
-				
 			}
 		function fanhui(){//报名完后跳转回页面
 			 $("#bmbq").val("1");
