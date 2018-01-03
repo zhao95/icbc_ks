@@ -359,17 +359,17 @@ if(userBean != null) {
 	</div>
 			<div class="modal fade" id="tiJiao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static"  aria-hidden="true" style="padding-top:5%">
 		<div class="modal-dialog" style="width:50%">
-			<div class="modal-content">
+			<div class="modal-content" style="width:90%">
 				<div class="modal-header" style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
 						批量审核
 				</div>
 				<form id="formmotai" method="post" action="bmshzg.jsp">
-				<div style="padding-left:10%">
+				<div>
 				<table style="height:125px;font-size:14px;">
-				<tr style="height:25%">
+				<tr style="height:20%">
 				<td style="text-align:right;width:20%">审核人姓名&nbsp;&nbsp;</td><td><input style="width:90%;height:30px" type="text" value="<%=username%>" name="shren"/></td>
-				<td style="width:3%"></td>
-				<td style="text-align:left">审核人登录名&nbsp;&nbsp;</td><td><input style="width:90%;height:30px" type="text" value="<%=loginname %>" name="shdlming"/></td>
+				<td style="width:1%"></td>
+				<td style="text-align:right;width:20%">审核人登录名&nbsp;</td><td><input style="width:90%;height:30px" type="text" value="<%=loginname %>" name="shdlming"/></td>
 				</tr>
 				<tr style="height:25%">
 				<td style="text-align:right">审核状态&nbsp;&nbsp;</td><td colspan="4"><span id="radiospan1"><input style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1" checked>审核通过&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -379,7 +379,7 @@ if(userBean != null) {
 				</table>
 				<table  style="height:100px;width:100%">
 				<tr>
-				<td style="text-align:right;width:14.5%;vertical-align:top">审核理由</td><td style="width:4%"></td><td style="width:75%;vertical-align:top"><textarea id="liyou" style="border:solid 1px lightseagreen;height:90%;width:80%" wrap="soft"></textarea></td>
+				<td style="text-align:right;width:16.5%;vertical-align:top">审核理由</td><td style="width:4%"></td><td style="width:75%;vertical-align:top"><textarea id="liyou" style="border:solid 1px lightseagreen;height:90%;width:80%" wrap="soft"></textarea></td>
 				</tr>
 				</table>
 				</div>
