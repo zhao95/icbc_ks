@@ -79,8 +79,11 @@ public class BmlbServ extends CommonServ {
 		String xm_id = paramBean.getStr("XM_ID");
 		String bmcode = paramBean.getStr("bmCodes");
 		String[] bmcodes = bmcode.split(",");
-		
+		int count = XmglMgr.existSh(xm_id);
 		//判断有没有审核人
+		String allman = "";
+		String node_name = "";
+		if (count == 2 || count == 3) {
 		ParamBean param = new ParamBean();
 		param.set("examerUserCode", user_code);
 		param.set("level", 0);
@@ -88,15 +91,14 @@ public class BmlbServ extends CommonServ {
 		param.set("flowName", 1);
 		param.set("shrUserCode", user_code);
 		/* List<Bean> blist = (List<Bean>) out.get("result"); */
-		String allman = "";
-		String node_name = "";
 		OutBean out = ServMgr.act("TS_WFS_APPLY", "backFlow", param);
 		String blist = out.getStr("result");
 		if (!"".equals(blist)) {
 			allman = blist.substring(0, blist.length() - 1);
 			node_name = out.getStr("NODE_NAME");
 		}else{
-			return new OutBean().set("_MSG_","报名失败,没有审核人");
+			return new OutBean().setError("报名失败,没有审核人");
+		}
 		}
 		for (String string : bmcodes) {
 			if("".equals(string)){
@@ -117,7 +119,7 @@ public class BmlbServ extends CommonServ {
 			}else{
 				continue;
 			}
-			int count = XmglMgr.existSh(xm_id);
+		
 			Bean beans = new Bean();
 			if (count == 0 || count == 1) {
 				beans.set("BM_SH_STATE", 1);
@@ -169,6 +171,7 @@ public class BmlbServ extends CommonServ {
 				ServDao.save("TS_BMSH_PASS", shBean);
 
 			} else {
+				
 				// 获取到报名id
 				String bm_id = bmbean.getStr("BM_ID");
 				beans.set("BM_SH_STATE", 0);
@@ -215,7 +218,7 @@ public class BmlbServ extends CommonServ {
 			objBean.set("STR1", ryl_mobile);
 			ServDao.save("TS_OBJECT", objBean);
 		}
-		return new OutBean().set("_MSG_","");
+		return new OutBean().setOk("报名成功");
 	}
 
 	

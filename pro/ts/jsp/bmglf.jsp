@@ -376,13 +376,13 @@ position: absolute;
 				param["USER_CMPY_DATE"] = "<%=user_cmpy_date%>";
 				param["XM_ID"] = "<%=xm_id%>";
 				var result = FireFly.doAct("TS_BMLB_BM", "addData", param,true,false);
-				if(""!=result._MSG_){
-					alert(result._MSG_);
-					
-				}
-				 $("#bmbq").val("1");
-				$("#form1").submit(); 
+				setTimeout("fanhui()", 1000);
+				
 			}
+		function fanhui(){//报名完后跳转回页面
+			 $("#bmbq").val("1");
+				$("#form1").submit(); 
+		}
 		  
 	</script>
 </body>
