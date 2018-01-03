@@ -2678,6 +2678,12 @@ var KsObject = {
 //                var shId = ks.SH_ID;
 //                var odeptName = ks.S_ODEPT__NAME;
 //                var bmxlName = ks.BM_XL__NAME;
+            var title;//考试名称
+            if (ks.BM_MK) {
+                title = ks.BM_XL + (ks.BM_MK === '无模块' ? '' : ('-' + ks.BM_MK));
+            } else {
+                title = ks.BM_TITLE;
+            }
             $ksTableTbody.append([
                 '<tr scope="row" id="' + ks.SH_ID + '" shId="' + ks.SH_ID + '">',
                 '   <td><input type="checkbox"></td>',
@@ -2688,7 +2694,7 @@ var KsObject = {
                 '   <td>' + ks.BM_CODE + '</td>',//人力资源编码
                 // '   <td>' + ks.org4 + '</td>',//四级机构
                 '   <td>' + ks.BM_NAME + '</td>',//姓名
-                '   <td>' + ks.BM_XL + (ks.BM_MK === '无模块' ? '' : ('-' + ks.BM_MK)) + '</td>',//考试名称
+                '   <td>' + title + '</td>',//考试名称
                 '   <td>' + FireFly.getDictNames(FireFly.getDict('TS_XMGL_BM_KSLBK_LV'), ks.BM_TYPE) + '</td>',//级别
                 '   <td>' + ks.COUNT + '</td>',//报考数
                 // '   <td>' + ks.STATUS + '</td>',//状态

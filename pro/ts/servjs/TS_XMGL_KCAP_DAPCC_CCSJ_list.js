@@ -15,7 +15,7 @@ _viewer.getBtn("myAdd").unbind("click").bind("click", function(event) {
 	var param = {};
 	param["SOURCE"] = "ARR_CC~ARR_START~ARR_END";
 	param["TYPE"] = "multi";
-	param["EXTWHERE"] = "and ARR_STATE = 1 and XM_ID = '"+xmId+"' and (ARR_ODEPT_CODES = '' or ARR_ODEPT_CODES = '"+odeptCode+"')";
+	param["EXTWHERE"] = "and ARR_STATE = 1 and XM_ID = '"+xmId+"' and (ARR_ODEPT_CODES = '' or ARR_ODEPT_CODES is null or ARR_ODEPT_CODES = '"+odeptCode+"')";
 	var configStr = "TS_XMGL_CCCS_ARRANGE,"+JsonToStr(param);
 	var options = {
 		"config" :configStr,

@@ -6,14 +6,14 @@ import com.rh.core.base.db.Transaction;
 import com.rh.core.comm.ConfMgr;
 import com.rh.core.icbc.basedata.KSSendTipMessageServ;
 import com.rh.core.org.UserBean;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.serv.bean.PageBean;
 import com.rh.core.serv.bean.SqlBean;
-import com.rh.core.serv.util.ExportExcel;
-import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.Constant;
 import com.rh.core.util.DateUtils;
+import com.rh.core.util.ExpUtils;
 import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.BMUtil;
 import com.rh.ts.util.RoleUtil;
@@ -38,16 +38,6 @@ public class DapccServ extends CommonServ {
         PvlgUtils.setOrgPvlgWhere(param);
     }
 
-
-    /**
-     * 每次获取数据条数
-     */
-    private static final int ONETIME_EXP_NUM = 5000;
-    /**
-     * excel最大行数
-     */
-    private static final int EXCEL_MAX_NUM = 65536;
-
     /**
      * 提供导出Excel
      *
@@ -55,13 +45,14 @@ public class DapccServ extends CommonServ {
      * @return 执行结果
      */
     public OutBean expAll(ParamBean paramBean) {
+        /*获取beanList信息*/
+        //*设置查询条件
         paramBean.set("isArrange", "false");//获取所有安排和未安排的考生
-        String servId = paramBean.getServId();
-        ServDefBean serv = ServUtils.getServDef(servId);
         paramBean.set(ParamBean.QUERY_NOPAGE_FLAG, "true");
+
         List<Bean> allList = new ArrayList<Bean>();
 
-        //
+        //未安排/已安排人员
         OutBean ksOutBean = this.getKsContent(paramBean);
         List<Bean> ksList = ksOutBean.getDataList();
         for (Bean bean : ksList) {
@@ -92,12 +83,8 @@ public class DapccServ extends CommonServ {
             bean.set("ksName", examinationName);
         }
 
-        OutBean outBean = new OutBean();
-        outBean.setCount(allList.size());
-
-        LinkedHashMap<String, Bean> cols = new LinkedHashMap<String, Bean>();
-
-        Map<String, String> colMap = new LinkedHashMap<String, String>();
+        /*设置导出展示信息*/
+        LinkedHashMap<String, String> colMap = new LinkedHashMap<String, String>();
         colMap.put("BM_CODE", "人力资源编码");
         colMap.put("BM_NAME", "姓名");
         colMap.put("USER_LOGIN_NAME", "统一认证号");
@@ -112,53 +99,7 @@ public class DapccServ extends CommonServ {
         colMap.put("state", "状态");
         colMap.put("", "承办单位备注");
 
-        for (String itemCode : colMap.keySet()) {
-            Bean colBean = new Bean();
-            colBean.set("SAFE_HTML", "");
-            colBean.set("ITEM_LIST_FLAG", "1");
-            colBean.set("ITEM_CODE", itemCode);
-            colBean.set("EN_JSON", "");
-            colBean.set("ITEM_NAME", colMap.get(itemCode));
-            cols.put(itemCode, colBean);
-        }
-
-        ExportExcel expExcel = new ExportExcel(serv);
-        try {
-            // 查询出 要导出的数据
-            long count = outBean.getCount();
-            // 总数大于excel可写最大值
-            if (count > EXCEL_MAX_NUM) {
-                return new OutBean().setError("导出数据总条数大于Excel最大行数："
-                        + EXCEL_MAX_NUM);
-            }
-            // 导出第一次查询数据
-            paramBean.setQueryPageNowPage(1); // 导出当前第几页
-            afterExp(paramBean, outBean); // 执行导出查询后扩展方法
-            // 查询出表头 查询出 对应数据 hashmaplist
-
-            expExcel.createHeader(cols);
-            expExcel.appendData1(allList, paramBean);
-//             //存在多页数据
-//            if (ONETIME_EXP_NUM < count) {
-//                times = count / ONETIME_EXP_NUM;
-//                // 如果获取的是整页数据
-//                if (ONETIME_EXP_NUM * times == count && count != 0) {
-//                    times = times - 1;
-//                }
-//                for (int i = 1; i <= times; i++) {
-//                    paramBean.setQueryPageNowPage(i + 1); // 导出当前第几页
-//                    OutBean out = query(paramBean);
-//                    afterExp(paramBean, out); // 执行导出查询后扩展方法
-//                    expExcel.appendData(out.getDataList(), paramBean);
-//                }
-//            }
-            expExcel.addSumRow();
-        } catch (Exception e) {
-            log.error("导出Excel文件异常" + e.getMessage(), e);
-        } finally {
-            expExcel.close();
-        }
-        return new OutBean().setOk();
+        return ExpUtils.expUtil(allList, colMap, paramBean);
     }
 
 
@@ -339,6 +280,7 @@ public class DapccServ extends CommonServ {
                 sql, page.getNowPage(), page.getShowNum(), new ArrayList<Object>(values), null);
 //        List<Bean> beanList = ServDao.finds("TS_XMGL_KCAP_DFPKS", paramBean);
         for (Bean bean : dataList) {
+            //添加 用户机构信息
             String userCode = bean.getStr("BM_CODE");
             ParamBean userCodeParamBean = new ParamBean();
             userCodeParamBean.set("userCode", userCode);
@@ -662,7 +604,7 @@ public class DapccServ extends CommonServ {
     private Bean getDeptByCode(String code, Map<String, Bean> cache) {
         Bean result;
         if (cache == null || cache.get(code) == null) {
-            result = new Bean(ServDao.find(ServMgr.SY_ORG_DEPT, code));
+            result = new Bean(OrgMgr.getDept(code));
         } else {
             result = cache.get(code);
         }
@@ -690,7 +632,7 @@ public class DapccServ extends CommonServ {
 //        List<Object> values = new ArrayList<Object>();
 //        values.add(deptCode);
 
-        Bean bean = ServDao.find(ServMgr.SY_ORG_DEPT, deptCode);
+        Bean bean = OrgMgr.getDept(deptCode);
 //        Bean bean = Transaction.getExecutor().queryOne("select * from sy_org_dept where DEPT_CODE = ?", values);
         String codePath = bean.getStr("CODE_PATH");
 
@@ -1047,7 +989,7 @@ public class DapccServ extends CommonServ {
         //是否是总行
         boolean isRootDept = false;
         for (String deptCode : split) {
-            Bean deptBean = ServDao.find(ServMgr.SY_ORG_DEPT, deptCode);
+            Bean deptBean = OrgMgr.getDept(deptCode);
             String codePath = deptBean.getStr("CODE_PATH");
             int i1 = codePath.indexOf("^");
             int i2 = codePath.indexOf("^", (i1 + 1));
