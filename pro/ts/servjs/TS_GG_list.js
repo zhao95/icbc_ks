@@ -1,6 +1,6 @@
 /** 服务卡片使用的js方法定义：开始fromTable */
 var _viewer = this;
-
+var module = 'PROJECT';
 var res = _viewer.grid.getBtn("look");
 res.unbind("click").bind("click",function() {
 var pk = jQuery(this).attr("rowpk");//获取主键信息
@@ -34,8 +34,8 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
         return false;
     }
 
-    //var width = jQuery(window).width()-200;
-    //var height = jQuery(window).height()-200;
+    var width = jQuery(window).width()-200;
+    var height = jQuery(window).height()-200;
 
     var temp = {"act":UIConst.ACT_CARD_ADD,
         "sId":_viewer.servId,
