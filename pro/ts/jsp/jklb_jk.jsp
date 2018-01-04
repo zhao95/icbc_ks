@@ -187,7 +187,7 @@
         <form class="form-horizontal" style="padding-right: 50px">
             <div class="form-group">
                 <label for="jktitle" class="col-sm-2 control-label">
-                    借考标题
+                    项目名称
                     <span style="color: red;font-weight: bold">*</span></label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="jktitle" readonly>

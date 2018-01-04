@@ -139,9 +139,7 @@
                     <thead>
                     <tr style="backGround-color: WhiteSmoke; height: 30px">
                         <td style="width: 6%;" align="left">序号</td>
-                        <td style="width: 25%;">标题</td>
-                        <td style="width: 15%;">单位</td>
-                        <td style="width: 6%;">借考人</td>
+                        <td style="width: 25%;">项目名称</td>
                         <td style="width: 9%;">借考地</td>
                         <td style="width: 10%">创建时间</td>
                         <td style="width: 9%; ">审核状态</td>
@@ -359,12 +357,6 @@
                 '	</td>',
                 '	<td>',
                 '	    ' + jkTitle,
-                '	</td>',
-                '	<td>',
-                '	    ' + jkDept,
-                '	</td>',
-                '	<td>',
-                '	    ' + jkName,
                 '	</td>',
                 '	<td>',
                 '	    ' + yjfhDept.DEPT_NAME,

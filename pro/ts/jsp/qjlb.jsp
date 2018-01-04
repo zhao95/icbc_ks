@@ -139,9 +139,7 @@
                     <thead>
                     <tr style="backGround-color: WhiteSmoke; height: 30px">
                         <td style="width: 6%;" align="left">序号</td>
-                        <td style="width: 25%;">标题</td>
-                        <td style="width: 20%;">单位</td>
-                        <td style="width: 10%;">请假人</td>
+                        <td style="width: 25%;">项目名称</td>
                         <td style="width: 10%">创建时间</td>
                         <td style="width: 9%;text-align: center ">审核状态</td>
                         <td style="width: 20%; text-align: center">操作</td>
@@ -356,12 +354,6 @@
                 '	</td>',
                 '	<td>',
                 '	    ' + qjTitle,
-                '	</td>',
-                '	<td>',
-                '	    ' + qjDanwei,
-                '	</td>',
-                '	<td>',
-                '	    ' + qjName,
                 '	</td>',
                 '	<td>',
                 '	    ' + qjDate,

@@ -188,7 +188,7 @@
         <form class="form-horizontal" style="padding-right: 50px">
             <div class="form-group">
                 <label for="qjtitle" class="col-sm-2 control-label">
-                    请假标题
+                    项目名称
                     <span style="color: red;font-weight: bold">*</span>
                 </label>
                 <div class="col-sm-10">

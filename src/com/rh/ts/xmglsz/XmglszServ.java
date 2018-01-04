@@ -114,24 +114,27 @@ public class XmglszServ extends CommonServ {
 	 * @return
 	 */
 	public OutBean getStayApXm(Bean paramBean){
+		OutBean outBean = new OutBean();
+		outBean.setData(new ArrayList<Bean>());
 		//所有考场安排的 项目设置ID
 		UserBean userBean = Context.getUserBean();
 		String user_code = userBean.getCode();
 		String odeptcode ="";
 		Bean userPvlgToHT = RoleUtil.getPvlgRole(user_code);
 		Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_XMGL_KCAP_YAPZW_PVLG");
+
 		if (userPvlgToHTBean == null) {
-			return new OutBean().setError("无权限");
+			return outBean.setError("无权限");
 		}
 		if("0".equals(userPvlgToHTBean.getStr("publish"))&&"0".equals(userPvlgToHTBean.getStr("auto"))){
-			return new OutBean();
+			return outBean;
 		}
 		int  a=0;
 		if ("0".equals(userPvlgToHTBean.getStr("publish"))) {
 
 			Bean str = (Bean) userPvlgToHTBean.get("auto");
 			if (str == null) {
-				return new OutBean().setError("无权限");
+				return outBean.setError("无权限");
 			}
 			odeptcode = str.getStr("ROLE_DCODE");
 			if ("".equals(odeptcode)) {
@@ -142,7 +145,7 @@ public class XmglszServ extends CommonServ {
 		} else {
 			Bean str = (Bean) userPvlgToHTBean.get("publish");
 			if (str == null) {
-				return new OutBean().setError("无权限");
+				return outBean.setError("无权限");
 			}
 			odeptcode = str.getStr("ROLE_DCODE");
 			if ("".equals(odeptcode)) {
@@ -217,7 +220,7 @@ public class XmglszServ extends CommonServ {
 
 
 	}
-	return new OutBean().setData(dataList);
+	return outBean.setData(dataList);
 	}
 	//判断是否提交了数据
 public Boolean getTjState(String odeptcode,String xmid){

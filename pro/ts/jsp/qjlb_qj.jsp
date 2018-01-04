@@ -164,8 +164,7 @@
         <div class="row" style="padding-top: 50px;">
             <div class="col-sm-2"></div>
             <div class="col-sm-9" style="padding: 0;">
-                <div
-                        style="background-color: #fed1d1; border: 1px solid red; border-radius: 5px; padding: 5px; color: #570000; min-width: 821px;">
+                <div style="background-color: #fed1d1; border: 1px solid red; border-radius: 5px; padding: 5px; color: #570000; min-width: 821px;">
                     ！ 温馨提示：本年度可请假 <span id="weekes" style="color: red;">  </span> 个考试周 (限<span
                         id="counts" style="color: red">  </span> 个考试), 您已请假 <span id="leaveWeekNum"
                                                                                   style="color: red">  </span> 个
@@ -183,8 +182,10 @@
 
         <form class="form-horizontal" style="padding-right: 50px">
             <div class="form-group">
-                <label for="qjtitle" class="col-sm-2 control-label">请假标题<span
-                        style="color: red; font-weight: bold">*</span></label>
+                <label for="qjtitle" class="col-sm-2 control-label">
+                    项目名称
+                    <span style="color: red; font-weight: bold">*</span>
+                </label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="qjtitle" readonly>
                 </div>

@@ -165,10 +165,10 @@ _viewer.getBtn("impDept").unbind("click").bind("click", function (event) {
 
 
 //从excel中导入人员
-const IMPORT_FILE_ID = "TS_BM_GROUP_USER-impUserByExcel";
+const IMPORT_FILE_ID = _viewer.servId + "-impUserByExcel";
 var $importUser = $('#' + IMPORT_FILE_ID);
-//避免刷新数据重复添加
 var $impFile = jQuery('#' + _viewer.servId + '-impFile');
+//避免刷新数据重复添加
 if ($importUser.length === 0) {
     var config = {
         "SERV_ID": _viewer.servId,
