@@ -2,6 +2,8 @@ package com.rh.ts.xmgl.kcap.arrange;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -185,7 +187,7 @@ public class KcapMatch {
 
 			return filtBean;
 		}
-		
+
 		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R001-begin:", KcapMatch.class);
 
 		try {
@@ -248,7 +250,7 @@ public class KcapMatch {
 
 			filtBean = new Bean();
 		}
-		
+
 		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R001-end:", KcapMatch.class);
 
 		return filtBean;
@@ -504,7 +506,7 @@ public class KcapMatch {
 	 * @param freeZw
 	 * @param farBean
 	 * @param filtBean
-	 *            {考生ID:考生bean}
+	 *            {考试时长：考生Bean{考生ID:考试list}}
 	 */
 	private static Bean filtR003(Bean freeZw, Bean farBean, Bean filtBean) {
 
@@ -539,16 +541,290 @@ public class KcapMatch {
 	}
 
 	/**
-	 * 筛选 同一网点级机构考生均分安排
+	 * 筛选 同一网点级机构考生均分安排 考试安排一天 上下午均分; 考试安排多天 隔天均分;
 	 * 
 	 * @param freeZw
 	 * @param res
 	 * @param filtBean
-	 *            {考生ID:考生bean}
+	 *            {考试时长：考生Bean{考生ID:考试list}}
 	 */
 	private static Bean filtR004(Bean freeZw, KcapResource res, Bean filtBean) {
 
+		String kcId = freeZw.getStr("KC_ID"); // 考场id
+
+		int cc = freeZw.getInt("SJ_CC"); // 场次号
+
+		String date = freeZw.getStr("SJ_DATE"); // 考试日期
+
+		List<String> dateList = new ArrayList<String>();
+
+		for (Object key : res.getCcAMPM().keySet()) {
+
+			String str = key.toString();
+
+			String strDate = str.substring(str.lastIndexOf("^") + 1, str.length());
+
+			if (!dateList.contains(strDate)) {
+
+				dateList.add(strDate);
+			}
+		}
+
+		if (dateList.size() > 1) { // 多天考试
+
+			filtR004MultiDay(filtBean, res, dateList, kcId, cc, date);
+
+		} else if (dateList.size() == 1) { // 一天考试
+
+			filtR004OneDay(filtBean, res, kcId, cc, date);
+		}
+
 		return filtBean;
+	}
+
+	/**
+	 * 一天考试
+	 * 
+	 * @param filtBean
+	 * @param res
+	 * @param kcId
+	 * @param cc
+	 * @param date
+	 */
+	private static void filtR004OneDay(Bean filtBean, KcapResource res, String kcId, int cc, String date) {
+
+		String curentKey = kcId + "^" + cc + "^" + date; // 当前场次key：考场ID^场次号^日期
+
+		Bean busyZwBean = res.getBusyZwBean();
+
+		String ampm = res.getCcAMPM().getStr(curentKey);
+
+		if (ampm.equals("AM")) { // 只限制上午
+
+			Bean busyKs = new Bean(); // 已安排所有考生
+
+			for (Object key : res.getCcAMPM().keySet()) {
+
+				String ap = res.getCcAMPM().getStr(key);
+
+				if (ampm.equals(ap)) {
+
+					Bean busyZw = busyZwBean.getBean(key);
+
+					for (Object zwkey : busyZw.keySet()) {
+
+						String ucode = busyZw.getBean(zwkey).getStr("U_CODE");
+
+						busyKs.set(ucode, "");
+					}
+				}
+			}
+
+			// for (Object time : filtBean.keySet()) { // 遍历考试时长
+			//
+			// log.error(curentKey+"-之前-------------time:"+time+"="+filtBean.getBean(time).size());
+			// }
+
+			removeR004Ks(filtBean, res, busyKs, kcId, true);
+
+			// for (Object time : filtBean.keySet()) { // 遍历考试时长
+			//
+			// log.error(curentKey+"-之后-------------time:"+time+"="+filtBean.getBean(time).size());
+			// }
+		}
+	}
+
+	/**
+	 * 多天考试
+	 * 
+	 * @param filtBean
+	 * @param res
+	 * @param dateList
+	 * @param kcId
+	 * @param cc
+	 * @param date
+	 */
+	private static void filtR004MultiDay(Bean filtBean, KcapResource res, List<String> dateList, String kcId, int cc,
+			String date) {
+
+		String curentKey = kcId + "^" + cc + "^" + date; // 当前场次key：考场ID^场次号^日期
+
+		Bean busyZwBean = res.getBusyZwBean();
+
+		// 考试日期排序
+		Collections.sort(dateList, new Comparator<String>() {
+
+			public int compare(String str1, String str2) {
+
+				return str1.compareTo(str2);
+			}
+		});
+
+		for (int i = 0; i < dateList.size(); i++) {
+
+			String oddEvenDate = dateList.get(i); // 所有考试日期
+
+			if (oddEvenDate.equals(date)) {
+
+				if ((i + 1) % 2 != 0) { // 当前考试日是奇数
+
+					Bean busyKsOdd = new Bean();// 已安排考生
+
+					for (Object key : res.getCcAMPM().keySet()) {
+
+						if (key.toString().indexOf("^" + oddEvenDate) > -1) {
+
+							Bean busyZw = busyZwBean.getBean(key);
+
+							for (Object zwkey : busyZw.keySet()) {
+
+								String ucode = busyZw.getBean(zwkey).getStr("U_CODE");
+
+								busyKsOdd.set(ucode, "");
+							}
+						}
+					}
+
+					for (Object time : filtBean.keySet()) { // 遍历考试时长
+
+						log.error(curentKey + "-奇前-------------time:" + time + "=" + filtBean.getBean(time).size());
+					}
+
+					removeR004Ks(filtBean, res, busyKsOdd, kcId, true);
+
+					for (Object time : filtBean.keySet()) { // 遍历考试时长
+
+						log.error(curentKey + "-奇后-------------time:" + time + "=" + filtBean.getBean(time).size());
+					}
+
+				} else if ((i + 1) % 2 == 0) { // 当前考试日是偶数
+
+					Bean yesterdayBusyKs = new Bean(); // 昨天安排的考生
+
+					String yesterday = DateUtils.getCertainDate(date, -1); // 昨天日期
+
+					for (Object key : res.getCcAMPM().keySet()) {
+
+						if (key.toString().indexOf("^" + yesterday) > -1) {
+
+							Bean busyZw = busyZwBean.getBean(key); // 昨天考场安排
+
+							for (Object zwkey : busyZw.keySet()) {
+
+								String ucode = busyZw.getBean(zwkey).getStr("U_CODE");
+
+								yesterdayBusyKs.set(ucode, "");
+							}
+						}
+					}
+
+					for (Object time : filtBean.keySet()) { // 遍历考试时长
+
+						log.error(curentKey + "-偶前-------------time:" + time + "=" + filtBean.getBean(time).size());
+					}
+
+					removeR004Ks(filtBean, res, yesterdayBusyKs, kcId, false);
+
+					for (Object time : filtBean.keySet()) { // 遍历考试时长
+
+						log.error(curentKey + "-偶后-------------time:" + time + "=" + filtBean.getBean(time).size());
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 移除网点考生
+	 * 
+	 * @param filtBean
+	 * @param res
+	 * @param busyKs
+	 * @param kcId
+	 * @param delFree
+	 *            true:删除未安排考生/false:删除已安排考生
+	 */
+	private static void removeR004Ks(Bean filtBean, KcapResource res, Bean busyKs, String kcId, boolean delFree) {
+
+		Bean allbranch = res.getBranchBean(); // 所有网点
+
+		Bean kcjg = res.getKcOrgBean().getBean(kcId); // 考场的关联机构
+
+		for (Object jg : kcjg.keySet()) { // 遍历关联机构
+
+			Bean branchJG = allbranch.getBean(jg); // 某机构下的网点
+
+			for (Object key : branchJG.keySet()) { // 遍历机构下的网点
+
+				Bean branchKs = branchJG.getBean(key); // 某网点考生
+
+				if (!branchKs.isEmpty() && branchKs.size() > 1) { // 网点考生人数大于1
+
+					int branchBusySize = 0; // 网点下已安排考生数
+
+					int branchFreeSize = 0; // 网点下未安排考生数
+
+					Bean branchFreeKs = new Bean();
+
+					Bean branchBusyKs = new Bean();
+
+					for (Object uKey : branchKs.keySet()) {
+
+						if (busyKs.containsKey(uKey)) {
+
+							branchBusySize++;
+
+							branchBusyKs.set(uKey, "");
+
+						} else {
+
+							branchFreeSize++;
+
+							branchFreeKs.set(uKey, "");
+						}
+					}
+
+					if (branchBusySize >= branchFreeSize && branchFreeSize > 0) { // 网点下已安排考生大于未安排考生,不在继续安排该网点考生
+
+						try {
+
+							Bean cloneFiltBean = (Bean) filtBean.clone();
+
+							for (Object time : cloneFiltBean.keySet()) { // 遍历考试时长
+
+								Bean timeBean = (Bean) cloneFiltBean.getBean(time).clone();
+
+								for (Object user : timeBean.keySet()) { // 遍历时长下考生bean
+
+									if (delFree) {
+
+										if (branchFreeKs.containsKey(user)) {// 移除该网点未安排考生
+
+											filtBean.getBean(time).remove(user);
+
+											log.error("移除----------------------------------------time:" + time + "="
+													+ user);
+										}
+									} else {
+
+										if (branchBusyKs.containsKey(user)) { // 移除该网点已安排考生
+
+											filtBean.getBean(time).remove(user);
+
+											log.error("移除----------------------------------------time:" + time + "="
+													+ user);
+										}
+									}
+								}
+							}
+						} catch (Exception e) {
+
+							log.error(e.getMessage(), e);
+						}
+					}
+				}
+			} // 遍历机构下的网点
+		} // 遍历关联机构
 	}
 
 	/**
@@ -557,7 +833,7 @@ public class KcapMatch {
 	 * @param freeZw
 	 * @param busyZwBean
 	 * @param filtBean
-	 *            {考生ID:考生bean}
+	 *            {考试时长：考生Bean{考生ID:考试list}}
 	 */
 	private static Bean filtR005(Bean freeZw, Bean busyZwBean, Bean filtBean) {
 
@@ -843,7 +1119,7 @@ public class KcapMatch {
 				String type = obj.getString("direction");
 
 				if (!Strings.isBlank(type) && !res.getSpOrgKsBean().isEmpty()) {
-					
+
 					Bean cloneFiltBean = (Bean) filtBean.clone();
 
 					filt = filtR008Ks(freeZw, res, cloneFiltBean, type);
@@ -904,7 +1180,7 @@ public class KcapMatch {
 		Bean temp = new Bean();
 
 		Bean spOrgKsBean = res.getSpOrgKsBean();
-		
+
 		Bean cloneFiltBean = (Bean) filtBean.clone();
 
 		for (Object time : cloneFiltBean.keySet()) { // 遍历考试时长
@@ -921,18 +1197,18 @@ public class KcapMatch {
 
 					if ("forward".equals(type)) { // forward靠前
 
-						String before = DateUtils.getCertainDate(date, 1); // 明天日期
+						String tomorrow = DateUtils.getCertainDate(date, 1); // 明天日期
 
-						if (ccBean.containsKey(before)) { // 判断今天是否靠前
+						if (ccBean.containsKey(tomorrow)) { // 判断今天是否靠前
 
 							uTemp.set(user, timeBean.get(user));
 						}
 
 					} else if ("back".equals(type)) { // back靠后
 
-						String after = DateUtils.getCertainDate(date, -1); // 昨天日期
+						String yesterday = DateUtils.getCertainDate(date, -1); // 昨天日期
 
-						if (ccBean.containsKey(after)) { // 判断今天是否靠后
+						if (ccBean.containsKey(yesterday)) { // 判断今天是否靠后
 
 							uTemp.set(user, timeBean.get(user));
 						}

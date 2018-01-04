@@ -76,6 +76,8 @@ public class RoleUtil {
 						
 						if (!Strings.isBlank(orgs) && !orgs.equals("0")) {
 							
+							orgs = Strings.removeSame(orgs);
+							
 							String[] orgsArgs = orgs.split(",");
 							
 							Arrays.sort(orgsArgs);
