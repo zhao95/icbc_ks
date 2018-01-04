@@ -55,36 +55,35 @@ public class ImpUtils {
     /**
      * 在excel中设置失败信息，返回fileId
      *
-     * @param fileId      fileId
      * @param rowBeanList 通过getDataFromXls返回的rowBeanList
      * @return errorFileId
      * @throws WriteException 写入失败
      */
-    public static void saveErrorAndReturnErrorFile(int i ,WritableSheet wSheet,Sheet sheet, List<Bean> rowBeanList) throws WriteException {
+    public static void saveErrorAndReturnErrorFile(int i, WritableSheet wSheet, Sheet sheet, List<Bean> rowBeanList) throws WriteException {
         OutBean outBean = new OutBean();
         //获取下载excel  sheet页
 //                final int titleRowNum = getImpTitleRowNum();
-                //取得第一行数据，这里非常重要，只要遇到空的cell，则忽略且不再往后处理
+        //取得第一行数据，这里非常重要，只要遇到空的cell，则忽略且不再往后处理
 //                int columns = sheet.getColumns();
 //                Cell[] titleCell = sheet.getRow(titleRowNum);
-                int cols = sheet.getColumns();
-                for (int j = 0; j < rowBeanList.size(); j++) {
-                    Bean bean = rowBeanList.get(j);
-                    WritableFont font = new WritableFont(WritableFont.COURIER);
-                    font.setColour(Colour.GREEN);
-                    WritableCellFormat format = new WritableCellFormat(font);
-                    format.setAlignment(Alignment.CENTRE);
-                    if (StringUtils.isEmpty(bean.getStr(ERROR_NAME))) {//没有出现错误信息
-                       Label label = new Label(cols, i+j-rowBeanList.size()+1, "成功", format);
-                       wSheet.addCell(label);
-                    } else {
-                        font.setColour(Colour.RED);
-                        Label label = new Label(cols, i+j-rowBeanList.size()+1, "失败", format);
-                        wSheet.addCell(label);
-                        Label label2 = new Label(cols + 1, i+j-rowBeanList.size()+1, bean.getStr(ERROR_NAME), format);
-                        wSheet.addCell(label2);
-                    }
-                }
+        int cols = sheet.getColumns();
+        for (int j = 0; j < rowBeanList.size(); j++) {
+            Bean bean = rowBeanList.get(j);
+            WritableFont font = new WritableFont(WritableFont.COURIER);
+            font.setColour(Colour.GREEN);
+            WritableCellFormat format = new WritableCellFormat(font);
+            format.setAlignment(Alignment.CENTRE);
+            if (StringUtils.isEmpty(bean.getStr(ERROR_NAME))) {//没有出现错误信息
+                Label label = new Label(cols, i + j - rowBeanList.size() + 1, "成功", format);
+                wSheet.addCell(label);
+            } else {
+                font.setColour(Colour.RED);
+                Label label = new Label(cols, i + j - rowBeanList.size() + 1, "失败", format);
+                wSheet.addCell(label);
+                Label label2 = new Label(cols + 1, i + j - rowBeanList.size() + 1, bean.getStr(ERROR_NAME), format);
+                wSheet.addCell(label2);
+            }
+        }
     }
 
     /**
@@ -167,10 +166,10 @@ public class ImpUtils {
      * @return outBean  rowBeans(List<Bean>)
      * @throws TipException 文件不存在，请重试 / Excel文件解析错误，请校验！
      */
-    public static OutBean getDataFromXls(String fileId,ParamBean paramBean) {
-    	 List<Bean> result = new ArrayList<Bean>();
-    	 int successnum = 0;
-    	 int failernum = 0;
+    public static OutBean getDataFromXls(String fileId, ParamBean paramBean) {
+        List<Bean> result = new ArrayList<Bean>();
+        int successnum = 0;
+        int failernum = 0;
         String servId = paramBean.getStr(SERV_ID);
         if (StringUtils.isBlank(servId)) {
             servId = paramBean.getServId();//服务名
@@ -180,26 +179,34 @@ public class ImpUtils {
         InputStream in = null;
         OutputStream os = null;
         TempFile tempFile = null;
-        Bean fileBean=null;
-        Bean  newFileBean  = null;
+        Bean fileBean = null;
+        Bean newFileBean = null;
         try {
-             fileBean = FileMgr.getFile(fileId);
+            fileBean = FileMgr.getFile(fileId);
             in = FileMgr.download(fileBean);
         } catch (Exception e) {
             throw new TipException("文件不存在，请重试");
         }
         Workbook workbook = null;
         try {
-            workbook = Workbook.getWorkbook(in);
-            Sheet sheet1 = workbook.getSheet(0);
-            
-            tempFile = new TempFile(TempFile.Storage.SMART);
-            os = tempFile.getOutputStream();
+            Sheet sheet1;
+            WritableSheet wSheet;
+            WritableWorkbook wbook;
+            try {
+                workbook = Workbook.getWorkbook(in);
+                sheet1 = workbook.getSheet(0);
 
-            log.debug("imp---->open file 1");
-            WritableWorkbook wbook = Workbook.createWorkbook(os, workbook);
-            WritableSheet wSheet = wbook.getSheet(0);
-            
+                tempFile = new TempFile(TempFile.Storage.SMART);
+                os = tempFile.getOutputStream();
+
+                log.debug("imp---->open file 1");
+                wbook = Workbook.createWorkbook(os, workbook);
+                wSheet = wbook.getSheet(0);
+
+            } catch (Exception e) {
+                throw new TipException("Excel文件解析错误，请校验！");
+            }
+
             int rows = sheet1.getRows();
             //rows大于500时 分批次  
             //rows小于500一次导出
@@ -212,42 +219,42 @@ public class ImpUtils {
                     rowBean.set(COL_NAME + "" + (j + 1), content);
                 }
                 result.add(rowBean);
-                
-                if(rows<500){
-                	if(i==rows-1){
-                		//每五百条进行  一次轮询   对数据进行处理
-                		paramBean.set(DATA_LIST, result);
-                		Bean resultres = ServMgr.act(servId,method,paramBean);
-                		List<Bean> rowBeanList = resultres.getList(ALL_LIST);
-                		List<Object> successlist = resultres.getList("successlist");
-                		successnum+=successlist.size();
-                		failernum+=rowBeanList.size()-successlist.size();
-                		saveErrorAndReturnErrorFile(i,wSheet,sheet1,rowBeanList);
-                	}
-                }else if(rows>=500){
-                	if(result.size()==500){
-                		//每五百条进行  一次轮询   对数据进行处理
-                    	paramBean.set(DATA_LIST, result);
-                    	Bean resultres = ServMgr.act(servId,method,paramBean);
-                    	List<Bean> rowBeanList = resultres.getList(ALL_LIST);
-                    	List<Object> successlist = resultres.getList("successlist");
-                    	successnum+=successlist.size();
-                    	failernum+=rowBeanList.size()-successlist.size();
-                    	saveErrorAndReturnErrorFile(i,wSheet,sheet1,rowBeanList);
-                    	result = null;
-                    	result= new ArrayList<Bean>();
-                	}else if(i==rows-1){
-                		//每五百条进行  一次轮询   对数据进行处理
-                    	paramBean.set(DATA_LIST, result);
-                    	Bean resultres = ServMgr.act(servId,method,paramBean);
-                    	List<Bean> rowBeanList = resultres.getList(ALL_LIST);
-                    	List<Object> successlist = resultres.getList("successlist");
-                    	successnum+=successlist.size();
-                    	failernum+=rowBeanList.size()-successlist.size();
-                    	saveErrorAndReturnErrorFile(i,wSheet,sheet1,rowBeanList);
-                    	result = null;
-                    	result= new ArrayList<Bean>();
-                	}
+
+                if (rows < 500) {
+                    if (i == rows - 1) {
+                        //每五百条进行  一次轮询   对数据进行处理
+                        paramBean.set(DATA_LIST, result);
+                        Bean resultres = ServMgr.act(servId, method, paramBean);
+                        List<Bean> rowBeanList = resultres.getList(ALL_LIST);
+                        List<Object> successlist = resultres.getList("successlist");
+                        successnum += successlist.size();
+                        failernum += rowBeanList.size() - successlist.size();
+                        saveErrorAndReturnErrorFile(i, wSheet, sheet1, rowBeanList);
+                    }
+                } else if (rows >= 500) {
+                    if (result.size() == 500) {
+                        //每五百条进行  一次轮询   对数据进行处理
+                        paramBean.set(DATA_LIST, result);
+                        Bean resultres = ServMgr.act(servId, method, paramBean);
+                        List<Bean> rowBeanList = resultres.getList(ALL_LIST);
+                        List<Object> successlist = resultres.getList("successlist");
+                        successnum += successlist.size();
+                        failernum += rowBeanList.size() - successlist.size();
+                        saveErrorAndReturnErrorFile(i, wSheet, sheet1, rowBeanList);
+                        result = null;
+                        result = new ArrayList<Bean>();
+                    } else if (i == rows - 1) {
+                        //每五百条进行  一次轮询   对数据进行处理
+                        paramBean.set(DATA_LIST, result);
+                        Bean resultres = ServMgr.act(servId, method, paramBean);
+                        List<Bean> rowBeanList = resultres.getList(ALL_LIST);
+                        List<Object> successlist = resultres.getList("successlist");
+                        successnum += successlist.size();
+                        failernum += rowBeanList.size() - successlist.size();
+                        saveErrorAndReturnErrorFile(i, wSheet, sheet1, rowBeanList);
+                        result = null;
+                        result = new ArrayList<Bean>();
+                    }
                 }
             }
             log.debug("imp---->close File");
@@ -256,10 +263,12 @@ public class ImpUtils {
             wbook.close();
 
             fileBean.set("FILE_NAME", fileBean.getStr("DIS_NAME") + "-导入结果.xls");
-             newFileBean = saveTempFile(fileBean, tempFile);
+            newFileBean = saveTempFile(fileBean, tempFile);
 
-        } catch (Exception e) {
-            throw new TipException("Excel文件解析错误，请校验！");
+        } catch (WriteException e) {
+            throw new RuntimeException("导入结果填写错误");
+        } catch (IOException e) {
+            throw new RuntimeException("导入结果填写错误");
         } finally {
             if (workbook != null) {
                 workbook.close();
@@ -269,6 +278,6 @@ public class ImpUtils {
             FileMgr.deleteFile(fileId);
             tempFile.destroy();
         }
-        return new OutBean().set("oknum",successnum).set("failernum", failernum).set("fileid", newFileBean.getId());
+        return new OutBean().set("oknum", successnum).set("failernum", failernum).set("fileid", newFileBean.getId());
     }
 }

@@ -111,7 +111,7 @@ public class BmGroupServ extends CommonServ {
                 }
                 bean.set("USER_DEPT_NAME", name);
                 //保存一二级机构
-                String deptCode = UserMgr.getUser(colCode).getDeptBean().getCode();//部门编码
+                String deptCode = UserMgr.getUser(userBean.getStr("USER_CODE")).getDeptBean().getCode();//部门编码
                 String[] deptArr = OrgMgr.getDept(deptCode).getCodePath().split("\\^");//五级机构
                 for (int i = 0; i < deptArr.length; i++) {
                     // 最后一个 deptcodename
