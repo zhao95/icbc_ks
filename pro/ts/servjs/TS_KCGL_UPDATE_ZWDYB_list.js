@@ -25,7 +25,7 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 	    			bean["ZW_ZWH_SJ"] = data.ZW_ZWH_SJ;
 	    			bean["ZW_IP"] = data.ZW_IP;
 	    			bean["ZW_DESC"] = data.ZW_DESC;
-	    			bean["ZW_ID"] = data.ZW_ID;
+	    			bean["ROOT_ID"] = data.ZW_ID;
 	    			FireFly.doAct("TS_KCGL_UPDATE_ZWDYB","save",bean);
 	    		});
 	    	}

@@ -137,9 +137,11 @@ public class KcglShServ extends CommonServ {
 		    dataBean.remove(actionCode);
 		    dataBean.remove("UPDATE_ID");
 		    dataBean.set("KC_ID", kcId);
+		    dataBean.setId(dataBean.getStr("ROOT_ID"));
+		    dataBean.remove("ROOT_ID");
 		    ServDao.save(tables2[i], dataBean);
 		}else if (action.equals("delete")) {
-		    ServDao.delete(tables2[i], dataBean.getId());
+		    ServDao.delete(tables2[i], dataBean.getStr("ROOT_ID"));
 		}
 	    }
 	}

@@ -27,7 +27,7 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 	    			bean["GLY_PHONE"] = data.GLY_PHONE;
 	    			bean["GLY_MOBILE"] = data.GLY_MOBILE;
 	    			bean["GLY_EMAIL"] = data.GLY_EMAIL;
-	    			bean["GLY_ID"] = data.GLY_ID;
+	    			bean["ROOT_ID"] = data.GLY_ID;
 	    			FireFly.doAct("TS_KCGL_UPDATE_GLY","save",bean);
 	    		});
 	    	}

@@ -24,7 +24,7 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 	    			bean["JKIP_ACTION"] = "update";//引入数据默认为修改
 	    			bean["JKIP_IP"] = data.JKIP_IP;
 	    			bean["IPS_DESC"] = data.IPS_DESC;
-	    			bean["JKIP_ID"] = data.JKIP_ID;
+	    			bean["ROOT_ID"] = data.JKIP_ID;
 	    			FireFly.doAct("TS_KCGL_UPDATE_JKIP","save",bean);
 	    		});
 	    	}

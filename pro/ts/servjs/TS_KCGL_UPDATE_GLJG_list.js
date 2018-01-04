@@ -23,7 +23,7 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 	    			bean["JG_ACTION"] = "update";//引入数据默认为修改
 	    			bean["JG_NAME"] = data.JG_NAME;
 	    			bean["JG_CODE"] = data.JG_CODE;
-	    			bean["JG_ID"] = data.JG_ID;
+	    			bean["ROOT_ID"] = data.JG_ID;
 	    			FireFly.doAct("TS_KCGL_UPDATE_GLJG","save",bean);
 	    		});
 	    	}

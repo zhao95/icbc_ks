@@ -25,7 +25,7 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 	    			bean["IPS_TITLE"] = data.IPS_TITLE;
 	    			bean["IPS_SCOPE"] = data.IPS_SCOPE;
 	    			bean["IPS_DESC"] = data.IPS_DESC;
-	    			bean["IPS_ID"] = data.IPS_ID;
+	    			bean["ROOT_ID"] = data.IPS_ID;
 	    			FireFly.doAct("TS_KCGL_UPDATE_IPSCOPE","save",bean);
 	    		});
 	    	}

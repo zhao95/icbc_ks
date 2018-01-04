@@ -25,7 +25,7 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 	    			bean["IPZ_IP"] = data.IPZ_IP;
 	    			bean["IPZ_ZWH"] = data.IPZ_ZWH;
 	    			bean["IPZ_DESC"] = data.IPZ_DESC;
-	    			bean["IPZ_ID"] = data.IPZ_ID;
+	    			bean["ROOT_ID"] = data.IPZ_ID;
 	    			FireFly.doAct("TS_KCGL_UPDATE_IPZWH","save",bean);
 	    		});
 	    	}
