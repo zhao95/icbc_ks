@@ -58,13 +58,13 @@
       </div>
 
       <!-- foot_text (矩形) -->
-       <div class="ax_default box_3" id="u3555" data-label="foot_text"> 
+ <!--       <div class="ax_default box_3" id="u3555" data-label="foot_text"> 
         <div id="u3555_div"></div>
-        <!-- Unnamed () -->
+        Unnamed ()
         <div class="text" id="u3556" style="display: none; visibility: hidden;">
           <p><span></span></p>
         </div>
-      </div>
+      </div> -->
 
       <!-- Unnamed (矩形) -->
       <div class="ax_default box_1" id="u3557">
@@ -120,13 +120,13 @@
       </div>
 
       <!-- Unnamed (矩形) -->
-      <div class="ax_default label" id="u3569">
+  <!--     <div class="ax_default label" id="u3569">
         <div id="u3569_div"></div>
-        <!-- Unnamed () -->
+        Unnamed ()
         <div class="text" id="u3570">
           <p><span>建议使用 1024 x 768 及以上分辨率浏览</span></p>
         </div>
-      </div>
+      </div> -->
 
       <!-- Unnamed (矩形) u3572-->
       <div class="ax_default _文本" id="u3571">
