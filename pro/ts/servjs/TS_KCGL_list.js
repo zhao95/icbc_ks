@@ -279,8 +279,11 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 });
 
 
+/*****************导出导入***************************/
 
-
+_viewer.getBtn("imp").unbind("click").bind("click",function() {
+	
+});
 
 
 
