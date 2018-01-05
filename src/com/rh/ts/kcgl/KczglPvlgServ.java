@@ -96,8 +96,6 @@ public class KczglPvlgServ extends CommonServ {
         /***********/
         String CTLG_PCODE = paramBean.getStr("CTLG_PCODE");
         
-        
-        
         /*************/
         beforeImp(paramBean); //执行监听方法
         String servId = paramBean.getServId();
@@ -159,6 +157,10 @@ public class KczglPvlgServ extends CommonServ {
                 for(int i = beginColNum; i < sheet.getRows(); i++) {
                     Cell [] cell = sheet.getRow(i);
                     Bean data = new Bean();
+                    /****************/
+                    data.set("CTLG_PCODE", CTLG_PCODE);
+                    data.set("SERV_ID", servId);
+                    /******************/
                     for(int j = 0; j < cell.length && j < cols; j++) {
                         if (itemMaps[j] != null) {
                             String value = sheet.getCell(j, i).getContents();
