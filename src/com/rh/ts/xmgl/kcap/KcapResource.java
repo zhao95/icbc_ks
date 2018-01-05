@@ -124,11 +124,8 @@ public class KcapResource {
 		// 考场座位安排
 		loadZw(xmId, "");
 
-		// 网点
-		loadBranch(xmId, "");
-
 		// 加载其他资源
-		loadOther();
+		loadOther(xmId, "");
 
 		// showResLog();
 	}
@@ -152,11 +149,8 @@ public class KcapResource {
 		// 考场座位安排
 		loadZw(xmId, odept);
 
-		// 网点
-		loadBranch(xmId, odept);
-
 		// 加载其他资源
-		loadOther();
+		loadOther(xmId, odept);
 
 		// showResLog();
 	}
@@ -360,7 +354,7 @@ public class KcapResource {
 		}
 	}
 
-	private void loadOther() {
+	private void loadOther(String xmId, String odept) {
 
 		try {
 
@@ -382,8 +376,9 @@ public class KcapResource {
 
 					fitSpOrgKsBean(rule);
 
-				} else if (KcapRuleEnum.R009.getCode().equals(ruleCode)) { // 特定考试仅限于省分行安排
-
+				} else if (KcapRuleEnum.R004.getCode().equals(ruleCode)) { // 同一网点级机构考生均分安排
+					
+					loadBranch(xmId, odept);
 				}
 			}
 		} catch (
