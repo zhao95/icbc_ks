@@ -770,13 +770,23 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 				
 		}*/
 		List<Bean> query = Transaction.getExecutor().query(sql);	
-		for (Bean bean : query) {
-			qz += "," + bean.getStr("G_ID");
+		for(int i=0;i<query.size();i++){
+			if("".equals(qz)){
+				if(i==0){
+					qz+=query.get(i).getStr("G_ID")+"'";
+				}else{
+					qz+=",'"  + query.get(i).getStr("G_ID")+"'";
+				}
+			}else{
+					qz+=",'" + query.get(i).getStr("G_ID")+"'";
+			}
 		}
+		
 		if (!Strings.isBlank(qz)) {
 			// 去掉重复群组
 			qz = Strings.removeSame(qz);
 		}
+		
 		String[] qzArray1 = qz.split(",");
 		String servId = "TS_BMSH_STAY";
 		String where1 = paramBean.getStr("where");
@@ -812,13 +822,13 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		}*/
 		//包含本人所在群组的  项目
 		//进行中
-		String sql1="select xm_id from (select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END and a.xm_state=1 and a.xm_name like '%"+xmname+"%' order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id)z where z.g_id in("+sql+")";
+		String sql1="select xm_id from (select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='进行中' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END and a.xm_state=1 and a.xm_name like '%"+xmname+"%' order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id)z where z.g_id in("+qz+")";
 		//未开始
-		String sql2="select xm_id from (select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END and a.xm_state=1 and a.xm_name like '%"+xmname+"%' order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id)z where z.g_id in("+sql+")";
+		String sql2="select xm_id from (select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where c.xm_sz_type='已结束' )d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END and a.xm_state=1 and a.xm_name like '%"+xmname+"%' order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id)z where z.g_id in("+qz+")";
 		//已结束
-		String sql3="select xm_id from (select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='' or c.xm_sz_type='未开启' ))d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END and a.xm_state=1 and a.xm_name like '%"+xmname+"%' order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id)z where z.g_id in("+sql+")";
+		String sql3="select xm_id from (select m.*,n.g_id from (select a.*,d.bm_end from ts_xmgl a left join (select b.bm_start,b.bm_end,b.xm_id,c.xm_sz_type from TS_XMGL_BMGL b left join TS_XMGL_SZ c ON b.xm_sz_id = c.xm_sz_id where (c.xm_sz_type='' or c.xm_sz_type='未开启' ))d  on a.xm_id = d.xm_id where '"+datestr+"' between  d.BM_START AND d.BM_END and a.xm_state=1 and a.xm_name like '%"+xmname+"%' order by d.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id)z where z.g_id in("+qz+")";
 		//其它
-		String sql4="select xm_id from (select m.*,n.g_id from (select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END AND ('"+datestr+"'>b.BM_END OR '"+datestr+"'<b.BM_START ) and a.xm_state=1 and a.xm_name like '%"+xmname+"%' order by b.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id)z where z.g_id in("+sql+")";
+		String sql4="select xm_id from (select m.*,n.g_id from (select a.*,b.bm_end from ts_xmgl a left join ts_xmgl_bmgl b on a.xm_id = b.xm_id where '"+datestr+"' between  b.BM_TZ_START AND b.BM_TZ_END AND ('"+datestr+"'>b.BM_END OR '"+datestr+"'<b.BM_START ) and a.xm_state=1 and a.xm_name like '%"+xmname+"%' order by b.bm_end ASC)m left join TS_BM_GROUP n on m.xm_id = n.xm_id)z where z.g_id in("+qz+")";
 		/*List<Bean> list = Transaction.getExecutor().query(sql1);
 		List<Bean> list2 = Transaction.getExecutor().query(sql2);
 		List<Bean> list3 = Transaction.getExecutor().query(sql3);

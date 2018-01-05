@@ -46,10 +46,9 @@ public class BmGroupServ extends CommonServ {
             String groupCode = user.getStr("G_ID");
 
             if (Strings.isBlank(groupCodes)) {
-
-                groupCodes = groupCode;
+                groupCodes = "'"+groupCode+"'";
             } else {
-                groupCodes += "," + groupCode;
+                groupCodes += ",'" + groupCode+"'";
             }
         }
 

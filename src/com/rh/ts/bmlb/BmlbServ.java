@@ -1939,7 +1939,7 @@ public class BmlbServ extends CommonServ {
 		String type = paramBean.getStr("type");
 			Bean find = ServDao.find("TS_XMGL_BM_KSLBK", kslbk_id);
 			if(find!=null){
-				if("02200401".equals(find.getStr("KSLBK_MKCODE"))||"02200402".equals(find.getStr("KSLBK_MKCODE"))){
+				if("02200401".equals(find.getStr("KSLBK_MKCODE"))){
 				for(int i =0;i<typelist.length();i++){
 					
 					if(!typelist.getJSONObject(i).getString("mk").equals(find.getStr("KSLBK_MK"))){
