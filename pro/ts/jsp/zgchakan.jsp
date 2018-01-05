@@ -131,8 +131,8 @@
        				<td width="16.5%"><%=user_cmpy_date%></td>
        				<td width="16.5%">办公电话</td>
        				<td width="16.5%"><%=user_office_phone %></td>
-       				<td width="16.5%">手机号码(<span style="color:red;">融e联绑定的手机号</span>)</td>
-       				<td width="17.5%"><span id="user_mobile1" value=""></span></td>
+       				<td width="16.5%">手机号码</td>
+       				<td width="17.5%"></td>
        			</tr>
        		</table>
        		</div>

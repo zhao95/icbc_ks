@@ -155,8 +155,7 @@ position: absolute;
 							<td width="16.5%"><%=user_office_phone %></td>
 							<td width="16.5%">手机号码
 							</td>
-							<td width="17.5%"><input type="text" id="user_mobile1"
-								value=""></td>
+							<td width="17.5%"></td>
 						</tr>
        		</table>
        		<table border="1" align="center" style="width: 90%;">

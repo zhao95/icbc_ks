@@ -504,7 +504,7 @@ if(userBean != null) {
 				<div class="modal-header" style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
 						请选择文件
 				</div>
-				<div style="position:absolute;padding-left:30px;padding-top:30px;color:gray">请导入要上传的  Excel</div>
+				<div style="position:absolute;padding-left:30px;padding-top:30px;color:gray">请导入要上传的  Excel&nbsp;&nbsp;&nbsp;&nbsp;<a style="color:lightseagreen" href="/ts/imp_template/报名审核导入模板.xls">点击下载导入模板</a></div>
 				<div id="uploadfile"  style="width:200px;position:relative;top:60px;color:lightseagreen;font-size:20px"><form action="/file" name="formup" id="excleupload11" class="form form-horizontal" style="width:200%"></form></div>
 				<div class="modal-footer" style="text-align:center;width:400px;">
 					<button id="excelimp" type="button" class="btn btn-primary" style="height:35px;background:lightseagreen;width:80px">导入</button>
