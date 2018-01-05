@@ -954,7 +954,6 @@ var listPage = function () {
  	}
  	
  	 var zdornot = $("#zdornot2").children('option:selected').val();
- 	 alert(zdornot);
 	 if(zdornot!="全部"){
 	 		if(zdornot=="1"){
 	 			where7 = " AND SH_OTHER IS null ";

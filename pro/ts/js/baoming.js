@@ -266,29 +266,29 @@ global.Fn.CascadeSelect = function (opt) {
             var nextIndex = opt.targets.indexOf($this.attr('id')) + 1;
             var $next = $("#" + opt.targets[nextIndex]);
             var curKeyValue = $this.find('option:checked').attr(opt.primaryKey);
-
             var nextVal = $next.val();
             var $nextItems = $next.find('option');
-//				debugger;
             $next.find('option[' + opt.relativeKey + '="' + curKeyValue + '"]').each(function () {
                 if ($(this).parent().is("span")) {
                     $(this).unwrap();
                 }
             });
             $next.find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').each(function () {
+            	
                 if (!$(this).parent().is("span")) {
                     $(this).wrap("<span style='display:none'></span>");
                 }
             });
-            $("#" + opt.targets[nextIndex + 1]).find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').each(function () {
-                if (!$(this).parent().is("span")) {
-                    $(this).wrap("<span style='display:none'></span>");
-                }
-            });
-            $($next.find('option[value=""]')).prop("selected","selected");
-            $($next.find('option[value=""]')).prop("selected","selected");
+        	   $("#" + opt.targets[nextIndex + 1]).find('option[' + opt.relativeKey + '!="' + curKeyValue + '"]').each(function () {
+        		   if (!$(this).parent().is("span")) {
+        			   $(this).wrap("<span style='display:none'></span>");
+        		   }
+        	   });
+          
             $($next.find('option[value=""]')).unwrap();
             $($("#" + opt.targets[nextIndex + 1]).find('option[value=""]')).unwrap();
+            $($next.find('option[value=""]')).prop("selected","selected");
+            $($next.find('option[value=""]')).prop("selected","selected");
 
             //如果下一项的option处于显示状态，则自动选中，否则显示请选择  第二级一样
             /* $next.find("option").attr('selected', false)
