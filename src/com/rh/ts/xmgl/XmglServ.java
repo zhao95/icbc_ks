@@ -773,7 +773,7 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 		for(int i=0;i<query.size();i++){
 			if("".equals(qz)){
 				if(i==0){
-					qz+=query.get(i).getStr("G_ID")+"'";
+					qz+="'"+query.get(i).getStr("G_ID")+"'";
 				}else{
 					qz+=",'"  + query.get(i).getStr("G_ID")+"'";
 				}
