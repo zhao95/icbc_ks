@@ -26,6 +26,7 @@ public class CccsServ extends CommonServ {
     private static final String SERV_ID3 = "TS_KCZGL_GROUP";
     private static final String SERV_ID4 = "TS_KCZGL_KCGL";
     
+    private static final int ONETIME_EXP_NUM = 20000;
     //考场关联机构
     private static final String VIEW_GLJG = "TS_KCGL_GLJG_V";
     //场次测算
@@ -611,4 +612,50 @@ public class CccsServ extends CommonServ {
 	outBean.set("ITEM_NAME", itemName);
 	return outBean;
     }
+    
+    public OutBean exp(ParamBean paramBean) {
+   	String servId = paramBean.getServId();
+   	ServDefBean serv = ServUtils.getServDef(servId);
+   	long count = 0;
+   	long times = 0;
+   	paramBean.setQueryPageShowNum(ONETIME_EXP_NUM); // 设置每页最大导出数据量
+   	beforeExp(paramBean); // 执行监听方法
+   	if (paramBean.getId().length() > 0) { // 支持指定记录的导出（支持多选）
+   	    String searchWhere = " and " + serv.getPKey() + " in ('" + paramBean.getId().replaceAll(",", "','") + "')";
+   	    paramBean.setQuerySearchWhere(searchWhere);
+   	}
+   	ExportExcel expExcel = new ExportExcel(serv);
+   	try {
+   	    OutBean outBean = queryExp(paramBean);
+   	    count = outBean.getCount();
+   	    // 导出第一次查询数据
+   	    paramBean.setQueryPageNowPage(1); // 导出当前第几页
+   	    afterExp(paramBean, outBean); // 执行导出查询后扩展方法
+   	    LinkedHashMap<String, Bean> cols = outBean.getCols();
+   	    cols.remove("BUTTONS");
+   	    expExcel.createHeader(cols);
+   	    expExcel.appendData(outBean.getDataList(), paramBean);
+
+   	    // 存在多页数据
+   	    if (ONETIME_EXP_NUM < count) {
+   		times = count / ONETIME_EXP_NUM;
+   		// 如果获取的是整页数据
+   		if (ONETIME_EXP_NUM * times == count && count != 0) {
+   		    times = times - 1;
+   		}
+   		for (int i = 1; i <= times; i++) {
+   		    paramBean.setQueryPageNowPage(i + 1); // 导出当前第几页
+   		    OutBean out = query(paramBean);
+   		    afterExp(paramBean, out); // 执行导出查询后扩展方法
+   		    expExcel.appendData(out.getDataList(), paramBean);
+   		}
+   	    }
+   	    expExcel.addSumRow();
+   	} catch (Exception e) {
+   	    log.error("导出Excel文件异常" + e.getMessage(), e);
+   	} finally {
+   	    expExcel.close();
+   	}
+   	return new OutBean().setOk();
+       }
 }

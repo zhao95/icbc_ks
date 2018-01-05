@@ -11,7 +11,8 @@ $("#TS_KCZGL .rhGrid").find("tr").each(function(index, item) {
 		
 		var abtns =''+	
 		'<a class="rhGrid-td-rowBtnObj" operCode="optZBtn" rowpk="'+dataId+'" style="cursor:pointer">&nbsp组管理&nbsp</a>'+
-//		'<a class="rhGrid-td-rowBtnObj" operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>'+
+// '<a class="rhGrid-td-rowBtnObj" operCode="optDeleteBtn" rowpk="'+dataId+'"
+// style="cursor:pointer">删除&nbsp</a>'+
 		'<a class="rhGrid-td-rowBtnObj" operCode="optCopyBtn" rowpk="'+dataId+'" style="cursor:pointer">复制&nbsp</a>';
 		if(state < 5){
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">垃圾箱&nbsp</a>';
@@ -30,7 +31,7 @@ $("#TS_KCZGL .rhGrid").find("tr").each(function(index, item) {
 	}
 });
 
-//隐藏列表行按钮条
+// 隐藏列表行按钮条
 $(".hoverDiv").bind("mouseleave", function(e){
 	setTimeout(function(){
 		$(".hoverDiv").css('display','none');
@@ -52,27 +53,27 @@ function bindCard(){
 			$("#hoverDiv_"+pkCode).focus();
 		},10);
 	});	
-	//当行查看事件
+	// 当行查看事件
 	jQuery(".hoverDiv [operCode='optLookBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
-//	    _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
+// _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",true);
 		openMyCard(pkCode,true);
 	});
-	//当行编辑事件
+	// 当行编辑事件
 	jQuery(".hoverDiv [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
-//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
+// _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode);
 		openMyCard(pkCode);
 	});
-	//当行删除事件
+	// 当行删除事件
 	jQuery(".hoverDiv [operCode='optDeleteBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
 		rowDelete(pkCode,_viewer);
 	});
-	//复制
+	// 复制
 	jQuery(".hoverDiv [operCode='optCopyBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
@@ -82,18 +83,18 @@ function bindCard(){
 			}
 		});
 	});
-	//放入垃圾箱
+	// 放入垃圾箱
 	jQuery(".hoverDiv [operCode='optTrashBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
 		FireFly.doAct("TS_UTIL","trash",{"servId":_viewer.servId,"pkCodes":pkCode,"stateColCode":"KCZ_STATE","action":"add"},true,false,function(data){
 			if(data._MSG_.indexOf("OK")!= -1){
-//				_viewer.onRefreshGridAndTree();
+// _viewer.onRefreshGridAndTree();
 				window.location.reload();
 			}
 		});
 	});
-	//从垃圾箱收回
+	// 从垃圾箱收回
 	jQuery(".hoverDiv [operCode='optBackTrashBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
@@ -107,7 +108,7 @@ function bindCard(){
 	jQuery(".hoverDiv [operCode='optZBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		$(".hoverDiv").css('display','none');
-//		_viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCZGL_GROUP"});
+// _viewer._openCardView(UIConst.ACT_CARD_MODIFY,pkCode,"",false,{"showTab":"TS_KCZGL_GROUP"});
 	    openMyCard(pkCode,"","TS_KCZGL_GROUP");
 	});
 }
@@ -133,7 +134,7 @@ rh.vi.listView.prototype.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 };
 
-//列表操作按钮 弹dialog
+// 列表操作按钮 弹dialog
 function openMyCard(dataId,readOnly,showTab){
 	var height = jQuery(window).height()-200;
 	var width = jQuery(window).width()-200;
@@ -166,10 +167,10 @@ _viewer.getBtn("ctlgMgr").unbind("click").bind("click",function(event) {
 	Tab.open(options);
 });
 
-//传给后台的数据
+// 传给后台的数据
 /*
-* 业务可覆盖此方法，在导航树的点击事件加载前
-*/
+ * 业务可覆盖此方法，在导航树的点击事件加载前
+ */
 rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	var params = {};
 	var user_pvlg=_viewer._userPvlg[_viewer.servId+"_PVLG"];
@@ -179,7 +180,7 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	_viewer.listClearTipLoad();
 	return flag;
 };
-//重写add方法
+// 重写add方法
 _viewer.getBtn("add").unbind("click").bind("click",function() {
 	var pcodeh = _viewer._transferData["CTLG_PCODE"];
 	if(pcodeh == "" || typeof(pcodeh) == "undefined") {
@@ -206,4 +207,95 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 	cardView.show();
 });
 
+// 重写imp方法
+_viewer.getBtn("imp").unbind("click").bind("click",function() {
+	var pcodeh = _viewer._transferData["CTLG_PCODE"];
+	if(pcodeh == "" || typeof(pcodeh) == "undefined") {
+		alert("请选择添加目录的层级 !");
+		return false;
+	}
+	
+	var config = {"SERV_ID":_viewer.opts.sId, "FILE_CAT":"EXCEL_UPLOAD", "FILENUMBER":1, 
+		"VALUE":5, "TYPES":"*.xls;*.xlsx", "DESC":"导入Excel文件"};
+	var file = new rh.ui.File({
+		"config" : config,"width":"99%"
+	});
+	
+	var importWin = new rh.ui.popPrompt({
+		title:"请选择文件",
+		tip:"请选择要导入的Excel文件：",
+		okFunc:function() {
+			var fileData = file.getFileData();
+			if (jQuery.isEmptyObject(fileData)) {
+				alert("请选择文件上传");
+				return;
+			}
+			var fileId = null;
+			for (var key in fileData) {
+				fileId = key;
+			}
+			if (fileId == null){
+				alert("请选择文件上传");
+				return;
+			}
+			
+			var param = {};
+			param["CTLG_PCODE"] = pcodeh;
+			
+			_viewer._imp(fileId,param);
+			importWin.closePrompt();
+	        // _viewer.refreshGrid();
+			file.destroy();
+		},
+		closeFunc:function() {
+			file.destroy();
+		}
+	});
+
+    var container = _viewer._getImpContainer(event, importWin);
+	container.append(file.obj);
+	file.obj.css({'margin-left':'5px'});
+	file.initUpload();
+
+});
+
+rh.vi.listView.prototype._imp = function(fileId, param) {
+	var data = {"fileId":fileId};
+	if(param) {
+		data = jQuery.extend(data, param);
+	}
+	var _loadbar = new rh.ui.loadbar();
+	_loadbar.show(true);
+	//form提交，需要服务器再返回Excel
+	FireFly.doAct(_viewer.opts.sId, "imp", data, false, true, function(result) {
+		if(result._MSG_.indexOf("ERROR,") == 0) {
+			console.log(result);
+			if(result.FILE_ID) {
+				var msg = "导入文件失败，点击“确定按钮”下载文件。请打开文件查看导入结果。";
+				SysMsg.alert(msg, function(){
+					
+						var url = FireFlyContextPath + "/file/" + result.FILE_ID;
+						window.open(url);
+					
+				});
+			} else {
+				SysMsg.alert(result._MSG_);
+			}
+		} else {
+			
+			if(result.FILE_ID) {
+				var msg = "点击“确定按钮”下载文件。请打开文件查看导入结果。";
+				SysMsg.alert(msg, function(){
+						var url = FireFlyContextPath + "/file/" + result.FILE_ID;
+						window.open(url);
+				});
+			} else {
+				SysMsg.alert(result._MSG_);
+			}
+		}
+		_viewer._deletePageAllNum();
+		_viewer.refreshGrid();
+		_loadbar.hideDelayed();	
+	});
+};
 
