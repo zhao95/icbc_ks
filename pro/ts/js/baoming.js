@@ -285,6 +285,8 @@ global.Fn.CascadeSelect = function (opt) {
                     $(this).wrap("<span style='display:none'></span>");
                 }
             });
+            $($next.find('option[value=""]')).prop("selected","selected");
+            $($next.find('option[value=""]')).prop("selected","selected");
             $($next.find('option[value=""]')).unwrap();
             $($("#" + opt.targets[nextIndex + 1]).find('option[value=""]')).unwrap();
 

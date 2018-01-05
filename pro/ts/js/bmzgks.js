@@ -390,7 +390,7 @@ function xminfoshow(){
 				       var kslb_xl_code=alldata[i].KSLBK_XL_CODE;
 				       var kslb_mk_code=alldata[i].KSLBK_MKCODE;
 				       var kslb_type = alldata[i].KSLBK_TYPE;
-				       if("02200401"==kslb_mk_code||"02200402"==kslb_mk_code){
+				       if("02200401"==kslb_mk_code){
 				    	   //模块code
 				    	   var paramstr = {};
 				    	   paramstr["mk"]=alldata[i].KSLBK_MK;
