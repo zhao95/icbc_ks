@@ -118,11 +118,13 @@ public class TsConstant {
 
 	/** 考场管理 准考证 */
 	public static final String SERV_XMGL_ADMISSION_FILE = "TS_XMGL_ADMISSION_FILE";
-	
+
 	/**报名流程节点*/
 	public static final String SERV_WFS_BMSHLC = "TS_WFS_BMSHLC";
 	/**节点*/
 	public static final String SERV_WFS_NODE_APPLY= "TS_WFS_NODE_APPLY";
+	/**节点历史*/
+	public static final String SERV_WFS_NODE_HISTORY = "TS_WFS_NODE_HISTORY";
 	/**节点管理者*/
 	public static final String SERV_WFS_NODEAPPLY_ADMINER= "TS_WFS_NODEAPPLY_ADMINER";
 	/**请假流程节点*/
@@ -134,9 +136,9 @@ public class TsConstant {
 
 	/** 字典 目录类型定义 */
 	public static final String DICT_CTLG_MOD = "TS_MODULE_CATALOG";
-	
+
 	/** 报名审核通过定义*/
 	public static final String TS_BMSH_PASS = "TS_BMSH_PASS";
 
-	
+
 }

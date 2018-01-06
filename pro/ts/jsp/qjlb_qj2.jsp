@@ -489,10 +489,17 @@
     var contextPath = '<%=CONTEXT_PATH %>';
     $(function () {
         var todoId = '<%=todoId%>';
+        var qjId = '<%=qj_id%>';
         var bmIdStr = '<%=qj_ksname%>';//报名id
         initData();
         setKsInfo(bmIdStr);
-        showFlowView(todoId);
+
+        //展示流程图
+        if (todoId) {
+            showFlowView(todoId);
+        } else {
+            showFlowViewByDataId(qjId);
+        }
 
         $('.file').unbind('click').bind('click', function () {
             var $this = jQuery(this);

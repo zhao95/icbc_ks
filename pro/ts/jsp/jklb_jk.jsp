@@ -115,7 +115,7 @@
 
         <div class="row">
             <div class="col-sm-12 text-center" style="background-color:#dfdfdf;">
-                <div style="min-height: 50px;padding:10px;">
+                <div id="flowView" style="min-height: 50px;padding:10px;">
                     <div style="display: inline-block">
                                 <span style="position: relative;left: 26px;top:3px;
                      font-family: 'Arial Negreta', 'Arial Normal', 'Arial',serif;

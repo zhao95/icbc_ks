@@ -56,7 +56,7 @@ public class TsTodoServ extends CommonServ {
                 " left join ts_qjlb_qj b on b.QJ_ID=a.DATA_ID " +
                 " left join ts_jklb_jk c on c.JK_ID=a.DATA_ID " +
                 " where a.OWNER_CODE ='" + currentUserCode + "' " +
-                whereSql;
+                whereSql + " order by a.SEND_TIME desc";
 
         List<Bean> dataList = Transaction.getExecutor().queryPage(
                 sql, page.getNowPage(), page.getShowNum(), null, null);

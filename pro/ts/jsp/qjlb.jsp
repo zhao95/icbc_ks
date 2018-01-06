@@ -323,7 +323,7 @@
         table1Tbody2.html('');
 //        listData.
         if (listData.FLAG_COUNT !== '0') {
-            $('#yishen').html('已申请的请假(' + qjListBean.FLAG_COUNT + ')');
+            $('#yishen').html('已申请的请假(' + listData.FLAG_COUNT + ')');
         }
         qjList = listData._DATA_;
         for (var i = 0; i < qjList.length; i++) {
@@ -689,10 +689,17 @@
     function qingjia2(e) {
         var xmId = $(e).attr('id');
         var xmSzBean = FireFly.doAct('ts_xmgl_sz', 'query', {_extWhere: " and XM_ID = '" + xmId + "' and XM_SZ_NAME ='考场安排'"});
-        debugger;
         if (xmSzBean._DATA_.length > 0 && (xmSzBean._DATA_[0].XM_SZ_TYPE === '未开启' || xmSzBean._DATA_[0].XM_SZ_TYPE === '')) {
             alert('考场安排未开始，您可在我的报名已申请报名页面撤销报名');
         } else {
+//            var existXmFlowBean = FireFly.doAct("TS_WFS_APPLY", "`existsXmFlow", {
+//                XM_ID: xmId,
+//                flowName: 3
+//            }, false, false);
+//            if (existXmFlowBean._MSG_.indexOf("ERROR") > -1) {
+//                alert("项目请假设置未配置流程");
+//                return;
+//            }
             doPost('qjlb_qj.jsp', {xmId: xmId});
         }
     }

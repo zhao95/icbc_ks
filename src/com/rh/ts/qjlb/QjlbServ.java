@@ -11,11 +11,12 @@ import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.serv.bean.PageBean;
+import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
-import com.rh.core.util.DateUtils;
 import com.rh.core.util.i18n.Language;
 import com.rh.ts.util.BMUtil;
 import com.rh.ts.util.TsConstant;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
@@ -286,6 +287,7 @@ public class QjlbServ extends CommonServ {
                 outBean.setError("待办已被处理，请返回！");
             } else {
                 nodeSteps = (String) todoBean.get("NODE_STEPS");
+                int nodeStepsInt = Integer.parseInt(nodeSteps);
                 String qjId = (String) todoBean.get("DATA_ID");
                 Bean qjbean = ServDao.find(TSQJ_SERVID, qjId);
 
@@ -336,8 +338,7 @@ public class QjlbServ extends CommonServ {
                 afterApply(outBean, qjbean, qj_status);
 
                 if ("1".equals(qj_status)) {
-                    int nodeSteps1 = Integer.parseInt((String) todoBean.get("NODE_STEPS"));
-                    doFlowTask(outBean, currentUser, qjbean, nodeSteps1);
+                    doFlowTask(outBean, currentUser, qjbean, nodeStepsInt);
                 }
 
                 if (outBean.get(Constant.RTN_MSG) != null
@@ -383,9 +384,42 @@ public class QjlbServ extends CommonServ {
                 e.printStackTrace();
                 log.error("请假结果提醒失败，" + "QJ_ID:" + qjId + ",USER_CODE:" + qjbean.getStr("USER_CODE"));
             }
+
             //修改借考记录状态为未读
             qjbean.set("LOOK_FLAG", "0");
             ServDao.update(TSQJ_SERVID, qjbean);
+
+            try {
+                //记录流程节点信息
+                SqlBean sqlBean = new SqlBean();
+                sqlBean.and("DATA_ID", qjId);
+                List<Bean> tsCommTodoDoneList = ServDao.finds("TS_COMM_TODO_DONE", sqlBean);
+
+                String wfsId = null;
+                if (CollectionUtils.isNotEmpty(tsCommTodoDoneList)) {
+                    wfsId = tsCommTodoDoneList.get(0).getStr("WFS_ID");
+                }
+                if (StringUtils.isNotBlank(wfsId)) {
+                    //String getStep = todoBean.getStr("NODE_STEPS");
+                    List<Bean> nodeApplyList = ServDao.finds("TS_WFS_NODE_APPLY", "AND WFS_ID='" + wfsId + "'");// and NODE_STEPS = " + getStep
+                    if (CollectionUtils.isNotEmpty(nodeApplyList)) {
+                        List<Bean> saveNodeHistoryBeanList = new ArrayList<Bean>();
+                        for (Bean nodeApply : nodeApplyList) {
+                            Bean nodeHistoryBean = new Bean();
+                            nodeHistoryBean.set("DATA_ID", qjId);
+                            nodeHistoryBean.set("NODE_NAME", nodeApply.getStr("NODE_NAME"));
+                            nodeHistoryBean.set("NODE_NUM", nodeApply.getStr("NODE_NUM"));
+                            nodeHistoryBean.set("WFS_ID", nodeApply.getStr("WFS_ID"));
+                            nodeHistoryBean.set("NODE_STEPS", nodeApply.getStr("NODE_STEPS"));
+                            saveNodeHistoryBeanList.add(nodeHistoryBean);
+                        }
+                        ServDao.creates(TsConstant.SERV_WFS_NODE_HISTORY, saveNodeHistoryBeanList);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("请假节点保存失败，" + "QJ_ID:" + qjId + ",USER_CODE:" + qjbean.getStr("USER_CODE"));
+            }
         }
 
         if ("2".equals(qj_status)) {
@@ -492,6 +526,7 @@ public class QjlbServ extends CommonServ {
         flowParamBean.set("level", level);//不懂  默认给0吧
         flowParamBean.set("deptCode", qjbean.getStr("S_DEPT"));
         flowParamBean.set("odeptCode", qjbean.getStr("S_ODEPT"));
+        flowParamBean.set("XM_ID", xmId);
         flowParamBean.set("xmId", xmId);
         flowParamBean.set("flowName", 3); //1:报名审核流程 2:异地借考流程 3:请假审核流程
         OutBean shBean = ServMgr.act("TS_WFS_APPLY", "backFlow", flowParamBean);
@@ -540,7 +575,7 @@ public class QjlbServ extends CommonServ {
                 outBean.setError("没有审核人，请联系管理员！");
             }
         } else {
-            int nodeSteps = shBean.getInt("NODE_STEPS");
+            int nodeSteps = shBean.getInt("SH_LEVEL");//shBean.getInt("NODE_STEPS");
             String nodeName = shBean.getStr("NODE_NAME");
             String wfsId = shBean.getStr("WFS_ID");
 

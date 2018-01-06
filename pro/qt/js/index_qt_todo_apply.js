@@ -301,17 +301,18 @@ function showTodoTip() {
                     '   </div>',
                     '</div>'].join('')
             );
+            itemContent.css('cursor', 'pointer');
             if (item.TYPE === '0') {
                 itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
                     var dataId = $(this).attr('data-id');
                     var todoId = $(this).attr('id');
-                    doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId});
+                    doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
                 });
             } else if (item.TYPE === '1') {
                 itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
                     var dataId = $(this).attr('data-id');
                     var todoId = $(this).attr('id');
-                    doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId});
+                    doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId, hidden: '2'});
                 });
             }
 

@@ -503,11 +503,18 @@
 <script type="text/javascript">
     var contextPath = '<%=CONTEXT_PATH %>';
     $(function () {
+        var jkId = '<%=jk_id%>';
         var todoId = '<%=todoId%>';
         var bmIdStr = '<%=jk_ksname%>';
         initData();
         setKsInfo(bmIdStr);//考试信息
-        showFlowView(todoId);
+        //展示流程图
+        debugger;
+        if (todoId) {
+            showFlowView(todoId);
+        } else {
+            showFlowViewByDataId(jkId);
+        }
 
         $('.file').unbind('click').bind('click', function () {
             var $this = jQuery(this);
