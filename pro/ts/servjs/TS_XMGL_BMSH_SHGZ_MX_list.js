@@ -570,20 +570,61 @@ function bindCard() {
 			formConDiv7.append(divinfo);
 		}else if(obj2[0].type=='level'){
 			for(var i=0;i<nameArg.length;i++) {
-				if(i<2){
 					if(i==0){
 						var span = document.createElement("span");
 						span.innerHTML=nameArg[i];
 						formConDiv7.append(span);
 					}else if(i==1){
+						//符号变量
+					
+						var selectfuhao = document.createElement("select");  
+						if(obj2[0].code=="1"){
+							selectfuhao.id = "fuhaobieselect";
+							selectfuhao.add(new Option(">","1",true,true)); 
+							selectfuhao.add(new Option("<","2")); 
+							selectfuhao.add(new Option(">=","3")); 
+							selectfuhao.add(new Option("<=","4")); 
+							selectfuhao.add(new Option("=","5")); 
+						}else if(obj2[0].code=="2"){
+							selectfuhao.id = "fuhaobieselect";
+							selectfuhao.add(new Option(">","1")); 
+							selectfuhao.add(new Option("<","2",true,true)); 
+							selectfuhao.add(new Option(">=","3")); 
+							selectfuhao.add(new Option("<=","4")); 
+							selectfuhao.add(new Option("=","5")); 
+						}else if(obj2[0].code=="3"){
+							selectfuhao.id = "fuhaobieselect";
+							selectfuhao.add(new Option(">","1")); 
+							selectfuhao.add(new Option("<","2")); 
+							selectfuhao.add(new Option(">=","3",true,true)); 
+							selectfuhao.add(new Option("<=","4")); 
+							selectfuhao.add(new Option("=","5")); 
+						}else if(obj2[0].code=="4"){
+							selectfuhao.id = "fuhaobieselect";
+							selectfuhao.add(new Option(">","1")); 
+							selectfuhao.add(new Option("<","2")); 
+							selectfuhao.add(new Option(">=","3")); 
+							selectfuhao.add(new Option("<=","4",true,true)); 
+							selectfuhao.add(new Option("=","5")); 
+						}else{
+							selectfuhao.id = "fuhaobieselect";
+							selectfuhao.add(new Option(">","1")); 
+							selectfuhao.add(new Option("<","2")); 
+							selectfuhao.add(new Option(">=","3")); 
+							selectfuhao.add(new Option("<=","4")); 
+							selectfuhao.add(new Option("=","5",true,true)); 
+						}
+						//初中高级
+						formConDiv7.append(selectfuhao);
+					}else if(i==2){
 						//初中高级
 						var select = document.createElement("select");  
-						if(obj2[0].code=="1"){
+						if(obj2[1].code=="1"){
 							select.id = "jibieselect";
 							select.add(new Option("初级","1",true,true)); 
 							select.add(new Option("中级","2")); 
 							select.add(new Option("高级","3")); 
-						}else if(obj2[i].code=="2"){
+						}else if(obj2[1].code=="2"){
 							select.id = "jibieselect";
 							select.add(new Option("中级","2",true,true)); 
 							select.add(new Option("初级","1")); 
@@ -594,13 +635,14 @@ function bindCard() {
 							select.add(new Option("初级","1")); 
 							select.add(new Option("中级","2")); 
 						}
+						formConDiv7.append(" ");
 						formConDiv7.append(select);
 						var span  = document.createElement("span");
 						span.innerHTML=nameArg[i];
 						formConDiv7.append(span);
-					}
 					
-				}else if(i==(nameArg.length-2)){
+					}
+				/*}else if(i==(nameArg.length-2)){
 					var inputaa = $('<input type="text" id="RULE-VAR-INPUT2" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[i-1].val);
 						
 						
@@ -624,8 +666,8 @@ function bindCard() {
 					span.innerHTML=nameArg[i];
 					formConDiv7.append(span);
 				}
+			}*/
 			}
-			
 		}else{
 			for(var i=0;i<nameArg.length;i++) {
 				if(obj2[0].type == 'dateyear') {
@@ -900,18 +942,18 @@ function bindCard() {
 					var mx_name = nameArg[0];
 					var jsons = "[";
 					$(formConDiv7.find('select')).each(function(index,item){
-								
 						mx_name+="#level#";
 						arr1[index]=$(this).val();
-						jsons+='{"vari":"level","val":"'+$(this).find("option:selected").text()+'","type":"level","code":"'+$(this).val()+'"},';
+						if(index==0){
+							
+							jsons+='{"vari":"level","val":"'+$(this).find("option:selected").text()+'","type":"level","code":"'+$(this).val()+'"},';
+						}else{
+							jsons+='{"vari":"level","val":"'+$(this).find("option:selected").text()+'","type":"level","code":"'+$(this).val()+'"}';
+
+						}
 					});
-					mx_name+=nameArg[1];
-					mx_name+="#level#";
-					mx_name+=nameArg[2];
-					jsons+='{"vari":"level","val":"'+$("#RULE-VAR-INPUT2").val()+'","type":"datetime"},';
-					mx_name+="#level#";
-					mx_name+=nameArg[3];
-					jsons+='{"vari":"level","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"int"}]';
+					mx_name+=nameArg[nameArg.length-1];
+					jsons+="]";
 					saveRuleVarCode(dataId,arr,arr1,jsons,mx_name);
 					
 				}else if(obj2[0].type=='date'){

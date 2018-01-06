@@ -56,6 +56,9 @@ public class BaseValidCert2YearBkxl implements IRule {
 			user_lb_level = kslbklist.get(0).getStr("KSLBK_TYPE_LEVEL");
 		}
 		int user_lb_level_in = Integer.parseInt(user_lb_level);
+		if("".equals(user_lb_level_in)){
+			return false;
+		}
 		
 		if(xl.equals(user_xl)){
 			
@@ -124,7 +127,7 @@ public class BaseValidCert2YearBkxl implements IRule {
 
 							 sqllb.and("STATION_NO", user_xl);// 序列编号
 
-							 sqllb.andGT("CERT_GRADE_CODE", Integer.parseInt(BM_TYPE)-1);// 证书等级编号
+							 sqllb.andGTE("CERT_GRADE_CODE", Integer.parseInt(BM_TYPE)-1);// 证书等级编号
 
 							 sqllb.and("S_FLAG", 1);
 							 
@@ -149,14 +152,14 @@ public class BaseValidCert2YearBkxl implements IRule {
 
 		String jsonStr = param.getStr("MX_VALUE2");
 
-		String twoYearAgo = ""; // N年前日期yyyy-mm-dd
-
+		/*String twoYearAgo = ""; // N年前日期yyyy-mm-dd
+*/
 		JSONArray obj;
 
 		try {
 			
 			obj = new JSONArray(jsonStr);
-			
+			/*
 			JSONObject jsonObject = obj.getJSONObject(obj.length()-1);
 
 			Calendar c = Calendar.getInstance();
@@ -166,35 +169,51 @@ public class BaseValidCert2YearBkxl implements IRule {
 			if (val == 0) {
 				val = 2;
 			}
-			int valfu = -val;
-			String endtime = obj.getJSONObject(obj.length()-2).getString("val");
+			int valfu = -val;*/
+			/*String endtime = obj.getJSONObject(obj.length()-2).getString("val");*/
 			
-			String level =obj.getJSONObject(0).getString("code");
-			
-			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+			/*SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 
 			Date endDate = format.parse(endtime);  //指定时间  不用 报名结束时间
-
-			c.setTime(endDate);
-
-			c.add(Calendar.YEAR, valfu);
+*/
+			/*c.setTime(endDate);
+*/
+			/*c.add(Calendar.YEAR, valfu);
 
 			Date y = c.getTime();
 
-			twoYearAgo = format.format(y);
+			twoYearAgo = format.format(y);*/
 
 			SqlBean bmsql = new SqlBean();
+			
+			String fuhao2 = obj.getJSONObject(0).getString("code");
+			String dengjicode = obj.getJSONObject(1).getString("code"); // 
+			if(fuhao2.equals("1")){
+				
+				bmsql.andGT("CERT_GRADE_CODE", dengjicode);
+			}else if(fuhao2.equals("2")){
+				//小于
+				bmsql.andLT("CERT_GRADE_CODE", dengjicode);
+			}else if(fuhao2.equals("3")){
+				//大于等于
+				bmsql.andGTE("CERT_GRADE_CODE", dengjicode);
+			}else if(fuhao2.equals("4")){
+				//小于等于
+				bmsql.andLTE("CERT_GRADE_CODE", dengjicode);// 证书等级编号
+			}else{
+				bmsql.and("CERT_GRADE_CODE", dengjicode);//等于
+			}
 
 			bmsql.and("STU_PERSON_ID", user);// 人员编码
 
-			bmsql.andLTE("BGN_DATE", twoYearAgo);// 起始有效日期 <= dateTime
-
+			/*bmsql.andLTE("BGN_DATE", twoYearAgo);// 起始有效日期 <= dateTime
+*/
 			bmsql.and("STATION_NO", xl);// 序列编号
 
-			bmsql.andGTE("CERT_GRADE_CODE", level);// 证书等级编号
-
 			bmsql.and("S_FLAG", 1);
-
+			
+			bmsql.and("QUALFY_STAT", 1);// 获证状态(1-正常;2-获取中;3-过期)
+			
 			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, bmsql);
 
 			if (count > 0) {
