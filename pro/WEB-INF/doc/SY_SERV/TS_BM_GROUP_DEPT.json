@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"AND G_TYPE='2'",
-"S_MTIME":"2017-12-20 10:36:45:648",
+"S_MTIME":"2018-01-06 10:54:17:155",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "TABLE_VIEW":"TS_BM_GROUP_USER_DEPT",
@@ -940,7 +940,7 @@
 "SERV_PAGE_COUNT":"50",
 "SERV_CARD_LOAD":"1",
 "SERV_KEYS":"GUD_ID",
-"SERV_CLASS":"",
+"SERV_CLASS":"com.rh.ts.bm.group.BmGroupDeptServ",
 "SERV_CMPY":"",
 "SERV_DELETE_FLAG":"2",
 "SERV_CARD_STYLE":"2",
@@ -971,11 +971,11 @@
 "ACT_HOT_KEY":"",
 "ACT_ID":"1vBKOW4qd3gXtKTw9Do8",
 "SERV_ID":"TS_BM_GROUP_DEPT",
-"S_MTIME":"2017-11-28 20:36:30:635",
+"S_MTIME":"2018-01-06 10:51:15:404",
 "ACT_EXPRESSION":"",
 "ACT_WS_RESULT":"",
 "ACT_MOBILE_FLAG":"1",
-"ACT_ORDER":"1",
+"ACT_ORDER":"0",
 "ACT_GROUP":"2",
 "SY_SERV_ACT_PARAM":
 [
@@ -984,6 +984,33 @@
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"添加部门"
+},
+{
+"ACT_TYPE":"1",
+"ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"",
+"ACT_MEMO":"",
+"ACT_CODE":"impFile",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"20OgKobzZ13OUsquXzyZ",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"20OgKobzZ13OUsquXzyZ",
+"SERV_ID":"TS_BM_GROUP_DEPT",
+"S_MTIME":"2018-01-06 10:51:13:439",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"1",
+"ACT_GROUP":"2",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"1",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":"导入模板"
 },
 {
 "ACT_TYPE":"3",
@@ -1007,7 +1034,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"1",
+"_ROWNUM_":"2",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 查 看 "
@@ -1034,7 +1061,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"2",
+"_ROWNUM_":"3",
 "ACT_TIP":"确保列表无编辑组按钮卡片也可以保存",
 "EN_JSON":"",
 "ACT_NAME":"修改"
@@ -1061,7 +1088,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"3",
+"_ROWNUM_":"4",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 添 加 "
@@ -1088,7 +1115,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"4",
+"_ROWNUM_":"5",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 保 存 "
@@ -1115,7 +1142,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"5",
+"_ROWNUM_":"6",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 保 存 "
@@ -1142,7 +1169,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"6",
+"_ROWNUM_":"7",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"复制并新建"
@@ -1169,7 +1196,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"7",
+"_ROWNUM_":"8",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"变更历史"
@@ -1196,7 +1223,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"8",
+"_ROWNUM_":"9",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 删 除 "
@@ -1207,14 +1234,14 @@
 "ACT_CSS":"imp",
 "ACT_MEMO":"",
 "ACT_CODE":"imp",
-"S_FLAG":"1",
+"S_FLAG":"2",
 "ACT_WS_FLAG":"2",
 "_PK_":"2saoh4SoB4MbwKdVCVmd",
 "ACT_LOG_FLAG":"2",
 "ACT_HOT_KEY":"",
 "ACT_ID":"2saoh4SoB4MbwKdVCVmd",
 "SERV_ID":"TS_BM_GROUP_DEPT",
-"S_MTIME":"2017-12-20 10:36:45:427",
+"S_MTIME":"2018-01-05 18:27:56:537",
 "ACT_EXPRESSION":"",
 "ACT_WS_RESULT":"",
 "ACT_MOBILE_FLAG":"1",
@@ -1223,7 +1250,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"9",
+"_ROWNUM_":"10",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 入 "
@@ -1250,7 +1277,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"10",
+"_ROWNUM_":"11",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 出 "
@@ -1277,7 +1304,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"11",
+"_ROWNUM_":"12",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 接 收 "
@@ -1304,7 +1331,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"12",
+"_ROWNUM_":"13",
 "ACT_TIP":"zip文件导入",
 "EN_JSON":"",
 "ACT_NAME":"批量导入"
@@ -1331,7 +1358,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"13",
+"_ROWNUM_":"14",
 "ACT_TIP":"zip文件导出",
 "EN_JSON":"",
 "ACT_NAME":"批量导出"
