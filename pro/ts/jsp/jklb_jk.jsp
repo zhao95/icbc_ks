@@ -308,7 +308,9 @@
                 </div>
             </div>
             <div class="col-sm-12">
-                <input id="fileupload" type="file" name="files" multiple style="display: none">
+                <input id="fileupload" type="file" name="files" multiple
+                       accept=".rar, .doc, .docx, .zip, .pdf, .txt, .swf, .wmv, .gif, .png, .jpg, .jpeg, .bmp, .ppt"
+                       style="display: none">
             </div>
 
         </form>

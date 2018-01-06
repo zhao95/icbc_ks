@@ -293,7 +293,9 @@
                             <form action="/file" name="formup" id="formContainer2" class="form form-horizontal"></form>
                         </div>
                     </div>--%>
-                    <input id="fileupload" type="file" name="files" multiple style="display: none">
+                    <input id="fileupload" type="file" name="files"
+                           accept=".rar, .doc, .docx, .zip, .pdf, .txt, .swf, .wmv, .gif, .png, .jpg, .jpeg, .bmp, .ppt"
+                           multiple style="display: none">
                     <%--<a data-btn="btn_upload_many" onclick="uploadFiles();" href="javascript:void(0);"
                        class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">批量上传</a>--%>
                 </div>
