@@ -464,7 +464,7 @@ function xminfoshow(){
 		 param1["DUTY_LV_CODE"]=DUTY_LEVEL_CODE;
 		 param1["STATION_TYPE_CODE"]=STATION_TYPE_CODE;
 		 param1["STATION_NO_CODE"]=STATION_NO_CODE;
-		 var cengji =  FireFly.doAct("TS_BMLB_BM","getcengji",param1);
+		/* var cengji =  FireFly.doAct("TS_BMLB_BM","getcengji",param1);
 		 var cengjinum = cengji.num;
 		 var sqls = "";
 		 if(cengjinum==""){
@@ -477,17 +477,17 @@ function xminfoshow(){
 			 belongnum=cengjinum;
 			 sqlstr = " AND (KSLBK_TYPE<="+cengjinum+" or KSLBK_TYPE is null)";
 			 sqls = " AND (KSLB_TYPE<="+cengjinum+" or KSLB_TYPE is null)";
-		 }
+		 }*/
 		 typeId(obj);
 		 tongji();
-		 var allList=getFzgList(sqls);
-		 showFzgList(allList);
+		/* var allList=getFzgList(sqls);
+		 showFzgList(allList);*/
 		 
-		 if(cengjinum==2){
+		/* if(cengjinum==2){
 			 //只能报
 			 $("#gaoji").html(0);
 			 $("#canheighnum").html(0);
-		 }
+		 }*/
 		 //没有数据的父节点不显示
 		/* +" AND KSLBK_ID not in (SELECT KSLBK_ID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_MK='无模块' AND KSLBK_TYPE is null)*/  
 		 var itemid = "";
