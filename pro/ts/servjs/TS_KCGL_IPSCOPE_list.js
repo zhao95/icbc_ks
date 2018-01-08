@@ -58,5 +58,53 @@ if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly){
 	$("a#TS_KCGL_IPSCOPE_edit").hide();
 }
 
+/**
+ * 导出
+ */
+_viewer.getBtn("imp").unbind("click").bind("click",function() {
+	var kcId = _viewer.getParHandler().getItem("KC_ID").getValue();
+	
+	var config = {"SERV_ID":_viewer.opts.sId, "FILE_CAT":"EXCEL_UPLOAD", "FILENUMBER":1, 
+		"VALUE":5, "TYPES":"*.xls;*.xlsx", "DESC":"导入Excel文件"};
+	var file = new rh.ui.File({
+		"config" : config,"width":"99%"
+	});
+	
+	var importWin = new rh.ui.popPrompt({
+		title:"请选择文件",
+		tip:"请选择要导入的Excel文件：",
+		okFunc:function() {
+			var fileData = file.getFileData();
+			if (jQuery.isEmptyObject(fileData)) {
+				alert("请选择文件上传");
+				return;
+			}
+			var fileId = null;
+			for (var key in fileData) {
+				fileId = key;
+			}
+			if (fileId == null){
+				alert("请选择文件上传");
+				return;
+			}
+			
+			var param = {};
+			param["KC_ID"] = kcId;
+			
+			_viewer._imp(fileId,param);
+			importWin.closePrompt();
+	        // _viewer.refreshGrid();
+			file.destroy();
+		},
+		closeFunc:function() {
+			file.destroy();
+		}
+	});
+
+    var container = _viewer._getImpContainer(event, importWin);
+	container.append(file.obj);
+	file.obj.css({'margin-left':'5px'});
+	file.initUpload();
+});
 
 
