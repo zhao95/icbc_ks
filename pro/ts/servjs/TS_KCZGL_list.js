@@ -259,43 +259,4 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 
 });
 
-rh.vi.listView.prototype._imp = function(fileId, param) {
-	var data = {"fileId":fileId};
-	if(param) {
-		data = jQuery.extend(data, param);
-	}
-	var _loadbar = new rh.ui.loadbar();
-	_loadbar.show(true);
-	//form提交，需要服务器再返回Excel
-	FireFly.doAct(_viewer.opts.sId, "imp", data, false, true, function(result) {
-		if(result._MSG_.indexOf("ERROR,") == 0) {
-			console.log(result);
-			if(result.FILE_ID) {
-				var msg = "导入文件失败，点击“确定按钮”下载文件。请打开文件查看导入结果。";
-				SysMsg.alert(msg, function(){
-					
-						var url = FireFlyContextPath + "/file/" + result.FILE_ID;
-						window.open(url);
-					
-				});
-			} else {
-				SysMsg.alert(result._MSG_);
-			}
-		} else {
-			
-			if(result.FILE_ID) {
-				var msg = "点击“确定按钮”下载文件。请打开文件查看导入结果。";
-				SysMsg.alert(msg, function(){
-						var url = FireFlyContextPath + "/file/" + result.FILE_ID;
-						window.open(url);
-				});
-			} else {
-				SysMsg.alert(result._MSG_);
-			}
-		}
-		_viewer._deletePageAllNum();
-		_viewer.refreshGrid();
-		_loadbar.hideDelayed();	
-	});
-};
 
