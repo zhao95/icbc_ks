@@ -29,6 +29,10 @@ public class BeforeHighCertDue implements IRule {
 		
 		String user_xl = zwbean.getStr("STATION_NO_CODE");
 		
+		if("A000000000000000020".equals(user_xl)){//才会资金序列 报名  考试无  资金  默认 匹配 财会
+			user_xl="A000000000000000019";
+		}
+		
 		String jsonStr = param.getStr("MX_VALUE2");
 		
 		if(xl.equals(user_xl)){

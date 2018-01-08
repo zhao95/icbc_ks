@@ -31,6 +31,10 @@ public class GlVerifying implements IRule {
 			
 			station_no_code=find.getStr("STATION_NO_CODE");
 			
+			if("A000000000000000020".equals(station_no_code)){//才会资金序列 报名  考试无  资金  默认 匹配 财会
+				station_no_code="A000000000000000019";
+			}
+			
 		}
 		
 		String jsonStr = param.getStr("MX_VALUE2");

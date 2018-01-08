@@ -910,30 +910,44 @@ public class QjlbServ extends CommonServ {
         String type = paramBean.getStr("type");
         List<Bean> qjlist = ServDao.finds("TS_COMM_TODO", "AND OWNER_CODE='" + user_code + "' AND TYPE='" + type + "'");
         for (Bean bean : qjlist) {
-            String id = bean.getStr("XM_ID");
             if (type.equals("0")) {
-                List<Bean> qjdatelist = ServDao.finds("TS_XMGL_QJGL", "and XM_ID='" + id + "'");
-                if (qjdatelist.size() != 0) {
-                    String start = qjdatelist.get(0).getStr("QJ_STADATE");
-                    String end = qjdatelist.get(0).getStr("QJ_ENDDATWE");
-                    bean.set("start", start);
-                    bean.set("end", end);
-                } else {
-                    bean.set("start", "");
-                    bean.set("end", "");
-                }
+            	Bean find = ServDao.find("ts_qjlb_qj", bean.getStr("DATA_ID"));
+            	if(find==null){
+            		  bean.set("start", "");
+                      bean.set("end", "");
+            	}else{
+            		
+            		String id = find.getStr("XM_ID");
+            		List<Bean> qjdatelist = ServDao.finds("TS_XMGL_QJGL", "and XM_ID='" + id + "'");
+            		if (qjdatelist.size() != 0) {
+            			String start = qjdatelist.get(0).getStr("QJ_STADATE");
+            			String end = qjdatelist.get(0).getStr("QJ_ENDDATWE");
+            			bean.set("start", start);
+            			bean.set("end", end);
+            		} else {
+            			bean.set("start", "");
+            			bean.set("end", "");
+            		}
+            	}
             } else if (type.equals("1")) {
-                //借考数据
-                List<Bean> qjdatelist = ServDao.finds("TS_XMGL_YDJK", "and XM_ID='" + id + "'");
-                if (qjdatelist.size() != 0) {
-                    String start = qjdatelist.get(0).getStr("YDJK_STADATE");
-                    String end = qjdatelist.get(0).getStr("YDJK_ENDDATE");
-                    bean.set("start", start);
-                    bean.set("end", end);
-                } else {
-                    bean.set("start", "");
+            	Bean find = ServDao.find("ts_jklb_jk", bean.getStr("DATA_ID"));
+            	if(find==null){
+          		  bean.set("start", "");
                     bean.set("end", "");
-                }
+          	}else{
+          		String id = find.getStr("XM_ID");
+          		//借考数据
+          		List<Bean> qjdatelist = ServDao.finds("TS_XMGL_YDJK", "and XM_ID='" + id + "'");
+          		if (qjdatelist.size() != 0) {
+          			String start = qjdatelist.get(0).getStr("YDJK_STADATE");
+          			String end = qjdatelist.get(0).getStr("YDJK_ENDDATE");
+          			bean.set("start", start);
+          			bean.set("end", end);
+          		} else {
+          			bean.set("start", "");
+          			bean.set("end", "");
+          		}
+          	}
             }
         }
 

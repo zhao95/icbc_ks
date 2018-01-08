@@ -34,12 +34,19 @@ public class AdmitTest implements IRule {
 			obj = new JSONArray(jsonStr);
 			JSONObject jsonObject = obj.getJSONObject(0);
 			int grade = jsonObject.getInt("val");// 通过成绩
-
+			//是否精确到模块 进行验证
+			int  flag= jsonObject.getInt("code");//0否 1是
 			// 序列
-			String bmXl = param.getStr("BM_XL");
+			String bmXl = param.getStr("BM_XL_CODE");
+			//模块
+			String bmMk = param.getStr("BM_MK_CODE");
 
 			SqlBean sql = new SqlBean();
 
+			if(flag==1){
+				//精确到模块
+				sql.and("AD_MK",bmMk);
+			}
 			sql.and("USER_CODE", user);
 
 			sql.and("AD_XL", bmXl);
@@ -49,11 +56,14 @@ public class AdmitTest implements IRule {
 			List<Bean> list = ServDao.finds(TsConstant.SERV_BMSH_ADMIT, sql);
 
 			if (list != null && list.size() > 0) {
-
-				Bean bean = list.get(0);
-
-				int adGrade = bean.getInt("AD_GRADE");
-
+				int adGrade=0;
+				//取最大分数      (上个版本是取最近一次准入测试成绩)
+				for (Bean bean : list) {
+				int nowgrade = bean.getInt("AD_GRADE");
+				if(nowgrade>adGrade){
+					adGrade = nowgrade;
+				}
+				}
 				if (adGrade >= grade) {
 					return true;
 				}

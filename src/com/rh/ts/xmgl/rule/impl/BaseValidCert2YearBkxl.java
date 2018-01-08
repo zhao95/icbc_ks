@@ -1,12 +1,8 @@
 package com.rh.ts.xmgl.rule.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.db.Transaction;
@@ -44,6 +40,9 @@ public class BaseValidCert2YearBkxl implements IRule {
 		Bean zwbean = ServDao.find("SY_HRM_ZDSTAFFPOSITION", user_code);
 		
 		String user_xl = zwbean.getStr("STATION_NO_CODE");
+		if("A000000000000000020".equals(user_xl)){//才会资金序列 报名  考试无  资金  默认 匹配 财会
+			user_xl="A000000000000000019";
+		}
 		
 		String user_lb = zwbean.getStr("STATION_TYPE_CODE");
 		

@@ -732,7 +732,29 @@ function bindCard() {
 							sediv.css("padding-top","10px")
 							formConDiv7.append(sediv);
 						}
-					}else{
+		        }else if(obj2[0].type=='grade'){
+		        	if(i>0){
+		        		break;
+		        	}
+		            var span = document.createElement("span");
+		            span.innerHTML=nameArg[0];
+		            formConDiv7.append(span);
+		            var GradeInput= $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[0].val);
+		            GradeInput.addClass("ui-text-default");
+		            GradeInput.css("width","50px");
+		            formConDiv7.append(GradeInput);
+		            var span1 = document.createElement("span");
+		            span1.innerHTML=nameArg[1];
+		            formConDiv7.append(span1);
+		            formConDiv7.append("&nbsp;&nbsp;精确到模块：");
+		            var RadioInput=""
+		            if(obj2[0].code=='1'){
+		                 RadioInput = "<input id='radio1' style='vertical-align:text-bottom; margin-bottom:-3px;' name='state' type='radio' value='1' checked>是&nbsp;<input id='radio2' style='vertical-align:text-bottom; margin-bottom:-3px;' name='state' type='radio' value='0'>否";
+		            }else{
+		                 RadioInput = "<input id='radio1' style='vertical-align:text-bottom; margin-bottom:-3px;' name='state' type='radio' value='1'>是&nbsp;<input id='radio2' style='vertical-align:text-bottom; margin-bottom:-3px;' name='state' type='radio' value='0' checked>否";
+		            }
+		            formConDiv7.append(RadioInput);
+		        }else{
 						if(i==nameArg.length-1) {
 							formConDiv7.append(nameArg[i]);
 						} else {
@@ -908,7 +930,16 @@ function bindCard() {
 					});
 					mx_name+= nameArg[nameArg.length-1];
 					saveRuleVarCode(dataId,arr,arr1,jsons,mx_name);
-				}else{
+                }else if(obj2[0].type=='grade'){
+                    var arr1 = [];
+                    var arr = [];
+                    var mx_name = nameArg[0];
+                    var jsons = "[";
+                    mx_name+="#grade#";
+                    jsons+='{"vari":"grade","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"grade","code":"'+$("input[name='state']:checked").val()+'"}]';
+                    mx_name+= nameArg[nameArg.length-1];
+                    saveRuleVarCode(dataId,arr,arr1,jsons,mx_name);
+                }else{
 				var text = "";
 				$("input[name='yearlimit']").each(function(index,item){
 					text = $(this).val();

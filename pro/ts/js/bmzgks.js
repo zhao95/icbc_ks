@@ -1172,12 +1172,16 @@ function xminfoshow(){
 			 STATION_TYPE = result.STATION_TYPE;
 			 STATION_NO = result.STATION_NO;
 			 STATION_NO_CODE= result.STATION_NO_CODE;
+			 if("A000000000000000020"==STATION_NO_CODE){
+				 STATION_NO_CODE="A000000000000000019";
+			 }
 			 ADMIN_DUTY = result.ADMIN_DUTY;
 			 DUTY_LEVEL_CODE = result.DUTY_LV_CODE;
 			 $("#gwlb").html(STATION_TYPE);
 			 $("#gwxl").html(STATION_NO);
 			 $("#zwcj").html(ADMIN_DUTY);
 		}
+		
 		var wherexl = "AND KSLB_CODE="+"'"+STATION_TYPE_CODE+"'"+" AND KSLB_XL_CODE="+"'"+STATION_NO_CODE+"'"+" AND XM_ID="+"'"+xm_id+"'";
 		var param={};
 		param["where"]=wherexl;
