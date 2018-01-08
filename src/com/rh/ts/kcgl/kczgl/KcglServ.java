@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.mysql.fabric.xmlrpc.base.Param;
 import com.rh.core.base.Bean;
 import com.rh.core.base.BeanUtils;
 import com.rh.core.comm.FileMgr;
@@ -216,7 +217,7 @@ public class KcglServ extends CommonServ{
     public OutBean imp(ParamBean paramBean) {
         OutBean outBean = new OutBean();
         /***********/
-        String CTLG_PCODE = paramBean.getStr("CTLG_PCODE");
+        String groupId = paramBean.getStr("GROUP_ID");
         
         /*************/
         beforeImp(paramBean); //执行监听方法
@@ -280,7 +281,7 @@ public class KcglServ extends CommonServ{
                     Cell [] cell = sheet.getRow(i);
                     Bean data = new Bean();
                     /****************/
-                    data.set("CTLG_PCODE", CTLG_PCODE);
+                    data.set("GROUP_ID", groupId);
                     data.set("SERV_ID", servId);
                     /******************/
                     for(int j = 0; j < cell.length && j < cols; j++) {
@@ -293,6 +294,11 @@ public class KcglServ extends CommonServ{
                                 }
                             }
                             data.set(itemMaps[j].getStr("ITEM_CODE"), value);
+                            List<Bean> list = ServDao.finds("TS_KCGL", " and serv_id = 'TS_KCGL' and KC_STATE = 5 and KC_CODE='"+value+"'");
+                            if(list.size() > 0){
+                        	String kcId = list.get(0).getId();
+                        	data.set("KC_ID", kcId);
+                            }
                         }
                     }
                     //校验该行数据为空行，则continue
@@ -305,7 +311,15 @@ public class KcglServ extends CommonServ{
                     try {
                     	error = getExcelRowDataError(data);
                     	if (StringUtils.isEmpty(error)) { //数据校验通过
-                    		ServMgr.act(servId, ServMgr.ACT_SAVE, new ParamBean(data));
+                    		//ServMgr.act(servId, ServMgr.ACT_SAVE, new ParamBean(data));
+                    	    if(StringUtils.isEmpty(data.getStr("KC_ID"))){
+                    		error = "失败";
+                    	    }else{
+                    		ParamBean myParamBean = new ParamBean();
+                    		myParamBean.set("ids", data.getStr("KC_ID"));
+                    		myParamBean.set("groupId", groupId);
+                        	kczAddKc(myParamBean);
+                    	    }
                     	}
                     } catch (Exception e) {
                     	error = e.getMessage();
