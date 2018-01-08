@@ -84,6 +84,7 @@ public class KcglExpServ extends CommonServ{
         OutBean outBean = new OutBean();
         /***********/
         String kcId = paramBean.getStr("KC_ID");
+        String kczId = paramBean.getStr("KCZ_ID");
         /*************/
         beforeImp(paramBean); //执行监听方法
         String servId = paramBean.getServId();
@@ -146,7 +147,12 @@ public class KcglExpServ extends CommonServ{
                     Cell [] cell = sheet.getRow(i);
                     Bean data = new Bean();
                     /****************/
-                    data.set("KC_ID", kcId);
+                    if(servId.equals("TS_KCZGL_GROUP")){
+                	data.set("KCZ_ID", kczId);
+                	data.set("SERV_ID", servId);
+                    }else{
+                	data.set("KC_ID", kcId);
+                    }
                     /******************/
                     for(int j = 0; j < cell.length && j < cols; j++) {
                         if (itemMaps[j] != null) {
