@@ -65,8 +65,6 @@ public class XinDaiLimit implements IRule {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
 		return false;
 	}
 	

@@ -123,8 +123,8 @@ function bindCard() {
 							var result = FireFly.doAct("TS_BMLB_BM","getkslbk",param);
 							var pageEntity = result.LBS;
 							var codestr="";
-							for(var j=0;j<(obj2.length-3);j++){
-								if(j==(obj2.length-4)){
+							for(var j=0;j<(obj2.length-2);j++){
+								if(j==(obj2.length-3)){
 									codestr+=obj2[j].code;
 								}else{
 									
@@ -474,7 +474,286 @@ function bindCard() {
 						
 					}
 				
-			}else if(obj2[0].type=='string'){
+            }else if(obj2[0].type=='yearmuty'){
+
+                var codestr = [];
+                var namestr = [];
+                for(var a=0;a<obj2.length;a++){
+                    if(a<obj2.length-3){
+                        namestr[a]=obj2[a].val;
+                        codestr[a]=obj2[a].code;
+                    }
+                }
+                xlcodes = codestr;
+                xlnames = namestr;
+            
+                for(var i=0;i<nameArg.length;i++) {
+                    var sediv = $('<div></div>');
+                    if(i<nameArg.length-4){
+                        var span  = document.createElement("span");
+                        if(i==0){
+                            var name = "";
+                        
+                                for(var j=0;j<nameArg.length-4;j++){
+                                    if(j==(nameArg.length-5)){
+                                        
+                                        name +=obj2[j].val;
+                                    }else{
+                                        name +=obj2[j].val+",";
+                                    }
+                                
+                                }
+                            span.innerHTML=nameArg[i]+"：";
+                            $(span).css("position","relative");
+                            $(span).css("top","-40px");
+                            formConDiv7.append(span);
+                            var textarea = $('<textarea id="textareaid" style="position:relative;top:20px;width:415px;height:80px">'+name+'</textarea>');
+                            formConDiv7.css("position","absolute");
+                            formConDiv7.append(textarea);
+                            var butt = document.createElement("button");
+                            formConDiv7.append(butt);
+                            butt.innerHTML="选择";
+                            $(butt).css("position","relative");
+                            $(butt).css("top","-40px");
+                            butt.id="xlbutton";
+                            /*span.innerHTML=nameArg[i]+obj2[i].val;
+                            formConDiv7.append(span);*/
+                        }
+                    }else if(i==nameArg.length-4){
+                        //符号变量
+                        var spanfuhao = document.createElement("span");
+                        spanfuhao.innerHTML="证书等级：";
+                        $(spanfuhao).css("padding-left","20px");
+                        var selectfuhao = document.createElement("select");  
+                        if(obj2[i].code=="1"){
+                            selectfuhao.id = "fuhaobieselect";
+                            selectfuhao.add(new Option(">","1",true,true)); 
+                            selectfuhao.add(new Option("<","2")); 
+                            selectfuhao.add(new Option(">=","3")); 
+                            selectfuhao.add(new Option("<=","4")); 
+                            selectfuhao.add(new Option("=","5")); 
+                        }else if(obj2[i].code=="2"){
+                            selectfuhao.id = "fuhaobieselect";
+                            selectfuhao.add(new Option(">","1")); 
+                            selectfuhao.add(new Option("<","2",true,true)); 
+                            selectfuhao.add(new Option(">=","3")); 
+                            selectfuhao.add(new Option("<=","4")); 
+                            selectfuhao.add(new Option("=","5")); 
+                        }else if(obj2[i].code=="3"){
+                            selectfuhao.id = "fuhaobieselect";
+                            selectfuhao.add(new Option(">","1")); 
+                            selectfuhao.add(new Option("<","2")); 
+                            selectfuhao.add(new Option(">=","3",true,true)); 
+                            selectfuhao.add(new Option("<=","4")); 
+                            selectfuhao.add(new Option("=","5")); 
+                        }else if(obj2[i].code=="4"){
+                            selectfuhao.id = "fuhaobieselect";
+                            selectfuhao.add(new Option(">","1")); 
+                            selectfuhao.add(new Option("<","2")); 
+                            selectfuhao.add(new Option(">=","3")); 
+                            selectfuhao.add(new Option("<=","4",true,true)); 
+                            selectfuhao.add(new Option("=","5")); 
+                        }else{
+                            selectfuhao.id = "fuhaobieselect";
+                            selectfuhao.add(new Option(">","1")); 
+                            selectfuhao.add(new Option("<","2")); 
+                            selectfuhao.add(new Option(">=","3")); 
+                            selectfuhao.add(new Option("<=","4")); 
+                            selectfuhao.add(new Option("=","5",true,true)); 
+                        }
+                        //初中高级
+                        sediv.append(spanfuhao);
+                        sediv.append(selectfuhao);
+                        sediv.append("&nbsp;");
+                        var span  = document.createElement("span");
+                        /*$(span).css("position","relative");
+                        $(span).css("top","30px");
+                        $(span).css("padding-left","15px");*/
+                        formConDiv7.append(span);
+                        var select = document.createElement("select");  
+                        if(obj2[i+1].code=="1"){
+                            select.id = "jibieselect";
+                            select.add(new Option("初级","1",true,true)); 
+                            select.add(new Option("中级","2")); 
+                            select.add(new Option("高级","3")); 
+                        }else if(obj2[i+1].code=="2"){
+                            select.id = "jibieselect";
+                            select.add(new Option("中级","2",true,true)); 
+                            select.add(new Option("初级","1")); 
+                            select.add(new Option("高级","3")); 
+                        }else{
+                            select.id = "jibieselect";
+                            select.add(new Option("高级","3",true,true)); 
+                            select.add(new Option("初级","1")); 
+                            select.add(new Option("中级","2")); 
+                        }
+                        /*var span  = document.createElement("span");
+                        span.innerHTML=nameArg[i];
+                        formConDiv7.append(span);*/
+                        sediv.append(span);
+                        sediv.append(select);
+                        sediv.css("padding-top","30px");
+                    /*    $(select).css("position","relative");
+                        $(select).css("top","30px");
+                        $(select).css("margin-left","20px");*/
+                        formConDiv7.append(sediv);
+                    }
+                        
+                    }
+                
+                //满 多少年
+                var sedivyear = $('<div></div>');
+                var firstspan  = $('<span>满</span>');
+                sedivyear.append(firstspan);
+                sedivyear.css("padding-top","30px");sedivyear.css("padding-left","30px");
+                var YearInput = $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[obj2.length-1].val);
+                YearInput.addClass("ui-text-default");
+                YearInput.css("width","50px");
+                sedivyear.append(YearInput);
+                var secondspan  = $('<span>年</span>');
+                sedivyear.append(secondspan);
+                formConDiv7.append(sedivyear);
+
+            }else if(obj2[0].type=='XinDaimuty'){
+
+                var codestr = [];
+                var namestr = [];
+                for(var a=0;a<obj2.length;a++){
+                    if(a<obj2.length-3){
+                        namestr[a]=obj2[a].val;
+                        codestr[a]=obj2[a].code;
+                    }
+                }
+                xlcodes = codestr;
+                xlnames = namestr;
+            
+                for(var i=0;i<nameArg.length;i++) {
+                    var sediv = $('<div></div>');
+                    if(i<nameArg.length-4){
+                        var span  = document.createElement("span");
+                        if(i==0){
+                            var name = "";
+                        
+                                for(var j=0;j<nameArg.length-4;j++){
+                                    if(j==(nameArg.length-5)){
+                                        
+                                        name +=obj2[j].val;
+                                    }else{
+                                        name +=obj2[j].val+",";
+                                    }
+                                
+                                }
+                            span.innerHTML=nameArg[i]+"：";
+                            $(span).css("position","relative");
+                            $(span).css("top","-40px");
+                            formConDiv7.append(span);
+                            var textarea = $('<textarea id="textareaid" style="position:relative;top:20px;width:415px;height:80px">'+name+'</textarea>');
+                            formConDiv7.css("position","absolute");
+                            formConDiv7.append(textarea);
+                            var butt = document.createElement("button");
+                            formConDiv7.append(butt);
+                            butt.innerHTML="选择";
+                            $(butt).css("position","relative");
+                            $(butt).css("top","-40px");
+                            butt.id="xlbutton";
+                            /*span.innerHTML=nameArg[i]+obj2[i].val;
+                            formConDiv7.append(span);*/
+                        }
+                    }else if(i==nameArg.length-4){
+                        //符号变量
+                        var spanfuhao = document.createElement("span");
+                        spanfuhao.innerHTML="证书等级：";
+                        $(spanfuhao).css("padding-left","20px");
+                        var selectfuhao = document.createElement("select");  
+                        if(obj2[i].code=="1"){
+                            selectfuhao.id = "fuhaobieselect";
+                            selectfuhao.add(new Option(">","1",true,true)); 
+                            selectfuhao.add(new Option("<","2")); 
+                            selectfuhao.add(new Option(">=","3")); 
+                            selectfuhao.add(new Option("<=","4")); 
+                            selectfuhao.add(new Option("=","5")); 
+                        }else if(obj2[i].code=="2"){
+                            selectfuhao.id = "fuhaobieselect";
+                            selectfuhao.add(new Option(">","1")); 
+                            selectfuhao.add(new Option("<","2",true,true)); 
+                            selectfuhao.add(new Option(">=","3")); 
+                            selectfuhao.add(new Option("<=","4")); 
+                            selectfuhao.add(new Option("=","5")); 
+                        }else if(obj2[i].code=="3"){
+                            selectfuhao.id = "fuhaobieselect";
+                            selectfuhao.add(new Option(">","1")); 
+                            selectfuhao.add(new Option("<","2")); 
+                            selectfuhao.add(new Option(">=","3",true,true)); 
+                            selectfuhao.add(new Option("<=","4")); 
+                            selectfuhao.add(new Option("=","5")); 
+                        }else if(obj2[i].code=="4"){
+                            selectfuhao.id = "fuhaobieselect";
+                            selectfuhao.add(new Option(">","1")); 
+                            selectfuhao.add(new Option("<","2")); 
+                            selectfuhao.add(new Option(">=","3")); 
+                            selectfuhao.add(new Option("<=","4",true,true)); 
+                            selectfuhao.add(new Option("=","5")); 
+                        }else{
+                            selectfuhao.id = "fuhaobieselect";
+                            selectfuhao.add(new Option(">","1")); 
+                            selectfuhao.add(new Option("<","2")); 
+                            selectfuhao.add(new Option(">=","3")); 
+                            selectfuhao.add(new Option("<=","4")); 
+                            selectfuhao.add(new Option("=","5",true,true)); 
+                        }
+                        //初中高级
+                        sediv.append(spanfuhao);
+                        sediv.append(selectfuhao);
+                        sediv.append("&nbsp;");
+                        var span  = document.createElement("span");
+                        /*$(span).css("position","relative");
+                        $(span).css("top","30px");
+                        $(span).css("padding-left","15px");*/
+                        formConDiv7.append(span);
+                        var select = document.createElement("select");  
+                        if(obj2[i+1].code=="1"){
+                            select.id = "jibieselect";
+                            select.add(new Option("初级","1",true,true)); 
+                            select.add(new Option("中级","2")); 
+                            select.add(new Option("高级","3")); 
+                        }else if(obj2[i+1].code=="2"){
+                            select.id = "jibieselect";
+                            select.add(new Option("中级","2",true,true)); 
+                            select.add(new Option("初级","1")); 
+                            select.add(new Option("高级","3")); 
+                        }else{
+                            select.id = "jibieselect";
+                            select.add(new Option("高级","3",true,true)); 
+                            select.add(new Option("初级","1")); 
+                            select.add(new Option("中级","2")); 
+                        }
+                        /*var span  = document.createElement("span");
+                        span.innerHTML=nameArg[i];
+                        formConDiv7.append(span);*/
+                        sediv.append(span);
+                        sediv.append(select);
+                        sediv.css("padding-top","30px");
+                    /*    $(select).css("position","relative");
+                        $(select).css("top","30px");
+                        $(select).css("margin-left","20px");*/
+                        formConDiv7.append(sediv);
+                    }
+                        
+                    }
+                
+                //满 多少年
+                var sedivyear = $('<div></div>');
+                var firstspan  = $('<span>信贷从业满</span>');
+                sedivyear.append(firstspan);
+                sedivyear.css("padding-top","30px");sedivyear.css("padding-left","30px");
+                var YearInput = $('<input type="text" id="RULE-VAR-INPUT" style="border:1px solid #ddd; margin:0px 5px 0px 5px;text-align:center">').val(obj2[obj2.length-1].val);
+                YearInput.addClass("ui-text-default");
+                YearInput.css("width","50px");
+                sedivyear.append(YearInput);
+                var secondspan  = $('<span>年</span>');
+                sedivyear.append(secondspan);
+                formConDiv7.append(sedivyear);
+            }else if(obj2[0].type=='string'){
 				var  BUTT= document.createElement("button");
 				BUTT.id="chongzhi";
 				BUTT.innerHTML="重置";
@@ -861,7 +1140,51 @@ function bindCard() {
 					mx_name+="#muty#";*/
 				
 					saveRuleVarCode(dataId,"","",jsons,mx_name);
-			}else if(obj2[0].type=='XL'){
+			}else if(obj2[0].type=='yearmuty'){
+                //保存 序列
+                var mx_name = nameArg[0];
+                var jsons = "[";
+                for(var j=0;j<xlcodes.length;j++){
+                    jsons+='{"vari":"yearmuty","val":"'+xlnames[j]+'","type":"yearmuty","code":"'+xlcodes[j]+'"},';
+                    if(j==xlcodes.length-1){
+                        mx_name+="#yearmuty#";
+                    }else{
+                        mx_name+="#yearmuty#、";
+                        
+                    }
+                }
+                jsons+='{"vari":"yearmuty","val":"'+$("#fuhaobieselect").find("option:selected").text()+'","type":"yearmuty","code":"'+$("#fuhaobieselect").val()+'"},';
+                mx_name+="#yearmuty#";
+                jsons+='{"vari":"yearmuty","val":"'+$("#jibieselect").find("option:selected").text()+'","type":"yearmuty","code":"'+$("#jibieselect").val()+'"},';
+                mx_name+="#yearmuty#";
+                mx_name+=nameArg[nameArg.length-2];
+                jsons+='{"vari":"yearmuty","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"yearmuty"}]';
+                mx_name+="#yearmuty#";
+                mx_name+=nameArg[nameArg.length-1];
+                saveRuleVarCode(dataId,"","",jsons,mx_name);
+
+				}else if(obj2[0].type=='XinDaimuty'){
+	                //保存 序列
+	                var mx_name = nameArg[0];
+	                var jsons = "[";
+	                for(var j=0;j<xlcodes.length;j++){
+	                    jsons+='{"vari":"XinDaimuty","val":"'+xlnames[j]+'","type":"XinDaimuty","code":"'+xlcodes[j]+'"},';
+	                    if(j==xlcodes.length-1){
+	                        mx_name+="#XinDaimuty#";
+	                    }else{
+	                        mx_name+="#XinDaimuty#、";
+	                    }
+	                }
+	                jsons+='{"vari":"XinDaimuty","val":"'+$("#fuhaobieselect").find("option:selected").text()+'","type":"XinDaimuty","code":"'+$("#fuhaobieselect").val()+'"},';
+	                mx_name+="#XinDaimuty#";
+	                jsons+='{"vari":"XinDaimuty","val":"'+$("#jibieselect").find("option:selected").text()+'","type":"XinDaimuty","code":"'+$("#jibieselect").val()+'"},';
+	                mx_name+="#XinDaimuty#";
+	                mx_name+=nameArg[nameArg.length-2];
+	                jsons+='{"vari":"XinDaimuty","val":"'+$("#RULE-VAR-INPUT").val()+'","type":"XinDaimuty"}]';
+	                mx_name+="#XinDaimuty#";
+	                mx_name+=nameArg[nameArg.length-1];
+	                saveRuleVarCode(dataId,"","",jsons,mx_name);
+				}else if(obj2[0].type=='XL'){
 //					debugger;
 					//保存 序列
 					var mx_name = nameArg[0];
