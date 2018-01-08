@@ -59,7 +59,7 @@ if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly){
 }
 
 /**
- * 导出
+ * 导入
  */
 _viewer.getBtn("imp").unbind("click").bind("click",function() {
 	var kcId = _viewer.getParHandler().getItem("KC_ID").getValue();
