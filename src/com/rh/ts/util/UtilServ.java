@@ -84,6 +84,9 @@ public class UtilServ extends CommonServ {
 		bean.remove(primaryColCode);
 		bean.setId("");
 		bean = delSysCol(bean);
+		if(servId.equals("TS_KCGL")){
+		    bean.set("KC_CODE", bean.getStr("KC_CODE")+"_2");
+		}
 		Bean newBean = ServDao.create(servId, bean);
 		if (!newBean.getId().equals("")) {
 			copyLinkData(servId, pkCode, newBean.getId());

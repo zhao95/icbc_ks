@@ -36,9 +36,9 @@ $("#TS_KCGL .rhGrid").find("tr").each(function(index, item) {
 //		'<a class="rhGrid-td-rowBtnObj" operCode="optJgBtn" rowpk="'+dataId+'" style="cursor:pointer">关联机构&nbsp</a>'+
 		'<a class="rhGrid-td-rowBtnObj" operCode="optCopyBtn" rowpk="'+dataId+'" style="cursor:pointer">&nbsp&nbsp复制&nbsp</a>';
 //		'<a class="rhGrid-td-rowBtnObj" operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>';
-		
-		if(state < 5){
-			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">垃圾箱&nbsp</a>';
+
+		if(state < 8){
+			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">逻辑删除&nbsp</a>';
 		}else{
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optBackTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">撤销&nbsp</a>';
 		}
@@ -141,8 +141,8 @@ function bindCard(){
 		$(".hoverDiv").css('display','none');
 		FireFly.doAct("TS_UTIL","trash",{"servId":_viewer.servId,"pkCodes":pkCode,"stateColCode":"KC_STATE","action":"add"},true,false,function(data){
 			if(data._MSG_.indexOf("OK")!= -1){
-				_viewer.refreshGrid();
-//				window.location.reload();
+//				_viewer.refreshGrid();
+				window.location.reload();
 			}
 		});
 	});
@@ -152,8 +152,8 @@ function bindCard(){
 		$(".hoverDiv").css('display','none');
 		FireFly.doAct("TS_UTIL","trash",{"servId":_viewer.servId,"pkCodes":pkCode,"stateColCode":"KC_STATE","action":"del"},true,false,function(data){
 			if(data._MSG_.indexOf("OK")!= -1){
-//				window.location.reload();
-				_viewer.refreshGrid();
+				window.location.reload();
+//				_viewer.refreshGrid();
 			}
 		});
 	});
