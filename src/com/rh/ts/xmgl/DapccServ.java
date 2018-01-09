@@ -133,10 +133,10 @@ public class DapccServ extends CommonServ {
         String searchKcId = paramBean.getStr("searchKcId");
         String searchSjId = paramBean.getStr("searchSjId");
 
-        String[] split = searchKcId.split(",");
+        String[] kcIdSplit = searchKcId.split(",");
         List<Object> kcIdValues = new ArrayList<Object>();
         StringBuilder kcIdSql = new StringBuilder();
-        for (String kcId : split) {
+        for (String kcId : kcIdSplit) {
             kcIdSql.append("?,");
             kcIdValues.add(kcId);
         }
@@ -210,7 +210,7 @@ public class DapccServ extends CommonServ {
 //            values1.add(searchKcId);
             List<Bean> beanList = Transaction.getExecutor().query(sql, values1);
             //substring(b.CODE_PATH , 12, 10) 获取
-            if (beanList != null && beanList.size() > 0) {
+            if (CollectionUtils.isNotEmpty(beanList)) {
                 Bean bean = beanList.get(0);
                 searchJkCodePath = bean.getStr("CODE_PATH");
                 values.add(searchJkCodePath);
@@ -225,14 +225,28 @@ public class DapccServ extends CommonServ {
             l = Long.MAX_VALUE;
             whereSql += " and a.BM_STATUS in('1','3')";
             paramBean.set("isArrange", "false");//请假数据获取所有，不考虑是否安排
-            whereSql += " AND EXISTS (select '' from ts_xmgl_kcap_gljg g where g.KC_ID in(" + kcIdSql + ") and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+            whereSql += " AND EXISTS (" +
+                    "   select '' from ts_xmgl_kcap_gljg g where g.KC_ID in(" + kcIdSql + ") " +
+                    "       AND (" +
+                    "       ( INSTR(c.CODE_PATH, g.JG_CODE) > 0 AND g.JG_TYPE = 2)" +
+                    "        OR " +
+                    "       ( c.ODEPT_CODE = g.JG_CODE  AND g.JG_TYPE = 1 ) " +
+                    "       )" +
+                    ")";
             values.addAll(kcIdValues);
 //            values.add(searchKcId);
         } else {
             //获取的考生 在考场关联机构本级及下级的机构
             //*EXISTS
             whereSql += " and a.BM_STATUS not in('1','2','3')";
-            whereSql += " AND EXISTS (select '' from ts_xmgl_kcap_gljg g where g.KC_ID in(" + kcIdSql + ") and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+            whereSql += " AND EXISTS (" +
+                    "   select '' from ts_xmgl_kcap_gljg g where g.KC_ID in(" + kcIdSql + ") " +
+                    "       AND (" +
+                    "       ( INSTR(c.CODE_PATH, g.JG_CODE) > 0 AND g.JG_TYPE = 2)" +
+                    "        OR " +
+                    "       ( c.ODEPT_CODE = g.JG_CODE  AND g.JG_TYPE = 1 ) " +
+                    "       )" +
+                    ")";
             values.addAll(kcIdValues);
 //            values.add(searchKcId);
 
@@ -906,7 +920,7 @@ public class DapccServ extends CommonServ {
                     //考场关联机构考生
                     "EXISTS (select '' from ts_xmgl_kcap_gljg g " +
                     "where g.KC_ID in(" + kcIdSql + ") " +
-                    "and INSTR(c.CODE_PATH ,g.JG_CODE)>0 ) " +
+                    "AND ( (INSTR(c.CODE_PATH, g.JG_CODE) > 0 AND g.JG_TYPE = 2) OR (c.ODEPT_CODE = g.JG_CODE AND g.JG_TYPE = 1) ) " +
                     "and a.BM_STATUS not in('1','2','3')" +
                     ") or (" +
                     //借考的考生
