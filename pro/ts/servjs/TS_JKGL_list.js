@@ -87,7 +87,7 @@ function bindCard(){
 
 
 //从excel中导入人员
-const IMPORT_FILE_ID = "TS_JKGL-impUserByExcel";debugger;
+const IMPORT_FILE_ID = "TS_JKGL-impUserByExcel";
 var $importUser = $('#' + IMPORT_FILE_ID);
 //避免刷新数据重复添加
 var $impFile = jQuery('#' + _viewer.servId + '-impFile');

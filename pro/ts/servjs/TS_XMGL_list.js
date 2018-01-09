@@ -420,7 +420,7 @@ function showRelease(pkAarry,_viewer,sflg){debugger;
 	
 }
 
-function  delXmData(pkAarry,_viewer){debugger;
+function  delXmData(pkAarry,_viewer){
 	for (var i = 0; i < pkAarry.length; i++) {
 		var param = {};
 		param["xmpk"]= pkAarry[i];

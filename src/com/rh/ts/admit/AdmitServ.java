@@ -82,7 +82,7 @@ public class AdmitServ extends CommonServ {
             String AD_GRADE = rowBean.getStr(ImpUtils.COL_NAME + "6");
             bean.set("AD_GRADE", AD_GRADE);
             if("".equals(AD_GRADE)){
-            	rowBean.set(ImpUtils.ERROR_NAME, "岗位类别为空");
+            	rowBean.set(ImpUtils.ERROR_NAME, "分数为空");
             	continue;
             }
             if (ServDao.count("ts_bmsh_admit", bean) <= 0) {

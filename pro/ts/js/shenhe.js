@@ -581,7 +581,7 @@ function yiyi(obj){
 			//审核理由
 			var param1 = {};
 			param1["bmid"]=a;
-			var result = FireFly.doAct("TS_BMLB_BM","getLiyou",param1);
+			var result = FireFly.doAct("TS_BMLB_BM","getLiyou",param1,true,false);
 			var reason = result.liyou;
 			$("#backliyou").text(reason);
 			  $("#backliyou").attr("disabled","disabled");
@@ -594,10 +594,14 @@ function yiyi(obj){
 	}
 //-------------------------------------------------------------------------------报名详细信息图标
 function form2submit(obj){
+	
 	var bmid = obj.parentNode.id;
 		var param = {};
 		param["bmid"]=bmid;
-	var result = FireFly.doAct("TS_BMLB_BM","getSingle",param);
+	var result = FireFly.doAct("TS_BMLB_BM","getSingle",param,true,false);
+	if(result._MSG_!=""){
+		return false;
+	}
 	var pageEntity = result.list;
 	if(pageEntity.length!=2){
 	$(obj).attr("data-target","#userbminfo");

@@ -54,10 +54,10 @@ public class BaseValidCert2YearBkxl implements IRule {
 		if(kslbklist!=null&&kslbklist.size()!=0){
 			user_lb_level = kslbklist.get(0).getStr("KSLBK_TYPE_LEVEL");
 		}
-		int user_lb_level_in = Integer.parseInt(user_lb_level);
-		if("".equals(user_lb_level_in)){
+		if("".equals(user_lb_level)){
 			return false;
 		}
+		int user_lb_level_in = Integer.parseInt(user_lb_level);
 		
 		if(xl.equals(user_xl)){
 			

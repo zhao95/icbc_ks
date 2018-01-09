@@ -737,6 +737,10 @@ var ZdfpccModal = {
                 setting.disabled = true;
                 setting.checked = true;
             }
+            //默认勾选 相同考试前后左右不相邻
+            if (setting.GZ_CODE === 'R001') {
+                setting.checked = true;
+            }
 
             if (setting.GZ_CODE === 'S001') {
                 //最少考场，最少场次 为单选框特殊处理

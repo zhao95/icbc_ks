@@ -1021,7 +1021,9 @@ public class BmlbServ extends CommonServ {
 		Bean bmbean = ServDao.find("TS_BMLB_BM", bmid);
 		String where = "AND DATA_ID=" + "'" + bmid + "'";
 		List<Bean> filelist = ServDao.finds("SY_COMM_FILE", where);
-
+		if(bmbean==null){
+			return new OutBean().setError("报名数据不存在，数据错误");
+		}
 		outBean.set("list", filelist);
 		outBean.set("liyou", bmbean.getStr("BM_SS_REASON"));
 		return outBean;
@@ -1038,6 +1040,9 @@ public class BmlbServ extends CommonServ {
 		Bean outBean = new Bean();
 		String bmid = paramBean.getStr("bmid");
 		Bean databean = ServDao.find("TS_BMLB_BM", bmid);
+		if(databean==null){
+			return new OutBean().setError("报名数据已不存在，数据错误");
+		}
 		outBean.set("liyou", databean.getStr("BM_SS_REASON"));
 		return outBean;
 	}
@@ -1061,7 +1066,7 @@ public class BmlbServ extends CommonServ {
 		String where = "AND BM_ID=" + "'" + id + "'";
 		List<Bean> list = ServDao.finds("TS_BMLB_BM", where);
 		if (list==null||list.size() == 0) {
-			return new OutBean().setError("数据错误，数据不存在").set("list", list);
+			return new OutBean().setError("报名数据已消失，数据不存在").set("list", list);
 		}
 		list.get(0).set("rylphone", rylphone);
 		list.get(0).set("phone_num", phone_num);
