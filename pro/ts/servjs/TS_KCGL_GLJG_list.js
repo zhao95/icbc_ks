@@ -141,5 +141,7 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 	file.initUpload();
 });
 
-
+_viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
+	window.open(FireFly.getContextPath() + '/ts/imp_template/考场管理-关联机构倒入模版.xls');
+});
 

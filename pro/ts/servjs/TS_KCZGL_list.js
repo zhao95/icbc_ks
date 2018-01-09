@@ -259,4 +259,8 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 
 });
 
+_viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
+	window.open(FireFly.getContextPath() + '/ts/imp_template/考场群组管理导入模版.xls');
+});
+
 

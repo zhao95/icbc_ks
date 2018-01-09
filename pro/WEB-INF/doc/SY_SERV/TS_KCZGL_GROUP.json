@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"and SERV_ID = 'TS_KCZGL_GROUP'",
-"S_MTIME":"2018-01-04 17:09:41:099",
+"S_MTIME":"2018-01-09 15:52:50:580",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "SERV_LINK_FLAG":"1",
@@ -1216,6 +1216,33 @@
 {
 "ACT_TYPE":"1",
 "ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"download",
+"ACT_MEMO":"",
+"ACT_CODE":"tmplBtn",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"0vdeoL3W6J70WLqEG4lH",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"0vdeoL3W6J70WLqEG4lH",
+"SERV_ID":"TS_KCZGL_GROUP",
+"S_MTIME":"2018-01-09 15:52:50:552",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"109",
+"ACT_GROUP":"2",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"8",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":"倒入模版"
+},
+{
+"ACT_TYPE":"1",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"imp",
 "ACT_MEMO":"",
 "ACT_CODE":"imp",
@@ -1235,7 +1262,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"8",
+"_ROWNUM_":"9",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 入 "
@@ -1262,7 +1289,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"9",
+"_ROWNUM_":"10",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 出 "
@@ -1289,7 +1316,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"10",
+"_ROWNUM_":"11",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 接 收 "
@@ -1316,7 +1343,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"11",
+"_ROWNUM_":"12",
 "ACT_TIP":"zip文件导入",
 "EN_JSON":"",
 "ACT_NAME":"批量导入"
@@ -1343,7 +1370,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"12",
+"_ROWNUM_":"13",
 "ACT_TIP":"zip文件导出",
 "EN_JSON":"",
 "ACT_NAME":"批量导出"

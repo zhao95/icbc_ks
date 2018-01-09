@@ -72,3 +72,7 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 	file.obj.css({'margin-left':'5px'});
 	file.initUpload();
 });
+
+_viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
+	window.open(FireFly.getContextPath() + '/ts/imp_template/项目管理_场次测算_考生管理导入模版.xls');
+});

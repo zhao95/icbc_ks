@@ -233,3 +233,7 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 	file.obj.css({'margin-left':'5px'});
 	file.initUpload();
 });
+
+_viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
+	window.open(FireFly.getContextPath() + '/ts/imp_template/考场组管理_考场导入模版.xls');
+});
