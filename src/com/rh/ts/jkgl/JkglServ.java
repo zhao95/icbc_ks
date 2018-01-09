@@ -198,7 +198,7 @@ public class JkglServ extends CommonServ {
     	return out;
     }
     
-    public OutBean imp(ParamBean paramBean) {
+  /** public OutBean imp(ParamBean paramBean) {
         OutBean outBean = new OutBean();
         
         String servId = paramBean.getServId();
@@ -372,7 +372,7 @@ public class JkglServ extends CommonServ {
         }
         FileMgr.deleteFile(fileBean); //最后删除临时上传的文件
         return outBean;
-    }
+    }*/
     
     
     
@@ -444,7 +444,6 @@ public class JkglServ extends CommonServ {
 			bean.set("JKGL_TYPE", jkType);// 禁考类型
 			bean.set("JKGL_START_DATE", jkStartTime);// 禁考开始时间
 			bean.set("JKGL_END_DATE", jkEndTime);// 禁考结束时间
-            // bean.set("G_TYPE", 1);//选取类型 1人员
             if (ServDao.count(TsConstant.SERV_JKGL, bean) <= 0) {
                 // 先查询避免重复添加col3=总行/广东分行营业部,总行/福建分行,
 //                bean.set("BMSHLC_SHR", name);
