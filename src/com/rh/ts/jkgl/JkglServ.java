@@ -1,8 +1,6 @@
 package com.rh.ts.jkgl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,18 +8,15 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
-import com.rh.core.base.BeanUtils;
+
 import com.rh.core.base.Context;
-import com.rh.core.comm.FileMgr;
-import com.rh.core.comm.file.TempFile;
-import com.rh.core.comm.file.TempFile.Storage;
+
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
@@ -422,8 +417,8 @@ public class JkglServ extends CommonServ {
 			String jkType = rowBean.getStr(ImpUtils.COL_NAME + "4");//获取禁考类型
 			String jkStartTime = rowBean.getStr(ImpUtils.COL_NAME + "5");//获取禁考开始时间
 			String jkEndTime = rowBean.getStr(ImpUtils.COL_NAME + "6");//获取禁考开始时间
-			
-            Bean userBean = ImpUtils.getUserBeanByString(colCode);
+			Bean  userBean=UserMgr.getUser(colCode);//获取人员信息
+           // Bean userBean = ImpUtils.getUserBeanByString(colCode);
             if (userBean == null) {
                 rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
                 continue;
@@ -436,15 +431,14 @@ public class JkglServ extends CommonServ {
                 rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
                 continue;
             }
-
             Bean bean = new Bean();
-            bean.set("JKGL_USER_NAME", name);
 			bean.set("JKGL_RLZY", code);// 人资源编码
-			bean.set("JKGL_ORG", userDeptCode);// 禁考人机构
 			bean.set("JKGL_TYPE", jkType);// 禁考类型
 			bean.set("JKGL_START_DATE", jkStartTime);// 禁考开始时间
 			bean.set("JKGL_END_DATE", jkEndTime);// 禁考结束时间
             if (ServDao.count(TsConstant.SERV_JKGL, bean) <= 0) {
+            	 bean.set("JKGL_USER_NAME", name);
+            	 bean.set("JKGL_ORG", userDeptCode);// 禁考人机构
                 // 先查询避免重复添加col3=总行/广东分行营业部,总行/福建分行,
 //                bean.set("BMSHLC_SHR", name);
 //                String[] colDeptCode = colDeptCodes.split(",");
@@ -481,7 +475,53 @@ public class JkglServ extends CommonServ {
     }
 
     
-    
+    private static final int ONETIME_EXP_NUM = 20000;
+    public OutBean exp(ParamBean paramBean) {
+   	String servId = paramBean.getServId();
+   	ServDefBean serv = ServUtils.getServDef(servId);
+   	long count = 0;
+   	long times = 0;
+   	paramBean.setQueryPageShowNum(ONETIME_EXP_NUM); // 设置每页最大导出数据量
+   	beforeExp(paramBean); // 执行监听方法
+   	if (paramBean.getId().length() > 0) { // 支持指定记录的导出（支持多选）
+   	    String searchWhere = " and " + serv.getPKey() + " in ('" + paramBean.getId().replaceAll(",", "','") + "')";
+   	    paramBean.setQuerySearchWhere(searchWhere);
+   	}
+   	ExportExcel expExcel = new ExportExcel(serv);
+   	try {
+   	    OutBean outBean = queryExp(paramBean);
+   	    count = outBean.getCount();
+   	    // 导出第一次查询数据
+   	    paramBean.setQueryPageNowPage(1); // 导出当前第几页
+   	    afterExp(paramBean, outBean); // 执行导出查询后扩展方法
+   	    LinkedHashMap<String, Bean> cols = outBean.getCols();
+   	    cols.remove("BUTTONS");
+   	    expExcel.createHeader(cols);
+   	    expExcel.appendData(outBean.getDataList(), paramBean);
+
+   	    // 存在多页数据
+   	    if (ONETIME_EXP_NUM < count) {
+   		times = count / ONETIME_EXP_NUM;
+   		// 如果获取的是整页数据
+   		if (ONETIME_EXP_NUM * times == count && count != 0) {
+   		    times = times - 1;
+   		}
+   		for (int i = 1; i <= times; i++) {
+   		    paramBean.setQueryPageNowPage(i + 1); // 导出当前第几页
+   		    OutBean out = query(paramBean);
+   		    afterExp(paramBean, out); // 执行导出查询后扩展方法
+   		    expExcel.appendData(out.getDataList(), paramBean);
+   		}
+   	    }
+   	    expExcel.addSumRow();
+   	} catch (Exception e) {
+   	    log.error("导出Excel文件异常" + e.getMessage(), e);
+   	} finally {
+   	    expExcel.close();
+   	}
+   	return new OutBean().setOk();
+       }
+} 
 	/**public OutBean saveFromExcel(ParamBean paramBean) throws IOException, BiffException, WriteException {
 		OutBean outBean = new OutBean();
 		// 获取前端传递参数
@@ -619,4 +659,4 @@ public class JkglServ extends CommonServ {
 	        }*/
 	
 	
-}
+
