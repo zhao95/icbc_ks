@@ -44,3 +44,10 @@ $importFile.find('object').css('cursor', 'pointer');
 $importFile.find('object').css('z-index', '999999999');
 $importFile.find('object').css('width', '100%');
 $importFile.attr('title', '导入文件为excel格式文件，内容为无标题的单列数据，一行数据为一个用户，数据为人力资源编码、统一认证号、身份证号');
+
+
+//导入模板下载
+var $impFile = jQuery('#' + _viewer.servId + '-impFile');
+$impFile.unbind('click').bind('click', function () {
+  window.open(FireFly.getContextPath() + '/ts/imp_template/准入测试导入模板.xls');
+});
