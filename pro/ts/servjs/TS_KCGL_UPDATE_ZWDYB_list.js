@@ -29,6 +29,9 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 	    			FireFly.doAct("TS_KCGL_UPDATE_ZWDYB","save",bean);
 	    		});
 	    	}
+	    	 setTimeout(function(){
+	    		 _viewer.refreshGrid();
+	         },100);
 		}
 	};
 	//2.用系统的查询选择组件 rh.vi.rhSelectListView()

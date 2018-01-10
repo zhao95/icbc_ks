@@ -60,6 +60,11 @@ _viewer.beforeSave = function() {
 		$("#TS_KCGL-KC_GLY_div").find(".ui-dataservice-container,.fl,.wp").addClass("blankError").addClass("errorbox");
 		return false;
 	}
+	
+	if($("#TS_KCGL-KC_JKIP_div .rhGrid-tbody").find("td").length == 1){
+		$("#TS_KCGL-KC_JKIP_div").find(".ui-dataservice-container,.fl,.wp").addClass("blankError").addClass("errorbox");
+		return false;
+	}
 };
 
 /**
@@ -163,7 +168,8 @@ $("#TS_KCGL_GLY-viListViewBatch-addBatch").click(function(){
 	},50);
 });
 
-$("input[icode='JKIP_IP']").change(function(){
+//监控机地址校验
+$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").change(function(){
 	var ipVal = $(this).val();
 	var reg = new RegExp("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$");
 	if(!reg.test(ipVal)){
@@ -171,5 +177,15 @@ $("input[icode='JKIP_IP']").change(function(){
 		$(this).val(""); 
     }
 });
-
-
+$("#TS_KCGL_JKIP-viListViewBatch-addBatch").click(function(){
+	setTimeout(function () {
+		$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").change(function(){
+			var ipVal = $(this).val();
+			var reg = new RegExp("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$");
+			if(!reg.test(ipVal)){
+				alert("IP地址格式不正确");
+				$(this).val(""); 
+		    }
+		});
+    }, 100)
+});
