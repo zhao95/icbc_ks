@@ -31,16 +31,16 @@ _viewer.beforeSave = function() {debugger;
     //
     var beginStart = (Date.parse(beginTime) - Date.parse(startArrayTimes)) / 3600 / 1000;
     if(beginStart< 0){
-    	$("#TS_BM_GROUP-G_DEAD_BEGIN").parent().showError("报名开始时间应晚于报名管理的报名开始时间");
-    	//$("#TS_BM_GROUP-G_DEAD_BEGIN").addClass("blankError").addClass("errorbox");
+    	$("#TS_BM_GROUP-G_DEAD_BEGIN").parent().showError("报名开始时间应晚于"+bmStart);
+    	//$("#TS_BM_GROUP-G_DEAD_BEGIN").addClass("blankError").addClass("errorbox");报名管理的报名开始时间
     	
     	return false;
     }
     
     var endsTimes = (Date.parse(endArrayTimes) - Date.parse(endTime)) / 3600 / 1000;
     if(endsTimes< 0){
-    	$("#TS_BM_GROUP-G_DEAD_END").parent().showError("报名结束时间应早于报名管理的报名结束时间");
-    	//$("#TS_BM_GROUP-G_DEAD_END").addClass("blankError").addClass("errorbox");
+    	$("#TS_BM_GROUP-G_DEAD_END").parent().showError("报名结束时间应早于"+bmEnd);
+    	//$("#TS_BM_GROUP-G_DEAD_END").addClass("blankError").addClass("errorbox");报名管理的报名结束时间
     	
     	return false;
     }
