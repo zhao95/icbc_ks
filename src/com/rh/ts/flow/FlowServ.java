@@ -40,6 +40,7 @@ public class FlowServ extends CommonServ {
         Bean newBean = ServDao.create(servId, bean);
         if (!newBean.getId().equals("")) {
             copyLinkData(servId, pkCode, newBean.getId());
+            changeWfsid( pkCode,  newBean.getId());
             outBean.setOk();
         }
         return outBean;
@@ -102,7 +103,38 @@ public class FlowServ extends CommonServ {
         Bean bean = ServDao.find("SY_SERV", servId);
         return bean.getStr("SERV_KEYS");
     }
-
+    /**
+     * 报名审核流程和借考的更新wfs_id
+     *
+     * @param servId
+     * @return
+     */
+    public void  changeWfsid(String oldWfsId, String newWfsId){
+    	//通过新的wfs_ID得到新的node_ID
+    	String  nodeWhere="AND  WFS_ID='"+newWfsId+"'";
+    	List<Bean> nodesBean=ServDao.finds("TS_WFS_NODE_APPLY", nodeWhere);
+    	if(nodesBean!=null && !nodesBean.isEmpty()){
+    		for(int i=0;i<nodesBean.size();i++){
+    			String nodeId=nodesBean.get(i).getStr("NODE_ID");
+    			String  nodesWhere="AND  NODE_ID='"+nodeId+"'";
+    	    	List<Bean> lcBean=ServDao.finds("TS_WFS_BMSHLC", nodesWhere);//三个流程
+    	    	if(lcBean!=null && !lcBean.isEmpty()){
+                     for(int j=0;j<lcBean.size();j++){
+                    	 lcBean.get(j).set("WFS_ID", newWfsId);
+                    	 ServDao.save("TS_WFS_BMSHLC", lcBean.get(j));
+    	    		}
+    	    	}
+    	    		
+    		}
+    	}
+    	
+    	
+    	
+    	
+    }
+ 
+    
+    
     /**
      * 注意：程序只考虑了最普通的主服务和自服务有一个字段有关系的情况，如果使用中情况不只一条绑定主键外键这种情况，需要自己另作处理
      * 取得关联服务
