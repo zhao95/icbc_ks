@@ -94,6 +94,7 @@ public class FlowJklcServ extends CommonServ {
      */
     public OutBean impDataSave(ParamBean paramBean) {
         OutBean outBean = new OutBean();
+        Bean  userBean  =new  Bean();
         // 获取前端传递参数
         String nodeId = (String) paramBean.get("NODE_ID"); // 节点id
 
@@ -115,11 +116,13 @@ public class FlowJklcServ extends CommonServ {
             String customDept = rowBean.getStr(ImpUtils.COL_NAME + "6");//自定义部门
             String shrJob = rowBean.getStr(ImpUtils.COL_NAME + "7");//审核人职位
             //Bean userBean = ImpUtils.getUserBeanByString(colCode);
-            Bean  userBean=UserMgr.getUser(colCode);//获取人员信息
+            
+            if(colCode != null && colCode.length() != 0){
+              userBean=UserMgr.getUser(colCode);//获取人员信息
 //            if (userBean == null) {
 //                rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
 //                continue;
-//            }  
+            }  
             String code="";
             if(userBean !=null){
              code = userBean.getStr("USER_CODE");
@@ -140,6 +143,7 @@ public class FlowJklcServ extends CommonServ {
             if(colCode != null && colCode.length() != 0) { 
             	bean.set("QJKLC_SEL", 1);
             }
+            
             //部门预定义
             bean.set("QJKLC_YDDEPT", predeFineDept);//预定义部门
             if(predeFineDept != null && predeFineDept.length() != 0) { 
@@ -228,6 +232,7 @@ public class FlowJklcServ extends CommonServ {
             	 }
             }
         }
+    
     }
         ServDao.creates(TsConstant.SERV_WFS_QJKLC, beans);
 

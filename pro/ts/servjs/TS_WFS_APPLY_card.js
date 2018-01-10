@@ -3,12 +3,15 @@ var flowServ = _viewer.getItem("WFS_SERVID").getValue();
 if(flowServ == 1 ){
 	_viewer.getItem("WFS_TYPE").show();
 }
+if(flowServ == 2 ){
+	_viewer.getItem("WFS_TYPE").show();
+}
 if(flowServ == 3){
 	_viewer.getItem("WFS_TYPE").show();
 }
 _viewer.getItem("WFS_SERVID").change(function(){
 	var flowSerTmp = _viewer.getItem("WFS_SERVID").getValue(); 
-	if(flowSerTmp == 1 || flowSerTmp == 3){
+	if(flowSerTmp == 1 || flowSerTmp == 2 || flowSerTmp == 3){
 		_viewer.getItem("WFS_TYPE").show();
 	}else{
 		_viewer.getItem("WFS_TYPE").hide();
