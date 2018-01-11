@@ -1883,7 +1883,7 @@ public class BmlbServ extends CommonServ {
 		UserBean userBean = Context.getUserBean();
 		String code = userBean.getCode();
 		String xmid = paramBean.getStr("xmid");
-		int middlenum = paramBean.getInt("middlenum");
+		int middlenum = paramBean.getInt("middle");
 		int high = paramBean.getInt("high");
 		String sql1 = "select * FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'";
 		if(high==0){

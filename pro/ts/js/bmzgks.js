@@ -502,7 +502,7 @@ function xminfoshow(){
 		 var paramb = {};
 		 paramb["xmid"]=xm_id;
 		 paramb["high"]=highnum;
-		 paramb["middle"]=middlenum;
+		 paramb["middle"]=parammiddle;
 		 var ressultids = FireFly.doAct("TS_BMLB_BM","getYibmids",paramb)
 		 var ids = ressultids.ids;
 		 if(resultFlag.flag=="false"){
@@ -1045,7 +1045,7 @@ function xminfoshow(){
 				
 			}else{
 				canmiddlenum=maxnum-yimidd;
-				middlenum =canmiddlenum; 
+				parammiddle =canmiddlenum; 
 				$("#allnum").html(yimidd);//中级
 				$("#cannum").html(canmiddlenum);
 			}
@@ -1313,7 +1313,7 @@ function mkfuzhi(){
 	}
 }
 var highnum=0;
-var middlenum = 0;
+var parammiddle = 0;
 	//统计 已报名的考试  针对中级
 	function tongji(){
 		var param={};
@@ -1334,7 +1334,7 @@ var middlenum = 0;
 		$("#gaoji").html(high);
 		$("#canheighnum").html(highcanum);
 		highnum=highcanum;
-		middlenum=cannum;
+		parammiddle=cannum;
 		if(data.mxbmnum==0){
 			$("#thirdtr").remove();
 		}else{
