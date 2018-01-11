@@ -54,13 +54,12 @@
 						
 		<tr style="backGround-color:WhiteSmoke; height: 30px">
 			<th style="width: 5%; text-align: center">序号</th>
-			<th style="width: 19%;text-align: left">审核时间</th>
-			<th style="width: 10%;text-align: center">审核人姓名</th>
-			<th style="width: 10%; text-align: center">审核人登录名</th>
-			<th style="width: 10%; text-align: center">审核级别</th>
-			<th style="width: 10%; text-align: center">审核状态</th>
-			<th style="width: 18%; text-align: center">审核理由</th>
-			<th style="width: 16%; text-align: center">审核地址</th>
+			<th style="width: 15%;text-align: left">审核时间</th>
+			<th style="width: 15%;text-align: center">审核人姓名</th>
+			<th style="width: 15%; text-align: center">审核人机构</th>
+			<th style="width: 15%; text-align: center">审核级别</th>
+			<th style="width: 15%; text-align: center">审核状态</th>
+			<th style="width: 15%; text-align: center">审核理由</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -80,6 +79,11 @@
 		String shlog = bean.getStr("SH_UCODE");
 		String jibie = bean.getStr("SH_LEVEL");
 		String state = bean.getStr("SH_STATUS");
+		String dept_name = "";
+		if(!"".equals(shlog)){
+			dept_name=OrgMgr.getDept(bean.getStr("S_ODEPT")).getStr("DEPT_NAME");
+		}
+	
 		String liyou = "";
 		String status = "";
 		if("1".equals(state)){
@@ -96,8 +100,7 @@
 		String address = bean.getStr("SH_ULOGIN");
 	%>
 		 <tr height="50px">
-		<td align="center"><%=j %></td><td><%=shdate %></td><td align="center"><%=shr %></td><td align="center"><%=shlog %></td><td align="center"><%=jibie %></td><td align="center"><%=status %></td><td id="liyou<%=i %>" align="center"><%=liyou %></td><td align="center"><%=address %></td>
-		</tr> 
+		<td align="center"><%=j %></td><td><%=shdate %></td><td align="center"><%=shr %></td><td align="center"><%=dept_name %></td><td align="center"><%=jibie %></td><td align="center"><%=status %></td><td id="liyou<%=i %>" align="center"><%=liyou %></td></tr> 
 		<%}}%>
 	</tbody>
 	</table>
