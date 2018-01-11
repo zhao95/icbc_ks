@@ -21,8 +21,10 @@ import java.util.List;
 
 
 
+
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
+
 
 
 
@@ -733,8 +735,16 @@ public class BmlbServ extends CommonServ {
 		String user_code = paramBean.getStr("user_code");
 		String ppname = paramBean.getStr("ppname");
 		String where1 = paramBean.getStr("where");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+		Date nowdate = new Date();
+		String year = sdf.format(nowdate);
+		if(!"".equals(paramBean.getStr("year"))){
+			
+			year = paramBean.getStr("year");
+		}
+		
 		where1 = where1.replaceAll("AND ", "AND a.");
-		String whereSql = " where a.BM_TITLE LIKE '%"+ppname+"%' AND a.BM_CODE=" + "'" + user_code + "' " + where1
+		String whereSql = " where YEAR(a.S_ATIME) = '"+year+"' and a.BM_TITLE LIKE '%"+ppname+"%' AND a.BM_CODE=" + "'" + user_code + "' " + where1
 				+ " order by s_atime desc";
 
 		String sql = "select a.*,c.PUBLICITY," +

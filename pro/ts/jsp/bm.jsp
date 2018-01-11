@@ -189,7 +189,7 @@ String bmbq = request.getParameter("bmbq");
                  <option value="2">中级</option>
                  <option value="3">高级</option>
                  </select>
-                  &nbsp;&nbsp;名称 &nbsp;<input id="ksnameselect" style="height:25px;width:30%"></input>
+                  &nbsp;&nbsp;名称 &nbsp;<input id="ksnameselect" style="height:25px;width:15%"></input> &nbsp;年度&nbsp;<input id="yearsearch" style="height:25px;width:15%"></input>
                  &nbsp; <button class="btn btn-success" id="cxbut" style="width:20%;height:30px;background-color:lightseagreen">查询</button>
                  </div>
 

@@ -507,6 +507,7 @@ listPage.prototype.getListData = function (num) {
     param._PAGE_.SHOWNUM = showNum;
 
     param["ppname"]=$("#ksnameselect").val();
+    param["year"]=$("#yearsearch").val();
     param["user_code"] = user_code;
     // //每页条数
     // var select = document.getElementById("yema");
