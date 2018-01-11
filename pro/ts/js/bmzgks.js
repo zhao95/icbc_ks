@@ -501,6 +501,8 @@ function xminfoshow(){
 		 //不显示已报名的考试
 		 var paramb = {};
 		 paramb["xmid"]=xm_id;
+		 paramb["high"]=highnum;
+		 paramb["middle"]=middlenum;
 		 var ressultids = FireFly.doAct("TS_BMLB_BM","getYibmids",paramb)
 		 var ids = ressultids.ids;
 		 if(resultFlag.flag=="false"){
@@ -508,6 +510,7 @@ function xminfoshow(){
 		 }else{
 		 extWhere="AND KSLBK_ID IN ("+ids+") AND KSLBK_CODE!='"+STATION_TYPE_CODE+"'";
 		 }
+		 
 		 var setting={data
 	             :FireFly.getDict('TS_XMGL_BM_KSLBK','KSLBK_PID',extWhere),
 	         dictId:"TS_XMGL_BM_KSLBK",expandLevel:1,
@@ -1030,10 +1033,11 @@ function xminfoshow(){
 			var data = FireFly.doAct("TS_BMLB_BM","getBmNum",param,true,false);
 			var yihig=data.highnum;
 			var yimidd = data.allnum;
-			if(canhightnum==(maxnum-yihig)){
+			if(canhightnum==(maxhigh-yihig)){
 				
 			}else{
-				canhightnum=maxnum-yihig;
+				canhightnum=maxhigh-yihig;
+				highnum = canhightnum;
 				$("#gaoji").html(yihig);
 				$("#canheighnum").html(canhightnum);
 			}
@@ -1041,6 +1045,7 @@ function xminfoshow(){
 				
 			}else{
 				canmiddlenum=maxnum-yimidd;
+				middlenum =canmiddlenum; 
 				$("#allnum").html(yimidd);//中级
 				$("#cannum").html(canmiddlenum);
 			}
@@ -1308,7 +1313,7 @@ function mkfuzhi(){
 	}
 }
 var highnum=0;
-
+var middlenum = 0;
 	//统计 已报名的考试  针对中级
 	function tongji(){
 		var param={};
@@ -1328,14 +1333,14 @@ var highnum=0;
 		var othernum = data.othernum;//夸序列所有
 		$("#gaoji").html(high);
 		$("#canheighnum").html(highcanum);
-		highnum=data.highnum;
+		highnum=highcanum;
+		middlenum=cannum;
 		if(data.mxbmnum==0){
 			$("#thirdtr").remove();
 		}else{
 			$("#maxbmnum").html(data.mxbmnum);
 			$("#restnum").html(data.mxbmnum-data.passednum);
 		}
-		
 }
 	//删除已报名的考试
 	function deleterow(obj){

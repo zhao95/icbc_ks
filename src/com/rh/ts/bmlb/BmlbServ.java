@@ -1883,7 +1883,15 @@ public class BmlbServ extends CommonServ {
 		UserBean userBean = Context.getUserBean();
 		String code = userBean.getCode();
 		String xmid = paramBean.getStr("xmid");
+		int middlenum = paramBean.getInt("middlenum");
+		int high = paramBean.getInt("high");
 		String sql1 = "select * FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'";
+		if(high==0){
+			sql1+=" AND KSLB_TYPE !=3";
+		}
+		if(middlenum ==0){
+			sql1+=" AND KSLB_TYPE !=2";
+		}
 		List<Bean> query = Transaction.getExecutor().query(sql1);
 		/*String sql = "select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"')))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"')union select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'";
 		List<Bean> query = Transaction.getExecutor().query(sql);*/
@@ -1927,6 +1935,7 @@ public class BmlbServ extends CommonServ {
 					}
 				}
 				}
+			
 			//最后的
 			String ids = "";
 			for(int i = 0;i<query.size();i++){
