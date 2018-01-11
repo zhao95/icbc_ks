@@ -319,10 +319,9 @@ function getResult(kcArr,allks,alltype){
 	for(var i = 0; i < allks.length; i++){
 			var ks_odept = allks[i].ODEPT_CODE_V;
 			var ks_path = allks[i].CODE_PATH;
-			
 			for(var j = 0; j < sumJgArr.length; j++){
 				var jg_code = sumJgArr[j].JG_CODE;
-				var jg_type = sumJgArr[j].CODE_TYPE;
+				var jg_type = sumJgArr[j].JG_TYPE;
 				var code_path = sumJgArr[j].CODE_PATH;
 				if(jg_type == 1){
 					//本机构
