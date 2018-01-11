@@ -155,6 +155,11 @@ position: absolute;
 						<td height="50px" align="left">2. 您在本年度跨序列已报名中级考试：<span id='allnum' style="color:red"></span>&nbsp;个（还可报名： <span id='cannum' style="color:red"></span>
 							&nbsp;个）、高级：<span id='gaoji' style="color:red"></span>&nbsp;个（还可报名：<span id='canheighnum' style="color:red"></span>）&nbsp;个。如超过报名总数，应先取消已有报名，然后再提交新的报名。</td>
 					</tr>
+					<tr id = "thirdtr">
+						<td></td>
+						<td height="50px" align="left">3. 本项目最大报名数：<span id='maxbmnum' style="color:red"></span>&nbsp;个（还可报名： <span id='restnum' style="color:red"></span>
+							&nbsp;个）</td>
+					</tr>
 				</table>
 				<div style="padding-top: 10px;">
 					<table border="1" align="center" id="baseinfo"

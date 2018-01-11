@@ -864,6 +864,8 @@ function xminfoshow(){
 	
 	//获取应考试的值
 	function tijiao(){
+		
+		
 		var bdyz = false;
 		$("input[name='checkboxaa']:checked").each(function(){
 			if($(this.parentNode.parentNode).find("input[name='yzspan']").length>0){
@@ -1024,6 +1026,7 @@ function xminfoshow(){
 			param["lbcode"]=STATION_TYPE_CODE;
 			param["xlcode"]=STATION_NO_CODE;
 			param["user_code"]=user_code;
+			param["xmid"]=xm_id;
 			var data = FireFly.doAct("TS_BMLB_BM","getBmNum",param,true,false);
 			var yihig=data.highnum;
 			var yimidd = data.allnum;
@@ -1041,6 +1044,7 @@ function xminfoshow(){
 				$("#allnum").html(yimidd);//中级
 				$("#cannum").html(canmiddlenum);
 			}
+			
 			$("input[name=checkboxaa]:checked").each(function(){
 				var tds = $(this.parentNode.parentNode).find("td");
 				var JIBIE = "";
@@ -1080,6 +1084,19 @@ function xminfoshow(){
 					motaitable.deleteRow(i);
 				}
 				return;
+			}
+			if(data.mxbmnum==0){
+			}else{
+				$("#maxbmnum").html(data.mxbmnum);
+				$("#restnum").html(data.mxbmnum-data.passednum);
+				if((data.mxbmnum-data.passednum)<$("input[name=checkboxaa]:checked").length){
+					alert("超过本项目最大报名数限制");
+					$("#tjbt").attr("data-target","");
+					for(var i=rowlength;i>1;i--){
+						motaitable.deleteRow(i);
+					}
+					return false;
+				}
 			}
 			
 			//获取 当前页面中checkbox选中的数据
@@ -1295,6 +1312,7 @@ var highnum=0;
 	//统计 已报名的考试  针对中级
 	function tongji(){
 		var param={};
+		param["xmid"]=xm_id;
 		param["lbcode"]=STATION_TYPE_CODE;
 		param["xlcode"]=STATION_NO_CODE;
 		param["user_code"]=user_code;
@@ -1311,6 +1329,13 @@ var highnum=0;
 		$("#gaoji").html(high);
 		$("#canheighnum").html(highcanum);
 		highnum=data.highnum;
+		if(data.mxbmnum==0){
+			$("#thirdtr").remove();
+		}else{
+			$("#maxbmnum").html(data.mxbmnum);
+			$("#restnum").html(data.mxbmnum-data.passednum);
+		}
+		
 }
 	//删除已报名的考试
 	function deleterow(obj){
