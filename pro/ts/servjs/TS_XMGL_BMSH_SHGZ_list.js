@@ -3,9 +3,12 @@ var _viewer = this;
 $(".rhGrid").find("tr").unbind("dblclick");
 
 var xmId = null;
-
+var qz_id = null;
 if(_viewer.getParHandler()) {
 	xmId = _viewer.getParHandler().getItem("XM_ID").getValue();
+}
+if(_viewer.getParHandler()) {
+	qz_id = _viewer.getParHandler().getItem("KSQZ_ID").getValue();
 }
 
 if(!xmId){
@@ -20,18 +23,29 @@ $("#TS_XMGL_BMSH_SHGZ .rhGrid").find("tr").each(function(index, item) {
 		}else{
 			gzids+=","+$('td[icode="GZK_ID"]',item).text();
 		}
-		var dataId = item.id;		
-		$(item).find("td[icode='BUTTONS']").append(
-			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optSetBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">设置</span><span class="rh-icon-img btn-option"></span></a>'+
-			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optDeleteBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
-		);	
+		var dataId = item.id;	
+		if($('td[icode="GZK_ID"]',item).text()=='N01'){
+			//准入测试规则  可以指定准入测试成绩
+			$(item).find("td[icode='BUTTONS']").append(
+					'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optSetBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">设置</span><span class="rh-icon-img btn-option"></span></a>'+
+					'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optDeleteBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'+
+					'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="ZrCjBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">准入成绩设置</span><span class="rh-icon-img btn-option"></span></a>'
+			);	
+
+		}else{
+			$(item).find("td[icode='BUTTONS']").append(
+					'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optSetBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">设置</span><span class="rh-icon-img btn-option"></span></a>'+
+					'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optDeleteBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+			);	
+		}
 		// 为每个按钮绑定卡片
 		bindCard();
 	}
 });
 
 function bindCard(){
-	
+	var height = jQuery(window).height();
+	var width = jQuery(window).width()-150;
 	//设置
 	jQuery("td [operCode='optSetBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
@@ -42,6 +56,14 @@ function bindCard(){
 	jQuery("td [operCode='optDeleteBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		rowDelete(pkCode,_viewer);
+	});
+	//准入成绩设置
+	jQuery("td [operCode='ZrCjBtn']").unbind("click").bind("click", function(){
+		//打开查看页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_BM_KSQZ_ADMIT","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,0]};
+		temp[UIConst.PK_KEY]=qz_id;//修改时，必填	    
+		 var cardView = new rh.vi.cardView(temp);
+		cardView.show(true);
 	});
 }
 /*
