@@ -131,6 +131,8 @@ function tiaozhuan(i) {
         $("#jkinfo").modal('show');
         return;
     }
+    //判断此人请假次数  请假过多不让报名
+    
     //计划名称
     var a = "BM_NAME" + i;
     var jhname = document.getElementById(a).innerHTML;

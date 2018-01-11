@@ -1,0 +1,1 @@
+ALTER TABLE `ts_bm_group_user_dept` ADD COLUMN ODEPT_CODE VARCHAR(400)

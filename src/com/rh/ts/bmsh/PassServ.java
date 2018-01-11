@@ -861,6 +861,9 @@ public class PassServ extends CommonServ {
 				String evname = OrgMgr.getDept(codepatharr[i]).getName();
 				out.set("LEVEL1", evname);
 			}
+			if(i==codepatharr.length-1){
+				out.set("dept_code",OrgMgr.getDept(codepatharr[i]).getCode());
+			}
 		}
 		return out;
 	}

@@ -121,6 +121,9 @@ public class BmGroupServ extends CommonServ {
                         String evname = OrgMgr.getDept(deptArr[i]).getName();
                         bean.set("SEN_LEVEL", evname);
                     }
+                    if(i==deptArr.length-1){
+                    	bean.set("ODEPT_CODE", OrgMgr.getDept(deptArr[i]).getCode());
+                    }
                 }
 
                 beans.add(bean);

@@ -100,6 +100,7 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
                 var resultstr = FireFly.doAct("TS_BMSH_PASS", "getDept", paramstr);
                 param.FIR_LEVEL = resultstr.LEVEL0;
                 param.SEN_LEVEL = resultstr.LEVEL1;
+                param.ODEPT_CODE= resultstr.dept_code;
                 paramArray.push(param);
 
             }
