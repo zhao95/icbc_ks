@@ -1589,9 +1589,9 @@ function showinfo(obj){
 	for(var i=0;i<jsonstr.length;i++){
 		if(jsonstr[i].name!=undefined&&jsonstr[i].name!=""){
 			if(jsonstr[i].validate=="false"){
-				$("#littlediv").append("<div style='color:red;padding-left:20%'><img src='/ts/image/u4721.png'>"+jsonstr[i].name+"</div>");
+				$("#littlediv").append("<div style='color:red;padding-left:10%;padding-top:1%'>"+jsonstr[i].name+"<img src='/ts/image/u4721.png'></div>");
 			}else{
-				$("#littlediv").append("<div style='color:lightseagreen;padding-left:20%'><img src='/ts/image/u4719.png'>"+jsonstr[i].name+"</div>");
+				$("#littlediv").append("<div style='color:lightseagreen;padding-left:10%;padding-top:1%'>"+jsonstr[i].name+"<img src='/ts/image/u4719.png'></div>");
 			}
 		}
 	}

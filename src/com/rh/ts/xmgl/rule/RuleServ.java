@@ -164,8 +164,57 @@ public class RuleServ extends CommonServ {
 										for(int a=0;a<mxvaluearr.length();a++){
 											String vari = mxvaluearr.getJSONObject(a).getString("vari");
 											String val = mxvaluearr.getJSONObject(a).getString("val");
-											littlemxname=littlemxname.replaceFirst("#"+vari+"#", val);
+											if(">".equals(val)){
+												val= mxvaluearr.getJSONObject(a+1).getString("val")+"以上";
+												littlemxname=littlemxname.replaceFirst("#"+vari+"#", val);
+												littlemxname=littlemxname.replaceFirst("#"+vari+"#", "");
+												a++;
+											}else if("<".equals(val)){
+												val= mxvaluearr.getJSONObject(a+1).getString("val")+"以下";
+												littlemxname=littlemxname.replaceFirst("#"+vari+"#", val);
+												littlemxname=littlemxname.replaceFirst("#"+vari+"#", "");
+												a++;
+											}else if("<=".equals(val)){
+												val= mxvaluearr.getJSONObject(a+1).getString("val")+"及以下";
+												littlemxname=littlemxname.replaceFirst("#"+vari+"#", val);
+												littlemxname=littlemxname.replaceFirst("#"+vari+"#", "");
+												a++;
+											}else if(">=".equals(val)){
+												val= mxvaluearr.getJSONObject(a+1).getString("val")+"及以上";
+												littlemxname=littlemxname.replaceFirst("#"+vari+"#", val);
+												littlemxname=littlemxname.replaceFirst("#"+vari+"#", "");
+												a++;
+											}else if("=".equals(val)){
+												val= mxvaluearr.getJSONObject(a+1).getString("val");
+												littlemxname=littlemxname.replaceFirst("#"+vari+"#", val);
+												littlemxname=littlemxname.replaceFirst("#"+vari+"#", "");
+												a++;
+											}else if("gwgz".equals(vari)){
+												List<Bean> gwgzlist = ServDao.finds("TS_BMSH_RULE"," AND R_XL='"+bmBean.getStr("BM_XL")+"' AND R_LV ="+bmBean.getStr("BM_TYPE") );
+												if(gwgzlist!=null&&gwgzlist.size()!=0){
+													String POSTCODE = gwgzlist.get(0).getStr("R_POST_CODE");
+													if("".equals(POSTCODE)){
+														littlemxname="";
+														break;
+													}else{
+														String[] split = POSTCODE.split(",");
+														for (String string : split) {
+															Bean find = ServDao.find("ts_org_postion", string);
+															if(find!=null){
+																littlemxname+=" "+find.getStr("POSTION_NAME");
+															}
+														}
+														littlemxname+=" 可报名此考试";
+													}
+												}else{
+													littlemxname="";
+													break;
+												}
+											}else{
+												littlemxname=littlemxname.replaceFirst("#"+vari+"#", val);
+											}
 										}
+										
 										littelGzBean.set("validate", result);
 										littelGzBean.set("name",littlemxname);
 									}
