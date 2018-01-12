@@ -425,7 +425,14 @@ public class StayServ extends CommonServ {
 					}
 					Bean bm_bean = ServDao.find("TS_BMLB_BM", bmid);
 					if (bm_bean != null) {
-						bm_bean.set("BM_SH_STATE", "2");
+						//异议过的数据不能再进行异议
+						int bmyiyi = bm_bean.getInt("BM_YIYI_STATE");
+						if(2==bmyiyi){
+							
+							bm_bean.set("BM_SH_STATE", "3");
+						}else{
+							bm_bean.set("BM_SH_STATE", "2");
+						}
 						ServDao.save("TS_BMLB_BM", bm_bean);
 					}
 					noPassBmIdList.add(bmid);
