@@ -89,7 +89,7 @@ function bindCard() {
  	 //复制
  	 $(".hoverDiv [actcode='copy']").unbind("click").bind("click", function(){
  	  
- 		var pkCode = jQuery(this).attr("rowpk");debugger;
+ 		var pkCode = jQuery(this).attr("rowpk");
  	    param = {};
  	    param["pkCodes"] = pkCode;
  	    FireFly.doAct(_viewer.servId, "copy", param);
@@ -143,7 +143,7 @@ $(".hoverDiv").find("a").hover(function() {
 
 
 
-function  findBmshAuto(pkAarry,_viewer){debugger
+function  findBmshAuto(pkAarry,_viewer){
 //var  StrPk=pkAarry.join(",");
 //var  param={"pks":StrPk};
 //var beanBmgl=FireFly.doAct("TS_XMGL", "countNum", param);
