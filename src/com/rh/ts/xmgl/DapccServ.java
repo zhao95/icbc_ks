@@ -916,7 +916,6 @@ public class DapccServ extends CommonServ {
                     "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT " +
                     "WHERE xm_id = ? " +
                     "and (" +
-                    "(" +
                     //考场关联机构考生
                     "EXISTS (select '' from ts_xmgl_kcap_gljg g " +
                     "where g.KC_ID in(" + kcIdSql + ") " +
