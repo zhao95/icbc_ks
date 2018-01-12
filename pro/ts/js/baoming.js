@@ -114,9 +114,13 @@ function fenyeselect() {
 function tiaozhuan(i) {
     var hid = "BM_ID" + i;
     var id = document.getElementById(hid).innerHTML;
-    //验证此人是否被禁考
+    //验证此人是否被禁考  //判断此人请假次数  请假过多不让报名   判断禁考同时判断请假
     var param = {};
     param["xmid"] = id;
+    var maxqjnum= FireFly.getConfig("TS_KSQJ_SETCONUTS").CONF_VALUE;
+    var maxweeknum= FireFly.getConfig("TS_KSQJ_WEEK_MAXNUM").CONF_VALUE;
+    param["qjnum"] = maxqjnum;
+    param["maxweeknum"]=maxweeknum;
     var result = FireFly.doAct("TS_JKGL", "getjkstate", param);
     if (result.num == 0) {
     } else {
@@ -124,14 +128,16 @@ function tiaozhuan(i) {
         var end = result.end;
         var reason = result.reason;
         var tsyjson = result.tsh;
-
         //获取禁考的配置信息  并显示给前台
         $("#jkxxinfo").html(tsyjson);
         $("#jkxxinfo").attr("disabled", "disabled");
         $("#jkinfo").modal('show');
         return;
     }
-    //判断此人请假次数  请假过多不让报名
+    if(result.qjflag=="false"){
+    	alert("请假次数过多，不允许报名");
+    	return false;
+    }
     
     //计划名称
     var a = "BM_NAME" + i;

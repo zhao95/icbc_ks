@@ -9,14 +9,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 
+
+
+
+
+
+import net.sf.cindy.test.User;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import sun.java2d.pipe.SpanShapeRenderer.Simple;
+
 import com.rh.core.base.Bean;
-
 import com.rh.core.base.Context;
-
+import com.rh.core.comm.ConfMgr;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
@@ -25,9 +33,11 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
+import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
+import com.rh.core.util.Constant;
 import com.rh.core.util.ImpUtils;
 import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
@@ -190,6 +200,37 @@ public class JkglServ extends CommonServ {
     	}else{
     		out.set("num",0);
     	}
+    	
+    	
+    	//判断请假次数
+    	int qjnum = paramBean.getInt("qjnum");
+    	int maxweeknum = paramBean.getInt("maxweeknum");
+    	SqlBean sqlbean = new SqlBean();
+    	sqlbean.and("USER_CODE",Context.getUserBean().getCode());
+    	sqlbean.and("QJ_STATUS", "2");
+    	//本年度
+    	SimpleDateFormat simp = new SimpleDateFormat("yyyy");
+    	Date date = new Date();
+    	String nowyear = simp.format(date);
+    	sqlbean.and("YEAR(S_ATIME)", nowyear);
+    	int count = ServDao.count("ts_qjlb_qj", sqlbean);
+    	if(count>=qjnum){
+    		//请假次数大于最大数  不能再报名
+    		out.set("qjflag", false);
+    	}else{
+    		out.set("qjflag", true);
+    	}
+    	//请假周数控制
+    	List<Bean> finds = ServDao.finds("TS_BM_QJ_NUM", " AND QJ_CODE ='"+Context.getUserBean().getCode()+"'");
+    	for (Bean bean : finds) {
+			int weeknum = bean.getInt("WEEK_NUM");
+			if(weeknum>maxweeknum){
+				//请假次数大于最大数  不能再报名
+				out.set("qjflag", false);
+			}else{
+				out.set("qjflag", true);
+			}
+		}
     	return out;
     }
     
