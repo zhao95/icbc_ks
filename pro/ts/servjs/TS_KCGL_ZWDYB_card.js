@@ -55,22 +55,25 @@ function saveCheck(){
 	var num1 = FireFly.doAct("TS_KCGL_ZWDYB","count",{"_WHERE_":"and kc_id = '"+kcId+"' and ZW_ZWH_XT = '"+ZW_ZWH_XT+"'"},true,false)._DATA_;
 	var num2 = FireFly.doAct("TS_KCGL_ZWDYB","count",{"_WHERE_":"and kc_id = '"+kcId+"' and ZW_IP = '"+ZW_IP+"'"},true,false)._DATA_;
 	if(_viewer.opts.act == "cardAdd"){
-		if(num1 > 0 || num2 > 0){
-			alert("系统座位号或IP地址不允许重复");
+		if(num1 > 0){
+			alert("系统座位号不允许重复");
+			return false;
+		}
+		if(num2 > 0){
+			alert("IP地址不允许重复");
 			return false;
 		}
 	}else{
 		
 		if(ZW_ZWH_XT_tmp != ZW_ZWH_XT && num1 > 0 ){
-			alert("系统座位号或IP地址不允许重复");
+			alert("系统座位号不允许重复");
 			return false;
 		}
 		
 		if(ZW_IP_tmp != ZW_IP && num2 > 0){
-			alert("系统座位号或IP地址不允许重复");
+			alert("IP地址不允许重复");
 			return false;
 		}
 	}
-	
 	return true;
 }

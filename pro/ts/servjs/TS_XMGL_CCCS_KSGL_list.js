@@ -76,3 +76,34 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 _viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
 	window.open(FireFly.getContextPath() + '/ts/imp_template/项目管理_场次测算_考生管理导入模版.xls');
 });
+
+var search = $("#TS_XMGL_CCCS_KSGL .rhGrid-btnBar").find("table[class='searchDiv']");
+if(search.length == 0){
+	var searchDiv = '<table class="searchDiv" style="float:right;margin-right: 8px;text-align: right;line-height: 26px;"><tbody><tr><td><select class="rhSearch-select" id="mySelect"><option value="BM_NAME">姓名</option><option value="BM_CODE">人力资源编码</option></select></td><td><input type="text" onfocus="this.value=\'\'" value="输入条件" class="rhSearch-input" id="myInput"></td><td text-valign="middle"><div class="rhSearch-button"><div class="rhSearch-inner">查询</div></div></td></tr></tbody></table>';
+	$("#TS_XMGL_CCCS_KSGL .rhGrid-btnBar").append(searchDiv);
+}
+
+$(".rhSearch-button").bind("click",function() {
+	_viewer.listBarTipLoad("结果加载中..");
+	setTimeout(function() {
+		var searcCode = $("#mySelect").val();
+		var seaValue = jQuery.trim($("#myInput").val().replace(/\'/g,""));
+		var where = "";
+		if ((seaValue.length > 0) && (seaValue != "输入条件")) {//TODO：完善
+			where += " and ";
+			if (seaValue.indexOf("\%") >= 0) {
+				where += searcCode + " like '" + seaValue + "'";	
+			} else {
+				where += searcCode + " like '%" + seaValue + "%'";	
+			}
+		}
+		_viewer.setSearchWhereAndRefresh(where,true);
+		return false;
+	},0);
+});
+
+
+
+
+
+
