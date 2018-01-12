@@ -37,9 +37,9 @@ $("#TS_KCGL .rhGrid").find("tr").each(function(index, item) {
 		'<a class="rhGrid-td-rowBtnObj" operCode="optCopyBtn" rowpk="'+dataId+'" style="cursor:pointer">&nbsp&nbsp复制&nbsp</a>';
 //		'<a class="rhGrid-td-rowBtnObj" operCode="optDeleteBtn" rowpk="'+dataId+'" style="cursor:pointer">删除&nbsp</a>';
 
-		if(state < 8){
+		if(state == 0 || state == 1 || state == 2){
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">逻辑删除&nbsp</a>';
-		}else{
+		}else if(state > 9){
 			abtns += '<a class="rhGrid-td-rowBtnObj" operCode="optBackTrashBtn" rowpk="'+dataId+'" style="cursor:pointer">撤销&nbsp</a>';
 		}
 		if(state == 5){
@@ -51,14 +51,10 @@ $("#TS_KCGL .rhGrid").find("tr").each(function(index, item) {
 		var divHeight = $(item).get(0).offsetHeight;
 		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;color:#666666'>"+abtns+"</div>";
 		$(".content-main").find("table").before(hoverDiv);
-				
 		// 为每个按钮绑定卡片
 		bindCard();
 	}
 });
-
-
-
 
 //隐藏列表行按钮条
 $(".hoverDiv").bind("mouseleave", function(e){
@@ -193,6 +189,16 @@ _viewer.getBtn("trash").unbind("click").bind("click", function(event) {
 		return;
 	}
 
+	for(var i=0;i<pkArray.length;i++){
+		var tmpId = pkArray[i];
+		var tmpstate = $("#TS_KCGL").find("tr[id='"+tmpId+"']").find("td[icode='KC_STATE']").html();
+		if(tmpstate == 3 || tmpstate == 4 || tmpstate == 5 || tmpstate == 6 || tmpstate == 7){
+			_viewer.listBarTipError("审核中或审核通过数据不允许逻辑删除");
+			_viewer.listClearTipLoad();
+			return false;
+		}
+	}
+	
 	FireFly.doAct("TS_UTIL","trash",{"servId":_viewer.servId,"pkCodes":pkArray.join(),"stateColCode":"KC_STATE","action":"add"},true,false,function(data){
 		if(data._MSG_.indexOf("OK")!= -1){
 //			window.location.reload();
@@ -205,6 +211,15 @@ _viewer.getBtn("trash").unbind("click").bind("click", function(event) {
 * 删除前方法执行getUserXm
 */
 _viewer.beforeDelete = function(pkArray) {
+	for(var i=0;i<pkArray.length;i++){
+		var tmpId = pkArray[i];
+		var tmpstate = $("#TS_KCGL").find("tr[id='"+tmpId+"']").find("td[icode='KC_STATE']").html();
+		if(tmpstate == 3 || tmpstate == 4 || tmpstate == 5 || tmpstate == 6 || tmpstate == 7){
+			_viewer.listBarTipError("审核中或审核通过数据不允许删除");
+			_viewer.listClearTipLoad();
+			return false;
+		}
+	}
 	showVerify(pkArray,_viewer);
 };
 

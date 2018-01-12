@@ -51,6 +51,8 @@ _viewer.getBtn("shTgBtn").unbind("click").bind("click", function(event) {
 		FireFly.doAct("TS_KCGL_SH","updateShInfo",{"kcId":kcId,"updateId":pkCode},true,false,function(data){
 			
 		});
+		_viewer.getItem("SHR_NAME").setValue(System.getVar("@USER_NAME@"));
+		_viewer.getItem("SHR_ODEPT_NAME").setValue(System.getVar("@ODEPT_NAME@"));
 		_viewer._saveForm();
 		setTimeout(function(){
 			_viewer.getParHandler().refreshGrid();
@@ -63,6 +65,8 @@ _viewer.getBtn("shTgBtn").unbind("click").bind("click", function(event) {
 _viewer.getBtn("shBtgBtn").unbind("click").bind("click", function(event) {
 	if (_viewer.getItem("UPDATE_AGREE").getValue() == 0) {
 		_viewer.getItem("UPDATE_AGREE").setValue(2);
+		_viewer.getItem("SHR_NAME").setValue(System.getVar("@USER_NAME@"));
+		_viewer.getItem("SHR_ODEPT_NAME").setValue(System.getVar("@ODEPT_NAME@"));
 		_viewer._saveForm();
 		setTimeout(function(){
 			_viewer.getParHandler().refreshGrid();

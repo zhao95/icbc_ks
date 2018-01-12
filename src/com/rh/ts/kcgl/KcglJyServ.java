@@ -9,10 +9,18 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
+import com.rh.ts.pvlg.PvlgUtils;
 
 public class KcglJyServ extends CommonServ{
     private static final int ONETIME_EXP_NUM = 20000;
     protected void beforeQuery(ParamBean paramBean) {
+	ParamBean param = new ParamBean();
+	String  ctlgModuleName="EXAM_ROOM";
+	param.set("paramBean", paramBean);
+	param.set("ctlgModuleName", ctlgModuleName);
+	param.set("serviceName", paramBean.getServId());
+	PvlgUtils.setOrgPvlgWhere(param);
+	
 	Bean pvlgBean = paramBean.getBean("extParams").getBean("USER_PVLG");
 	if (pvlgBean.isEmpty()) {
 	    paramBean.setQueryExtWhere(" and (odept_level < 3 or KC_STATE2 = 1)");
