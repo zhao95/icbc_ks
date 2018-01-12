@@ -38,11 +38,18 @@ $("#TS_PVLG_GROUP .rhGrid").find("tr").each(function(index, item) {
 		var dataId = item.id;
 		
 		$(item).find("td[icode='BUTTONS']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP-upd" actcode="upd" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP-delete" actcode="delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
-//		'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP-upd" actcode="upd" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
-//				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_ROLE-delete" actcode="delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'		
+				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP-upd" actcode="upd" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'		
 		);
+		
+		var isdel = $(item).find("td[icode='G_DEL']").text();
+		if(isdel==0){
+			$(item).find("td[icode='BUTTONS']").append(
+					'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP-delete" actcode="delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+			);
+		} else {
+			_viewer.grid.getCheckBoxItem(dataId).remove();
+		}
+		
 		// 为每个按钮绑定卡片
 		bindCard();
 	}
