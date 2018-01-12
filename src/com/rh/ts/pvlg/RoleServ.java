@@ -63,12 +63,12 @@ public class RoleServ extends CommonServ {
 	 */
 	protected void afterSave(ParamBean paramBean, OutBean outBean) {
 
-		if (outBean.getStr("_MSG_").startsWith("OK")) {
+//		if (outBean.getStr("_MSG_").startsWith("OK")) {
 			// 重置角色缓存
 			if (!Strings.isBlank(paramBean.getId())) {
 				RoleMgr.setRoleCache(paramBean.getId());
 			}
-		}
+//		}
 	}
 
 	/**

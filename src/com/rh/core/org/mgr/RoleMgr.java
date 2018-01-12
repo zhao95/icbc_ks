@@ -56,7 +56,7 @@ public class RoleMgr {
                 + TBL_SY_ORG_ROLE_USER);
         roleListSql.append(" where " + COL_USER_CODE + "='" + userCode + "'");
         roleListSql.append(" and " + COL_CMPY_CODE + "='" + cmpyCode + "'");
-        roleListSql.append(authStateSql());
+//        roleListSql.append(authStateSql());
         roleListSql.append(" and " + COL_S_FLAG + "=1");
 
         return roleListSql.toString();

@@ -169,7 +169,7 @@ public class DictMgr {
 		}
 
 		if (dictId.equals("SY_ORG_USER") || dictId.equals("SY_ORG_DEPT_USER_ALL")) {
-			throw new RuntimeException("Error dictId:" + dictId);
+//			throw new RuntimeException("Error dictId:" + dictId);
 		}
 
 		Bean dict = (Bean) CacheMgr.getInstance().get(dictId, CACHE_DICT);

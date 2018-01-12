@@ -77,50 +77,91 @@ if(resultP._DATA_) {
  * 渲染角色所有模块 (主方法)
  */
 render = function() {
-	var formContent = $(_viewer.formCon).find("#MD_OPTS").find(".formContent");
-
-	if(moduleArray) {
+	
+	$(_viewer.formCon).find("#SEL_ALL").find(".icon-card-close").remove();
+	
+	$(_viewer.formCon).find("#SEL_ALL").css({"padding":"10px 0 10px 0"});
+	
+	var selall = $('<input type="checkbox" id="TS_PVLG_ROLE-CHECK_ALL_OPTS">').css({"vertical-align":"middle","margin-left":"5px"});
+	
+	$(_viewer.formCon).find("#SEL_ALL").find(".legend").append($("<span class='selall'>").append(selall));
+	
+	//全部选择功能
+	selall.change(function() {
+		
+		var allobj = $("input[id='TS_PVLG_ROLE-CHECK_ALL_OPTS']");
 		
 		$(moduleArray).each(function (index, obj) {
-		   var row =  $("<div id='TS_PVLG_ROLE-"+obj.ITEM_CODE+"_div' class='inner' style='width:100%;max-width:1400px;'>");
-		
-		  //左侧模块区域
-		  var name = $("<span class='name'>").text(obj.ITEM_NAME);
-		
-		  var start = $("<span class='star'>");
-		
-		  var leftContainer = $("<div class='container'>").append(name).append(start);
-		
-		  var leftDiv = $("<div id='TS_PVLG_ROLE-"+obj.ITEM_CODE+"_label' class='ui-label-default'>").append(leftContainer);
-		
-		  var left = $("<span class='left form__left30'>").append(leftDiv);
-	
-		  //右侧功能区域
-		  var rightDiv = $('<div class="blank fl wp">').css({"float":"left","width":"85%","clear":"none","border-left":"none"});
-		  
-		  var rightDiv1 = $('<div class="blank fl wp">').css({"float":"left","width":"10%","clear":"none","background":"#ECF5FF"});
-		  
-		  var ckallSpan = $('<span id="TS_PVLG_ROLE-CHECK_ALL_SPAN_'+obj.ITEM_CODE+'" class="ui-checkbox-default">').appendTo(rightDiv1);
-		  
-		  var ckallObj = $('<input type="checkbox" id="TS_PVLG_ROLE-CHECK_ALL_'+obj.ITEM_CODE+'">').appendTo(ckallSpan);
-		  
-		  ckallSpan.append($("<label style='padding-left:1px'>全选</label>"));
-		  
-		  //全选功能
-		  ckallObj.change(function() {
-			  checkedAll(obj.ITEM_CODE);
-		  }); 
-		  
-		  //显示功能选项(多选)
-		  optRender(obj.ITEM_CODE, rightDiv);
-		
-		  var right = $("<span class='right form__right85'>").append(rightDiv1).append(rightDiv);
-		
-		  row.append(left).append(right);
-		
-		  $(formContent).append(row);
+			
+			var obj = $("input[name='TS_PVLG_ROLE-"+obj.ITEM_CODE+"']:not(:disabled)");
+			
+			if(allobj.is(':checked')) {
+
+				obj.attr("checked",true);
+			} else {
+				
+				obj.attr("checked",false);
+			}
 		});
-	}
+	});
+	
+	var optlab = $("div[id$='OPT_LAB']");
+	
+	$("div[id$='OPT_LAB']").css({"padding":"10px 0 10px 0"});
+	
+	optlab.each(function (idx, labObj) {
+		
+		var inputCfg = _viewer.getItemConfig(labObj.id);
+	
+		var formContent = $(_viewer.formCon).find("#"+labObj.id).find(".formContent");
+
+		if(moduleArray) {
+			
+			$(moduleArray).each(function (index, obj) {
+				
+				if(inputCfg.indexOf(obj.ITEM_CODE)>=0) {
+					
+				  var row =  $("<div id='TS_PVLG_ROLE-"+obj.ITEM_CODE+"_div' class='inner' style='width:100%;max-width:1400px;'>");
+				
+				  //左侧模块区域
+				  var name = $("<span class='name'>").text(obj.ITEM_NAME);
+				
+				  var start = $("<span class='star'>");
+				
+				  var leftContainer = $("<div class='container'>").append(name).append(start);
+				
+				  var leftDiv = $("<div id='TS_PVLG_ROLE-"+obj.ITEM_CODE+"_label' class='ui-label-default'>").append(leftContainer);
+				
+				  var left = $("<span class='left form__left30'>").append(leftDiv);
+			
+				  //右侧功能区域
+				  var rightDiv = $('<div class="blank fl wp">').css({"float":"left","width":"85%","clear":"none","border-left":"none"});
+				  
+				  var rightDiv1 = $('<div class="blank fl wp">').css({"float":"left","width":"10%","clear":"none","background":"#ECF5FF"});
+				  
+				  var ckallSpan = $('<span id="TS_PVLG_ROLE-CHECK_ALL_SPAN_'+obj.ITEM_CODE+'" class="ui-checkbox-default">').appendTo(rightDiv1);
+				  
+				  var ckallObj = $('<input type="checkbox" id="TS_PVLG_ROLE-CHECK_ALL_'+obj.ITEM_CODE+'">').appendTo(ckallSpan);
+				  
+				  ckallSpan.append($("<label style='padding-left:1px'>全选</label>"));
+				  
+				  //全选功能
+				  ckallObj.change(function() {
+					  checkedAll(obj.ITEM_CODE);
+				  }); 
+				  
+				  //显示功能选项(多选)
+				  optRender(obj.ITEM_CODE, rightDiv);
+				
+				  var right = $("<span class='right form__right85'>").append(rightDiv1).append(rightDiv);
+				
+				  row.append(left).append(right);
+				
+				  $(formContent).append(row);
+				}
+			});
+		}
+	});
 }
 
 /**
@@ -322,7 +363,7 @@ if (StringUtils.startWith(rtnMsg, "OK,") || StringUtils.startWith(rtnMsg, "ERROR
 //调用主方法
 render();
 
-var checked = "";
-$("input[type='checkbox'][name='ROLE_PID']").change(function(){
-	alert(0);
-});
+//var checked = "";
+//$("input[type='checkbox'][name='ROLE_PID']").change(function(){
+//	alert(0);
+//});

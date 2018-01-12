@@ -24,7 +24,7 @@ public class RoleModServ extends CommonServ {
 	 */
 	protected void afterBatchSave(ParamBean paramBean, OutBean outBean) {
 
-		if (outBean.getStr("_MSG_").startsWith("OK")) {
+//		if (outBean.getStr("_MSG_").startsWith("OK")) {
 			
 			List<Bean> list = paramBean.getBatchSaveDatas();
 
@@ -35,7 +35,7 @@ public class RoleModServ extends CommonServ {
 					RoleMgr.setRoleOptsCache(save.getStr("ROLE_ID"));
 				}
 			}
-		}
+//		}
 	}
 
 	/**
