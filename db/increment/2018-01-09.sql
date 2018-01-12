@@ -1,6 +1,6 @@
 -- 日志相关视图更改
 -- sy_serv_log_item_v 视图添加sy_org_user的user_name    作为视图的USER_NAME
-DROP VIEW IF EXISTS `sy_serv_log_item_v`$$
+DROP VIEW IF EXISTS `sy_serv_log_item_v`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `sy_serv_log_item_v` AS 
 SELECT
@@ -24,5 +24,5 @@ FROM ((`sy_serv_log_item` `a`
     LEFT JOIN `sy_serv_item` `b`
       ON ((`a`.`ITEM_ID` = `b`.`ITEM_ID`)))
    LEFT JOIN `sy_org_user` `u`
-     ON ((`a`.`S_USER` = `u`.`USER_CODE`)))$$
+     ON ((`a`.`S_USER` = `u`.`USER_CODE`)));
 
