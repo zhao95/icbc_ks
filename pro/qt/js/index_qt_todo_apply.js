@@ -189,7 +189,7 @@ function setAnnouncementContent() {
     var currentUserPvlg = FireFly.getCache(System.getUserBean().USER_CODE, FireFly.userPvlg);
     params["USER_PVLG"] = currentUserPvlg["TS_GG_PVLG"];
     data["extParams"] = params;
-    FireFly.doAct("TS_GG", 'query', {data: JSON.stringify(data)}, false, true, function (ggList) {
+    FireFly.doAct("TS_GG", 'finds', {data: JSON.stringify(data)}, false, true, function (ggList) {
         var tbodyEl = jQuery('#announcement-box').find('.table tbody');
         tbodyEl.html('');
 

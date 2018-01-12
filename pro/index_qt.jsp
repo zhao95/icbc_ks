@@ -250,9 +250,9 @@
 					<div class="panel panel-default box" style=" border-top: 1px solid #d2d6de;">
 						<div class="panel-heading qt_ks_title" style="padding:5px 15px;">
 							<ul class="panel-title" id="ksTable">
-								<li class="active"><a href="#tab-zgks" data-toggle="tab" aria-expanded="true">资格考试(<span id=""  >6</span>) </a></li><li style="color:#e2e4e7"> |  </li>
-								<li ><a href="#tab-zsjs" data-toggle="tab" aria-expanded="true">知识竞赛(<span id="" >3</span>) </a> </li><li style="color:#e2e4e7">|  </li>
-								<li ><a href="#tab-qtks" data-toggle="tab" aria-expanded="true">其他考试(<span id="" >6</span>) </a></li>
+								<li class="active"><a href="#tab-zgks" data-toggle="tab" aria-expanded="true">资格考试(<span id=""  >0</span>) </a></li><li style="color:#e2e4e7"> |  </li>
+								<li ><a href="#tab-zsjs" data-toggle="tab" aria-expanded="true">知识竞赛(<span id="" >0</span>) </a> </li><li style="color:#e2e4e7">|  </li>
+								<li ><a href="#tab-qtks" data-toggle="tab" aria-expanded="true">其他考试(<span id="" >0</span>) </a></li>
 								
 								<li class="index-list-more-a" >
 									更多
@@ -272,7 +272,8 @@
 								</tr>
 								</thead>
 								<tbody class="grid-tbody">
-								<tr>
+								<tr><td></td><td>建设中...</td><td></td></tr>
+								<!-- <tr>
 									<td >2017年（第8周）资格考试</td>
 									<td >中国工商银行总行</td>
 									<td>2017-05-07  － 2017-05-16 </td>
@@ -281,7 +282,7 @@
 									<td >2017年（第8周）资格考试</td>
 									<td >北京分行</td>
 									<td>2017-05-07  － 2017-05-16 </td>
-								</tr>
+								</tr> -->
 								</tbody>
 							</table>
 							</div>
@@ -296,7 +297,8 @@
 								</tr>
 								</thead>
 								<tbody class="grid-tbody">
-								<tr>
+								<tr><td></td><td>建设中...</td><td></td></tr>
+								<!-- <tr>
 									<td >信息技术知识竞赛</td>
 									<td >中国工商银行总行</td>
 									<td>2017-05-07 － 2017-05-16 </td>
@@ -305,7 +307,7 @@
 									<td >2017综合知识竞赛</td>
 									<td >北京分行</td>
 									<td>2017-05-07  － 2017-05-16 </td>
-								</tr>
+								</tr> -->
 								</tbody>
 							</table>
 							</div>
@@ -320,7 +322,8 @@
 								</tr>
 								</thead>
 								<tbody class="grid-tbody">
-								<tr>
+								<tr><td></td><td>建设中...</td><td></td></tr>
+								<!-- <tr>
 									<td >岗位培训结业考试</td>
 									<td >中国工商银行总行</td>
 									<td>2017-05-07  － 2017-05-16 </td>
@@ -329,7 +332,7 @@
 									<td >消防安全知识考试</td>
 									<td >北京分行</td>
 									<td>2017-05-07  － 2017-05-16 </td>
-								</tr>
+								</tr> -->
 								</tbody>
 							</table>
 							</div>
@@ -476,7 +479,10 @@
 							<!-- /.box-header -->
 							<div class="box-body no-padding">
 								<table class="table table-striped">
-									<tr>
+								<tr><td></td><td> </td><td></td></tr>
+								<tr><th style="text-align: center;">建设中...</th></tr>
+								<tr><td></td><td> </td><td></td></tr>
+									<!-- <tr>
 										<td style="width: 10px">1
 										</th>
 										<td>新版考试系统使用问卷调查</td>
@@ -493,7 +499,7 @@
 										</th>
 										<td>新版考试系统使用问卷调查</td>
 										<td>2017-06-01</td>
-									</tr>
+									</tr> -->
 
 								</table>
 							</div>

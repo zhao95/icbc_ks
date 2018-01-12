@@ -13,13 +13,26 @@ import com.rh.ts.util.RoleUtil;
 
 public class GGServ  extends CommonServ{
 
-
+	/**
+	 * 后台管理查询用
+	 */
 	public OutBean query(ParamBean paramBean) {
 		return super.query(paramBean);
 	}
 	/**
+	 * 前台首页查询用
+	 */
+	public OutBean finds(ParamBean paramBean) {
+		return super.finds(paramBean);
+	}
+	// 查询前添加查询条件
+			protected void beforeFinds(ParamBean paramBean) {
+				findMsg(paramBean);
+			}
+	/**
 	 * 过滤没有权限的查询
 	 */
+	
 	// 查询前添加查询条件
 	protected void findMsg(ParamBean paramBean) {
 		UserBean userBean = Context.getUserBean();
@@ -27,7 +40,7 @@ public class GGServ  extends CommonServ{
 		//用户编码设置进roleParam里面，使其查询处用户所有的权限
 		StringBuilder param_where = new StringBuilder();
 		param_where.append(" AND EXISTS (SELECT d.code_path FROM sy_org_dept d ");
-		param_where.append("WHERE  d.dept_code ='"+userOdeptCode+"' AND INSTR (d.CODE_PATH,S_ODEPT))");
+		param_where.append("WHERE  d.dept_code ='"+userOdeptCode+"' AND INSTR (d.CODE_PATH,CTLG_PCODE)>0)");
 		paramBean.set(Constant.PARAM_WHERE, param_where.toString());
 	}
 	
