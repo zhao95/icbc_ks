@@ -15,7 +15,7 @@ _viewer.beforeSave = function() {
 	});
 }
 //保存之后
-_viewer.afterSave=function(){debugger;
+_viewer.afterSave=function(){
 	var userCode=_viewer.getItem("ADMINER_UWERCODE").getValue();//人力资源编码
 	var nodeId =_viewer.getItem("NODE_ID").getValue();
 	var param={};
