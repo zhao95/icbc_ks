@@ -64,10 +64,14 @@ public class DeptRelMgr {
 			param.set("STRU_ID", struBean.getStr("STRU_ID"));
 			param.set("STRU_NAME", struBean.getStr("STRU_SNAME"));
 
-			param = findsMajor(struBean, param);
-			
+			try{
+				param = findsMajor(struBean, param);
+				dataList.add(param);
+			}catch(Exception e){
+				e.printStackTrace();
+				log.error("findsMajor同步数据异常，错误为："+e+",错误的数据为："+struBean);	
+			}
 //			log.info(param);
-			dataList.add(param);
 		}
 		ServDao.creates("SY_ODEPT_DEPT_REL", dataList);
 		dataList.clear();
@@ -318,10 +322,10 @@ public class DeptRelMgr {
 		
 		//机构层级为4（一级支行的）
 		if (struGrade == 4) {
-			Bean pStruBean = getPStruBean(struBean);
-			if (pStruBean.getInt("STRU_GRADE") != 4 || struBean.getStr("STRU_ID").equals(struBean.getStr("SUP_STRU"))) {
-				return setMajorParam(struBean, param);
-			}
+				Bean pStruBean = getPStruBean(struBean);
+				if (pStruBean.getInt("STRU_GRADE") != 4 || struBean.getStr("STRU_ID").equals(struBean.getStr("SUP_STRU"))) {
+					return setMajorParam(struBean, param);
+				}
 		}
 		
 		if (struSign == 4 || struSign == 5) { // 直属机构
