@@ -54,6 +54,7 @@ public class NoPassServ extends CommonServ {
 		Bean outBean = new Bean();
 		String NOWPAGE = paramBean.getStr("nowpage");
 		String SHOWNUM = paramBean.getStr("shownum");
+		String where1 = paramBean.getStr("where");
 		int ALLNUM = 0;
 		int meiye = Integer.parseInt(SHOWNUM);
 
@@ -84,7 +85,7 @@ public class NoPassServ extends CommonServ {
 	String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+deptcodes+")) and dept_code in("+deptcodes+")";
 			List<Bean> query1 = Transaction.getExecutor().query(sql1);
 			String sql3 = "";
-			sql3 += "select * from (select a.*,b.code_path from ts_bmsh_nopass a left join sy_org_dept b on a.s_dept=b.dept_code where xm_id = '"+xmid+"') c ";
+			sql3 += "select * from (select a.*,b.code_path from ts_bmsh_nopass a left join sy_org_dept b on a.s_dept=b.dept_code where 1=1 "+where1+") c ";
 			for (int i=0;i<query1.size();i++) {
 				//判断哪些考生部门 在此codepath 下
 				if(i==0){
@@ -93,7 +94,6 @@ public class NoPassServ extends CommonServ {
 					sql3+=" or c.code_path like concat('"+query1.get(i).getId()+"','%')";
 				}
 			}
-			sql3+=" and SH_LEVEL !=0 ";
 			ALLNUM = Transaction.getExecutor().count(sql3);
 			 if(jieshu>ALLNUM){
 				 showpage=ALLNUM-chushi;
@@ -258,27 +258,6 @@ public class NoPassServ extends CommonServ {
 				// 获取下级参数
 				Bean bean = ServDao.find("TS_BMSH_NOPASS", id);
 				String bmid = bean.getStr("BM_ID");
-				String allman = "";
-
-				if (level != 1) {
-
-					ParamBean parambean = new ParamBean();
-					parambean.set("examerUserCode", bean.getStr("BM_CODE"));
-					parambean.set("deptCode", bean.getStr("S_DEPT"));
-					parambean.set("odeptCode", bean.getStr("S_ODEPT"));
-					parambean.set("level", level);
-					parambean.set("shrUserCode", shenuser);
-					parambean.set("flowName", 1);
-					parambean.set("xmId", xmid);
-					OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow",
-							parambean);
-					String blist = outbean.getStr("result");
-
-					if(!"".equals(blist)){
-						allman= blist.substring(0,blist.length()-1);
-					}
-
-				}
 				bean.remove("SH_ID");
 				bean.remove("S_CMPY");
 				bean.remove("S_ATIME");
@@ -290,18 +269,7 @@ public class NoPassServ extends CommonServ {
 				newBean.copyFrom(bean);
 				newBean.set("SH_LEVEL", level);
 				ServDao.save("TS_BMSH_PASS", newBean);
-				if (level == 1) {
-					// 不用再去待审核中直接去 审核通过中 且数据无改动
-				} else {
-					if("1".equals(flag)){   //越级审核流程不用再去待审核中
-						Bean newBean1 = new Bean();
-						newBean1.copyFrom(bean);
-						newBean1.set("SH_OTHER", allman);
-						newBean1.set("SH_LEVEL", level);
-						newBean1.set("BM_STATUS",0);
-						ServDao.save("TS_BMSH_STAY", newBean1);
-					}
-				}
+				
 				// 修改报名状态
 				Bean bm_bean = ServDao.find("TS_BMLB_BM", bmid);
 				if (bm_bean != null) {
@@ -398,17 +366,15 @@ public class NoPassServ extends CommonServ {
 		}
 		String where = "AND BM_ID=" + "'" + bmid + "'";
 		List<Bean> list = ServDao.finds("TS_BMSH_NOPASS", where);
-
+		ServDao.delete("TS_BMSH_NOPASS", where);
 		// 继续走审核流程
 		if (list.size() != 0) {
 			Bean bean = list.get(0);
-			String slevel = bean.getStr("SH_LEVEL");
 			String xmid = bean.getStr("XM_ID");
 			String bm_code = bean.getStr("BM_CODE");
-			int level = Integer.parseInt(slevel);
 			ParamBean parambean = new ParamBean();
 			parambean.set("examerUserCode", bm_code);
-			parambean.set("level", level);
+			parambean.set("level", 0);
 			parambean.set("shrUserCode", shenuser);
 			parambean.set("flowName", 1);
 			parambean.set("xmId", xmid);
@@ -417,7 +383,6 @@ public class NoPassServ extends CommonServ {
 			OutBean outbean = ServMgr
 					.act("TS_WFS_APPLY", "backFlow", parambean);
 			String allman = "";
-			int nowlevel = level;
 			String blist = outbean.getStr("result");
 
 			if(!"".equals(blist)){
@@ -437,7 +402,7 @@ public class NoPassServ extends CommonServ {
 				newBean1.copyFrom(bean);
 				newBean1.set("SH_USER", allman);
 				newBean1.set("SH_OTHER", allman);
-				newBean1.set("SH_LEVEL", nowlevel);
+				newBean1.set("SH_LEVEL", outbean.getStr("SH_LEVEL"));
 				newBean1.set("BM_YIYI", bmid);
 				newBean1.set("BM_STATUS", 0);
 				ServDao.save("TS_BMSH_STAY", newBean1);
@@ -808,12 +773,12 @@ public class NoPassServ extends CommonServ {
 		List<Bean> list;
 			if(dept_code.equals("0010100000")){
 				//所有人员
-				String sql = "select * from TS_BMSH_NOPASS where 1=1"+where1;
+				String sql = "select * from TS_BMSH_NOPASS where 1=1 "+where1;
 				 ALLNUM = Transaction.getExecutor().count(sql);
 				 if(jieshu>ALLNUM){
 					 showpage=ALLNUM-chushi;
 				 }
-				 String datasql = "select * from TS_BMSH_nopass where 1=1"+where1 +" limit "+chushi+","+showpage;
+				 String datasql = "select * from TS_BMSH_nopass where 1=1 "+where1 +" limit "+chushi+","+showpage;
 				  list = Transaction.getExecutor().query(datasql);
 
 			}else{
@@ -824,10 +789,10 @@ public class NoPassServ extends CommonServ {
 				deptwhere = "AND S_DEPT IN ("+dept_code+")";*/
 				DeptBean dept = OrgMgr.getDept(dept_code);
 				String codepath = dept.getCodePath();
-				String sql = "select count(*) from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
+				String sql = "select count(*) from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') "+where1;
 				ALLNUM = Transaction.getExecutor().count(sql);
 				 ALLNUM = Transaction.getExecutor().count(sql);
-				 String datasql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1+" limit "+chushi+","+jieshu;
+				 String datasql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') "+where1+" limit "+chushi+","+jieshu;
 				  list = Transaction.getExecutor().query(datasql);
 				
 			}

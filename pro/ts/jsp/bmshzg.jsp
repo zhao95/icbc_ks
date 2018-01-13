@@ -254,11 +254,11 @@ if(userBean != null) {
 				<td style="width:10%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
 				<td style="width:18%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm2" type="text"></input>&nbsp;&nbsp;</td>
 						<td style="width:15;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm2" type="text"></input>&nbsp;&nbsp;</td>
-						<td style="width:1%;text-align:left"><select id = "zhuangtai1">
+						<td style="width:1%;text-align:left"><!-- <select id = "zhuangtai1">
 				            <option selected="selected">全部</option>
 				            <option value="进行中">进行中</option>
 				            <option value="已结束">已结束</option>
-				            </select>
+				            </select> -->
 				        </td>
 				        <td style="width:8%;text-align:left">&nbsp;&nbsp;<button id="check2" class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise">查询</button></td>
 			</tr>
@@ -320,11 +320,11 @@ if(userBean != null) {
 				<td style="width:10%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:60%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
 				<td style="width:18%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm3" type="text"></input>&nbsp;&nbsp;</td>
 						<td style="width:25;text-align:right">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm3" type="text"></input>&nbsp;&nbsp;</td>
-						<td style="width:6%;text-align:left"><select id = "zhuangtai2">
+						<td style="width:6%;text-align:left"><!-- <select id = "zhuangtai2">
 				            <option selected="selected">全部</option>
 				            <option value="进行中">进行中</option>
 				            <option value="已结束">已结束</option>
-				            </select>
+				            </select> -->
 				        </td>
 				        <td style="width:8%;text-align:left">&nbsp;&nbsp;<button id="check3" class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise">查询</button></td>
 			</tr>
