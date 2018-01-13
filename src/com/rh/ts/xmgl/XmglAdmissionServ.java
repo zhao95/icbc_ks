@@ -34,6 +34,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.ParseException;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Created by shenh on 2017/10/25.
@@ -223,6 +225,8 @@ public class XmglAdmissionServ extends CommonServ {
         List<Bean> existsBeanList = ServDao.finds(TsConstant.SERV_XMGL_ADMISSION_FILE, admissionFileBean);
         Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
         String xmKcapPublishTime = xmBean.getStr("XM_KCAP_PUBLISH_TIME");
+        UserBean userBean = UserMgr.getUser(userCode);
+        String pdfFileTempName = xmBean.getStr("XM_NAME") + "-" + userBean.getStr("USER_NAME");
 
         if (existsBeanList.size() > 0 && StringUtils.isNotEmpty(existsBeanList.get(0).getStr("FILE_ID"))//已生成该项目该考生的准考证
                 && existsBeanList.get(0).getStr("S_ATIME").compareTo(xmKcapPublishTime) > 0//生成时间在发布之后
@@ -232,7 +236,6 @@ public class XmglAdmissionServ extends CommonServ {
             pdfFileBean = FileMgr.getFile(fileId);
         } else {
             //还未生成，执行生成代码
-            UserBean userBean = UserMgr.getUser(userCode);
             String excel_template_id = xmBean.getStr("EXCEL_TEMPLATE_ID");
             String excelTemplateId = "";
             if (StringUtils.isNotEmpty(excel_template_id)) {
@@ -247,53 +250,53 @@ public class XmglAdmissionServ extends CommonServ {
 
             Bean excelTemplateFileBean = FileMgr.getFile(excelTemplateId);
 
-            File admissionExcelFile = null;
-            File admissionPdfFile = null;
+            List<File> pdfFiles = new ArrayList<File>();
+            File pdfZipfile = null;
             try {
                 in = FileMgr.download(excelTemplateFileBean);
                 //根据模板生成excel文件
-                admissionExcelFile = generateAdmissionExcelFile(xmId, userCode, in);
-                //转换成pdf
-                admissionPdfFile = File.createTempFile("admissionPdf", ".pdf");
-                int pdfFlag = office2PDF(admissionExcelFile.getAbsolutePath(), admissionPdfFile.getAbsolutePath());
-                if (pdfFlag == 0) {
-                    //pdf转换成功：添加/更新 TS_XMGL_ADMISSION_FILE  上传pdf文件
-                    if (existsBeanList.size() > 0) {
-                        //存在admissionFileBean数据
-                        admissionFileBean = existsBeanList.get(0);
-                        String existFileId = admissionFileBean.getStr("FILE_ID");
-                        if (StringUtils.isNotBlank(existFileId)) {
-                            //fileId 不为空 删除文件
-                            FileMgr.deleteFile(existFileId);
-                            admissionFileBean.set("FILE_ID", "");
-                        }
-                    } else {
-                        //不存在admissionFileBean，创建
-                        admissionFileBean.set("FILE_ID", "");
-                        admissionFileBean.set("S_ATIME", DateUtils.getDatetime());
-                        admissionFileBean = ServDao.save(TsConstant.SERV_XMGL_ADMISSION_FILE, admissionFileBean);
-                    }
-                    String dataId = admissionFileBean.getId();
-                    FileInputStream fileInputStream = new FileInputStream(admissionPdfFile);
-//                    resultInputStream = new FileInputStream(admissionPdfFile);
-                    pdfFileBean = FileMgr.upload(TsConstant.SERV_XMGL_ADMISSION_FILE, dataId, "ADMISSION", fileInputStream,
-                            xmBean.getStr("XM_NAME") + "-" + userBean.getStr("USER_NAME") + ".pdf");
-                    fileId = pdfFileBean.getId();
-                    admissionFileBean.set("FILE_ID", fileId);
-                    admissionFileBean.set("S_ATIME", DateUtils.getDatetime());
-                    ServDao.update(TsConstant.SERV_XMGL_ADMISSION_FILE, admissionFileBean);
-                } else {
-                    //excel转pdf失败
-                    throw new TipException("excel转pdf失败");
+                List<File> sourceFiles = generateAdmissionExcelFileList(xmId, userCode, in);
+                for (File sourceFile : sourceFiles) {
+                    //office to pdf
+                    pdfFiles.add(this.office2PDF(sourceFile, pdfFileTempName));
                 }
+                //zip打包
+                pdfZipfile = zipFiles(pdfFiles);
+                for (File sourceFile : sourceFiles) {
+                    sourceFile.delete();
+                }
+                for (File pdfFile : pdfFiles) {
+                    pdfFile.delete();
+                }
+                //添加/更新 TS_XMGL_ADMISSION_FILE  上传pdf文件
+                if (existsBeanList.size() > 0) {
+                    //存在admissionFileBean数据
+                    admissionFileBean = existsBeanList.get(0);
+                    String existFileId = admissionFileBean.getStr("FILE_ID");
+                    if (StringUtils.isNotBlank(existFileId)) {
+                        //fileId 不为空 删除文件
+                        FileMgr.deleteFile(existFileId);
+                        admissionFileBean.set("FILE_ID", "");
+                    }
+                } else {
+                    //不存在admissionFileBean，创建
+                    admissionFileBean.set("FILE_ID", "");
+                    admissionFileBean.set("S_ATIME", DateUtils.getDatetime());
+                    admissionFileBean = ServDao.save(TsConstant.SERV_XMGL_ADMISSION_FILE, admissionFileBean);
+                }
+                String dataId = admissionFileBean.getId();
+                FileInputStream fileInputStream = new FileInputStream(pdfZipfile);
+                pdfFileBean = FileMgr.upload(TsConstant.SERV_XMGL_ADMISSION_FILE, dataId, "ADMISSION", fileInputStream,
+                        pdfFileTempName + ".zip");
+                fileId = pdfFileBean.getId();
+                admissionFileBean.set("FILE_ID", fileId);
+                admissionFileBean.set("S_ATIME", DateUtils.getDatetime());
+                ServDao.update(TsConstant.SERV_XMGL_ADMISSION_FILE, admissionFileBean);
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                if (admissionExcelFile != null) {
-                    admissionExcelFile.delete();
-                }
-                if (admissionPdfFile != null) {
-                    admissionPdfFile.delete();
+                if (pdfZipfile != null) {
+                    pdfZipfile.delete();
                 }
             }
         }
@@ -309,7 +312,7 @@ public class XmglAdmissionServ extends CommonServ {
      * @return admissionExcelFile
      * @throws IOException IOException
      */
-    public File generateAdmissionExcelFile(String xmId, String userCode, InputStream inputStream) throws IOException {
+    public List<File> generateAdmissionExcelFileList(String xmId, String userCode, InputStream inputStream) throws IOException {
         Bean dataBean = new Bean();
 
         //基本信息 {title} {userCode} {userName} {userSexName} {orgName} {kcName} {kcAdress}
@@ -384,6 +387,95 @@ public class XmglAdmissionServ extends CommonServ {
         ksInfoFieldNameList.add("{kcName}");
         ksInfoFieldNameList.add("{kcAddress}");
 
+        //将模板文件写到临时文件里
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        File tempFile = File.createTempFile("excel_template", ".xls");
+        try {
+            bos = new BufferedOutputStream(new FileOutputStream(tempFile));
+            byte[] bufs = new byte[1024 * 10];
+            bis = new BufferedInputStream(inputStream, 1024 * 10);
+            int read;
+            while ((read = bis.read(bufs, 0, 1024 * 10)) != -1) {
+                bos.write(bufs, 0, read);
+            }
+        } finally {
+            //关闭流
+            try {
+                if (null != bis) bis.close();
+                if (null != bos) bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+
+        //每个考试生成对应准考证文件
+        List<File> sourceFiles = new ArrayList<File>();
+        try {
+            List<Bean> ksList = dataBean.getList("ksList");
+            for (Bean ks : ksList) {
+                List<Bean> ksTempList = new ArrayList<Bean>();
+                ksTempList.add(ks);
+                dataBean.set("ksList", ksTempList);
+                FileInputStream fileInputStream = new FileInputStream(tempFile);
+                sourceFiles.add(this.generateAdmissionExcelFile(dataBean, ksIndexMap, ksInfoFieldNameList, fileInputStream));
+            }
+        } finally {
+            tempFile.delete();
+        }
+
+        return sourceFiles;
+    }
+
+    /**
+     * 打包成zip
+     *
+     * @param sourceFiles 源文件
+     * @return file
+     * @throws IOException IOException
+     */
+    private File zipFiles(List<File> sourceFiles) throws IOException {
+//        boolean flag = false;
+        File zipTempFile = File.createTempFile("admission", ".xls");
+
+        FileInputStream fis;
+        BufferedInputStream bis = null;
+        FileOutputStream fos;
+        ZipOutputStream zos = null;
+        try {
+            fos = new FileOutputStream(zipTempFile);
+            zos = new ZipOutputStream(new BufferedOutputStream(fos));
+            byte[] bufs = new byte[1024 * 10];
+            for (File file : sourceFiles) {
+                //创建ZIP实体，并添加进压缩包
+                ZipEntry zipEntry = new ZipEntry(file.getName());
+                zos.putNextEntry(zipEntry);
+                //读取待压缩的文件并写进压缩包里
+                fis = new FileInputStream(file);
+                bis = new BufferedInputStream(fis, 1024 * 10);
+                int read;
+                while ((read = bis.read(bufs, 0, 1024 * 10)) != -1) {
+                    zos.write(bufs, 0, read);
+                }
+            }
+//            flag = true;
+        } catch (Exception e) {
+            throw new TipException("准考证打包失败");
+        } finally {
+            //关闭流
+            try {
+                if (null != bis) bis.close();
+                if (null != zos) zos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+        return zipTempFile;
+    }
+
+    private File generateAdmissionExcelFile(Bean dataBean, Map<String, Integer> ksIndexMap, List<String> ksInfoFieldNameList, InputStream inputStream) throws IOException {
         List<String> list = new ArrayList<String>();
         for (Object o : dataBean.keySet()) {
             list.add("{" + o + "}");
@@ -553,6 +645,11 @@ public class XmglAdmissionServ extends CommonServ {
 
 
             if (!CollectionUtil.isEmpty(ksList)) {
+                boolean oneKs = false;//只有一次考试
+                if (ksList.size() == 1) {
+                    oneKs = true;
+                }
+
                 Bean ksBean = ksList.get(0);
                 String ksName = ksBean.getStr("ksName");
                 String ksXTZW = ksBean.getStr("ksXTZW");
@@ -561,66 +658,93 @@ public class XmglAdmissionServ extends CommonServ {
                 String kcName = ksBean.getStr("kcName");
                 String kcAddress = ksBean.getStr("kcAddress");
                 //ksName
-                HSSFRow row = sheet.getRow(ksNameRowIndex);
-                if (row != null) {
-                    HSSFCell cell = row.getCell(ksNameColIndex);
-                    if (cell != null) {
-                        cell.setCellValue(ksName);
-                    }
-                }
+                setKsCellValue(sheet, ksNameRowIndex, ksNameColIndex, oneKs, ksName);
                 //ksXTZW
-                HSSFRow row2 = sheet.getRow(ksXTZWRowIndex);
-                if (row2 != null) {
-                    HSSFCell cell = row2.getCell(ksXTZWColIndex);
-                    if (cell != null) {
-                        cell.setCellValue(ksXTZW);
-                    }
-                }
+                setKsCellValue(sheet, ksXTZWRowIndex, ksXTZWColIndex, oneKs, ksXTZW);
                 //ksBeginTime
-                HSSFRow row3 = sheet.getRow(ksBeginTimeRowIndex);
-                if (row3 != null) {
-                    HSSFCell cell = row3.getCell(ksBeginTimeColIndex);
-                    if (cell != null) {
-                        cell.setCellValue(ksBeginTime);
-                    }
-                }
+                setKsCellValue(sheet, ksBeginTimeRowIndex, ksBeginTimeColIndex, oneKs, ksBeginTime);
                 //ksDuration
-                HSSFRow row4 = sheet.getRow(ksDurationRowIndex);
-                if (row4 != null) {
-                    HSSFCell cell = row4.getCell(ksDurationColIndex);
-                    if (cell != null) {
-                        cell.setCellValue(ksDuration);
-                    }
-                }
+                setKsCellValue(sheet, ksDurationRowIndex, ksDurationColIndex, oneKs, ksDuration);
                 //kcName
-                HSSFRow row5 = sheet.getRow(kcNameRowIndex);
-                if (row4 != null) {
-                    HSSFCell cell = row5.getCell(kcNameColIndex);
-                    if (cell != null) {
-                        cell.setCellValue(kcName);
-                    }
-                }
+                setKsCellValue(sheet, kcNameRowIndex, kcNameColIndex, oneKs, kcName);
                 //kcAddress
-                HSSFRow row6 = sheet.getRow(kcAddressRowIndex);
-                if (row6 != null) {
-                    HSSFCell cell = row6.getCell(kcAddressColIndex);
-                    if (cell != null) {
-                        cell.setCellValue(kcAddress);
-                    }
-                }
+                setKsCellValue(sheet, kcAddressRowIndex, kcAddressColIndex, oneKs, kcAddress);
             }
 
             FileOutputStream os = new FileOutputStream(temp);
             os.flush();
+
             //将Excel写出
             workbook.write(os);
             //关闭流
 //            fileInput.close();
             os.close();
-            return temp;
         } catch (IOException e) {
             e.printStackTrace();
             throw new TipException("准考证生成失败");
+        }
+        return temp;
+    }
+
+    /**
+     * 设置准考证值
+     *
+     * @param sheet              sheet
+     * @param ksPropertyRowIndex ksPropertyRowIndex
+     * @param ksPropertyColIndex ksPropertyColIndex
+     * @param oneKs              只有一次考试
+     * @param ksPropertyValue
+     */
+    private void setKsCellValue(HSSFSheet sheet, int ksPropertyRowIndex, int ksPropertyColIndex, boolean oneKs, String ksPropertyValue) {
+        HSSFRow row = sheet.getRow(ksPropertyRowIndex);
+        if (row != null) {
+            HSSFCell cell = row.getCell(ksPropertyColIndex);
+            if (cell != null) {
+                cell.setCellValue(ksPropertyValue);
+            }
+            if (oneKs) {
+                try {
+                    //只有一个考试将"1"替换为空
+                    HSSFCell nameCell = row.getCell(ksPropertyColIndex - 1);
+                    if (nameCell != null) {
+                        nameCell.setCellValue(nameCell.getStringCellValue().replace("1", ""));
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        }
+    }
+
+    /**
+     * 将Office文档转换为PDF
+     *
+     * @param admissionExcelFile Office文档
+     * @return File
+     * @throws IOException IOException
+     */
+    private File office2PDF(File admissionExcelFile) throws IOException {
+        return office2PDF(admissionExcelFile, null);
+    }
+
+    /**
+     * 将Office文档转换为PDF
+     *
+     * @param admissionExcelFile Office文档
+     * @return File
+     * @throws IOException IOException
+     */
+    private File office2PDF(File admissionExcelFile, String pdfFileTempName) throws IOException {
+        //转换成pdf
+        if (StringUtils.isBlank(pdfFileTempName)) {
+            pdfFileTempName = "admissionPdf";
+        }
+        File admissionPdfFile = File.createTempFile(pdfFileTempName, ".pdf");
+        int pdfFlag = office2PDF(admissionExcelFile.getAbsolutePath(), admissionPdfFile.getAbsolutePath());
+        if (pdfFlag == 0) {
+            return admissionPdfFile;
+        } else {
+            //excel转pdf失败
+            throw new TipException("excel转pdf失败");
         }
     }
 
@@ -640,7 +764,7 @@ public class XmglAdmissionServ extends CommonServ {
      * @return 操作成功与否的提示信息. 如果返回 -1, 表示找不到源文件, 或url.properties配置错误; 如果返回 0,
      * 则表示操作成功; 返回1, 则表示转换失败
      */
-    public static int office2PDF(String sourceFile, String destFile) throws FileNotFoundException {
+    private static int office2PDF(String sourceFile, String destFile) throws FileNotFoundException {
         try {
             File inputFile = new File(sourceFile);
             if (!inputFile.exists()) {
