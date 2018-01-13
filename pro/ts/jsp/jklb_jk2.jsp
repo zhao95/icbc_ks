@@ -119,7 +119,7 @@
     Bean jkbean = ServDao.find("TS_JKLB_JK", jk_id);
     String jk_title = jkbean.getStr("JK_TITLE");
     String jk_ksname = jkbean.getStr("JK_KSNAME");
-//    String[] bmidArray = jk_ksname.split(",");
+//    String[] shidArray = jk_ksname.split(",");
     String jk_reason = jkbean.getStr("JK_REASON");
     String s_atime = jkbean.getStr("S_ATIME");
 //    String jk_status = jkbean.getStr("JK_STATUS");
@@ -505,9 +505,9 @@
     $(function () {
         var jkId = '<%=jk_id%>';
         var todoId = '<%=todoId%>';
-        var bmIdStr = '<%=jk_ksname%>';
+        var shIdStr = '<%=jk_ksname%>';
         initData();
-        setKsInfo(bmIdStr);//考试信息
+        setKsInfo(shIdStr);//考试信息
         //展示流程图
         debugger;
         if (todoId) {
@@ -546,8 +546,8 @@
 
     }
     //考试信息
-    function setKsInfo(bmIdStr) {
-        var params = {bmids: bmIdStr};
+    function setKsInfo(shIdStr) {
+        var params = {shids: shIdStr};
         var bmInfoListBean = FireFly.doAct('TS_JKLB_JK', 'getBmInfoByIds', params);
         var bmInfoList = bmInfoListBean._DATA_;
         var $jkksTable = $('#jkks-table').find('tbody');
@@ -555,9 +555,9 @@
             var bmInfo = bmInfoList[i];
             $jkksTable.append([
                 '<tr style="padding-left: 5px;text-align: center">',
-                '   <td class="rhGrid-td-hide">' + bmInfo.BM_ID,
+                '   <td class="rhGrid-td-hide">' + bmInfo.SH_ID,
                 '   </td>',
-                '   <td class="rhGrid-td-hide"><input type="text" name="bmids" id="tjid" value="' + bmInfo.BM_ID + '">',
+                '   <td class="rhGrid-td-hide"><input type="text" name="shids" id="tjid" value="' + bmInfo.SH_ID + '">',
                 '   </td>',
                 '   <td width="35%">' + bmInfo.title,
                 '   </td>',

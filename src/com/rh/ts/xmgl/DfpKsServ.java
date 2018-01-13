@@ -80,12 +80,7 @@ public class DfpKsServ extends CommonServ {
             }
 
             //查询考试类别kslb
-            ParamBean queryBean = new ParamBean();
-            queryBean.set("LB_NAME", lbString);
-            queryBean.set("XL_NAME", xlString);
-            queryBean.set("MK_NAME", mkString);
-            queryBean.set("TYPE_NAME", typeString);
-            OutBean kslbBean = this.getKSLBBySql(queryBean);
+            Bean kslbBean = ImpUtils.getKsLBKBean(lbString, xlString, mkString, typeString);
             if (kslbBean == null) {
                 rowBean.set(ImpUtils.ERROR_NAME, "找不到相关考试类别");
                 continue;

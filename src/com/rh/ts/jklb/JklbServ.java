@@ -68,7 +68,9 @@ public class JklbServ extends CommonServ {
         int lookCount = Transaction.getExecutor().queryOne(lookCountSql).getInt("COUNT");//, page.getNowPage(), page.getShowNum(), null, null
 
         //有审批记录，说明已审批 撤回标识为false 不可撤回
-        String sql = "select a.*,(case when exists(select '' from ts_comm_mind b where b.DATA_ID=JK_ID) then 'false' else 'true' end) as canRetract from TS_JKLB_JK a where a.USER_CODE ='" + currentUserCode + "' order by a.JK_DATE";
+        String sql = "select a.*,(case when exists(select '' from ts_comm_mind b where b.DATA_ID=JK_ID) then 'false' else 'true' end) as canRetract " +
+                " from TS_JKLB_JK a where a.USER_CODE ='" + currentUserCode + "' " +
+                " order by a.JK_DATE desc";
         List<Bean> dataList = Transaction.getExecutor().query(sql);//, page.getNowPage(), page.getShowNum(), null, null
 
         String countSql = "select count(*) as count " + sql.substring(sql.indexOf("from TS_JKLB_JK a"));
@@ -160,13 +162,13 @@ public class JklbServ extends CommonServ {
         String jkBumen = paramBean.getStr("bumen");
         String jkimg = paramBean.getStr("jkimg");
         String jkReason = paramBean.getStr("jkreason");
-        String bmidStr = paramBean.getStr("bmids");
-        String[] bmids = bmidStr.split(",");
+        String shidStr = paramBean.getStr("shids");
+        String[] shids = shidStr.split(",");
         //获取XM_ID
-        String bmid = bmids[0];
-        Bean bmBean = ServDao.find("TS_BMLB_BM", bmid);
-        String xmId = bmBean.getStr("XM_ID");
-        String lbDate = bmBean.getStr("JKLB_DATE");
+        String shid = shids[0];
+        Bean bmPassBean = ServDao.find(TsConstant.SERV_BMSH_PASS, shid);
+        String xmId = bmPassBean.getStr("XM_ID");
+        String lbDate = bmPassBean.getStr("JKLB_DATE");
 
         //借考
         Bean jkbean = new Bean();
@@ -176,17 +178,17 @@ public class JklbServ extends CommonServ {
         jkbean.set("USER_CODE", jkUserCode);
         jkbean.set("JK_REASON", jkReason);
         jkbean.set("JK_DEPT", jkBumen);
-        jkbean.set("JK_KSNAME", bmidStr);
+        jkbean.set("JK_KSNAME", shidStr);
         jkbean.set("XM_ID", xmId);
         jkbean.set("JK_NAME", userName);
         // jkbean.set("USER_CODE", userWorkNum);//人力资源编码  todo是不是要改个名称
         jkbean.set("JK_IMG", jkimg);//证明材料（fileId ）
         jkbean.set("JK_STATUS", "1");   //  1"审核中"; 2  "已通过";3 "未通过";
         jkbean.set("JK_DATE", new SimpleDateFormat(dateFormatString).format(new Date()));
-        jkbean.set("JK_KSTIME", lbDate);//考试开始时间   todo  TS_BMSH_PASS  BM_ID  TS_BMLB_BM
-        jkbean.set("S_DEPT", bmBean.get("S_DEPT"));
-        jkbean.set("S_ODEPT", bmBean.get("S_ODEPT"));
-        jkbean.set("S_TDEPT", bmBean.get("S_TDEPT"));
+        jkbean.set("JK_KSTIME", lbDate);//考试开始时间   todo  TS_BMSH_PASS  SH_ID  TS_BMLB_BM
+        jkbean.set("S_DEPT", bmPassBean.get("S_DEPT"));
+        jkbean.set("S_ODEPT", bmPassBean.get("S_ODEPT"));
+        jkbean.set("S_TDEPT", bmPassBean.get("S_TDEPT"));
         //保存到ts_JKLB_JK库里
         Bean qjbd = ServDao.create(servId, jkbean);
         //起草人
@@ -377,12 +379,12 @@ public class JklbServ extends CommonServ {
                 if ("2".equals(jk_status)) {
                     //借考已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
                     String jkKsname = jkbean.getStr("JK_KSNAME");
-                    String[] bmIds = jkKsname.split(",");
+                    String[] shIds = jkKsname.split(",");
                     StringBuilder shIdStr = new StringBuilder();
                     List<Object> values = new ArrayList<Object>();
-                    for (String bmId : bmIds) {
+                    for (String shId : shIds) {
                         ParamBean queryParamBean = new ParamBean();
-                        queryParamBean.set("BM_ID", bmId);
+                        queryParamBean.set("SH_ID", shId);
                         Bean bean = ServDao.find(TS_BMSH_PASS_SERVID, queryParamBean);
                         if (bean == null) {
                             continue;
@@ -395,7 +397,6 @@ public class JklbServ extends CommonServ {
                         bean.set("JK_ODEPT", jkbean.getStr("JK_YJFH"));
                         ServDao.update(TS_BMSH_PASS_SERVID, bean);
                         //shIdStr
-                        String shId = bean.getStr("SH_ID");
                         shIdStr.append("?,");
                         values.add(shId);
                     }
@@ -499,32 +500,31 @@ public class JklbServ extends CommonServ {
     }
 
     /**
-     * 根据bmId获取报名的信息
-     * 注：bmids:'id1,id2,id3'
+     * 根据shId获取报名的信息
+     * 注：shids:'id1,id2,id3'
      */
     public OutBean getBmInfoByIds(ParamBean paramBean) {
-        String bmidStr = paramBean.getStr("bmids");
-        String[] bmids = bmidStr.split(",");
+        String shidStr = paramBean.getStr("shids");
+        String[] shids = shidStr.split(",");
         StringBuilder sbu = new StringBuilder();
-        if (bmids.length > 0) {
-            sbu.append("'").append(bmids[0]).append("'");
-            for (int i = 1; i < bmids.length; i++) {
-//                String bmid = bmids[i];
-                sbu.append(",'").append(bmids[i]).append("'");
+        if (shids.length > 0) {
+            sbu.append("'").append(shids[0]).append("'");
+            for (int i = 1; i < shids.length; i++) {
+//                String shid = shids[i];
+                sbu.append(",'").append(shids[i]).append("'");
             }
         }
 //    "TS_BMSH_PASS"
-        List<Bean> tsBmshPassList = ServDao.finds("TS_BMLB_BM", "and BM_ID in(" + sbu.toString() + ")");//userWorkNum
+        List<Bean> tsBmshPassList = ServDao.finds(TsConstant.SERV_BMSH_PASS, "and SH_ID in(" + sbu.toString() + ")");//userWorkNum
         for (Bean tsBmshPass : tsBmshPassList) {
             //通过TS_BMLB_BM表，获取标题和考试开始时间信息
-            String bmId = tsBmshPass.getStr("BM_ID");
-            Bean bmBean = ServDao.find("TS_BMLB_BM", bmId);
-            String bmTitle = bmBean.getStr("BM_TITLE");
+            String shId = tsBmshPass.getStr("SH_ID");
+            String bmTitle = tsBmshPass.getStr("BM_TITLE");
 //        String bmLb = (String) bmBean.get("BM_LB");
-            String bmXl = bmBean.getStr("BM_XL");
-            String bmMk = bmBean.getStr("BM_MK");
-            String bmType = bmBean.getStr("BM_TYPE");
-            String lbDate = bmBean.getStr("LB_DATE");
+            String bmXl = tsBmshPass.getStr("BM_XL");
+            String bmMk = tsBmshPass.getStr("BM_MK");
+            String bmType = tsBmshPass.getStr("BM_TYPE");
+            String lbDate = tsBmshPass.getStr("LB_DATE");
             String bm_bt = BMUtil.getExaminationName(bmType, bmXl, bmMk);
             String title = "";
             if (StringUtils.isBlank(bmMk)) {
@@ -552,15 +552,15 @@ public class JklbServ extends CommonServ {
         for (Iterator<Bean> iterator = tsBmshPassList.iterator(); iterator.hasNext(); ) {
             Bean tsBmshPass = iterator.next();
 //            String xmId = (String) tsBmshPass.get("XM_ID");
-            String bmId = (String) tsBmshPass.get("BM_ID");
+            String shId = (String) tsBmshPass.get("SH_ID");
 
-            List<Bean> queryJkList = ServDao.finds(TSJK_SERVID, "and JK_KSNAME like '%" + bmId + "%' and JK_STATUS in('1','2') ");
-            List<Bean> queryQjList = ServDao.finds(TSQJ_SERVID, "and QJ_KSNAME like '%" + bmId + "%' and QJ_STATUS in('1','2')");
+            List<Bean> queryJkList = ServDao.finds(TSJK_SERVID, "and JK_KSNAME like '%" + shId + "%' and JK_STATUS in('1','2') ");
+            List<Bean> queryQjList = ServDao.finds(TSQJ_SERVID, "and QJ_KSNAME like '%" + shId + "%' and QJ_STATUS in('1','2')");
 
             //项目有报名设置 在项目报名时间内 && 不存在进行中或已通过的报名（是否已经请假）（是否已经借考）
             if (inApplyTime(xmId) && queryJkList.size() <= 0 && queryQjList.size() <= 0) {
                 //通过TS_BMLB_BM表，获取标题信息
-                Bean bmBean = ServDao.find("TS_BMLB_BM", bmId);
+                Bean bmBean = ServDao.find("TS_BMLB_BM", shId);
                 if (bmBean == null) {
                     //报名信息丢失移除（数据错误）
                     iterator.remove();
@@ -607,9 +607,9 @@ public class JklbServ extends CommonServ {
                 " where now() BETWEEN str_to_date(XM_START,'%Y-%m-%d %H:%i:%s') and str_to_date(XM_END,'%Y-%m-%d %H:%i:%s') " +
                 "and exists( " +
                 " select * from TS_BMSH_PASS pass " +
-                " where pass.BM_ID !='' and pass.BM_ID is not null and a.XM_ID =pass.XM_ID and BM_CODE ='" + userCode + "'" +
-                "  and not EXISTS(select '' from ts_jklb_jk jk where jk.JK_KSNAME like CONCAT('%',pass.BM_ID,'%') and jk.JK_STATUS in('1','2')) " +
-                "  and not EXISTS(select '' from TS_QJLB_QJ qj where qj.QJ_KSNAME like CONCAT('%',pass.BM_ID,'%') and qj.QJ_STATUS in('1','2')) " +
+                " where pass.SH_ID !='' and pass.SH_ID is not null and a.XM_ID =pass.XM_ID and BM_CODE ='" + userCode + "'" +
+                "  and not EXISTS(select '' from ts_jklb_jk jk where jk.JK_KSNAME like CONCAT('%',pass.SH_ID,'%') and jk.JK_STATUS in('1','2')) " +
+                "  and not EXISTS(select '' from TS_QJLB_QJ qj where qj.QJ_KSNAME like CONCAT('%',pass.SH_ID,'%') and qj.QJ_STATUS in('1','2')) " +
                 " )");
 
         for (Iterator<Bean> iterator = xmBeanList.iterator(); iterator.hasNext(); ) {
@@ -690,11 +690,23 @@ public class JklbServ extends CommonServ {
         List<String> successIdList = new ArrayList<String>();
 
         List<String> bmIdList = paramBean.getList("bmIdList");//通过后 又被审批为不通过的报名Id
-        for (String bmId : bmIdList) {
+        //移除空字符串
+        for (Iterator<String> iterator = bmIdList.iterator(); iterator.hasNext(); ) {
+            String bmId = iterator.next();
+            if (StringUtils.isBlank(bmId)) {
+                iterator.remove();
+            }
+        }
+
+        SqlBean sqlBean = new SqlBean();
+        sqlBean.andIn("BM_ID", bmIdList);
+        List<Bean> bmPassBeanList = ServDao.finds(TsConstant.SERV_BMSH_PASS, sqlBean);
+
+        for (Bean bmPass: bmPassBeanList) {
             //根据bmId查找出审核中的借考流程
-            List<Bean> queryJkList = ServDao.finds(TSJK_SERVID, "and JK_KSNAME like '%" + bmId + "%' and JK_STATUS in('1')");
+            List<Bean> queryJkList = ServDao.finds(TSJK_SERVID, "and JK_KSNAME like '%" + bmPass.getStr("SH_ID") + "%' and JK_STATUS in('1')");
             for (Bean jkBean : queryJkList) {
-                //每个bmId的处理进行 事务操作
+                //每个shId的处理进行 事务操作
                 Transaction.begin();
                 try {
                     String jkId = jkBean.getId();
@@ -722,7 +734,7 @@ public class JklbServ extends CommonServ {
                         ServDao.update(TSJK_SERVID, jkBean);
                     }
                     Transaction.commit();
-                    successIdList.add(bmId);
+                    successIdList.add(bmPass.getStr("BM_ID"));
                 } catch (Exception e) {
                     Transaction.rollback();
                 } finally {

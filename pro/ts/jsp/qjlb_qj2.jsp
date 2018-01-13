@@ -118,7 +118,7 @@
     Bean qjbean = ServDao.find("TS_QJLB_QJ", qj_id);
     String qj_title = qjbean.getStr("QJ_TITLE");
     String qj_ksname = qjbean.getStr("QJ_KSNAME");
-//    String[] bmidArray = qj_ksname.split(",");
+//    String[] shIdArray = qj_ksname.split(",");
     String qj_reason = qjbean.getStr("QJ_REASON");
     String s_atime = qjbean.getStr("S_ATIME");
 //    String qj_status = qjbean.getStr("QJ_STATUS");
@@ -490,9 +490,9 @@
     $(function () {
         var todoId = '<%=todoId%>';
         var qjId = '<%=qj_id%>';
-        var bmIdStr = '<%=qj_ksname%>';//报名id
+        var shIdStr = '<%=qj_ksname%>';//报名id
         initData();
-        setKsInfo(bmIdStr);
+        setKsInfo(shIdStr);
 
         //展示流程图
         if (todoId) {
@@ -525,9 +525,9 @@
         }
     }
 
-    function setKsInfo(bmIdStr) {
+    function setKsInfo(shIdStr) {
         //考试信息
-        var params = {bmids: bmIdStr};
+        var params = {shids: shIdStr};
         var bmInfoListBean = FireFly.doAct('TS_QJLB_QJ', 'getBmInfoByIds', params);
         var bmInfoList = bmInfoListBean._DATA_;
         var $qjksTable = $('#qjks-table').find('tbody');
@@ -535,9 +535,9 @@
             var bmInfo = bmInfoList[i];
             $qjksTable.append([
                 '<tr style="padding-left: 5px;text-align: center">',
-                '   <td class="rhGrid-td-hide">' + bmInfo.BM_ID,
+                '   <td class="rhGrid-td-hide">' + bmInfo.SH_ID,
                 '   </td>',
-                '   <td class="rhGrid-td-hide"><input type="text" name="bmids" id="tjid" value="' + bmInfo.BM_ID + '">',
+                '   <td class="rhGrid-td-hide"><input type="text" name="shids" id="tjid" value="' + bmInfo.SH_ID + '">',
                 '   </td>',
                 '   <td width="35%">' + bmInfo.title,
                 '   </td>',

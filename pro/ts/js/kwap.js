@@ -409,7 +409,7 @@ var HeaderBtn = {
                 Utils.getCanDraggable(true);
                 KcObject.reloadCCInfo();
                 KsObject.setDfpKsContent();
-                self.zdfpccDisableAftertjccap();
+                self.setCanArrangeOrNot();
             });
         });
 
@@ -431,7 +431,7 @@ var HeaderBtn = {
                 Utils.getCanDraggable(true);
                 KcObject.reloadCCInfo();
                 KsObject.setDfpKsContent();
-                self.zdfpccDisableAftertjccap();
+                self.setCanArrangeOrNot();
                 $("#publish").css('display', 'none');
                 $("#unPublish").css('display', 'block');
             });
@@ -457,7 +457,7 @@ var HeaderBtn = {
                 Utils.getCanDraggable(true);
                 KcObject.reloadCCInfo();
                 KsObject.setDfpKsContent();
-                self.zdfpccDisableAftertjccap();
+                self.setCanArrangeOrNot();
                 $("#publish").css('display', 'block');
                 $("#unPublish").css('display', 'none');
             });

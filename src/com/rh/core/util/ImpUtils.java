@@ -11,6 +11,8 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 
+import com.rh.core.serv.bean.SqlBean;
+import com.rh.ts.util.TsConstant;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -137,7 +139,28 @@ public class ImpUtils {
     }
 
 
-   /* *//**
+    /**
+     * 获取考试类别库Bean
+     *
+     * @param lbName   类别名称
+     * @param xlName   序列名称
+     * @param mkName   模块名称
+     * @param typeName 级别名称
+     * @return bean
+     */
+    public static Bean getKsLBKBean(String lbName, String xlName, String mkName, String typeName) {
+        //查询考试类别kslb
+        SqlBean sqlBean = new SqlBean();
+        sqlBean.and("KSLBK_NAME", lbName);
+        sqlBean.and("KSLBK_XL", xlName);
+        if (StringUtils.isNotBlank(mkName)) {
+            sqlBean.and("KSLBK_MK", mkName);
+        }
+        sqlBean.and("KSLBK_TYPE_NAME", typeName);
+        return ServDao.find(TsConstant.SERV_BM_KSLBK, sqlBean);
+    }
+
+    /**
      * 通过fileId获取第一个sheet的内容
      *
      * @param fileId      文件id
@@ -145,7 +168,8 @@ public class ImpUtils {
      *                    例：["USER_CODE","USER_NAME"] 第一列的值key为USER_CODE，第二列的值key为USER_NAME
      * @return outBean  rowBeans(List<Bean>)
      * @throws TipException 文件不存在，请重试 / Excel文件解析错误，请校验！
-     *//*
+     */
+    /*
     public static List<Bean> getDataFromXls(String fileId, List<String> colCodeList) {
         List<Bean> rowBeans = getDataFromXls(fileId);
         for (Bean rowBean : rowBeans) {

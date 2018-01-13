@@ -4,7 +4,7 @@
          pageEncoding="UTF-8" %>
 <%
     final String CONTEXT_PATH = request.getContextPath();
-    String bmIdStr = request.getParameter("bmids") != null ? request.getParameter("bmids") : "";//已选中的报名-传递到该页面的参数
+    String shIdStr = request.getParameter("shids") != null ? request.getParameter("shids") : "";//已选中的报名-传递到该页面的参数
     String xmId = request.getParameter("xmId") != null ? request.getParameter("xmId") : "";//项目id
 %>
 <html>
@@ -504,13 +504,13 @@
             table1Tbody.append([
                 '<tr>',
                 '   <td style="text-align: center" width="10%">',
-                '   <input type="checkbox" name="checkname1" value="' + userCanLeave.BM_ID + '">',
+                '   <input type="checkbox" name="checkname1" value="' + userCanLeave.SH_ID + '">',
                 '   </td>',
                 '   <td align="center">' + (i + 1),
                 '   </td>',
                 '   <td align="center">' + userCanLeave.title,
                 '   </td>',
-                '   <td class="rhGrid-td-hide">' + userCanLeave.BM_ID,
+                '   <td class="rhGrid-td-hide">' + userCanLeave.SH_ID,
                 '   </td>',
                 '</tr>'
             ].join(''));
@@ -519,16 +519,16 @@
 //            '   </td>',
 
 
-        /*将参数bmId对应的，报名添加到请假的考试列表中*/
-        var bmIdStr = '<%=bmIdStr%>';
-        var bmIds = bmIdStr.split(',');
+        /*将参数shId对应的，报名添加到请假的考试列表中*/
+        var shIdStr = '<%=shIdStr%>';
+        var shIds = shIdStr.split(',');
         var kslxArray = document.getElementsByName("checkname1");
 
-        for (var i = 0; i < bmIds.length; i++) {
-            var bmId = bmIds[i];
+        for (var i = 0; i < shIds.length; i++) {
+            var shId = shIds[i];
             for (var j = 0; j < kslxArray.length; j++) {
                 var kslx = kslxArray[j];
-                if (bmId === kslx.value) {
+                if (shId === kslx.value) {
                     addToSelectedKSTable(kslx)
                 }
             }
@@ -559,7 +559,7 @@
                 var uploadErrors = [];
 
                 var acceptFileTypes = /\/(pdf|xml)$/i;
-                if(data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type'])) {
+                if (data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type'])) {
                     uploadErrors.push('Tipo de Archivo no Aceptado');
                 }
 
@@ -621,17 +621,17 @@
 //                var xu_hao = tds[1].innerText.trim();
         var qj_name = tds[2].innerText.trim();
 //        var ks_date = tds[3].innerText.trim();
-        var bm_id = tds[3].innerText.trim();
+        var shId = tds[3].innerText.trim();
         var qjksTbody = jQuery('#qjks-table tbody');
         qjksTbody.append(
-            '<tr data-id="' + bm_id + '">' +
-            '<td class="rhGrid-td-hide">' + bm_id + '</td>' +
+            '<tr data-id="' + shId + '">' +
+            '<td class="rhGrid-td-hide">' + shId + '</td>' +
             '<td align="center" width="35%">' + qj_name + '</td>' +
 //            '<td align="center" width="35%">' + ks_date + '</td>' +
             '<td align="center" width="35%" >' +
-            '   <a style="cursor:pointer;" data-id="' + bm_id + '" onclick="delOne(this)">删除</a>' +
+            '   <a style="cursor:pointer;" data-id="' + shId + '" onclick="delOne(this)">删除</a>' +
             '</td>' +
-            '<td class="rhGrid-td-hide"><input type="text" name="bmids" value="' + bm_id + '"></td>' +
+            '<td class="rhGrid-td-hide"><input type="text" name="shids" value="' + shId + '"></td>' +
             '</tr>'
         );
         kslx.disabled = true;
@@ -643,14 +643,14 @@
     }
     //根据选择的考试设置disabled和checked -- 若果考试存在，就不能进行选择   选择按钮点击事件
     function xuanze() {
-        var bmidsArray = document.getElementsByName("bmids");
+        var shidsArray = document.getElementsByName("shids");
         var kslxArray = document.getElementsByName("checkname1");
 
         for (var i = 0; i < kslxArray.length; i++) {
             kslxArray[i].disabled = false;
             kslxArray[i].checked = false;
-            for (var j = 0; j < bmidsArray.length; j++) {
-                if (bmidsArray[j].value === kslxArray[i].value) {
+            for (var j = 0; j < shidsArray.length; j++) {
+                if (shidsArray[j].value === kslxArray[i].value) {
                     kslxArray[i].disabled = true;
                     kslxArray[i].checked = true;
                 }
@@ -670,8 +670,8 @@
     }
     //删除已选择的请假
     function delOne(delObj) {
-        var bmId = $(delObj).attr("data-id");
-        $('#qjks-table').find('tr[data-id="' + bmId + '"]').remove();
+        var shId = $(delObj).attr("data-id");
+        $('#qjks-table').find('tr[data-id="' + shId + '"]').remove();
     }
     //提交申请
     function applyForLeave() {
@@ -680,24 +680,24 @@
         var qjtitle = document.getElementById("qjtitle").value;
         var bumen = document.getElementById("bumen").value;
         var qjreason = document.getElementById("qjreason").value;
-        var bmidsArray = document.getElementsByName("bmids");
-        var bmids = "";
-        for (var i = 0; i < bmidsArray.length; i++) {
+        var shidsArray = document.getElementsByName("shids");
+        var shids = "";
+        for (var i = 0; i < shidsArray.length; i++) {
             if (i === 0) {
-                bmids = bmidsArray[i].value;
+                shids = shidsArray[i].value;
             } else {
-                bmids += "," + bmidsArray[i].value;
+                shids += "," + shidsArray[i].value;
             }
         }
 
         var cishu = FireFly.getConfig("TS_KSQJ_SETCONUTS").CONF_VALUE;
         var zhoushu = FireFly.getConfig("TS_KSQJ_WEEK_MAXNUM").CONF_VALUE;
-        if (bmids === "") {
+        if (shids === "") {
             alert("请选择请假的考试");
             return false;
         } else {
-            var bmidarr = bmids.split(",");
-            if (bmidarr.length > cishu) {
+            var shIdArr = shids.split(",");
+            if (shIdArr.length > cishu) {
                 alert("选择考试超过上限");
                 return false;
             }
@@ -712,7 +712,7 @@
             var paramstr = {};
             paramstr["xm_id"] = xmId;
             paramstr["cishu"] = cishu;
-            paramstr["bmids"] = bmids;
+            paramstr["shids"] = shids;
             paramstr["zhoushu"] = zhoushu;
             var result = FireFly.doAct("TS_BM_QJ_NUM", "getFlag", paramstr);
 
@@ -739,13 +739,13 @@
         var qjtitle = document.getElementById("qjtitle").value;
         var bumen = document.getElementById("bumen").value;
         var qjreason = document.getElementById("qjreason").value;
-        var bmidsArray = document.getElementsByName("bmids");
-        var bmids = "";
-        for (var i = 0; i < bmidsArray.length; i++) {
+        var shidsArray = document.getElementsByName("shids");
+        var shids = "";
+        for (var i = 0; i < shidsArray.length; i++) {
             if (i === 0) {
-                bmids = bmidsArray[i].value;
+                shids = shidsArray[i].value;
             } else {
-                bmids += "," + bmidsArray[i].value;
+                shids += "," + shidsArray[i].value;
             }
         }
 
@@ -756,7 +756,7 @@
         param["user_code"] = System.getUser("USER_CODE");
         param["bumen"] = bumen;
         param["qjreason"] = qjreason;
-        param["bmids"] = bmids;
+        param["shids"] = shids;
         param["user_name"] = System.getUser("USER_NAME");
         FireFly.doAct("TS_QJLB_QJ", "addData", param, false, false, function (response) {
 
