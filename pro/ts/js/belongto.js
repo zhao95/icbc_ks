@@ -872,7 +872,7 @@ var listPage = function () {
 	 param["nowpage"]=num;
 	 param["user_code"]=user_code;
 	 param["xmid"]=xmid;
-	 param["where"]=where5+where3+where4;
+	 param["where"]=where5+where3;
 	 param["xianei"]=xianei;
      return FireFly.doAct(servid,"getBelongToList",param);
      
@@ -889,17 +889,18 @@ var listPage = function () {
    //查询条件按钮（设置查询考试名称和年份的条件）
   jQuery("#check1").unbind("click").click(function(){
 		  myts = $("#select1").children('option:selected').val();
-	  var name = $("xm1").val();
-	    var renlicode =  $("rlzybm1").val();
-	    var shjshu =  $("shjs").val();
+	  var name = $("#xm1").val();
+	    var renlicode =  $("#rlzybm1").val();
+	    var shjshu =  $("#shjs").val();
+	    var bumende =  $("#bumende").val();
 	    var where1 = "";
 	    var where2 = "";
 	    var where3 = "";
 	    var where4="";
 	    var where5 = " AND XM_ID="+"'"+xmid+"'";
-	 
+	    var where6 = ""
 	    if(jQuery.trim(shjshu)!=""){
-	    	where3 = " AND SH_NODE like "+"'%"+shjshu+"%'";
+	    	where3 = " AND SH_LEVEL like "+"'%"+shjshu+"%'";
 	    }
      	if(jQuery.trim(name)!==""){
      		where1 = "AND BM_NAME like "+"'%"+name+"%'";
@@ -907,8 +908,11 @@ var listPage = function () {
      	if(jQuery.trim(renlicode)!==""){
      		where2 = " AND BM_CODE like "+"'%"+renlicode+"%'";
      	}
+     	if(jQuery.trim(bumende)!==""){
+     		where6 = " AND ODEPT_CODE like "+"'%"+bumende+"%'";
+     	}
      	var param={};
-     	param["where"]=where1 + where2+where3+where5;
+     	param["where"]=where1 + where2+where3+where5+where6;
     	 param["shownum"]=myts;
     	 param["xmid"]=xmid;
     	 param["nowpage"]=1;
@@ -932,10 +936,12 @@ var listPage = function () {
 	  myts = $("#select2").children('option:selected').val();
 	  var name = $("#xm2").val();
 	    var renlicode =  $("#rlzybm2").val();
+	    var bumende =  $("#bumende2").val();
     var where1 = "";
     var where2 = "";
     var where3 = "";
     var where5 = " AND XM_ID="+"'"+xmid+"'";
+    var where6 = ""
     var where7 = "";
  	if(jQuery.trim(name)!==""){
  		where1 = "AND BM_NAME like "+"'%"+name+"%'";
@@ -943,7 +949,9 @@ var listPage = function () {
  	if(jQuery.trim(renlicode)!==""){
  		where2 = " AND BM_CODE like "+"'%"+renlicode+"%'";
  	}
-	 
+ 	if(jQuery.trim(bumende)!==""){
+ 		where6 = " AND ODEPT_CODE like "+"'%"+bumende+"%'";
+ 	}
  	var  zhuangtai = $("#zhuangtai1").children('option:selected').val();
  	if(zhuangtai!="全部"){
  		if(zhuangtai=="进行中"){
@@ -963,7 +971,7 @@ var listPage = function () {
 	 	}
  	
  	var param={};
- 	param["where"]=where1 + where2+where3+where5+where7;
+ 	param["where"]=where1 + where2+where3+where5+where6;
 	 param["shownum"]=myts;
 	 param["nowpage"]=1;
 	 param["xmid"]=xmid;
@@ -984,17 +992,21 @@ var listPage = function () {
 	  myts = $("#select3").children('option:selected').val();
 	  var name = $("#xm3").val();
 	    var renlicode =  $("#rlzybm3").val();
+	  var bumende =  $("#bumende3").val();
     var where1 = "";
     var where2 = "";
     var where3 = "";
     var where5 = " AND XM_ID="+"'"+xmid+"'";
+    var where6 = ""
  	if(jQuery.trim(name)!==""){
  		where1 = "AND BM_NAME like "+"'%"+name+"%'";
  	}
  	if(jQuery.trim(renlicode)!==""){
  		where2 = " AND BM_CODE like "+"'%"+renlicode+"%'";
  	}
-	 
+ 	if(jQuery.trim(bumende)!==""){
+ 		where6 = " AND ODEPT_CODE like "+"'%"+bumende+"%'";
+ 	}
  	var  zhuangtai = $("#zhuangtai2").children('option:selected').val();
  	if(zhuangtai!="全部"){
  		if(zhuangtai=="进行中"){
@@ -1005,15 +1017,9 @@ var listPage = function () {
  	}
  	
  	 var zdornot = $("#zdornot3").children('option:selected').val();
-	 if(zdornot!="全部"){
-	 		if(zdornot=="1"){
-	 			where7 = " AND SH_OTHER IS null ";
-	 		}else{
-	 			where7 = " AND SH_OTHER IS NOT null ";
-	 		}
-	 	}
+	
  	var param={};
- 	param["where"]=where1 + where2+where3+where5+where7;
+ 	param["where"]=where1 + where2+where3+where5+where6;
 	 param["shownum"]=myts;
 	 param["nowpage"]=1;
 	 param["xmid"]=xmid;

@@ -944,14 +944,13 @@ var listPage = function () {
 	
 	//param
 	var where5 = " AND XM_ID="+"'"+xmid+"'";
-	var where6 = "AND SH_OTHER like '%"+user_code+"%'";
 	 var param = {};
 	 param["shownum"]=myts;
 	 param["nowpage"]=num;
 	 param["xmid"]=xmid;
 	 param["nowlevel"]=nowlevel;
 	 param["user_code"]=user_code;
-	 param["where"]=where5+where6+where3;
+	 param["where"]=where5;
      return FireFly.doAct(servid,"getUncheckList",param);
 //     debugger;
  };
@@ -974,10 +973,9 @@ var listPage = function () {
 	    var where3 = "";
 	    var where4="";
 	    var where5 = " AND XM_ID="+"'"+xmid+"'";
-		var where6 = "AND SH_OTHER like '%"+user_code+"%'";
 	   
 	    if(jQuery.trim(shjshu)!=""){
-	    	where3 = " AND SH_NODE like "+"'%"+shjshu+"%'";
+	    	where3 = " AND SH_LEVEL like "+"'%"+shjshu+"%'";
 	    }
      	if(jQuery.trim(name)!==""){
      		where1 = "AND BM_NAME like "+"'%"+name+"%'";
@@ -986,10 +984,12 @@ var listPage = function () {
      		where2 = " AND BM_CODE like "+"'%"+renlicode+"%'";
      	}
      	var param={};
-     	param["where"]=where1 + where2+where3+where5+where6;
+     	param["where"]=where1 + where2+where3+where5;
     	 param["shownum"]=myts;
     	 param["nowpage"]=1;
     	 param["user_code"]=user_code;
+    	 param["xmid"]=xmid;
+    	 param["nowlevel"]=nowlevel;
      	//页面的输入查询条件放入传递的参数中
      	//获取到查询后的数据
      	var searchResult = FireFly.doAct("TS_BMSH_STAY","getUncheckList",param);
@@ -1012,7 +1012,6 @@ var listPage = function () {
     var where2 = "";
     var where3 = "";
     var where5 = " AND XM_ID="+"'"+xmid+"'";
-	var where6 = "AND SH_OTHER like '%"+user_code+"%'";
  	if(jQuery.trim(name)!==""){
  		where1 = "AND BM_NAME like "+"'%"+name+"%'";
  	}
@@ -1030,7 +1029,7 @@ var listPage = function () {
  	}
  	
  	var param={};
- 	param["where"]=where1 + where2+where3+where5+where6;
+ 	param["where"]=where1 + where2+where5;
 	 param["shownum"]=myts;
 	 param["nowpage"]=1;
 	 param["xmid"]=xmid;
@@ -1054,7 +1053,6 @@ var listPage = function () {
     var where2 = "";
     var where3 = "";
     var where5 = " AND XM_ID="+"'"+xmid+"'";
-	var where6 = "AND SH_OTHER like '%"+user_code+"%'";
  	if(jQuery.trim(name)!==""){
  		where1 = "AND BM_NAME like "+"'%"+name+"%'";
  	}
@@ -1072,7 +1070,7 @@ var listPage = function () {
  	}
  	
  	var param={};
- 	param["where"]=where1 + where2+where3+where5+where6;
+ 	param["where"]=where1 + where2+where5;
 	 param["shownum"]=myts;
 	 param["nowpage"]=1;
 	 param["xmid"]=xmid;

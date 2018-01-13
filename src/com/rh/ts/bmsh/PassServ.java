@@ -85,7 +85,7 @@ public class PassServ extends CommonServ {
 	String sql1 = "select distinct code_path from sy_org_dept where dept_level in(select min(dept_level) from sy_org_dept where dept_code in ("+deptcodes+")) and dept_code in("+deptcodes+")";
 			List<Bean> query1 = Transaction.getExecutor().query(sql1);
 			String sql3 = "";
-			sql3 += "select * from (select a.*,b.code_path from ts_bmsh_pass a left join sy_org_dept b on a.s_dept=b.dept_code where xm_id = '"+xmid+"') c ";
+			sql3 += "select * from (select a.*,b.code_path from ts_bmsh_pass a left join sy_org_dept b on a.s_dept=b.dept_code where 1=1 "+where1+") c ";
 			for (int i=0;i<query1.size();i++) {
 				//判断哪些考生部门 在此codepath 下
 				if(i==0){
@@ -94,7 +94,6 @@ public class PassServ extends CommonServ {
 					sql3+=" or c.code_path like concat('"+query1.get(i).getId()+"','%')";
 				}
 			}
-			sql3+=" and SH_LEVEL !=0 ";
 			ALLNUM = Transaction.getExecutor().count(sql3);
 			 if(jieshu>ALLNUM){
 				 showpage=ALLNUM-chushi;
@@ -271,10 +270,6 @@ public class PassServ extends CommonServ {
 				newBean.set("SH_USER", shenuser);
 				newBean.set("SH_LEVEL", level);
 				if(flag.equals("1")){
-					if(level==1){
-						String newother = newBean.getStr("SH_OTHER");
-						newBean.set("SH_OTHER", newother);
-					}else{
 						String newother = newBean.getStr("SH_OTHER")+","+shenuser;
 						String[] split = newother.split(",");
 						List<String> newlist = new ArrayList<String>();
@@ -296,7 +291,6 @@ public class PassServ extends CommonServ {
 							
 						}
 						newBean.set("SH_OTHER", newothers);
-					}
 				}else{
 					//越级  所有人可见
 					ParamBean parambean1 = new ParamBean();
@@ -776,12 +770,12 @@ public class PassServ extends CommonServ {
 		List<Bean> list;
 			if(dept_code.equals("0010100000")){
 				//所有人员
-				String sql = "select * from TS_BMSH_PASS where 1=1"+where1;
+				String sql = "select * from TS_BMSH_PASS where 1=1 "+where1;
 				 ALLNUM = Transaction.getExecutor().count(sql);
 				 if(jieshu>ALLNUM){
 					 showpage=ALLNUM-chushi;
 				 }
-				 String datasql = "select * from TS_BMSH_PASS where 1=1"+where1 +" limit "+chushi+","+showpage;
+				 String datasql = "select * from TS_BMSH_PASS where 1=1 "+where1 +" limit "+chushi+","+showpage;
 				  list = Transaction.getExecutor().query(datasql);
 				 
 			}else{
@@ -792,10 +786,10 @@ public class PassServ extends CommonServ {
 				deptwhere = "AND S_DEPT IN ("+dept_code+")";*/
 				DeptBean dept = OrgMgr.getDept(dept_code);
 				String codepath = dept.getCodePath();
-				String sql = "select count(*) from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1;
+				String sql = "select count(*) from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') "+where1;
 				ALLNUM = Transaction.getExecutor().count(sql);
 				 ALLNUM = Transaction.getExecutor().count(sql);
-				 String datasql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')"+where1+" limit "+chushi+","+jieshu;
+				 String datasql = "select * from "+servId+" a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1') "+where1+" limit "+chushi+","+jieshu;
 				  list = Transaction.getExecutor().query(datasql);
 			}
 		//根据审核  机构 匹配当前机构下的所有人

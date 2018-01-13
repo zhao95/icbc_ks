@@ -155,7 +155,7 @@ if(userBean != null) {
 						<td style="width:20%;text-align:center">人力资源编码&nbsp;&nbsp;<input  style="height:30px;width:50%" id="rlzybm1" type="text"></input></td>
 						<td style="width:15%;text-align:center">部门&nbsp;&nbsp;<input  style="height:30px;width:50%" id="bumende" type="text"></input></td>
 				        
-				        <td style="width:12%;text-align:left;"><button id="check1" class ="btn" style="color:white;height:30px;width:35%;background:DarkTurquoise" onclick="xzcu(1)"id = "chaxun">查询</button></td>
+				        <td style="width:12%;text-align:left;"><button id="check1" class ="btn" style="color:white;height:30px;width:35%;background:DarkTurquoise" id = "chaxun">查询</button></td>
 					</tr>
 				</tbody>
 			</table>
@@ -224,19 +224,19 @@ if(userBean != null) {
 				<td style="width:6%;text-align:right"><button class="btn btn-success" style="border:none;color:white;height:30px;width:90%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button>&nbsp;</td>
 				<td style="width:10%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm2" type="text"></input>&nbsp;&nbsp;</td>
 						<td style="width:18%;text-align:center">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm2" type="text"></input>&nbsp;&nbsp;</td>
-						<td style="width:10%;text-align:center">部门&nbsp;&nbsp;<input  style="height:30px;width:70%" id="bumende" type="text"></input></td>
-						<td style="width:5%;text-align:right"><select id = "zdornot2">
+						<td style="width:10%;text-align:center">部门&nbsp;&nbsp;<input  style="height:30px;width:70%" id="bumende2" type="text"></input></td>
+						<td style="width:5%;text-align:right"><!-- <select id = "zdornot2">
 				            <option value="全部" selected="selected">全部</option>
 				            <option value="1">自动</option>
 				            <option value="2">手动</option>
-				            </select>&nbsp;&nbsp;</td>
+				            </select>&nbsp;&nbsp; --></td>
 						<td style="width:1%;text-align:left"><select id = "zhuangtai1">
 				            <option selected="selected">全部</option>
 				            <option value="进行中">进行中</option>
 				            <option value="已结束">已结束</option>
 				            </select>
 				        </td>
-				        <td style="width:8%;text-align:left">&nbsp;&nbsp;<button id="check2" class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(2)"id = "chaxun">查询</button></td>
+				        <td style="width:8%;text-align:left">&nbsp;&nbsp;<button id="check2" class ="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" id = "chaxun">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">
@@ -294,19 +294,19 @@ if(userBean != null) {
 				<td style="width:6%;text-align:right"><button class="btn btn-success" style="border:none;color:white;height:30px;width:90%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button>&nbsp;</td>
 				<td style="width:10%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm3" type="text"></input>&nbsp;&nbsp;</td>
 						<td style="width:18%;text-align:center">人力资源编码&nbsp;&nbsp;<input style="height:30px;width:60%" id="rlzybm3" type="text"></input>&nbsp;&nbsp;</td>
-						<td style="width:10%;text-align:center">部门&nbsp;&nbsp;<input  style="height:30px;width:70%" id="bumende" type="text"></input></td>
-						<td style="width:5%;text-align:right"><select id = "zdornot3">
+						<td style="width:10%;text-align:center">部门&nbsp;&nbsp;<input  style="height:30px;width:70%" id="bumende3" type="text"></input></td>
+						<td style="width:5%;text-align:right"><!-- <select id = "zdornot3">
 				            <option value="全部" selected="selected">全部</option>
 				            <option value="1">自动</option>
 				            <option value="2">手动</option>
-				            </select>&nbsp;&nbsp;</td>
+				            </select>&nbsp;&nbsp; --></td>
 						<td style="width:1%;text-align:left"><select id = "zhuangtai2">
 				            <option selected="selected">全部</option>
 				            <option value="进行中">进行中</option>
 				            <option value="已结束">已结束</option>
 				            </select>
 				        </td>
-				        <td style="width:8%;text-align:left">&nbsp;&nbsp;<button id="check3" class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" onclick="xzcu(3)"id = "chaxun">查询</button></td>
+				        <td style="width:8%;text-align:left">&nbsp;&nbsp;<button id="check3" class="btn" style="border:none;color:white;height:30px;width:60%;background:DarkTurquoise" id = "chaxun">查询</button></td>
 			</tr>
 			</table>
 			<div id="dshtable" class="" style="margin-top:20px;margin-left: 10px; width: 98%">

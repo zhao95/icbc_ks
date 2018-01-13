@@ -14,17 +14,14 @@ import java.util.List;
 
 
 
-import net.sf.cindy.test.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import sun.java2d.pipe.SpanShapeRenderer.Simple;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
-import com.rh.core.comm.ConfMgr;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.CommonServ;
@@ -32,28 +29,12 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServDefBean;
-import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
-import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
-import com.rh.core.util.Constant;
 import com.rh.core.util.ImpUtils;
-import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
 
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.format.Alignment;
-import jxl.format.Colour;
-import jxl.read.biff.BiffException;
-import jxl.write.Label;
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableFont;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
 
 public class JkglServ extends CommonServ {
 
