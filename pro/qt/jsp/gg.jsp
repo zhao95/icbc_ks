@@ -7,6 +7,9 @@
 <%@ page import="com.rh.core.serv.dict.DictMgr" %>
 <%@ include file= "../../sy/base/view/inHeader-icbc.jsp" %>
 <%
+	final String CONTEXT_PATH = request.getContextPath();
+%>
+<%
 	String id = request.getParameter("id");
 	Bean ks = ServDao.find("TS_GG",id);
 	String title = ks.getStr("GG_TITLE");
@@ -29,42 +32,11 @@
     <link href="<%=urlPath %>/qt/css/styles1.css" rel="stylesheet" type="text/css"/>
   </head>
     <body>
-      <div class="" id="base">
-      <!-- Unnamed (矩形) -->
-      <div class="ax_default box_1" id="u3547">
-        <div id="u3547_div"></div>
-        <!-- Unnamed () -->
-        <div class="text" id="u3548" style="display: none; visibility: hidden;">
-          <p><span></span></p>
-        </div>
-      </div>
-
-      <!-- Unnamed (图像) -->
-      <div class="ax_default image" id="u3549">
-         <img class="img " id="u3549_img" src="<%=urlPath %>/qt/img/u3148.png"> 
-         <div class="text" id="u3550" style="display: none; visibility: hidden;">
-          <p><span></span></p>
-        </div>
-      </div>
-
-      
-
-      <!-- Unnamed (图像) -->
-      <div class="ax_default image" id="u3553">
-        <img class="img " id="u3553_img" src="<%=urlPath %>/qt/img/u3376.png">
-        <div class="text" id="u3554" style="display: none; visibility: hidden;">
-          <p><span></span></p>
-        </div>
-      </div>
-
-      <!-- foot_text (矩形) -->
- <!--       <div class="ax_default box_3" id="u3555" data-label="foot_text"> 
-        <div id="u3555_div"></div>
-        Unnamed ()
-        <div class="text" id="u3556" style="display: none; visibility: hidden;">
-          <p><span></span></p>
-        </div>
-      </div> -->
+	<%@ include file="header-logo.jsp"%>
+	<!-- 首页/返回 -->
+	<div class="" style="padding: 10px">
+		<a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="color: #388CAE;" src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a> <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;公告详情</span>
+	</div>
 
       <!-- Unnamed (矩形) -->
       <div class="ax_default box_1" id="u3557">
@@ -86,30 +58,21 @@
         </div>
       </div>
        <!-- Unnamed (图像) -->
-      <div class="ax_default image" id="u3561">
-	       	 <img class="img " id="u3561_img" src="<%=urlPath %>/qt/img/u1182.png">
-	        <div class="text" id="u3562" style="display: none; visibility: hidden;">
-	          <p><span></span></p>
-	        </div>
-      </div>
+<!--       <div class="ax_default image" id="u3561"> -->
+<%-- 	       	 <img class="img " id="u3561_img" src="<%=urlPath %>/qt/img/u1182.png"> --%>
+<!-- 	        <div class="text" id="u3562" style="display: none; visibility: hidden;"> -->
+<!-- 	          <p><span></span></p> -->
+<!-- 	        </div> -->
+<!--       </div> -->
 
-      <!-- Unnamed (矩形) -->
-      <div class="ax_default label" id="u3563">
-        <div id="u3563_div"></div>
-        <!-- Unnamed () -->
-        <div class="text" id="u3564">
-          <p><span>/</span></p>
-        </div>
-      </div>
-
-      <!-- Unnamed (矩形) -->
-      <div class="ax_default label" id="u3565">
-        <div id="u3565_div"></div>
-        <!-- Unnamed () -->
-        <div class="text" id="u3566">
-          <p><span>通知公告</span></p>
-        </div>
-      </div>
+<!--       Unnamed (矩形) -->
+<!--       <div class="ax_default label" id="u3563"> -->
+<!--         <div id="u3563_div"></div> -->
+<!--         Unnamed () -->
+<!--         <div class="text" id="u3564"> -->
+<!--           <p><span>/</span></p> -->
+<!--         </div> -->
+<!--       </div> -->
 
       <!-- Unnamed (横线) -->
       <div class="ax_default line" id="u3567">
