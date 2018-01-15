@@ -73,6 +73,13 @@ if(resultP._DATA_) {
 }
 //console.log("roleCheckedP",roleCheckedP);
 
+var roleRel = {};
+var resultRel = FireFly.doAct("TS_PVLG_ROLE_REL", "finds", {"S_FLAG":1}, 2, false);
+
+if(resultP._DATA_) {
+	roleRel = resultRel._DATA_;
+}
+
 /**
  * 渲染角色所有模块 (主方法)
  */
@@ -171,7 +178,7 @@ render = function() {
  */
 optRender = function(code,rightDiv) {
 
-	var rightSpan = $('<span id="TS_PVLG_ROLE-'+obj.ITEM_CODE+'" class="ui-checkbox-default">');
+	var rightSpan = $('<span id="TS_PVLG_ROLE-'+code+'" class="ui-checkbox-default">');
 	//功能权限主键
 	var mdId = $('<input type="hidden">').attr("name","TS_PVLG_ROLE-"+code+"_MID").appendTo(rightSpan);
 	
@@ -224,6 +231,13 @@ optRender = function(code,rightDiv) {
 		$(option).each(function (index, item) {
 			
 			var ckItem = $('<input type="checkbox">').attr("name","TS_PVLG_ROLE-"+code).val(item.ITEM_CODE);
+			
+			var comps = ",TS_ORG_DEPT_PVLG,TS_ORG_USER_ALL_PVLG,";
+			
+			if(comps.indexOf(","+code+",")>=0) { //人员选择，部门选择默认选中
+				ckItem.attr("checked",true);
+			}
+			
 			//功能权限名称 checkbox名称
 			var lab = $("<label>").text(item.ITEM_NAME);
 
@@ -238,6 +252,9 @@ optRender = function(code,rightDiv) {
 				lab.css("color","#dddddd");
 			}
 			
+			ckItem.change(function() {
+				checkedRel(ckItem,code,item.ITEM_CODE);
+			}); 
 		});
 	}
 	
@@ -294,6 +311,26 @@ _viewer.beforeSave = function() {
 		
 	});
 	
+//	var param = {};
+//	param.ROLE_ID = roleId;
+//	//功能编码
+//	param.MD_CODE = "TS_ORG_DEPT_PVLG";
+//	//功能名称
+//	param.MD_NAME = "机构选择";
+//	//多选value
+//	param.MD_VAL = "show";
+//	
+//	paramArray.push(param);
+//	
+//	//功能编码
+//	param.MD_CODE = "TS_ORG_USER_ALL_PVLG";
+//	//功能名称
+//	param.MD_NAME = "人员选择";
+//	//多选value
+//	param.MD_VAL = "show";
+//	
+//	paramArray.push(param);
+	
 	var batchData = {};
 //	console.log("save paramArray",paramArray);
 	batchData["BATCHDATAS"] = paramArray;
@@ -338,6 +375,71 @@ checkedAll = function(code) {
 		
 		obj.attr("checked",false);
 	}	
+};
+
+checkedRel = function(obj,mod,opt) {
+	
+	if($(obj).is(':checked')) {
+		
+		try{
+			
+			$(roleRel).each(function (relIdx, relItem) {
+				var roleMod = relItem.ROLE_MOD;
+				var roleOpt = ","+relItem.ROLE_MOD_OPT+",";
+				
+				if(roleMod == mod && roleOpt.indexOf(","+opt+",")>=0) {
+					
+					var relMod = relItem.REL_MOD;
+					var relOpt = ","+relItem.REL_MOD_OPT+",";
+					
+					var obj = $("input[name='TS_PVLG_ROLE-"+relMod+"']:not(:disabled)");
+					
+					$(obj).each(function () {
+						
+						var val = $(this).attr('value');
+						
+						if(relOpt.indexOf(","+val+",")>=0) {
+							
+							$(this).attr("checked",true);
+						}
+					});
+				}
+			});
+		} catch(e){
+			console.log(e);
+		}
+		
+	} else {
+		
+		try{
+			$(roleRel).each(function (relIdx, relItem) {
+				var roleMod = relItem.ROLE_MOD;
+				var roleOpt = ","+relItem.ROLE_MOD_OPT+",";
+				
+				if(roleMod == mod && roleOpt.indexOf(","+opt+",")>=0) {
+					
+					var relMod = relItem.REL_MOD;
+					var relOpt = ","+relItem.REL_MOD_OPT+",";
+					
+					var obj = $("input[name='TS_PVLG_ROLE-"+relMod+"']:not(:disabled)");
+					
+					$(obj).each(function () {
+						
+						var val = $(this).attr('value');
+						
+						if(relOpt.indexOf(","+val+",")>=0) {
+							
+							$(this).removeAttr("checked");
+						}
+					});
+				}
+			});
+		} catch(e){
+			console.log(e);
+		}
+	}
+	
+	
 };
 
 /**
