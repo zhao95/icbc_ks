@@ -1,10 +1,15 @@
 package com.rh.ts.xmgl;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
@@ -34,7 +39,15 @@ public class Cccs2Serv extends CommonServ {
 	paramBean.setQueryNoPageFlag(true);
 	if (paramBean.getServId().equals(VIEW_CCCS)) {
 	    if (cjVal.isEmpty()) {
-		paramBean.setQueryExtWhere("and 1=2");
+		String cjVal_param = paramBean.getStr("cjVal");
+		String xmId = paramBean.getStr("XM_ID");
+		if(cjVal_param.equals("1")){
+		    paramBean.setQueryExtWhere("and XM_ID = '"+xmId+"' and KC_LEVEL in ('一级')");
+		}else if(cjVal_param.equals("1,2")){
+		    paramBean.setQueryExtWhere("and XM_ID = '"+xmId+"' and KC_LEVEL in ('一级','二级')");
+		}else{
+		    paramBean.setQueryExtWhere("and 1=2");
+		}
 	    } else {
 		if (cjVal.indexOf("%2C") != -1) {
 		    cjVal = "一级','二级";
@@ -119,5 +132,84 @@ public class Cccs2Serv extends CommonServ {
 	outBean.set("all", ksList);
 	return outBean;
     }
-
+    
+    @SuppressWarnings("deprecation")
+    public OutBean getCC(ParamBean paramBean) throws JSONException{
+	OutBean outBean = new OutBean();
+	int kcGood = paramBean.getInt("kcGood");
+	int kcMax = paramBean.getInt("kcMax");
+	String myArr = paramBean.getStr("myArr");
+	String myArrStr=URLDecoder.decode(myArr);
+	JSONArray list = new JSONArray(myArrStr);
+	
+	int ccGood = 0;
+	int ccMax = 0;
+	
+	// 总体已占用
+	ArrayList<Integer> list0 = new ArrayList<Integer>();
+	for (int j = 0; j < list.length(); j++) {
+	    if (list0.contains(j)) {
+		continue;
+	    }
+	    // 本次计算已占用
+	    ArrayList<Integer> list3 = new ArrayList<Integer>();
+	    list0.add(j);
+	    list3.add(j);
+	    int i = j + 1;
+	    ArrayList<String> setA = new ArrayList<String>();
+	    JSONArray listChildA = new JSONArray(list.get(j).toString());
+	    for(int k=0;k<listChildA.length();k++){
+		setA.add(listChildA.getString(k));
+	    }
+	    
+	    while (i < list.length()) {
+		if (list0.contains(i) || list3.contains(i)) {
+		    i++;
+		    continue;
+		}
+		ArrayList<String> setB = new ArrayList<String>();
+		JSONArray listChildB = new JSONArray(list.get(i).toString());
+		for(int k=0;k<listChildB.length();k++){
+		    setB.add(listChildB.getString(k));
+		}
+		
+		boolean flag = check(setA, setB);
+		if (!flag) {
+		    setA.addAll(setB);
+		    list0.add(i);
+		    list3.add(i);
+		}
+		i++;
+	    }
+//	    System.out.println("本次计算==="+list3);
+	    int tmpPeopleNum = setA.size();
+//	    System.out.println("本次计算人数==="+tmpPeopleNum);
+	    int cc1 = tmpPeopleNum/kcGood;
+	    int cc2 = tmpPeopleNum/kcMax;
+	    if(tmpPeopleNum%kcGood > 0){ cc1++; }
+	    if(tmpPeopleNum%kcMax > 0){ cc2++; }
+	    
+	    ccGood += cc1;
+	    ccMax += cc2;
+	}
+	System.out.println("总计算=" + list0);
+	outBean.set("ccGood", ccGood);
+	outBean.set("ccMax", ccMax);
+	return outBean;
+    }
+    
+    /**
+     * 是否有重复数据
+     * @param setA
+     * @param setB
+     * @return
+     */ 
+    public static boolean check(List<String> setA,List<String> setB) {
+	Iterator<String> a = setA.iterator();
+	while (a.hasNext()) {
+	    String tmp = a.next();
+	    if(setB.contains(tmp))return true;
+	}
+	return false;
+    }
 }

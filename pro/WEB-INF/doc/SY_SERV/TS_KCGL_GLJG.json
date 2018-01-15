@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"",
-"S_MTIME":"2018-01-09 15:48:46:109",
+"S_MTIME":"2018-01-12 15:31:50:033",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "TABLE_VIEW":"TS_KCGL_GLJG",
@@ -903,6 +903,33 @@
 "SY_SERV_ACT":
 [
 {
+"ACT_TYPE":"1",
+"ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"batchSave",
+"ACT_MEMO":"",
+"ACT_CODE":"batchSave",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"13hiE9rFd7JWp5RlRUi4",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"13hiE9rFd7JWp5RlRUi4",
+"SERV_ID":"TS_KCGL_GLJG",
+"S_MTIME":"2018-01-12 15:31:25:862",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"10",
+"ACT_GROUP":"1",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"0",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":" 保 存 "
+},
+{
 "ACT_TYPE":"3",
 "ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"byid",
@@ -924,7 +951,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"0",
+"_ROWNUM_":"1",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 查 看 "
@@ -951,7 +978,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"1",
+"_ROWNUM_":"2",
 "ACT_TIP":"确保列表无编辑组按钮卡片也可以保存",
 "EN_JSON":"",
 "ACT_NAME":"修改"
@@ -978,37 +1005,10 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"2",
-"ACT_TIP":"",
-"EN_JSON":"",
-"ACT_NAME":" 添 加 "
-},
-{
-"ACT_TYPE":"1",
-"ACT_EXPRESSION_FLAG":"",
-"ACT_CSS":"batchSave",
-"ACT_MEMO":"",
-"ACT_CODE":"batchSave",
-"S_FLAG":"1",
-"ACT_WS_FLAG":"2",
-"_PK_":"13hiE9rFd7JWp5RlRUi4",
-"ACT_LOG_FLAG":"2",
-"ACT_HOT_KEY":"",
-"ACT_ID":"13hiE9rFd7JWp5RlRUi4",
-"SERV_ID":"TS_KCGL_GLJG",
-"S_MTIME":"2017-10-12 17:24:33:963",
-"ACT_EXPRESSION":"",
-"ACT_WS_RESULT":"",
-"ACT_MOBILE_FLAG":"1",
-"ACT_ORDER":"30",
-"ACT_GROUP":"1",
-"SY_SERV_ACT_PARAM":
-[
-],
 "_ROWNUM_":"3",
 "ACT_TIP":"",
 "EN_JSON":"",
-"ACT_NAME":" 保 存 "
+"ACT_NAME":" 添 加 "
 },
 {
 "ACT_TYPE":"2",
@@ -1148,33 +1148,6 @@
 {
 "ACT_TYPE":"1",
 "ACT_EXPRESSION_FLAG":"",
-"ACT_CSS":"download",
-"ACT_MEMO":"",
-"ACT_CODE":"tmplBtn",
-"S_FLAG":"1",
-"ACT_WS_FLAG":"2",
-"_PK_":"3TxY21fUl7e8VpZks5B9",
-"ACT_LOG_FLAG":"2",
-"ACT_HOT_KEY":"",
-"ACT_ID":"3TxY21fUl7e8VpZks5B9",
-"SERV_ID":"TS_KCGL_GLJG",
-"S_MTIME":"2018-01-09 15:48:46:093",
-"ACT_EXPRESSION":"",
-"ACT_WS_RESULT":"",
-"ACT_MOBILE_FLAG":"1",
-"ACT_ORDER":"109",
-"ACT_GROUP":"2",
-"SY_SERV_ACT_PARAM":
-[
-],
-"_ROWNUM_":"9",
-"ACT_TIP":"",
-"EN_JSON":"",
-"ACT_NAME":"导入模版"
-},
-{
-"ACT_TYPE":"1",
-"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"edit",
 "ACT_MEMO":"",
 "ACT_CODE":"near",
@@ -1194,10 +1167,37 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"10",
+"_ROWNUM_":"9",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"近"
+},
+{
+"ACT_TYPE":"1",
+"ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"download",
+"ACT_MEMO":"",
+"ACT_CODE":"tmplBtn",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"3TxY21fUl7e8VpZks5B9",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"3TxY21fUl7e8VpZks5B9",
+"SERV_ID":"TS_KCGL_GLJG",
+"S_MTIME":"2018-01-12 15:31:49:863",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"114",
+"ACT_GROUP":"2",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"10",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":"导入模版"
 },
 {
 "ACT_TYPE":"1",
@@ -1212,11 +1212,11 @@
 "ACT_HOT_KEY":"",
 "ACT_ID":"3IQ3W56952ZGzebk4Pl6",
 "SERV_ID":"TS_KCGL_GLJG",
-"S_MTIME":"2017-12-25 17:54:33:172",
+"S_MTIME":"2018-01-12 15:31:50:024",
 "ACT_EXPRESSION":"",
 "ACT_WS_RESULT":"",
 "ACT_MOBILE_FLAG":"1",
-"ACT_ORDER":"110",
+"ACT_ORDER":"115",
 "ACT_GROUP":"1",
 "SY_SERV_ACT_PARAM":
 [

@@ -26,8 +26,9 @@ if(runVal == "1"){
 }
 
 _viewer.getBtn("run").unbind("click").bind("click", function(event) {
-	if(scVal == "" || sjVal == "" || cjVal == ""){
+	if(scVal == "" || sjVal == "" || cjVal == "" || scVal == null || sjVal == null || cjVal == null){
 		alert("请设置测算条件");
+		return false;
 	}
 	run();
 });
@@ -58,30 +59,16 @@ function run(){
 			//最大场次数
 			var maxValue = 0;
 			if (scVal != "" && scVal != null) {
+				//导出顺序与列表一致
+				var all_exp = all;
 				$("#TS_XMGL_CCCS_2,#JColResizer2").find("tr").each(function(index, item) {
 					if (index != 0) {
 						var dataId = item.id;
-						if(dataId != "")sum++;
 						var kcName = $(item).find("td[icode='KC_NAME']").html();
 						var kcGood = $(item).find("td[icode='KC_GOOD']").html();
 						var kcMax = $(item).find("td[icode='KC_MAX']").html();
-						var result = getResult(dataId,kcGood,kcMax,all,alltype);
-						all = result.syKsArray;
-						$(item).find("td[icode='NUM_PEOPLE']").html(result.CC_PEOPLE_NUM);
-						$(item).find("td[icode='NUM_GOOD']").html(result.CC_GOOD_NUM);
-						$(item).find("td[icode='NUM_MAX']").html(result.CC_MAX_NUM);
-						if(result.CC_GOOD_NUM > 10 || result.CC_MAX_NUM > 10){
-							$(item).css("background","#AAAAAA");
-							x1++;
-						}
-						if(result.CC_GOOD_NUM > maxValue){
-							maxValue = result.CC_GOOD_NUM;
-							maxDataId = dataId;
-						}
-						if(result.CC_MAX_NUM > maxValue){
-							maxValue = result.CC_MAX_NUM;
-							maxDataId = dataId;
-						}
+						var result = getResult(dataId,kcGood,kcMax,all_exp,alltype);
+						all_exp = result.syKsArray;
 						var tmpBean = {};
 						tmpBean["KC_ID"] = dataId;
 						tmpBean["KC_NAME"] = kcName;
@@ -93,6 +80,42 @@ function run(){
 						allArray.push(tmpBean);
 					}
 				});
+				
+				//二级考场优先级高于一级考场
+				var param = {};
+				param["XM_ID"] = xmId;
+				param["cjVal"] = cjVal;
+				param["_ORDER_"] = "KC_LEVEL desc";
+				var searchResult =FireFly.doAct("TS_XMGL_CCCS_2","query",param)._DATA_;
+				
+				for(var i=0;i<searchResult.length;i++){
+					sum++;
+					var dataId = searchResult[i].KC_ID;
+					var kcName = searchResult[i].KC_NAME;
+					var kcGood = searchResult[i].KC_GOOD;
+					var kcMax = searchResult[i].KC_MAX;
+					
+					var result = getResult(dataId,kcGood,kcMax,all,alltype);
+					all = result.syKsArray;
+					
+					var trObj = $("#TS_XMGL_CCCS_2").find("tr[id='"+dataId+"']");
+					
+					trObj.find("td[icode='NUM_PEOPLE']").html(result.CC_PEOPLE_NUM);
+					trObj.find("td[icode='NUM_GOOD']").html(result.CC_GOOD_NUM);
+					trObj.find("td[icode='NUM_MAX']").html(result.CC_MAX_NUM);
+					if(result.CC_GOOD_NUM > 10 || result.CC_MAX_NUM > 10){
+						trObj.css("background","#AAAAAA");
+						x1++;
+					}
+					if(result.CC_GOOD_NUM > maxValue){
+						maxValue = result.CC_GOOD_NUM;
+						maxDataId = dataId;
+					}
+					if(result.CC_MAX_NUM > maxValue){
+						maxValue = result.CC_MAX_NUM;
+						maxDataId = dataId;
+					}
+				}
 			}
 			
 			if(maxDataId != ""){
@@ -188,6 +211,24 @@ function getResult(kcId,kcGood,kcMax,allks,alltype){
 		}
 	}
 	
+//	for(var i = 0; i < alltype.length; i++){
+//		var tmpBmXlCode = alltype[i].BM_XL_CODE;
+//		var tmpBmMkCode = alltype[i].BM_MK_CODE;
+//		var tmpBmType = alltype[i].BM_TYPE;
+//		var userArray = new Array();
+//		for(var j=0;j<scopeKs.length;j++){
+//			if(tmpBmXlCode == scopeKs[j].BM_XL_CODE&&tmpBmMkCode == scopeKs[j].BM_MK_CODE&&tmpBmType == scopeKs[j].BM_TYPE){
+//				userArray.push(scopeKs[j]);
+//			}
+//		}
+//		var userArrayLength = userArray.length;
+//		if(userArrayLength > 0){
+//			goodCCNum += Math.ceil(userArrayLength/kcGood); //最大场次数 
+//			maxCCNum += Math.ceil(userArrayLength/kcMax); //最优场次数 
+//		}
+//	}
+	/***********/
+	var myArr = new Array();
 	for(var i = 0; i < alltype.length; i++){
 		var tmpBmXlCode = alltype[i].BM_XL_CODE;
 		var tmpBmMkCode = alltype[i].BM_MK_CODE;
@@ -195,16 +236,24 @@ function getResult(kcId,kcGood,kcMax,allks,alltype){
 		var userArray = new Array();
 		for(var j=0;j<scopeKs.length;j++){
 			if(tmpBmXlCode == scopeKs[j].BM_XL_CODE&&tmpBmMkCode == scopeKs[j].BM_MK_CODE&&tmpBmType == scopeKs[j].BM_TYPE){
-				userArray.push(scopeKs[j]);
+				userArray.push(scopeKs[j].BM_CODE);
 			}
 		}
-		var userArrayLength = userArray.length;
-		if(userArrayLength > 0){
-			goodCCNum += Math.ceil(userArrayLength/kcGood); //最大场次数 
-			maxCCNum += Math.ceil(userArrayLength/kcMax); //最优场次数 
+		
+		if(userArray.length > 0){
+			myArr.push(userArray);
 		}
 	}
 	
+	var myParam = {};
+	myParam["myArr"] = encodeURIComponent(JSON.stringify(myArr));
+	myParam["kcGood"] = kcGood;
+	myParam["kcMax"] = kcMax;
+	var rescc = FireFly.doAct("TS_XMGL_CCCS_2","getCC",myParam,true,false);
+	
+	goodCCNum = rescc.ccGood;
+	maxCCNum = rescc.ccMax;
+	/***********/
 	peopleNum = scopeKs.length;
 	res["CC_PEOPLE_NUM"] = peopleNum;
 	res["CC_GOOD_NUM"] = goodCCNum;
