@@ -1074,6 +1074,7 @@ global.Fn.InitUploadImage1 = function(container, bmid) {
 	var $fileUpload = $(':file', $upload);
 	// data赋值
 	$fileUpload.bind('fileuploadsubmit', function(e, data) {
+		 filename = data.files[0].name;
 		var arr = data.files[0].name.split(".");
 		var size = data.files[0].size;
 		if (arr[1] != "xls" && arr[1] != "xlsx") {
@@ -1121,7 +1122,7 @@ global.Fn.InitUploadImage1 = function(container, bmid) {
 													+ '><li>&nbsp;&nbsp;<a style="color:lightseagreen;font-size:13px" href="/file/'
 													+ s
 													+ '" id="shanchu" onclick="xiaz ai()">'
-													+ s
+													+ filename
 													+ '</a>&nbsp;&nbsp;&nbsp;&nbsp;<a style="font-size:13px" href="#" onclick=deletefile(this)>删除</a></li></div>');
 							
 					} else {
@@ -1185,7 +1186,7 @@ global.Fn.InitPlugin = function(plugins, container, bmid) {
 		});
 	}
 }
-
+var filename = "";
 global.Fn.InitUploadImage = function(container, bmid) {
 	container = container || document;
 	var $upload = $('.upload-file', global.Fn.$(container));
@@ -1230,6 +1231,7 @@ global.Fn.InitUploadImage = function(container, bmid) {
 	var $fileUpload = $(':file', $upload);
 	// data赋值
 	$fileUpload.bind('fileuploadsubmit', function(e, data) {
+		 filename = data.files[0].name;
 		var size = data.files[0].size;
 	 if(size>1024*1024*20){
 			alert("文件不能超过20M");
@@ -1267,7 +1269,7 @@ global.Fn.InitUploadImage = function(container, bmid) {
 										'<div width:"100px" style="font-size:13px" id='
 												+ s
 												+ '><li name="filedown">'
-												+ s
+												+ filename
 												+ '</li><li>&nbsp;&nbsp;<a href="/file/'
 												+ s
 												+ '" onclick="xiazai()"><image src="/ts/image/u344.png"></image></a></li><li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick=deletefile(this)>删除</a></li></div>');

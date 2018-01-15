@@ -250,6 +250,7 @@ if(userBean != null) {
 			<tr>
 				<td style="width:10%;text-align:center"><button  class="btn btn-success"  data-toggle="modal"  style="border:none;color:white;height:30px;width:50%;background:lightseagreen" onclick="shenheB()" id = "shenheB">审核</button></td>
 				<td style="width:10%;text-align:left"><button id="TS_BMSH_PASS" class="btn btn-success" data-toggle="modal" data-target="#excleupload" onclick="importdata(2)"  style="border:none;color:white;height:30px;width:95%;background:lightseagreen"  id = "import2">文件批量导入</button></td>
+				<td id="impexternalbut"  style="width:100%;text-align:left;display:none"><button class="btn btn-success" data-toggle="modal" data-target="#excleupload" onclick="importdata(4)"  style="border:none;color:white;height:30px;width:95%;background:lightseagreen;"  >导入额外数据</button></td>
 				<td style="width:12%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:90%;background:lightseagreen" onclick="exportdata('TS_BMSH_PASS','checkboxb')" id = "export2">文件批量导出</button></td>
 				<td style="width:10%;text-align:left"><button class="btn btn-success" style="border:none;color:white;height:30px;width:80%;background:lightseagreen" onclick="fanhui()" id = "fanhui">返回</button></td>
 				<td style="width:18%;text-align:right">姓名&nbsp;&nbsp;<input style="height:30px;width:70%" id="xm2" type="text"></input>&nbsp;&nbsp;</td>
@@ -504,7 +505,7 @@ if(userBean != null) {
 				<div class="modal-header" style="line-height:20px;font-size:16px;height:50px;background-color: #00c2c2;color: white">
 						请选择文件
 				</div>
-				<div style="position:absolute;padding-left:30px;padding-top:30px;color:gray">请导入要上传的  Excel&nbsp;&nbsp;&nbsp;&nbsp;<a style="color:lightseagreen" href="/ts/imp_template/报名审核导入模板.xls">点击下载导入模板</a></div>
+				<div style="position:absolute;padding-left:30px;padding-top:30px;color:gray">请导入要上传的  Excel&nbsp;&nbsp;&nbsp;&nbsp;<a id="impmodeal" style="color:lightseagreen" href="/ts/imp_template/报名审核导入模板.xls">点击下载导入模板</a></div>
 				<div id="uploadfile"  style="width:200px;position:relative;top:60px;color:lightseagreen;font-size:20px"><form action="/file" name="formup" id="excleupload11" class="form form-horizontal" style="width:200%"></form></div>
 				<div class="modal-footer" style="text-align:center;width:400px;">
 					<button id="excelimp" type="button" class="btn btn-primary" style="height:35px;background:lightseagreen;width:80px">导入</button>

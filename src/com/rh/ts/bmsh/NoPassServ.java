@@ -1017,15 +1017,63 @@ public class NoPassServ extends CommonServ {
 	 * @param fileId
 	 *            文件id
 	 */
+	@SuppressWarnings("deprecation")
 	public OutBean savedata(Bean paramBean){
 		 OutBean outBean = new OutBean();
+		 String xmid = paramBean.getStr("xmid");
+		 String user_code = Context.getUserBean().getCode();
+		  int level = paramBean.getInt("level");
+		  String nodeid = paramBean.getStr("nodeid");
+			 String node_name = "";
+		  String flag = "";
+		//判断逐级  越级
+    		String wherewfs = "AND XM_ID = '"+xmid+"'";
+    		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", wherewfs);
+    		for (Bean bean2 : finds) {
+    		String wfsid = 	bean2.getStr("WFS_ID");
+    		Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
+    		flag = find.getStr("WFS_TYPE");
+    		String wfswhere = "AND WFS_ID='" + wfsid + "'  ORDER BY NODE_STEPS ASC";
+  		List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+  		for (Bean nodebean : finds2) {
+  			boolean flagstr = false;
+  			// 根据流程id获取 流程绑定的人和审核机构
+  			String nodeids = nodebean.getStr("NODE_ID");
+  			String nodewhere = "AND NODE_ID='" + nodeids + "'";
+  			List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
+  			for (Bean codebean : finds3) {
+  				if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
+  					node_name= nodebean.getStr("NODE_NAME");
+  					flagstr = true;
+  					break;
+  				}
+  				
+  			}
+  			if(flagstr){
+  				break;
+  			}
+  		}
+        }
 	        //获取前端传递参数
 	        //*获取文件内容
 	        List<Bean> rowBeanList = paramBean.getList("datalist");
 	        List<String> codeList = new ArrayList<String>();//避免重复添加数据
 
 	        List<Bean> beans = new ArrayList<Bean>();
+	        List<Bean> bmbeans = new ArrayList<Bean>();
+	        List<Bean> mindbeans = new ArrayList<Bean>();
 	        for (Bean rowBean : rowBeanList) {
+	        	 String colCode2 = rowBean.getStr(ImpUtils.COL_NAME + "2");
+		            if(colCode2.equals("")){
+		            	 rowBean.set(ImpUtils.ERROR_NAME, "审核理由不能为空");
+			                continue;
+		            }
+	        	 if(level!=1){
+	        	 if("1".equals(flag)){
+	        		   rowBean.set(ImpUtils.ERROR_NAME, "逐级审核下级不能导入最终结果");
+		                continue;
+	      		 }
+	        	 }
 	            String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");
 	            if("".equals(colCode)){
 	            	 rowBean.set(ImpUtils.ERROR_NAME, "编码错误，没有此报名数据");
@@ -1044,68 +1092,151 @@ public class NoPassServ extends CommonServ {
 	            }
 
 	          //将审核通过的数据   导入到不通过表中   
-
-	            List<Bean> shlist = ServDao.finds("TS_BMSH_NOPASS", " and BM_ID = '"+colCode+"'");
-	            if (shlist != null&&shlist.size()!=0) {
-	                rowBean.set(ImpUtils.ERROR_NAME, "重复数据，报名数据已通过，不需导入");
-	                continue;
+	            //报名人所在机构
+	            String  bmpath = OrgMgr.getDept(bmbean.getStr("S_DEPT")).getCodePath();
+	            
+	            //判断是否是此人的辖内数据
+	            String sql = "select * from (select b.* from ts_xmgl_bmsh a left join ts_wfs_bmshlc b on  a.wfs_id = b.wfs_id and a.xm_id = '"+xmid+"')c where c.shr_usercode='"+user_code+"'";
+	            List<Bean> shrlist = Transaction.getExecutor().query(sql);
+	            String odeptcodes = "";
+	            if(shrlist!=null&&shrlist.size()!=0){
+	            	for (Bean bean : shrlist) {
+	            		if(!"".equals(bean.getStr("DEPT_CODE"))){
+	            			odeptcodes+=bean.getStr("DEPT_CODE")+",";
+	            		}
+					}
+	            }else{
+	            	 rowBean.set(ImpUtils.ERROR_NAME, "审核人不存在");
+		                continue;
 	            }
-	            //将审核通过的数据导入到不通过表中       
-		           List<Bean> passlist = ServDao.finds("TS_BMSH_NOPASS", " and BM_ID = '"+colCode+"'");
-		           List<Bean> staylist = ServDao.finds("TS_BMSH_STAY", " and BM_ID = '"+colCode+"'");
-		           if(passlist!=null&&passlist.size()!=0){
-		        	   Bean passbean = passlist.get(0);
-		        	   //删除通过数据   或待审核数据
-		        	   Bean whereBean = new Bean();
-		        	   whereBean.set("_WHERE_"," and BM_ID = '"+colCode+"'");
-		        	   ServDao.delete("TS_BMSH_PASS", whereBean);
-		        	   ServDao.delete("TS_BMSH_STAY", whereBean);
-		        	   //复制审核通过bean  到审核不通过中
-		        	   passbean.remove("SH_ID");
-		        	   passbean.remove("S_CMPY");
-		        	   passbean.remove("S_ATIME");
-		        	   passbean.remove("S_MTIME");
-		        	   passbean.remove("S_FLAG");
-		        	   passbean.remove("_PK_");
-		        	   passbean.remove("ROW_NUM_");
-						Bean newBean = new Bean();
-						newBean.copyFrom(passbean);
-						beans.add(newBean);
-						codeList.add(colCode);
-						//更新报名状态
-						bmbean.set("BM_SH_STATE", "2");
-						ServDao.save("TS_BMLB_BM", bmbean);
-		           }else if(staylist!=null&&staylist.size()!=0){
-		        	   //审核不通过中没有报名数据   
-		        	   //去待审核中查找 
-		        	   Bean staybean = staylist.get(0);
-		        	   //删除不通过数据   或待审核数据
-		        	   Bean whereBean = new Bean();
-		        	   whereBean.set("_WHERE_"," and BM_ID = '"+colCode+"'");
-		        	   ServDao.delete("TS_BMSH_PASS", whereBean);
-		        	   ServDao.delete("TS_BMSH_STAY", whereBean);
-		        	   //复制审核不同通过bean  到审核通过中
-		        	   staybean.remove("SH_ID");
-		        	   staybean.remove("S_CMPY");
-		        	   staybean.remove("S_ATIME");
-		        	   staybean.remove("S_MTIME");
-		        	   staybean.remove("S_FLAG");
-		        	   staybean.remove("_PK_");
-		        	   staybean.remove("ROW_NUM_");
-						Bean newBean = new Bean();
-						newBean.copyFrom(staybean);
-						beans.add(newBean);
-						codeList.add(colCode);
-						//更新报名状态
-						bmbean.set("BM_SH_STATE", "2");
-						ServDao.save("TS_BMLB_BM", bmbean);
-		           }else{
-		        	   //没有 报名 数据
-		        	   rowBean.set(ImpUtils.ERROR_NAME, "审核模块中没有此报名数据");
-		           }
+	            int pathflag = 0;
+	           if(!"".equals(odeptcodes)){
+	        	   String[] split = odeptcodes.split(",");
+	        	   if(split.length!=0){
+	        		  for (String string : split) {
+	        			  String codepath = OrgMgr.getDept(string).getCodePath();
+	        			  if(!"".equals(codepath)){
+	        				  if(bmpath.indexOf(codepath)!=-1){
+	        					  //包含此人的权限
+	        					  pathflag++;
+	        				  }
+	        			  }
+					}
+	        	   }else{
+	        		   rowBean.set(ImpUtils.ERROR_NAME, "没有审核机构，超出审核权限");
+		                continue;
+	        	   }
+	           }
+	           if(pathflag==0){
+	        	   rowBean.set(ImpUtils.ERROR_NAME, "超出审核权限，此人不再审核范围内");
+	                continue;
+	           }
+	            
+	            //将审核不通过的数据   导入到通过表中   
+	            List<Bean> passshlist = ServDao.finds("TS_BMSH_PASS", " and BM_ID = '"+colCode+"'");
+	            List<Bean> shlist = ServDao.finds("TS_BMSH_STAY", " and BM_ID = '"+colCode+"'");
+	            List<Bean> nopassshlist = ServDao.finds("TS_BMSH_NOPASS", " and BM_ID = '"+colCode+"'");
+	            if (nopassshlist != null&&nopassshlist.size()!=0) {
+	                rowBean.set(ImpUtils.ERROR_NAME, "重复数据，报名数据已在不同过表中，不需导入");
+	                continue;
+	            }else if (shlist != null&&shlist.size()!=0) {
+	            	Bean bean = shlist.get(0);
+	            	//判断审核层级
+	            	if(level>shlist.get(0).getInt("SH_LEVEL")){
+	            		rowBean.set(ImpUtils.ERROR_NAME, "上级已审核 没有权限审核此数据");
+	            		continue;
+	            	}else{
+	            		ParamBean parambean = new ParamBean();
+	    				parambean.set("examerUserCode", bean.getStr("BM_CODE"));
+	    				parambean.set("level", level);
+	    				parambean.set("deptCode", bean.getStr("S_DEPT"));
+	    				parambean.set("odeptCode", bean.getStr("S_ODEPT"));
+	    				parambean.set("shrUserCode", user_code);
+	    				parambean.set("flowName", "1");
+	    				parambean.set("xmId", xmid);
+	    				OutBean outbean = ServMgr.act("TS_WFS_APPLY", "backFlow",
+	    						parambean);
+							//越级  所有人可见   逐级  一级审核人 可以直接导入最终结果 
+							ServDao.delete("TS_BMSH_STAY", bean.getId());
+							bean.remove("SH_ID");
+							bean.remove("S_CMPY");
+							bean.remove("S_ATIME");
+							bean.remove("S_MTIME");
+							bean.remove("S_FLAG");
+							bean.remove("_PK_");
+							bean.remove("ROW_NUM_");
+							String allman1 = "";
+							String blist1 = outbean.getStr("result");
+							if(!"".equals(blist1)){
+								allman1= blist1.substring(0,blist1.length()-1);
+							}
+							Bean newBean = new Bean();
+							newBean.copyFrom(bean);
+							newBean.set("SH_USER", user_code);
+							newBean.set("SH_LEVEL", level);
+							newBean.set("SH_OTHER", allman1);
+								//异议过的数据不能再进行异议
+								int bmyiyi = bmbean.getInt("BM_YIYI_STATE");
+								if(2==bmyiyi){
+									bmbean.set("BM_SH_STATE", "3");
+								}else{
+									bmbean.set("BM_SH_STATE", "2");
+								}
+								Bean mindbean = new Bean();
+								mindbean.set("SH_LEVEL", node_name);
+								mindbean.set("SH_MIND", colCode2);
+								mindbean.set("DATA_ID", bean.getStr("BM_ID"));
+								mindbean.set("SH_STATUS", "2");
+								mindbean.set("SH_UNAME", Context.getUserBean().getName());
+								mindbean.set("SH_UCODE", user_code);
+								mindbean.set("SH_TYPE", 1);
+								mindbean.set("SH_NODE", nodeid);
+								mindbeans.add(mindbean);
+								bmbeans.add(bmbean);
+								codeList.add(bean.getStr("BM_ID"));
+								beans.add(newBean);
+								ServDao.save("TS_BMLB_BM", bmbean);
+	            	}	
+								
+	            }else if (passshlist != null&&passshlist.size()!=0) {
+	            	Bean bean = passshlist.get(0);
+	            	//判断审核层级
+	            	if(level>nopassshlist.get(0).getInt("SH_LEVEL")){
+	            		rowBean.set(ImpUtils.ERROR_NAME, "上级已审核 没有权限审核此数据");
+	            		continue;
+	            	}else{
+	            		//将审核通过的数据导入到不通过的表中
+	            		ServDao.delete("TS_BMSH_PASS", bean.getId());
+	            		Bean newBean = new Bean();
+						newBean.copyFrom(bean);
+						newBean.set("SH_USER", user_code);
+						newBean.set("SH_LEVEL", level);
+							//异议过的数据不能再进行异议
+							bmbean.set("BM_SH_STATE", "2");
+							Bean mindbean = new Bean();
+							mindbean.set("SH_LEVEL", node_name);
+							mindbean.set("SH_MIND", colCode2);
+							mindbean.set("DATA_ID", bean.getStr("BM_ID"));
+							mindbean.set("SH_STATUS", "2");
+							mindbean.set("SH_UNAME", Context.getUserBean().getName());
+							mindbean.set("SH_UCODE", user_code);
+							mindbean.set("SH_TYPE", 1);
+							mindbean.set("SH_NODE", nodeid);
+							mindbeans.add(mindbean);
+							bmbeans.add(bmbean);
+							codeList.add(bean.getStr("BM_ID"));
+							beans.add(newBean);
+							 ServDao.save("TS_BMLB_BM", bmbean);
+	            	}
+	            }else{
+	            	//没有 报名 数据
+	            	rowBean.set(ImpUtils.ERROR_NAME, "审核模块中没有此报名数据");
+	            }
+	            
+		         
 	        }
 	        ServDao.creates("TS_BMSH_NOPASS", beans);
-	        
+	        ServDao.creates("TS_COMM_MIND", mindbeans);
 	        return outBean.set("alllist", rowBeanList).set("successlist", codeList);
 	}
 
