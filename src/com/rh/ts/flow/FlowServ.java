@@ -40,8 +40,8 @@ public class FlowServ extends CommonServ {
         Bean newBean = ServDao.create(servId, bean);
         if (!newBean.getId().equals("")) {
             copyLinkData(servId, pkCode, newBean.getId());
-            changeWfsid( pkCode,  newBean.getId());
-            changeAdminer( pkCode,  newBean.getId());
+            changeWfsid(pkCode, newBean.getId());
+            changeAdminer(pkCode, newBean.getId());
             outBean.setOk();
         }
         return outBean;
@@ -104,62 +104,66 @@ public class FlowServ extends CommonServ {
         Bean bean = ServDao.find("SY_SERV", servId);
         return bean.getStr("SERV_KEYS");
     }
+
     /**
      * 报名审核流程和借考的更新wfs_id
      *
-     * @param servId
+     * @param oldWfsId
+     * @param newWfsId
      * @return
      */
-    public void  changeWfsid(String oldWfsId, String newWfsId){
-    	//通过新的wfs_ID得到新的node_ID
-    	String  nodeWhere="AND  WFS_ID='"+newWfsId+"'";
-    	List<Bean> nodesBean=ServDao.finds("TS_WFS_NODE_APPLY", nodeWhere);
-    	if(nodesBean!=null && !nodesBean.isEmpty()){
-    		for(int i=0;i<nodesBean.size();i++){
-    			String nodeId=nodesBean.get(i).getStr("NODE_ID");//新的id
-    			String  nodesWhere="AND  NODE_ID='"+nodeId+"'";
-    	    	List<Bean> lcBean=ServDao.finds("TS_WFS_BMSHLC", nodesWhere);//三个流程
-    	    	if(lcBean!=null && !lcBean.isEmpty()){
-                     for(int j=0;j<lcBean.size();j++){
-                    	 lcBean.get(j).set("WFS_ID", newWfsId);
-                    	 ServDao.save("TS_WFS_BMSHLC", lcBean.get(j));
-    	    		}
-    	    	}
-    		}
-    	}
-    }
-    public void  changeAdminer(String oldWfsId, String newWfsId){
-    	String oldWfsWhere="AND WFS_ID='"+oldWfsId+"'";
-    	List<Bean> oldNodeIdBean=ServDao.finds("TS_WFS_NODE_APPLY", oldWfsWhere);//获取oldNodeId
-        if(oldNodeIdBean !=null  && !oldNodeIdBean.isEmpty()){
-        	for(int i=0;i<oldNodeIdBean.size();i++){
-        		int j=i+1;
-        		String old="AND WFS_ID='"+oldWfsId+"' AND  NODE_STEPS='"+j+"'";;
-            	List<Bean> ol=ServDao.finds("TS_WFS_NODE_APPLY", old);//获取oldNodeId
-            	String nWhere="AND WFS_ID='"+newWfsId+"' AND  NODE_STEPS='"+j+"'";
-            	List<Bean> ne=ServDao.finds("TS_WFS_NODE_APPLY", nWhere);//获取oldNodeId
-            	if(ol !=null  && !ol.isEmpty()){
-            		String oldN= ol.get(0).getStr("NODE_ID");
-            		String newN=ne.get(0).getStr("NODE_ID");
-            		String oldNodeId="and NODE_ID='"+oldN+"'";
-            		List<Bean> oldBean=ServDao.finds("TS_WFS_NODEAPPLY_ADMINER", oldNodeId);
-            		if(oldBean !=null  &&  !oldBean.isEmpty()){
-                    	for(int k=0;k<oldBean.size();k++){
-                    		Bean bean=new  Bean();
-                    		String name=oldBean.get(k).getStr("ADMINER_NAME");//审核人
-                    		String userCode=oldBean.get(k).getStr("ADMINER_UWERCODE");//审核人力资源编码
-                    		bean.set("ADMINER_NAME", name);
-                    		bean.set("ADMINER_UWERCODE", userCode);
-                    		bean.set("NODE_ID", newN);
-                    		ServDao.save("TS_WFS_NODEAPPLY_ADMINER", bean);
-                    	}
+    public void changeWfsid(String oldWfsId, String newWfsId) {
+        //通过新的wfs_ID得到新的node_ID
+        String nodeWhere = "AND  WFS_ID='" + oldWfsId + "'";
+        List<Bean> nodesBean = ServDao.finds("TS_WFS_NODE_APPLY", nodeWhere);
+        if (nodesBean != null && !nodesBean.isEmpty()) {
+            for (int i = 0; i < nodesBean.size(); i++) {
+                String nodeId = nodesBean.get(i).getStr("NODE_ID");//新的id
+                String nodesWhere = "AND  NODE_ID='" + nodeId + "'";
+                List<Bean> lcBean = ServDao.finds("TS_WFS_BMSHLC", nodesWhere);//三个流程
+                if (lcBean != null && !lcBean.isEmpty()) {
+                    for (int j = 0; j < lcBean.size(); j++) {
+                        lcBean.get(j).set("WFS_ID", newWfsId);
+                        ServDao.save("TS_WFS_BMSHLC", lcBean.get(j));
                     }
-            	}
-             }
-        	}
-    	}
-    
-    
+                }
+            }
+        }
+    }
+
+    public void changeAdminer(String oldWfsId, String newWfsId) {
+        String oldWfsWhere = "AND WFS_ID='" + oldWfsId + "'";
+        List<Bean> oldNodeIdBean = ServDao.finds("TS_WFS_NODE_APPLY", oldWfsWhere);//获取oldNodeId
+        if (oldNodeIdBean != null && !oldNodeIdBean.isEmpty()) {
+            for (int i = 0; i < oldNodeIdBean.size(); i++) {
+                int j = i + 1;
+                String old = "AND WFS_ID='" + oldWfsId + "' AND  NODE_STEPS='" + j + "'";
+                ;
+                List<Bean> ol = ServDao.finds("TS_WFS_NODE_APPLY", old);//获取oldNodeId
+                String nWhere = "AND WFS_ID='" + newWfsId + "' AND  NODE_STEPS='" + j + "'";
+                List<Bean> ne = ServDao.finds("TS_WFS_NODE_APPLY", nWhere);//获取oldNodeId
+                if (ol != null && !ol.isEmpty()) {
+                    String oldN = ol.get(0).getStr("NODE_ID");
+                    String newN = ne.get(0).getStr("NODE_ID");
+                    String oldNodeId = "and NODE_ID='" + oldN + "'";
+                    List<Bean> oldBean = ServDao.finds("TS_WFS_NODEAPPLY_ADMINER", oldNodeId);
+                    if (oldBean != null && !oldBean.isEmpty()) {
+                        for (int k = 0; k < oldBean.size(); k++) {
+                            Bean bean = new Bean();
+                            String name = oldBean.get(k).getStr("ADMINER_NAME");//审核人
+                            String userCode = oldBean.get(k).getStr("ADMINER_UWERCODE");//审核人力资源编码
+                            bean.set("ADMINER_NAME", name);
+                            bean.set("ADMINER_UWERCODE", userCode);
+                            bean.set("NODE_ID", newN);
+                            ServDao.save("TS_WFS_NODEAPPLY_ADMINER", bean);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     /**
      * 注意：程序只考虑了最普通的主服务和自服务有一个字段有关系的情况，如果使用中情况不只一条绑定主键外键这种情况，需要自己另作处理
      * 取得关联服务
@@ -342,7 +346,7 @@ public class FlowServ extends CommonServ {
         //审核类型  1:逐级审核  2:越级审核
         int wfsType = wfsBean.getInt("WFS_TYPE");
         int wfsSteps = wfsBean.getInt("WFS_STEPS");
-        if (flowName == 1 || flowName == 3) {
+        if (flowName == 1 || flowName == 3 || flowName == 2) {
             //报名审核
             if (wfsType == 1) {
                 String s = "";

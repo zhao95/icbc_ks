@@ -3,15 +3,15 @@ package com.rh.ts.xmgl;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.org.UserBean;
-import com.rh.core.serv.CommonServ;
-import com.rh.core.serv.OutBean;
-import com.rh.core.serv.ParamBean;
-import com.rh.core.serv.ServDao;
+import com.rh.core.serv.*;
 import com.rh.core.serv.bean.SqlBean;
+import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.DateUtils;
 import com.rh.core.util.ImpUtils;
 import com.rh.ts.pvlg.PvlgUtils;
+import com.rh.ts.util.RoleUtil;
 import com.rh.ts.util.TsConstant;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -65,6 +65,19 @@ public class DfpKsServ extends CommonServ {
 
         //*获取文件内容
         List<Bean> rowBeanList = paramBean.getList(ImpUtils.DATA_LIST);
+        //获取当前用户 安排权限
+        String servId = "TS_XMGL_KCAP_YAPZW";
+        Bean tsXmglKcapYapzwPvlg = RoleUtil.getPvlgRole(Context.getUserBean().getCode(), servId);
+        Bean auto = tsXmglKcapYapzwPvlg.getBean(servId + "_PVLG").getBean("auto");
+        String roleDcode = auto.getStr("ROLE_DCODE");
+        String[] deptCodes = roleDcode.split(",");
+
+        //当前登录人是否是项目创建人
+        boolean isXmCreator = false;
+        Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+        if (xmBean != null && Context.getUserBean().getCode().equals(xmBean.getStr("S_USER"))) {
+            isXmCreator = true;
+        }
 
         List<Bean> beans = new ArrayList<Bean>();
         for (Bean rowBean : rowBeanList) {
@@ -86,38 +99,71 @@ public class DfpKsServ extends CommonServ {
                 continue;
             }
 
+
             Bean passBean = new Bean();
             passBean.set("XM_ID", xmId);//项目id
             passBean.set("BM_CODE", userBean.getCode());// 人力资源编码
             passBean.set("KSLBK_ID", kslbBean.getStr("KSLBK_ID"));// 考试类别id
             // 先查询避免重复添加
-            if (ServDao.count(TsConstant.TS_BMSH_PASS, passBean) <= 0) {
-//                passBean.set("BM_ID", );
-                passBean.set("BM_NAME", userBean.getName());
-                passBean.set("KSLBK_ID", kslbBean.getStr("KSLBK_ID"));
-                passBean.set("BM_LB", kslbBean.getStr("KSLBK_NAME"));
-                passBean.set("BM_XL", kslbBean.getStr("KSLBK_XL"));
-                passBean.set("BM_MK", kslbBean.getStr("KSLBK_MK"));
-                passBean.set("BM_TYPE_NAME", kslbBean.getStr("KSLBK_TYPE_NAME"));
-                passBean.set("BM_LB_CODE", kslbBean.getStr("KSLBK_CODE"));
-                passBean.set("BM_XL_CODE", kslbBean.getStr("KSLBK_XL_CODE"));
-                passBean.set("BM_MK_CODE", kslbBean.getStr("KSLBK_MKCODE"));
-                passBean.set("BM_TYPE", kslbBean.getStr("KSLBK_TYPE"));
-                passBean.set("BM_KS_TIME", kslbBean.getStr("KSLBK_TIME"));
-                passBean.set("S_FLAG", "1");
-                passBean.set("S_DEPT", userBean.getDeptCode());
-                passBean.set("S_TDEPT", userBean.getTDeptCode());
-                passBean.set("S_ODEPT", userBean.getODeptCode());//机构编码 导入后所属机构
-                passBean.set("ODEPT_CODE", userBean.getODeptCode());
-                passBean.set("BM_STATUS", "0");
+            if (ServDao.count(TsConstant.TS_BMSH_PASS, passBean) > 0) {
+                //TS_BMSH_PASS 有数据
+                List<Bean> passBeanList = ServDao.finds(TsConstant.TS_BMSH_PASS, passBean);
+                if (CollectionUtils.isNotEmpty(passBeanList)) {
+                    Bean existsPassBean = passBeanList.get(0);
+                    ParamBean deptContainParamBean = new ParamBean();
+                    deptContainParamBean.set("DEPT_CODE", userBean.getStr("DEPT_CODE"));
+                    OutBean deptContainFlagOutBean = ServMgr.act(TsConstant.SERV_KCAP_DAPCC, "deptContainFlag", deptContainParamBean);
+                    if ("true".equals(deptContainFlagOutBean.getStr("flag"))) {
+                        //有权限(TS_BMSH_PASS有数据 + 有权限 -> 重复数据)
+                        rowBean.set(ImpUtils.ERROR_NAME, "重复数据");
+                        continue;
+                    } else {
+                        //无权限(TS_BMSH_PASS有数据 + 无权限 -> 借考到本地)
+                        String bmStatus = existsPassBean.getStr("BM_STATUS");
+                        if ("1".equals(bmStatus) && "2".equals(bmStatus)) {
+                            //已请假
+                            rowBean.set(ImpUtils.ERROR_NAME, "已请假");
+                            continue;
+                        } else {
+                            //未请假
+                            if (deptCodes.length > 0) {
+                                //借考地为
+                                existsPassBean.set("BM_STATUS", "2");
+                                existsPassBean.set("JK_ODEPT", deptCodes[0]);
+                                ServDao.save(TsConstant.TS_BMSH_PASS, existsPassBean);
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (isXmCreator) {
+                    //没有记录 ->添加 额外的人
+                    //passBean.set("BM_ID", );
+                    passBean.set("BM_NAME", userBean.getName());
+                    passBean.set("KSLBK_ID", kslbBean.getStr("KSLBK_ID"));
+                    passBean.set("BM_LB", kslbBean.getStr("KSLBK_NAME"));
+                    passBean.set("BM_XL", kslbBean.getStr("KSLBK_XL"));
+                    passBean.set("BM_MK", kslbBean.getStr("KSLBK_MK"));
+                    passBean.set("BM_TYPE_NAME", kslbBean.getStr("KSLBK_TYPE_NAME"));
+                    passBean.set("BM_LB_CODE", kslbBean.getStr("KSLBK_CODE"));
+                    passBean.set("BM_XL_CODE", kslbBean.getStr("KSLBK_XL_CODE"));
+                    passBean.set("BM_MK_CODE", kslbBean.getStr("KSLBK_MKCODE"));
+                    passBean.set("BM_TYPE", kslbBean.getStr("KSLBK_TYPE"));
+                    passBean.set("BM_KS_TIME", kslbBean.getStr("KSLBK_TIME"));
+                    passBean.set("S_FLAG", "1");
+                    passBean.set("S_DEPT", userBean.getDeptCode());
+                    passBean.set("S_TDEPT", userBean.getTDeptCode());
+                    passBean.set("S_ODEPT", userBean.getODeptCode());//机构编码 导入后所属机构
+                    passBean.set("ODEPT_CODE", userBean.getODeptCode());
+                    passBean.set("BM_STATUS", "0");
 //                passBean.set("BM_YIYI",);
 //                passBean.set("S_CMPY", );
-                passBean.set("S_USER", Context.getUserBean().getCode());
-                passBean.set("S_MTIME", DateUtils.getDatetime());
-                passBean.set("S_ATIME", DateUtils.getDatetime());
+                    passBean.set("S_USER", Context.getUserBean().getCode());
+                    passBean.set("S_MTIME", DateUtils.getDatetime());
+                    passBean.set("S_ATIME", DateUtils.getDatetime());
 //                passBean.set("SH_NODE", );
-                passBean.set("SH_STATUS", "0");
-                passBean.set("SH_LEVEL", "1");
+                    passBean.set("SH_STATUS", "0");
+                    passBean.set("SH_LEVEL", "1");
 //                passBean.set("SH_USER", );
 //                passBean.set("SH_OTHER", );
 //                passBean.set("SH_DESC", );
@@ -125,10 +171,15 @@ public class DfpKsServ extends CommonServ {
 //                passBean.set("RZYEAR", );//任职时间
 //                passBean.set("BM_TITLE", );
 //                passBean.set("SH_ID", );//id
-                beans.add(passBean);
-            } else {
-                rowBean.set(ImpUtils.ERROR_NAME, "重复数据:" + userBean.getCode() + "-" + kslbBean.getStr("KSLBK_ID"));
+                    beans.add(passBean);
+                } else {
+                    rowBean.set(ImpUtils.ERROR_NAME, "只有项目创建人可以添加额外的人员");
+                    continue;
+                }
             }
+//            else{
+//                rowBean.set(ImpUtils.ERROR_NAME, "重复数据:" + userBean.getCode() + "-" + kslbBean.getStr("KSLBK_ID"));
+//            }
         }
         ServDao.creates(TsConstant.TS_BMSH_PASS, beans);
 

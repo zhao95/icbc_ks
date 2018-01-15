@@ -453,6 +453,13 @@
                         机构数：<span id="totalCount" style="color: red">23</span>
                         已提交：<span id="hasCount" style="color: red">20</span>
                         未提交：<span id="noCount" style="color: red">3</span>
+                        <a id="TS_XMGL_KCAP_TJJL-expAll" onclick="SubmissionArrangementModal.expData()"
+                           class="rh-icon rhGrid-btnBar-a" style="float:right;"
+                           actcode="expAll" title="">
+                            <span class="rh-icon-inner">导出</span>
+                            <span class="rh-icon-img btn-exp"></span>
+                        </a>
+
                     </div>
                     <div class="col-sm-12">
                         <table id="submissionArrangement-table" class="table table-border">
