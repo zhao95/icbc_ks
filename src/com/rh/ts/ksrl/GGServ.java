@@ -6,6 +6,7 @@ import com.rh.core.org.UserBean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
+import com.rh.core.serv.ServDao;
 import com.rh.core.util.Constant;
 import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.RoleUtil;
@@ -80,4 +81,14 @@ public class GGServ  extends CommonServ{
 		}
 		return outBean;
 	}
+	
+	public void  setValue(ParamBean paramBean){
+		String ggId=paramBean.getStr("GG_ID");
+		Bean ggBean=ServDao.find("TS_GG", ggId);
+		if(ggBean !=null){
+			ggBean.set("GG_SORT", 0);
+			ServDao.save("TS_GG", ggBean);
+		}
+	}
+	
 }
