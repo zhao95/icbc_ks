@@ -20,7 +20,8 @@ function sel(event){
 		seltype = "multi" ;
 	}
 	
-	var configStr = "TS_KCGL_GLJG_ODEPT,{'TYPE':'"+seltype+"'}";//single
+//	var configStr = "TS_KCGL_GLJG_ODEPT,{'TYPE':'"+seltype+"'}";//single
+	var configStr = "TS_KCGL_GLJG_ODEPT,{'TYPE':'"+seltype+"','sId':'TS_KCGL','pvlg':'CODE_PATH','params':{'USE_SERV_ID':'TS_KCGL'}}";
 
 	var options = {
 			"config" :configStr,

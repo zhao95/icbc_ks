@@ -15,7 +15,8 @@ if(action == "" || action == "add"){
 if($("#TS_KCGL_UPDATE_GLJG-JG_CODE__NAME").hasClass("disabled") == false) {
 	$("#TS_KCGL_UPDATE_GLJG-JG_CODE__NAME").unbind("click").bind("click", function(event) {
 
-		var configStr = "TS_KCGL_GLJG_ODEPT,{'TYPE':'single'}";
+//		var configStr = "TS_KCGL_GLJG_ODEPT,{'TYPE':'single'}";
+		var configStr = "TS_KCGL_GLJG_ODEPT,{'TYPE':'single','sId':'TS_KCGL','pvlg':'CODE_PATH','params':{'USE_SERV_ID':'TS_KCGL'}}";
 
 		var options = {
 				"config" :configStr,
