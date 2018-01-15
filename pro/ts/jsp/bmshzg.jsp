@@ -381,9 +381,9 @@ if(userBean != null) {
 				<div>
 				<table style="height:125px;font-size:14px;">
 				<tr style="height:20%">
-				<td style="text-align:right;width:20%">审核人姓名&nbsp;&nbsp;</td><td><input style="width:90%;height:30px" type="text" value="<%=username%>" name="shren"/></td>
+				<td style="text-align:right;width:20%">审核人姓名&nbsp;&nbsp;</td><td><input readonly="value" style="width:90%;height:30px" type="text" value="<%=username%>" name="shren"/></td>
 				<td style="width:1%"></td>
-				<td style="text-align:right;width:20%">审核人登录名&nbsp;</td><td><input style="width:90%;height:30px" type="text" value="<%=loginname %>" name="shdlming"/></td>
+				<td style="text-align:right;width:20%">审核人登录名&nbsp;</td><td><input readonly="value" style="width:90%;height:30px" type="text" value="<%=loginname %>" name="shdlming"/></td>
 				</tr>
 				<tr style="height:25%">
 				<td style="text-align:right">审核状态&nbsp;&nbsp;</td><td colspan="4"><span id="radiospan1"><input style="vertical-align:text-bottom; margin-bottom:-3;" name="state" type="radio" value="1" checked>审核通过&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
