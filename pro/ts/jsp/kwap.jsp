@@ -249,7 +249,7 @@
             <div class="col-sm-2" style="width: 14%;min-width: 108px;max-width: 120px">
                 登录名<input id="search-login-name" style="width:50px;" type="text" title="">
             </div>
-            <div class="col-sm-4" style="width: 54%;min-width: 421px;max-width:430px;">
+            <div class="col-sm-4" style="width: 54%;min-width: 421px;max-width:439px;">
                 报考类型
                 <select id="search-bm-xl" style=""></select>
                 <select id="search-bm-mk" style="width:176px;" type="text" title=""></select>
