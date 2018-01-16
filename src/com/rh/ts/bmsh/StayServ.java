@@ -193,16 +193,7 @@ public class StayServ extends CommonServ {
 		} else {
 			shenuser = userBean.getStr("USER_CODE");
 		}
-		
 		String node_name = "";
-		String nodeid = paramBean.getStr("nodeid");
-
-		String levels = paramBean.getStr("level");
-		int level = 0;
-		if (!"".equals(levels)) {
-
-			level = Integer.parseInt(levels);
-		}
 		String s = paramBean.getStr("checkedid");
 		String xmid = paramBean.getStr("xmid");
 		
@@ -211,6 +202,8 @@ public class StayServ extends CommonServ {
 		String wherewfs = "AND XM_ID = '"+xmid+"'";
 		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", wherewfs);
 		String sh_level = "0";
+		
+		List<Bean> list = new ArrayList<Bean>();
 		for (Bean bean2 : finds) {
 		String wfsid = 	bean2.getStr("WFS_ID");
 		Bean find = ServDao.find("TS_WFS_APPLY", wfsid);
@@ -236,6 +229,22 @@ public class StayServ extends CommonServ {
 				break;
 			}
 		}
+		for (Bean nodebean : finds2) {
+			// 根据流程id获取 流程绑定的人和审核机构
+			String nodeids = nodebean.getStr("NODE_ID");
+			String nodewhere = "AND NODE_ID='" + nodeids + "'";
+			List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
+			for (Bean codebean : finds3) {
+				if (shenuser.equals(codebean.getStr("SHR_USERCODE"))) {
+					Bean bean = new Bean();
+					bean.set("level", nodebean.getStr("NODE_STEPS"));
+					bean.set("NODE_NAME", nodebean.getStr("NODE_NAME"));
+					list.add(bean);
+				}
+				
+			}
+			
+		}
 		
 		}
 		
@@ -252,13 +261,9 @@ public class StayServ extends CommonServ {
 				String bmid = bean.getStr("BM_ID");
 				// 获取审核人信息
 				int flowname = 1;
-				int flowlevel = 0;
-				if(flag.equals("1")){
-					flowlevel=level;
-				}
 				ParamBean parambean = new ParamBean();
 				parambean.set("examerUserCode", bean.getStr("BM_CODE"));
-				parambean.set("level", flowlevel);
+				parambean.set("level", sh_level);
 				parambean.set("deptCode", bean.getStr("S_DEPT"));
 				parambean.set("odeptCode", bean.getStr("S_ODEPT"));
 				parambean.set("shrUserCode", shenuser);
@@ -278,7 +283,7 @@ public class StayServ extends CommonServ {
 				if (state.equals("1")) {
 					Bean bm_bean = ServDao.find("TS_BMLB_BM", bmid);
 					// 查找下一层级的人当前人力资源编码
-					if ("1".equals(level)) {
+					if ("1".equals(sh_level)) {
 						// 流程最后一次审核
 						ServDao.delete("TS_BMSH_STAY", id);
 					} else {
@@ -286,6 +291,7 @@ public class StayServ extends CommonServ {
 						if(flag.equals("1")){  //todo  下级审核人不在时抛异常
 						bean.set("SH_LEVEL", outbean.getStr("SH_LEVEL"));
 						bean.set("SH_USER", allman);
+						bean.set("SH_NODE", node_name);
 						bean.set("SH_OTHER", allman);
 						ServDao.save("TS_BMSH_STAY", bean);
 						}else{
@@ -332,7 +338,7 @@ public class StayServ extends CommonServ {
 								allman1= blist1.substring(0,blist1.length()-1);
 							}
 							newBean.set("SH_USER", shenuser);
-							newBean.set("SH_LEVEL", level);
+							newBean.set("SH_LEVEL", sh_level);
 							newBean.set("SH_OTHER", allman1);
 							ServDao.delete("TS_BMSH_STAY", id);
 							if (bm_bean != null) {
@@ -354,7 +360,7 @@ public class StayServ extends CommonServ {
 						Bean newBean = new Bean();
 						newBean.copyFrom(bean);
 						newBean.set("SH_USER", shenuser);
-						newBean.set("SH_LEVEL", level);
+						newBean.set("SH_LEVEL", sh_level);
 						if(flag.equals("1")){
 							//							    逐级  
 							if ("1".equals(sh_level)) {
@@ -378,7 +384,7 @@ public class StayServ extends CommonServ {
 								allman1= blist1.substring(0,blist1.length()-1);
 							}
 							newBean.set("SH_USER", shenuser);
-							newBean.set("SH_LEVEL", level);
+							newBean.set("SH_LEVEL", sh_level);
 							newBean.set("SH_OTHER", allman1);
 							ServDao.delete("TS_BMSH_STAY", id);
 							ServDao.save("TS_BMSH_PASS", newBean);
@@ -402,6 +408,7 @@ public class StayServ extends CommonServ {
 						bean.set("SH_LEVEL", outbean.getStr("SH_LEVEL"));
 						bean.set("SH_USER", allman);
 						bean.set("SH_OTHER", allman);
+						bean.set("SH_NODE", node_name);
 						ServDao.save("TS_BMSH_STAY", bean);
 						}else{
 							ServDao.delete("TS_BMSH_STAY", id);
@@ -453,7 +460,7 @@ public class StayServ extends CommonServ {
 								allman1= blist1.substring(0,blist1.length()-1);
 							}
 							newBean.set("SH_USER", shenuser);
-							newBean.set("SH_LEVEL", level);
+							newBean.set("SH_LEVEL", sh_level);
 							newBean.set("SH_OTHER", allman1);
 							ServDao.delete("TS_BMSH_STAY", id);
 							ServDao.save("TS_BMSH_NOPASS", newBean);
@@ -475,7 +482,7 @@ public class StayServ extends CommonServ {
 						Bean newBean = new Bean();
 						newBean.copyFrom(bean);
 						newBean.set("SH_USER", shenuser);
-						newBean.set("SH_LEVEL", level);
+						newBean.set("SH_LEVEL", sh_level);
 						if(flag.equals("1")){
 							//							    逐级  
 							if ("1".equals(sh_level)) {
@@ -506,7 +513,7 @@ public class StayServ extends CommonServ {
 								allman1= blist1.substring(0,blist1.length()-1);
 							}
 							newBean.set("SH_USER", shenuser);
-							newBean.set("SH_LEVEL", level);
+							newBean.set("SH_LEVEL", sh_level);
 							newBean.set("SH_OTHER", allman1);
 							ServDao.delete("TS_BMSH_STAY", id);
 							ServDao.save("TS_BMSH_NOPASS", newBean);
@@ -540,17 +547,21 @@ public class StayServ extends CommonServ {
 			            e.printStackTrace(); 
 
 			        } 
-				Bean mindbean = new Bean();
-				mindbean.set("SH_LEVEL", node_name);
-				mindbean.set("SH_MIND", liyou);
-				mindbean.set("DATA_ID", bean.getStr("BM_ID"));
-				mindbean.set("SH_STATUS", state);
-				mindbean.set("SH_ULOGIN",localip);
-				mindbean.set("SH_UNAME", userBean.getName());
-				mindbean.set("SH_UCODE", shenuser);
-				mindbean.set("SH_TYPE", 1);
-				mindbean.set("SH_NODE", nodeid);
-				ServDao.save("TS_COMM_MIND", mindbean);
+			      for(Bean nodebeans :list){
+			    		Bean mindbean = new Bean();
+						mindbean.set("SH_LEVEL", nodebeans.getStr("NODE_NAME"));
+						mindbean.set("SH_MIND", liyou);
+						mindbean.set("DATA_ID", bean.getStr("BM_ID"));
+						mindbean.set("SH_STATUS", state);
+						mindbean.set("SH_ULOGIN",localip);
+						mindbean.set("SH_UNAME", userBean.getName());
+						mindbean.set("SH_UCODE", shenuser);
+						mindbean.set("SH_TYPE", 1);
+						mindbean.set("SH_NODE", nodebeans.getStr("NODE_NAME"));
+						ServDao.save("TS_COMM_MIND", mindbean);
+			      }
+			       
+			
 			}
 		}
 
@@ -1803,7 +1814,6 @@ public class StayServ extends CommonServ {
 			String wfswhere = "AND WFS_ID='" + wfsid + "'  ORDER BY NODE_STEPS ASC";
 			List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
 			for (Bean nodebean : finds2) {
-				boolean flagstr = false;
 				// 根据流程id获取 流程绑定的人和审核机构
 				String nodeids = nodebean.getStr("NODE_ID");
 				String nodewhere = "AND NODE_ID='" + nodeids + "'";
@@ -1811,13 +1821,8 @@ public class StayServ extends CommonServ {
 				for (Bean codebean : finds3) {
 					if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
 						sh_level=nodebean.getStr("NODE_STEPS");
-						flagstr = true;
-						break;
 					}
 					
-				}
-				if(flagstr){
-					break;
 				}
 			}
 			
@@ -2198,9 +2203,6 @@ public class StayServ extends CommonServ {
 					expExcel.close();
 				}
 				return new OutBean().setOk();	
-				
-				
-				
 	}
 	
 	/**
@@ -2208,16 +2210,16 @@ public class StayServ extends CommonServ {
 	 *
 	 * @param fileId
 	 *            文件id
-	 */
+	 */ 
 	public OutBean savedata(Bean paramBean){
 		 OutBean outBean = new OutBean();
 		 String xmid = paramBean.getStr("xmid");
 		 String user_code = Context.getUserBean().getCode();
-		 int level = paramBean.getInt("level");
 		 String nodeid = paramBean.getStr("nodeid");
 		 String node_name = "";
 		  String flag = "";
-          	
+		  List<Bean> list = new ArrayList<Bean>();
+          	int level = 0;
           	//判断逐级  越级
       		String wherewfs = "AND XM_ID = '"+xmid+"'";
       		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", wherewfs);
@@ -2236,6 +2238,7 @@ public class StayServ extends CommonServ {
     			for (Bean codebean : finds3) {
     				if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
     					node_name= nodebean.getStr("NODE_NAME");
+    					 level = nodebean.getInt("NODE_STEPS");
     					flagstr = true;
     					break;
     				}
@@ -2244,6 +2247,22 @@ public class StayServ extends CommonServ {
     			if(flagstr){
     				break;
     			}
+    		}
+    		for (Bean nodebean : finds2) {
+    			// 根据流程id获取 流程绑定的人和审核机构
+    			String nodeids = nodebean.getStr("NODE_ID");
+    			String nodewhere = "AND NODE_ID='" + nodeids + "'";
+    			List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
+    			for (Bean codebean : finds3) {
+    				if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
+    					Bean bean = new Bean();
+    					bean.set("level", nodebean.getStr("NODE_STEPS"));
+    					bean.set("NODE_NAME", nodebean.getStr("NODE_NAME"));
+    					list.add(bean);
+    				}
+    				
+    			}
+    			
     		}
           }
 	        //获取前端传递参数
@@ -2257,6 +2276,7 @@ public class StayServ extends CommonServ {
 	        for (Bean rowBean : rowBeanList) {
 	            String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");
 	            String colCode2 = rowBean.getStr(ImpUtils.COL_NAME + "2");
+	            String shstate = rowBean.getStr(ImpUtils.COL_NAME + "3");
 	            if(colCode2.equals("")){
 	            	 rowBean.set(ImpUtils.ERROR_NAME, "审核理由不能为空");
 		                continue;
@@ -2265,6 +2285,7 @@ public class StayServ extends CommonServ {
 	            	 rowBean.set(ImpUtils.ERROR_NAME, "编码错误，没有此报名数据");
 		                continue;
 	            }
+	          
 	            Bean bmbean = ServDao.find("TS_BMLB_BM", colCode);
 	            if (bmbean == null) {
 	                rowBean.set(ImpUtils.ERROR_NAME, "编码错误，没有此报名数据");
@@ -2327,10 +2348,27 @@ public class StayServ extends CommonServ {
 	            			rowBean.set(ImpUtils.ERROR_NAME, "重复数据，报名数据已存在，不需导入");
 	            			continue;
 	            		}else{
+	            			int flagzhuji = 0;
+	            			 for(Bean nodebeans :list){
+   							  if(nodebeans.getInt("level")==bean.getInt("SH_LEVEL")){
+   								flagzhuji++;
+   							  }
+   					      }
+	            			 if(flagzhuji==0){
+	            				 rowBean.set(ImpUtils.ERROR_NAME, "没有权限审核此数据");
+		    	            		continue;
+	            			 }
 	            			if(level>shlist.get(0).getInt("SH_LEVEL")){
 	    	            		rowBean.set(ImpUtils.ERROR_NAME, "上级已审核 没有权限审核此数据");
 	    	            		continue;
 	    	            	}else{
+	    	            		  if("".equals(shstate)){
+	    	      	            	rowBean.set(ImpUtils.ERROR_NAME, "审核状态为空");
+	    	      	                continue;
+	    	      	            }else if(!"1".equals(shstate)&&!"2".equals(shstate)){
+	    	      	            	rowBean.set(ImpUtils.ERROR_NAME, "审核状态不正确，请以模板为准");
+	    	      	                continue;
+	    	      	            }
 	    	            		//当前人 可以对数据进行审核     线下审核流程
 	    	            		ParamBean parambean = new ParamBean();
 	    	    				parambean.set("examerUserCode", bean.getStr("BM_CODE"));
@@ -2351,20 +2389,25 @@ public class StayServ extends CommonServ {
 	    	    				}
 	    	            		bean.set("SH_LEVEL", outbean.getStr("SH_LEVEL"));
 	    						bean.set("SH_USER", allman);
+	    						bean.set("SH_NODE", node_name);
 	    						bean.set("SH_OTHER", allman);
 	    						beans.add(bean);
 	    						codeList.add(bean.getStr("BM_ID"));
 	    						//保存审批记录
-	    						Bean mindbean = new Bean();
-	    						mindbean.set("SH_LEVEL", node_name);
-	    						mindbean.set("SH_MIND", colCode2);
-	    						mindbean.set("DATA_ID", bean.getStr("BM_ID"));
-	    						mindbean.set("SH_STATUS", "0");
-	    						mindbean.set("SH_UNAME", Context.getUserBean().getName());
-	    						mindbean.set("SH_UCODE", user_code);
-	    						mindbean.set("SH_TYPE", "1");
-	    						mindbean.set("SH_NODE", nodeid);
-	    						mindbeans.add(mindbean);
+	    						  for(Bean nodebeans :list){
+	    							  if(nodebeans.getInt("level")<=bean.getInt("SH_LEVEL")){
+	    								  Bean mindbean = new Bean();
+	    								  mindbean.set("SH_LEVEL", nodebeans.getStr("NODE_NAME"));
+	    								  mindbean.set("SH_MIND", colCode2);
+	    								  mindbean.set("DATA_ID", bean.getStr("BM_ID"));
+	    								  mindbean.set("SH_STATUS", shstate);
+	    								  mindbean.set("SH_UNAME", Context.getUserBean().getName());
+	    								  mindbean.set("SH_UCODE", user_code);
+	    								  mindbean.set("SH_TYPE", 1);
+	    								  mindbean.set("SH_NODE", nodebeans.getStr("NODE_NAME"));
+	    								  mindbeans.add(mindbean);
+	    							  }
+	    					      }
 	    						ServDao.save("TS_BMSH_STAY", bean);
 	    	            	}
 	            		}
@@ -2502,4 +2545,48 @@ public class StayServ extends CommonServ {
   }
 
 	
+	/**
+	 * 获取项目下所有待审核的数据
+	 * 
+	 * @param paramBean
+	 * @return
+	 */
+	public Bean getPassState(Bean paramBean) {
+		OutBean out = new OutBean();
+		UserBean user = Context.getUserBean();
+		String user_code = user.getStr("USER_CODE"); 
+		String xmid = paramBean.getStr("xmid");
+		//根据项目id找到流程下的所有节点
+		String belongwhere = "AND XM_ID='"+xmid+"'";
+		List<Bean> finds = ServDao.finds("TS_XMGL_BMSH", belongwhere);
+		if(finds.size()!=0){
+			String wfsid = 	finds.get(0).getStr("WFS_ID");
+			String wfswhere = "AND WFS_ID='" + wfsid + "'  ORDER BY NODE_STEPS ASC";
+			List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", wfswhere);
+			for (Bean nodebean : finds2) {
+				// 根据流程id获取 流程绑定的人和审核机构
+				String nodeids = nodebean.getStr("NODE_ID");
+				String nodewhere = "AND NODE_ID='" + nodeids + "'";
+				List<Bean> finds3 = ServDao.finds("TS_WFS_BMSHLC", nodewhere);
+				for (Bean codebean : finds3) {
+					if (user_code.equals(codebean.getStr("SHR_USERCODE"))) {
+						if("".equals(out.getStr("level"))){
+							out.set("level", codebean.getStr("NODE_STEPS"));
+							out.set("node_id", codebean.getStr("NODE_NAME"));
+						}else{
+							if(out.getInt("level")>codebean.getInt("NODE_STEPS")){
+								out.set("level", codebean.getStr("NODE_STEPS"));
+								out.set("node_id", codebean.getStr("NODE_NAME"));
+							}
+						}
+						
+					}
+					
+				}
+			
+			}
+			
+		}
+		return out;
+	}
 }

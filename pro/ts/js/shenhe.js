@@ -147,7 +147,11 @@ function appendTh(user_code){
 	//可选报名  已选报名字体图片改变
 var tabnum=1;
 	function dsha(){
-		
+		var paramst = {};
+		paramst["xmid"]=xmid;
+		 var result2 = FireFly.doAct("TS_BMSH_STAY","getAllData",paramst);
+	  	 nowlevel=result2.level;
+	  	 nodeid=result2.node_id;
 		document.getElementById("dshimage").src="/ts/image/u1677.png";
 		document.getElementById("dshsp").style.color="LightSeaGreen";
 		document.getElementById("shtgsp").style.color="black";
@@ -158,6 +162,17 @@ var tabnum=1;
 		 new listPage().gotoPage(1);
 	}
 	function shtga(){
+		//更新审核层级  取最大
+		var paramst = {};
+		paramst["xmid"]=xmid;
+		 var result2 = FireFly.doAct("TS_BMSH_STAY","getPassState",paramst);
+	  	 nowlevel=result2.level;
+	  	 nodeid=result2.node_id;
+	  	 if(nowlevel==1){
+	  		 $("#impexternalbut").css("display","block");
+	  	 }else{
+	  		 $("#impexternalbut").css("display","none");
+	  	 }
 		document.getElementById("shtgsp").style.color="LightSeaGreen";
 		document.getElementById("shtgimage").src="/ts/image/u2216.png";
 		document.getElementById("dshimage").src="/ts/image/u2212.png";
@@ -167,6 +182,11 @@ var tabnum=1;
 		tabnum=2;
 		new listPage().gotoPage(1);	}
 	function shwtda(){
+		var paramst = {};
+		paramst["xmid"]=xmid;
+		 var result2 = FireFly.doAct("TS_BMSH_STAY","getPassState",paramst);
+	  	 nowlevel=result2.level;
+	  	 nodeid=result2.node_id;
 		document.getElementById("shwtgsp").style.color="LightSeaGreen";
 		document.getElementById("shwtgimage").src="/ts/image/u2813.png";
 		document.getElementById("shtgsp").style.color="black";
@@ -796,6 +816,10 @@ var eles=[
 	if(impexter==4){
 		//修改导入数据模板
 		$("#impmodeal").attr("href","/ts/imp_template/额外报名数据导入模板.xls");
+	}else if(impexter==2){
+		$("#impmodeal").attr("href","/ts/imp_template/报名审核通过导入模板.xls");
+	}else if(impexter==3){
+		$("#impmodeal").attr("href","/ts/imp_template/报名审核不通过导入模板.xls");
 	}else{
 		$("#impmodeal").attr("href","/ts/imp_template/报名审核导入模板.xls");
 	}
@@ -825,7 +849,7 @@ $("#excelimp").click(function(){
 		 var param = {};
 		 $(this).unbind("click");
 		 $("#loading").modal("show");
-		 var s = document.getElementById("shanchu").innerHTML;
+		 var s =$("#shanchu").attr("href").split("\\")[1];
 		 param["FILE_ID"]=s;
 		 param["level"]=nowlevel;
 		 param["xmid"]=xmid;
@@ -845,7 +869,7 @@ $("#excelimp").click(function(){
 		 $("#loading").modal("show");
 		 var servid="";
 		 var param = {};
-		 var s = document.getElementById("shanchu").innerHTML;
+		 var s =$("#shanchu").attr("href");
 		 param["FILE_ID"]=s;
 		 if(tabnum==1){
 			  servid = "TS_BMSH_STAY";
