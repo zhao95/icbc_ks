@@ -1270,6 +1270,29 @@ rh.ui.grid.prototype._bldPage = function() {
 				}
 			}));
 		}
+		var myts = this._lPage.SHOWNUM;
+		var  $select = $('<select><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="400">400</option></select>');
+		if(myts==50){
+			$select.find("option[value = '"+50+"']").attr("selected","selected");
+		}else if(myts==100){
+			$select.find("option[value = '"+100+"']").attr("selected","selected");
+		}else if(myts==200){
+			$select.find("option[value = '"+200+"']").attr("selected","selected");
+		}else if(myts==400){
+			$select.find("option[value = '"+400+"']").attr("selected","selected");
+		}else{
+			$select = "<select><option>"+myts+"</option><option >50</option><option >100</option><option >200</option><option checked>400</option></select>";
+		}
+		this._page.append("<input class='toPageNum ui-corner-4' type='text' value=''/>").append($select).change(function(){
+			var param={};
+			param["SAFE_FLAG"]="";
+			param["SERV_NO_COUNT"]="";
+			param["SERV_PAGE_COUNT"]=$(this).find("option:checked").val();
+			var data = new Date();
+			param["_PK_"]=_self._data.SERV_ID;
+			var resultData = FireFly.cardModify("SY_SERV",param, null, 2);
+			$("a[actcode='refresh']:last").mousedown();
+		});
 		//总条数显示
 //		jQuery("<span class='allNum'></span>").text("共" + allNum + "条").appendTo(this._page);
 		jQuery("<span class='allNum'></span>").text(Language.transArr("rh_ui_grid_L1",[allNum])).appendTo(this._page);

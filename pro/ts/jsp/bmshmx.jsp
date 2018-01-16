@@ -69,7 +69,7 @@
 	 	String bmid = "";
 		if(userBean != null) {
 	    bmid = request.getParameter("bmidmx"); 
-	    String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1'";
+	    String where = "AND DATA_ID="+"'"+bmid+"'"+" AND SH_TYPE='1' order by s_atime desc";
 	    List<Bean> list = ServDao.finds("TS_COMM_MIND",where);
 	    for(int i=0;i<list.size();i++){
 		Bean bean = list.get(i);

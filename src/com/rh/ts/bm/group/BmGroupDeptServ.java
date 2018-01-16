@@ -36,7 +36,16 @@ public class BmGroupDeptServ extends CommonServ {
         List<Bean> beans = new ArrayList<Bean>();
         for (Bean rowBean : rowBeanList) {
             String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");
-            Bean deptBean = OrgMgr.getDept(colCode);
+            List<Bean> deptlist = ServDao.finds("SY_ORG_DEPT", " AND DEPT_NAME = '"+colCode+"'");
+            Bean deptBean = null;
+            if(deptlist!=null&&deptlist.size()!=0){
+            	if(deptlist.size()>1){
+            		rowBean.set(ImpUtils.ERROR_NAME, "重名的部门");
+            		continue;
+            	}else{
+            		deptBean = deptlist.get(0);
+            	}
+            } 
             if (deptBean == null) {
                 rowBean.set(ImpUtils.ERROR_NAME, "找不到部门");
                 continue;
@@ -46,14 +55,14 @@ public class BmGroupDeptServ extends CommonServ {
                     name = deptBean.getStr("DEPT_NAME");
             if (codeList.contains(code)) {
                 //已包含 continue ：避免重复添加数据
-                rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
+                rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + name);
                 continue;
             }
 
             Bean bean = new Bean();
             bean.set("G_ID", gId);
+            bean.set("USER_DEPT_NAME", colCode);
             bean.set("USER_DEPT_CODE", code);
-            bean.set("XM_ID", xmId);
             bean.set("G_TYPE", 2);//选取类型 1人员
 
             if (ServDao.count(TsConstant.SERV_BM_GROUP_USER, bean) <= 0) {
@@ -62,7 +71,7 @@ public class BmGroupDeptServ extends CommonServ {
                 beans.add(bean);
                 codeList.add(code);
             } else {
-                rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
+                rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + name);
             }
         }
         ServDao.creates(TsConstant.SERV_BM_GROUP_USER, beans);

@@ -22,8 +22,10 @@ import java.util.List;
 
 
 
+
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
+
 
 
 
@@ -52,6 +54,7 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
+import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.util.Constant;
 import com.rh.ts.util.RoleUtil;
 import com.rh.ts.xmgl.XmglMgr;
@@ -1223,7 +1226,7 @@ public class BmlbServ extends CommonServ {
 		}else{*/
 			where = "AND BM_CODE=" + "'" + user_code+
 						"' AND YEAR(BM_ENDDATE) = '"+strdate+"'"
-						+ " AND BM_TYPE=3  AND (BM_SH_STATE = 1 OR BM_SH_STATE =0) AND BM_STATE='1' and BM_XL_CODE <>'"+xl_code+"'";
+						+ " AND BM_TYPE=2  AND (BM_SH_STATE = 1 OR BM_SH_STATE =0) AND BM_STATE='1' and BM_XL_CODE <>'"+xl_code+"'";
 		List<Bean> list = ServDao.finds("TS_BMLB_BM", where);
 		for (Bean bean : list) {
 			String bmid = bean.getStr("BM_ID");
@@ -1999,4 +2002,5 @@ public class BmlbServ extends CommonServ {
 			return new OutBean().set("flag", "false");
 					
 	}	
+	
 }
