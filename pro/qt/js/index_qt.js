@@ -14,25 +14,26 @@ $(function () {
 function userInfo() {
     var userName = System.getVar("@USER_NAME@");
     var odeptName = System.getVar("@ODEPT_NAME@");
-    
+
     var deptName = System.getVar("@DEPT_NAME@");
     var deptCode = System.getVar("@DEPT_CODE@");
-    
+
     var deptNameM = System.getVar("@DEPT_NAME_M@");
     var deptCodeM = System.getVar("@DEPT_CODE_M@");
-    
+
     var deptCSecond = System.getVar("@DEPT_CODES_SECOND@");
     var deptNSecond = System.getVar("@DEPT_NAMES_SECOND@");
-    
+
     $("#userInfo").append("<div>" + userName + "</div>").append(
         "<div>" + odeptName + "</div>");
 //	var perImg1 = FireFly.getContextPath() +""+ System.getUser("USER_IMG_SRC");
     var perImg2 = FireFly.getContextPath() + System.getUser("USER_IMG");
 //	debugger;
-    $("#userInfo2").append("<span class='hidden-xs' style='font-family: '黑体 Bold', '黑体 Regular', '黑体';font-weight: 700;font-style: normal;font-size: 16px;color: #FFFFFF;text-align: center;'>" + userName + "</span>");
+    var $userInfo2 = $("#userInfo2");
+    $userInfo2.append("<span class='hidden-xs' style='font-family: '黑体 Bold', '黑体 Regular', '黑体';font-weight: 700;font-style: normal;font-size: 16px;color: #FFFFFF;text-align: center;'>" + userName + "</span>");
 
-    $("#userInfo2").append("<span class='hidden-xs' style='margin-left:10px;'><i class='fa fa-chevron-circle-down'></i></span>");
-    if (perImg2 == "") {
+    $userInfo2.append("<span class='hidden-xs' style='margin-left:10px;'><i class='fa fa-chevron-circle-down'></i></span>");
+    if (perImg2 === "") {
         //	写死头像图片
         $("#userImg1").attr('src', "/sy/theme/default/images/common/user_64_64.png");
         $("#userImg2").attr('src', "/sy/theme/default/images/common/user0.png");
@@ -41,51 +42,50 @@ function userInfo() {
         $("#userImg2").attr('src', perImg2);
     }
     $("#userImg3").attr('src', perImg2);
-    
+
     //多机构用户切换身份
-    if(deptCSecond.length > 0) {
-    	
-    	$("#mulitLi").css({"display":"block"});
-    	
-	    $("#mulitDepts").append("<span class='hidden-xs' style='font-family: '黑体 Bold', '黑体 Regular', '黑体';font-weight: 700;font-style: normal;font-size: 16px;color: #FFFFFF;text-align: center;'>" + deptName + "</span>");
-	
-	    $("#mulitDepts").append("<span class='hidden-xs' style='margin-left:10px;'><i class='fa fa-chevron-circle-down'></i></span>");
-    	
-    	var deptCArg = deptCSecond.split(",");
-    	var deptNArg = deptNSecond.split(",");
-    	
-    	console.log("DEPT_CODE",deptCode);
-    	console.log("DEPT_NAME",deptName);
-    	console.log("DEPT_CODE_M",deptCodeM);
-    	console.log("DEPT_NAME_M",deptNameM);
-    	console.log("DEPT_CODES_SECOND",deptCArg);
-    	console.log("DEPT_NAMES_SECOND",deptNArg);
-    	
-    	if(deptCode != deptCodeM) {
-    		$("#mulitList").append("<li><a href='#' id='"+deptCodeM+"'><i class='fa fa-user-o fa-fw'></i>"+deptNameM+"</a></li>");
-    		
-    		$("#"+deptCodeM).unbind("click").bind("click",function() {
-    			
-    			FireFly.doAct("TS_COMM_USER_RELOGIN", "relogin", {"DEPT_CODE": $(this).attr("id")}, true,false,function(data) {
-		    		location.reload();
-		    	});	
-    		});
-    	}
-    	
-    	for(var dn in deptNArg) {
-    		
-    		if(deptCode != deptCArg[dn]) {
-    	     
-	    		$("#mulitList").append("<li><a href='#' id='"+deptCArg[dn]+"'><i class='fa fa-user-o fa-fw'></i>"+deptNArg[dn]+"</a></li>");
-	    		
-	    		$("#"+deptCArg[dn]).unbind("click").bind("click",function() {
-	    			
-	    			FireFly.doAct("TS_COMM_USER_RELOGIN", "relogin", {"DEPT_CODE": $(this).attr("id")}, true,false,function(data) {
-			    		location.reload();
-			    	});	
-	    		});
-    		}
-    	}
+    if (deptCSecond.length > 0) {
+
+        $("#mulitLi").css({"display": "block"});
+        var $mulitDepts = $("#mulitDepts");
+        $mulitDepts.append("<span class='hidden-xs' style='font-family: '黑体 Bold', '黑体 Regular', '黑体';font-weight: 700;font-style: normal;font-size: 16px;color: #FFFFFF;text-align: center;'>" + deptName + "</span>");
+        $mulitDepts.append("<span class='hidden-xs' style='margin-left:10px;'><i class='fa fa-chevron-circle-down'></i></span>");
+
+        var deptCArg = deptCSecond.split(",");
+        var deptNArg = deptNSecond.split(",");
+
+        console.log("DEPT_CODE", deptCode);
+        console.log("DEPT_NAME", deptName);
+        console.log("DEPT_CODE_M", deptCodeM);
+        console.log("DEPT_NAME_M", deptNameM);
+        console.log("DEPT_CODES_SECOND", deptCArg);
+        console.log("DEPT_NAMES_SECOND", deptNArg);
+
+        if (deptCode !== deptCodeM) {
+            $("#mulitList").append("<li><a href='#' id='" + deptCodeM + "'><i class='fa fa-user-o fa-fw'></i>" + deptNameM + "</a></li>");
+
+            $("#" + deptCodeM).unbind("click").bind("click", function () {
+
+                FireFly.doAct("TS_COMM_USER_RELOGIN", "relogin", {"DEPT_CODE": $(this).attr("id")}, true, false, function (data) {
+                    location.reload();
+                });
+            });
+        }
+
+        for (var dn in deptNArg) {
+
+            if (deptCode !== deptCArg[dn]) {
+
+                $("#mulitList").append("<li><a href='#' id='" + deptCArg[dn] + "'><i class='fa fa-user-o fa-fw'></i>" + deptNArg[dn] + "</a></li>");
+
+                $("#" + deptCArg[dn]).unbind("click").bind("click", function () {
+
+                    FireFly.doAct("TS_COMM_USER_RELOGIN", "relogin", {"DEPT_CODE": $(this).attr("id")}, true, false, function (data) {
+                        location.reload();
+                    });
+                });
+            }
+        }
     }
 }
 
@@ -113,23 +113,23 @@ function showMenu() {
         for (var i = 0; i < data.menuList.length; i++) {
             var $menuItem;
             var MENU_URL = "'" + data.menuList[i].MENU_URL + "'";
-            if (flagstr == "false" && data.menuList[i].MENU_NAME == "报名审核") {
+            if (flagstr === "false" && data.menuList[i].MENU_NAME === "报名审核") {
                 //不显示
                 continue;
             }
-            if (data.menuList[i].MENU_NAME == "报名审核") {
+            if (data.menuList[i].MENU_NAME === "报名审核") {
                 var menu_url = MENU_URL;
                 //报名审核 数据  是否有 待审核的数据
                 /*  var xmids = "";
                  for(var j=0;j<list.length;j++){
                  xmids+=list[j].XM_ID+",";
                  }*/
-                 var paramstay = {};
+                var paramstay = {};
                 var MENU_IMG = data.menuList[i].MENU_IMG;
                 var MENU_NAME = data.menuList[i].MENU_NAME;
                 FireFly.doAct("TS_BMSH_STAY", "getStayList", "", true, true, function (result) {
 
-                    if (result.flag != "true") {
+                    if (result.flag !== "true") {
                         //有待审核的数据
                         $(".sidebar-menu")
                             .append(
@@ -147,9 +147,9 @@ function showMenu() {
                     }
                 });
 
-            } else if (data.menuList[i].MENU_NAME == "查看辖内报名" && lookflag == "false") {
+            } else if (data.menuList[i].MENU_NAME === "查看辖内报名" && lookflag === "false") {
                 continue;
-            } else if (data.menuList[i].MENU_NAME == "首页") {
+            } else if (data.menuList[i].MENU_NAME === "首页") {
 
                 $(".sidebar-menu")
                     .append(
@@ -171,6 +171,14 @@ function showMenu() {
                     $menuItem.find('a').append('<i style="margin-left: 5px;" class="fa fa-circle text-yellow"></i>');
                 }
             }
+
+            if (data.menuList[i].MENU_NAME === "我的请假") {
+                var listBean = FireFly.doAct('TS_QJLB_QJ', 'getUserCanLeaveXmList', {});
+                if (listBean._DATA_.length !== 0) {
+                    $menuItem.find('a').append('<i style="margin-left: 5px;" class="fa fa-circle text-yellow"></i>');
+                }
+            }
+
         }
     }
 }

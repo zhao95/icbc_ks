@@ -16,6 +16,7 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
+import com.rh.core.util.Constant;
 import com.rh.core.util.DateUtils;
 import com.rh.core.util.ExpUtils;
 import com.rh.core.util.ImpUtils;
@@ -79,7 +80,7 @@ public class QjPassServ extends CommonServ {
                 StringBuilder ksName = new StringBuilder();
                 for (String shId : shIdArray) {
                     Bean bmPassBean = ServDao.find(TsConstant.SERV_BM, shId);
-                    if (bmPassBean==null) {
+                    if (bmPassBean == null) {
                         bmPassBean = ServDao.find(TsConstant.SERV_BMSH_PASS, shId);
                     }
                     String bmTitle = bmPassBean.getStr("BM_TITLE");
@@ -247,10 +248,6 @@ public class QjPassServ extends CommonServ {
     }
 
     /**
-
-     */
-
-    /**
      * 根据qjId shStatus shMind 完成审批
      *
      * @param qjId     qjId
@@ -289,10 +286,44 @@ public class QjPassServ extends CommonServ {
             if ("1".equals(shStatus)) {
                 qjBean.set("QJ_STATUS", "2");//同意 申请通过
             } else if ("2".equals(shStatus)) {
-                qjBean.set("QJ_STATUS", "3");//不同意 不申请通过
+                qjBean.set("QJ_STATUS", "3");//不同意 申请不通过
             }
+            ServDao.update(TSQJ_SERVID, qjBean);
+
+            String qjKsname = qjBean.getStr("QJ_KSNAME");
+            String[] shIds = qjKsname.split(",");
 
             //*变更考试安排信息
+            for (String shId : shIds) {
+                Bean bean = ServDao.find(TsConstant.SERV_BMSH_PASS, shId);
+                if (bean == null) {
+                    continue;
+                }
+
+                if ("2".equals(bean.getStr("BM_STATUS"))) {
+                    bean.set("BM_STATUS", "3");
+                } else {
+                    bean.set("BM_STATUS", "1");
+                }
+                ServDao.update(TsConstant.SERV_BMSH_PASS, bean);
+            }
+
+            String xmId = qjBean.getStr("XM_ID");
+            Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+            //如果在提交场次安排前，请假成功删除考位安排
+            String xmKcapPublishTime = xmBean.getStr("XM_KCAP_PUBLISH_TIME");//项目场次发布时间
+            if (StringUtils.isBlank(xmKcapPublishTime)) {
+                //项目场次未发布
+                for (String s : shIds) {
+                    List<Object> values = new ArrayList<Object>();
+                    values.add(s);
+                    Bean whereBean1 = new Bean();
+                    //未提交场次安排
+                    whereBean1.set(Constant.PARAM_WHERE, " and SH_ID =? and (IS_SUBMIT!='1' or IS_SUBMIT is null)");
+                    whereBean1.set(Constant.PARAM_PRE_VALUES, values);
+                    ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean1);
+                }
+            }
 
             Transaction.commit();
         } catch (Exception e) {

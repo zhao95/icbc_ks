@@ -420,7 +420,7 @@ public class QjlbServ extends CommonServ {
 
             String xmId = qjbean.getStr("XM_ID");
             Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
-            String xmKsStartDate = xmBean.getStr("XM_KSSTARTDATA"); //项目详情考试开始时间
+//            String xmKsStartDate = xmBean.getStr("XM_KSSTARTDATA"); //项目详情考试开始时间
 //            Date date = DateUtils.parseDate(xmKsStartDate);
             //如果在提交场次安排前，请假成功删除考位安排
             String xmKcapPublishTime = xmBean.getStr("XM_KCAP_PUBLISH_TIME");//项目场次发布时间
@@ -460,12 +460,12 @@ public class QjlbServ extends CommonServ {
             getQxBean.put("zhoushu", ConfMgr.getConf("TS_KSQJ_WEEK_MAXNUM", "0"));
             try {
                 Bean result = ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
-                if (!"true".equals(result.getStr("yes"))) {
-                    outBean.setError((String) result.get(Constant.RTN_MSG));
-                }
+//                if (!"true".equals(result.getStr("yes"))) {
+//                    outBean.setError((String) result.get(Constant.RTN_MSG));
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
-                outBean.setError("发起人请假次数已超出规定，审批失败");
+//                outBean.setError("发起人请假次数已超出规定，审批失败");
             }
         }
     }
@@ -677,6 +677,9 @@ public class QjlbServ extends CommonServ {
      */
     public OutBean getUserCanLeaveXmList(ParamBean paramBean) throws ParseException {
         String userCode = paramBean.getStr("USER_CODE");
+        if (StringUtils.isBlank(userCode)) {
+            userCode = Context.getUserBean().getCode();
+        }
 //        String xmId = paramBean.getStr("XM_ID");
         OutBean outBean = new OutBean();
         List<Bean> xmBeanList = Transaction.getExecutor().query("select * from TS_XMGL a" +

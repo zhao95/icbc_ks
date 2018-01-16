@@ -616,6 +616,9 @@ public class JklbServ extends CommonServ {
      */
     public OutBean getUserCanLeaveXmList(ParamBean paramBean) throws ParseException {
         String userCode = paramBean.getStr("USER_CODE");
+        if (StringUtils.isBlank(userCode)) {
+            userCode = Context.getUserBean().getCode();
+        }
 //        String xmId = paramBean.getStr("XM_ID");
         OutBean outBean = new OutBean();
         List<Bean> xmBeanList = Transaction.getExecutor().query("select * from TS_XMGL a" +

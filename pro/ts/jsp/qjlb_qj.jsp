@@ -709,18 +709,18 @@
             alert('请假事由不能为空');
             return false;
         } else {
-            var paramstr = {};
-            paramstr["xm_id"] = xmId;
-            paramstr["cishu"] = cishu;
-            paramstr["shids"] = shids;
-            paramstr["zhoushu"] = zhoushu;
-            var result = FireFly.doAct("TS_BM_QJ_NUM", "getFlag", paramstr);
-
-            if (result.yes === "true") {
-            } else {
-                alert(result._MSG_);
-                return false;
-            }
+//            var paramstr = {};
+//            paramstr["xm_id"] = xmId;
+//            paramstr["cishu"] = cishu;
+//            paramstr["shids"] = shids;
+//            paramstr["zhoushu"] = zhoushu;
+//            var result = FireFly.doAct("TS_BM_QJ_NUM", "getFlag", paramstr);
+//
+//            if (result.yes === "true") {
+//            } else {
+//                alert(result._MSG_);
+//                return false;
+//            }
 
             //var currentUserWorkNum = System.getUser("USER_WORK_NUM");
 //        var data = {USER_WORK_NUM: currentUserWorkNum};

@@ -64,10 +64,11 @@ public class GGServ extends CommonServ {
     }
 
     /**
-     * @auth wanglida
      * 前台按钮根据用户的信息判断是否可见方法
      * 返回值为 1 可见  2 不可见
+     *
      * @return outBean
+     * @author wanglida
      */
     public OutBean btnRoleFun() {
         OutBean outBean = new OutBean();
@@ -91,9 +92,9 @@ public class GGServ extends CommonServ {
                 }
             }
         }
-        /**
-         * 将进入后台的权限配置成默认的方式，只要有角色功能中的一项，就可以进入后台。
-         * 如果返回的权限集合中不为空，则说明有进入后台的权限
+        /*
+          将进入后台的权限配置成默认的方式，只要有角色功能中的一项，就可以进入后台。
+          如果返回的权限集合中不为空，则说明有进入后台的权限
          */
         if (userCode.equals("admin") || userLoginName.equals("admin")) {
             outBean.set("hasRole", "1");
@@ -107,7 +108,7 @@ public class GGServ extends CommonServ {
             }
         }
         //获取权限是否配置的方式判断用户是否可以进后台
-		/*Bean userPvlgToHT = RoleUtil.getPvlgRole(userCode,"TS_QT_HT");
+        /*Bean userPvlgToHT = RoleUtil.getPvlgRole(userCode,"TS_QT_HT");
         Bean userPvlgToHTBean = (Bean) userPvlgToHT.get("TS_QT_HT_PVLG");
 		String userPvlgToHT_Flag = userPvlgToHTBean.getStr("show");
 		if(userPvlgToHT_Flag!=""){
