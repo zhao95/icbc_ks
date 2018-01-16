@@ -19,6 +19,11 @@ public class QjUtils {
 
     protected static Log log = LogFactory.getLog(QjUtils.class);
 
+    /**
+     * 保存流程的审批节点
+     *
+     * @param dataId
+     */
     public static void saveFlowHistoryNode(String dataId) {
 //        Bean qjBean = ServDao.find(TsConstant.SERV_QJ, dataId);
 
@@ -53,5 +58,17 @@ public class QjUtils {
             e.printStackTrace();
             log.error("流程节点保存失败，" + "todo DATA_ID:" + dataId /*",USER_CODE:" + qjBean.getStr("USER_CODE")*/);
         }
+    }
+
+    public static String getQjStatusName(String qjStatus) {
+        String result = "";
+        if ("1".equals(qjStatus)) {
+            result = "审批中";
+        } else if ("2".equals(qjStatus)) {
+            result = "已通过";
+        } else if ("3".equals(qjStatus)) {
+            result = "未通过";
+        }
+        return result;
     }
 }

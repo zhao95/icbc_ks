@@ -48,6 +48,8 @@ public class ImpUtils {
 
     public final static String ALL_LIST = "alllist";
 
+    public final static String SUCCESS_LIST = "successlist";
+    
     //服务id标识符
     public final static String SERV_ID = "SERV_ID";
 
@@ -250,7 +252,7 @@ public class ImpUtils {
                         paramBean.set(DATA_LIST, result);
                         Bean resultres = ServMgr.act(servId, method, paramBean);
                         List<Bean> rowBeanList = resultres.getList(ALL_LIST);
-                        List<Object> successlist = resultres.getList("successlist");
+                        List<Object> successlist = resultres.getList(SUCCESS_LIST);
                         successnum += successlist.size();
                         failernum += rowBeanList.size() - successlist.size();
                         saveErrorAndReturnErrorFile(i, wSheet, sheet1, rowBeanList);
@@ -261,7 +263,7 @@ public class ImpUtils {
                         paramBean.set(DATA_LIST, result);
                         Bean resultres = ServMgr.act(servId, method, paramBean);
                         List<Bean> rowBeanList = resultres.getList(ALL_LIST);
-                        List<Object> successlist = resultres.getList("successlist");
+                        List<Object> successlist = resultres.getList(SUCCESS_LIST);
                         successnum += successlist.size();
                         failernum += rowBeanList.size() - successlist.size();
                         saveErrorAndReturnErrorFile(i, wSheet, sheet1, rowBeanList);
@@ -272,7 +274,7 @@ public class ImpUtils {
                         paramBean.set(DATA_LIST, result);
                         Bean resultres = ServMgr.act(servId, method, paramBean);
                         List<Bean> rowBeanList = resultres.getList(ALL_LIST);
-                        List<Object> successlist = resultres.getList("successlist");
+                        List<Object> successlist = resultres.getList(SUCCESS_LIST);
                         successnum += successlist.size();
                         failernum += rowBeanList.size() - successlist.size();
                         saveErrorAndReturnErrorFile(i, wSheet, sheet1, rowBeanList);

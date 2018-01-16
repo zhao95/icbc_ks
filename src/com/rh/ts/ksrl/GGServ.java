@@ -75,7 +75,7 @@ public class GGServ extends CommonServ {
         String userCode = userBean.getCode();
         String userLoginName = userBean.getLoginName();
         Bean pvlgRole = RoleUtil.getPvlgRole(userCode);
-        Set<String> resultSet = new HashSet<>();
+        Set<String> resultSet = new HashSet<String>();
         for (Object moduleValue : pvlgRole.values()) {
             Bean moduleValueBean = (Bean) moduleValue;
             for (Object optValue : moduleValueBean.values()) {

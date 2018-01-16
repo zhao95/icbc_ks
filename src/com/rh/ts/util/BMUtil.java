@@ -1,6 +1,7 @@
 package com.rh.ts.util;
 
 import com.rh.core.serv.dict.DictMgr;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * 基本工具方法
@@ -20,5 +21,23 @@ public class BMUtil {
             s += "-" + bmMk;
         }
         return s;
+    }
+
+
+    /**
+     * @param bmType 类别（初中高）
+     * @param bmXl   序列
+     * @param bmMk   模块
+     * @return 考试名称
+     */
+    public static String getExaminationName(String bmType, String bmXl, String bmMk, String bmTitle) {
+        String examinationName = getExaminationName(bmType, bmXl, bmMk);
+        String title = "";
+        if (StringUtils.isBlank(bmMk)) {
+            title = bmTitle;
+        } else {
+            title = examinationName;
+        }
+        return title;
     }
 }
