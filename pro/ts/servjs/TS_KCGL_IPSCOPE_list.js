@@ -54,7 +54,7 @@ function openMyCard(dataId,readOnly,showTab){
 }
 
 //如果父页面是只读的，则隐藏编辑行按钮
-if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly){
+if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly || _viewer.getParHandler().servId == "TS_KCGL_SH"){
 	$("a#TS_KCGL_IPSCOPE_edit").hide();
 }
 

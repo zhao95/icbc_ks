@@ -1,5 +1,9 @@
 var _viewer = this;
 
+if(_viewer.opts.readOnly){
+	_viewer.readCard();
+}
+
 var action = _viewer.getItem("GLY_ACTION").getValue();
 if(action == ""){
 	_viewer.getItem("GLY_ACTION").setValue("add");

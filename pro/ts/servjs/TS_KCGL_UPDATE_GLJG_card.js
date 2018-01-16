@@ -49,3 +49,7 @@ _viewer.afterSave = function(resultData) {
 		jQuery("#" + _viewer.dialogId).dialog("close");
 	}, 100);
 };
+
+if(_viewer.opts.readOnly){
+	_viewer.readCard();
+}

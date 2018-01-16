@@ -5,6 +5,10 @@ if(action == ""){
 	_viewer.getItem("ZW_ACTION").setValue("add");
 }
 
+if(_viewer.opts.readOnly){
+	_viewer.readCard();
+}
+
 if(action == "" || action == "add"){
 	$("#TS_KCGL_UPDATE_ZWDYB-ZW_ACTION input[value='update']").attr("disabled", true);
 	$("#TS_KCGL_UPDATE_ZWDYB-ZW_ACTION input[value='delete']").attr("disabled", true);

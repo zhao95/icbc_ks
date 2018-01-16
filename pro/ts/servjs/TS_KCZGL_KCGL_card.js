@@ -51,3 +51,67 @@ function check(colName){
 		}
 	});
 }
+
+_viewer.getItem("KC_MAX").change(function(){
+	var maxValue = _viewer.getItem("KC_MAX").getValue();
+	var goodValue = _viewer.getItem("KC_GOOD").getValue();
+	if(goodValue != ""){
+		if(maxValue < goodValue){
+			alert("最大设备数不能小于最优设备数！");
+			_viewer.getItem("KC_MAX").clear();
+		}
+	}
+});
+_viewer.getItem("KC_GOOD").change(function(){
+	var maxValue = _viewer.getItem("KC_MAX").getValue();
+	var goodValue = _viewer.getItem("KC_GOOD").getValue();
+	if(maxValue != ""){
+		if(maxValue < goodValue){
+			alert("最大设备数不能小于最优设备数！");
+			_viewer.getItem("KC_GOOD").clear();
+		}
+	}
+});
+
+_viewer.beforeSave = function() {
+	if($("#TS_KCZGL_KCGL-KC_GLY_div .rhGrid-tbody").find("td").length == 1){
+		$("#TS_KCZGL_KCGL-KC_GLY_div").find(".ui-dataservice-container,.fl,.wp").addClass("blankError").addClass("errorbox");
+		return false;
+	}
+	
+	if($("#TS_KCZGL_KCGL-KC_JKIP_div .rhGrid-tbody").find("td").length == 1){
+		$("#TS_KCZGL_KCGL-KC_JKIP_div").find(".ui-dataservice-container,.fl,.wp").addClass("blankError").addClass("errorbox");
+		return false;
+	}
+};
+
+$("#TS_KCGL_GLY-viListViewBatch input[icode='GLY_NAME']").css("width","80px");
+$("td[icode='GLY_NUMBER'] input").attr("disabled","disabled");
+$("#TS_KCGL_GLY-viListViewBatch-addBatch").click(function(){
+	setTimeout(function(){
+		$("#TS_KCGL_GLY-viListViewBatch input[icode='GLY_NAME']").css("width","80px");
+		$("td[icode='GLY_NUMBER'] input").attr("disabled","disabled");
+	},50);
+});
+
+//监控机地址校验
+$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").change(function(){
+	var ipVal = $(this).val();
+	var reg = new RegExp("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$");
+	if(!reg.test(ipVal)){
+		alert("IP地址格式不正确");
+		$(this).val(""); 
+    }
+});
+$("#TS_KCGL_JKIP-viListViewBatch-addBatch").click(function(){
+	setTimeout(function () {
+		$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").change(function(){
+			var ipVal = $(this).val();
+			var reg = new RegExp("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$");
+			if(!reg.test(ipVal)){
+				alert("IP地址格式不正确");
+				$(this).val(""); 
+		    }
+		});
+    }, 100)
+});

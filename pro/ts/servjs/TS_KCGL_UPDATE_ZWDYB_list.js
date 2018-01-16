@@ -44,6 +44,7 @@ $("#TS_KCGL_UPDATE_ZWDYB .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
 		$(item).find("td[icode='BUTTONS']").append(
+				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optLookBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+
 				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optEditBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
 //				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optDeleteBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
 				);	
@@ -64,6 +65,12 @@ function bindCard(){
 	jQuery("td [operCode='optEditBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 	    openMyCard(pkCode);
+	});
+	
+	//当行查看事件
+	jQuery("td [operCode='optLookBtn']").unbind("click").bind("click", function(){;
+		var pkCode = jQuery(this).attr("rowpk");
+		openMyCard(pkCode,true);
 	});
 };
 
@@ -88,3 +95,18 @@ function openMyCard(dataId,readOnly,showTab){
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
 }
+
+if (_viewer.getParHandler().getParHandler().getParHandler() != undefined
+		&& _viewer.getParHandler().getParHandler().getParHandler() != null) {
+	var parparServId = _viewer.getParHandler().getParHandler().getParHandler().servId;
+	if (parparServId == "TS_KCGL_SH") {
+		$("#TS_KCGL_UPDATE_ZWDYB-add").hide();
+		$("#TS_KCGL_UPDATE_ZWDYB-impData").hide();
+		$("#TS_KCGL_UPDATE_ZWDYB-delete").hide();
+		$("#TS_KCGL_UPDATE_ZWDYB").find("a[opercode='optEditBtn']").hide();
+	}
+}
+
+
+
+

@@ -1,5 +1,10 @@
 var _viewer = this;
 
+
+if(_viewer.opts.readOnly){
+	_viewer.readCard();
+}
+
 var mxCol = _viewer.getItem("MX_COL").getValue();
 if(mxCol == "KC_ODEPTCODE"){
 	_viewer.getItem("MX_DATA").hide();
