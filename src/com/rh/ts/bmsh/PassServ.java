@@ -23,6 +23,7 @@ import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
+import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.ImpUtils;
@@ -1348,18 +1349,21 @@ public class PassServ extends CommonServ {
 	            }
 	            String colCode6 = rowBean.getStr(ImpUtils.COL_NAME + "6");
 	            if("".equals(colCode6)){
-	            	  rowBean.set(ImpUtils.ERROR_NAME, "报名理由为空");
+	            	  rowBean.set(ImpUtils.ERROR_NAME, "导入理由为空");
 		                continue;
 	            }
-	            
-	            Bean bean = new Bean();
-	            bean.set("XM_ID", xmid);
-	            bean.set("BM_CODE",userBean.getCode());
-	            bean.set("BM_LB", colCode2);
-	            bean.set("BM_XL", colCode3);
-	            bean.set("BM_MK", colCode4);
-	            bean.set("BM_STATE", "1");
-	            bean.set("BM_TYPE_NAME", colCode5);
+	            String[] arr = new String[2];
+    			arr[0]="0";
+    			arr[1]="1";
+	            SqlBean bean = new SqlBean();
+	            bean.and("XM_ID", xmid);
+	            bean.and("BM_CODE",userBean.getCode());
+	            bean.and("BM_LB", colCode2);
+	            bean.and("BM_XL", colCode3);
+	            bean.and("BM_MK", colCode4);
+	            bean.and("BM_STATE", "1");
+	            bean.and("BM_SH_STATE", arr);
+	            bean.and("BM_TYPE_NAME", colCode5);
 	            Bean kslbean = new Bean();
 	            kslbean.set("XM_ID", xmid);
 	            kslbean.set("KSLB_NAME",colCode2);
@@ -1371,6 +1375,32 @@ public class PassServ extends CommonServ {
 	            	//考试类别中有此考试
 	            	if (ServDao.count("TS_BMLB_BM", bean) <= 0) {
 	            		//没有报名此考试  增加到报名审核通过表中
+	            		
+	            		int allnum = 0;
+	            		//高级考试只能报一个 
+	            		SqlBean newbean1 = new SqlBean();
+            			newbean1.and("XM_ID", xmid);
+            			newbean1.and("BM_CODE",userBean.getCode());
+            			newbean1.and("BM_STATE", "1");
+            			if("高级".equals(colCode5)){
+            				newbean1.set("BM_TYPE", "3");
+            				allnum = 1;
+            			}else if("中级".equals(colCode5)){
+            				newbean1.set("BM_TYPE", "2");
+            				List<Bean> CONFLIST = ServDao.finds("SY_COMM_CONFIG", " AND CONF_KEY='TS_BM_MIDDLE_MAXNUM'");
+    	            		if(CONFLIST!=null&&CONFLIST.size()!=0){
+    	            			allnum = CONFLIST.get(0).getInt("CONF_VALUE");
+    	            		}
+            			}else{
+            				Bean xmnumbean = ServDao.find("TS_XMGL", xmid);
+            				allnum=xmnumbean.getInt("XM_LBNUM");
+            				if(allnum==0){
+            					allnum = 10000;
+            				}
+            			}
+            			newbean1.andIn("BM_SH_STATE", arr);
+	            		if (ServDao.count("TS_BMLB_BM", newbean1) <allnum) {
+	            		//超过最大报名数 
 	            		Bean shBean = new Bean();
 	            		String bmid =  Lang.getUUID();
 	            		Bean bmbean = new Bean();
@@ -1438,12 +1468,24 @@ public class PassServ extends CommonServ {
 						mindbeans.add(mindbean);
 						codeList.add(bmid);
 						beans.add(shBean);
-						
+	            		
+	            		}else{
+	            			if("高级".equals(colCode5)){
+	            				rowBean.set(ImpUtils.ERROR_NAME, "高级报名数限制");
+	            			}else if("中级".equals(colCode5)){
+	            				rowBean.set(ImpUtils.ERROR_NAME, "中级报名数限制");
+	            			}else{
+	            				rowBean.set(ImpUtils.ERROR_NAME, "最大报名数限制");
+	            			}
+		            		continue;
+	            		}
 	            	}else{
 	            		rowBean.set(ImpUtils.ERROR_NAME, "已报名此考试，重复数据，请用另外的导入功能导入");
+	            		continue;
 	            	}
 	            } else {
 	                rowBean.set(ImpUtils.ERROR_NAME, "此项目没有此考试");
+	                continue;
 	            }
 	            
 	        }

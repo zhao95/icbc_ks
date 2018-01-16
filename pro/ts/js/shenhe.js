@@ -849,7 +849,7 @@ $("#excelimp").click(function(){
 		 var param = {};
 		 $(this).unbind("click");
 		 $("#loading").modal("show");
-		 var s =$("#shanchu").attr("href").split("\\")[1];
+		 var s =$("#shanchu").attr("href");
 		 param["FILE_ID"]=s;
 		 param["level"]=nowlevel;
 		 param["xmid"]=xmid;
