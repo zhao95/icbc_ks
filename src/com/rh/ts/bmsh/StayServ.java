@@ -2541,7 +2541,7 @@ public class StayServ extends CommonServ {
      String failnum = out.getStr("failernum");
      String successnum = out.getStr("oknum");
      //返回导入结果
-     return new OutBean().set("FILE_ID",out.getStr("fileid")).set("_MSG_", "导入成功："+successnum+"条， 导入失败："+failnum+"条");
+     return new OutBean().set("FILE_ID",out.getStr("fileid")).set("_MSG_", "导入成功："+successnum+"条,导入失败："+failnum+"条");
   }
 
 	
