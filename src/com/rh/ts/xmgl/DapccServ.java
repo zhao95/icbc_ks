@@ -1045,34 +1045,21 @@ public class DapccServ extends CommonServ {
     }
 
     /**
-     * 是否有安排这个机构的权限
+     * 当前机构是否有安排这个机构的权限
      *
      * @param paramBean paramBean DEPT_CODE
      * @return OutBean flag
      */
     public OutBean deptContainFlag(ParamBean paramBean) {
-        String result = "false";
-
         String deptCode = paramBean.getStr("DEPT_CODE");
-
         String servId = "TS_XMGL_KCAP_YAPZW";
         Bean tsXmglKcapYapzwPvlg = RoleUtil.getPvlgRole(Context.getUserBean().getCode(), servId);
         Bean auto = tsXmglKcapYapzwPvlg.getBean(servId + "_PVLG").getBean("auto");
         String roleDcode = auto.getStr("ROLE_DCODE");
         String[] deptCodes = roleDcode.split(",");
-        SqlBean sqlBean = new SqlBean();
-        sqlBean.and("DEPT_CODE", deptCode);
-        List<Bean> deptList = ServDao.finds(ServMgr.SY_ORG_DEPT, sqlBean);
-        if (CollectionUtils.isNotEmpty(deptList)) {
-            Bean bean = deptList.get(0);
-            String codePath = bean.getStr("CODE_PATH");
-            for (String code : deptCodes) {
-                if (StringUtils.isNotBlank(code) && codePath.contains(code)) {
-                    result = "true";
-                    break;
-                }
-            }
-        }
+        String result = DapccUtils.getDeptContains(deptCode, deptCodes);
         return new OutBean().set("flag", result);
     }
+
+
 }

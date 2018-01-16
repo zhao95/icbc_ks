@@ -442,23 +442,40 @@ public class JklbServ extends CommonServ {
         String jkTitle = jkbean.getStr("JK_TITLE");
         String xmId = jkbean.getStr("XM_ID");
         String examerUserCode = jkbean.getStr("USER_CODE");
-        String shUserCode = userBean.getCode();
+        String shrUserCode = userBean.getCode();
 
         ParamBean flowParamBean = new ParamBean();
         //form表单传给后台一个bean，只包括借考一级分行
         flowParamBean.set("form", jkbean);
         flowParamBean.set("examerUserCode", examerUserCode);
-        flowParamBean.set("shrUserCode", shUserCode);//起草节点examerWorkNum传shrWorkNum
+        flowParamBean.set("shrUserCode", shrUserCode);//起草节点examerWorkNum传shrWorkNum
         flowParamBean.set("level", level);
         flowParamBean.set("deptCode", jkbean.getStr("S_DEPT"));
         flowParamBean.set("odeptCode", jkbean.getStr("S_ODEPT"));
         flowParamBean.set("xmId", xmId);
         flowParamBean.set("flowName", 2); //1:报名审核流程 2:异地借考流程 3:请假审核流程
         OutBean shBean = ServMgr.act("TS_WFS_APPLY", "backFlow", flowParamBean);
-        List<Bean> shList = shBean.getList("result");
+        String result = shBean.getStr("result");
+
+        String[] split;
+        if (StringUtils.isNotBlank(result)) {
+            split = result.split(",");
+        } else {
+            split = new String[]{};
+        }
+        List<Bean> shList = new ArrayList<Bean>();
+        for (String shUserCode : split) {
+            Bean bean = new Bean();
+            if (StringUtils.isBlank(shUserCode)) {
+                continue;
+            }
+            bean.set("SHR_USERCODE", shUserCode);
+            bean.set("SHR_NAME", UserMgr.getUser(shUserCode).getName());
+            shList.add(bean);
+        }
         outBean.putAll(shBean);
         if (CollectionUtil.isEmpty(shList)) {
-            if (shList != null && shList.size() == 0) {
+            if (shList.size() == 0) {
                 outBean.setError("没有审核人，请联系管理员！");
             }
         } else {
@@ -702,7 +719,7 @@ public class JklbServ extends CommonServ {
         sqlBean.andIn("BM_ID", bmIdList);
         List<Bean> bmPassBeanList = ServDao.finds(TsConstant.SERV_BMSH_PASS, sqlBean);
 
-        for (Bean bmPass: bmPassBeanList) {
+        for (Bean bmPass : bmPassBeanList) {
             //根据bmId查找出审核中的借考流程
             List<Bean> queryJkList = ServDao.finds(TSJK_SERVID, "and JK_KSNAME like '%" + bmPass.getStr("SH_ID") + "%' and JK_STATUS in('1')");
             for (Bean jkBean : queryJkList) {

@@ -362,7 +362,6 @@ var HeaderBtn = {
             var data = {searchKcId: kcIdStr, XM_ID: xmId};
             window.open(FireFly.getContextPath() + '/TS_XMGL_KCAP_DAPCC.expAll.do?data=' +
                 encodeURIComponent(JSON.stringify(data)));
-            // FireFly.doAct("TS_XMGL_KCAP_DAPCC", "expAll", data);
         });
 
         $("#changeArrangeOrg").unbind('click').bind('click', function () {
@@ -1059,6 +1058,15 @@ var SubmissionArrangementModal = {
                 '</tr>'
             ].join(''));
         }
+    },
+    expData:function () {
+        var userYAPAutoCode = Utils.getUserYAPAutoCode();
+        var data =  {
+            XM_ID: this.xmId,
+            pvlgDeptCodeStr: userYAPAutoCode
+        };
+        window.open(FireFly.getContextPath() + '/TS_XMGL_KCAP_TJJL.expKcOrgStatus.do?data=' +
+            encodeURIComponent(JSON.stringify(data)));
     },
     getData: function () {
         var userYAPAutoCode = Utils.getUserYAPAutoCode();

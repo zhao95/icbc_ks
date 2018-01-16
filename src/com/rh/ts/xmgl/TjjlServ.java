@@ -4,11 +4,9 @@ import com.rh.core.base.Bean;
 import com.rh.core.base.db.Transaction;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.mgr.OrgMgr;
-import com.rh.core.serv.CommonServ;
-import com.rh.core.serv.OutBean;
-import com.rh.core.serv.ParamBean;
-import com.rh.core.serv.ServDao;
+import com.rh.core.serv.*;
 import com.rh.core.serv.bean.SqlBean;
+import com.rh.core.util.ExpUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -33,17 +31,22 @@ public class TjjlServ extends CommonServ {
 
         String xmId = paramBean.getStr("XM_ID");
         String pvlgDeptCodeStr = paramBean.getStr("pvlgDeptCodeStr");
-        String[] strings = pvlgDeptCodeStr.split(",");
+        //根据用户权限code（deptCodeStr）过滤考场
+        if (StringUtils.isBlank(pvlgDeptCodeStr)) {
+            pvlgDeptCodeStr = "no-pvlgDeptCodeStr";
+        }
+        String[] pvlgDeptCodeSplit = pvlgDeptCodeStr.split(",");
+
+//        ParamBean kcCcParamBean = new ParamBean();
+//        kcCcParamBean.set("xmId", xmId);
+//        kcCcParamBean.set("deptCodeStr", pvlgDeptCodeStr);
+//        OutBean kcCcOutBean = ServMgr.act("TS_XMGL_KCAP_DAPCC", "getKcAndCc", kcCcParamBean);
 
         List<Object> values = new ArrayList<Object>();
         values.add(xmId);
-        //根据用户权限code（deptCodeStr）过滤考场
-        if (StringUtils.isBlank(pvlgDeptCodeStr)) {
-            pvlgDeptCodeStr ="no-pvlgDeptCodeStr";
-        }
-        String[] splitDeptCode = pvlgDeptCodeStr.split(",");
+
         StringBuilder deptBuilder = new StringBuilder(" and ( ");
-        for (String deptCode : splitDeptCode) {
+        for (String deptCode : pvlgDeptCodeSplit) {
             values.add("%" + deptCode + "%");
             deptBuilder.append(" e.CODE_PATH like ? ").append("or ");
         }
@@ -56,7 +59,7 @@ public class TjjlServ extends CommonServ {
 
         //用户权限下已经提交的机构信息
         List<Bean> hasTjBeanList = new ArrayList<Bean>();
-        for (String deptCode : strings) {
+        for (String deptCode : pvlgDeptCodeSplit) {
             if (StringUtils.isNotBlank(deptCode)) {
                 values.clear();
                 values.add("%" + deptCode + "%");
@@ -106,6 +109,26 @@ public class TjjlServ extends CommonServ {
         outBean.set("noCount", noCount);
         outBean.set("totalCount", result.size());
         return outBean;
+    }
+
+    /**
+     * 导出项目场次安排提交情况
+     */
+    public OutBean expKcOrgStatus(ParamBean paramBean) {
+        OutBean kcOrgStatusOutBean = this.getKcOrgStatus(paramBean);
+        List<Bean> beanList = (List<Bean>) kcOrgStatusOutBean.getData();
+        for (Bean bean : beanList) {
+            if ("true".equals(bean.getStr("isTj"))) {
+                bean.set("tjStatus", "已提交");
+            } else {
+                bean.set("tjStatus", "未提交");
+            }
+        }
+        LinkedHashMap<String, String> linkedHashMap = new LinkedHashMap<String, String>();
+        linkedHashMap.put("DEPT_NAME", "机构名称");
+        linkedHashMap.put("tjStatus", "状态");
+
+        return ExpUtils.expUtil(beanList, linkedHashMap, paramBean);
     }
 
     /**

@@ -32,16 +32,21 @@ function  lookCard(){
 	});
 	
 }
+
+var userCode = System.getVar("@USER_CODE@");//当前登录用户code
 //每一行添加编辑和删除
 $("#TS_PVLG_GROUP .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0) {
 		var dataId = item.id;
 		
-		$(item).find("td[icode='BUTTONS']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP-upd" actcode="upd" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'		
-		);
-		
 		var isdel = $(item).find("td[icode='G_DEL']").text();
+		
+		if(isdel==0 || userCode == 'admin') {
+			$(item).find("td[icode='BUTTONS']").append(
+					'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP-upd" actcode="upd" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'		
+			);
+		}
+		
 		if(isdel==0){
 			$(item).find("td[icode='BUTTONS']").append(
 					'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_PVLG_GROUP-delete" actcode="delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'

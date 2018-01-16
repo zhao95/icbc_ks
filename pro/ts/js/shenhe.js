@@ -777,8 +777,9 @@ function ztcx(obj){
 var data_id = xmid;
 //区分点击
 var zzzz=0;
+var impexter = 0;
 function importdata(obj){
-	
+	impexter = obj;
 	if(zzzz==0){
 var eles=[ 
           [ 
@@ -791,6 +792,12 @@ var eles=[
           
       }); 
       zzzz++;
+	}
+	if(impexter==4){
+		//修改导入数据模板
+		$("#impmodeal").attr("href","/ts/imp_template/额外报名数据导入模板.xls");
+	}else{
+		$("#impmodeal").attr("href","/ts/imp_template/报名审核导入模板.xls");
 	}
 }
 function deletefile(obj){
@@ -813,6 +820,26 @@ $("#excelimp").click(function(){
 	 //不为0 时可以删除
 	 if(linum==0){
 		 alert("文件不能为空");
+	 }else if(impexter==4){
+		 //导入额外数据
+		 var param = {};
+		 $(this).unbind("click");
+		 $("#loading").modal("show");
+		 var s = document.getElementById("shanchu").innerHTML;
+		 param["FILE_ID"]=s;
+		 param["level"]=nowlevel;
+		 param["xmid"]=xmid;
+		 param["nodeid"]=nodeid;
+		 param["impexter"]=impexter;
+		 FireFly.doAct("TS_BMSH_PASS","saveFromExcel",param,false,true,function (result) {
+			 alert(result._MSG_);
+			 window.open("/file/"+result.FILE_ID);
+			 $("#excleupload").modal('hide');
+			 var parents = document.getElementById("shanchu").parentNode.parentNode;
+			 parents.parentNode.removeChild(parents);
+			 new listPage().gotoPage(1);
+			 $("#loading").modal("hide");
+		 });
 	 }else{
 		 $(this).unbind("click");
 		 $("#loading").modal("show");
@@ -828,6 +855,9 @@ $("#excelimp").click(function(){
 			 servid="TS_BMSH_NOPASS"
 		 }
 		 param["serv_id"]=servid;
+		 param["level"]=nowlevel;
+		 param["nodeid"]=nodeid;
+		 param["xmid"]=xmid;
 		 FireFly.doAct(servid,"saveFromExcel",param,false,true,function (result) {
 		 alert(result._MSG_);
 		 window.open("/file/"+result.FILE_ID);
@@ -912,6 +942,9 @@ var listPage = function () {
 	 var result2 = FireFly.doAct("TS_BMSH_STAY","getAllData",param);
   	 nowlevel=result2.level;
   	 nodeid=result2.node_id;
+  	 if(nowlevel==1){
+  		 $("#impexternalbut").css("display","block");
+  	 }
 	 var servid = "";
 	 var myts="";
 	 var where3 = "";

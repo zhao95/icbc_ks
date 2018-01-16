@@ -129,6 +129,9 @@ public class TsConstant {
 	public static final String SERV_WFS_NODEAPPLY_ADMINER= "TS_WFS_NODEAPPLY_ADMINER";
 	/**请假流程节点*/
 	public static final String SERV_WFS_QJKLC= "TS_WFS_QJKLC";
+
+	//请假申请
+	public final static String SERV_QJ = "TS_QJLB_QJ";
 	/**通过请假*/
 	public static final String SERV_XMGL_QJPASS= "TS_XMGL_QJPASS";
 	/**通过借考*/

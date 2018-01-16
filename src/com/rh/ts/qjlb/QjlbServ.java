@@ -384,41 +384,12 @@ public class QjlbServ extends CommonServ {
                 log.error("请假结果提醒失败，" + "QJ_ID:" + qjId + ",USER_CODE:" + qjbean.getStr("USER_CODE"));
             }
 
-            //修改借考记录状态为未读
+            //修改请假记录状态为未读
             qjbean.set("LOOK_FLAG", "0");
             ServDao.update(TSQJ_SERVID, qjbean);
 
-            try {
-                //记录流程节点信息
-                SqlBean sqlBean = new SqlBean();
-                sqlBean.and("DATA_ID", qjId);
-                List<Bean> tsCommTodoDoneList = ServDao.finds("TS_COMM_TODO_DONE", sqlBean);
-
-                String wfsId = null;
-                if (CollectionUtils.isNotEmpty(tsCommTodoDoneList)) {
-                    wfsId = tsCommTodoDoneList.get(0).getStr("WFS_ID");
-                }
-                if (StringUtils.isNotBlank(wfsId)) {
-                    //String getStep = todoBean.getStr("NODE_STEPS");
-                    List<Bean> nodeApplyList = ServDao.finds("TS_WFS_NODE_APPLY", "AND WFS_ID='" + wfsId + "'");// and NODE_STEPS = " + getStep
-                    if (CollectionUtils.isNotEmpty(nodeApplyList)) {
-                        List<Bean> saveNodeHistoryBeanList = new ArrayList<Bean>();
-                        for (Bean nodeApply : nodeApplyList) {
-                            Bean nodeHistoryBean = new Bean();
-                            nodeHistoryBean.set("DATA_ID", qjId);
-                            nodeHistoryBean.set("NODE_NAME", nodeApply.getStr("NODE_NAME"));
-                            nodeHistoryBean.set("NODE_NUM", nodeApply.getStr("NODE_NUM"));
-                            nodeHistoryBean.set("WFS_ID", nodeApply.getStr("WFS_ID"));
-                            nodeHistoryBean.set("NODE_STEPS", nodeApply.getStr("NODE_STEPS"));
-                            saveNodeHistoryBeanList.add(nodeHistoryBean);
-                        }
-                        ServDao.creates(TsConstant.SERV_WFS_NODE_HISTORY, saveNodeHistoryBeanList);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.error("请假节点保存失败，" + "QJ_ID:" + qjId + ",USER_CODE:" + qjbean.getStr("USER_CODE"));
-            }
+            //保存流程节点信息
+            QjUtils.saveFlowHistoryNode(qjId);
         }
 
         if ("2".equals(qj_status)) {
@@ -452,11 +423,10 @@ public class QjlbServ extends CommonServ {
             String xmKsStartDate = xmBean.getStr("XM_KSSTARTDATA"); //项目详情考试开始时间
 //            Date date = DateUtils.parseDate(xmKsStartDate);
             //如果在提交场次安排前，请假成功删除考位安排
-            String[] split = shIdStr.toString().split(",");
             String xmKcapPublishTime = xmBean.getStr("XM_KCAP_PUBLISH_TIME");//项目场次发布时间
             if (StringUtils.isBlank(xmKcapPublishTime)) {
                 //项目场次未发布
-                for (String s : split) {
+                for (String s : shIds) {
                     List<Object> values = new ArrayList<Object>();
                     values.add(s);
                     Bean whereBean = new Bean();
