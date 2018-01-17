@@ -133,7 +133,6 @@ public class PvlgUtils {
 
 		try {
 			int treeWhereSize = paramBean.getList("_treeWhere").size();
-
 			if (treeWhereSize == 0) {
 
 				JSONObject jsonObject = new JSONObject(userPvlg);
@@ -183,5 +182,89 @@ public class PvlgUtils {
 			paramBean.set(Constant.PARAM_WHERE, " and 1=2 ");
 		}
 	}
+	
+    /**
+     *	默认进入列表页面后不自动查询的方法，需要在paramBean中传递一个参数_searhFirstType为false
+     * @param param
+     */
+	@SuppressWarnings("rawtypes")
+	public static void setOrgPvlgWhereNoSearch(ParamBean param) {
+		
+		boolean ismgr = com.rh.core.org.mgr.UserMgr.existInRoles(Context.getUserBean().getCode(), "RADMIN");
+
+		if (ismgr) {
+			return;
+		}
+
+		ParamBean paramBean = (ParamBean) param.getBean("paramBean");
+
+		String serviceName = param.getStr("serviceName");
+		String deptPcode = param.getStr("fieldName");
+		if(deptPcode == null ||"".equals(deptPcode)){
+			deptPcode="CTLG_PCODE";
+		}
+		ServDefBean servDef = ServUtils.getServDef(serviceName);
+
+		String tableView = servDef.getTableView();
+
+		// tree的编码 机构编码
+		Bean extParams = paramBean.getBean("extParams");
+		// 用户权限 所有权限的机构编码
+		Bean userPvlg = extParams.getBean("USER_PVLG");
+
+		try {
+			int treeWhereSize = paramBean.getList("_treeWhere").size();
+			//是否查询的标志位
+			boolean searchFirstType = paramBean.getBoolean("_searhFirstType");
+			if (searchFirstType == true && treeWhereSize == 0) {
+
+				JSONObject jsonObject = new JSONObject(userPvlg);
+				String result = null;
+				Iterator iterator = jsonObject.keys();
+				String key;
+				while (iterator.hasNext()) {
+					key = (String) iterator.next();
+					try {
+						JSONObject object = (JSONObject) jsonObject.get(key);
+						String object2 = (String) object.get("ROLE_DCODE");
+						String[] object3 = object2.split(",");
+						if (result != null) {
+							for (int i = 0; i < object3.length; i++) {
+								if (result.indexOf(object3[i]) < 0) {
+									result += "," + object3[i];
+								}
+							}
+						} else {
+							result = object2;
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+				if (!Strings.isBlank(result)) {
+					// result 排序DEPT_PCODE
+					String[] roles = result.split(",");
+
+					StringBuilder param_where = new StringBuilder();
+					param_where.append(" AND  EXISTS ( ");
+					param_where.append(" SELECT DEPT_CODE FROM SY_ORG_DEPT  A ");
+
+					param_where.append(" WHERE " + tableView + "."+deptPcode+" = A.DEPT_CODE ");
+
+ 					param_where.append(" and INSTR (A.CODE_PATH," + "'" + roles[0] + "') ");
+
+					param_where.append(") ");
+					paramBean.set(Constant.PARAM_WHERE, param_where.toString());
+				} else {
+					// 无权限
+					paramBean.set(Constant.PARAM_WHERE, " and 1=2 ");
+				}
+			}
+		} catch (Exception e) {
+			// 无权限
+			paramBean.set(Constant.PARAM_WHERE, " and 1=2 ");
+		}
+	}
+	
 
 }

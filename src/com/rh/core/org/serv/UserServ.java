@@ -408,9 +408,10 @@ public class UserServ extends CommonServ {
   	protected void beforeQuery(ParamBean paramBean) {
   			ParamBean param = new ParamBean();
   			param.set("paramBean", paramBean);
+  			param.set("_searhFirstType", false);
 //  			param.set("ctlgModuleName", ctlgModuleName);
   			param.set("fieldName","DEPT_CODE");
   			param.set("serviceName", paramBean.getServId());
-  			PvlgUtils.setOrgPvlgWhere(param);	
+  			PvlgUtils.setOrgPvlgWhereNoSearch(param);	
   		}
 }
