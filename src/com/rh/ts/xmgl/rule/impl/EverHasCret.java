@@ -11,13 +11,13 @@ public class EverHasCret implements IRule {
 	@Override
 	public boolean validate(Bean param) {
 		//中级过期 可以报 初级 
-		String xl = param.getStr("BM_XL");
+ 		String xl = param.getStr("BM_XL");
 		//初级过期不可以报中高级
 		String user = param.getStr("BM_CODE");
 		int a = 0;
 		//判断当前 报考的考试等级
 		String str = param.getStr("BM_TYPE");
-		if("".equals(str)){
+		if(!"".equals(str)){
 		a=	Integer.parseInt(str);
 		}
 		
