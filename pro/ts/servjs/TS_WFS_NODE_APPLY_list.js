@@ -1,18 +1,38 @@
 var _viewer = this;
 var height=jQuery(window).height()-400;
 var width=jQuery(window).width()-200;
+var userCode = System.getVar("@USER_CODE@");//当前登录用户code
+var wfsId=_viewer.getParHandler()._pkCode;//WFS_ID
+var  paramS={};
+paramS["USER_CODE"]=userCode;debugger;
+paramS["WFS_ID"]=wfsId;
+FireFly.doAct("TS_WFS_NODEAPPLY_ADMINER","findShDate",paramS,true,false,function(data){debugger;
+	 var num=data.TMP;//所在层级
+
 //列表需要建一个code为buttons的自定义字段。
 $("#TS_WFS_NODE_APPLY .rhGrid").find("tr").each(function(index,item){
 	if(index !=0){
 		var  dataId=item.id;
-		$(item).find("td[icode='BUTTONS']").append(
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_edit" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
-				'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_addes" rowpk="'+dataId+'"><span class="rh-icon-inner">添加管理</span><span class="rh-icon-img btn-edit"></span></a>'
-				//'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
-				)
+		
+			if(num<=index){
+				 $(item).find("td[icode='BUTTONS']").append(
+						    '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_edit" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
+							//'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_addes" rowpk="'+dataId+'"><span class="rh-icon-inner">添加管理</span><span class="rh-icon-img btn-edit"></span></a>'
+							//'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+							) 
+			}
+			 if(  userCode =="admin"){
+				 $(item).find("td[icode='BUTTONS']").append(
+						    '<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_edit" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
+							//'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_addes" rowpk="'+dataId+'"><span class="rh-icon-inner">添加管理</span><span class="rh-icon-img btn-edit"></span></a>'
+							//'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_WFS_NODE_APPLY_delete" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+							) 
+			 }
+		
 				//为每个按钮绑定卡片
 				bindCard();
 	}
+});
 });
 /*
 * 删除前方法执行
@@ -59,6 +79,9 @@ function openMyCard(dataId,readOnly,showTab){
     cardView.show();
    
 }
+
+
+
 //		var dataId = "";
 //		FireFly.doAct("TS_WFS_NODEAPPLY_ADMINER","finds",{"_WHERE_":" and NODE_ID='"+pkCode+"'"},true,false,function(data){
 //			if(data._DATA_.length > 0){

@@ -273,7 +273,7 @@ public class FlowServ extends CommonServ {
                     bean.set("NODE_NAME", "三级审核级别");
                     break;
                 case 5:
-                    bean.set("NODE_NAME", "最低级审核级别");
+                    bean.set("NODE_NAME", "最低审核级别");
                     break;
                 default:
                     break;

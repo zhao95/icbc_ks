@@ -133,5 +133,14 @@ public class GGServ extends CommonServ {
             ServDao.save("TS_GG", ggBean);
         }
     }
+    
+    public void getValue(ParamBean paramBean) {
+        String ggId = paramBean.getStr("GG_ID");
+        Bean ggBean = ServDao.find("TS_GG", ggId);
+        if (ggBean != null) {
+            ggBean.set("GG_SORT", 10);
+            ServDao.save("TS_GG", ggBean);
+        }
+    }
 
 }

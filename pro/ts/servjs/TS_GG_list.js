@@ -10,11 +10,23 @@ var module = 'PROJECT';
 $("#TS_GG .rhGrid").find("tr").each(function (index, item) {
     if (index != 0) {
         var dataId = item.id;
-        $(item).find("td[icode='BUTTONS']").append(
-            '<a class="rhGrid-td-rowBtnObj rh-icon"  id="TS_GG_look" operCode="optLookBtn" rowpk="' + dataId + '"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>' +
-            '<a class="rh-icon rhGrid-btnBar-a" id="TS_GG_edit" operCode="optEditBtn"   rowpk="' + dataId + '"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
-            '<a class="rh-icon rhGrid-btnBar-a" id="TS_GG_first" operCode="optFirstBtn"   rowpk="' + dataId + '"><span class="rh-icon-inner">置顶</span><span class="rh-icon-img btn-edit"></span></a>'
-        );
+        if(index == 1){
+        	 $(item).find("td[icode='BUTTONS']").append(
+        	            '<a class="rhGrid-td-rowBtnObj rh-icon"  id="TS_GG_look" operCode="optLookBtn" rowpk="' + dataId + '"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>' +
+        	            '<a class="rh-icon rhGrid-btnBar-a" id="TS_GG_edit" operCode="optEditBtn"   rowpk="' + dataId + '"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
+        	            '<a class="rh-icon rhGrid-btnBar-a" id="TS_GG_first" operCode="optFirstBtn"   rowpk="' + dataId + '"><span class="rh-icon-inner">置顶</span><span class="rh-icon-img btn-edit"></span></a>'+
+        	            '<a class="rh-icon rhGrid-btnBar-a" id="TS_GG_delete" operCode="optFirstBtn"   rowpk="' + dataId + '"><span class="rh-icon-inner">置后</span><span class="rh-icon-img btn-edit"></span></a>'
+        	           
+        	        );
+        }else{
+        	 $(item).find("td[icode='BUTTONS']").append(
+     	            '<a class="rhGrid-td-rowBtnObj rh-icon"  id="TS_GG_look" operCode="optLookBtn" rowpk="' + dataId + '"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>' +
+     	            '<a class="rh-icon rhGrid-btnBar-a" id="TS_GG_edit" operCode="optEditBtn"   rowpk="' + dataId + '"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
+     	            '<a class="rh-icon rhGrid-btnBar-a" id="TS_GG_first" operCode="optFirstBtn"   rowpk="' + dataId + '"><span class="rh-icon-inner">置顶</span><span class="rh-icon-img btn-edit"></span></a>'
+     	            );
+        }
+        
+       
         // 为每个按钮绑定卡片
         bindCard();
     }
@@ -39,6 +51,15 @@ function  bindCard(){
 			 FireFly.doAct("TS_GG", "setValue", paramfb);
 			 _viewer.refresh();
 		});
+		jQuery("td [id='TS_GG_delete']").unbind("click").bind("click", function () {	
+			var pkCode = jQuery(this).attr("rowpk");
+			var paramfb = {};
+			paramfb["GG_ID"] = pkCode;
+			 FireFly.doAct("TS_GG", "getValue", paramfb);
+			 _viewer.refresh();
+		});
+		
+		
 }
 
 //列表操作按钮 弹dialogfresh

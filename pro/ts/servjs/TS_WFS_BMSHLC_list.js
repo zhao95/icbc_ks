@@ -1,6 +1,10 @@
 var _viewer = this;
 var  height=jQuery(window).height()-200;
 var  width=jQuery(window).width()-200;
+var userCode = System.getVar("@USER_CODE@");//当前登录用户code
+//var  params={};
+//params["USER_CODE"]=userCode;debugger;
+//FireFly.doAct("TS_WFS_BMSHLC","getUsers",params,true,false,function(data){});debugger;
 //列表需要建一个code为buttons的自定义字段。
 $("#TS_WFS_BMSHLC .rhGrid").find("tr").each(function(index,item){
 	if(index !=0){
@@ -92,7 +96,7 @@ file.afterQueueComplete = function (fileData) {// 这个上传队列完成之后
             var data = {};
           
              data.NODE_ID = _viewer.getParHandler()._pkCode;
-           // data.G_ID = _viewer.getParHandler()._pkCode;
+            data.code = userCode;
             data.FILE_ID = fileId;
             FireFly.doAct(_viewer.servId, "saveFromExcel", data, false, false, function (data) {
                 rh.ui.File.prototype.downloadFile(data.FILE_ID, "test");

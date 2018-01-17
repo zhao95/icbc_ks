@@ -10,11 +10,18 @@ import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.ImpUtils;
+import com.rh.core.util.Strings;
+import com.rh.ts.pvlg.mgr.RoleMgr;
+import com.rh.ts.util.RoleUtil;
 import com.rh.ts.util.TsConstant;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class FlowBmlcServ extends CommonServ {
 
@@ -51,7 +58,19 @@ public class FlowBmlcServ extends CommonServ {
         // 获取流程id（xmId）
         Bean bmGroupBean = ServDao.find(TsConstant.SERV_WFS_NODE_APPLY, nodeId);
         String wfsId = bmGroupBean.getStr("WFS_ID");
-
+        
+       
+			Bean beanRus = null;
+			try {
+				beanRus = getUsers (  (String)paramBean.get("code"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String resul= (String) beanRus.get("RESULT");
+			String[] rePvlg=resul.split(",");
+			int  len=rePvlg.length;
+	
         List<Bean> beans = new ArrayList<Bean>();
         for (int index = 0; index < rowBeanList.size(); index++) {
             Bean rowBean = rowBeanList.get(index);
@@ -63,9 +82,12 @@ public class FlowBmlcServ extends CommonServ {
                 rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
                 continue;
             }
-
+            
             String code = userBean.getStr("USER_CODE"), name = userBean.getStr("USER_NAME"),
-                    userDeptCode = userBean.getStr("DEPT_CODE");
+                    userDeptCode = userBean.getStr("DEPT_CODE"),codePath=userBean.getStr("CODE_PATH");
+             for(int k=0;k<len;k++){
+            	 String b=rePvlg[k];
+            	 if(codePath.indexOf(rePvlg[k])>-1) {
             if (codeList.contains(code)) {
                 // 已包含 continue ：避免重复添加数据
                 rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
@@ -107,6 +129,12 @@ public class FlowBmlcServ extends CommonServ {
             } else {
                 rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
             }
+            	 }else {
+                     rowBean.set(ImpUtils.ERROR_NAME, "越权限：" + code);
+                 }
+             }
+            	
+            
         }
         ServDao.creates(TsConstant.SERV_WFS_BMSHLC, beans);
 
@@ -162,5 +190,51 @@ public class FlowBmlcServ extends CommonServ {
    	}
    	return new OutBean().setOk();
        }
+    
+    //获取登录人的权限
+    public  Bean getUsers (String code) throws JSONException {
+    	Bean  beanResult=new Bean();
+    	//String  userCode=paramBean.getStr("USER_CODE");//登陆人
+    	String  userCode=code;//登陆人
+    	//Bean bean=RoleMgr.getRoleOptsByUser(userCode,"TS_WFS_NODEAPPLY_ADMINER");"TS_WFS_BMSHLC"
+    	if(!"admin".equals(userCode)){
+    		Bean bean=RoleUtil.getPvlgRole( userCode);
+    		Bean extParams = bean.getBean("TS_WFS_BMSHLC_PVLG");
+    		//if (!extParams.isEmpty() && extParams != null) {
+    			JSONObject jsonObject = new JSONObject(extParams);
+    		//}
+    			String result = null;
+				Iterator iterator = jsonObject.keys();
+				String key;
+				while (iterator.hasNext()) {
+					key = (String) iterator.next();
+					try {
+						JSONObject object = (JSONObject) jsonObject.get(key);
+						String object2 = (String) object.get("ROLE_DCODE");
+						//String object2 = (String) object.get("ROLE_DCODE");
+						String[] object3 = object2.split(",");
+						if (result != null) {
+							for (int i = 0; i < object3.length; i++) {
+								if (result.indexOf(object3[i]) < 0) {
+									result += "," + object3[i];
+								}
+							}
+						} else {
+							result = object2;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				
+				if (!Strings.isBlank(result)) {
+					// result 排序
+					beanResult.set("RESULT", result);
+					
+				}
+    	}
+    	return beanResult;
+    	
+    }
 
 }
