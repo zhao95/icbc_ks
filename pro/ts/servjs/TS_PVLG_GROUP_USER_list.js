@@ -109,6 +109,7 @@ if (jQuery('#' + IMPORT_FILE_ID).length === 0) {
                 data.G_ID = _viewer.getParHandler()._pkCode;
                 data.FILE_ID = fileId;
                 FireFly.doAct(_viewer.servId, "saveFromExcel", data, false, false, function (data) {
+                    rh.ui.File.prototype.downloadFile(data.FILE_ID, "test");
                     _viewer.refresh();
                     alert(data._MSG_);
                 });
