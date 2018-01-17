@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"and S_FLAG=1",
-"S_MTIME":"2017-04-07 16:34:58:197",
+"S_MTIME":"2018-01-18 00:35:39:603",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "TABLE_VIEW":"",
@@ -19,7 +19,7 @@
 {
 "ITEM_INPUT_MODE":"3",
 "ITEM_CARD_FORMAT":"",
-"S_MTIME":"2017-04-07 16:34:58:190",
+"S_MTIME":"2018-01-18 00:35:39:582",
 "ITEM_VALIDATE_HINT":"",
 "ITEM_USER_FLAG":"2",
 "ITEM_NAME":"上级部门",
@@ -28,7 +28,7 @@
 "ITEM_LIST_ORDER":"104",
 "ITEM_LIST_ALIGN":"0",
 "ITEM_UNIQUE_GROUP":"0",
-"ITEM_CARD_ORDER":"0",
+"ITEM_CARD_ORDER":"",
 "ITEM_FIELD_LENGTH":"40",
 "S_FLAG":"1",
 "ITEM_TIP":"",
@@ -46,11 +46,11 @@
 "ITEM_LIST_LINK":"",
 "ITEM_LIST_FLAG":"2",
 "ITEM_CARD_DISABLE":"2",
-"ITEM_INPUT_CONFIG":"SY_ORG_DEPT_ALL",
+"ITEM_INPUT_CONFIG":"TS_ORG_DEPT_ALL,{'TYPE':'single','sId':'TS_ORG_DEPT','pvlg':'CODE_PATH','params' : {'USE_SERV_ID':'SY_ORG_DEPT_ALL'}}",
 "ITEM_INPUT_DEFAULT":"",
 "ITEM_INPUT_FLAG":"2",
 "ITEM_NOTNULL":"2",
-"DICT_ID":"SY_ORG_DEPT_ALL",
+"DICT_ID":"TS_ORG_DEPT_ALL",
 "ITEM_ORDER_CODES":"",
 "ITEM_SUM_FLAG":"0",
 "ITEM_LIST_EDIT":"2",
@@ -118,60 +118,6 @@
 ],
 "SY_SERV_ACT":
 [
-{
-"ACT_TYPE":"2",
-"ACT_EXPRESSION_FLAG":"0",
-"ACT_CSS":"home",
-"ACT_MEMO":"",
-"ACT_CODE":"register",
-"S_FLAG":"2",
-"ACT_WS_FLAG":"2",
-"_PK_":"0iFz18tSZ9gbYsMZN3cMvp",
-"ACT_LOG_FLAG":"2",
-"ACT_HOT_KEY":"",
-"ACT_ID":"0iFz18tSZ9gbYsMZN3cMvp",
-"SERV_ID":"SY_ORG_DEPT_ALL",
-"S_MTIME":"2013-10-09 16:55:52:787",
-"ACT_EXPRESSION":"",
-"ACT_WS_RESULT":"",
-"ACT_MOBILE_FLAG":"",
-"ACT_ORDER":"200",
-"ACT_GROUP":"2",
-"SY_SERV_ACT_PARAM":
-[
-],
-"_ROWNUM_":"0",
-"ACT_TIP":"",
-"EN_JSON":"",
-"ACT_NAME":"开通站点"
-},
-{
-"ACT_TYPE":"1",
-"ACT_EXPRESSION_FLAG":"0",
-"ACT_CSS":"option",
-"ACT_MEMO":"this.doAct('initPinyin');",
-"ACT_CODE":"initPinyin",
-"S_FLAG":"1",
-"ACT_WS_FLAG":"2",
-"_PK_":"3OeDkc7pDFd7rxHRyjX5pDYG",
-"ACT_LOG_FLAG":"2",
-"ACT_HOT_KEY":"",
-"ACT_ID":"3OeDkc7pDFd7rxHRyjX5pDYG",
-"SERV_ID":"SY_ORG_DEPT_ALL",
-"S_MTIME":"2017-04-07 16:33:49:325",
-"ACT_EXPRESSION":"",
-"ACT_WS_RESULT":"",
-"ACT_MOBILE_FLAG":"1",
-"ACT_ORDER":"999",
-"ACT_GROUP":"2",
-"SY_SERV_ACT_PARAM":
-[
-],
-"_ROWNUM_":"1",
-"ACT_TIP":"自动生成部门的拼音简称",
-"EN_JSON":"{\"ACT_NAME\":\"Initialize the abbreviation\",\"ACT_TIP\":\"Initialize the abbreviation\"}",
-"ACT_NAME":"初始化简称"
-}
 ],
 "SERV_MEMO":""
 }
