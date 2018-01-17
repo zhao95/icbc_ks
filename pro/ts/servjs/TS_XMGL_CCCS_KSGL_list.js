@@ -79,10 +79,16 @@ $importUser.find('object').css('width', '100%');
 
 //导入模板下载
 _viewer.getBtn("tmplBtn").unbind("click").bind("click", function () {
-    window.open(FireFly.getContextPath() + '/ts/imp_template/项目管理_场次测算_考生管理导入模版.xls');
+    window.open(FireFly.getContextPath() + '/ts/imp_template/项目管理_待安排考生_导入模版.xls');
 });
 _viewer.getBtn("imp").remove();
 
+//导出
+_viewer.getBtn("exp").unbind("click").bind("click", function () {
+    var data = {XM_ID: xmId};
+    window.open(FireFly.getContextPath() + '/' + _viewer.servId + '.expAll.do?data=' +
+        encodeURIComponent(JSON.stringify(data)));
+});
 // _viewer.getBtn("imp").unbind("click").bind("click", function () {
 //     var xmId = _viewer.getParHandler().getItem("XM_ID").getValue();
 //     var config = {

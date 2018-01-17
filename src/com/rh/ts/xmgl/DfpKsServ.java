@@ -99,6 +99,14 @@ public class DfpKsServ extends CommonServ {
                 continue;
             }
 
+            //不在项目引入的考试类别
+            SqlBean sqlBean = new SqlBean();
+            sqlBean.and("XM_ID", xmId);
+            sqlBean.and("KSLBK_ID", kslbBean.getId());
+            if (ServDao.count(TsConstant.SERV_BM_KSLB, sqlBean) <= 0) {
+                rowBean.set(ImpUtils.ERROR_NAME, "该考试类别不在项目引入的考试类别中");
+                continue;
+            }
 
             Bean passBean = new Bean();
             passBean.set("XM_ID", xmId);//项目id

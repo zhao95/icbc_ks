@@ -5,9 +5,12 @@ import com.rh.core.base.BeanUtils;
 import com.rh.core.comm.FileMgr;
 import com.rh.core.comm.file.TempFile;
 import com.rh.core.comm.file.TempFile.Storage;
+import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.serv.*;
+import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.serv.util.ServUtils;
+import com.rh.core.util.ExpUtils;
 import com.rh.core.util.ImpUtils;
 import com.rh.ts.pvlg.PvlgUtils;
 import jxl.Cell;
@@ -58,6 +61,45 @@ public class CccsKsServ extends CommonServ {
      */
     public OutBean impDataSave(ParamBean paramBean) {
         return ServMgr.act("TS_XMGL_KCAP_DFPKS", "impDataSave", paramBean);
+    }
+
+    /**
+     * 导出全部
+     *
+     * @param paramBean paramBean XM_ID
+     * @return outBean
+     */
+    public OutBean expAll(ParamBean paramBean) {
+        String xmId = paramBean.getStr("XM_ID");
+        SqlBean sqlBean = new SqlBean();
+        sqlBean.and("XM_ID", xmId);
+        List<Bean> allList = ServDao.finds("TS_XMGL_CCCS_KSGL", sqlBean);
+
+        for (Bean bean : allList) {
+            String userCode = bean.getStr("BM_CODE");
+            ParamBean userCodeParamBean = new ParamBean();
+            userCodeParamBean.set("userCode", userCode);
+            OutBean userOrgBean = ServMgr.act("TS_XMGL_KCAP_DAPCC", "getUserOrg", userCodeParamBean);
+            bean.putAll(userOrgBean);
+
+            String odeptCodeV = bean.getStr("S_ODEPT");
+            bean.set("ODEPT_V_NAME", OrgMgr.getDept(odeptCodeV).getName());
+        }
+        /*设置导出展示信息*/
+        LinkedHashMap<String, String> colMap = new LinkedHashMap<String, String>();
+        colMap.put("BM_NAME", "姓名");
+        colMap.put("BM_CODE", "人力资源编码");
+        colMap.put("BM_LB", "考试类别");
+        colMap.put("BM_XL", "序列");
+        colMap.put("BM_MK", "模块");
+        colMap.put("BM_TYPE_NAME", "级别");
+        colMap.put("BM_KS_TIME", "考试时长");
+        colMap.put("org1", "一级机构");
+        colMap.put("org2", "二级机构");
+        colMap.put("ODEPT_V_NAME", "所属机构");
+
+        return ExpUtils.expUtil(allList, colMap, paramBean);
+
     }
 
 

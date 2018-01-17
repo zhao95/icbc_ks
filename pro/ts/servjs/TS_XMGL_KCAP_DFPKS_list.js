@@ -106,5 +106,5 @@ $importUser.find('object').css('width', '100%');
 
 //导入模板下载
 $impFile.unbind('click').bind('click', function () {
-    window.open(FireFly.getContextPath() + '/ts/imp_template/场次安排导入人员模板.xls');
+    window.open(FireFly.getContextPath() + '/ts/imp_template/项目管理_待安排考生_导入模版.xls');
 });
