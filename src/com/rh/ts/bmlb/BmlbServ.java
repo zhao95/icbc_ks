@@ -1803,8 +1803,8 @@ public class BmlbServ extends CommonServ {
 		String xm_id = paramBean.getStr("xm_id");
 		String STATION_NO_CODE =paramBean.getStr("STATION_NO_CODE");
 		String STATION_TYPE_CODE =paramBean.getStr("STATION_TYPE_CODE");
-		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", "AND (KSLB_XL_CODE<>'"+STATION_NO_CODE+"') AND KSLB_CODE='"+STATION_TYPE_CODE+"' AND XM_ID='"+xm_id+"'");
-		List<Bean> find = ServDao.finds("TS_BMLB_BM", "and xm_id='"+xm_id+"' AND BM_XL_CODE<>'"+STATION_NO_CODE+"' and bm_lb_code ='"+STATION_TYPE_CODE+"'");
+		List<Bean> list = ServDao.finds("TS_XMGL_BM_KSLB", " AND KSLB_XL_CODE<>'"+STATION_NO_CODE+"' AND KSLB_CODE='"+STATION_TYPE_CODE+"' AND XM_ID='"+xm_id+"'");
+		List<Bean> find = ServDao.finds("TS_BMLB_BM", " and xm_id='"+xm_id+"' AND BM_XL_CODE<>'"+STATION_NO_CODE+"' and bm_lb_code ='"+STATION_TYPE_CODE+"'");
 		//删除 已报名的数据 之后
 		for (Bean bean : find) {
 			for(int i=0;i<list.size();i++){
@@ -1919,6 +1919,7 @@ public class BmlbServ extends CommonServ {
 				}
 			}*/
 			//考试类别库考试
+			List<Bean> listbea = new ArrayList<Bean>();
 			for(int i = 0;i<query.size();i++){
 				String kslbk_code = query.get(i).getStr("KSLB_CODE");
 				String kslb_xl = query.get(i).getStr("KSLB_XL_CODE");
@@ -1935,6 +1936,8 @@ public class BmlbServ extends CommonServ {
 						query.remove(i);
 						i--;
 						break;
+					}else{
+						listbea.add(query.get(i));
 					}
 				}
 				}

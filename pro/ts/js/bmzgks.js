@@ -508,7 +508,7 @@ function xminfoshow(){
 		 if(resultFlag.flag=="false"){
 		 extWhere="AND KSLBK_ID IN ("+ids+") AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)";
 		 }else{
-		 extWhere="AND KSLBK_ID IN ("+ids+") AND KSLBK_CODE!='"+STATION_TYPE_CODE+"'";
+		 extWhere="AND KSLBK_ID IN ("+ids+")";
 		 }
 		 
 		 var setting={data
@@ -1188,6 +1188,7 @@ function xminfoshow(){
 	var result1 = "";
 	function matchinfo(){
 		//人员信息
+		
 		var result =  FireFly.byId("SY_HRM_ZDSTAFFPOSITION", user_code);
 		if(result!=null){
 			 STATION_TYPE_CODE=result.STATION_TYPE_CODE;
@@ -1260,7 +1261,6 @@ function xminfoshow(){
 				var kstimes = ww.KS_TIME.split(",");
 				var select = document.getElementById("lxid");
 				jQuery("#lxid").empty();          //把select对象的所有option清除掉
-				
 				for(var i=0;i<tyArray.length;i++){
 					select.options[i]=new Option((tyArray[i]=="1")?"初级":(tyArray[i]=="2")?"中级":(tyArray[i]=="3")?"高级":"无",tyArray[i]);
 					$(select.options[i]).attr("name",kstimes[i]);
