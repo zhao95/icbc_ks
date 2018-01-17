@@ -14,12 +14,12 @@ _viewer.beforeSave = function() {
 		}
 	});
 }
-//保存之后
-_viewer.afterSave=function(){
-	var userCode=_viewer.getItem("ADMINER_UWERCODE").getValue();//人力资源编码
-	var nodeId =_viewer.getItem("NODE_ID").getValue();
-	var param={};
-	param["ADMINER_UWERCODE"]=userCode;
-	param["NODE_ID"]=nodeId;
-	FireFly.doAct(_viewer.servId,"adminerSave",param);
-}
+////保存之后
+//_viewer.afterSave=function(){
+//	var userCode=_viewer.getItem("ADMINER_UWERCODE").getValue();//人力资源编码
+//	var nodeId =_viewer.getItem("NODE_ID").getValue();
+//	var param={};
+//	param["ADMINER_UWERCODE"]=userCode;
+//	param["NODE_ID"]=nodeId;
+//	FireFly.doAct(_viewer.servId,"adminerSave",param);
+//}
