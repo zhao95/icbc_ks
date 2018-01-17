@@ -1862,7 +1862,11 @@ rh.vi.listView.prototype._bldNavTree = function() {
 	                // 字典额外参数配置，用于传到后台字典处理类做特殊处理
 	                if(confJson && !jQuery.isEmptyObject(confJson.params)) {
 	                		params = jQuery.extend({}, params, confJson.params);
-	                		setting.url += "?" + jQuery.param(confJson.params);
+                			if(setting.url.indexOf("?")>=0) {
+                				setting.url += "&" + jQuery.param(confJson.params);
+                			} else {
+                				setting.url += "?" + jQuery.param(confJson.params);
+                			}
 	                }
 	                extWhere = Tools.parVarReplace(extWhere);
 	                extWhere = Tools.systemVarReplace(extWhere);
