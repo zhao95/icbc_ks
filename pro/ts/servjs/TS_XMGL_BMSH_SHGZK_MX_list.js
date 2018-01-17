@@ -40,7 +40,7 @@ $("#TS_XMGL_BMSH_SHGZK_MX .rhGrid").find("tr").each(function(index, item) {
 			}
 			 name = $('td[icode="MX_NAME"]',item).text();
 			$('td[icode="MX_NAME"]',item).text(newName);
-			if(obj2[0].type=="select"||obj2[0].type=="date"){
+			if(obj2[0].type=="select"||obj2[0].type=="date"||obj2[0].type=="yearmuty"){
 				$(item).find("td[icode='BUTTONS']").append(
 						'<a class="rhGrid-td-rowBtnObj rh-icon" id="TS_XMGL_BMSH_SHGZK_MX-setting" actcode="setting" rowpk="'+dataId+'" rowjson="'+val+'" rowname="'+name+'" >'+
 						'<span class="rh-icon-inner-notext">设置</span><span class="rh-icon-img btn-change"></span></a>'+

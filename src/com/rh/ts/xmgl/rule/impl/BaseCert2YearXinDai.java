@@ -96,11 +96,15 @@ public class BaseCert2YearXinDai implements IRule {
 		int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sql);
 
 		if (count > 0) {
-			XdSql.and("STATION_NO_CODE","A000000000000000013");//信贷类
-			XdSql.and("PERSON_ID", user);//报名人user_code
-			int countXd = ServDao.count("sy_hrm_zdstaffposition", XdSql);
-			if (countXd > 0) {
-			return true;
+			if(endDate==0){
+				return true;
+			}else{
+				XdSql.and("STATION_NO_CODE","A000000000000000013");//信贷类
+				XdSql.and("PERSON_ID", user);//报名人user_code
+				int countXd = ServDao.count("sy_hrm_zdstaffposition", XdSql);
+				if (countXd > 0) {
+				return true;
+				}
 			}
 		}
 

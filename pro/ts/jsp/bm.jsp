@@ -208,11 +208,10 @@ String bmbq = request.getParameter("bmbq");
 									style="width: 6.6%; text-align: center">序号</th>
 									<th style="width: 10%;text-align: left">提交时间</th>
 								<th style="width: 30%; text-align: left">名称</th>
-								<th style="width: 5%; text-align: center">类型</th>
-								<th style="text-align: center; width: 6%;">审核结果</th>
-							 	<th style="width: 6%; text-align: center">状态</th>
+								<th style="width: 10%; text-align: center">类型</th>
+								<th style="text-align: center; width: 10%;">审核结果</th>
 								<th id="BM_OPTIONS" class=""
-									style="width: 12%; text-align: center">操作</th>
+									style="width: 18%; text-align: center">操作</th>
 							</tr>
 						</thead>
 						<tbody>

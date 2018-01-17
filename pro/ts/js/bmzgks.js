@@ -53,6 +53,7 @@ function xminfoshow(){
 		bminfo['BM_STARTDATE'] = bm_start;
 		bminfo['BM_ENDDATE'] = bm_end;
 		var neAry=xkArg;
+		console.log(yk);
 		if(yk.ID){
 			neAry=xkArg.concat(yk);	//yk为考试参数   放入数组中
 		}
@@ -459,7 +460,7 @@ function xminfoshow(){
 	 $(function(){ 
 		 xminfoshow();
 		 matchinfo();
-		 mkfuzhi();
+		/* mkfuzhi();*/
 		 var param1 = {};
 		 param1["DUTY_LV_CODE"]=DUTY_LEVEL_CODE;
 		 param1["STATION_TYPE_CODE"]=STATION_TYPE_CODE;
@@ -478,7 +479,7 @@ function xminfoshow(){
 			 sqlstr = " AND (KSLBK_TYPE<="+cengjinum+" or KSLBK_TYPE is null)";
 			 sqls = " AND (KSLB_TYPE<="+cengjinum+" or KSLB_TYPE is null)";
 		 }*/
-		 typeId(obj);
+		 /*typeId(obj);*/
 		 tongji();
 		/* var allList=getFzgList(sqls);
 		 showFzgList(allList);*/
@@ -503,10 +504,11 @@ function xminfoshow(){
 		 paramb["xmid"]=xm_id;
 		 paramb["high"]=highnum;
 		 paramb["middle"]=parammiddle;
+		 paramb["STATION_NO_CODE"]=STATION_NO_CODE;
 		 var ressultids = FireFly.doAct("TS_BMLB_BM","getYibmids",paramb)
 		 var ids = ressultids.ids;
 		 if(resultFlag.flag=="false"){
-		 extWhere="AND KSLBK_ID IN ("+ids+") AND (KSLBK_XL_CODE<>'"+STATION_NO_CODE+"' OR KSLBK_XL_CODE is null)";
+		 extWhere="AND KSLBK_ID IN ("+ids+")";
 		 }else{
 		 extWhere="AND KSLBK_ID IN ("+ids+")";
 		 }
@@ -741,23 +743,45 @@ function xminfoshow(){
 			       var kslb_xl_code=alldata[i].KSLBK_XL_CODE;
 			       var kslb_mk_code=alldata[i].KSLBK_MKCODE;
 			       var kslb_type = alldata[i].KSLBK_TYPE;
-			       tbody=document.getElementById("goods");
+			       
+			       if(STATION_NO_CODE==kslb_xl_code){
+			    	   tbody=document.getElementById("tableid");
+			       }else{
+			    	   tbody=document.getElementById("goods");
+			       }
 			       var ntr = tbody.insertRow();
-			       ntr.innerHTML=
-			       '<td ><input type="checkbox" name="checkboxaa"></td>'+
-			       '<td >'+kslb_name+'</td>'+
-			       '<td >'+kslb_xl+'</td>'+
-			       '<td >'+kslb_mk+'</td>'+
-			       '<td >'+kslb_type_name+'</td>'+
-			       '<td class="rhGrid-td-hide"><div>cannot</div></td>'+
-			       '<td ><div id="'+kslbk_id+'"></div></td>'+
-			       '<td ><div id="'+kslbk_id+'yzjg"></div></td>'+
-				   '<td class="rhGrid-td-hide" ><input type="text" name="zgksname" value="'+kslbk_id+'"></td>'+
-				   '<td class="rhGrid-td-hide" >'+kslbk_id+'</td>'+
-				   '<td class="rhGrid-td-hide" >'+kslb_code+'</td>'+
-				   '<td class="rhGrid-td-hide" >'+kslb_xl_code+'</td>'+
-				   '<td class="rhGrid-td-hide" >'+kslb_mk_code+'</td>'+
-				   '<td class="rhGrid-td-hide" >'+kslb_type+'</td>';
+			       if(STATION_NO_CODE==kslb_xl_code){
+			    	   ntr.innerHTML=
+					       '<td ><input type="checkbox" name="checkboxaa"></td>'+
+					       '<td >'+kslb_name+'</td>'+
+					       '<td >'+kslb_xl+'</td>'+
+					       '<td >'+kslb_mk+'</td>'+
+					       '<td >'+kslb_type_name+'</td>'+
+					       '<td class="rhGrid-td-hide"><div>cannot</div></td>'+
+					       '<td ><div id="'+kslbk_id+'"></div></td>'+
+					       '<td ><div id="'+kslbk_id+'yzjg"></div></td>'+
+						   '<td class="rhGrid-td-hide" ><input type="text" name="zgksname" value="'+kslbk_id+'"></td>'+
+						   '<td class="rhGrid-td-hide" >'+kslbk_id+'</td>'+
+						   '<td class="rhGrid-td-hide" >'+kslb_code+'</td>'+
+						   '<td class="rhGrid-td-hide" >'+kslb_xl_code+'</td>';
+			       }else{
+			    	   ntr.innerHTML=
+					       '<td ><input type="checkbox" name="checkboxaa"></td>'+
+					       '<td >'+kslb_name+'</td>'+
+					       '<td >'+kslb_xl+'</td>'+
+					       '<td >'+kslb_mk+'</td>'+
+					       '<td >'+kslb_type_name+'</td>'+
+					       '<td class="rhGrid-td-hide"><div>cannot</div></td>'+
+					       '<td ><div id="'+kslbk_id+'"></div></td>'+
+					       '<td ><div id="'+kslbk_id+'yzjg"></div></td>'+
+						   '<td class="rhGrid-td-hide" ><input type="text" name="zgksname" value="'+kslbk_id+'"></td>'+
+						   '<td class="rhGrid-td-hide" >'+kslbk_id+'</td>'+
+						   '<td class="rhGrid-td-hide" >'+kslb_code+'</td>'+
+						   '<td class="rhGrid-td-hide" >'+kslb_xl_code+'</td>'+
+						   '<td class="rhGrid-td-hide" >'+kslb_mk_code+'</td>'+
+						   '<td class="rhGrid-td-hide" >'+kslb_type+'</td>';
+			       }
+			      
 			       var xk = {};
 			       xk['ID'] = kslbk_id;
 			       xk['BM_LB'] = kslb_code;
@@ -771,6 +795,8 @@ function xminfoshow(){
 			       xk['KSLBK_TYPE_LEVEL']=alldata[i].KSLBK_TYPE_LEVEL;
 			       xkArg.push(xk);
 			}
+			
+			
 		}
 	
 		/*debugger;
@@ -864,11 +890,8 @@ function xminfoshow(){
 
 	})
 	
-	
 	//获取应考试的值
 	function tijiao(){
-		
-		
 		var bdyz = false;
 		$("input[name='checkboxaa']:checked").each(function(){
 			if($(this.parentNode.parentNode).find("input[name='yzspan']").length>0){
@@ -1135,15 +1158,15 @@ function xminfoshow(){
 							'<td style="text-align:right;color:lightseagreen">报考类型</td>'+
 							'<td style="text-align:center">'+tds[1].innerHTML+'</td>'+
 							'<td style="text-align:left">'+tds[2].innerHTML+'</td>'+
-							'<td style="text-align:left">'+$("#mkid").children('option:selected').text()+'</td>'+
-							'<td style="text-align:left">'+$("#lxid").children('option:selected').text()+'</td>';
+							'<td style="text-align:left">'+tds[3].innerHTML+'</td>'+
+							'<td style="text-align:left">'+tds[4].innerHTML+'</td>';
 					}else{
 						ntr.innerHTML=
 							'<td style="text-align:center;color:blue"></td>'+
 							'<td style="text-align:center">'+tds[1].innerHTML+'</td>'+
 							'<td style="text-align:left">'+tds[2].innerHTML+'</td>'+
-							'<td style="text-align:left">'+$("#mkid").children('option:selected').text()+'</td>'+
-							'<td style="text-align:left">'+$("#lxid").children('option:selected').text()+'</td>';
+							'<td style="text-align:left">'+tds[3].innerHTML+'</td>'+
+							'<td style="text-align:left">'+tds[4].innerHTML+'</td>';
 					}
 					continue;
 				}
@@ -1220,12 +1243,41 @@ function xminfoshow(){
 			 var kslb_id = pageEntity[0].KSLBK_ID;
 			  lbname = pageEntity[0].KSLB_NAME;
 			  xlname= pageEntity[0].KSLB_XL;
+			  var mkmame = pageEntity[0].KSLB_MK;
+			  if(mkmame=="无模块"){
+				  mkmame="";
+			  }
+			  var typemame = pageEntity[0].KSLB_TYPE_NAME;
 			  lbcode= pageEntity[0].KSLB_CODE;
 			  xlcode= pageEntity[0].KSLB_XL_CODE;
 			 //拼接 tr
 			 var tr = document.createElement('tr');
 				 tr.innerHTML='<td style="text-align:center"><input style="margin-right:12px;" type="checkbox" name="checkboxaa"></td>'+
 				 '<td>'+lbname+'</td>'+
+				 '<td>'+xlname+'</td>'+
+				 '<td width="27%">'+mkmame+'</td>'+
+				 '<td width="10%">'+typemame+'</td>'+
+				 '<td class="rhGrid-td-hide"><input type="text" id="zglbid" name="zgksname" value='+kslb_id+'></td>'+
+				 '<td width="20%" id="yz_info"><div id='+kslb_id+'></div></td>'+
+				 '<td width="15%" id="yzjg_info"><div id="'+kslb_id+'yzjg"></div></td>'+
+				 '<td class="rhGrid-td-hide"><div>cannot</div></td>'+
+				 '<td class="rhGrid-td-hide"><div>biaoshi</div></td>'+
+				 '<td class="rhGrid-td-hide"><div>biaoshi</div></td>';
+					yk["BM_LB"]=lbcode;
+					yk["BM_XL"]=xlcode;
+					yk["BM_MK"]=pageEntity[0].KSLB_MK_CODE;
+					yk['BM_KS_TIME']=pageEntity[0].KSLB_TIME;
+					yk["ID"]=pageEntity[0].KSLBK_ID;
+					yk["BM_TYPE"]=pageEntity[0].KSLB_TYPE;
+			 $("#tableid tbody").append(tr);
+	}
+			
+			//模块改变事件
+			/*function typeId(obj){
+				
+				var tr = document.createElement('tr');
+				 tr.innerHTML='<td style="text-align:center"><input style="margin-right:12px;" type="checkbox" name="checkboxaa"></td>'+
+				 '<td>'+$("#tableid").find("tr:first").find("td")[1].html()+'</td>'+
 				 '<td>'+xlname+'</td>'+
 				 '<td width="27%"><select id="mkid" onchange="typeId(this)"></select></td>'+
 				 '<td width="10%"><select id="lxid" onchange="changeyk(this)"><option></option></select></td>'+
@@ -1235,12 +1287,8 @@ function xminfoshow(){
 				 '<td class="rhGrid-td-hide"><div>cannot</div></td>'+
 				 '<td class="rhGrid-td-hide"><div>biaoshi</div></td>'+
 				 '<td class="rhGrid-td-hide"><div>biaoshi</div></td>';
-				 
-			 $("#tableid tbody").append(tr);
-	}
-			
-			//模块改变事件
-			function typeId(obj){
+				 $("#tableid tbody").append(tr);
+			 
 				var tab = document.getElementById("tableid");
 			    //表格行数
 			    var rows = tab.rows.length;
@@ -1286,8 +1334,9 @@ function xminfoshow(){
 			    	var tds = $("#tableid tbody").find("tr").find("td");
 			    $($(tds[7]).find("div").eq(0)).html("")
 			    	$($(tds[6]).find("div").eq(0)).html("");
-			}
-function mkfuzhi(){
+			    
+			}*/
+/*function mkfuzhi(){
 
 	var obj = result1.mkoption;
 	if(obj==""){
@@ -1311,7 +1360,7 @@ function mkfuzhi(){
 		}
 		i++;
 	}
-}
+}*/
 var highnum=0;
 var parammiddle = 0;
 	//统计 已报名的考试  针对中级

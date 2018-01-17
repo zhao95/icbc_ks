@@ -63,7 +63,7 @@ public class BaseValidCert2YearBkxl implements IRule {
 			
 			//相同序列 不用验证此规则
 			
-			return false;
+			return true;
 			
 		}else{
 			//跨序列 报考考试 时 先判断  本序列证书是否有效         专业类，销售类人员 持 中级 高级 本序列证书 时可报 运行类客服类的所有跨序列考试       运行类，客服类  最多报专业类，销售类的中级考试
