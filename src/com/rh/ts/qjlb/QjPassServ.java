@@ -223,6 +223,7 @@ public class QjPassServ extends CommonServ {
                     Bean qjbd = null;
                     try {
                         qjbd = ServDao.create(TSQJ_SERVID, qjbean);
+                        Transaction.commit();
                     } catch (Exception e) {
                         rowBean.set(ImpUtils.ERROR_NAME, "程序错误：创建请假申请失败，错误信息为" + e.getMessage());
                         continue;
