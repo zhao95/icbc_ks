@@ -55,10 +55,12 @@ public class StaffPost implements IRule {
 			if (!Strings.isBlank(postCode)) {
 				
 				for (String post : postCode.split(",")) {
-					
-					if (userBean.getPost().equals(post)) {
-						
-						return true;
+					Bean find = ServDao.find("ts_org_postion", post);
+					if(find!=null&&find.size()!=0){
+						if (userBean.getPost().equals(find.getStr("POSTION_SEQUENCE"))) {
+							
+							return true;
+						}
 					}
 				}
 			}
