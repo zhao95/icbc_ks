@@ -3,7 +3,9 @@
 <!DOCTYPE html>
 <%
     final String CONTEXT_PATH = request.getContextPath();
-    String batch = request.getParameter("batch");
+    String batchType = request.getParameter("batch");
+    String xmId = request.getParameter("XM_ID") != null ? request.getParameter("shids") : "";
+    ;
 %>
 <html>
 <head>
@@ -134,8 +136,17 @@
                 </select>
             </div>
 
-            <div id="batchsh" class="col-sm-3" style="display:none;">
-                <div style="width:85px;;background-color:lightseagreen;margin-left:5%;color:white;"
+            <label class="control-label col-sm-1" style="max-width: 63px;padding: 7px;" for="xm_id">类型</label>
+            <div class="col-sm-3">
+                <select id="batch" class="form-control">
+                    <option value=""></option>
+                    <option value="1">请假</option>
+                    <option value="2">借考</option>
+                </select>
+            </div>
+
+            <div class="col-sm-3"><%-- style="display:none;"--%>
+                <div id="batchsh" style="width:85px;;background-color:lightseagreen;margin-left:5%;color:white;"
                      class="btn">
                     批量审核
                 </div>
@@ -173,6 +184,7 @@
                     <option value="30">30 条/页</option>
                     <option value="40">40 条/页</option>
                     <option value="50">50 条/页</option>
+                    <option value="100">100 条/页</option>
                 </select>
 
                 <%--分页--%>
@@ -300,69 +312,28 @@
 
     var mttijiao = function () {
     };
-    $(function () {
-        var batch = '<%=batch%>';
-        var type = '';
-        if (batch === '1') {
-            type = '0';
-        } else if (batch === '2') {
-            type = '1';
-        }
 
-        if (batch === '1' || batch === '2') {
-            $('#todo-th-checkbox').css('display', 'block');
-            $('#batchsh').css('display', 'block');
-        }
+    var xmId = '<%=xmId%>';
+    var batchType = '<%=batchType%>';
+    var listPage;
 
-        /*获取待办项目列表*/
-        var todoXmListBean = FireFly.doAct("TS_COMM_TODO", "getTodoXMList", {"TYPE": type});
-        var todoXmList = todoXmListBean._DATA_;
-        var $xmIdSelect = $('#xm_id');
-        $xmIdSelect.html('');
-        $xmIdSelect.append('<option value=""></option>');
-        for (var i = 0; i < todoXmList.length; i++) {
-            var todoXm = todoXmList[i];
-            $xmIdSelect.append('<option value="' + todoXm.XM_ID + '">' + todoXm.XM_NAME + '</option>');
-        }
-        $xmIdSelect.unbind('change').bind('change', function () {
-            listPage.search();
-        });
+    var initData = function (xmId, batchType) {
+        $('#xm_id').val(xmId);
+        $('#batch').val(batchType);
 
-        $('#batchsh').unbind('click').bind('click', function () {
+        var $batchsh = $('#batchsh');
+        $('#todo-th-checkbox').css('display', 'block');
+        $batchsh.css('display', 'block');
+//        if (batchType === '1' || batchType === '2') {
+//
+//        }
+
+        $batchsh.unbind('click').bind('click', function () {
             $('#tiJiao').modal({backdrop: false, show: true});
         });
 
-        mttijiao = function () {
-            var param = {};
-            var radiovalue = $('#tiJiao').find('input:radio:checked').val();
-            var liyou = document.getElementById("liyou").value;
-            param["shstatus"] = radiovalue;
-            param["shreason"] = liyou;
-            if (radiovalue === 1) {
-                param["isRetreat"] = "false";
-            } else {
-                param["isRetreat"] = "true";
-            }
-            var ids = "";
-            var $checkedItems = $('#todo-table tbody').find('input[type="checkbox"]:checked');
-            if ($checkedItems.length <= 0) {
-                alert('请选择要审批的待办！');
-                return;
-            } else {
-                $checkedItems.each(function () {
-                    ids = ids + $(this).attr("id") + ',';
-                });
-                ids = ids.substring(0, ids.length - 1);
-                param["todoId"] = ids;
-                if (batch === '1') {
-                    FireFly.doAct("TS_QJLB_QJ", "updateData", param);
-                } else if (batch === '2') {
-                    FireFly.doAct("TS_JKLB_JK", "updateData", param);
-                }
-                listPage.search();
-                $("#tiJiao").modal("hide");
-            }
-        };
+
+        reloadXmList();
 
         var userName = System.getUser('USER_NAME');
         var loginName = System.getUser('LOGIN_NAME');
@@ -390,26 +361,6 @@
             }
         }
 
-        /**
-         * 实现post请求
-         * @param to 例：/ts/jsp/qjlb_qj2.jsp
-         * @param data {property1:value1,property2:value2}
-         */
-        function doPost(to, data) {  // to:提交动作（action）,data:参数
-            var myForm = document.createElement("form");
-            myForm.method = "post";
-            myForm.action = to;
-            for (var i in data) {
-                var myInput = document.createElement("input");
-                myInput.setAttribute("name", i);  // 为input对象设置name
-                myInput.setAttribute("value", data[i]);  // 为input对象设置value
-                myForm.appendChild(myInput);
-            }
-            document.body.appendChild(myForm);
-            myForm.submit();
-            document.body.removeChild(myForm);  // 提交后移除创建的form
-        }
-
         //变更标签页时，更改图标
         $('div[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             var img1 = jQuery(e.target).find('img');
@@ -426,32 +377,63 @@
             // previous active tab
         });
 
-
-        var typeNameMap = {
-            '0': '请假',
-            '1': '借考',
-            '2': '异议'
-        };
         //
-        var ListPage = function (preHandle) {
-            this.preHandle = preHandle;
-            if (this.preHandle) {
-                this.showNumSelect = this.preHandle.find('.showNumSelect');
-            } else {
-                this.showNumSelect = jQuery('.showNumSelect');
-            }
+        $('#batch').unbind('change').bind('change', function () {
+            reloadXmList();
+            listPage.search();
+        });
 
-            // 构建页码所需参数
-            this.showPageNum = 5; // 最多显示的页码
-            this.startNum = 1; // 中间页码的第一个页码
-            this.endNum = this.startNum; // 中间页码的最后一个页码
-        };
-        /*获取搜索条件 where语句*/
-        ListPage.prototype.getExtWhere = function () {
-            var extWhere = "and OWNER_CODE='" + System.getUser("USER_CODE") + "'";
-//            if (batch === '1') {
+    };
+
+    function reloadXmList() {
+        var batchType = $('#batch').find("option:selected").val();
+        var type = '';
+        if (batchType === '1') {
+            type = '0';
+        } else if (batchType === '2') {
+            type = '1';
+        }
+
+        /*获取待办项目列表*/
+        var todoXmListBean = FireFly.doAct("TS_COMM_TODO", "getTodoXMList", {"TYPE": type});
+        var todoXmList = todoXmListBean._DATA_;
+        var $xmIdSelect = $('#xm_id');
+        $xmIdSelect.html('');
+        $xmIdSelect.append('<option value=""></option>');
+        for (var i = 0; i < todoXmList.length; i++) {
+            var todoXm = todoXmList[i];
+            $xmIdSelect.append('<option value="' + todoXm.XM_ID + '">' + todoXm.XM_NAME + '</option>');
+        }
+        $xmIdSelect.unbind('change').bind('change', function () {
+            listPage.search();
+        });
+    }
+
+    var typeNameMap = {
+        '0': '请假',
+        '1': '借考',
+        '2': '异议'
+    };
+
+    var ListPage = function (preHandle) {
+        this.preHandle = preHandle;
+        if (this.preHandle) {
+            this.showNumSelect = this.preHandle.find('.showNumSelect');
+        } else {
+            this.showNumSelect = jQuery('.showNumSelect');
+        }
+
+        // 构建页码所需参数
+        this.showPageNum = 5; // 最多显示的页码
+        this.startNum = 1; // 中间页码的第一个页码
+        this.endNum = this.startNum; // 中间页码的最后一个页码
+    };
+    /*获取搜索条件 where语句*/
+    ListPage.prototype.getExtWhere = function () {
+        var extWhere = "and OWNER_CODE='" + System.getUser("USER_CODE") + "'";
+//            if (batchType === '1') {
 //                extWhere += " and TYPE ='0'";
-//            } else if (batch === '2') {
+//            } else if (batchType === '2') {
 //                extWhere += " and TYPE ='1'";
 //            }
 //            for (var i = 0; i < icodes.length; i++) {
@@ -462,277 +444,281 @@
 //                    extWhere += " and " + icode + "= '" + option + "'";
 //                }
 //            }
-            return extWhere;
-        };
-        /*根据条件获取数据*/
-        ListPage.prototype.getListData = function (num) {
-            var batch = '<%=batch%>';
-            var type = '';
-            if (batch === '1') {
-                type = '0';
-            } else if (batch === '2') {
-                type = '1';
-            }
-            var xmId = $('#xm_id').find("option:selected").val();
+        return extWhere;
+    };
+    /*根据条件获取数据*/
+    ListPage.prototype.getListData = function (num) {
+        var batchType = $('#batch').find("option:selected").val();
+        var type = '';
+        if (batchType === '1') {
+            type = '0';
+        } else if (batchType === '2') {
+            type = '1';
+        }
+        var xmId = $('#xm_id').find("option:selected").val();
 
-            var showNum = parseInt(this.showNumSelect.find("option:selected").val());
+        var showNum = parseInt(this.showNumSelect.find("option:selected").val());
 
-            var data = {};
-            data["_PAGE_"] = {"NOWPAGE": num, "SHOWNUM": showNum};
-            data.TYPE = type;
-            data.XM_ID = xmId;
-            data["_extWhere"] = this.getExtWhere();
+        var data = {};
+        data["_PAGE_"] = {"NOWPAGE": num, "SHOWNUM": showNum};
+        data.TYPE = type;
+        data.XM_ID = xmId;
+        data["_extWhere"] = this.getExtWhere();
 
-            return FireFly.doAct("TS_COMM_TODO", 'getToDoList', data, false);
+        return FireFly.doAct("TS_COMM_TODO", 'getToDoList', data, false);
 //            return FireFly.getListData("TS_COMM_TODO", data, false);
-        };
-        /*根据listdata构建表格*/
-        ListPage.prototype.bldTable = function (listData) {
-            var rhGridTBody;
-            if (this.preHandle) {
-                rhGridTBody = this.preHandle.find(".grid-tbody");
-            } else {
-                rhGridTBody = jQuery(".grid-tbody");
-            }
+    };
+    /*根据listdata构建表格*/
+    ListPage.prototype.bldTable = function (listData) {
+        var rhGridTBody;
+        if (this.preHandle) {
+            rhGridTBody = this.preHandle.find(".grid-tbody");
+        } else {
+            rhGridTBody = jQuery(".grid-tbody");
+        }
 
-            rhGridTBody.html('');
-            for (var i = 0; i < listData._DATA_.length; i++) {
-                var item = listData._DATA_[i];
-                var tr = jQuery('<tr style="height:50px;"></tr>');
-                if (batch === '1' || batch === '2') {
-                    tr.append('<td style="text-align: center;"><input id="' + item.TODO_ID + '"  type="checkbox"></td>');
+        rhGridTBody.html('');
+        for (var i = 0; i < listData._DATA_.length; i++) {
+            var item = listData._DATA_[i];
+            var tr = jQuery('<tr style="height:50px;"></tr>');
+//            if (batchType === '1' || batchType === '2') {
+            tr.append('<td style="text-align: center;"><input id="' + item.TODO_ID + '"  type="checkbox"></td>');
+//            }
+            tr.append('<td style="text-align: center;">' + (i + 1) + '</td>');
+
+            var td = jQuery('<td></td>');
+            var a = jQuery('<td>' + item.TITLE + '</td>');
+            td.append(a);
+            tr.append(td);
+
+            tr.append('<td>' + typeNameMap[item.TYPE] + '</td>');
+            tr.append('<td>' + item.SEND_NAME + '</td>');
+            tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
+            tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');
+            var $btnTd = jQuery('<td></td>');
+            var $btn = jQuery('<button id="' + item.TODO_ID + '"type_value ="' + item.TYPE + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer;margin-left:30%;display:block;color:white;text-align: center;line-height: 35px;font-size:15px;background-color:LightSeaGreen;height:35px;width:70px">' + '审核</button>');
+            $btn.unbind('click').bind('click', function () {
+                var todoId = $(this).attr('id');
+                var dataId = $(this).attr('data-id');
+                var typeValue = $(this).attr('type_value');
+                if (typeValue === '0') {
+                    doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
+                } else if (typeValue === '1') {
+                    doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId, hidden: '2'});
                 }
-                tr.append('<td style="text-align: center;">' + (i + 1) + '</td>');
-
-                var td = jQuery('<td></td>');
-                var a = jQuery('<td>' + item.TITLE + '</td>');
-                td.append(a);
-                tr.append(td);
-
-                tr.append('<td>' + typeNameMap[item.TYPE] + '</td>');
-                tr.append('<td>' + item.SEND_NAME + '</td>');
-                tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
-                tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');
-                var $btnTd = jQuery('<td></td>');
-                var $btn = jQuery('<button id="' + item.TODO_ID + '"type_value ="' + item.TYPE + '" data-id="' + item.DATA_ID + '"  style="cursor: pointer;margin-left:30%;display:block;color:white;text-align: center;line-height: 35px;font-size:15px;background-color:LightSeaGreen;height:35px;width:70px">'+'审核</button>');
-                $btn.unbind('click').bind('click', function () {
-                    var todoId = $(this).attr('id');
-                    var dataId = $(this).attr('data-id');
-                    var typeValue = $(this).attr('type_value');
-                    if (typeValue === '0') {
-                        doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
-                    } else if (typeValue === '1') {
-                        doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId, hidden: '2'});
-                    }
-                });
-                $btnTd.append($btn);
-                tr.append($btnTd);
-                rhGridTBody.append(tr);
-            }
-            Utils.addTableCheckboxChangeEvent("todo-table");
-        };
-        /*构建主体内容（表格和分页）*/
-        ListPage.prototype.bldBody = function (num) {
-            if (!num) {
-                num = 0;
-            }
-            var listData = this.getListData(num);
-            this._lPage = listData._PAGE_;
-            this._lData = listData._DATA_;
-            this.bldTable(listData);
-            this.bldPage(/*listData._PAGE_*/);
-        };
-        /*查询更新*/
-        ListPage.prototype.search = function () {
-            this.bldBody();
-        };
-        /*跳转到指定页*/
-        ListPage.prototype.gotoPage = function (num) {
-            this.bldBody(num);
-        };
-        /*上一页*/
-        ListPage.prototype.prePage = function () {
-            var prePage = parseInt(this._lPage.NOWPAGE) - 1;
-            var nowPage = "" + ((prePage > 0) ? prePage : 1);
-            this.gotoPage(nowPage);
-        };
-        /*下一页*/
-        ListPage.prototype.nextPage = function () {
-            var nextPage = parseInt(this._lPage.NOWPAGE) + 1;
-            var pages = parseInt(this._lPage.PAGES);
-            var nowPage = "" + ((nextPage > pages) ? pages : nextPage);
-            this.gotoPage(nowPage);
-        };
-        /*首页*/
-        ListPage.prototype.firstPage = function () {
-            this.gotoPage(1);
-        };
-        /*末页*/
-        ListPage.prototype.lastPage = function () {
-            this.gotoPage(this._lPage.PAGES);
-        };
-        /*构建分页*/
-        ListPage.prototype.bldPage = function () {
-            this._buildPageFlag = true;
-            var _self = this;
+            });
+            $btnTd.append($btn);
+            tr.append($btnTd);
+            rhGridTBody.append(tr);
+        }
+        Utils.addTableCheckboxChangeEvent("todo-table");
+    };
+    /*构建主体内容（表格和分页）*/
+    ListPage.prototype.bldBody = function (num) {
+        if (!num) {
+            num = 0;
+        }
+        var listData = this.getListData(num);
+        this._lPage = listData._PAGE_;
+        this._lData = listData._DATA_;
+        this.bldTable(listData);
+        this.bldPage(/*listData._PAGE_*/);
+    };
+    /*查询更新*/
+    ListPage.prototype.search = function () {
+        this.bldBody();
+    };
+    /*跳转到指定页*/
+    ListPage.prototype.gotoPage = function (num) {
+        this.bldBody(num);
+    };
+    /*上一页*/
+    ListPage.prototype.prePage = function () {
+        var prePage = parseInt(this._lPage.NOWPAGE) - 1;
+        var nowPage = "" + ((prePage > 0) ? prePage : 1);
+        this.gotoPage(nowPage);
+    };
+    /*下一页*/
+    ListPage.prototype.nextPage = function () {
+        var nextPage = parseInt(this._lPage.NOWPAGE) + 1;
+        var pages = parseInt(this._lPage.PAGES);
+        var nowPage = "" + ((nextPage > pages) ? pages : nextPage);
+        this.gotoPage(nowPage);
+    };
+    /*首页*/
+    ListPage.prototype.firstPage = function () {
+        this.gotoPage(1);
+    };
+    /*末页*/
+    ListPage.prototype.lastPage = function () {
+        this.gotoPage(this._lPage.PAGES);
+    };
+    /*构建分页*/
+    ListPage.prototype.bldPage = function () {
+        this._buildPageFlag = true;
+        var _self = this;
 //            this._page = jQuery("<div class='rhGrid-page'></div>");
-            if (this.preHandle) {
-                this._page = this.preHandle.find(".rhGrid-page");
+        if (this.preHandle) {
+            this._page = this.preHandle.find(".rhGrid-page");
+        } else {
+            this._page = jQuery(".rhGrid-page");
+        }
+        this._page.html('');
+        //判断是否构建分页
+        if (this._buildPageFlag === "false" || this._buildPageFlag === false) {
+            this._page.addClass("rhGrid-page-none");
+        } else if (this._lPage.PAGES === null) {//没有总条数的情况
+            if (this._lPage.NOWPAGE > 1) {//上一页 {"ALLNUM":"1","SHOWNUM":"1000","NOWPAGE":"1","PAGES":"1"}
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
+                    _self.prePage();
+                }));
             } else {
-                this._page = jQuery(".rhGrid-page");
+//			this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
+                this._page.append("<span class='disabled ui-corner-4'><</span>");
             }
-            this._page.html('');
-            //判断是否构建分页
-            if (this._buildPageFlag === "false" || this._buildPageFlag === false) {
-                this._page.addClass("rhGrid-page-none");
-            } else if (this._lPage.PAGES === null) {//没有总条数的情况
-                if (this._lPage.NOWPAGE > 1) {//上一页 {"ALLNUM":"1","SHOWNUM":"1000","NOWPAGE":"1","PAGES":"1"}
-//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
-                    this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
-                        _self.prePage();
-                    }));
-                } else {
-//			this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
-                    this._page.append("<span class='disabled ui-corner-4'><</span>");
-                }
-                this._page.append("<span class='current ui-corner-4'>" + this._lPage.NOWPAGE + "</span>");	//当前页
-                if (this._lData.length === this._lPage.SHOWNUM) {//下一页
+            this._page.append("<span class='current ui-corner-4'>" + this._lPage.NOWPAGE + "</span>");	//当前页
+            if (this._lData.length === this._lPage.SHOWNUM) {//下一页
 //			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
-                    this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
-                        _self.nextPage();
-                    }));
-                } else {
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+                    _self.nextPage();
+                }));
+            } else {
 //			this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
-                    this._page.append("<span class='disabled ui-corner-4'>></span>");
-                }
-            } else if (!jQuery.isEmptyObject(this._lPage)) {
-                // 当前页码
-                var currentPageNum = parseInt(this._lPage.NOWPAGE);
-                // 总页数
-                var sumPage = parseInt(this._lPage.PAGES);
+                this._page.append("<span class='disabled ui-corner-4'>></span>");
+            }
+        } else if (!jQuery.isEmptyObject(this._lPage)) {
+            // 当前页码
+            var currentPageNum = parseInt(this._lPage.NOWPAGE);
+            // 总页数
+            var sumPage = parseInt(this._lPage.PAGES);
 
-                if (this.startNum + this.showPageNum < sumPage) {
-                    this.endNum = this.startNum + this.showPageNum
-                } else {
-                    this.endNum = sumPage;
-                }
+            if (this.startNum + this.showPageNum < sumPage) {
+                this.endNum = this.startNum + this.showPageNum
+            } else {
+                this.endNum = sumPage;
+            }
 
-                // 总条数
-                var allNum = parseInt(this._lPage.ALLNUM);
-                // 显示上一页
-                if (currentPageNum !== 1) {
+            // 总条数
+            var allNum = parseInt(this._lPage.ALLNUM);
+            // 显示上一页
+            if (currentPageNum !== 1) {
 //			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>上一页</a>").click(function(){
-                    this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
-                        _self.prePage();
-                    }));
-                } else {
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'><</a>").click(function () {
+                    _self.prePage();
+                }));
+            } else {
 //			this._page.append("<span class='disabled ui-corner-4'>上一页</span>");
-                    this._page.append("<span class='disabled ui-corner-4'><</span>");
-                }
-                // 移动页码
-                if (currentPageNum > this.startNum + Math.floor((this.endNum - this.startNum) / 2)) {// 如果点击了后面的页码，则后移
-                    if (currentPageNum === sumPage) {// 点击了最后一页
-                        this.endNum = sumPage;
+                this._page.append("<span class='disabled ui-corner-4'><</span>");
+            }
+            // 移动页码
+            if (currentPageNum > this.startNum + Math.floor((this.endNum - this.startNum) / 2)) {// 如果点击了后面的页码，则后移
+                if (currentPageNum === sumPage) {// 点击了最后一页
+                    this.endNum = sumPage;
 
-                        if (this.endNum - this.showPageNum > 0) {
-                            this.startNum = this.endNum - this.showPageNum;
-                        } else {
-                            this.startNum = 1;
-                        }
+                    if (this.endNum - this.showPageNum > 0) {
+                        this.startNum = this.endNum - this.showPageNum;
                     } else {
-                        if (currentPageNum > this.showPageNum) {
-                            this.endNum = currentPageNum + 1;
-                            this.startNum = currentPageNum - this.showPageNum + 1;
-                        }
-                    }
-                } else {// 否则前移
-                    if (currentPageNum === 1) {// 点击了第一页
                         this.startNum = 1;
-                    } else {
-                        this.startNum = currentPageNum - 1;
                     }
-                    if (this.startNum + this.showPageNum < sumPage) {
-                        this.endNum = this.startNum + this.showPageNum;
-                    } else {
-                        this.endNum = sumPage;
+                } else {
+                    if (currentPageNum > this.showPageNum) {
+                        this.endNum = currentPageNum + 1;
+                        this.startNum = currentPageNum - this.showPageNum + 1;
                     }
                 }
-                // 显示首页
-                if (this.startNum !== 1) {
-                    this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>1</a>").click(function () {
-                        _self.gotoPage(parseInt(jQuery(this).html()));
-                    })).append("...");
+            } else {// 否则前移
+                if (currentPageNum === 1) {// 点击了第一页
+                    this.startNum = 1;
+                } else {
+                    this.startNum = currentPageNum - 1;
                 }
-                // 如果总页数小于本页显示的最大页码
-                if (sumPage < this.endNum) {
+                if (this.startNum + this.showPageNum < sumPage) {
+                    this.endNum = this.startNum + this.showPageNum;
+                } else {
                     this.endNum = sumPage;
                 }
-                // 显示中间页码
-                for (var i = this.startNum; i <= this.endNum; i++) {
-                    if (i === currentPageNum) {// 构建当前页
-                        this._page.append("<span class='current ui-corner-4'>" + i + "</span>");
-                    } else {
-                        this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + i + "</a>").click(function () {
-                            _self.gotoPage(parseInt(jQuery(this).html()));
-                        }));
-                    }
-                }
-                // 显示尾页
-                if (sumPage > this.endNum) {
-                    this._page.append("...").append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + sumPage + "</a>").click(function () {
-                        _self.lastPage();
-                    }));
-                }
-                // 显示下一页
-                if (currentPageNum !== sumPage) {
-//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
-                    this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
-                        _self.nextPage();
-                    }));
+            }
+            // 显示首页
+            if (this.startNum !== 1) {
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>1</a>").click(function () {
+                    _self.gotoPage(parseInt(jQuery(this).html()));
+                })).append("...");
+            }
+            // 如果总页数小于本页显示的最大页码
+            if (sumPage < this.endNum) {
+                this.endNum = sumPage;
+            }
+            // 显示中间页码
+            for (var i = this.startNum; i <= this.endNum; i++) {
+                if (i === currentPageNum) {// 构建当前页
+                    this._page.append("<span class='current ui-corner-4'>" + i + "</span>");
                 } else {
-//			this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
-                    this._page.append("<span class='disabled ui-corner-4'>></span>");
-                }
-                // 显示跳转到指定页码
-                if (sumPage > 6) {
-                    this._page.append("<input class='toPageNum ui-corner-4' type='text' value=''/>").append(jQuery("<input class='toPageBtn' type='button' value='GO' />").click(function () {
-                        try {
-                            var val = parseInt(jQuery(this).prev().val());
-                            if (val >= 1 && val <= sumPage) {
-                                _self.gotoPage(val);
-                            }
-                        } catch (e) {
-                            // 页码转换异常，忽略
-                        }
+                    this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + i + "</a>").click(function () {
+                        _self.gotoPage(parseInt(jQuery(this).html()));
                     }));
                 }
-                //总条数显示
+            }
+            // 显示尾页
+            if (sumPage > this.endNum) {
+                this._page.append("...").append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>" + sumPage + "</a>").click(function () {
+                    _self.lastPage();
+                }));
+            }
+            // 显示下一页
+            if (currentPageNum !== sumPage) {
+//			this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>下一页</a>").click(function(){
+                this._page.append(jQuery("<a href='javascript:_parent.window.scroll(0,0);' class='ui-corner-4'>></a>").click(function () {
+                    _self.nextPage();
+                }));
+            } else {
+//			this._page.append("<span class='disabled ui-corner-4'>下一页</span>");
+                this._page.append("<span class='disabled ui-corner-4'>></span>");
+            }
+            // 显示跳转到指定页码
+            if (sumPage > 6) {
+                this._page.append("<input class='toPageNum ui-corner-4' type='text' value=''/>").append(jQuery("<input class='toPageBtn' type='button' value='GO' />").click(function () {
+                    try {
+                        var val = parseInt(jQuery(this).prev().val());
+                        if (val >= 1 && val <= sumPage) {
+                            _self.gotoPage(val);
+                        }
+                    } catch (e) {
+                        // 页码转换异常，忽略
+                    }
+                }));
+            }
+            //总条数显示
 //		jQuery("<span class='allNum'></span>").text("共" + allNum + "条").appendTo(this._page);
 //                jQuery("<span class='allNum'></span>").text(Language.transArr("rh_ui_grid_L1", [allNum])).appendTo(this._page);
-            }
-            // _PAGE_ :{ALLNUM: "2", NOWPAGE: "1", PAGES: "1", SHOWNUM: "50"}
-            //上一页
+        }
+        // _PAGE_ :{ALLNUM: "2", NOWPAGE: "1", PAGES: "1", SHOWNUM: "50"}
+        //上一页
 //            if () {
 //            }
 //            pageBean.NOWPAGE;
 //            pageBean.PAGES;
 
-            //变更每页显示条数时，重新获取数据
-            var showNumSelect;
-            if (this.preHandle) {
-                showNumSelect = this.preHandle.find('.showNumSelect');
-            } else {
-                showNumSelect = jQuery('.showNumSelect');
-            }
-            showNumSelect.on('change', function () {
-                _self.search();
-            });
+        //变更每页显示条数时，重新获取数据
+        var showNumSelect;
+        if (this.preHandle) {
+            showNumSelect = this.preHandle.find('.showNumSelect');
+        } else {
+            showNumSelect = jQuery('.showNumSelect');
+        }
+        showNumSelect.on('change', function () {
+            _self.search();
+        });
 
-            return this._page;
-        };
+        return this._page;
+    };
+
+    $(function () {
+
+        initData(xmId, batchType);
 
         //未处理待办列表
-        var listPage = new ListPage(jQuery('.content-main1'));
+        listPage = new ListPage(jQuery('.content-main1'));
         listPage.bldBody();
 
         //已处理待办列表
@@ -767,7 +753,7 @@
 
                 var td = jQuery('<td>' + item.TITLE + '</td>');
 //                 var tda = jQuery('<td>' + item.TITLE + '</a>');
-                
+
 //                } else if (item.TYPE === '2') {
 //                    a.unbind('click').bind('click', function () {
 //                        var todoId = $(this).attr('id');
@@ -785,7 +771,7 @@
                 tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');
                 tr.append('<td>' + ( item.SH_STATUS === '2' ? '不同意' : '同意' ) + '</td>');
                 tr.append('<td>' + ( item.ZH_STATUS === '2' ? '通过' : (item.ZH_STATUS === '3' ? '不通过' : '') ) + '</td>');
-                var a =  jQuery('<button  id="' + item.TODO_ID + '"type_value ="' + item.TYPE + '" data-id="' + item.DATA_ID + '" style="cursor: pointer;margin-left:19%;display:block;color:white;text-align: center;line-height: 35px;font-size:15px;background-color:LightSeaGreen;height:35px;width:70px">' + '查看</button>');
+                var a = jQuery('<button  id="' + item.TODO_ID + '"type_value ="' + item.TYPE + '" data-id="' + item.DATA_ID + '" style="cursor: pointer;margin-left:19%;display:block;color:white;text-align: center;line-height: 35px;font-size:15px;background-color:LightSeaGreen;height:35px;width:70px">' + '查看</button>');
                 var tda2 = jQuery("<td></td>");
                 tda2.append(a);
                 a.unbind('click').bind('click', function () {
@@ -804,7 +790,58 @@
         };
         listPage2.bldBody();
 
+        mttijiao = function () {
+            var param = {};
+            var radiovalue = $('#tiJiao').find('input:radio:checked').val();
+            var liyou = document.getElementById("liyou").value;
+            param["shstatus"] = radiovalue;
+            param["shreason"] = liyou;
+            if (radiovalue === 1) {
+                param["isRetreat"] = "false";
+            } else {
+                param["isRetreat"] = "true";
+            }
+            var ids = "";
+            var $checkedItems = $('#todo-table').find('tbody').find('input[type="checkbox"]:checked');
+            if ($checkedItems.length <= 0) {
+                alert('请选择要审批的待办！');
+                return;
+            } else {
+                $checkedItems.each(function () {
+                    ids = ids + $(this).attr("id") + ',';
+                });
+                ids = ids.substring(0, ids.length - 1);
+                param["todoId"] = ids;
+                if (batchType === '1') {
+                    FireFly.doAct("TS_QJLB_QJ", "updateData", param);
+                } else if (batchType === '2') {
+                    FireFly.doAct("TS_JKLB_JK", "updateData", param);
+                }
+                listPage.search();
+                $("#tiJiao").modal("hide");
+            }
+        };
     });
+
+    /**
+     * 实现post请求
+     * @param to 例：/ts/jsp/qjlb_qj2.jsp
+     * @param data {property1:value1,property2:value2}
+     */
+    function doPost(to, data) {  // to:提交动作（action）,data:参数
+        var myForm = document.createElement("form");
+        myForm.method = "post";
+        myForm.action = to;
+        for (var i in data) {
+            var myInput = document.createElement("input");
+            myInput.setAttribute("name", i);  // 为input对象设置name
+            myInput.setAttribute("value", data[i]);  // 为input对象设置value
+            myForm.appendChild(myInput);
+        }
+        document.body.appendChild(myForm);
+        myForm.submit();
+        document.body.removeChild(myForm);  // 提交后移除创建的form
+    }
 
     var Utils = {
         /**
