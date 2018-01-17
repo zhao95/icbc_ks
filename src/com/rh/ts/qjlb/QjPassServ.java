@@ -50,13 +50,13 @@ public class QjPassServ extends CommonServ {
        
         /*设置导出展示信息*/
         LinkedHashMap<String, String> colMap = new LinkedHashMap<String, String>();
-        colMap.put("QJ_ID", "申请单编码");
+        colMap.put("QJ_ID", "请假申请单编码");
         colMap.put("QJ_TITLE", "项目名称");
         colMap.put("USER_CODE", "人力资源编码");
         colMap.put("QJ_NAME", "姓名");
         colMap.put("KS_NAME", "考试名称");
         colMap.put("QJ_REASON", "请假事由");
-        colMap.put("QJ_SATUS_NAME", "请假状态");
+        colMap.put("QJ_STATUS_NAME", "请假状态");
 
         return ExpUtils.expUtil(allList, colMap, paramBean);
     }
@@ -95,7 +95,7 @@ public class QjPassServ extends CommonServ {
                     ksName = new StringBuilder(ksName.substring(1));
                 }
                 bean.set("KS_NAME", ksName.toString());
-                bean.set("QJ_SATUS_NAME", QjUtils.getQjStatusName(bean.getStr("QJ_STATUS")));
+                bean.set("QJ_STATUS_NAME", QjUtils.getQjStatusName(bean.getStr("QJ_STATUS")));
             }
         }
         return list;
@@ -130,12 +130,12 @@ public class QjPassServ extends CommonServ {
     public OutBean savedata(ParamBean paramBean) {
         OutBean outBean = new OutBean();
 
-        String nowTime = DateUtils.getDatetime();
-        UserBean currentUser = Context.getUserBean();
+//        String nowTime = DateUtils.getDatetime();
+//        UserBean currentUser = Context.getUserBean();
         //获取项目id
         String xmId = paramBean.getStr("XM_ID");
         Bean xmBean = ServDao.find("TS_XMGL", xmId);
-        String xmName = xmBean.getStr("XM_NAME");
+//        String xmName = xmBean.getStr("XM_NAME");
 
         List<Bean> rowBeanList = paramBean.getList(ImpUtils.DATA_LIST);
 //        List<String> codeList = new ArrayList<String>();// 避免重复添加数据

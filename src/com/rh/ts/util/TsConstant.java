@@ -132,6 +132,9 @@ public class TsConstant {
 
 	//请假申请
 	public final static String SERV_QJ = "TS_QJLB_QJ";
+
+	//请假申请
+	public final static String SERV_JK = "TS_JKLB_JK";
 	/**通过请假*/
 	public static final String SERV_XMGL_QJPASS= "TS_XMGL_QJPASS";
 	/**通过借考*/

@@ -61,7 +61,7 @@ $importUser.attr('title', '导入文件为excel格式文件，请不要随意修
 
 //导入模板下载
 $impFile.unbind('click').bind('click', function () {
-  window.open(FireFly.getContextPath() + '/ts/imp_template/项目请假人员导入模板.xls');
+  window.open(FireFly.getContextPath() + '/ts/imp_template/项目请假申请导入模板.xls');
 });
 
 
