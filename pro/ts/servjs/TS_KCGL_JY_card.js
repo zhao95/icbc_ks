@@ -12,3 +12,8 @@ _viewer.getBtn("stop").click(function() {
 		_viewer._saveForm();
 	}
 });
+
+var kcType = _viewer.getItem("KC_TYPE").getValue();
+if(kcType != 2){
+	_viewer.getItem("KC_XM_NAME").hide();
+}

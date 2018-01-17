@@ -49,7 +49,7 @@ public class KcglShServ extends CommonServ {
 		    sb2.append(" (odept_level < 3 or KC_STATE2 = 1)");
 		}
 	    }else if(!roleOrgLv.isEmpty()){
-		sb2.append("odept_level in (" + roleOrgLv + ")");
+		sb2.append("odept_level in (1," + roleOrgLv + ")");
 	    }
 	    
 	    if (sb1.length() > 0 && sb2.length() > 0) {
