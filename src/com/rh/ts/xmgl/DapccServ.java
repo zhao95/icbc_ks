@@ -79,6 +79,29 @@ public class DapccServ extends CommonServ {
         allList.addAll(jkKsList);
 
         for (Bean bean : allList) {
+            String shId = bean.getStr("SH_ID");
+
+            Bean yapzwBean;
+
+            List<Object> values = new ArrayList<Object>();
+            values.add(shId);
+            List<Bean> yapzwBeanList = Transaction.getExecutor().query(
+                    "select * from ts_xmgl_kcap_yapzw a " +
+                            " LEFT JOIN ts_kcgl b ON a.KC_ID = b.KC_ID" +
+                            " left join ts_xmgl_kcap_dapcc_ccsj c on c.SJ_ID =a.SJ_ID " +
+                            " left join ts_kcgl_zwdyb d on d.ZW_ID = a.ZW_ID " +
+                            " where SH_ID=?", values);
+            if (CollectionUtils.isNotEmpty(yapzwBeanList)) {
+                yapzwBean = yapzwBeanList.get(0);
+            } else {
+                yapzwBean = new Bean();
+            }
+            bean.set("KC_NAME", yapzwBean.getStr("KC_NAME"));
+            bean.set("KC_ADDRESS", yapzwBean.getStr("KC_ADDRESS"));
+            bean.set("BM_KS_TIME", yapzwBean.getStr("BM_KS_TIME"));
+            bean.set("SJ_START", yapzwBean.getStr("SJ_START"));
+            bean.set("ZW_ZWH_SJ", yapzwBean.getStr("ZW_ZWH_SJ"));
+
             String examinationName = BMUtil.getExaminationName(bean.getStr("BM_TYPE"), bean.getStr("BM_XL"), bean.getStr("BM_MK"));
             bean.set("ksName", examinationName);
         }
@@ -94,8 +117,11 @@ public class DapccServ extends CommonServ {
         colMap.put("COUNT", "报名数");
         colMap.put("ksName", "考试名称");
         colMap.put("BM_TYPE_NAME", "级别");
-//        colMap.put("", "考场名称");
-//        colMap.put("", "考场地址");
+        colMap.put("KC_NAME", "考场名称");
+        colMap.put("KC_ADDRESS", "考场地址");
+        colMap.put("SJ_START", "考试时间");
+        colMap.put("BM_KS_TIME", "考试时长");
+        colMap.put("ZW_ZWH_SJ", "座位号");
         colMap.put("state", "状态");
         colMap.put("", "承办单位备注");
 
@@ -279,14 +305,17 @@ public class DapccServ extends CommonServ {
 
 
         String sql = "select a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH"
-                + ",(select COUNT(*) from TS_BMSH_PASS a2 where a2.BM_CODE=a.BM_CODE and a2.XM_ID=a.XM_ID AND a2.BM_STATUS NOT IN ('1', '3') ) as count" +
-                ",(case a.BM_STATUS when '2' then '借考' else '' end) as status "
+                + ",countt.count"
+//                + ",(select COUNT(*) from TS_BMSH_PASS a2 where a2.BM_CODE=a.BM_CODE and a2.XM_ID=a.XM_ID AND a2.BM_STATUS NOT IN ('1', '3') ) as count" +
+                + ",(case a.BM_STATUS when '2' then '借考' else '' end) as status "
                 + "from TS_BMSH_PASS a "
-                + "left join SY_ORG_USER b on b.USER_CODE = a.BM_CODE "
-                + "LEFT JOIN SY_ORG_DEPT c ON c.DEPT_CODE = a.S_DEPT "
-                + "LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
-                + "where 1=1 "
-                + whereSql + " order by a.BM_CODE";//,c.DEPT_CODE
+                + " LEFT JOIN (SELECT BM_CODE,count(*) AS count FROM ts_bmsh_pass a2 WHERE a2.XM_ID = ? AND a2.BM_STATUS NOT IN ('1', '3') GROUP BY BM_CODE) countt ON countt.BM_CODE = a.BM_CODE"
+                + " left join SY_ORG_USER b on b.USER_CODE = a.BM_CODE "
+                + " LEFT JOIN SY_ORG_DEPT c ON c.DEPT_CODE = a.S_DEPT "
+                + " LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
+                + " where 1=1 "
+                + whereSql + " order by a.BM_CODE,count desc ";//,c.DEPT_CODE
+        values.add(0, paramBean.getStr("XM_ID"));
         /*not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
                 + " and */
         //where 姓名/登录名/报考类型/报考数  bm_name /login_name?/

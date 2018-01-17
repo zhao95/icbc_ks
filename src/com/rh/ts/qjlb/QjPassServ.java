@@ -199,6 +199,7 @@ public class QjPassServ extends CommonServ {
                 sqlBean.and("USER_CODE", userCode);
                 sqlBean.and("XM_ID", xmId);
                 sqlBean.andLike("QJ_KSNAME", bmPass.getStr("SH_ID"));
+                sqlBean.and("QJ_STATUS", "2");
                 if (ServDao.count(TSQJ_SERVID, sqlBean) > 0) {
                     //已经存在请假信息
                     rowBean.set(ImpUtils.ERROR_NAME, "该考生该考试已经请假");
@@ -223,6 +224,7 @@ public class QjPassServ extends CommonServ {
                     Bean qjbd = null;
                     try {
                         qjbd = ServDao.create(TSQJ_SERVID, qjbean);
+                        Transaction.commit();
                     } catch (Exception e) {
                         rowBean.set(ImpUtils.ERROR_NAME, "程序错误：创建请假申请失败，错误信息为" + e.getMessage());
                         continue;
@@ -300,10 +302,12 @@ public class QjPassServ extends CommonServ {
                     continue;
                 }
 
-                if ("2".equals(bean.getStr("BM_STATUS"))) {
-                    bean.set("BM_STATUS", "3");
-                } else {
-                    bean.set("BM_STATUS", "1");
+                if ("1".equals(shStatus)) {
+                    if ("2".equals(bean.getStr("BM_STATUS"))) {
+                        bean.set("BM_STATUS", "3");
+                    } else {
+                        bean.set("BM_STATUS", "1");
+                    }
                 }
                 ServDao.update(TsConstant.SERV_BMSH_PASS, bean);
             }
