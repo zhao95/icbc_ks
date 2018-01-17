@@ -452,7 +452,7 @@ public class BmlbServ extends CommonServ {
 					beans.set("SH_LEVEL", SH_LEVEL);
 					Bean shBean = new Bean();
 					shBean.set("BM_TITLE", xm_name);
-					shBean.set("RZ_YEAR", rz_year);
+					shBean.set("RZYEAR", rz_year);
 					shBean.set("XM_ID", xm_id);
 					shBean.set("ODEPT_CODE", odept_code);
 					shBean.set("BM_ID", bm_id);
