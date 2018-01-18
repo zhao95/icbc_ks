@@ -68,10 +68,10 @@ select `t`.`KC_ID` AS `kc_id`,`t`.`KC_TYPE` AS `KC_TYPE`,`t`.`KC_XM_ID` AS `KC_X
 where (`a`.`DEPT_CODE` = `t`.`S_ODEPT`)) AS `odept_level`,(select `a`.`CODE_PATH` 
 from `sy_org_dept` `a` where (`a`.`DEPT_CODE` = `t`.`S_ODEPT`)) AS `odept_path`,
 group_concat(`g`.`GLY_NAME` separator ',') AS `gly_name` from (`ts_kcgl` `t` left join
- `ts_kcgl_gly` `g` on((`t`.`KC_ID` = `g`.`KC_ID`))) group by `t`.`KC_ID` 
+ `ts_kcgl_gly` `g` on((`t`.`KC_ID` = `g`.`KC_ID`))) group by `t`.`KC_ID`;
  
  
  
-create view TS_XMGL_BM_KSLB_cccs_v as
-select a.*,b.KSLBK_PID from TS_XMGL_BM_KSLB a left join TS_XMGL_BM_KSLBK b on a.KSLBK_ID = b.KSLBK_ID
+create or replace view TS_XMGL_BM_KSLB_cccs_v as
+select a.*,b.KSLBK_PID from TS_XMGL_BM_KSLB a left join TS_XMGL_BM_KSLBK b on a.KSLBK_ID = b.KSLBK_ID;
  
