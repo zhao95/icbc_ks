@@ -257,8 +257,9 @@ public class PassServ extends CommonServ {
 				// 将数据删除 若存在的话在stay中 因为不会再往下推送 所以审核 级数不会变
 				String bmid = bean.getStr("BM_ID");
 				// 获取 stay里对象
-					ServDao.delete("TS_BMSH_STAY", bmid);
-
+					SqlBean sqlbean= new SqlBean();
+					sqlbean.and("BM_ID", bmid);
+					ServDao.delete("TS_BMSH_PASS", sqlbean);
 				bean.remove("SH_ID");
 				bean.remove("S_CMPY");
 				bean.remove("S_ATIME");
