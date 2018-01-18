@@ -582,7 +582,6 @@ public class RuleServ extends CommonServ {
 			if(!"".equals(zsxl)){
 				sqlbean.and("STU_PERSON_ID", BM_CODE);
 				//是否是 自动获取 报名的考试
-				sqlbean.and("POSTION_ID", BM_CODE);
 					sqlbean.andIn("QUALFY_STAT", lxtype.split(","));
 					
 					sqlbean.andIn("CERT_GRADE_CODE", zsdj.split(","));
