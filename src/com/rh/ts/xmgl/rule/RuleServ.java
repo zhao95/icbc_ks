@@ -497,10 +497,7 @@ public class RuleServ extends CommonServ {
 			String lxtype = bean.getStr("R_CERT_STAT");//证书类型  有效获取中  无效  
 			int cy = bean.getInt("R_RZYEAR");//从业年限
 			int zd = bean.getInt("R_ZD");//自动验证  报考序列证书是否 通过
-			SqlBean Sqlbeans = new SqlBean();
-			Sqlbeans.andGT("YEAR(BGN_DATE)-YEAR(END_DATE)",zsvalid);
-			ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, Sqlbeans);
-			
+			/*ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, new ParamBean().setWhere(""));*/
 			if("1".equals(zd)){
 				zsxl=BM_XL;
 				zsdj=BM_TYPE;
@@ -592,7 +589,7 @@ public class RuleServ extends CommonServ {
 					//判断证书有效期
 					if("0".equals(zsvalid)){
 					}else{
-						sqlbean.appendWhere("_WHERE_", " AND YEAR(BGN_DATE)-YEAR(END_DATE)>'"+zsvalid+"'");
+						sqlbean.andGT("YEAR(END_DATE)-YEAR(BGN_DATE)", zsvalid);
 					}
 					
 					
@@ -605,7 +602,7 @@ public class RuleServ extends CommonServ {
 					//判断证书有效期
 					if("0".equals(zsvalid)){
 					}else{
-						sqlbean.appendWhere("_WHERE_", " AND YEAR(BGN_DATE)-YEAR(END_DATE)>'"+zsvalid+"'");
+						sqlbean.andGT("YEAR(END_DATE)-YEAR(BGN_DATE)", zsvalid);
 					}
 					
 				}else{
