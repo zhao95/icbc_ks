@@ -180,6 +180,8 @@ $("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").change(functio
 $("#TS_KCGL_JKIP-viListViewBatch-addBatch").click(function(){
 	setTimeout(function () {
 		$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").change(function(){
+			$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").addClass("tooltip");
+			$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").attr("title","格式规范:1-1,表示第一排第一座");
 			var ipVal = $(this).val();
 			var reg = new RegExp("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$");
 			if(!reg.test(ipVal)){
@@ -210,9 +212,7 @@ if(_viewer.getParHandler().getParHandler() != undefined || _viewer.getParHandler
 	}
 }
 
-
-
-
-
+$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").addClass("tooltip");
+$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").attr("title","格式规范:1-1,表示第一排第一座");
 
 

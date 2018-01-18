@@ -272,7 +272,7 @@ function notInTable(array){
 	var main = $("#TS_XMGL_CCCS_2 .content-mainCont");
 	$("#mytable").remove();
 	
-	var htmlStr = '<table border="1" class="rhGrid JPadding JColResizer" id="mytable" style="margin:0px 8px 15px 8px;width:0%">';
+	var htmlStr = '<table border="1" class="rhGrid JPadding JColResizer" id="mytable" style="margin:0px 8px 15px 8px;width:98%">';
 	htmlStr += '<caption align="left">不符合条件考生：</caption>';
 	htmlStr += '<thead class="rhGrid-thead"><tr><th class="rhGrid-thead-num" style="width: 3.3%;"></th><th icode="BM_NAME" class="rhGrid-thead-th" style="width: 15.7%;">姓名</th><th icode="BM_CODE" class="rhGrid-thead-th" style="width: 15.7%;">人力资源编码</th><th icode="BM_XL" class="rhGrid-thead-th" style="width: 15.7%;">序列</th><th icode="BM_MK" class="rhGrid-thead-th" style="width: 15.7%;">模块</th><th icode="BM_TYPE_NAME" class="rhGrid-thead-th" style="width: 5.9%;">级别</th><th icode="BM_KS_TIME" class="rhGrid-thead-th" style="width: 10%;">考试时长</th><th icode="ODEPT_CODE_V__NAME" class="rhGrid-thead-th" style="width: 16%;">机构</th></tr></thead>';
 	htmlStr += '<tbody class="rhGrid-tbody">';
