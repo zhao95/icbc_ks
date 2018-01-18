@@ -68,6 +68,9 @@ public class RoleMgr {
 
 					if (groupBean != null) {
 
+						// 群组角色 自定义关联机构
+						Bean groupRelOrg = groupBean.getBean("ROLE_REL_DCODES");
+
 						String roleCodes = groupBean.getStr("ROLE_CODES");
 
 						for (String role : roleCodes.split(",")) {
@@ -75,7 +78,22 @@ public class RoleMgr {
 							if (!Strings.isBlank(role)) {
 								// 缓存获取角色信息
 								RoleBean roleBean = RoleMgr.getRole(role);
+
 								if (roleBean != null) {
+									// 从群组中获取自定义关联机构
+									if (roleBean.getStr("ROLE_TYPE").equals("2")) {
+
+										if (groupRelOrg != null && !groupRelOrg.isEmpty()) {
+
+											Bean roleRelOrg = groupRelOrg.getBean(role);
+
+											if (roleRelOrg != null && !roleRelOrg.isEmpty()) {
+
+												roleBean.set("ROLE_DCODE", roleRelOrg.getStr("ROLE_DCODE"));
+												roleBean.set("ROLE_DNAME", roleRelOrg.getStr("ROLE_DNAME"));
+											}
+										}
+									}
 									list.add(roleBean);
 								}
 							}
@@ -168,9 +186,9 @@ public class RoleMgr {
 
 		return false;
 	}
-	
+
 	public static Bean getRoleOptsByUser(String userCode) {
-		return getRoleOptsByUser(userCode,"");
+		return getRoleOptsByUser(userCode, "");
 	}
 
 	/**
@@ -179,7 +197,7 @@ public class RoleMgr {
 	 * @param userCode
 	 * @return
 	 */
-	public static Bean getRoleOptsByUser(String userCode,String servId) {
+	public static Bean getRoleOptsByUser(String userCode, String servId) {
 		// 缓存获取用户 所有角色list 包含功能
 		List<RoleBean> rolelist = getRoleList(userCode);
 
@@ -199,40 +217,56 @@ public class RoleMgr {
 				String mdCode = md.getStr("MD_CODE");
 
 				String mdVal = md.getStr("MD_VAL");
-				
-				if (!Strings.isBlank(servId) && !mdCode.equals(servId+"_PVLG")) {
-					continue;
-				}
 
 				if (!Strings.isBlank(mdVal)) {
 
 					// 合并角色功能字符串 逗号隔开
 					if (roleOptBean.containsKey(mdCode)) {
 
-						mdVal = Strings.mergeStr(roleOptBean.getStr(mdCode), mdVal);
+						Bean mdValBean = roleOptBean.getBean(mdCode);
+
+						String mdValTemp = "";
+
+						for (Object k : mdValBean.keySet()) {
+
+							if (Strings.isBlank(mdValTemp)) {
+
+								mdValTemp = k.toString();
+							} else {
+
+								mdValTemp += "," + k.toString();
+							}
+						}
+
+						mdVal = Strings.mergeStr(mdValTemp, mdVal);
 					}
 
-					roleOptBean.put(mdCode, mdVal);
-
 					Bean pvlg = getOptsPvlg(role, opts, mdVal);
-					
+
 					if (!pvlg.isEmpty()) {
-						
-//						roleOptBean.put("PVLG-" + mdCode, pvlg);
+
 						roleOptBean.put(mdCode, pvlg);
 					}
 				}
 			}
 		}
-		return roleOptBean;
+
+		if (!Strings.isBlank(servId)) {
+			Bean rtn = new Bean();
+			rtn.set(servId + "_PVLG", roleOptBean.getBean(servId + "_PVLG"));
+			return rtn;
+		} else {
+			return roleOptBean;
+		}
 	}
 
 	/**
 	 * 获取角色功能 的 关联部门
+	 * 
 	 * @param role
 	 * @param opts
 	 * @param mdVal
-	 * @return Bean  key: PVLG+功能模块编码
+	 * @return Bean key: PVLG+功能模块编码
 	 */
 	private static Bean getOptsPvlg(RoleBean role, Bean opts, String mdVal) {
 
@@ -250,7 +284,7 @@ public class RoleMgr {
 
 				String dCode = opts.getBean(opt).getStr("ROLE_DCODE");
 
-				if (role.getRoleType() == 1) {
+				if (role.getRoleType() == 1) { // 本人机构层级
 
 					if (!Strings.isBlank(orgLv)) {
 
@@ -262,8 +296,8 @@ public class RoleMgr {
 						orgLv = role.getOrgLv() + "";
 					}
 
-				} else if(role.getRoleType() == 2) {
-					
+				} else if (role.getRoleType() == 2) {// 自定义机构
+
 					if (!Strings.isBlank(dCode)) {
 
 						if (!Strings.containsValue(dCode, role.getDCode())) {
@@ -273,7 +307,7 @@ public class RoleMgr {
 					} else {
 						dCode = role.getDCode();
 					}
-					
+
 				}
 
 				if (!Strings.isBlank(dCode)) {

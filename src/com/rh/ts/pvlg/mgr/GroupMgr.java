@@ -23,6 +23,8 @@ import com.rh.ts.util.TsConstant;
 public class GroupMgr {
 
 	private static Log log = LogFactory.getLog(GroupMgr.class);
+	
+	final static String GROUP_ROLE_RELDCODE = "TS_PVLG_GROUP_ROLE-REL_RDCODE";
 
 	/**
 	 * 获取用户所有群组编码 (逗号相隔)
@@ -123,6 +125,13 @@ public class GroupMgr {
 		if (!Strings.isBlank(userCodes)) {
 			// 缓存获取群组绑定人员
 			groupBean.set("USER_CODES", userCodes);
+		}
+		
+		Bean roleRelOrg = getGroupRoleDeptCodes(groupId);
+		
+		if (roleRelOrg != null) {
+			// 缓存获取群组绑定角色的自定义关联机构
+			groupBean.set("ROLE_REL_DCODES", roleRelOrg);
 		}
 
 		return groupBean;
@@ -245,6 +254,47 @@ public class GroupMgr {
 		return roleCodes;
 
 	}
+	
+	/**
+	 * 获取群组绑定角色的自定义关联机构
+	 * 
+	 * @param groupId
+	 * @return
+	 */
+	public static Bean getGroupRoleDeptCodes(String groupId) {
+
+		if (!groupInDeadLine(groupId)) { // 判断群组是否在有效期
+			return null;
+		}
+		
+		Bean roleOrg  = (Bean) getGroupCache(groupId, GROUP_ROLE_RELDCODE);
+
+		if (roleOrg == null || roleOrg.isEmpty()) {
+			
+			roleOrg = new Bean();
+
+			Bean param = new Bean();
+			param.set("G_ID", groupId);
+			param.set("S_FLAG", 1);
+
+			// 查询群组关联的角色
+			List<Bean> roleList = ServDao.finds(TsConstant.SERV_GROUP_ROLE, param);
+
+			for (Bean role : roleList) {
+				//自定义关联机构
+				if(role.getStr("ROLE_TYPE").equals("2")) {
+					
+					roleOrg.set(role.getStr("ROLE_CODE"), role);
+				}
+			}
+
+			if (roleOrg != null && !roleOrg.isEmpty()) {
+				updateGroupCache(groupId, GROUP_ROLE_RELDCODE, roleOrg);
+			}
+		}
+
+		return roleOrg;
+	}
 
 	/**
 	 * 当前时间是否在有效期
@@ -333,10 +383,15 @@ public class GroupMgr {
 			throw new TipException("更新群组角色缓存失败, 群组编码为空!");
 		}
 
-		// 清除缓存
+		// 清除缓存 角色编码
 		removeGroupCache(groupId, TsConstant.SERV_GROUP_ROLE);
 		// 重新添加缓存
 		getGroupRoleCodes(groupId);
+		
+		// 清除缓存 角色自定义机构
+		removeGroupCache(groupId, GROUP_ROLE_RELDCODE);
+		// 重新加载缓存
+		getGroupRoleDeptCodes(groupId);
 	}
 
 	/**

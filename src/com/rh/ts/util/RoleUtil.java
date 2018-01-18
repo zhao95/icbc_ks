@@ -67,7 +67,6 @@ public class RoleUtil {
 						
 					} else if (userOptBean.containsKey(optCode)) {// 用户已赋予功能
 						// 该功能可见范围
-//						Bean optPvlg = userOpt.getBean("PVLG-" + mdCode).getBean(optCode);
 						Bean optPvlg = userOpt.getBean(mdCode).getBean(optCode);
 						// 关联机构层级的机构编码
 						String orgsLv = getOrgsByLv(userCode, optPvlg.getStr("ROLE_ORG_LV"));
