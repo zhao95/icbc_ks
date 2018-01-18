@@ -207,7 +207,7 @@ public class RuleServ extends CommonServ {
 														littlemxname+=" 可报名此考试";
 													}
 												}else{
-													littlemxname="";
+													littlemxname="未设置此考试岗位规则";
 													break;
 												}
 											}else{
