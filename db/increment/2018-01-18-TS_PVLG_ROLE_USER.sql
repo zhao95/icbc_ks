@@ -36,7 +36,7 @@ ALTER TABLE TS_PVLG_GROUP_ROLE ADD COLUMN ROLE_DCODE VARCHAR(40) COMMENT '关联
 ALTER TABLE TS_PVLG_GROUP_ROLE ADD COLUMN ROLE_DNAME VARCHAR(100) COMMENT '关联部门名称' ;
 ALTER TABLE TS_PVLG_GROUP_ROLE ADD COLUMN ROLE_ORG_LV  DECIMAL(1,0) COMMENT '关联本机构 级别 一二三四五级';
 
-UPDATE ts_pvlg_group_role a,ts_pvlg_role b SET a.role_type = b.role_type,a.role_dcode= b.role_dcode,a.role_dname = b.role_dname, a.role_org_lv = b.role_org_lv WHERE a.role_id = b.role_code;
+UPDATE ts_pvlg_group_role a,ts_pvlg_role b SET a.role_type = b.role_type,a.role_dcode= b.role_dcode,a.role_dname = b.role_dname, a.role_org_lv = b.role_org_lv WHERE b.role_id = a.role_code;
 
 UPDATE 
   sy_org_user u,
