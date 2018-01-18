@@ -19,7 +19,7 @@
     UserBean userBean = Context.getUserBean(request);
  	// 如果没有登录则导向首页去登录
     if(userBean == null) {
-  	 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/index.jsp");
+  	 String loginUrl = Context.getSyConf("SY_LOGIN_URL","/login.jsp");
   	 RequestUtils.sendDir(response, loginUrl);
     }
     String devUsers = Context.getSyConf("SY_DEV_USERS","");//开发用户

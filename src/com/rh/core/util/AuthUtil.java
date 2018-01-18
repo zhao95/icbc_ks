@@ -123,7 +123,7 @@ public class AuthUtil {
 				}
 			}
 		} else {
-			request.getRequestDispatcher("ksgogogo.jsp").forward(request, response);
+			request.getRequestDispatcher("/ts/ksgogogo.jsp").forward(request, response);
 			// if(isTran){
 			// request.getRequestDispatcher("index.jsp").forward(request,response);
 			// }

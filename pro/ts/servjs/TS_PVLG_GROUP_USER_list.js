@@ -36,8 +36,8 @@ function bindCard() {
 }
 
 _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
-    var configStr = "TS_ORG_USER_ALL,{'TARGET':'USER_CODE~USER_NAME~USER_LOGIN_NAME','SOURCE':'USER_CODE~USER_NAME~USER_LOGIN_NAME'," +
-        "'HIDE':'','TYPE':'multi','HTMLITEM':''}";
+    var configStr = "TS_ORG_USER_ALL,{'TARGET':'DEPT_CODE~USER_CODE~USER_NAME~USER_LOGIN_NAME~DUTY_LV_CODE~ODEPT_NAME_LV1~ODEPT_NAME_LV2~ODEPT_NAME_LV3','SOURCE':'DEPT_CODE~USER_CODE~USER_NAME~USER_LOGIN_NAME~DUTY_LV_CODE~ODEPT_NAME_LV1~ODEPT_NAME_LV2~ODEPT_NAME_LV3'," +
+        "'HIDE':'DUTY_LV_CODE,DEPT_CODE','TYPE':'multi','HTMLITEM':''}";
     var options = {
         "config": configStr,
 //			"params" : {"_TABLE_":"SY_ORG_USER"},
@@ -46,6 +46,8 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
         "replaceCallBack": function (idArray) {//回调，idArray为选中记录的相应字段的数组集合
             var codes = idArray.USER_CODE.split(",");
             var names = idArray.USER_NAME.split(",");
+            
+            var dutyLvCode = idArray.DUTY_LV_CODE.split(",");
 
             var paramArray = [];
 
@@ -59,6 +61,8 @@ _viewer.getBtn("impUser").unbind("click").bind("click", function (event) {
                 param.USER_NAME = names[i];
                 //选取类型 1人员
                 param.GU_TYPE = 1;
+                //职务层级编码
+                param.DUTY_LV_CODE = dutyLvCode[i];
 
                 paramArray.push(param);
             }
@@ -128,3 +132,10 @@ $importFile.attr('title', '导入文件为excel格式文件，内容为无标题
 $impFile.unbind('click').bind('click', function () {
     window.open(FireFly.getContextPath() + '/ts/imp_template/权限群组人员导入模板.xls');
 });
+
+/*
+* 删除前方法执行
+*/
+_viewer.beforeDelete = function(pkArray) {
+	showVerify(pkArray,_viewer);
+};

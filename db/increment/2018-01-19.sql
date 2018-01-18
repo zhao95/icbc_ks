@@ -1,0 +1,4 @@
+
+	
+	
+ALTER TABLE `TS_BMSH_ADMIT` ADD COLUMN `XM_ID` varchar(40) NULL;

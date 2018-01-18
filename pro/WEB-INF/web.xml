@@ -157,6 +157,15 @@
 	</listener>
 
 	<servlet>
+		<servlet-name>TemporaryLoginServlet</servlet-name>
+		<servlet-class>com.rh.core.TemporaryLoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TemporaryLoginServlet</servlet-name>
+		<url-pattern>/t</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>DoServlet</servlet-name>
 		<servlet-class>com.rh.core.DoServlet</servlet-class>
 	</servlet>
@@ -164,6 +173,10 @@
 		<servlet-name>DoServlet</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
+	
+	
+	
+	
 	<servlet>
 		<servlet-name>FileServlet</servlet-name>
 		<servlet-class>com.rh.core.FileServlet</servlet-class>

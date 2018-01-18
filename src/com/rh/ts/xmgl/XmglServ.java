@@ -132,7 +132,7 @@ public  void   copyBmgl(String dataId,Bean beanA){
 		nksqzbean.remove("KSQZ_ID");
 		nksqzbean.remove("_PK_");
 		ksqzIdBean =ServDao.save(oKsqzServId, nksqzbean);
-		copyGZ ( oldXmidWhere,nXmid,ksqzIdBean.getId());
+		//copyGZ ( oldXmidWhere,nXmid,ksqzIdBean.getId());2018-1-18
 		}
 	}
 	// 考试类别复制
@@ -194,44 +194,44 @@ public  void   copyBmgl(String dataId,Bean beanA){
 	}
 }
 	
-//审核规则的复制
-public  void  copyGZ (String oldXmidWhere,String nXmid,String   ksqzId){
-	//审核规则的复制
-		String  ObmshgzkServId="TS_XMGL_BMSH_SHGZ";
-		Bean  GZBean  =new   Bean();
-		List<Bean>  ObmshgzkBeanList= ServDao.finds(ObmshgzkServId, oldXmidWhere);//1条
-		if(ObmshgzkBeanList !=null && !ObmshgzkBeanList.isEmpty()){
-			for(int i=0;i<ObmshgzkBeanList.size();i++){
-				Bean  bmshgzkbean  =new   Bean();
-				bmshgzkbean.copyFrom(ObmshgzkBeanList.get(i));
-				bmshgzkbean.set("XM_ID", nXmid);
-				bmshgzkbean.set("KSQZ_ID", ksqzId);
-				bmshgzkbean.remove("GZ_ID");
-				bmshgzkbean.remove("_PK_");
-				GZBean =ServDao.save(ObmshgzkServId, bmshgzkbean);
-				copyGZMX ( oldXmidWhere, nXmid,   ksqzId, GZBean.getId());
-			}
-		}
-}
+////审核规则的复制2018-1-18
+//public  void  copyGZ (String oldXmidWhere,String nXmid,String   ksqzId){
+//	//审核规则的复制
+//		String  ObmshgzkServId="TS_XMGL_BMSH_SHGZ";
+//		Bean  GZBean  =new   Bean();
+//		List<Bean>  ObmshgzkBeanList= ServDao.finds(ObmshgzkServId, oldXmidWhere);//1条
+//		if(ObmshgzkBeanList !=null && !ObmshgzkBeanList.isEmpty()){
+//			for(int i=0;i<ObmshgzkBeanList.size();i++){
+//				Bean  bmshgzkbean  =new   Bean();
+//				bmshgzkbean.copyFrom(ObmshgzkBeanList.get(i));
+//				bmshgzkbean.set("XM_ID", nXmid);
+//				bmshgzkbean.set("KSQZ_ID", ksqzId);
+//				bmshgzkbean.remove("GZ_ID");
+//				bmshgzkbean.remove("_PK_");
+//				GZBean =ServDao.save(ObmshgzkServId, bmshgzkbean);
+//				copyGZMX ( oldXmidWhere, nXmid,   ksqzId, GZBean.getId());
+//			}
+//		}
+//}
 	
-//规则详细
-public  void  copyGZMX (String oldXmidWhere,String nXmid,String   ksqzId,String  gzid){
-	//审核规则的复制
-		String  ObmshgzkmxServId="TS_XMGL_BMSH_SHGZ_MX";
-		List<Bean>  ObmshgzkBeanList= ServDao.finds(ObmshgzkmxServId, oldXmidWhere);//1条
-		if(ObmshgzkBeanList !=null && !ObmshgzkBeanList.isEmpty()){
-			for(int i=0;i<ObmshgzkBeanList.size();i++){
-				Bean  bmshgzkmxbean  =new   Bean();
-				bmshgzkmxbean.copyFrom(ObmshgzkBeanList.get(i));
-				bmshgzkmxbean.set("XM_ID", nXmid);
-				bmshgzkmxbean.set("KSQZ_ID", ksqzId);
-				bmshgzkmxbean.set("GZ_ID", ksqzId);
-				bmshgzkmxbean.remove("MX_ID");
-				bmshgzkmxbean.remove("_PK_");
-				ServDao.save(ObmshgzkmxServId, bmshgzkmxbean);
-			}
-		}
-}
+////规则详细2018-1-18
+//public  void  copyGZMX (String oldXmidWhere,String nXmid,String   ksqzId,String  gzid){
+//	//审核规则的复制
+//		String  ObmshgzkmxServId="TS_XMGL_BMSH_SHGZ_MX";
+//		List<Bean>  ObmshgzkBeanList= ServDao.finds(ObmshgzkmxServId, oldXmidWhere);//1条
+//		if(ObmshgzkBeanList !=null && !ObmshgzkBeanList.isEmpty()){
+//			for(int i=0;i<ObmshgzkBeanList.size();i++){
+//				Bean  bmshgzkmxbean  =new   Bean();
+//				bmshgzkmxbean.copyFrom(ObmshgzkBeanList.get(i));
+//				bmshgzkmxbean.set("XM_ID", nXmid);
+//				bmshgzkmxbean.set("KSQZ_ID", ksqzId);
+//				bmshgzkmxbean.set("GZ_ID", gzid);//gzid
+//				bmshgzkmxbean.remove("MX_ID");
+//				bmshgzkmxbean.remove("_PK_");
+//				ServDao.save(ObmshgzkmxServId, bmshgzkmxbean);
+//			}
+//		}
+//}
 //报名审核复制
 public  void  copybmsh(String dataId,Bean beanA){
 	String bmshservId="TS_XMGL_BMSH";

@@ -346,7 +346,7 @@ public class FlowServ extends CommonServ {
         //审核类型  1:逐级审核  2:越级审核
         int wfsType = wfsBean.getInt("WFS_TYPE");
         int wfsSteps = wfsBean.getInt("WFS_STEPS");
-        if (flowName == 1 || flowName == 3 || flowName == 2) {
+        if (flowName == 1) {
             //报名审核
             if (wfsType == 1) {
                 String s = "";
@@ -450,6 +450,104 @@ public class FlowServ extends CommonServ {
                 outBean.set("WFS_ID", wfsId);
                 outBean.set("result", s);
             }
+        } else if (flowName == 2 || flowName == 3) {
+            //请假/借考审核
+            int getStep = 0;
+            if (level == 0) {
+                getStep = wfsSteps;
+            } else {
+                getStep = level - 1;
+            }
+
+            String s = "";
+            String node_name = "";
+            //节点
+            List<Bean> newlist = new ArrayList<Bean>();
+
+            if (flowName == 2 && getStep == 1) {
+                String shDeptCode = formBean.getStr("JK_YJFH");//userBean.getStr("DEPT_CODE");//要审核的机构编码
+
+                //借考 && 为最后一个审核节点
+                List<Bean> nodeList = ServDao.finds("TS_WFS_NODE_APPLY", "AND WFS_ID='" + wfsId + "' and NODE_STEPS = " + getStep);
+                for (Bean nodeBean : nodeList) {
+                    String str = nodeBean.getStr("NODE_ID");
+                    List<Bean> nodeApplyBeanList = ServDao.finds("TS_WFS_BMSHLC", "and NODE_ID='" + str + "'");
+
+                    for (Bean nodeApplyBean : nodeApplyBeanList) {
+                        newlist.add(nodeApplyBean);
+                        String nodeApplyDeptCodeStr = nodeApplyBean.getStr("DEPT_CODE");
+                        String[] nodeApplyDeptCodes = nodeApplyDeptCodeStr.split(",");
+                        for (String nodeApplyDeptCode : nodeApplyDeptCodes) {
+                            if (nodeApplyDeptCode.equals("0010100000")) {
+                                s += nodeApplyBean.getStr("SHR_USERCODE") + ",";
+                                node_name = nodeBean.getStr("NODE_NAME");
+                                getStep = nodeBean.getInt("NODE_STEPS");
+                                break;
+                            }
+                            if (nodeApplyDeptCode.equals(shDeptCode)) {
+                                s += nodeApplyBean.getStr("SHR_USERCODE") + ",";
+                                node_name = nodeBean.getStr("NODE_NAME");
+                                getStep = nodeBean.getInt("NODE_STEPS");
+                                break;
+                            }
+                            List<DeptBean> childDepts = OrgMgr.getChildDepts(nodeBean.getStr("S_CMPY"), nodeApplyDeptCode);
+                            if (childDepts != null) {
+                                for (DeptBean deptBean : childDepts) {
+                                    if (deptBean.getCode().equals(shDeptCode)) {
+                                        s += nodeApplyBean.getStr("SHR_USERCODE") + ",";
+                                        node_name = nodeBean.getStr("NODE_NAME");
+                                        getStep = nodeBean.getInt("NODE_STEPS");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } else {
+
+                List<Bean> finds2 = ServDao.finds("TS_WFS_NODE_APPLY", "AND WFS_ID='" + wfsId + "' and NODE_STEPS = " + getStep);
+                for (Bean bean2 : finds2) {
+                    String str = bean2.getStr("NODE_ID");
+                    List<Bean> finds = ServDao.finds("TS_WFS_BMSHLC", "and NODE_ID='" + str + "'");
+
+                    for (Bean bean : finds) {
+                        newlist.add(bean);
+                        String dept_code = bean.getStr("DEPT_CODE");
+                        String[] split = dept_code.split(",");
+                        for (String string : split) {
+                            if (string.equals("0010100000")) {
+                                s += bean.getStr("SHR_USERCODE") + ",";
+                                node_name = bean2.getStr("NODE_NAME");
+                                getStep = bean2.getInt("NODE_STEPS");
+                                break;
+                            }
+                            if (string.equals(userBean.getStr("DEPT_CODE"))) {
+                                s += bean.getStr("SHR_USERCODE") + ",";
+                                node_name = bean2.getStr("NODE_NAME");
+                                getStep = bean2.getInt("NODE_STEPS");
+                                break;
+                            }
+                            List<DeptBean> childDepts = OrgMgr.getChildDepts(bean2.getStr("S_CMPY"), string);
+                            for (DeptBean deptBean : childDepts) {
+                                if (deptBean.getCode().equals(userBean.getStr("DEPT_CODE"))) {
+                                    s += bean.getStr("SHR_USERCODE") + ",";
+                                    node_name = bean2.getStr("NODE_NAME");
+                                    getStep = bean2.getInt("NODE_STEPS");
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+            }
+            outBean.set("SH_LEVEL", getStep);
+            outBean.set("NODE_NAME", node_name);
+            outBean.set("resultlist", newlist);
+            outBean.set("WFS_ID", wfsId);
+            outBean.set("result", s);
+//            }
         } else {
             //异地借考，请假审核
             int getStep = 0;
@@ -520,10 +618,10 @@ public class FlowServ extends CommonServ {
                     }
 
                     List<Bean> list2 = ServDao.finds("TS_PVLG_GROUP_USER", sqlWhere);
-                    for (int i = 0; i < list2.size(); i++) {
+                    for (Bean a2 : list2) {
                         Bean tmpUser = new Bean();
-                        tmpUser.set("SHR_NAME", list2.get(i).getStr("USER_NAME"));
-                        tmpUser.set("SHR_USERCODE", list2.get(i).getStr("USER_CODE"));
+                        tmpUser.set("SHR_NAME", a2.getStr("USER_NAME"));
+                        tmpUser.set("SHR_USERCODE", a2.getStr("USER_CODE"));
                         resList.add(tmpUser);
                     }
                     continue;
@@ -531,7 +629,7 @@ public class FlowServ extends CommonServ {
                 //2.预定义部门，审核人职位已填写
                 if (selDept == 0 && (!ydyBm.equals("")) && (!shzw.equals(""))) {
 
-                    if (shzw.indexOf(",") != -1) {
+                    if (shzw.contains(",")) {
                         shzw = shzw.replace(",", "','");
                     }
 
@@ -559,25 +657,25 @@ public class FlowServ extends CommonServ {
                     }
                     if (!sqlWhere.equals("")) {
                         List<Bean> userlist = ServDao.finds("SY_ORG_USER_ALL", sqlWhere);
-                        for (int i = 0; i < userlist.size(); i++) {
+                        for (Bean anUser : userlist) {
                             Bean tmpUser = new Bean();
-                            tmpUser.set("SHR_NAME", userlist.get(i).getStr("USER_NAME"));
-                            tmpUser.set("SHR_USERCODE", userlist.get(i).getStr("USER_CODE"));
+                            tmpUser.set("SHR_NAME", anUser.getStr("USER_NAME"));
+                            tmpUser.set("SHR_USERCODE", anUser.getStr("USER_CODE"));
                             resList.add(tmpUser);
                         }
                     }
                 }
                 //3.自定义部门，审核人职位已填写
                 if (selDept == 1 && (!zdyDeptCode.equals("")) && (!shzw.equals(""))) {
-                    if (shzw.indexOf(",") != -1) {
+                    if (shzw.contains(",")) {
                         shzw = shzw.replace(",", "','");
                     }
 
                     List<Bean> userlist = ServDao.finds("SY_ORG_USER_ALL", "and dept_code = '" + zdyDeptCode + "' and DUTY_LV_CODE in( '" + shzw + "')");
-                    for (int i = 0; i < userlist.size(); i++) {
+                    for (Bean anUser : userlist) {
                         Bean tmpUser = new Bean();
-                        tmpUser.set("SHR_NAME", userlist.get(i).getStr("USER_NAME"));
-                        tmpUser.set("SHR_USERCODE", userlist.get(i).getStr("USER_CODE"));
+                        tmpUser.set("SHR_NAME", anUser.getStr("USER_NAME"));
+                        tmpUser.set("SHR_USERCODE", anUser.getStr("USER_CODE"));
                         resList.add(tmpUser);
                     }
                 }

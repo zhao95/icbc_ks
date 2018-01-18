@@ -155,7 +155,7 @@
         <div style="margin-left: 10px; background-color: white; height: 20px; width: 98%"></div>
         <div id="table1" class="" style="margin-left: 10px; width: 98%">
             <div class="content-main1">
-                <table class="rhGrid  JColResizer" id="todo-table"><%--JPadding--%>
+                <table class="rhGrid" id="todo-table"><%--JPadding JColResizer--%>
                     <thead class="">
                     <tr style="backGround-color:WhiteSmoke; height: 30px">
                         <th id="todo-th-checkbox" style="display: none;text-align: center;">
@@ -379,23 +379,22 @@
 
         //
         $('#batch').unbind('change').bind('change', function () {
-            reloadXmList();
             listPage.search();
         });
 
     };
 
     function reloadXmList() {
-        var batchType = $('#batch').find("option:selected").val();
-        var type = '';
-        if (batchType === '1') {
-            type = '0';
-        } else if (batchType === '2') {
-            type = '1';
-        }
+//        var batchType = $('#batch').find("option:selected").val();
+//        var type = '';
+//        if (batchType === '1') {
+//            type = '0';
+//        } else if (batchType === '2') {
+//            type = '1';
+//        }
 
         /*获取待办项目列表*/
-        var todoXmListBean = FireFly.doAct("TS_COMM_TODO", "getTodoXMList", {"TYPE": type});
+        var todoXmListBean = FireFly.doAct("TS_COMM_TODO", "getTodoXMList", {});/*"TYPE": type*/
         var todoXmList = todoXmListBean._DATA_;
         var $xmIdSelect = $('#xm_id');
         $xmIdSelect.html('');

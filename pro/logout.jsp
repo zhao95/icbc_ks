@@ -7,6 +7,6 @@
 	if(!debugMode){
 		window.close();
 	}else{
-		window.location.href = FireFly.getContextPath() + "/ksgogogo.jsp";
+		window.location.href = FireFly.getContextPath() + "/t";
 	}
 </script>

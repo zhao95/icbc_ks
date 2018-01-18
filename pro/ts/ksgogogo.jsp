@@ -21,7 +21,7 @@
 	href="/apple-touch-icon-precompose.png" />
 <link rel="shortcut icon" href="favicon.ico" />
 <!-- 引用公用头部资源文件：开始 -->
-<%@ include file="sy/base/view/inHeader.jsp"%>
+<%@ include file="../sy/base/view/inHeader.jsp"%>
 <!-- 引用公用头部资源文件：结束 -->
 <link rel="stylesheet" type="text/css"
 	href="<%=CONTEXT_PATH%>/sy/comm/index/incl-index.css" charset="UTF-8" />
@@ -48,7 +48,7 @@
 			//var imgLink = FireFly.getHttpHost() + FireFly.contextPath + "/file?act=qrCode&value=" + tempValue + "&size=150";
 			//jQuery("#mb-link-img").attr("src",imgLink);
 			checkLang();
-			if(window.screen.height<=768){
+			if(window.screen.height <= 768){
 				jQuery("#form-div").css("top","-20px");
 			}else if(window.screen.height > 768){
 				jQuery("#form-div").css("top","8%");

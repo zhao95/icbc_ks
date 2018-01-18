@@ -9,17 +9,16 @@ import com.rh.ts.util.TsConstant;
 import com.rh.ts.xmgl.rule.IRule;
 
 /**
- * 按要求持证
+ * 夸序列时验证本序列是否
  * 
  * @author zjl
  *
  */
 public class ObtainCert implements IRule {
-	
 	static final String wyCode = "A000000000000000004"; // 文员序列code
 	static final String ywclCode = "A000000000000000005"; // 业务处理序列code
 	static final String thgwCode = "A000000000000000016"; // 投行顾问序列code
-	static final String yxCode = "A000000000000000006"; // 营销序列code
+    final String yxCode = "A000000000000000006"; // 营销序列code
 	static final String dgCode = "A000000000000000022"; // 对公客户经理序列code
 	static final String xdCode = "A000000000000000013"; // 信贷序列code
 
@@ -46,43 +45,34 @@ public class ObtainCert implements IRule {
 
 		// 人力资源编码; 获证状态(1-正常;2-获取中;3-过期)
 		certSql.and("STU_PERSON_ID", user).andNot("QUALFY_STAT", 3);
-
-		// 报考初级无持证要求
-		if (lvCode.equals("1")) {
-			return true;
-		}
 		
-		if (wyCode.equals(xl)) { // 文员序列各层级资格不设置考试，取得业务类其他各序列同等级专业资格视同取得文员序列专业资格
-			xl = ywclCode;
+		Bean zwbean = ServDao.find("SY_HRM_ZDSTAFFPOSITION", user);  //本序列
+		
+		String user_xl = zwbean.getStr("STATION_NO_CODE");
+		
+		if("A000000000000000020".equals(user_xl)){//才会资金序列 报名  考试无  资金  默认 匹配 财会
+			user_xl="A000000000000000019";
+		}
+		if(user_xl.equals(xl)){
+			return true;
+		}else{
 		}
 
-		if (lvCode.equals("2")) { // 报考中级，需要初级资质
+		if (wyCode.equals(user_xl)) { // 文员序列各层级资格不设置考试，取得业务类其他各序列同等级专业资格视同取得文员序列专业资格
+			user_xl = ywclCode;
+		}
+
 
 			// 投行顾问序列初级资格不设置考试，取得营销、对公客户经理序列初级专业资格，信贷A类初级和信贷B类初级专业资质，可视为取得投行顾问序列初级资格
-			if (thgwCode.equals(xl)) {
+			if (thgwCode.equals(user_xl)) {
 
-				postSql.and("POSTION_QUALIFICATION", "1").andIn("POSTION_SEQUENCE_ID", yxCode, dgCode, xdCode);
+				postSql.andIn("POSTION_SEQUENCE_ID", yxCode, dgCode, xdCode);
 
 			} else {
 
-				postSql.and("POSTION_QUALIFICATION", "1").and("POSTION_SEQUENCE_ID", xl);
+				postSql.and("POSTION_SEQUENCE_ID", user_xl);
 			}
-
-			certSql.and("CERT_GRADE_CODE", "1");
-
-		} else if (lvCode.equals("3")) { // 报考高级，需要中级资质
-
-			postSql.and("POSTION_QUALIFICATION", "2").and("POSTION_SEQUENCE_ID", xl);
-
-			certSql.and("CERT_GRADE_CODE", "2");
-
-		} else { // 报考专家级，需要高级资质
-
-			postSql.and("POSTION_QUALIFICATION", "3").and("POSTION_SEQUENCE_ID", xl);
-
-			certSql.and("CERT_GRADE_CODE", "3");
-		}
-
+		
 		// 获证sql 设置证书模块条件
 //		if (xlArg != null && xlArg.length > 0) {
 //
