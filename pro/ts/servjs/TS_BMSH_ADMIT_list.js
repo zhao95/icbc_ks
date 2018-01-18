@@ -1,4 +1,10 @@
 var _viewer = this
+/*
+* 删除前方法执行
+*/
+rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+	showVerify(pkArray,_viewer);
+}
 //从excel中导入人员
 const IMPORT_FILE_ID = "TS_BMSH_ADMIT-impUserByExcel";
 //避免刷新数据重复添加
@@ -29,10 +35,11 @@ if (jQuery('#' + IMPORT_FILE_ID).length === 0) {
                 var data = {};
                 // data.XM_SZ_ID = xmSzId;
                 data.FILE_ID = fileId;
+                data.XM_ID =  _viewer.getParHandler().getItem("XM_ID").getValue();
                 FireFly.doAct(_viewer.servId, "saveFromExcel", data, false, false, function (data) {
                     rh.ui.File.prototype.downloadFile(data.FILE_ID, "test");
-                    _viewer.refresh();
-                    alert(data._MSG_);
+                    alert(data.mess);
+                    _viewer.refreshGrid();
                 });
             }
         }
@@ -49,5 +56,5 @@ $importFile.attr('title', '导入文件为excel格式文件，内容为无标题
 //导入模板下载
 var $impFile = jQuery('#' + _viewer.servId + '-impFile');
 $impFile.unbind('click').bind('click', function () {
-  window.open(FireFly.getContextPath() + '/ts/imp_template/准入测试导入模板.xls');
+  window.open(FireFly.getContextPath() + '/ts/imp_template/报名准入测试导入模板.xls');
 });
