@@ -40,12 +40,14 @@ _viewer.beforeSave = function() {
         var shrName=_viewer.getItem("BMSHLC_SHR").getValue();//审核人
         var shDepts=_viewer.getItem("DEPT_CODE").getValue();
         var nodeId=_viewer.getItem("NODE_ID").getValue();
-
-        var  WHERE="and SHR_USERCODE='"+userCode+"'and BMSHLC_SHR='"+shrName+"' and DEPT_CODE='"+shDepts+"' and NODE_ID='"+nodeId+"'";
+        var nodeId=_viewer.getItem("BMSHLC_YESNO").getValue();					
+    	var  WHERE="and SHR_USERCODE='"+userCode+"' and DEPT_CODE='"+shDepts+"' and NODE_ID='"+nodeId+"' and BMSHLC_YESNO='"+nodeId+"'";
+        //var  WHERE="and SHR_USERCODE='"+userCode+"'and BMSHLC_SHR='"+shrName+"' and DEPT_CODE='"+shDepts+"' and NODE_ID='"+nodeId+"'";
         FireFly.doAct(_viewer.servId,"count",{"_WHERE_":WHERE},true,false,function(data){
             if(data._DATA_ > 0){
                 _viewer.getItem("BMSHLC_SHR").clear();//审核人
                 _viewer.getItem("DEPT_CODE").clear();
+                _viewer.getItem("BMSHLC_YESNO").clear();
                 alert("数据有重复");
             }
         });
