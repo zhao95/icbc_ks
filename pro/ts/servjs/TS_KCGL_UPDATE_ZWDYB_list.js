@@ -20,7 +20,7 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 	    		FireFly.doAct("TS_KCGL_ZWDYB","byid",{"_PK_":zwId},true,false,function(data){
 	    			var bean = {};
 	    			bean["UPDATE_ID"] = updateId;
-	    			bean["ZW_ACTION"] = "update";//引入数据默认为修改
+	    			bean["ZW_ACTION"] = "delete";//引入数据默认为删除
 	    			bean["ZW_ZWH_XT"] = data.ZW_ZWH_XT;
 	    			bean["ZW_ZWH_SJ"] = data.ZW_ZWH_SJ;
 	    			bean["ZW_IP"] = data.ZW_IP;
@@ -39,10 +39,17 @@ _viewer.getBtn("impData").unbind("click").bind("click", function(event) {
 	queryView.show(event);	 
 });
 
-
 $("#TS_KCGL_UPDATE_ZWDYB .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
+		
+		var rootId = $(item).find("td[icode='ROOT_ID']").html();
+		if(rootId == ""){
+			$(item).find("select[icode='ZW_ACTION']").attr("disabled",true);
+		}else{
+			$(item).find("select[icode='ZW_ACTION']").find("option[value='add']").attr("disabled", "disabled"); 
+		}
+		
 		$(item).find("td[icode='BUTTONS']").append(
 				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optLookBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>'+
 				'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optEditBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'
@@ -104,9 +111,59 @@ if (_viewer.getParHandler().getParHandler().getParHandler() != undefined
 		$("#TS_KCGL_UPDATE_ZWDYB-impData").hide();
 		$("#TS_KCGL_UPDATE_ZWDYB-delete").hide();
 		$("#TS_KCGL_UPDATE_ZWDYB").find("a[opercode='optEditBtn']").hide();
+		$("#TS_KCGL_UPDATE_ZWDYB-tmplBtn").hide();
+		$("#TS_KCGL_UPDATE_ZWDYB-imp").hide();
 	}
 }
 
+
+_viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
+	window.open(FireFly.getContextPath() + '/ts/imp_template/考场管理-变更审核-座位对应表导入模版.xls');
+});
+
+_viewer.getBtn("imp").unbind("click").bind("click",function() {
+	var config = {"SERV_ID":_viewer.opts.sId, "FILE_CAT":"EXCEL_UPLOAD", "FILENUMBER":1, 
+		"VALUE":5, "TYPES":"*.xls;*.xlsx", "DESC":"导入Excel文件"};
+	var file = new rh.ui.File({
+		"config" : config,"width":"99%"
+	});
+	
+	var importWin = new rh.ui.popPrompt({
+		title:"请选择文件",
+		tip:"请选择要导入的Excel文件：",
+		okFunc:function() {
+			var fileData = file.getFileData();
+			if (jQuery.isEmptyObject(fileData)) {
+				alert("请选择文件上传");
+				return;
+			}
+			var fileId = null;
+			for (var key in fileData) {
+				fileId = key;
+			}
+			if (fileId == null){
+				alert("请选择文件上传");
+				return;
+			}
+					
+			var param = {};
+			param["updateId"] = updateId;
+			
+			_viewer._imp(fileId,param);
+			importWin.closePrompt();
+	        // _viewer.refreshGrid();
+			file.destroy();
+		},
+		closeFunc:function() {
+			file.destroy();
+		}
+	});
+
+    var container = _viewer._getImpContainer(event, importWin);
+	container.append(file.obj);
+	file.obj.css({'margin-left':'5px'});
+	file.initUpload();
+});
 
 
 

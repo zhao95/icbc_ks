@@ -132,13 +132,32 @@ public class KcglShServ extends CommonServ {
 		    dataBean.remove("UPDATE_ID");
 		    dataBean.set("KC_ID", kcId);
 		    dataBean.remove("_PK_");
+		    if(tables1[i].equals("TS_KCGL_UPDATE_ZWDYB")){
+			String zwh = dataBean.getStr("ZW_ZWH_XT");
+			String IPStr = dataBean.getStr("ZW_IP");
+			int num_zwh = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_ZWH_XT ='"+zwh+"'"));
+			int num_ip = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_IP ='"+IPStr+"'"));
+			if(num_zwh > 0 || num_ip > 0){
+			    continue;
+			}
+		    }
 		    ServDao.save(tables2[i], dataBean);
 		} else if(action.equals("update")){
+		    String childId = dataBean.getStr("ROOT_ID");
 		    dataBean.remove(actionCode);
 		    dataBean.remove("UPDATE_ID");
 		    dataBean.set("KC_ID", kcId);
 		    dataBean.setId(dataBean.getStr("ROOT_ID"));
 		    dataBean.remove("ROOT_ID");
+		    if(tables1[i].equals("TS_KCGL_UPDATE_ZWDYB")){
+			String zwh = dataBean.getStr("ZW_ZWH_XT");
+			String IPStr = dataBean.getStr("ZW_IP");
+			int num_zwh = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_ZWH_XT ='"+zwh+"' and ZW_ID !='"+childId+"'"));
+			int num_ip = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_IP ='"+IPStr+"' and ZW_ID !='"+childId+"'"));
+			if(num_zwh > 0 || num_ip > 0){
+			    continue;
+			}
+		    }
 		    ServDao.save(tables2[i], dataBean);
 		}else if (action.equals("delete")) {
 		    ServDao.delete(tables2[i], dataBean.getStr("ROOT_ID"));

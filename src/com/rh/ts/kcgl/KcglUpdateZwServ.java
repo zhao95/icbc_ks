@@ -16,11 +16,9 @@ import com.rh.core.comm.file.TempFile.Storage;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
-import com.rh.core.serv.ServDao;
 import com.rh.core.serv.ServDefBean;
 import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.dict.DictMgr;
-import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
 
 import jxl.Cell;
@@ -34,59 +32,11 @@ import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
-public class KcglExpServ extends CommonServ{
-    private static final int ONETIME_EXP_NUM = 20000;
-    public OutBean exp(ParamBean paramBean) {
-   	String servId = paramBean.getServId();
-   	ServDefBean serv = ServUtils.getServDef(servId);
-   	long count = 0;
-   	long times = 0;
-   	paramBean.setQueryPageShowNum(ONETIME_EXP_NUM); // 设置每页最大导出数据量
-   	beforeExp(paramBean); // 执行监听方法
-   	if (paramBean.getId().length() > 0) { // 支持指定记录的导出（支持多选）
-   	    String searchWhere = " and " + serv.getPKey() + " in ('" + paramBean.getId().replaceAll(",", "','") + "')";
-   	    paramBean.setQuerySearchWhere(searchWhere);
-   	}
-   	ExportExcel expExcel = new ExportExcel(serv);
-   	try {
-   	    OutBean outBean = queryExp(paramBean);
-   	    count = outBean.getCount();
-   	    // 导出第一次查询数据
-   	    paramBean.setQueryPageNowPage(1); // 导出当前第几页
-   	    afterExp(paramBean, outBean); // 执行导出查询后扩展方法
-   	    LinkedHashMap<String, Bean> cols = outBean.getCols();
-   	    cols.remove("BUTTONS");
-   	    expExcel.createHeader(cols);
-   	    expExcel.appendData(outBean.getDataList(), paramBean);
-
-   	    // 存在多页数据
-   	    if (ONETIME_EXP_NUM < count) {
-   		times = count / ONETIME_EXP_NUM;
-   		// 如果获取的是整页数据
-   		if (ONETIME_EXP_NUM * times == count && count != 0) {
-   		    times = times - 1;
-   		}
-   		for (int i = 1; i <= times; i++) {
-   		    paramBean.setQueryPageNowPage(i + 1); // 导出当前第几页
-   		    OutBean out = query(paramBean);
-   		    afterExp(paramBean, out); // 执行导出查询后扩展方法
-   		    expExcel.appendData(out.getDataList(), paramBean);
-   		}
-   	    }
-   	    expExcel.addSumRow();
-   	} catch (Exception e) {
-   	    log.error("导出Excel文件异常" + e.getMessage(), e);
-   	} finally {
-   	    expExcel.close();
-   	}
-   	return new OutBean().setOk();
-       }
-    
+public class KcglUpdateZwServ extends CommonServ{
     public OutBean imp(ParamBean paramBean) {
         OutBean outBean = new OutBean();
         /***********/
-        String kcId = paramBean.getStr("KC_ID");
-        String kczId = paramBean.getStr("KCZ_ID");
+        String updateId = paramBean.getStr("updateId");
         /*************/
         beforeImp(paramBean); //执行监听方法
         String servId = paramBean.getServId();
@@ -149,12 +99,8 @@ public class KcglExpServ extends CommonServ{
                     Cell [] cell = sheet.getRow(i);
                     Bean data = new Bean();
                     /****************/
-                    if(servId.equals("TS_KCZGL_GROUP")){
-                	data.set("KCZ_ID", kczId);
-                	data.set("SERV_ID", servId);
-                    }else{
-                	data.set("KC_ID", kcId);
-                    }
+                	data.set("UPDATE_ID", updateId);
+                	data.set("ZW_ACTION","add");
                     /******************/
                     for(int j = 0; j < cell.length && j < cols; j++) {
                         if (itemMaps[j] != null) {
@@ -179,7 +125,7 @@ public class KcglExpServ extends CommonServ{
                     	error = getExcelRowDataError(data);
                     	
                     	//验证座位号IP和系统座位号
-			if (servId.equals("TS_KCGL_ZWDYB")) {
+			if (servId.equals("TS_KCGL_UPDATE_ZWDYB")) {
 			    String zwh = data.getStr("ZW_ZWH_XT");
 			    String IPStr = data.getStr("ZW_IP");
 
@@ -194,14 +140,6 @@ public class KcglExpServ extends CommonServ{
 				error = "IP地址格式不正确";
 			    }
 			    
-			    int num_zwh = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_ZWH_XT ='"+zwh+"'"));
-			    int num_ip = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_IP ='"+IPStr+"'"));
-			    if(num_zwh > 0){
-				error = "座位号已存在";
-			    }
-			    if(num_ip > 0){
-				error = "IP地址已存在";
-			    }
 			}
                     	
                     	if (StringUtils.isEmpty(error)) { //数据校验通过
