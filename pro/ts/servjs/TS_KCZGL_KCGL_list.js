@@ -25,6 +25,43 @@ _viewer.getBtn("add").unbind("click").bind("click",function(event){
 	queryView.show(event);
 });
 
+var parparparServId = _viewer.getParHandler().getParHandler().getParHandler().servId;
+if(parparparServId == "TS_XMGL_CCCS_KCZGL"){
+	_viewer.getBtn("addLin").show();
+	var xm_id = _viewer.getParHandler().getParHandler().getParHandler().getItem("XM_ID").getValue();
+	
+	_viewer.getBtn("addLin").unbind("click").bind("click",function(event){
+		//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
+		var param = {};
+		param["SOURCE"] = "KC_ID~KC_CODE~KC_NAME~KC_ODEPTNAME";
+		param["TYPE"] = "multi";
+		param["HIDE"] = "KC_TS_KCGLID";
+		param["EXTWHERE"] = "and KC_STATE = 5 and kc_type = 2 and kc_xm_id = '"+xm_id+"'";
+		var configStr = "TS_KCGL,"+JsonToStr(param);
+		
+		var options = {
+			"config" :configStr,
+			"parHandler":_viewer,
+			"formHandler":_viewer.form,
+		    "replaceCallBack":function(idArray) {//回调，idArray为选中记录的相应字段的数组集合
+		    	var groupId = _viewer.getParHandler().getPKCode();
+		    	var ids = idArray.KC_ID;
+		    	if(ids != "" && groupId != ""){
+		    		FireFly.doAct(_viewer.servId, "kczAddKc", {"ids":ids,"groupId":groupId}, true,false,function(data){
+			    		_viewer.refresh();
+			    	});	
+		    	}
+			}
+		};
+		//2.用系统的查询选择组件 rh.vi.rhSelectListView()
+		var queryView = new rh.vi.rhSelectListView(options);
+		queryView.show(event);
+	});
+	
+}else{
+	_viewer.getBtn("addLin").hide();
+}
+
 $("#TS_KCZGL_KCGL .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;

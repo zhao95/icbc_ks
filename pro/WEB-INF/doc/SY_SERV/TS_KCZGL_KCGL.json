@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"and serv_id = 'TS_KCZGL_KCGL'",
-"S_MTIME":"2018-01-16 14:38:49:517",
+"S_MTIME":"2018-01-18 09:46:33:352",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "SERV_LINK_FLAG":"1",
@@ -2205,6 +2205,33 @@
 {
 "ACT_TYPE":"1",
 "ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"add",
+"ACT_MEMO":"",
+"ACT_CODE":"addLin",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"3cZzul2qhaNFP6DzKkkT",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"3cZzul2qhaNFP6DzKkkT",
+"SERV_ID":"TS_KCZGL_KCGL",
+"S_MTIME":"2018-01-18 09:46:33:317",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"25",
+"ACT_GROUP":"2",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"3",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":"添加临时考场"
+},
+{
+"ACT_TYPE":"1",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"batchSave",
 "ACT_MEMO":"",
 "ACT_CODE":"batchSave",
@@ -2224,7 +2251,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"3",
+"_ROWNUM_":"4",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 保 存 "
@@ -2251,7 +2278,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"4",
+"_ROWNUM_":"5",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 保 存 "
@@ -2278,7 +2305,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"5",
+"_ROWNUM_":"6",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"复制并新建"
@@ -2305,7 +2332,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"6",
+"_ROWNUM_":"7",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"变更历史"
@@ -2332,7 +2359,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"7",
+"_ROWNUM_":"8",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 删 除 "
@@ -2359,7 +2386,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"8",
+"_ROWNUM_":"9",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"导入模版"
@@ -2386,7 +2413,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"9",
+"_ROWNUM_":"10",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 入 "
@@ -2413,7 +2440,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"10",
+"_ROWNUM_":"11",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 出 "
@@ -2440,7 +2467,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"11",
+"_ROWNUM_":"12",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 接 收 "
@@ -2467,7 +2494,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"12",
+"_ROWNUM_":"13",
 "ACT_TIP":"zip文件导入",
 "EN_JSON":"",
 "ACT_NAME":"批量导入"
@@ -2494,7 +2521,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"13",
+"_ROWNUM_":"14",
 "ACT_TIP":"zip文件导出",
 "EN_JSON":"",
 "ACT_NAME":"批量导出"
@@ -2521,7 +2548,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"14",
+"_ROWNUM_":"15",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"更新考场信息"
