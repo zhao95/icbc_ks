@@ -38,7 +38,7 @@ public class BeforeHighCertDue implements IRule {
 		if(xl.equals(user_xl)){
 			//本序列
 		}else{
-			return false;
+			return true;
 		}
 
 		JSONArray obj;

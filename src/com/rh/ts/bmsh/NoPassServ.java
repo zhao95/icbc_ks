@@ -406,6 +406,7 @@ public class NoPassServ extends CommonServ {
 				newBean1.set("SH_OTHER", allman);
 				newBean1.set("SH_LEVEL", outbean.getStr("SH_LEVEL"));
 				newBean1.set("BM_YIYI", bmid);
+				newBean1.set("YIYI_LIYOU", liyou);
 				newBean1.set("BM_STATUS", 0);
 				ServDao.save("TS_BMSH_STAY", newBean1);
 			
