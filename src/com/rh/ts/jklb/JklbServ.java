@@ -479,7 +479,7 @@ public class JklbServ extends CommonServ {
                 outBean.setError("没有审核人，请联系管理员！");
             }
         } else {
-            int nodeSteps = shBean.getInt("NODE_STEPS");
+            int nodeSteps = shBean.getInt("SH_LEVEL");//shBean.getInt("NODE_STEPS");
             String nodeName = shBean.getStr("NODE_NAME");
             String wfsId = shBean.getStr("WFS_ID");
             StringBuilder shrNames = new StringBuilder();
@@ -577,18 +577,12 @@ public class JklbServ extends CommonServ {
             //项目有报名设置 在项目报名时间内 && 不存在进行中或已通过的报名（是否已经请假）（是否已经借考）
             if (inApplyTime(xmId) && queryJkList.size() <= 0 && queryQjList.size() <= 0) {
                 //通过TS_BMLB_BM表，获取标题信息
-                Bean bmBean = ServDao.find("TS_BMLB_BM", shId);
-                if (bmBean == null) {
-                    //报名信息丢失移除（数据错误）
-                    iterator.remove();
-                    continue;
-                }
-                String bmTitle = (String) bmBean.get("BM_TITLE");
+                String bmTitle = (String) tsBmshPass.get("BM_TITLE");
 //        String bmLb = (String) bmBean.get("BM_LB");
-                String bmXl = (String) bmBean.get("BM_XL");
-                String bmMk = (String) bmBean.get("BM_MK");
-                String bmType = (String) bmBean.get("BM_TYPE");
-                String lbDate = (String) bmBean.get("LB_DATE");
+                String bmXl = (String) tsBmshPass.get("BM_XL");
+                String bmMk = (String) tsBmshPass.get("BM_MK");
+                String bmType = (String) tsBmshPass.get("BM_TYPE");
+                String lbDate = (String) tsBmshPass.get("LB_DATE");
                 String bm_bt = BMUtil.getExaminationName(bmType, bmXl, bmMk);
                 String title = "";
                 if (!"".equals(bmMk)) {

@@ -320,7 +320,7 @@ function showTodoTip() {
             tipListEl.append(itemContent);
         }
         //如无数据，则提示
-        if (todoList.length == 0) {
+        if (todoList.length === 0) {
             tipListEl.append(
                 [
                     '<div style="text-align:center; min-height: 100px;font-size: 14px;color:#999999;padding-top:10px;">',

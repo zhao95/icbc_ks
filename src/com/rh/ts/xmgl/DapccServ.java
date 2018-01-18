@@ -218,7 +218,7 @@ public class DapccServ extends CommonServ {
 //        configMap.put("searchJkCodePath", " a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
 //                " and ? like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%')");
 //        configMap.put("searchKsTime", "CAST(BM_KS_TIME as SIGNED) < ?");
-//        configMap.put("searchBmCount", "count = ?");
+        configMap.put("searchBmCount", "count = ?");
 
         @SuppressWarnings("rawtypes")
         List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
@@ -314,7 +314,7 @@ public class DapccServ extends CommonServ {
                 + " LEFT JOIN SY_ORG_DEPT c ON c.DEPT_CODE = a.S_DEPT "
                 + " LEFT JOIN SY_ORG_DEPT d ON d.DEPT_CODE = a.JK_ODEPT "
                 + " where 1=1 "
-                + whereSql + " order by a.BM_CODE,count desc ";//,c.DEPT_CODE
+                + whereSql + " order by count desc,a.BM_CODE";//,c.DEPT_CODE
         values.add(0, paramBean.getStr("XM_ID"));
         /*not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) "
                 + " and */

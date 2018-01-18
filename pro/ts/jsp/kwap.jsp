@@ -255,9 +255,9 @@
                 <select id="search-bm-mk" style="width:176px;" type="text" title=""></select>
                 <select id="search-bm-jb" type="text" title=""></select>
             </div>
-            <%--<div class="col-sm-2" style="width: 10%;min-width: 82px;max-width:90px;">
+            <div class="col-sm-2" style="width: 10%;min-width: 82px;max-width:90px;">
                 报考数<input id="search-bm-count" type="text" title="" style="width: 24px;">
-            </div>--%>
+            </div>
             <div class="col-sm-2" style="width: 7%;float: right">
                 <button onclick="KsObject.search()" class="btn btn-default" value="查询"
                         style="top: -3px;position: relative;height: 32px;color: #fff;background-color:#5ab6a6;padding: 3px 20px;">
