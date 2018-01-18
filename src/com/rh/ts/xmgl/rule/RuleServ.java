@@ -11,7 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
+import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
+import com.rh.core.org.UserBean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -491,13 +493,19 @@ public class RuleServ extends CommonServ {
 			String zsmk = bean.getStr("R_MK");//证书模块
 			String zsdj = bean.getStr("R_LV");//证书等级
 			String zslv = bean.getStr("R_TYPE");//证书获证类型  1 与  2 或
-			String zsvalid = bean.getStr("R_YEAR");//证书有效期
+			int zsvalid = bean.getInt("R_YEAR");//证书有效期
 			String lxtype = bean.getStr("R_CERT_STAT");//证书类型  有效获取中  无效  
 			int cy = bean.getInt("R_RZYEAR");//从业年限
 			int zd = bean.getInt("R_ZD");//自动验证  报考序列证书是否 通过
+			SqlBean Sqlbeans = new SqlBean();
+			Sqlbeans.andGT("YEAR(BGN_DATE)-YEAR(END_DATE)",zsvalid);
+			ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, Sqlbeans);
+			
 			if("1".equals(zd)){
 				zsxl=BM_XL;
 				zsdj=BM_TYPE;
+				zslv="0";
+				
 			}
 			String zspost = bean.getStr("R_POST_NAME");//职务层级
 			//先判断从业年限
@@ -530,18 +538,46 @@ public class RuleServ extends CommonServ {
 			}else{
 				//职务层级不为空
 				//职务层级为空
-				SqlBean sql = new SqlBean();
-				sql.andIn("POSTION_ID", BM_CODE);
-				sql.and("POSTION_SEQUENCE", zspost.split(","));
-				int count = ServDao.count("ts_org_postion", sql);
-				if(count>0){
+				String zwname = "";
+				String[] postarr = zspost.split(",");
+				for (String string : postarr) {
+					Bean find = ServDao.find("TS_ORG_POSTION", string);
+					if(find!=null){
+						
+						zwname+=" "+find.getStr("POSTION_NAME");
+					}
+				}
+				Bean find = ServDao.find("sy_hrm_zdstaffposition", BM_CODE);
+				if(find!=null&&find.size()!=0){
+					String possql = " AND POSTION_NAME_CODE = '"+find.getStr("DUTY_LV_CODE")+"' AND POSTION_SEQUENCE_ID ='"+find.getStr("STATION_NO_CODE")+"' AND POSTION_TYPE='"+find.getStr("STATION_TYPE_CODE")+"'";
+					List<Bean> finds2 = ServDao.finds("ts_org_postion", possql);
+				
+					Boolean flagpost = false;
 					
+					for (Bean bean2 : finds2) {
+						for (String string : postarr) {
+							if(bean2.getStr("POSTION_ID").equals(string)){
+								flagpost=true;
+							}
+						}
+					}
+					if(flagpost){
+						//在此层级内
+					}else{
+						littelGzBean.set("validate", false);
+						littelGzBean.set("name","不在 "+zwname+" 职务层级内");
+						listbean.add(littelGzBean);
+						continue;
+					}
+						
+						
 				}else{
 					littelGzBean.set("validate", false);
-					littelGzBean.set("name","不在验证职务层级内");
+					littelGzBean.set("name","不在 "+zwname+" 职务层级内");
 					listbean.add(littelGzBean);
 					continue;
 				}
+				
 			}
 			
 		
@@ -549,7 +585,7 @@ public class RuleServ extends CommonServ {
 			if(!"".equals(zsxl)){
 				sqlbean.and("STU_PERSON_ID", BM_CODE);
 				//是否是 自动获取 报名的考试
-				sqlbean.andIn("POSTION_ID", BM_CODE);
+				sqlbean.and("POSTION_ID", BM_CODE);
 					sqlbean.andIn("QUALFY_STAT", lxtype.split(","));
 					
 					sqlbean.andIn("CERT_GRADE_CODE", zsdj.split(","));
@@ -583,7 +619,7 @@ public class RuleServ extends CommonServ {
 					String[] xlarr = zsxl.split(",");
 					for (String string : xlarr) {
 						sqlbean.and("STATION_NO",string);
-						count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
+						count += ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
 					}
 				}else{
 					sqlbean.andIn("STATION_NO", zsxl.split(","));
