@@ -1,17 +1,24 @@
 package com.rh.ts.ksrl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
+import com.rh.core.base.TipException;
+import com.rh.core.base.db.Transaction;
 import com.rh.core.org.UserBean;
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
+import com.rh.core.serv.ServDefBean;
+import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.Constant;
+import com.rh.core.util.DateUtils;
 import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.RoleUtil;
 import org.apache.commons.lang.StringUtils;
@@ -137,10 +144,73 @@ public class GGServ extends CommonServ {
     public void getValue(ParamBean paramBean) {
         String ggId = paramBean.getStr("GG_ID");
         Bean ggBean = ServDao.find("TS_GG", ggId);
+       String aTime= ggBean.getStr("S_ATIME");
         if (ggBean != null) {
+            ggBean.set("S_MTIME", aTime);
             ggBean.set("GG_SORT", 10);
-            ServDao.save("TS_GG", ggBean);
+            Bean ggBeanS = save("TS_GG", ggBean);
+        
+            String aTimeS= ggBeanS.getStr("S_MTIME");
+           String a=aTimeS;
         }
+    }
+    
+    public  Bean save(String servId, Bean dataBean) {
+        if (dataBean.getId().length() > 0) {
+            return update(servId, dataBean);
+        } else {
+            return create(servId, dataBean);
+        }
+    }
+    
+    public  Bean update(String servId, Bean dataBean) {
+        ServDefBean servDef = ServUtils.getServDef(servId);
+
+        Bean updateBean = dataBean.copyOf(); //复制一份参数确保原参数不被修改
+        //updateBean.set("S_MTIME", DateUtils.getDatetimeTS());
+        List<Object> preValue = getPreValueClone(updateBean);
+        String psql = Transaction.getBuilder().update(servDef, updateBean, preValue);
+        boolean result = Transaction.getExecutor().execute(psql, preValue) > 0 ? true : false;
+        if (result) {
+            String key = servDef.getPKey();
+            if (updateBean.contains(key)) { //设置主键字段
+                updateBean.setId(updateBean.getStr(key));
+            }
+            servDef.clearDataCache(updateBean.getId()); //清除缓存
+            return updateBean;
+        } else {
+            return null;
+        }
+    }
+    
+    public  Bean create(String servId, Bean dataBean) {
+        ServDefBean servDef = ServUtils.getServDef(servId);
+        Bean createBean = dataBean.copyOf(); //复制一份确保参数信息不会被修改
+        List<Object> preValue = new ArrayList<Object>(dataBean.size());
+        String psql = Transaction.getBuilder().insert(servDef, createBean, preValue);
+        //进行唯一组约束的判断
+        String uniqueStr = ServUtils.checkUniqueExists(servDef, createBean, true);
+        if (uniqueStr != null) {
+            throw new TipException(Context.getSyMsg("SY_SAVE_UNIQUE_EXISTS", uniqueStr));
+        }
+        boolean result = Transaction.getExecutor().execute(psql, preValue) > 0 ? true : false;
+        if (result) {
+            createBean.setId(createBean.getStr(servDef.getPKey())); //设置主键字段
+            return createBean;
+        } else {
+            return null;
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private  List<Object> getPreValueClone(Bean dataBean) {
+        List<Object> preValue; //处理prevalue,存在就复制一份
+        if (dataBean.contains(Constant.PARAM_PRE_VALUES)) {
+            preValue = (List<Object>) ((ArrayList<Object>) dataBean.get(Constant.PARAM_PRE_VALUES)).clone();
+        } else {
+            preValue = new ArrayList<Object>();
+        }
+        return preValue;
     }
 
 }
