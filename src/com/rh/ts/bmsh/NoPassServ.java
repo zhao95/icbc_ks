@@ -368,7 +368,7 @@ public class NoPassServ extends CommonServ {
 		}
 		String where = "AND BM_ID=" + "'" + bmid + "'";
 		List<Bean> list = ServDao.finds("TS_BMSH_NOPASS", where);
-		ServDao.delete("TS_BMSH_NOPASS", where);
+		ServDao.delete("TS_BMSH_NOPASS", list.get(0).getId());
 		// 继续走审核流程
 		if (list.size() != 0) {
 			Bean bean = list.get(0);
