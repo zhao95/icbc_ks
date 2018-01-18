@@ -258,7 +258,13 @@ public class UserMgr {
         sql.orders("STRU_FLAG");
         Bean bean = ServDao.find(ServMgr.SY_ORG_USER, sql);
         if (bean == null) {
-            throw new TipException(Context.getSyMsg("SY_USER_NOT_FOUND", loginName + ":" + cmpyCode));
+        	 SqlBean sql1 = new SqlBean();
+        	 sql1.and(COL_USER_CODE, loginName).and(COL_CMPY_CODE, cmpyCode).and(COL_S_FLAG, 1);
+        	 sql1.orders("STRU_FLAG");
+        	bean = ServDao.find(ServMgr.SY_ORG_USER, sql1);
+        	if(bean == null){
+        		throw new TipException(Context.getSyMsg("SY_USER_NOT_FOUND", loginName + ":" + cmpyCode));
+        	}
         }
         return getUser(bean.getStr("USER_CODE"));
     }
