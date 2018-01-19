@@ -349,7 +349,7 @@ public class BmlbServ extends CommonServ {
 					}
 					Bean beans = new Bean();
 
-					beans.set("BM_YIYI_STATE", BM_YIYI_STATE);
+					beans.set("BM_YIYI_STATE", 2);
 					beans.set("RZ_YEAR", rz_year);
 					beans.set("BM_CODE", user_code);
 					beans.set("BM_NAME", user_name);
@@ -382,11 +382,11 @@ public class BmlbServ extends CommonServ {
 							beans.set("BM_SH_STATE", 1);
 						}
 						if (ad_result.equals("2")) {
-							beans.set("BM_SH_STATE", 2);
+							beans.set("BM_SH_STATE", 3);
 						}
 						if (ad_result.equals("0")) {
 							// 通过
-							beans.set("BM_SH_STATE", 2);
+							beans.set("BM_SH_STATE", 3);
 						}
 					}
 					if (count == 2) {
