@@ -23,6 +23,7 @@ $("#TS_XMGL_BMSH_SHGZ .rhGrid").find("tr").each(function(index, item) {
 		}else{
 			gzids+=","+$('td[icode="GZK_ID"]',item).text();
 		}
+		debugger;
 		var dataId = item.id;	
 		if($('td[icode="GZK_ID"]',item).text()=='N01'){
 			//准入测试规则  可以指定准入测试成绩
@@ -73,9 +74,10 @@ function bindCard(){
 	
 	//准入成绩设置
 	jQuery("td [operCode='SetBtn']").unbind("click").bind("click", function(){
+		var pkCode = jQuery(this).attr("rowpk");
 		//打开查看页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
 		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_BM_KSQZ_BMOPT","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,0]};
-		temp[UIConst.PK_KEY]=qz_id;//修改时，必填	    
+		temp[UIConst.PK_KEY]=pkCode;//修改时，必填	    
 		 var cardView = new rh.vi.cardView(temp);
 		cardView.show(true);
 	});
