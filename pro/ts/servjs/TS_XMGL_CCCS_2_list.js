@@ -245,6 +245,16 @@ function getResult(kcId,kcGood,kcMax,allks,alltype){
 		}
 	}
 	
+	for(var i=0;i<myArr.length -1;i++){
+		for(var j=0;j<myArr.length -1;j++){
+			if(myArr[j].length > myArr[j+1].length){
+				var swap = myArr[j];
+				myArr[j] = myArr[j+1];
+				myArr[j+1] = swap;
+			}
+		}
+	}
+	
 	var myParam = {};
 	myParam["myArr"] = encodeURIComponent(JSON.stringify(myArr));
 	myParam["kcGood"] = kcGood;
