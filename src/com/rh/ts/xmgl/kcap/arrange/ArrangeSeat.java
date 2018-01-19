@@ -176,9 +176,8 @@ public class ArrangeSeat {
 								KcapUtils.showInfo(odeptKs, "------------3-|过滤相同日期和场次考生后-报名考生人数|", this.getClass());
 							}
 
-							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
-
 							try {
+								Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
 
 								if (oneKs != null && !oneKs.isEmpty()) {
 
@@ -289,9 +288,9 @@ public class ArrangeSeat {
 
 							}
 
-							Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
-
 							try {
+
+								Bean oneKs = KcapMatch.matchUser(freeZw, odeptKs, res, isConstrain);// 符合座位规则的考生
 
 								if (oneKs != null && !oneKs.isEmpty()) {
 
@@ -711,8 +710,6 @@ public class ArrangeSeat {
 
 		if (ksObj instanceof Bean) {
 
-			log.debug("最终删除考生List--uCode:" + uCode + "--shId:" + ksBean.getBean(uCode).getStr("SH_ID"));
-
 			ksBean.remove(uCode);
 
 		} else if (ksObj instanceof List) {
@@ -729,22 +726,14 @@ public class ArrangeSeat {
 				}
 			}
 
-			log.debug("最终删除考生List--uCode:" + uCode + "--shId:" + shId);
-
 			ksBean.remove(uCode);
 
 			if (tempList.size() == 1) { // 当前考生还有一个考试
 				Bean t = tempList.get(0);
 
-				log.debug("最终保留考生List--uCode:" + uCode + "--shId:" + t.getStr("SH_ID"));
-
 				ksBean.set(uCode, tempList.get(0)); // 放入未安排考生资源
 
 			} else if (tempList.size() > 1) { // 当前考生还有多个考试
-
-				for (Bean t : tempList) {
-					log.debug("最终保留考生List--uCode:" + uCode + "--shId:" + t.getStr("SH_ID"));
-				}
 
 				ksBean.set(uCode, tempList); // 放入未安排考生资源
 			}
