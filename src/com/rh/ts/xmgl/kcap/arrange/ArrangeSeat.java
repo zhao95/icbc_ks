@@ -129,7 +129,7 @@ public class ArrangeSeat {
 
 					String kcLv = freeKc.getStr("KC_LV");
 
-					String zwsort[] = KcapUtils.sortStr(freeKc); // 座位排序
+					String zwsort[] = KcapUtils.sortZwStr(freeKc); // 座位排序
 
 					for (int zs = 0; zs < zwsort.length; zs++) { // 遍历座位
 
@@ -241,7 +241,7 @@ public class ArrangeSeat {
 
 					String date = day.toString();
 
-					String zwsort[] = KcapUtils.sortStr(freeDayCc); // 座位排序
+					String zwsort[] = KcapUtils.sortZwStr(freeDayCc); // 座位排序
 
 					for (int zs = 0; zs < zwsort.length; zs++) {// 遍历座位
 
@@ -438,7 +438,7 @@ public class ArrangeSeat {
 						resetKc = (Bean) res.getFreeKcZwBean().getBean(kcId).getBean(cc).getBean(date).clone();
 					}
 
-					String zwsort[] = KcapUtils.sortStr(resetKc); // 座位排序
+					String zwsort[] = KcapUtils.sortZwStr(resetKc); // 座位排序
 
 					for (int zs = 0; zs < zwsort.length; zs++) {// 遍历座位
 
