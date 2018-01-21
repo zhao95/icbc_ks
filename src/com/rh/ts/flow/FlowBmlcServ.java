@@ -76,6 +76,7 @@ public class FlowBmlcServ extends CommonServ {
             Bean rowBean = rowBeanList.get(index);
             String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");
             String colDeptCodes = rowBean.getStr(ImpUtils.COL_NAME + "3");
+            String yesNo = rowBean.getStr(ImpUtils.COL_NAME + "4");
             //Bean userBean = ImpUtils.getUserBeanByString(colCode);
             Bean  userBean=UserMgr.getUser(colCode);//获取人员信息
             if (userBean == null) {
@@ -98,7 +99,12 @@ public class FlowBmlcServ extends CommonServ {
             bean.set("NODE_ID", nodeId);
             bean.set("WFS_ID", wfsId);
             bean.set("SHR_USERCODE", code);// 审核人资源编码
-           
+            if("是".equals(yesNo)){
+            	bean.set("BMSHLC_YESNO", 1);
+            }else {
+            	bean.set("BMSHLC_YESNO", 2);
+            } 
+            
             // 先查询避免重复添加col3=总行/广东分行营业部,总行/福建分行,
            
             String[] colDeptCode = colDeptCodes.split(",");
@@ -106,7 +112,7 @@ public class FlowBmlcServ extends CommonServ {
             for (int i = 0; i < colDeptCode.length; i++) {
                 String getDept = colDeptCode[i];
                 String[] colDeptNAME = getDept.split("/");
-                String deptName = colDeptNAME[1];// 名称
+                String deptName = colDeptNAME[0];// 名称
                 String where = "AND DEPT_NAME='" + deptName + "'";
                 List<Bean> deptBean = ServDao.finds("TS_ORG_DEPT", where);
                 if (deptBean != null && !deptBean.isEmpty()) {
@@ -198,7 +204,7 @@ public class FlowBmlcServ extends CommonServ {
     	String  userCode=code;//登陆人
     	//Bean bean=RoleMgr.getRoleOptsByUser(userCode,"TS_WFS_NODEAPPLY_ADMINER");"TS_WFS_BMSHLC"
     	if(!"admin".equals(userCode)){
-    		Bean bean=RoleUtil.getPvlgRole( userCode);
+    		Bean bean=RoleUtil.getPvlgRole( userCode,"TS_WFS_BMSHLC");
     		Bean extParams = bean.getBean("TS_WFS_BMSHLC_PVLG");
     		//if (!extParams.isEmpty() && extParams != null) {
     			JSONObject jsonObject = new JSONObject(extParams);

@@ -97,7 +97,7 @@ file.afterQueueComplete = function (fileData) {// 这个上传队列完成之后
           
              data.NODE_ID = _viewer.getParHandler()._pkCode;
             data.code = userCode;
-            data.FILE_ID = fileId;
+            data.FILE_ID = fileId;debugger;
             FireFly.doAct(_viewer.servId, "saveFromExcel", data, false, false, function (data) {
                 rh.ui.File.prototype.downloadFile(data.FILE_ID, "test");
                 _viewer.refresh();
