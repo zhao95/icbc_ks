@@ -98,6 +98,65 @@ public class KcapUtils {
 		return sort;
 	}
 
+	public static String[] sortZwStr(Bean bean) {
+
+		String sort[] = new String[bean.keySet().size()];
+
+		int count = 0;
+
+		Bean keyBean = new Bean();
+
+		for (Object key : bean.keySet()) { // 遍历场次号
+
+			if (!Strings.isBlank(key.toString())) {
+
+				String keystr = key.toString();
+
+				String keyarg[] = keystr.split("-");
+
+				if (keyarg != null && keyarg.length == 2) {
+
+					String row = keyarg[0];
+
+					if (keyarg[0].length() == 1) {
+						row = "0" + keyarg[0];
+					}
+
+					String col = keyarg[1];
+
+					if (keyarg[1].length() == 1) {
+						col = "0" + keyarg[1];
+					}
+
+					keystr = row + "-" + col;
+				}
+
+				sort[count] = keystr;
+
+				count++;
+
+				keyBean.set(keystr, key.toString());
+			}
+		}
+
+		Arrays.sort(sort);
+		
+		String temp[] = new String[bean.keySet().size()];
+		
+		for(int j=0;j<sort.length;j++) {
+			
+			String zw = keyBean.getStr(sort[j]);
+			
+			if(Strings.isBlank(zw)){
+				temp[j] = sort[j];
+			} else {
+				temp[j] = zw;
+			}
+		}
+
+		return temp;
+	}
+
 	public static int[] sortInt(Bean bean) {
 
 		int sort[] = new int[bean.keySet().size()];

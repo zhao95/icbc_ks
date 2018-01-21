@@ -5,7 +5,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -170,7 +173,7 @@ public class KcapMatch {
 			}
 		}
 
-		return randomFiltBean(filtBean);
+		return randomFiltBean(freeZw.getStr("KC_ID"), filtBean, res);
 	}
 
 	/**
@@ -1407,6 +1410,99 @@ public class KcapMatch {
 				int index = new Random().nextInt(singleList.size()); // 随机获取list索引
 
 				return singleList.get(index);
+			}
+		}
+
+		return new Bean();
+	}
+
+	/**
+	 * 获取 报名生多的考生
+	 * 
+	 * @param kcId
+	 * @param filtBean
+	 * @param res
+	 * @return
+	 */
+	public static Bean randomFiltBean(String kcId, Bean filtBean, KcapResource res) {
+
+		if (!filtBean.isEmpty()) {
+
+			Map<String, Integer> ksUcode = new TreeMap<String, Integer>();
+
+			String maxUser = "";
+
+			for (Object time : filtBean.keySet()) { // 遍历考试时长
+
+				Bean timeBean = filtBean.getBean(time);
+
+				for (Object user : timeBean.keySet()) { // 遍历时长下考生bean
+
+					ksUcode.put(user.toString(), 0);
+
+					maxUser = user.toString();
+				}
+			}
+
+			if (!ksUcode.isEmpty() && ksUcode.size() > 1) { // 多个考生报名多的优先
+				Bean odeptKs = res.getGljgKs(kcId); // 考场所有未安排考生
+
+				for (Object time : odeptKs.keySet()) { // 遍历时长
+
+					Bean timeks = odeptKs.getBean(time); // 考生
+
+					for (Object ukey : timeks.keySet()) {
+
+						if (ksUcode.containsKey(ukey)) {
+
+							Object val = timeks.get(ukey);
+							
+							int count = ksUcode.get(ukey);
+
+							if (val instanceof Bean) { // 当前考生报考一个考试
+
+								ksUcode.put(ukey.toString(), count + 1);
+
+							} else if (val instanceof List) { // 当前考生报考多个考试
+
+								List<Bean> kslist = timeks.getList(ukey);
+
+								ksUcode.put(ukey.toString(), count + kslist.size());
+							}
+						}
+					}
+				}
+
+				List<Entry<String, Integer>> list = new ArrayList<Entry<String, Integer>>(ksUcode.entrySet());
+
+				Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+					// 升序排序
+					public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+						return o1.getValue().compareTo(o2.getValue());
+					}
+				});
+
+				Entry<String, Integer> uEntry = list.get(0);
+
+				maxUser = uEntry.getKey();
+			}
+
+			for (Object time : filtBean.keySet()) { // 遍历考试时长
+
+				Bean timeBean = filtBean.getBean(time);
+
+				Object val = timeBean.get(maxUser);
+
+				if (val instanceof Bean) { // 当前考生报考一个考试
+
+					return timeBean.getBean(maxUser);
+
+				} else if (val instanceof List) { // 当前考生报考多个考试
+
+					List<Bean> kslist = timeBean.getList(maxUser);
+
+					return kslist.get(0);
+				}
 			}
 		}
 
