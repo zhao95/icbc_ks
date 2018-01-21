@@ -73,6 +73,9 @@ public class Cccs2Serv extends CommonServ {
 	    List<Bean> list = JsonUtils.toBeanList(expStr);
 	    for(int i=0;i<list.size();i++){
 		Bean bean = new Bean();
+		if(list.get(i).getStr("KC_NAME").isEmpty()){
+		    continue;
+		}
 		bean.set("KC_NAME", list.get(i).getStr("KC_NAME"));
 		bean.set("KC_GOOD", list.get(i).getStr("KC_GOOD"));
 		bean.set("KC_MAX", list.get(i).getStr("KC_MAX"));
