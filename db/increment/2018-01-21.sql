@@ -2,7 +2,10 @@ alter table ts_org_postion add column postion_level varchar(40) null;
 alter table ts_org_postion add column code_path varchar(400) null;
 alter table ts_org_postion add column postion_pid varchar(40) null;
 alter table ts_org_postion add column postion_idvalue varchar(40) null;
-
+alter table ts_bmsh_rule add COLUMN POST_DEPT VARCHAR(400) NOT NULL;
+alter table ts_bmsh_rule add COLUMN SUCCESS_INFO VARCHAR(400) NOT NULL;
+alter table ts_bmsh_rule add COLUMN FAIL_INFO VARCHAR(400) NOT NULL;
+alter table ts_bmsh_rule add COLUMN GOTO_STAY VARCHAR(400) NOT NULL;
 delete from ts_org_postion;
 INSERT INTO `ts_org_postion` (`POSTION_ID`, `POSTION_TYPE`, `POSTION_SEQUENCE`, `POSTION_NAME`, `POSTION_QUALIFICATION`, `S_USER`, `S_TDEPT`, `S_ODEPT`, `S_MTIME`, `S_FLAG`, `S_DEPT`, `S_CMPY`, `S_ATIME`, `POSTION_TYPE_NAME`, `POSTION_SEQUENCE_ID`, `POSTION_NAME_CODE`, `postion_pid`, `code_path`, `postion_level`, `postion_idvalue`) VALUES ('02w7EQCW5l3A8FECPJem', '023002', '营销', '营销资深专家', '4', '278p246BZ2jNaftzl7kooot', 'icbc0001', 'icbc0001', '2018-01-21 14:13:41:110', '1', 'icbc0001', 'icbc', '2017-08-14 10:46:44:280', '专业类', 'A000000000000000006', 'A000000000000000051', '09Snrqollefp7lUB7JVq', '09Snrqollefp7lUB7JVq^02w7EQCW5l3A8FECPJem^', '2', '营销资深专家');
 INSERT INTO `ts_org_postion` (`POSTION_ID`, `POSTION_TYPE`, `POSTION_SEQUENCE`, `POSTION_NAME`, `POSTION_QUALIFICATION`, `S_USER`, `S_TDEPT`, `S_ODEPT`, `S_MTIME`, `S_FLAG`, `S_DEPT`, `S_CMPY`, `S_ATIME`, `POSTION_TYPE_NAME`, `POSTION_SEQUENCE_ID`, `POSTION_NAME_CODE`, `postion_pid`, `code_path`, `postion_level`, `postion_idvalue`) VALUES ('05DvChawFcg8CxdW4xjY', '023005', '柜员', '柜员资深柜员', '3', '278p246BZ2jNaftzl7kooot', 'icbc0001', 'icbc0001', '2018-01-21 14:13:41:248', '1', 'icbc0001', 'icbc', '2017-08-10 17:10:31:081', '客服类', 'A000000000000000301', 'A000000000000000185', '2GxrxMULp2w7HMdWJz8l', '2GxrxMULp2w7HMdWJz8l^05DvChawFcg8CxdW4xjY^', '2', '柜员资深柜员');
