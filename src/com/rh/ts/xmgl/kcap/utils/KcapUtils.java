@@ -14,147 +14,166 @@ import com.rh.core.base.Bean;
 import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.util.Strings;
 import com.rh.ts.xmgl.kcap.KcapResource;
+import com.rh.ts.xmgl.kcap.arrange.ArrangeSeat;
 
 public class KcapUtils {
 
+	private static Log log = LogFactory.getLog(ArrangeSeat.class);
+
 	/**
 	 * 合并bean。key重复，value合并List
-	 * 
+	 *
 	 * @param srcBean
 	 * @param dstBean
 	 * @return
 	 */
 	public static Bean mergeBean(Bean srcBean, Bean dstBean) {
 
-		Bean rtnBan = new Bean(dstBean);
+		try {
+			Bean rtnBan = new Bean(dstBean);
 
-		for (Object key : srcBean.keySet()) {
+			for (Object key : srcBean.keySet()) {
 
-			Object srcObj = srcBean.get(key);
+				Object srcObj = srcBean.get(key);
 
-			if (rtnBan.containsKey(key)) { // 如果两个bean都存在相同key则 合并bean
+				if (rtnBan.containsKey(key)) { // 如果两个bean都存在相同key则 合并bean
 
-				Object dstObj = rtnBan.get(key);
+					Object dstObj = rtnBan.get(key);
 
-				List<Bean> dstList = new ArrayList<Bean>();
+					List<Bean> dstList = new ArrayList<Bean>();
 
-				if (dstObj instanceof Bean) {
+					if (dstObj instanceof Bean) {
 
-					Bean temp = rtnBan.getBean(key);
+						Bean temp = rtnBan.getBean(key);
 
-					dstList.add(temp);
+						dstList.add(temp);
 
-				} else if (dstObj instanceof List) {
+					} else if (dstObj instanceof List) {
 
-					List<Bean> t = rtnBan.getList(key);
+						List<Bean> t = rtnBan.getList(key);
 
-					dstList.addAll(t);
+						dstList.addAll(t);
+					}
+
+					if (srcObj instanceof Bean) {
+
+						Bean temp = srcBean.getBean(key);
+
+						dstList.add(temp);
+
+					} else if (srcObj instanceof List) {
+
+						List<Bean> t = srcBean.getList(key);
+
+						dstList.addAll(t);
+
+					}
+
+					rtnBan.set(key, dstList);
+
+				} else { // dstBean不存在
+
+					rtnBan.set(key, srcObj);
 				}
 
-				if (srcObj instanceof Bean) {
-
-					Bean temp = srcBean.getBean(key);
-
-					dstList.add(temp);
-
-				} else if (srcObj instanceof List) {
-
-					List<Bean> t = srcBean.getList(key);
-
-					dstList.addAll(t);
-
-				}
-
-				rtnBan.set(key, dstList);
-
-			} else { // dstBean不存在
-
-				rtnBan.set(key, srcObj);
 			}
 
-		}
+			return rtnBan;
 
-		return rtnBan;
+		} catch (Exception e) {
+			log.error(e);
+			return null;
+		}
 	}
 
 	public static String[] sortStr(Bean bean) {
+		try {
+			String sort[] = new String[bean.keySet().size()];
 
-		String sort[] = new String[bean.keySet().size()];
+			int i = 0;
 
-		int i = 0;
+			for (Object key : bean.keySet()) { // 遍历场次号
 
-		for (Object key : bean.keySet()) { // 遍历场次号
+				if (!Strings.isBlank(key.toString())) {
 
-			if (!Strings.isBlank(key.toString())) {
+					sort[i] = key.toString();
 
-				sort[i] = key.toString();
-
-				i++;
+					i++;
+				}
 			}
+
+			Arrays.sort(sort);
+
+			return sort;
+		} catch (Exception e) {
+			log.error(e);
+			return null;
 		}
 
-		Arrays.sort(sort);
-
-		return sort;
 	}
 
 	public static String[] sortZwStr(Bean bean) {
 
-		String sort[] = new String[bean.keySet().size()];
+		try {
+			String temp[] = new String[bean.keySet().size()];
 
-		int count = 0;
+			String sort[] = new String[bean.keySet().size()];
 
-		Bean keyBean = new Bean();
+			int count = 0;
 
-		for (Object key : bean.keySet()) { // 遍历场次号
+			Bean keyBean = new Bean();
 
-			if (!Strings.isBlank(key.toString())) {
+			for (Object key : bean.keySet()) { // 遍历场次号
 
-				String keystr = key.toString();
+				if (!Strings.isBlank(key.toString())) {
 
-				String keyarg[] = keystr.split("-");
+					String keystr = key.toString();
 
-				if (keyarg != null && keyarg.length == 2) {
+					String keyarg[] = keystr.split("-");
 
-					String row = keyarg[0];
+					if (keyarg != null && keyarg.length == 2) {
 
-					if (keyarg[0].length() == 1) {
-						row = "0" + keyarg[0];
+						String row = keyarg[0];
+
+						if (keyarg[0].length() == 1) {
+							row = "0" + keyarg[0];
+						}
+
+						String col = keyarg[1];
+
+						if (keyarg[1].length() == 1) {
+							col = "0" + keyarg[1];
+						}
+
+						keystr = row + "-" + col;
 					}
 
-					String col = keyarg[1];
+					sort[count] = keystr;
 
-					if (keyarg[1].length() == 1) {
-						col = "0" + keyarg[1];
-					}
+					count++;
 
-					keystr = row + "-" + col;
+					keyBean.set(keystr, key.toString());
 				}
-
-				sort[count] = keystr;
-
-				count++;
-
-				keyBean.set(keystr, key.toString());
 			}
-		}
 
-		Arrays.sort(sort);
-		
-		String temp[] = new String[bean.keySet().size()];
-		
-		for(int j=0;j<sort.length;j++) {
-			
-			String zw = keyBean.getStr(sort[j]);
-			
-			if(Strings.isBlank(zw)){
-				temp[j] = sort[j];
-			} else {
-				temp[j] = zw;
+			Arrays.sort(sort);
+
+			for (int j = 0; j < sort.length; j++) {
+
+				String zw = keyBean.getStr(sort[j]);
+
+				if (Strings.isBlank(zw)) {
+					temp[j] = sort[j];
+				} else {
+					temp[j] = zw;
+				}
 			}
-		}
 
-		return temp;
+			return temp;
+		} catch (Exception e) {
+			log.error(e);
+			return null;
+		}
 	}
 
 	public static int[] sortInt(Bean bean) {
@@ -173,7 +192,7 @@ public class KcapUtils {
 
 			} catch (Exception e) {
 
-				e.printStackTrace();
+				log.error(e);
 			}
 		}
 
@@ -184,155 +203,168 @@ public class KcapUtils {
 
 	/**
 	 * 考场排序
-	 * 
+	 *
 	 * @param bean
 	 * @param res
 	 * @return
 	 */
 	public static String[] sortKcIdold(Bean bean, KcapResource res) {
 
-		Bean kcBean = res.getKcBean();
+		try {
 
-		String lvSort[] = new String[bean.keySet().size()];
+			Bean kcBean = res.getKcBean();
 
-		int i = 0;
+			String lvSort[] = new String[bean.keySet().size()];
 
-		for (Object key : bean.keySet()) { // 考场
+			int i = 0;
 
-			outloop:
+			for (Object key : bean.keySet()) { // 考场
 
-			if (!Strings.isBlank(key.toString())) {
+				outloop:
 
-				for (Object ssjg : kcBean.keySet()) {// 所属机构
+				if (!Strings.isBlank(key.toString())) {
 
-					List<Bean> list = kcBean.getList(ssjg.toString());
+					for (Object ssjg : kcBean.keySet()) {// 所属机构
 
-					for (Bean kc : list) {// 考场
+						List<Bean> list = kcBean.getList(ssjg.toString());
 
-						Bean info = kc.getBean("INFO");
+						for (Bean kc : list) {// 考场
 
-						if (info.getStr("KC_ID").equals(key.toString())) {
+							Bean info = kc.getBean("INFO");
 
-							String kcCode = info.getStr("KC_CODE");
+							if (info.getStr("KC_ID").equals(key.toString())) {
 
-							int lv = OrgMgr.getDept(ssjg.toString()).getLevel();
+								String kcCode = info.getStr("KC_CODE");
 
-							lvSort[i] = lv + "^" + kcCode + "##" + key.toString();
+								int lv = OrgMgr.getDept(ssjg.toString()).getLevel();
 
-							i++;
+								lvSort[i] = lv + "^" + kcCode + "##" + key.toString();
 
-							break outloop;
+								i++;
+
+								break outloop;
+							}
 						}
 					}
 				}
 			}
+
+			Arrays.sort(lvSort);
+
+			int kk = 0;
+
+			String codeSort[] = new String[lvSort.length];
+
+			for (int k = lvSort.length - 1; k >= 0; k--) {
+
+				String kclv = lvSort[k];
+
+				String[] kclvArg = kclv.split("\\^");
+
+				codeSort[kk] = kclvArg[1];
+
+				kk++;
+			}
+
+			String[] sort = new String[codeSort.length];
+
+			// Arrays.sort(codeSort);
+
+			for (int j = 0; j < codeSort.length; j++) {
+
+				String code = codeSort[j];
+
+				String[] codeArray = code.split("##");
+
+				sort[j] = codeArray[1];
+			}
+
+			return sort;
+
+		} catch (Exception e) {
+			log.error(e);
+			return null;
 		}
-
-		Arrays.sort(lvSort);
-
-		int kk = 0;
-
-		String codeSort[] = new String[lvSort.length];
-
-		for (int k = lvSort.length - 1; k >= 0; k--) {
-
-			String kclv = lvSort[k];
-
-			String[] kclvArg = kclv.split("\\^");
-
-			codeSort[kk] = kclvArg[1];
-
-			kk++;
-		}
-
-		String[] sort = new String[codeSort.length];
-
-		// Arrays.sort(codeSort);
-
-		for (int j = 0; j < codeSort.length; j++) {
-
-			String code = codeSort[j];
-
-			String[] codeArray = code.split("##");
-
-			sort[j] = codeArray[1];
-		}
-
-		return sort;
 	}
 
 	public static String[] sortKcId(Bean bean, KcapResource res) {
+		try {
 
-		int count = 0;
+			int count = 0;
 
-		Bean kcBean = res.getKcBean();
+			Bean kcBean = res.getKcBean();
 
-		TreeMap<String, Map<String, String>> sortMap = new TreeMap<String, Map<String, String>>(
-				new Comparator<String>() {
-					public int compare(String o1, String o2) {
-						return o2.compareTo(o1);
-					}
-				});
+			TreeMap<String, Map<String, String>> sortMap = new TreeMap<String, Map<String, String>>(
+					new Comparator<String>() {
+						public int compare(String o1, String o2) {
+							return o2.compareTo(o1);
+						}
+					});
 
-		for (Object key : bean.keySet()) { // 考场
+			for (Object key : bean.keySet()) { // 考场
 
-			outloop:
+				outloop:
 
-			if (!Strings.isBlank(key.toString())) {
+				if (!Strings.isBlank(key.toString())) {
 
-				for (Object ssjg : kcBean.keySet()) {// 所属机构
+					for (Object ssjg : kcBean.keySet()) {// 所属机构
 
-					List<Bean> list = kcBean.getList(ssjg.toString());
+						List<Bean> list = kcBean.getList(ssjg.toString());
 
-					for (Bean kc : list) {// 考场
+						for (Bean kc : list) {// 考场
 
-						Bean info = kc.getBean("INFO");
+							Bean info = kc.getBean("INFO");
 
-						if (info.getStr("KC_ID").equals(key.toString())) {
+							if (info.getStr("KC_ID").equals(key.toString())) {
 
-							String kcCode = info.getStr("KC_CODE");
+								String kcCode = info.getStr("KC_CODE");
 
-							int lv = OrgMgr.getDept(ssjg.toString()).getLevel();
+								int lv = OrgMgr.getDept(ssjg.toString()).getLevel();
 
-							TreeMap<String, String> codeMap = new TreeMap<String, String>();
+								TreeMap<String, String> codeMap = new TreeMap<String, String>();
 
-							if (sortMap.containsKey(String.valueOf(lv))) {
+								if (sortMap.containsKey(String.valueOf(lv))) {
 
-								codeMap = (TreeMap<String, String>) sortMap.get(String.valueOf(lv));
+									codeMap = (TreeMap<String, String>) sortMap.get(String.valueOf(lv));
+								}
+
+								codeMap.put(kcCode, key.toString());
+
+								sortMap.put(String.valueOf(lv), codeMap);
+
+								count++;
+
+								break outloop;
 							}
-
-							codeMap.put(kcCode, key.toString());
-
-							sortMap.put(String.valueOf(lv), codeMap);
-
-							count++;
-
-							break outloop;
 						}
 					}
 				}
 			}
-		}
 
-		int index = 0;
+			int index = 0;
 
-		String[] sort = new String[count];
+			String[] sort = new String[count];
 
-		for (Object lv : sortMap.keySet()) {
+			for (Object lv : sortMap.keySet()) {
 
-			TreeMap<String, String> codeMap = (TreeMap<String, String>) sortMap.get(lv);
+				TreeMap<String, String> codeMap = (TreeMap<String, String>) sortMap.get(lv);
 
-			for (Object code : codeMap.keySet()) {
+				for (Object code : codeMap.keySet()) {
 
-				String kcId = codeMap.get(code);
+					String kcId = codeMap.get(code);
 
-				sort[index] = kcId;
+					sort[index] = kcId;
 
-				index++;
+					index++;
+				}
 			}
-		}
 
-		return sort;
+			return sort;
+
+		} catch (Exception e) {
+			log.error(e);
+			return null;
+		}
 	}
 
 	public static boolean isEmpty(Bean ksBean) {
@@ -363,18 +395,24 @@ public class KcapUtils {
 	@SuppressWarnings("rawtypes")
 	public static void showInfo(Bean ksBean, String msg, Class clazz) {
 
-		Log log = LogFactory.getLog(clazz);
+		try {
 
-		if (ksBean == null || ksBean.isEmpty()) {
+			Log log = LogFactory.getLog(clazz);
 
-			log.debug(msg + "|0");
+			if (ksBean == null || ksBean.isEmpty()) {
 
-		} else {
+				log.debug(msg + "|0");
 
-			for (Object time : ksBean.keySet()) {
+			} else {
 
-				log.debug(msg + "|time:" + time.toString() + "|" + ksBean.getBean(time).size());
+				for (Object time : ksBean.keySet()) {
+
+					log.debug(msg + "|time:" + time.toString() + "|" + ksBean.getBean(time).size());
+				}
 			}
+		} catch (Exception e) {
+
+			log.error(e);
 		}
 	}
 

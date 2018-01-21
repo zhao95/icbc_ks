@@ -156,7 +156,7 @@ public class KcapResource {
 
 	/**
 	 * 加载没有安排座位的考生
-	 * 
+	 *
 	 * @param xmId
 	 * @param odepts
 	 */
@@ -186,7 +186,7 @@ public class KcapResource {
 
 	/**
 	 * 加载考场及场次信息
-	 * 
+	 *
 	 * @param xmId
 	 * @param odepts
 	 */
@@ -257,10 +257,10 @@ public class KcapResource {
 
 	/**
 	 * 获取已安排座位
-	 * 
+	 *
 	 * @param xmId
 	 * @param odepts
-	 * 
+	 *
 	 */
 	private void loadBusyZw(String xmId, String odept) {
 
@@ -307,7 +307,7 @@ public class KcapResource {
 
 	/**
 	 * 装载考场安排规则
-	 * 
+	 *
 	 * @param xmId
 	 * @throws Exception
 	 */
@@ -342,7 +342,7 @@ public class KcapResource {
 					}
 
 				} else if (KcapRuleEnum.S002.getCode().equals(ruleCode)) { // 无符合规则考生
-																			// 是否强制安排
+					// 是否强制安排
 					ksConstrain = 1; // 1 强制安排
 				}
 			}
@@ -382,7 +382,7 @@ public class KcapResource {
 			}
 		} catch (
 
-		Exception e) {
+				Exception e) {
 			log.error(e.getMessage(), e);
 			throw new TipException(e.getMessage());
 		}
@@ -390,7 +390,7 @@ public class KcapResource {
 
 	/**
 	 * 装载领导 R007
-	 * 
+	 *
 	 * @param rule
 	 */
 	private void fitLeaderBean(Bean rule) {
@@ -478,7 +478,7 @@ public class KcapResource {
 
 	/**
 	 * 装载特定机构考生 R008
-	 * 
+	 *
 	 * @param rule
 	 */
 	private void fitSpOrgKsBean(Bean rule) {
@@ -575,7 +575,7 @@ public class KcapResource {
 
 	/**
 	 * 同一网点考生资源
-	 * 
+	 *
 	 * @param xmId
 	 * @param odept
 	 */
@@ -670,7 +670,7 @@ public class KcapResource {
 
 	/**
 	 * 装载网点考生bean
-	 * 
+	 *
 	 * @param branchKsList
 	 */
 	private void fitBranchBean(List<Bean> branchKsList) {
@@ -702,7 +702,7 @@ public class KcapResource {
 
 	/**
 	 * 组装最少考场 未安排座位
-	 * 
+	 *
 	 */
 	@SuppressWarnings("deprecation")
 	private void fitKcZwBean() {
@@ -794,7 +794,7 @@ public class KcapResource {
 
 	/**
 	 * 组装最少场次 未安排座位
-	 * 
+	 *
 	 */
 	private void fitCcZwBean() {
 
@@ -1089,7 +1089,7 @@ public class KcapResource {
 
 	/**
 	 * 获取未安排座位
-	 * 
+	 *
 	 * @param zwhList
 	 *            考场座位list
 	 * @param kcId
@@ -1223,7 +1223,7 @@ public class KcapResource {
 
 	/**
 	 * list 转 Bean
-	 * 
+	 *
 	 * @param list
 	 *            待转换list
 	 * @param keyName
@@ -1277,7 +1277,7 @@ public class KcapResource {
 
 	/**
 	 * 获取考生
-	 * 
+	 *
 	 * @param xmId
 	 * @param odept
 	 * @param status
@@ -1408,7 +1408,7 @@ public class KcapResource {
 
 	/**
 	 * 获取考场下关联机构
-	 * 
+	 *
 	 * @param kcId
 	 * @param res
 	 * @return
@@ -1433,7 +1433,7 @@ public class KcapResource {
 
 	/**
 	 * 考场关联的机构下考生
-	 * 
+	 *
 	 * @param kcId
 	 * @param res
 	 * @return Bean{考试时长：考生Bean{考生编码：考生bean/list}}
@@ -1490,7 +1490,7 @@ public class KcapResource {
 
 	/**
 	 * 考场资源bean
-	 * 
+	 *
 	 * @return Bean{所属机构id：考场list<Bean>
 	 *         {INFO:考场信息Bean,GLJG:关联机构Bean,ZWH:座位号list,CC:场次list} }
 	 */
@@ -1500,7 +1500,7 @@ public class KcapResource {
 
 	/**
 	 * 不含请假考生
-	 * 
+	 *
 	 * @return Bean{ 机构ID : 考试时长Bean {时长：考生Bean { 考生ID ： 单个报名Bean/多个报名List} } }
 	 */
 	public Bean getFreeKsBean() {
@@ -1509,7 +1509,7 @@ public class KcapResource {
 
 	/**
 	 * 借考考生
-	 * 
+	 *
 	 * @return Bean{ 机构ID : 考试时长Bean {时长：考生Bean { 考生ID ： 单个报名Bean/多个报名List} } }
 	 */
 	public Bean getJkKsBean() {
@@ -1518,7 +1518,7 @@ public class KcapResource {
 
 	/**
 	 * 考生分配最少考场场次规则
-	 * 
+	 *
 	 * @return 0 最少考场 1 最少场次
 	 */
 	public int getKsPriority() {
@@ -1534,7 +1534,7 @@ public class KcapResource {
 
 	/**
 	 * 未安排座位 最少考场
-	 * 
+	 *
 	 * @return Bean{考场id:场次Bean{场次id:Bean{日期:座位Bean}}} 考场 ->场次 ->日期 ->座位
 	 */
 	public Bean getFreeKcZwBean() {
@@ -1543,7 +1543,7 @@ public class KcapResource {
 
 	/**
 	 * 未安排座位 最少场次
-	 * 
+	 *
 	 * @return {场次id:Bean{日期:考场Bean{考场id:Bean座位}}} 场次 ->日期 ->考场 ->座位
 	 */
 	public Bean getFreeCcZwBean() {
@@ -1552,7 +1552,7 @@ public class KcapResource {
 
 	/**
 	 * 领导职务考生
-	 * 
+	 *
 	 * @return Bean{userCode:审核id 多个报名逗号隔开}
 	 */
 	public Bean getLeaderBean() {
@@ -1561,7 +1561,7 @@ public class KcapResource {
 
 	/**
 	 * 已安排座位
-	 * 
+	 *
 	 * @return Bean{考场ID^场次号^日期: 座位安排 Bean}
 	 */
 	public Bean getBusyZwBean() {
@@ -1570,7 +1570,7 @@ public class KcapResource {
 
 	/**
 	 * 距离考场远的考生
-	 * 
+	 *
 	 * @return Bean{考场ID：Bean{用户id: 用户id}}
 	 */
 	public Bean getFarKsBean() {
@@ -1583,7 +1583,7 @@ public class KcapResource {
 
 	/**
 	 * 考场关联机构
-	 * 
+	 *
 	 * @return Bean{kcid:关联机构bean}
 	 */
 	public Bean getKcOrgBean() {
@@ -1592,7 +1592,7 @@ public class KcapResource {
 
 	/**
 	 * 特殊机构考生 靠前靠后安排
-	 * 
+	 *
 	 * @return Bean{考生code:考生code}
 	 */
 	public Bean getSpOrgKsBean() {
@@ -1601,7 +1601,7 @@ public class KcapResource {
 
 	/**
 	 * 网点考生
-	 * 
+	 *
 	 * @return Bean{网点所属机构：网点Bean{网点code：考生Bean{考生编码：报名list}}}
 	 */
 	public Bean getBranchBean() {
@@ -1610,7 +1610,7 @@ public class KcapResource {
 
 	/**
 	 * 场次 上午/下午
-	 * 
+	 *
 	 * @return Bean{考场ID^场次号^日期: AM/PM}
 	 */
 	public Bean getCcAMPM() {

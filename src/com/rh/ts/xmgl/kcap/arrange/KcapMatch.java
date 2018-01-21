@@ -27,7 +27,7 @@ public class KcapMatch {
 
 	/**
 	 * 匹配符合规则的考生bean
-	 * 
+	 *
 	 * @param freeZw
 	 *            单个座位信息
 	 * @param ksBean
@@ -36,7 +36,7 @@ public class KcapMatch {
 	 *            资源
 	 * @param isConstrain
 	 *            是否强制安排
-	 * 
+	 *
 	 * @return Bean 报名考生信息
 	 */
 	public static Bean matchUser(Bean freeZw, Bean ksBean, KcapResource res, boolean isConstrain) {
@@ -82,67 +82,67 @@ public class KcapMatch {
 			}
 			switch (tmpValue) {
 
-			case 1:
+				case 1:
 
-				// 相同考试前后左右不相邻
-				filtBean = filtR001(freeZw, busyZwBean, filtBean);
+					// 相同考试前后左右不相邻
+					filtBean = filtR001(freeZw, busyZwBean, filtBean);
 
-				break;
-			case 2:
+					break;
+				case 2:
 
-				// Bean clone = (Bean) filtBean.clone();
+					// Bean clone = (Bean) filtBean.clone();
 
-				// 同一考生同一场场次连排 (同一考生 同一天 同一考场 同一座位 上一场次)
-				Bean rtnBean = filtR002(freeZw, busyZwBean, filtBean);
+					// 同一考生同一场场次连排 (同一考生 同一天 同一考场 同一座位 上一场次)
+					Bean rtnBean = filtR002(freeZw, busyZwBean, filtBean);
 
-				if (!rtnBean.isEmpty() && rtnBean.getBoolean("IS_TRUE")) {
+					if (!rtnBean.isEmpty() && rtnBean.getBoolean("IS_TRUE")) {
 
-					rtnBean.remove("IS_TRUE");
+						rtnBean.remove("IS_TRUE");
 
-					filtBean = (Bean) rtnBean.clone();
+						filtBean = (Bean) rtnBean.clone();
 
-					break rtnLoop;
-				}
+						break rtnLoop;
+					}
 
-				break;
-			case 3:
+					break;
+				case 3:
 
-				// 距离远近规则
-				filtBean = filtR003(freeZw, res.getFarKsBean(), filtBean);
+					// 距离远近规则
+					filtBean = filtR003(freeZw, res.getFarKsBean(), filtBean);
 
-				break;
-			case 4:
+					break;
+				case 4:
 
-				// 同一网点级机构考生均分安排
-				filtBean = filtR004(freeZw, res, filtBean);
+					// 同一网点级机构考生均分安排
+					filtBean = filtR004(freeZw, res, filtBean);
 
-				break;
-			case 5:
+					break;
+				case 5:
 
-				// 来自同一机构考生不连排
-				filtBean = filtR005(freeZw, busyZwBean, filtBean);
+					// 来自同一机构考生不连排
+					filtBean = filtR005(freeZw, busyZwBean, filtBean);
 
-				break;
-			case 7:
+					break;
+				case 7:
 
-				// 领导职务考生座位靠前安排
-				filtBean = filtR007(freeZw, res.getLeaderBean(), filtBean);
+					// 领导职务考生座位靠前安排
+					filtBean = filtR007(freeZw, res.getLeaderBean(), filtBean);
 
-				break;
-			case 8:
+					break;
+				case 8:
 
-				// 特定机构考生场次先后安排
-				filtBean = filtR008(freeZw, res, rule.getBean(key), filtBean);
+					// 特定机构考生场次先后安排
+					filtBean = filtR008(freeZw, res, rule.getBean(key), filtBean);
 
-				break;
-			case 9:
+					break;
+				case 9:
 
-				// 特定考试仅限于省分行安排
-				filtBean = filtR009(freeZw, rule.getBean(key), filtBean);
+					// 特定考试仅限于省分行安排
+					filtBean = filtR009(freeZw, rule.getBean(key), filtBean);
 
-				break;
-			default:
-				break;
+					break;
+				default:
+					break;
 			}
 
 			if (isConstrain) {
@@ -178,7 +178,7 @@ public class KcapMatch {
 
 	/**
 	 * 筛选 相同考试前后左右不相邻的考生
-	 * 
+	 *
 	 * @param freeZw
 	 * @param busyZwBean
 	 * @param filtBean
@@ -261,7 +261,7 @@ public class KcapMatch {
 
 	/**
 	 * R001 移除相同考试相邻考生
-	 * 
+	 *
 	 * @param filtBean
 	 * @param busyZwBean
 	 */
@@ -351,7 +351,7 @@ public class KcapMatch {
 
 	/**
 	 * 筛选 同一天 同一考场 上一场次考试的考生。 移除 同一天 不同考场 上一场次考试的考生。
-	 * 
+	 *
 	 * @param freeZw
 	 * @param busyZwBean
 	 * @param filtBean
@@ -408,7 +408,7 @@ public class KcapMatch {
 
 	/**
 	 * 筛选同一考场,上一场次,同一天的安排考生
-	 * 
+	 *
 	 * @param filtBean
 	 * @param filtTemp
 	 * @param userBean
@@ -458,7 +458,7 @@ public class KcapMatch {
 
 	/**
 	 * 清除不同考场,上一场次,同一天的安排考生
-	 * 
+	 *
 	 * @param filtBean
 	 * @param filtTemp
 	 * @param userBean
@@ -505,7 +505,7 @@ public class KcapMatch {
 
 	/**
 	 * 筛选 距离近的考生，移除距离远的考生
-	 * 
+	 *
 	 * @param freeZw
 	 * @param farBean
 	 * @param filtBean
@@ -545,7 +545,7 @@ public class KcapMatch {
 
 	/**
 	 * 筛选 同一网点级机构考生均分安排 考试安排一天 上下午均分; 考试安排多天 隔天均分;
-	 * 
+	 *
 	 * @param freeZw
 	 * @param res
 	 * @param filtBean
@@ -587,7 +587,7 @@ public class KcapMatch {
 
 	/**
 	 * 一天考试
-	 * 
+	 *
 	 * @param filtBean
 	 * @param res
 	 * @param kcId
@@ -639,7 +639,7 @@ public class KcapMatch {
 
 	/**
 	 * 多天考试
-	 * 
+	 *
 	 * @param filtBean
 	 * @param res
 	 * @param dateList
@@ -648,7 +648,7 @@ public class KcapMatch {
 	 * @param date
 	 */
 	private static void filtR004MultiDay(Bean filtBean, KcapResource res, List<String> dateList, String kcId, int cc,
-			String date) {
+										 String date) {
 
 		String curentKey = kcId + "^" + cc + "^" + date; // 当前场次key：考场ID^场次号^日期
 
@@ -739,7 +739,7 @@ public class KcapMatch {
 
 	/**
 	 * 移除网点考生
-	 * 
+	 *
 	 * @param filtBean
 	 * @param res
 	 * @param busyKs
@@ -832,7 +832,7 @@ public class KcapMatch {
 
 	/**
 	 * 筛除 相邻座位 来自同一机构考生
-	 * 
+	 *
 	 * @param freeZw
 	 * @param busyZwBean
 	 * @param filtBean
@@ -908,7 +908,7 @@ public class KcapMatch {
 
 	/**
 	 * 去除 相邻座位 来自同一机构考生
-	 * 
+	 *
 	 * @param filtBean
 	 * @param busyZwBean
 	 * @throws Exception
@@ -962,7 +962,7 @@ public class KcapMatch {
 
 	/**
 	 * 考生人数少于机器数一半时，考生左右间隔不低于2个座位，前后不低于1个
-	 * 
+	 *
 	 * @param freeZw
 	 * @param res
 	 * @param filtBean
@@ -1037,7 +1037,7 @@ public class KcapMatch {
 
 	/**
 	 * 筛选 领导职务考生座位靠前安排
-	 * 
+	 *
 	 * @param freeZw
 	 * @param leaderBean
 	 * @param filtBean
@@ -1096,7 +1096,7 @@ public class KcapMatch {
 
 	/**
 	 * 筛选 特定机构考生场次先后安排
-	 * 
+	 *
 	 * @param freeZw
 	 * @param res
 	 * @param filtBean
@@ -1144,7 +1144,7 @@ public class KcapMatch {
 
 	/**
 	 * 过滤考生
-	 * 
+	 *
 	 * @param filtBean
 	 * @param freeZw
 	 * @param dCode
@@ -1252,7 +1252,7 @@ public class KcapMatch {
 
 	/**
 	 * 筛选 特定考试仅限于省分行安排
-	 * 
+	 *
 	 * @param freeZw
 	 * @param res
 	 * @param filtBean
@@ -1361,7 +1361,7 @@ public class KcapMatch {
 
 	/**
 	 * 随机获取考生
-	 * 
+	 *
 	 * @param filtBean
 	 *            通过规则筛选的考生
 	 * @return
@@ -1418,7 +1418,7 @@ public class KcapMatch {
 
 	/**
 	 * 获取 报名生多的考生
-	 * 
+	 *
 	 * @param kcId
 	 * @param filtBean
 	 * @param res
@@ -1456,7 +1456,7 @@ public class KcapMatch {
 						if (ksUcode.containsKey(ukey)) {
 
 							Object val = timeks.get(ukey);
-							
+
 							int count = ksUcode.get(ukey);
 
 							if (val instanceof Bean) { // 当前考生报考一个考试
@@ -1511,7 +1511,7 @@ public class KcapMatch {
 
 	/**
 	 * 根据考试时长 筛选考生 60、90分钟考试混排;120分钟混排;150分钟混排
-	 * 
+	 *
 	 * @param freeZw
 	 * @param filtBean
 	 */
@@ -1550,7 +1550,7 @@ public class KcapMatch {
 
 	/**
 	 * 过滤 不同考场，相同日期，相同场次的考生
-	 * 
+	 *
 	 * @param freeZw
 	 * @param busyZwBean
 	 * @param filtBean
