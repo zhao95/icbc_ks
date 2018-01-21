@@ -228,6 +228,10 @@ function getResult(kcId,kcGood,kcMax,allks,alltype){
 //		}
 //	}
 	/***********/
+	var goodCCNum = getcc(scopeKs,kcGood);
+	var maxCCNum = getcc(scopeKs,kcMax);
+	
+	/**
 	var myArr = new Array();
 	for(var i = 0; i < alltype.length; i++){
 		var tmpBmXlCode = alltype[i].BM_XL_CODE;
@@ -263,6 +267,7 @@ function getResult(kcId,kcGood,kcMax,allks,alltype){
 	
 	goodCCNum = rescc.ccGood;
 	maxCCNum = rescc.ccMax;
+	**/
 	/***********/
 	peopleNum = scopeKs.length;
 	res["CC_PEOPLE_NUM"] = peopleNum;
@@ -313,3 +318,40 @@ function notInTable(array){
 	main.append(htmlStr);
 }
 
+/**
+ * 根据考生数组，座位数来取得场次数
+ * @param arr
+ * @param zws
+ * @returns {Number}
+ */
+function getcc(arr,zws){
+	//存放计算过的index
+	var numArr = new Array();
+	//存放总的人
+	var sumArr = new Array();
+	var k = 0;
+	
+	while(numArr.length < arr.length){
+		var array = new Array();
+		var i = 0;
+		while(i < arr.length){
+			if(numArr.indexOf(i) != -1){
+				i++;
+				continue;
+			}
+			var bmCode = arr[i].BM_CODE;
+			if(array.indexOf(bmCode) == -1){
+				array.push(bmCode);
+				numArr.push(i);
+			}
+			if(array.length > zws ){
+				break;
+			}
+			i++;
+		}
+		sumArr[k] = array;
+		k++;
+	}
+
+	return sumArr.length;
+}
