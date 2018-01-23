@@ -1,15 +1,11 @@
 package com.rh.ts.xmgl;
 
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
@@ -45,6 +41,8 @@ public class Cccs2Serv extends CommonServ {
 		    paramBean.setQueryExtWhere("and XM_ID = '"+xmId+"' and KC_LEVEL in ('一级')");
 		}else if(cjVal_param.equals("1,2")){
 		    paramBean.setQueryExtWhere("and XM_ID = '"+xmId+"' and KC_LEVEL in ('一级','二级')");
+		}else if(!paramBean.getStr("_WHERE_").isEmpty()){
+		    System.out.println();
 		}else{
 		    paramBean.setQueryExtWhere("and 1=2");
 		}
@@ -124,80 +122,20 @@ public class Cccs2Serv extends CommonServ {
 	OutBean outBean = new OutBean();
 	String xmId = paramBean.getStr("xmId");
 	String sjVal = paramBean.getStr("sjVal");
+	
+	ParamBean param1 = new ParamBean();
+	param1.setWhere("and xm_id = '"+xmId+"' and bm_ks_time in ("+sjVal+") order by BM_CODE");
+	param1.setSelect("BM_CODE,BM_NAME,BM_LB,BM_XL,BM_MK,BM_TYPE_NAME,BM_KS_TIME,CODE_PATH,ODEPT_CODE_V");
 	//所有符合考生
-	List<Bean> ksList = ServDao.finds("TS_XMGL_CCCS_KSGL", "and xm_id = '"+xmId+"' and bm_ks_time in ("+sjVal+")");
+	List<Bean> ksList = ServDao.finds("TS_XMGL_CCCS_KSGL", param1);
+	ParamBean param2 = new ParamBean();
+	param2.setWhere("and xm_id = '"+xmId+"' and bm_ks_time in ("+sjVal+")");
+	param2.setSelect("BM_CODE,BM_NAME,BM_LB,BM_XL,BM_MK,BM_TYPE_NAME,BM_KS_TIME,CODE_PATH,ODEPT_CODE_V");
 	//所有不符合的考生
-	List<Bean> nonKsList = ServDao.finds("TS_XMGL_CCCS_KSGL", "and xm_id = '"+xmId+"' and bm_ks_time not in ("+sjVal+")");
-	//所有考试
-	List<Bean> typeList = ServDao.finds("TS_XMGL_CCCS_UTIL_TYPE_V", "and xm_id = '"+xmId+"'");
-	outBean.set("typeList", typeList);
+	List<Bean> nonKsList = ServDao.finds("TS_XMGL_CCCS_KSGL", param2);
+
 	outBean.set("nonKsList", nonKsList);
 	outBean.set("all", ksList);
-	return outBean;
-    }
-    
-    @SuppressWarnings("deprecation")
-    public OutBean getCC(ParamBean paramBean) throws JSONException{
-	OutBean outBean = new OutBean();
-	int kcGood = paramBean.getInt("kcGood");
-	int kcMax = paramBean.getInt("kcMax");
-	String myArr = paramBean.getStr("myArr");
-	String myArrStr=URLDecoder.decode(myArr);
-	JSONArray list = new JSONArray(myArrStr);
-	
-	int ccGood = 0;
-	int ccMax = 0;
-	
-	// 总体已占用
-	ArrayList<Integer> list0 = new ArrayList<Integer>();
-	for (int j = 0; j < list.length(); j++) {
-	    if (list0.contains(j)) {
-		continue;
-	    }
-	    // 本次计算已占用
-	    ArrayList<Integer> list3 = new ArrayList<Integer>();
-	    list0.add(j);
-	    list3.add(j);
-	    int i = j + 1;
-	    ArrayList<String> setA = new ArrayList<String>();
-	    JSONArray listChildA = new JSONArray(list.get(j).toString());
-	    for(int k=0;k<listChildA.length();k++){
-		setA.add(listChildA.getString(k));
-	    }
-	    
-	    while (i < list.length()) {
-		if (list0.contains(i) || list3.contains(i)) {
-		    i++;
-		    continue;
-		}
-		ArrayList<String> setB = new ArrayList<String>();
-		JSONArray listChildB = new JSONArray(list.get(i).toString());
-		for(int k=0;k<listChildB.length();k++){
-		    setB.add(listChildB.getString(k));
-		}
-		
-		boolean flag = check(setA, setB);
-		if (!flag) {
-		    setA.addAll(setB);
-		    list0.add(i);
-		    list3.add(i);
-		}
-		i++;
-	    }
-//	    System.out.println("本次计算==="+list3);
-	    int tmpPeopleNum = setA.size();
-//	    System.out.println("本次计算人数==="+tmpPeopleNum);
-	    int cc1 = tmpPeopleNum/kcGood;
-	    int cc2 = tmpPeopleNum/kcMax;
-	    if(tmpPeopleNum%kcGood > 0){ cc1++; }
-	    if(tmpPeopleNum%kcMax > 0){ cc2++; }
-	    
-	    ccGood += cc1;
-	    ccMax += cc2;
-	}
-	System.out.println("总计算=" + list0);
-	outBean.set("ccGood", ccGood);
-	outBean.set("ccMax", ccMax);
 	return outBean;
     }
     
