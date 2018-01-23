@@ -248,7 +248,7 @@ function xminfoshow(){
        					if(shArray==true&&truetisi=="true"){
        						$("#"+a).find("img[src='/ts/image/u4721.png']").attr("src","/ts/image/u4099.png");//xx改为 问号
        						/*$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'</div>');*/
-       						$("#"+a).append('<div">管理任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
+       						$("#"+a).append('<div">管理/信贷类任职已满&nbsp;&nbsp;<input style="width:20%" name="yzspan"></input>&nbsp;&nbsp;年</div>');
        						$("#tishiyu").html(tishiyu);
        						$("#yzxx").modal("show");
        					}

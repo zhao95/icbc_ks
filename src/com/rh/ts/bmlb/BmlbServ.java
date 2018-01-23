@@ -329,7 +329,7 @@ public class BmlbServ extends CommonServ {
 						if (!"".equals(rz_year)) {
 							if (yzgzArg.length() > 0) {
 								mind = mind.substring(0, mind.length() - 1)
-										+ ",{'VLIDATE':'STAY','TISHI':'','NAME':'管理任职已满"
+										+ ",{'VLIDATE':'STAY','TISHI':'','NAME':'管理任/信贷类任职已满"
 										+ rz_year + "年'}]";
 								mind = mind.replaceAll("\'", "\"");
 								ad_result = "0";
@@ -524,6 +524,7 @@ public class BmlbServ extends CommonServ {
 					mindbean.set("S_DNAME", dept_name);
 					mindbean.set("S_DEPT", bmbean.getStr("S_DEPT"));
 					ServDao.save("TS_COMM_MIND", mindbean);
+					Transaction.commit();
 				}
 			}
 		} catch (JSONException e) {
