@@ -61,7 +61,7 @@
 %>
 <%@ include file="../../qt/jsp/header-logo.jsp" %>
 <div class="" style="padding: 10px">
-    <a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img style="padding-bottom: 10px ;color: #388CAE;"
+    <a href="<%=CONTEXT_PATH%>/index_qt.jsp"><img title="返回" style="padding-bottom: 10px ;color: #388CAE;"
                                                   src="<%=CONTEXT_PATH%>/ts/image/Home_16x16.png" id="shouye"></a>
     <span style="color: #909090;font-size: 16px;">&nbsp;&nbsp;/&nbsp;&nbsp;我的请假</span>
 </div>
