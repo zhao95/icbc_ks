@@ -10,6 +10,17 @@ $("#TS_BMSH_RULE-CONDITION_ONE_div").find("span:last").find("div").css("width","
 $("#TS_BMSH_RULE-VALID_START_div").css("margin-left","-30%");
 $("#TS_BMSH_RULE-VALID_END_div").css("margin-left","-30%");
 _viewer.beforeSave = function() {
+	var con_one = _viewer.getItem("CONDITION_ONE").getValue("");//条件一
+	var con_two = _viewer.getItem("CONDITION_TWO").getValue("");//条件二
+	var start_time = _viewer.getItem("VALID_START").getValue("");//开始时间
+	var end_time = _viewer.getItem("VALID_END").getValue("");//开始时间
+	if(end_time!=""&&start_time!=""){
+		if(con_one=="<"&&con_two==">"){
+			$("#TS_BMSH_RULE-CONDITION_ONE").parent().showError("两种条件不能同时存在");
+	 		$("#TS_BMSH_RULE-CONDITION_TWO").parent().showError("两种条件不能同时存在");
+		}
+	}
+	
 	var beginTime=_viewer.getItem("VALID_START").getValue();
 	var endTime=_viewer.getItem("VALID_END").getValue();
 	var beginTimes = beginTime.substring(0, 10).split('-');
@@ -24,4 +35,6 @@ _viewer.beforeSave = function() {
  		$("#TS_BMSH_RULE-VALID_END").parent().showError("证书有效结束时间应晚于有效开始时间");
 		return false;
  	}
+    
+    
 };
