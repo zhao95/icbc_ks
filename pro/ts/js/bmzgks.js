@@ -359,15 +359,12 @@ function xminfoshow(){
 				if (ryl_mobile != "" && ryl_mobile != null) {
 				}*/
 				$("#loading").modal("show");//不再进行手机号校验
-				var res = FireFly.doAct("TS_BMLB_BM", "addZgData", param,true,false);
-				setTimeout("fanhui()", 1000);
-					
+				var res = FireFly.doAct("TS_BMLB_BM", "addZgData", param,true,true,function (result){
+					$("#bmbq").val("1");
+					$("#form1").submit();
+				})
 			}
 	})
-	function fanhui(){//报名完后跳转回页面
-		$("#bmbq").val("1");
-		$("#form1").submit();
-	}
 	
 	function showFzgList(showList){
 		rlzyglmk=[];

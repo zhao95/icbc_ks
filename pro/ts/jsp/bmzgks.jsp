@@ -432,10 +432,20 @@ position: absolute;
 			</form>
 	<input type="hidden" id='xmidval' value="<%=xm_id %>">
 	<script>
-	
-	/* function checkLeave(){
+	 window.onbeforeunload = onbeforeunload_handler;     
+	     window.onunload = onunload_handler;
+	     function onbeforeunload_handler(){     
+	     var  leng = $("input[name='checkboxaa']").length;
+	     if(leng>0&&$("#tjloading").css("display")!="block"){
+	         var warning="您尚未提交报名，请确认是否离开?";             
+	         return warning;     
+	     }
+	     }     
+
+	/*  function checkLeave(){
+		 alert("a");
 		//判断是否有考试没有提交
-		var  leng = $("input[name='checkboxaa']").length;
+		
 		if(leng>0){
 			var sureconfir = confirm("还有考试没有提交是否要离开页面");
 			if(sureconfir){
@@ -444,7 +454,7 @@ position: absolute;
 				 return '您可能有数据没有保存'; 
 			}
 		}
-	} */
+	}  */
 	</script>
 	<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<!-- Bootstrap 3.3.6 -->

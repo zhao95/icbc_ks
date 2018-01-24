@@ -1,4 +1,8 @@
 var xmid = $("#xmid").val();
+var paramxmid = {};
+paramxmid["xmid"]=xmid;
+var xmtyperel = FireFly.doAct("TS_XMGL","getXmType",paramxmid);
+var xm_type = xmtyperel.xm_type;
 var user_code = System.getVar("@USER_CODE@");
 //隔一行 进行 背景颜色 渲染
 function rowscolor(table){
@@ -317,7 +321,6 @@ function firall(){
 		}
 		}
 		function mttijiao(){
-			
 			//提交审核
 			var mokuai = document.getElementById("mokuai").value;
 			var  s = "";
@@ -815,7 +818,14 @@ var eles=[
 	}
 	if(impexter==4){
 		//修改导入数据模板
-		$("#impmodeal").attr("href","/ts/imp_template/额外报名数据导入模板.xls");
+		alert(xm_type);
+		if(xm_type=="其他类考试"){
+			$("#impmodeal").attr("href","/ts/imp_template/非资格额外报名数据导入模板.xls");
+
+		}else{
+			$("#impmodeal").attr("href","/ts/imp_template/额外报名数据导入模板.xls");
+			
+		}
 	}else if(impexter==2){
 		$("#impmodeal").attr("href","/ts/imp_template/报名审核通过导入模板.xls");
 	}else if(impexter==3){
@@ -855,6 +865,7 @@ $("#excelimp").click(function(){
 		 param["xmid"]=xmid;
 		 param["nodeid"]=nodeid;
 		 param["impexter"]=impexter;
+		 param["xm_type"]=xm_type;
 		 FireFly.doAct("TS_BMSH_PASS","saveFromExcel",param,false,true,function (result) {
 			 alert(result._MSG_);
 			 window.open("/file/"+result.FILE_ID);
