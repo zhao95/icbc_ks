@@ -10,13 +10,12 @@ import com.rh.core.org.mgr.OrgMgr;
 import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.serv.bean.PageBean;
-import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Constant;
 import com.rh.core.util.DateUtils;
 import com.rh.core.util.ExpUtils;
 import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.BMUtil;
-import com.rh.ts.util.RoleUtil;
+import com.rh.ts.util.KcUtils;
 import com.rh.ts.util.TsConstant;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -60,7 +59,8 @@ public class DapccServ extends CommonServ {
         }
         allList.addAll(ksList);
 
-        //请假
+        //请假人员
+
         paramBean.set("searchDeptCode", "qj");
         OutBean qjKsOutBean = this.getKsContent(paramBean);
         List<Bean> qjKsList = qjKsOutBean.getDataList();
@@ -69,7 +69,7 @@ public class DapccServ extends CommonServ {
         }
         allList.addAll(qjKsList);
 
-        //借考
+        //借考人员
         paramBean.set("searchDeptCode", "jk");
         OutBean jkKsOutBean = this.getKsContent(paramBean);
         List<Bean> jkKsList = jkKsOutBean.getDataList();
@@ -78,11 +78,12 @@ public class DapccServ extends CommonServ {
         }
         allList.addAll(jkKsList);
 
+        //设置其他信息
         for (Bean bean : allList) {
+
+            //设置座位安排信息
             String shId = bean.getStr("SH_ID");
-
             Bean yapzwBean;
-
             List<Object> values = new ArrayList<Object>();
             values.add(shId);
             List<Bean> yapzwBeanList = Transaction.getExecutor().query(
@@ -102,6 +103,7 @@ public class DapccServ extends CommonServ {
             bean.set("SJ_START", yapzwBean.getStr("SJ_START"));
             bean.set("ZW_ZWH_SJ", yapzwBean.getStr("ZW_ZWH_SJ"));
 
+            //设置考试名称
             String examinationName = BMUtil.getExaminationName(bean.getStr("BM_TYPE"), bean.getStr("BM_XL"), bean.getStr("BM_MK"));
             bean.set("ksName", examinationName);
         }
@@ -159,6 +161,7 @@ public class DapccServ extends CommonServ {
         String searchKcId = paramBean.getStr("searchKcId");
         String searchSjId = paramBean.getStr("searchSjId");
 
+        //kcId  ,
         String[] kcIdSplit = searchKcId.split(",");
         List<Object> kcIdValues = new ArrayList<Object>();
         StringBuilder kcIdSql = new StringBuilder();
@@ -169,7 +172,8 @@ public class DapccServ extends CommonServ {
         kcIdSql = kcIdSql.insert(0, "'',");
         kcIdSql = new StringBuilder(kcIdSql.substring(0, kcIdSql.length() - 1));
 
-        long l = Long.MAX_VALUE;//选中的考场时长
+        //选中的考场时长
+        long l = Long.MAX_VALUE;
         try {
             if (StringUtils.isNotBlank(searchSjId)) {
                 Bean sjBean = ServDao.find(TsConstant.SERV_KCAP_CCSJ, searchSjId);
@@ -228,6 +232,7 @@ public class DapccServ extends CommonServ {
 
         //查找借考考生数据
         if ("jk".equals(searchDeptCode)) {
+            l = Long.MAX_VALUE;
             String searchJkCodePath = "";
             String sql = "SELECT b.CODE_PATH FROM TS_KCGL a " +
                     "LEFT JOIN sy_org_dept b ON b.DEPT_CODE = a.KC_ODEPTCODE WHERE KC_ID in(" + kcIdSql + ")";
@@ -401,28 +406,8 @@ public class DapccServ extends CommonServ {
         String DEPT_CODE = "KC_ODEPTCODE";//KC_ODEPTCODE：根据考场所属机构挂靠考场；DEPT_CODE：根据关联机构挂靠考场
         String xmId = paramBean.getStr("xmId");
         String roleDeptCode = paramBean.getStr("deptCodeStr");
-        List<Object> values = new ArrayList<Object>();
-        values.add(xmId);
 
-        //根据用户权限code（deptCodeStr）过滤考场
-        String[] splitDeptCode = roleDeptCode.split(",");
-        StringBuilder deptBuilder = new StringBuilder("and ( ");
-        for (String deptCode : splitDeptCode) {
-            values.add("%" + deptCode + "%");
-            deptBuilder.append(" e.CODE_PATH like ? ").append("or ");
-        }
-        String deptSql = deptBuilder.substring(0, deptBuilder.length() - 3) + ")";
-
-        //查询出所有有权限的考场
-        // xmId:该项目 a待安排考场 a.XM_ID
-        // roleDeptCode:当前用户所拥有的权限  e考场所属机构 e.CODE_PATH like %roleDeptCode%
-        //b考场信息 c考场关联机构 d考场关联机构信息
-        List<Bean> list = Transaction.getExecutor().query("select a.*,d.DEPT_CODE,b.KC_ODEPTCODE from TS_XMGL_KCAP_DAPCC a " +
-                "INNER JOIN TS_KCGL b on b.KC_ID =a.KC_ID " +
-                "INNER JOIN ts_xmgl_kcap_gljg c on c.KC_ID=a.KC_ID " +
-                "LEFT JOIN SY_ORG_DEPT d on d.DEPT_CODE = c.JG_CODE " +
-                "LEFT JOIN SY_ORG_DEPT e on b.KC_ODEPTCODE = e.DEPT_CODE " +
-                "where a.XM_ID=? " + deptSql, values);
+        List<Bean> list = KcUtils.getKcList(xmId, roleDeptCode);
         Set<String> hashSet = new HashSet<String>();
         for (Bean bean : list) {
             hashSet.add(bean.getStr(DEPT_CODE));
@@ -761,12 +746,21 @@ public class DapccServ extends CommonServ {
 
     /**
      * xngs 辖内公示
+     *
+     * @param paramBean {XM_ID, KC_ID_STR(没有取当前登录人权限范围内的考场)}
+     * @return outBean
      */
     public OutBean xngs(ParamBean paramBean) {
 
-        //set PUBLICITY = '1'
+        //
         String xmId = paramBean.getStr("XM_ID");
         String kcIdStr = paramBean.getStr("KC_ID_STR");
+
+        if (StringUtils.isBlank(kcIdStr)) {
+            kcIdStr = KcUtils.getKcIdStr(xmId);
+        }
+
+        //update ts_xmgl_kcap_yapzw PUBLICITY
         String kcIdSql = "'" + kcIdStr.replaceAll(",", "','") + "'";
         String sql = "update ts_xmgl_kcap_yapzw set PUBLICITY = '1' where XM_ID = ? and KC_ID in (" + kcIdSql + ")";
         List<Object> values = new LinkedList<Object>();
@@ -926,9 +920,13 @@ public class DapccServ extends CommonServ {
     public OutBean getDeptKcCount(ParamBean paramBean) {
         OutBean outBean = new OutBean();
         String count = "0", remainCount = "0";
+        String xmId = paramBean.getStr("XM_ID");
         String kcIdStr = paramBean.getStr("KC_ID");
+        if (StringUtils.isBlank(kcIdStr)) {
+            kcIdStr = KcUtils.getKcIdStr(xmId);
+        }
+
         if (StringUtils.isNotBlank(kcIdStr)) {
-            String xmId = paramBean.getStr("XM_ID");
             String[] split = kcIdStr.split(",");
 
             List<Object> kcIdValues = new ArrayList<Object>();
@@ -1081,10 +1079,7 @@ public class DapccServ extends CommonServ {
      */
     public OutBean deptContainFlag(ParamBean paramBean) {
         String deptCode = paramBean.getStr("DEPT_CODE");
-        String servId = "TS_XMGL_KCAP_YAPZW";
-        Bean tsXmglKcapYapzwPvlg = RoleUtil.getPvlgRole(Context.getUserBean().getCode(), servId);
-        Bean auto = tsXmglKcapYapzwPvlg.getBean(servId + "_PVLG").getBean("auto");
-        String roleDcode = auto.getStr("ROLE_DCODE");
+        String roleDcode = KcUtils.getAutoPvlgCode();
         String[] deptCodes = roleDcode.split(",");
         String result = DapccUtils.getDeptContains(deptCode, deptCodes);
         return new OutBean().set("flag", result);

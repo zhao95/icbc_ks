@@ -9,6 +9,7 @@ import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.DateUtils;
 import com.rh.core.util.ImpUtils;
 import com.rh.ts.pvlg.PvlgUtils;
+import com.rh.ts.util.KcUtils;
 import com.rh.ts.util.RoleUtil;
 import com.rh.ts.util.TsConstant;
 import org.apache.commons.collections4.CollectionUtils;
@@ -66,10 +67,7 @@ public class DfpKsServ extends CommonServ {
         //*获取文件内容
         List<Bean> rowBeanList = paramBean.getList(ImpUtils.DATA_LIST);
         //获取当前用户 安排权限
-        String servId = "TS_XMGL_KCAP_YAPZW";
-        Bean tsXmglKcapYapzwPvlg = RoleUtil.getPvlgRole(Context.getUserBean().getCode(), servId);
-        Bean auto = tsXmglKcapYapzwPvlg.getBean(servId + "_PVLG").getBean("auto");
-        String roleDcode = auto.getStr("ROLE_DCODE");
+        String roleDcode = KcUtils.getAutoPvlgCode();
         String[] deptCodes = roleDcode.split(",");
 
         //当前登录人是否是项目创建人
