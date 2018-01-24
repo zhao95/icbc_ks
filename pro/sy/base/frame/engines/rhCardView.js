@@ -1,4 +1,5 @@
 /** 卡片页面渲染引擎 */
+
 GLOBAL.namespace("rh.vi");
 rh.vi.cardView = function(options) {
    var defaults = {
