@@ -593,7 +593,6 @@ public class RuleServ extends CommonServ {
 			String zslv = bean.getStr("R_TYPE");//证书获证类型  1 与  2 或
 			int zsvalid = bean.getInt("R_YEAR");//证书有效期
 			String lxtype = bean.getStr("R_CERT_STAT");//证书类型  有效获取中  无效  
-			int cy = bean.getInt("R_RZYEAR");//从业年限
 			int zd = bean.getInt("R_ZD");//自动验证  报考序列证书是否 通过
 			int ruzhi = bean.getInt("R_POST_CODE");//入职年限
 			String success_info = bean.getStr("SUCCESS_INFO");//成功提示信息
@@ -601,7 +600,26 @@ public class RuleServ extends CommonServ {
 			String start_date = bean.getStr("VALID_START");//获证日期
 			String end_date = bean.getStr("VALID_END");//失效日期
 			int gotostay = bean.getInt("GOTO_STAY");//获证日期
+			int cy = bean.getInt("R_RZYEAR");//从业年限
+			String RULE_CY = bean.getStr("RULE_CY");//验证从业序列
+			int RULE_MAST = bean.getInt("RULE_MAST");//是否担任管理类职务
 			
+			if(RULE_MAST==1){//担任管理类职务
+				SqlBean adminbean = new SqlBean();
+				adminbean.set("STATION_TYPE_CODE", "023001");
+				adminbean.set("STATION_TYPE_CODE", "023001");
+				adminbean.and("PERSON_ID", BM_CODE);
+				int adcount = ServDao.count("sy_hrm_zdstaffposition", adminbean);
+				if(adcount<=0){//不是管理类职务
+					if(gotostay==1){
+						staytogo=true;
+					}
+					littelGzBean.set("validate", false);
+					littelGzBean.set("name",failer_info);
+					listbean.add(littelGzBean);
+					continue;
+				}
+			}
 			if(ruzhi==0){
 			}else{
 				SqlBean ruzhibean = new SqlBean();
@@ -658,23 +676,61 @@ public class RuleServ extends CommonServ {
 			if(cy==0){
 				
 			}else{
-				cybean.and("PERSON_ID", BM_CODE);
-				//从业当前职位满多少年
-				//当前时间减去年数
-				Calendar c = Calendar.getInstance();
-
-				int valfu = -cy;
-				
-				SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-				c.setTime(newdate);
-
-				c.add(Calendar.YEAR, valfu);
-
-				Date y = c.getTime();
-
-				String yearago = format.format(y);
+				if(!"".equals(RULE_CY)){
+					SqlBean xlsql = new SqlBean();
+					xlsql.andIn("KSLBK_ID", zsxl.split(","));
+					List<Bean> finds2 = ServDao.finds("TS_XMGL_BM_KSLBK", xlsql);
+					String cyxl="";
+					String cylb="";
+					for(int i=0;i<finds2.size();i++){
+						if(i==0){
+							if("".equals(finds2.get(i).getStr("KSLBK_XL_CODE"))){
+								cylb+=finds2.get(i).getStr("KSLBK_CODE");
+							}else{
+								cyxl+=finds2.get(i).getStr("KSLBK_XL_CODE");
+							}
+						}else{
+							if("".equals(finds2.get(i).getStr("KSLBK_XL_CODE"))){
+								cylb+=","+finds2.get(i).getStr("KSLBK_CODE");
+							}else{
+								cyxl+=","+finds2.get(i).getStr("KSLBK_XL_CODE");
+							}
+						}
+					}
+					if(!"".equals(cylb)){
+						cybean.andIn("STATION_TYPE_CODE", cylb.split(","));
+					}
+					if(!"".equals(cyxl)){
+						cybean.andIn("STATION_NO_CODE", cyxl.split(","));
+					}
+					cybean.and("PERSON_ID", BM_CODE);
+					//从业当前职位满多少年
+					//当前时间减去年数
+					Calendar c = Calendar.getInstance();
 					
-				cybean.andLTE("HOLD_TIME", yearago);// 开始日期小于等于
+					int valfu = -cy;
+					
+					SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+					c.setTime(newdate);
+					
+					c.add(Calendar.YEAR, valfu);
+					
+					Date y = c.getTime();
+					
+					String yearago = format.format(y);
+					
+					cybean.andLTE("HOLD_TIME", yearago);// 开始日期小于等于
+					int cycount = ServDao.count("sy_hrm_zdstaffposition", cybean);
+					if(cycount<=0){//从业年限不符合条件
+						if(gotostay==1){
+							staytogo=true;
+						}
+						littelGzBean.set("validate", false);
+						littelGzBean.set("name",failer_info);
+						listbean.add(littelGzBean);
+					}
+					
+				}
 			}
 			
 			if(!"".equals(zsxl)){
@@ -701,7 +757,6 @@ public class RuleServ extends CommonServ {
 					if(!"".equals(zsdj)){
 						sqlbean.andIn("CERT_GRADE_CODE", zsdj.split(","));
 					}
-					cybean.andIn("STATION_TYPE_CODE", zslb.split(","));
 					//判断证书有效期
 					if(0==zsvalid){
 					}else{
@@ -740,7 +795,6 @@ public class RuleServ extends CommonServ {
 				}
 			}
 			int count = 0;
-			int cycount = 0;
 			if(!"".equals(zsxl)){
 				//是否是 自动获取 报名的考试
 				//证书类型 是 与还是或
@@ -748,40 +802,25 @@ public class RuleServ extends CommonServ {
 					String[] xlarr = zsxl.split(",");
 					for (String string : xlarr) {
 						sqlbean.and("STATION_NO",string);
-						cybean.and("STATION_NO_CODE",string);
-						
 						if(!"".equals(zsdj)){
 							count += ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
 							}
-						if(cy!=0){
-						cycount+=ServDao.count("sy_hrm_zdstaffposition", cybean);
-						}
 					}
 				}else{
 					sqlbean.andIn("STATION_NO", zsxl.split(","));
-					cybean.andIn("STATION_NO_CODE", zsxl.split(","));
 					if(!"".equals(zsdj)){
 						count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
 						}
-					if(cy!=0){
-					cycount = ServDao.count("sy_hrm_zdstaffposition", cybean);
-					}
 				}
 			}else{
 				if(!"".equals(zsdj)){//是否验证证书
 					count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
 					}
-				if(cy!=0){//是否验证从业年限
-				cycount = ServDao.count("sy_hrm_zdstaffposition", cybean);
-				}
 			}
-			if(cy==0){
-				cycount=1;
-				}
-			if("".equals(zsdj)){//是否验证证书
-				count = 1;
-				}
-			if(count>0&&cycount>0){
+			if("".equals(zsdj)){//证书为空时 不验证证书
+				count=1;
+			}
+			if(count>0){
 				flag = true;
 				littelGzBean.set("validate", true);
 				littelGzBean.set("name",success_info);

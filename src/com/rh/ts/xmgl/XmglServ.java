@@ -1,7 +1,4 @@
 
-
-
-
 package com.rh.ts.xmgl;
 
 import java.io.IOException;
@@ -1557,6 +1554,14 @@ public  void delFieldCal(String   delXmidAll)  {
 //	
 //	return  outBean;
 //}	
-	
+public OutBean getXmType(ParamBean paramBean){
+	String xmid = paramBean.getStr("xmid");
+	Bean find = ServDao.find("TS_XMGL", xmid);
+	String xm_type = "";
+	if(find!=null){
+		xm_type=find.getStr("XM_TYPE");
+	}
+	return new OutBean().set("xm_type", xm_type);
+}
 	
 }
