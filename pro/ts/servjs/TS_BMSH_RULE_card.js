@@ -1,6 +1,4 @@
 _viewer = this;
-$("#TS_BMSH_RULE-GOTO_STAY_label").find("span:first").css("width","250px");
-$("#TS_BMSH_RULE-GOTO_STAY_div").css("margin-left","10.5%");
 $("#TS_BMSH_RULE-R_ZD_label").find("span:first").css("width","1000px");
 $("#TS_BMSH_RULE-R_ZD_div").css("margin-left","2%");
 $("#TS_BMSH_RULE-R_TYPE_label").find("span:first").css("width","1000px");
@@ -20,7 +18,6 @@ _viewer.beforeSave = function() {
 	 		$("#TS_BMSH_RULE-CONDITION_TWO").parent().showError("两种条件不能同时存在");
 		}
 	}
-	
 	var beginTime=_viewer.getItem("VALID_START").getValue();
 	var endTime=_viewer.getItem("VALID_END").getValue();
 	var beginTimes = beginTime.substring(0, 10).split('-');
@@ -36,5 +33,38 @@ _viewer.beforeSave = function() {
 		return false;
  	}
     
-    
 };
+
+$("#TS_BMSH_RULE-R_MK").css("cursor","pointer");
+    $("#TS_BMSH_RULE-R_MK").unbind('click').bind('click',function(){
+    var xls = $("#TS_BMSH_RULE-R_XL__NAME").val();
+    if(xls!=""){
+    	var arr = xls.split(",");
+    	xls = '';
+    	for(var i=0;i<arr.length;i++){
+    		var arrstr = arr[i].split("/");
+    		if(arrstr.length>1){
+    			arr[i]=arrstr[1];
+    		}
+    		if(i==0){
+    			xls += "^"+arr[i]+"^";
+    		}else{
+    			xls +=",^"+arr[i]+"^";
+    		}
+    	}
+    }
+	var configStr = "TS_XMGL_BM_KSLBK,{'TARGET':'','SOURCE':'KSLBK_MK~KSLBK_XL'," +
+	"'HIDE':'','EXTWHERE':'AND KSLBK_XL IN("+xls+") AND KSLBK_MK !=^无模块^ GROUP by KSLBK_MK','TYPE':'multi','HTMLITEM':''}";
+	var options = {
+			"config" :configStr,
+			"parHandler":_viewer,
+			"formHandler":_viewer.form,
+		    "replaceCallBack":function(idArray) {//回调，idArray为选中记录的相应字段的数组集合
+		    	var ids = idArray.KSLBK_MK;
+		    	$("#TS_BMSH_RULE-R_MK").val(ids);
+			}
+		};
+	var queryView = new rh.vi.rhSelectListView(options);
+	queryView.show(event,[],[0,495]);
+    })
+    

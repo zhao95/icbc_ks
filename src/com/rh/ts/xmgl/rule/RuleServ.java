@@ -732,7 +732,21 @@ public class RuleServ extends CommonServ {
 					
 				}
 			}
-			
+			if(!"".equals(zsmk)){
+				sqlbean.and("STU_PERSON_ID", BM_CODE);
+				if(!"".equals(lxtype)){
+					sqlbean.andIn("QUALFY_STAT", lxtype.split(","));
+				}
+				if(!"".equals(zsdj)){
+					sqlbean.andIn("CERT_GRADE_CODE", zsdj.split(","));
+				}
+				//判断证书有效期
+				if(0==zsvalid){
+				}else{
+					sqlbean.andGTE("YEAR(END_DATE)-YEAR(BGN_DATE)", zsvalid);
+				}
+				sqlbean.andIn("CERT_MODULE", zsmk.split(","));
+			}else{
 			if(!"".equals(zsxl)){
 				sqlbean.and("STU_PERSON_ID", BM_CODE);
 				//是否是 自动获取 报名的考试
@@ -766,6 +780,7 @@ public class RuleServ extends CommonServ {
 				}else{
 				}
 			}
+			}
 			if(!"".equals(start_date)){//证书时间判断
 				int CON_ONE = bean.getInt("CONDITION_ONE");
 				if(CON_ONE==1){
@@ -780,6 +795,7 @@ public class RuleServ extends CommonServ {
 					sqlbean.andLTE("BGN_DATE", zsvalid);
 				}
 			}
+			
 			if(!"".equals(end_date)){
 				int CON_TWO = bean.getInt("CONDITION_TWO");
 				if(CON_TWO==1){
@@ -795,27 +811,33 @@ public class RuleServ extends CommonServ {
 				}
 			}
 			int count = 0;
-			if(!"".equals(zsxl)){
-				//是否是 自动获取 报名的考试
-				//证书类型 是 与还是或
-				if("1".equals(zslv)){
-					String[] xlarr = zsxl.split(",");
-					for (String string : xlarr) {
-						sqlbean.and("STATION_NO",string);
-						if(!"".equals(zsdj)){
-							count += ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
-							}
-					}
-				}else{
-					sqlbean.andIn("STATION_NO", zsxl.split(","));
-					if(!"".equals(zsdj)){
-						count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
-						}
-				}
-			}else{
+			if(!"".equals(zsmk)){
 				if(!"".equals(zsdj)){//是否验证证书
 					count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
+				}
+			}else{
+				if(!"".equals(zsxl)){
+					//是否是 自动获取 报名的考试
+					//证书类型 是 与还是或
+					if("1".equals(zslv)){
+						String[] xlarr = zsxl.split(",");
+						for (String string : xlarr) {
+							sqlbean.and("STATION_NO",string);
+							if(!"".equals(zsdj)){
+								count += ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
+							}
+						}
+					}else{
+						sqlbean.andIn("STATION_NO", zsxl.split(","));
+						if(!"".equals(zsdj)){
+							count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
+						}
 					}
+				}else{
+					if(!"".equals(zsdj)){//是否验证证书
+						count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
+					}
+				}
 			}
 			if("".equals(zsdj)){//证书为空时 不验证证书
 				count=1;
