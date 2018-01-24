@@ -56,6 +56,8 @@ _viewer.getItem("KC_MAX").change(function(){
 	var maxValue = _viewer.getItem("KC_MAX").getValue();
 	var goodValue = _viewer.getItem("KC_GOOD").getValue();
 	if(goodValue != ""){
+		maxValue = parseInt(maxValue);
+		goodValue = parseInt(goodValue);
 		if(maxValue < goodValue){
 			alert("最大设备数不能小于最优设备数！");
 			_viewer.getItem("KC_MAX").clear();
@@ -66,6 +68,8 @@ _viewer.getItem("KC_GOOD").change(function(){
 	var maxValue = _viewer.getItem("KC_MAX").getValue();
 	var goodValue = _viewer.getItem("KC_GOOD").getValue();
 	if(maxValue != ""){
+		maxValue = parseInt(maxValue);
+		goodValue = parseInt(goodValue);
 		if(maxValue < goodValue){
 			alert("最大设备数不能小于最优设备数！");
 			_viewer.getItem("KC_GOOD").clear();
