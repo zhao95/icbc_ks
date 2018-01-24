@@ -27,6 +27,8 @@ import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -34,13 +36,13 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.ParseException;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 /**
  * Created by shenh on 2017/10/25.
  */
 public class XmglAdmissionServ extends CommonServ {
+
+    private static String ZIP_ENCODING = "GBK";
 
     /**
      * 获取准考证列表
@@ -459,6 +461,7 @@ public class XmglAdmissionServ extends CommonServ {
                     zos.write(bufs, 0, read);
                 }
             }
+            zos.setEncoding(ZIP_ENCODING);
 //            flag = true;
         } catch (Exception e) {
             throw new TipException("准考证打包失败");
