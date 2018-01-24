@@ -192,19 +192,6 @@ $("#TS_KCGL_JKIP-viListViewBatch-addBatch").click(function(){
     }, 100)
 });
 
-var kcType = _viewer.getItem("KC_TYPE").getValue();
-if(kcType != 2){
-	_viewer.getItem("KC_XM_NAME").hide();
-}
-_viewer.getItem("KC_TYPE").change(function(){
-	kcType = _viewer.getItem("KC_TYPE").getValue();
-	if(kcType != 2){
-		_viewer.getItem("KC_XM_NAME").hide();
-	}else{
-		_viewer.getItem("KC_XM_NAME").show();
-	}
-});
-
 if(_viewer.getParHandler().getParHandler() != undefined || _viewer.getParHandler().getParHandler() != null){
 	var parHandlerServId = _viewer.getParHandler().getParHandler().servId;
 	if(parHandlerServId == "TS_KCZGL_GROUP"){

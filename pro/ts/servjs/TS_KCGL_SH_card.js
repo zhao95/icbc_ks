@@ -47,7 +47,4 @@ _viewer.getBtn("noBtn").unbind("click").bind("click", function(event) {
 		_viewer.getBtn("yesBtn").show();
 	});
 });
-var kcType = _viewer.getItem("KC_TYPE").getValue();
-if(kcType != 2){
-	_viewer.getItem("KC_XM_NAME").hide();
-}
+

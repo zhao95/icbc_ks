@@ -120,7 +120,7 @@ function run(){
 			percent1 = Math.round(x1*100/sum)
 		}
 		var fx = "分析:超过10场的考场有"+x1+"个，占比"+percent1+"%。说明：背景色为深色行为场次数大于10场，红色考场名称表示当前考场场次数最大。";
-		$("#TS_XMGL_CCCS_2").find("table[id='JColResizer2']").find(".rhGrid-tbody").append("<tr class='tBody-tr'><td colspan=8 class='rhGrid-td-left'>"+fx+"</td></tr>")
+		$("#TS_XMGL_CCCS_2").find("table[id='JColResizer2']").find(".rhGrid-tbody").append("<tr class='tBody-tr'><td colspan=9 class='rhGrid-td-left'>"+fx+"</td></tr>")
 		
 		notInArray = non.concat(result_good.all);
 		notInTable(notInArray);
