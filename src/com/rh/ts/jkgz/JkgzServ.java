@@ -1,6 +1,11 @@
 package com.rh.ts.jkgz;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import com.rh.core.base.Bean;
 import com.rh.core.serv.CommonServ;
@@ -46,6 +51,26 @@ public class JkgzServ extends CommonServ {
 		gzkMxBean.remove("S_ODEPT");
 		gzkMxBean.remove("S_MTIME");
 		gzkMxBean.remove("S_ATIME");
+		String MXVALUE2 = gzkMxBean.getStr("MX_VALUE2");
+		if(!"".equals(MXVALUE2)){
+			try {
+				JSONArray json = new JSONArray(MXVALUE2);
+				if("date".equals(json.getJSONObject(0).getString("type"))){
+					String fuhao2 = json.getJSONObject(0).getString("val");
+					String jsons = json.toString();
+					String[] split = jsons.split(fuhao2);
+					SimpleDateFormat simp = new SimpleDateFormat("yyyyMMdd");
+					Date date = new Date();
+					String newdate = simp.format(date);
+					String jsonstr = split[0]+ newdate+split[1];
+					jsonstr = jsonstr.replace("\"", "\'");
+					gzkMxBean.set("MX_VALUE2",jsonstr);
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		ServDao.save("ts_xmgl_bm_jkglgz_mx", gzkMxBean);
 	    }
 	}

@@ -174,7 +174,7 @@ position: absolute;
 							<td width="16.5%" ><%=user_name%></td>
 							<td width="16.5%" style="color:#00C2C2">性别</td>
 							<td width="17.5%" >
-								<% if (user_sex == "1") { %>女<% } else { %>男<% } %>
+								<% if (user_sex == "2") { %>女<% } else { %>男<% } %>
 							</td>
 						</tr>
 						<tr style="background-color: #f7fdff;">
@@ -204,7 +204,7 @@ position: absolute;
 				</div>
 				<div style="padding-top: 10px;">
 					<div style="padding-top: 10px; text-align: left; width: 90%;">
-						<span style="color: #ff0000">★ 应报名的考试</span> <!-- <span
+						<span style="color: #ff0000">★ 应报名的本序列考试</span> <!-- <span
 							style="color: #fdb64f;">(提示：如果应考序列包含模块，请在下方选择具体的模块)</span> -->
 					</div>
 					<table border="1" align="center" style="width: 90%;" id="tableid">
@@ -225,7 +225,7 @@ position: absolute;
 					</table>
 				</div>
 				<div style="width: 90%; 60 px; padding-top: 20px; text-align: left;">
-					<span style="color: #0782cb;">★ 可报名的考试</span><!--  <span
+					<span style="color: #0782cb;">★ 可报名的跨序列考试</span><!--  <span
 						style="color: #fdb64f;">(提示：只允许选择两个跨序列的考试)</span> -->
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<button class="btn btn-success" id='selectks' 
