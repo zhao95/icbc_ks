@@ -189,7 +189,7 @@ public class DapccServ extends CommonServ {
         } catch (NullPointerException e) {
             l = Long.MAX_VALUE;
         }
-        paramBean.set("searchKsTime", "");
+//        paramBean.set("searchKsTime", l);
 
 //        if (hashSet.contains(searchDeptCode)) {
 //            paramBean.set("containDeptCode", searchDeptCode);
@@ -224,16 +224,11 @@ public class DapccServ extends CommonServ {
 //        configMap.put("searchKsTime", "CAST(BM_KS_TIME as SIGNED) < ?");
         configMap.put("searchBmCount", "count = ?");
 
-        @SuppressWarnings("rawtypes")
-        List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
-        @SuppressWarnings("unchecked")
-        List<Object> values = (List<Object>) extWhereSqlData.get(1);
-        String whereSql = (String) extWhereSqlData.get(0);
-
+        String extraWhereSql = "";
+        List<Object> extraValues = new ArrayList<Object>();
         //查找借考考生数据
         if ("jk".equals(searchDeptCode)) {
             l = Long.MAX_VALUE;
-            String searchJkCodePath = "";
             String sql = "SELECT b.CODE_PATH FROM TS_KCGL a " +
                     "LEFT JOIN sy_org_dept b ON b.DEPT_CODE = a.KC_ODEPTCODE WHERE KC_ID in(" + kcIdSql + ")";
             List<Object> values1 = new LinkedList<Object>();
@@ -242,21 +237,26 @@ public class DapccServ extends CommonServ {
             List<Bean> beanList = Transaction.getExecutor().query(sql, values1);
             //substring(b.CODE_PATH , 12, 10) 获取
             if (CollectionUtils.isNotEmpty(beanList)) {
-                Bean bean = beanList.get(0);
-                searchJkCodePath = bean.getStr("CODE_PATH");
-                values.add(searchJkCodePath);
-                whereSql += " and a.BM_STATUS in('2')";
-                whereSql += " and a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
-                        " and ? like CONCAT('%',substring(d.CODE_PATH , 12, 10),'%')";
+                StringBuilder jkODeptSql = new StringBuilder();
+
+                for (Bean bean : beanList) {
+                    jkODeptSql.append(" ? like CONCAT('%',a.JK_ODEPT,'%') or");
+                    extraValues.add(bean.getStr("CODE_PATH"));
+                }
+                extraWhereSql += " and a.BM_STATUS in('2')";
+                extraWhereSql += " and a.JK_ODEPT is not null and a.JK_ODEPT !='' " +
+                        " and (" + jkODeptSql.substring(0, jkODeptSql.length() - 2) + ")";//substring(d.CODE_PATH , 12, 10)
                 //select CODE_PATH,substring(CODE_PATH , LOCATE('^',CODE_PATH,1)+1, LOCATE('^',CODE_PATH,LOCATE('^',CODE_PATH,1)+1)-LOCATE('^',CODE_PATH,1)-1) from sy_org_dept where CODE_PATH is not null;
 //                paramBean.set("searchJkCodePath", searchJkCodePath);
+            } else {
+                extraWhereSql += " and 1 = 2";
             }
         } else if ("qj".equals(searchDeptCode)) {
             //请假数据 不考虑时长
             l = Long.MAX_VALUE;
-            whereSql += " and a.BM_STATUS in('1','3')";
+            extraWhereSql += " and a.BM_STATUS in('1','3')";
             paramBean.set("isArrange", "false");//请假数据获取所有，不考虑是否安排
-            whereSql += " AND EXISTS (" +
+            extraWhereSql += " AND EXISTS (" +
                     "   select '' from ts_xmgl_kcap_gljg g where g.KC_ID in(" + kcIdSql + ") " +
                     "       AND (" +
                     "       ( INSTR(c.CODE_PATH, g.JG_CODE) > 0 AND g.JG_TYPE = 2)" +
@@ -264,13 +264,13 @@ public class DapccServ extends CommonServ {
                     "       ( c.ODEPT_CODE = g.JG_CODE  AND g.JG_TYPE = 1 ) " +
                     "       )" +
                     ")";
-            values.addAll(kcIdValues);
-//            values.add(searchKcId);
+            extraValues.addAll(kcIdValues);
+//            extraValues.add(searchKcId);
         } else {
             //获取的考生 在考场关联机构本级及下级的机构
             //*EXISTS
-            whereSql += " and a.BM_STATUS not in('1','2','3')";
-            whereSql += " AND EXISTS (" +
+            extraWhereSql += " and a.BM_STATUS not in('1','2','3')";
+            extraWhereSql += " AND EXISTS (" +
                     "   select '' from ts_xmgl_kcap_gljg g where g.KC_ID in(" + kcIdSql + ") " +
                     "       AND (" +
                     "       ( INSTR(c.CODE_PATH, g.JG_CODE) > 0 AND g.JG_TYPE = 2)" +
@@ -278,36 +278,43 @@ public class DapccServ extends CommonServ {
                     "       ( c.ODEPT_CODE = g.JG_CODE  AND g.JG_TYPE = 1 ) " +
                     "       )" +
                     ")";
-            values.addAll(kcIdValues);
-//            values.add(searchKcId);
+            extraValues.addAll(kcIdValues);
+//            extraValues.add(searchKcId);
 
             //*in
-//            whereSql += " and c.CODE_PATH in(select c.CODE_PATH from ts_xmgl_kcap_gljg g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
+//            extraWhereSql += " and c.CODE_PATH in(select c.CODE_PATH from ts_xmgl_kcap_gljg g where g.KC_ID =? and INSTR(c.CODE_PATH ,g.JG_CODE)>0 )";
 //            values.add(searchKcId);
 
             //*deptSql
 //            StringBuilder deptSql = new StringBuilder();//" or CODE_PATH like ?";
 //            Set<String> hashSet = this.getKcRelateOrgCodeList(searchKcId);
 //            for (String s : hashSet) {
-//                values.add(s);
+//                extraValues.add(s);
 //                deptSql.append("INSTR(c.CODE_PATH ,?)>0 or ");
 //            }
-//            whereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
+//            extraWhereSql += " and (" + deptSql.toString().substring(0, deptSql.toString().length() - 3) + ")";
         }
 //        Pair<String, List<Object>> extWhereSqlData
 
-        //考试时长
-        whereSql += " and CAST(BM_KS_TIME as SIGNED) <= ?";
-        values.add(l);
 
         //默认获取未安排的人员,isArrange = 'false'  获取安排人员
         if (!"false".equals(paramBean.getStr("isArrange"))) {
             //默认获取未安排的人员
-            whereSql += " and not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID)";
+            extraWhereSql += " and not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID)";
         }
 
-//        configMap.put("isArrange", " not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) ");
+        @SuppressWarnings("rawtypes")
+        List extWhereSqlData = this.getExtWhereSqlData(paramBean, configMap);
+        @SuppressWarnings("unchecked")
+        List<Object> values = (List<Object>) extWhereSqlData.get(1);
+        String whereSql = (String) extWhereSqlData.get(0);
 
+        //考试时长
+        whereSql += " and CAST(BM_KS_TIME as SIGNED) <= ?";
+        values.add(l);
+//        configMap.put("isArrange", " not exists(select 'X' from TS_XMGL_KCAP_YAPZW where SH_ID=a.SH_ID) ");
+        whereSql += extraWhereSql;
+        values.addAll(extraValues);
 
         String sql = "select a.*,b.USER_NAME,b.USER_LOGIN_NAME,b.DEPT_CODE,c.CODE_PATH"
                 + ",countt.count"
@@ -915,6 +922,7 @@ public class DapccServ extends CommonServ {
     /**
      * 根据考场获取未安排人员数/考场考生总数
      *
+     * @param paramBean {XM_ID, KC_ID(kcIdStr)}
      * @return outBean
      */
     public OutBean getDeptKcCount(ParamBean paramBean) {
