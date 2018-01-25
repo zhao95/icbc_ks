@@ -3,6 +3,9 @@ var module = 'EXAM_ROOM';
 var height = jQuery(window).height()-200;
 var width = jQuery(window).width()-200;
 
+$("#TS_KCGL").find("th[icode='KC_IPS']").hide();
+$("#TS_KCGL").find("td[icode='KC_IPS']").hide();
+
 //取消行点击事件
 $(".rhGrid").find("tr").unbind("dblclick");
 //列表需建一个code为BUTTONS的自定义字段

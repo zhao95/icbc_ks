@@ -2,6 +2,9 @@ var _viewer = this;
 
 $(".rhGrid").find("tr").unbind("dblclick");
 
+$("#TS_KCZGL_KCGL").find("th[icode='KC_IPS']").hide();
+$("#TS_KCZGL_KCGL").find("td[icode='KC_IPS']").hide();
+
 _viewer.getBtn("add").unbind("click").bind("click",function(event){
 	//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
 	var configStr = "TS_KCGL,{'TARGET':'','SOURCE':'KC_ID~KC_CODE~KC_NAME~KC_ODEPTNAME'," +
