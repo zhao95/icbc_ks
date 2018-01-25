@@ -22,7 +22,7 @@
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" encoding="utf-8" source="1.6" target="1.6" debug="${compile.debug}" optimize= "true"   fork= "no"   verbose= "no"  failonerror= "true">
 			<classpath refid="compile.classpath" />
 		</javac>
-		<javac srcdir="${test.dir}" destdir="${classes.dir}" encoding="utf-8" source="1.8" target="1.8" debug="${compile.debug}" optimize= "true"   fork= "no"   verbose= "no"  failonerror= "true">
+		<javac srcdir="${test.dir}" destdir="${classes.dir}" encoding="utf-8" source="1.6" target="1.6" debug="${compile.debug}" optimize= "true"   fork= "no"   verbose= "no"  failonerror= "true">
 			<classpath refid="compile.classpath" />
 		</javac>
 		<zip destfile="${classes.dir}/com/rh/resource/${def.prefix}_SERV.zip" basedir="${web-info-doc.dir}/SY_SERV" />
