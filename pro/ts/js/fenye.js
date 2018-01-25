@@ -122,6 +122,9 @@ var listPage = function () {
 			var state1 = pageEntity[i].shstatestr;
 			//待报名数据
 			var numstr =pageEntity[i].numstr;
+			if(numstr==0){
+				numstr="";
+			}
 			if(state1=="待报名"){
 				state="报名审核"
 			}else if(state1=="已结束"){

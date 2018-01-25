@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -1126,7 +1128,7 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 			//已结束的项目
 			 sqlxm = "select m.xm_id from ts_xmgl_bmsh m where wfs_id in(select wfs_id from TS_WFS_BMSHLC a where a.shr_usercode = '"+user_code+"') and m.xm_id in("+sql4+")";
 		}else{
-			 sqlxm = "select m.xm_id from ts_xmgl_bmsh m where wfs_id in(select wfs_id from TS_WFS_BMSHLC a where a.shr_usercode = '"+user_code+"') and (m.xm_id in("+sql4+") or m.xm_id in("+sql1+"))";
+			 sqlxm = "select m.xm_id from ts_xmgl_bmsh m where wfs_id in(select wfs_id from TS_WFS_BMSHLC a where a.shr_usercode = '"+user_code+"') and (m.xm_id in("+sql1+") or m.xm_id in("+sql4+"))";
 		}
 		
 		ALLNUM = Transaction.getExecutor().count(sqlxm);
@@ -1134,36 +1136,49 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 			 showpage=ALLNUM-chushi;
 		 }
 		 
-		 String lastsql = "select * from (select c.*,d.sh_end from (select a.*,b.xm_sz_typenum,b.xm_sz_id from ts_xmgl a left join ts_xmgl_sz b on a.xm_id = b.xm_id where b.xm_sz_name = '审核')c left join ts_xmgl_bmsh d on c.xm_sz_id = d.xm_sz_id)e where e.xm_id in ("+sqlxm+") order by e.xm_sz_typenum,e.sh_end asc";
+		 String lastsql = "select * from (select c.*,d.sh_end from (select a.*,b.xm_sz_type,b.xm_sz_id from ts_xmgl a left join ts_xmgl_sz b on a.xm_id = b.xm_id where b.xm_sz_name = '审核')c left join ts_xmgl_bmsh d on c.xm_sz_id = d.xm_sz_id)e where e.xm_id in ("+sqlxm+") order by e.xm_sz_type asc";
 		 lastsql+=" limit "+chushi+","+showpage;
 		List<Bean> list = Transaction.getExecutor().query(lastsql);
 		
 		/*String sql = "SELECT * FROM TS_XMGL WHERE XM_ID IN(select XM_ID from TS_XMGL_BMSH WHERE SH_RGSH = '1') "+where1;
 		List<Bean> list = Transaction.getExecutor().query(sql);*/
 		List<Bean> pxlist = new ArrayList<Bean>();
+		List<Bean> jxlist = new ArrayList<Bean>();
+		List<Bean> jshlist = new ArrayList<Bean>();
+		SimpleDateFormat simp = new SimpleDateFormat("yyyyMMdd");
 		for (Bean bean : list) {
+			try {
+				Date parse = simp.parse(bean.getStr("SH_END"));
+				bean.set("SH_END", simp.format(parse));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// 根据报名id找到审核数据的状态
 			String id = bean.getStr("XM_ID");
 			ParamBean paramb = new ParamBean();
 			paramb.set("xmid", id);
 			OutBean out = ServMgr.act("TS_XMGL_BMGL", "getSHState", paramb);//审核状态数据
-			OutBean out1 = ServMgr.act("TS_BMSH_STAY", "getsingxmnum", paramb);//待审核数据量
-			String numstr = out1.getStr("num");
-			bean.set("numstr", numstr);
 			String state =out.getStr("state");
 			String END_TIME =out.getStr("END_TIME");
-			bean.set("endtimestr", END_TIME);
-			bean.set("shstatestr", state);
 			if("待报名".equals(state)){
-				pxlist.add(bean);
+				OutBean out1 = ServMgr.act("TS_BMSH_STAY", "getsingxmnum", paramb);//待审核数据量
+				String numstr = out1.getStr("num");
+				bean.set("numstr", numstr);
+				bean.set("endtimestr", END_TIME);
+				bean.set("shstatestr", state);
+				jxlist.add(bean);
+			}else{
+				bean.set("numstr", "0");
+				bean.set("endtimestr", END_TIME);
+				bean.set("shstatestr", state);
+				jshlist.add(bean);
 			}
 		}
-		for (Bean bean : list) {
-			if(!"待报名".equals(bean.getStr("shstatestr"))){
-				pxlist.add(bean);
-			}
-		}
-
+		sort(jxlist);
+		sort(jshlist);
+		pxlist.addAll(jxlist);
+		pxlist.addAll(jshlist);
 		// 计算页数
 		int yeshu = ALLNUM / meiye;
 		int yushu = ALLNUM % meiye;
@@ -1563,5 +1578,27 @@ public OutBean getXmType(ParamBean paramBean){
 	}
 	return new OutBean().set("xm_type", xm_type);
 }
-	
+private static void sort(List<Bean> data) {
+    Collections.sort(data, new Comparator<Bean>() {
+
+      /*  public int compare(Map o1, Map o2) {
+
+            Integer a = (Integer) o1.get("PRECOUNTOUT");
+            Integer b = (Integer) o2.get("PRECOUNTOUT");
+
+            // 升序
+            return a.compareTo(b);
+
+            // 降序
+            // return b.compareTo(a);
+        }*/
+
+		@Override
+		public int compare(Bean arg0, Bean arg1) {
+			 Integer a =  arg0.getInt("SH_END");
+	         Integer b =  arg1.getInt("SH_END");
+			return a.compareTo(b);
+		}
+    });
+}
 }
