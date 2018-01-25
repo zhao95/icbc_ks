@@ -23,8 +23,12 @@ import java.util.List;
 
 
 
+
+
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
+
+
 
 
 
@@ -63,6 +67,7 @@ public class BmlbServ extends CommonServ {
 	 protected Log log = LogFactory.getLog(this.getClass());
 	
 	public OutBean addData(Bean paramBean) {
+		OutBean outbean = new OutBean();
 		UserBean userBean = Context.getUserBean();
 		String odept_code = "";
 		if (userBean.isEmpty()) {
@@ -118,12 +123,16 @@ public class BmlbServ extends CommonServ {
 			String fzgks_name = bean.getStr("FZGKS_NAME");
 		/*	ServDao.count(servId, paramBean)*/
 			SqlBean sqlbean = new SqlBean();
+			String state = "0,1";
 			sqlbean.and("xm_id", xm_id);
 			sqlbean.and("kslbk_id", string);
 			sqlbean.and("bm_code", user_code);
+			sqlbean.and("BM_SH_STATE", state.split(","));
+			sqlbean.and("BM_STATE", 1);
 			int count2 = ServDao.count("TS_BMLB_BM", sqlbean);
 			if(count2==0){
 			}else{
+				outbean.setError("重复报名");
 				continue;
 			}
 		
@@ -228,7 +237,10 @@ public class BmlbServ extends CommonServ {
 			objBean.set("STR1", ryl_mobile);
 			ServDao.save("TS_OBJECT", objBean);
 		}
-		return new OutBean().setOk("报名成功");
+		if(outbean.isEmpty("error")){
+			outbean.setOk("报名成功");
+		}
+		return outbean;
 	}
 
 	
@@ -1731,7 +1743,7 @@ public class BmlbServ extends CommonServ {
 			if (!"".equals(string)) {
 				List<Bean> finds = ServDao.finds("TS_BMLB_BM",
 						"and KSLBK_ID ='" + string + "' AND BM_CODE = '"
-								+ userCode + "'");
+								+ userCode + "' AND (BM_SH_STATE = 1 OR BM_SH_STATE = 0) AND BM_STATE = 1");
 				if (finds != null) {
 					if (finds.size() == 0) {
 					} else {
@@ -2047,5 +2059,25 @@ public class BmlbServ extends CommonServ {
 			return new OutBean().set("flag", "false");
 					
 	}	
-	
+	public OutBean getFzgList(ParamBean paramBean){
+		String where2 = paramBean.getStr("where");
+		String xm_id = paramBean.getStr("xm_id");
+		String user_code = Context.getUserBean().getCode();
+		List<Bean> finds = ServDao.finds("TS_XMGL_BM_FZGKS", where2);
+		List bmkslist= new ArrayList<Bean>();
+		List<Bean> bmlist = ServDao.finds("TS_BMLB_BM", " AND BM_CODE = '"+user_code+"' and (BM_SH_STATE =1 OR BM_SH_STATE =0) AND BM_STATE=1 AND XM_ID = '"+xm_id+"'");
+		for (Bean fzgbean : finds) {
+			boolean flag = false;
+		for (Bean bean : bmlist) {
+				if(fzgbean.getId().equals(bean.getStr("KSLBK_ID"))){
+					flag = true;
+				}
+			}
+		if(flag){
+		}else{
+			bmkslist.add(fzgbean);
+		}
+		}
+		return new OutBean().set("list", bmkslist);
+	}
 }

@@ -83,13 +83,10 @@ position: absolute;
 		}
 		//获取非资格列表
 		String where2 = "AND BM_ID="+"'"+bm_id+"' and XM_ID = '"+xm_id+"'";
-		List<Bean> fzgbean =ServDao.finds("TS_XMGL_BM_FZGKS", where2);
-		if(fzgbean!=null && fzgbean.size()>0){
-		 fzgbean = ServDao.finds("TS_XMGL_BM_FZGKS", where2);
-		}
 		//获取用户编码
 		String user_code = userBean.getStr("USER_CODE");
 		//获取用户名称
+		List<Bean> fzgbean =ServDao.finds("TS_XMGL_BM_FZGKS", where2);
 		String user_name = userBean.getStr("USER_NAME");
 		//获取用户性别
 		String user_sex = userBean.getStr("USER_SEX");
@@ -133,7 +130,7 @@ position: absolute;
 							<td width="16.5%"><%=user_name%></td>
 							<td width="16.5%">性别</td>
 							<td width="17.5%">
-								<% if (user_sex == "1") { %>女<% } else { %>男<% } %>
+								<% if (user_sex == "2") { %>女<% } else { %>男<% } %>
 							</td>
        			</tr>
        			<tr style="background-color: #f7fdff;">
@@ -168,7 +165,7 @@ position: absolute;
        				<p style="color: red;"> <%=bm_ksxz %></p></td>
        			</tr>
        		</table>
-       		<table border="1" align="center" style="width: 90%;">
+       		<table id = "fzgtable" border="1" align="center" style="width: 90%;">
        			<tr style="background-color: #dfdfdf;">
        				<td align="left" colspan="3">考试项目</td>
        			</tr>
@@ -177,7 +174,7 @@ position: absolute;
        				<td width="55%" align="center">名称</td>
        				<td width="35" align="center" colspan="2">考试时间</td>
        			</tr>
-       			<%
+       			<%-- <%
 					for(int i=0;i<fzgbean.size();i++){
 						Bean bean1 = fzgbean.get(i);
 						String fzgks_id = bean1.getStr("FZGKS_ID");
@@ -185,6 +182,7 @@ position: absolute;
 						String date1 = bean1.getStr("FZGKS_STADATE");
 						String date2 = bean1.getStr("FZGKS_ENDDATE");
 						String date3=date1+"~"+date2;
+					
 				%>
 				<tr>
 					<td style="text-align: center" width="10%"><input type="checkbox" name="checkname" value="<%=fzgks_id%>"></td>
@@ -193,7 +191,7 @@ position: absolute;
 				</tr>
 				<%
 					}
-				%>
+				%> --%>
        		</table>
        		<div style="height: 100px;padding: 20px;">
        			<button onclick="tijiaofzg()" class="btn btn-success" style="width:100px;background-color: #00c2c2;">提交</button>
@@ -279,6 +277,24 @@ position: absolute;
 		}
 	</script>
 	<script>
+	var param = {};
+	param["xm_id"]="<%=xm_id%>";
+	param["where"]="<%=where2%>";
+	var bmresult = FireFly.doAct("TS_BMLB_BM","getFzgList",param);
+	var pagentity = bmresult.list;
+	for(var i=0;i<pagentity.length;i++){
+		var date1 = pagentity[i].FZGKS_STADATE;
+		var date2 = pagentity[i].FZGKS_ENDDATE;
+		var date3=date1+"~"+date2;
+		$("#fzgtable").append('<tr>'+
+							  '<td style="text-align: center" width="10%"><input type="checkbox" name="checkname" value='+pagentity[i].FZGKS_ID+'></td>'+
+							  '<td >'+pagentity[i].FZGKS_NAME+'</td>'+
+							  '<td style="text-align: center">'+date3+'</td>'+
+							  '</tr>'
+		)
+	}
+	
+	
 	var result =  FireFly.byId("SY_HRM_ZDSTAFFPOSITION", "<%=user_code%>");
 	if(result!=null){
 		 STATION_TYPE_CODE=result.STATION_TYPE_CODE;

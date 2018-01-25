@@ -87,7 +87,20 @@ position: absolute;
     left: 20%;
     right: 0;
 }
-
+#yiyiloading .modal-dialog{
+position: absolute;
+    top: 20%;
+    bottom: 200px;
+    left: 20%;
+    right: 0;
+}
+ #yiyiloadingdialog{
+ font-family: Arial;
+ border: 2px solid #379082;
+ border-radius: 20px;
+ padding: 30px 30px;
+ width: 330px;
+}
 </style>
 <!--判断用户是否登录  -->
 <%
@@ -340,7 +353,17 @@ String bmbq = request.getParameter("bmbq");
 		</div>
 		<!-- /.modal -->
 	</div>
-
+	<div class="modal fade" id="yiyiloading" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div  class="modal-dialog" style="width:700px;">
+			<div id="yiyiloadingdialog" class="modal-content" style="position:absoluate;background:white;height:100px;width:50%">
+				<div style="color:lightseagreen;padding-left:30%;padding-top:10px;font-size:16px;">&nbsp;&nbsp;<B>提交中.....</B></div>
+				<div id="loadiv" style="position:relative;top:-80%;left:15%;font-size:16px;"><img src="<%=CONTEXT_PATH%>/ts/image/loading.gif"></img></div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
 
 		<div class="modal" style="z-index: 999999;background: transparent;" id="showSeatModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">

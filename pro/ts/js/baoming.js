@@ -446,11 +446,14 @@ function tijiaoyiyi() {
         return;
     }
     $('#appeal').modal('hide');
+    $("#yiyiloading").modal("show");//不再进行手机号校验
     var param = {};
     param["bmid"] = bmid
     param["liyou"] = liyou;
-    FireFly.doAct("TS_BMSH_NOPASS", "yiyi", param);
-    new listPage().gotoPage(page);
+    FireFly.doAct("TS_BMSH_NOPASS", "yiyi", param,true,true,function(result){
+    	new listPage().gotoPage(page);
+    	 $("#yiyiloading").modal("hide");//不再进行手机号校验
+    });
 }
 
 //审核明细
