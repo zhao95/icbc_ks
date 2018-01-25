@@ -5,7 +5,7 @@ $("#TS_BMSH_RULE .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;		
 		$(item).find("td[icode='BUTTONS']").append(
-			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optSetBtn1" rowpk="'+dataId+'"><span class="rh-icon-inner">设置</span><span class="rh-icon-img btn-option"></span></a>'+
+			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optSetBtn1" rowpk="'+dataId+'"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-option"></span></a>'+
 			'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optDeleteBtn1" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
 		);	
 		// 为每个按钮绑定卡片
@@ -19,7 +19,6 @@ _viewer.beforeDelete = function(pkArray) {
 	showVerify(pkArray,_viewer);
 }
 function bindCard(){
-	
 	//设置
 	jQuery("td [operCode='optSetBtn1']").unbind("click").bind("click", function(){
 		var height = jQuery(window).height();
