@@ -422,12 +422,15 @@ rh.vi.cardView.prototype._tabLayout = function() {
 	   }*/
 	   
 	   this.backA.on("mousedown",function() {
-		   
-		   if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {//修改
-			   if (jQuery.isEmptyObject(_self.getChangeData())) {
+		   debugger;
+		   if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {
+			   //修改
+			   var changeData = _self.getChangeData();
+			   delete changeData.SAFE_FLAG;
+			   delete changeData.SERV_NO_COUNT;
+			   if (jQuery.isEmptyObject(changeData)) {
 			   } else {
-//				   var confirmDel=confirm("数据有修改，是否保存？");
-				   var confirmDel=confirm(Language.transStatic("rhCardView_string1"));
+				   var confirmDel=confirm("数据有修改，是否保存？");
 				   if (confirmDel == true){
 					   if (_self.btns[UIConst.ACT_SAVE]) {
 						   _self.btns[UIConst.ACT_SAVE].click();
