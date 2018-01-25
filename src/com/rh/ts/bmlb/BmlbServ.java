@@ -247,17 +247,42 @@ public class BmlbServ extends CommonServ {
 		String xm_name = paramBean.getStr("XM_NAME");
 		String liststr = paramBean.getStr("BM_LIST");
 		String yzgzstr = paramBean.getStr("YZGZ_LIST");
-		
+		int count = XmglMgr.existSh(xm_id);
 		if("".equals(yzgzstr)){
 			yzgzstr="{'none':'true'}";
 		}
-		
 		String dept_code = paramBean.getStr("DEPT_CODE");
 		DeptBean deptbean = OrgMgr.getDept(dept_code);
+		if(deptbean==null){
+			return new OutBean().setError("所在部门不存在");
+		}
 		String odept_code = deptbean.getODeptCode();
 		String t_dept_code = deptbean.getTDeptCode();
 		String odept_name = deptbean.getODeptBean().getName();
 		String dept_name = deptbean.getName();
+		String allman = "";
+		String node_name = "";
+		int SH_LEVEL = 0;
+		if(count==2||count==3){
+			ParamBean param = new ParamBean();//查找审核人
+			param.set("examerUserCode", user_code);
+			param.set("level", 0);
+			param.set("deptCode", dept_code);
+			param.set("odeptCode", odept_code);
+			param.set("xmId", xm_id);
+			param.set("flowName", 1);
+			param.set("shrUserCode", user_code);
+			OutBean out = ServMgr
+					.act("TS_WFS_APPLY", "backFlow", param);
+			String blist = out.getStr("result");
+			if (!"".equals(blist)) {
+				allman = blist.substring(0, blist.length() - 1);
+				node_name = out.getStr("NODE_NAME");
+				SH_LEVEL = out.getInt("SH_LEVEL");
+			}else{
+				return new OutBean().setError("没有审核人");
+			}
+		}
 		OutBean outBean = new OutBean();
 		JSONArray json;
 		JSONObject yzgzstrjson;
@@ -299,7 +324,6 @@ public class BmlbServ extends CommonServ {
 							+ "-" + kslb_type;
 					int flag = 0;
 					String mind = "";
-					int count = XmglMgr.existSh(xm_id);
 					String ad_rule = "";
 					String ad_result = "";
 					
@@ -430,25 +454,6 @@ public class BmlbServ extends CommonServ {
 						ServDao.save("TS_OBJECT", objBean);
 					}
 					
-					ParamBean param = new ParamBean();
-					param.set("examerUserCode", user_code);
-					param.set("level", 0);
-					param.set("deptCode", dept_code);
-					param.set("odeptCode", odept_code);
-					param.set("xmId", xm_id);
-					param.set("flowName", 1);
-					param.set("shrUserCode", user_code);
-					OutBean out = ServMgr
-							.act("TS_WFS_APPLY", "backFlow", param);
-					String blist = out.getStr("result");
-					String allman = "";
-					String node_name = "";
-					int SH_LEVEL = 0;
-					if (!"".equals(blist)) {
-						allman = blist.substring(0, blist.length() - 1);
-						node_name = out.getStr("NODE_NAME");
-						SH_LEVEL = out.getInt("SH_LEVEL");
-					}
 					beans.set("SH_LEVEL", SH_LEVEL);
 					Bean shBean = new Bean();
 					shBean.set("BM_TITLE", xm_name);
@@ -524,7 +529,6 @@ public class BmlbServ extends CommonServ {
 					mindbean.set("S_DNAME", dept_name);
 					mindbean.set("S_DEPT", bmbean.getStr("S_DEPT"));
 					ServDao.save("TS_COMM_MIND", mindbean);
-					Transaction.commit();
 				}
 			}
 		} catch (JSONException e) {
