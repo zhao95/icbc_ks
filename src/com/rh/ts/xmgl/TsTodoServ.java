@@ -52,7 +52,9 @@ public class TsTodoServ extends CommonServ {
         }
         String currentUserCode = Context.getUserBean().getCode();
 
-        String sql = "select a.* from ts_comm_todo a " +
+        String sql = "select a.*" +
+                " ,case when(b.QJ_REASON is not null and b.QJ_REASON !='') then b.QJ_REASON else c.JK_REASON end as APPLY_REASON" +
+                " from ts_comm_todo a " +
                 " left join ts_qjlb_qj b on b.QJ_ID=a.DATA_ID " +
                 " left join ts_jklb_jk c on c.JK_ID=a.DATA_ID " +
                 " where a.OWNER_CODE ='" + currentUserCode + "' " +
@@ -110,6 +112,31 @@ public class TsTodoServ extends CommonServ {
                 " left join ts_jklb_jk c on c.JK_ID=a.DATA_ID " +
                 " where a.OWNER_CODE='" + Context.getUserBean().getCode() + "' AND (c.XM_ID = xm.XM_ID or b.XM_ID = xm.XM_ID)" + whereSql +
                 " )";
+
+        List<Bean> xmList = Transaction.getExecutor().query(sql);
+        OutBean outBean = new OutBean();
+        outBean.setData(xmList);
+        return outBean;
+    }
+
+    /**
+     * 获取待办对应的项目列表
+     *
+     * @param paramBean TYPE
+     * @return outBean
+     */
+    public OutBean getTodoXMListHasType(ParamBean paramBean) {
+        String sql = " SELECT	xm.XM_ID,xm.XM_NAME,a.TYPE" +
+                " FROM" +
+                " 	ts_comm_todo a" +
+                " LEFT JOIN ts_qjlb_qj b ON b.QJ_ID = a.DATA_ID" +
+                " LEFT JOIN ts_jklb_jk c ON c.JK_ID = a.DATA_ID" +
+                " LEFT JOIN ts_xmgl xm ON (" +
+                " 	c.XM_ID = xm.XM_ID" +
+                " 	OR b.XM_ID = xm.XM_ID" +
+                " )" +
+                " where a.OWNER_CODE='" + Context.getUserBean().getCode() + "'" +
+                " GROUP BY xm.XM_ID,a.TYPE";
 
         List<Bean> xmList = Transaction.getExecutor().query(sql);
         OutBean outBean = new OutBean();

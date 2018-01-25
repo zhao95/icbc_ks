@@ -4,8 +4,7 @@
 <%
     final String CONTEXT_PATH = request.getContextPath();
     String batchType = request.getParameter("batch");
-    String xmId = request.getParameter("XM_ID") != null ? request.getParameter("shids") : "";
-    ;
+    String xmId = request.getParameter("XM_ID") != null ? request.getParameter("XM_ID") : "";
 %>
 <html>
 <head>
@@ -41,7 +40,7 @@
     <!--插件-->
     <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/jquery.smart-form.js"></script>
 
-    <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-1.12.4.min.js"></script>
     <!-- Bootstrap 3.3.6 -->
     <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
 
@@ -164,6 +163,7 @@
                         <th class="" style="width: 10%; text-align: center">序号</th>
                         <th class="" style="width: 20%;">名称</th>
                         <th class="" style="width: 10%;">类型</th>
+                        <th class="" style="width: 10%;">申请事由</th>
                         <th class="" style="width: 10%;">送交人</th>
                         <th class="" style="width: 20%;">送交人所在单位</th>
                         <th class="" style="width: 15%;">送交时间</th>
@@ -318,6 +318,8 @@
     var listPage;
 
     var initData = function (xmId, batchType) {
+        reloadXmList();
+
         $('#xm_id').val(xmId);
         $('#batch').val(batchType);
 
@@ -332,14 +334,10 @@
             $('#tiJiao').modal({backdrop: false, show: true});
         });
 
-
-        reloadXmList();
-
         var userName = System.getUser('USER_NAME');
         var loginName = System.getUser('LOGIN_NAME');
         $('#userName').val(userName);
         $('#loginName').val(loginName);
-
 
         //tab标签页切换改变图标
         function changeImg($img) {
@@ -491,6 +489,7 @@
             tr.append(td);
 
             tr.append('<td>' + typeNameMap[item.TYPE] + '</td>');
+            tr.append('<td>' + item.APPLY_REASON + '</td>');
             tr.append('<td>' + item.SEND_NAME + '</td>');
             tr.append('<td>' + item.SEND_DEPT_NAME + '</td>');
             tr.append('<td>' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : '') + '</td>');

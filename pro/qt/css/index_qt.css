@@ -78,8 +78,8 @@
 	position: relative;
 	background-color: #eeeeee;
 	z-index: 1;
-	left: 0px;
-	top: 0px;
+	left: 0;
+	top: 0;
 	width: 100%;
 	height: 76px;
 /*     margin-top: 40px; */
@@ -130,7 +130,7 @@
 #upDiv>div {
 	/* 	float:left; */
 	position: absolute;
-	top: 0px;
+	top: 0;
 	left: 80px;
 	color: #666666;
 	text-align: center;
@@ -162,8 +162,8 @@
 
 #downDiv .downSX {
 	position: relative;
-	top: 0px;
-	left: 0px;
+	top: 0;
+	left: 0;
 	z-index: 1;
 }
 
@@ -175,23 +175,23 @@
 #jdtDivInner {
 	/* 	width: 0%; */
 	/* 	position: left; */
-	/* 	border-radius: 0px; */
+	/* 	border-radius: 0; */
 	/* 	z-index: 2; */
 	
 }
 
 #jdtDivOut {
 	position: relative;
-	margin-left: 0px;
+	margin-left: 0;
 	margin-top: 15px;
-	left: 0px;
+	left: 0;
 	width: 95%;
 	height: 10px;
-	border: 0px solid;
+	border: 0 solid;
 	background-color: #f0f0f0;
 	display: block;
 	border-radius: 35px;
-	min-height: 0px;
+	min-height: 0;
 	/* 层级高度 */
 	z-index: 2;
 }
@@ -200,7 +200,7 @@
 	color: red;
 	/* 		float: right; */
 	/* 	position: relative; */
-	/*     margin: -36px 100px 0px 0px; */
+	/*     margin: -36px 100px 0 0; */
 }
 
 #jdtTitle .jdtNumClass {
@@ -210,7 +210,7 @@
 	position: absolute;
 	/* 		float: right; */
 	/*     margin-right: 30px; */
-	/*     margin: -36px 100px 0px 0px; */
+	/*     margin: -36px 100px 0 0; */
 }
 
 #jdtNameT {
@@ -230,7 +230,7 @@
 	font-size: 16px;
 	/* 	padding-top: 25%; */
 	/*     padding-bottom: 25%; */
-	/*     border-width: 0px; */
+	/*     border-width: 0; */
 	/* 	display: table-cell; */
 	/* /*     vertical-align: middle;	 */
 	/*     text-align:center; */
@@ -340,8 +340,8 @@
     line-height: 25px;
 	float: right;
 	text-align: center;
-	border-left: 0px #CCCCCC solid;
-	border-right: 0px #CCCCCC solid;
+	border-left: 0 #CCCCCC solid;
+	border-right: 0 #CCCCCC solid;
 }
 
 /** 日历样式覆盖 */
@@ -383,14 +383,14 @@
 
 .TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-prev, .TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-next
 	{
-	border-left: 0px solid #CCCCCC;
+	border-left: 0 solid #CCCCCC;
 	width: 20px;
-	border-right: 0px solid #CCCCCC;
+	border-right: 0 solid #CCCCCC;
 }
 
 .TS_KS_CAL .scalender .ui-widget-header .ui-state-hover, .TS_KS_CAL .scalender .ui-widget-header .ui-datepicker-prev .ui-state-hover,
 	.TS_KS_CAL .scalender .ui-widget-header .ui-datepicker-next.ui-state-hover,
-	.TS_KS_CAL .ui-datepicker-prev-hover, .TS_KS_CAL .ui-datepicker-next-hover,
+	.TS_KS_CAL .ui-datepicker-prev-hover, .TS_KS_CAL .ui-datepicker-next-hover
 	 {
 	background-image: none;
 	background-color: #CCCCCC;
@@ -405,7 +405,7 @@
 
 .TS_KS_CAL .scalender .ui-datepicker .ui-datepicker-title {
 	position: relative;
-	right: 0px;
+	right: 0;
 	margin-left: 15%;
 	margin-right: 12%;
 	text-align: left;
@@ -485,7 +485,7 @@
 .index-qt-todo-list .todo-item>.todo-content {
 	margin-left: 52px;
 	position: absolute;
-	top: 0;
+	top: 8px;
 	left: 0;
 	cursor: pointer;
 }
