@@ -435,10 +435,10 @@ public class JkglServ extends CommonServ {
         List<Bean> beans = new ArrayList<Bean>();
         for (int j = 0; j < rowBeanList.size(); j++) {
             Bean rowBean = rowBeanList.get(j);
-            String colCode = rowBean.getStr(ImpUtils.COL_NAME + "2");//人力资源编码
-			String jkType = rowBean.getStr(ImpUtils.COL_NAME + "4");//获取禁考类型
-			String jkStartTime = rowBean.getStr(ImpUtils.COL_NAME + "5");//获取禁考开始时间
-			String jkEndTime = rowBean.getStr(ImpUtils.COL_NAME + "6");//获取禁考开始时间
+            String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");//人力资源编码
+			String jkType = rowBean.getStr(ImpUtils.COL_NAME + "3");//获取禁考类型
+			String jkStartTime = rowBean.getStr(ImpUtils.COL_NAME + "4");//获取禁考开始时间
+			String jkEndTime = rowBean.getStr(ImpUtils.COL_NAME + "5");//获取禁考开始时间
 			Bean  userBean=UserMgr.getUser(colCode);//获取人员信息
            // Bean userBean = ImpUtils.getUserBeanByString(colCode);
             if (userBean == null) {

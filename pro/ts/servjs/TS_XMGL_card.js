@@ -39,8 +39,9 @@ $($allSelect).unbind('change').bind('change', function () {
 //});
 
 
-//针对项目开始时间的校验与互斥
+//针对项目开始时间的校验与互斥资格类考试其他类考试JH_TYPE
 _viewer.beforeSave = function () {
+	var xmType = _viewer.getItem("XM_TYPE").getValue();//
     var xmStart = _viewer.getItem("XM_START").getValue();//项目开始时间
     var xmEnd = _viewer.getItem("XM_END").getValue();//项目截至时间
     var xmKsStartData = _viewer.getItem("XM_KSSTARTDATA").getValue();//考试开始时间
@@ -90,6 +91,10 @@ _viewer.beforeSave = function () {
         $("#TS_XMGL-XM_KSENDDATA").parent().showError("考试结束时间不应晚于项目结束时间");
         return false;
     }
+    
+    
+    
+    
 
 };
 //修改input时间样式
@@ -112,31 +117,12 @@ _viewer.getBtn("nextbtn").unbind("click").bind("click", function (event) {
     var xmName = _viewer.getItem("XM_NAME").getValue();
 //	alert(xmName);
     if (xmName === "") {
-        $("#TS_XMGL-XM_NAME").addClass("blankError").addClass("errorbox");
-    } else {
-        $("#TS_XMGL-XM_NAME").removeClass("blankError").removeClass("errorbox");
-    }
+        //$("#TS_XMGL-XM_NAME").addClass("blankError").addClass("errorbox");
+        $("#TS_XMGL-XM_NAME").parent().showError("项目名称不能为空");
+    }// else {
+       // $("#TS_XMGL-XM_NAME").removeClass("blankError").removeClass("errorbox");
+    //}
 
-//	if(xmStart==""){
-//		$("#TS_XMGL-XM_START").addClass("blankError").addClass("errorbox");
-//	}else{
-//		$("#TS_XMGL-XM_START").removeClass("blankError").removeClass("errorbox");
-//	};
-//	if(xmEnd==""){
-//		$("#TS_XMGL-XM_END").addClass("blankError").addClass("errorbox");
-//	}else{
-//		$("#TS_XMGL-XM_END").removeClass("blankError").removeClass("errorbox");
-//	};
-//	if(xmKsStartData==""){
-//		$("#TS_XMGL-XM_KSSTARTDATA").addClass("blankError").addClass("errorbox");
-//	}else{
-//		$("#TS_XMGL-XM_KSSTARTDATA").removeClass("blankError").removeClass("errorbox");
-//	};
-//	if(xmKsEndData==""){
-//		$("#TS_XMGL-XM_KSENDDATA").addClass("blankError").addClass("errorbox");
-//	}else{
-//		$("#TS_XMGL-XM_KSENDDATA").removeClass("blankError").removeClass("errorbox");
-//	};
     var a = setTime(xmStart, xmEnd, xmKsStartData, xmKsEndData);
     //alert(typeof(a)!="undefined");
 //	alert(a);

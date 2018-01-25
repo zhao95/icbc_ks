@@ -50,7 +50,7 @@ public class AdmitServ extends CommonServ {
 
         List<Bean> beans = new ArrayList<Bean>();
         for (Bean rowBean : rowBeanList) {
-            String colCode = rowBean.getStr(ImpUtils.COL_NAME + "2");
+            String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");
            // Bean userBean = ImpUtils.getUserBeanByString(colCode);
             Bean  userBean=UserMgr.getUser(colCode);//获取人员信息
             if (userBean == null) {
@@ -62,32 +62,49 @@ public class AdmitServ extends CommonServ {
                     name = userBean.getStr("USER_NAME");
             Bean bean = new Bean();
             bean.set("USER_CODE", code);
-            String AD_LB = rowBean.getStr(ImpUtils.COL_NAME + "3");
-            bean.set("AD_LB", AD_LB);
+            String AD_LB = rowBean.getStr(ImpUtils.COL_NAME + "2");
+            String adlbWhere="AND KSLBK_NAME='"+AD_LB+"'";
+           List<Bean> lblist= ServDao.finds("TS_XMGL_BM_KSLBK", adlbWhere);
+           if(lblist != null && !lblist.isEmpty()){
+        	  String lb=lblist.get(0).getStr("KSLBK_CODE");
+            bean.set("AD_LB", lb);
             if("".equals(AD_LB)){
             	rowBean.set(ImpUtils.ERROR_NAME, "岗位类别为空");
             	continue;
             }
-            String AD_XL = rowBean.getStr(ImpUtils.COL_NAME + "4");
-            bean.set("AD_XL", AD_XL);
+           }
+            String AD_XL = rowBean.getStr(ImpUtils.COL_NAME + "3");
+            String adxlWhere="AND KSLBK_XL='"+AD_XL+"'";
+            List<Bean> xllist= ServDao.finds("TS_XMGL_BM_KSLBK", adxlWhere);
+            if(xllist !=null && !xllist.isEmpty()){
+            	String xl=xllist.get(0).getStr("KSLBK_XL_CODE");
+            bean.set("AD_XL", xl);
             if("".equals(AD_XL)){
             	rowBean.set(ImpUtils.ERROR_NAME, "岗位序列为空");
             	continue;
             }
-            String AD_MK = rowBean.getStr(ImpUtils.COL_NAME + "5");
-            bean.set("AD_MK", AD_MK);
-           
-            if("".equals(AD_MK)){
-            	bean.set("AD_MK", "-1");
+            }
+            String AD_MK = rowBean.getStr(ImpUtils.COL_NAME + "4");
+            String admlWhere="AND KSLBK_MK='"+AD_MK+"'";
+            List<Bean> mklist= ServDao.finds("TS_XMGL_BM_KSLBK", admlWhere);
+            if(mklist !=null && !mklist.isEmpty()){
+            	String mk=mklist.get(0).getStr("KSLBK_MKCODE");
+            bean.set("AD_MK", mk);
+         
+            }
+            String AD_TYPE = rowBean.getStr(ImpUtils.COL_NAME + "5");
+            String adtypeWhere="AND KSLBK_TYPE_NAME='"+AD_TYPE+"'";
+            List<Bean> adtypelist= ServDao.finds("TS_XMGL_BM_KSLBK", adtypeWhere);
+            if(adtypelist !=null && !adtypelist.isEmpty()){
+            	String TYPE=mklist.get(0).getStr("KSLBK_TYPE");
+            	bean.set("AD_TYPE", TYPE);
             }
             
-            String AD_TYPE = rowBean.getStr(ImpUtils.COL_NAME + "6");
-            bean.set("AD_TYPE", AD_TYPE);
-            if("".equals(AD_TYPE)){
-            	rowBean.set(ImpUtils.ERROR_NAME, "岗位等级为空");
-            	continue;
-            }
-            String AD_GRADE = rowBean.getStr(ImpUtils.COL_NAME + "7");
+//            if("".equals(AD_TYPE)){
+//            	rowBean.set(ImpUtils.ERROR_NAME, "岗位等级为空");
+//            	continue;
+//            }
+            String AD_GRADE = rowBean.getStr(ImpUtils.COL_NAME + "6");
             bean.set("AD_GRADE", AD_GRADE);
             if("".equals(AD_GRADE)){
             	rowBean.set(ImpUtils.ERROR_NAME, "分数为空");
@@ -98,7 +115,7 @@ public class AdmitServ extends CommonServ {
                 //先查询避免重复添加
                 bean.set("USER_NAME", name);
                 //bean.set("AD_TIME", simp.format(date));操作失败
-                bean.set("XM_ID", XM_Id);
+                //bean.set("XM_ID", XM_Id);
                 beans.add(bean);
                 codeList.add(code);
             } else {

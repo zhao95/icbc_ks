@@ -32,8 +32,8 @@ function showTodoContent() {
     var data = {};
     data = {_extWhere: "and OWNER_CODE='" + System.getUser("USER_CODE") + "'", _NOPAGE_: true};
     /*var todoListPageList =*/
-    FireFly.doAct("TS_COMM_TODO", 'query', data, false, true, function (todoListPageList) {
-        var todoList = todoListPageList._DATA_;
+    FireFly.doAct("TS_COMM_TODO", 'getTodoXMListHasType', data, false, true, function (todoListPageList) {
+        var todoXMList = todoListPageList._DATA_;
 
         var typeNameMap = {
             '0': '请假',
@@ -47,39 +47,37 @@ function showTodoContent() {
             '2': 'yiyi'
         };
 
-        for (var i = 0; i < todoList.length; i++) {
-            var item = todoList[i];
+        for (var i = 0; i < todoXMList.length; i++) {
+            var item = todoXMList[i];
             //最多显示3个待办
             if (i === 3) {
                 return false;
+            }
+            var batchType = '';
+            if (item.TYPE === '0') {
+                batchType = '1';
+            } else if (item.TYPE === '1') {
+                batchType = '2';
             }
             var typeName = typeNameMap[item.TYPE];
             typeName = typeName ? typeName : '';
             var colorClassName = colorClassNameMap[item.TYPE];
             colorClassName = colorClassName ? colorClassName : 'yichang';
-            $('#todoListSum').html(todoList.length);//设置待办总数
+            $('#todoListSum').html(todoXMList.length);//设置待办总数
             var itemContent = jQuery(
                 [
-                    '<div id="' + item.TODO_ID + '" data-id="' + item.DATA_ID + '" style="" class="todo-content">',
-                    '   <div style="min-height: 17px;">' + item.TITLE + '</div>',
-                    '   <div style="font-size: 12px;color:#999999;min-height: 17px;">',
-                    '   ' + item.SEND_DEPT_NAME + ' ' + item.SEND_NAME + ' ' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : ''),
-                    '   </div>',
+                    '<div id="' + item.XM_ID + '" batch-type="' + batchType + '" style="" class="todo-content">',
+                    '   <div style="min-height: 17px;">' + item.XM_NAME + '</div>',
+                    // '   <div style="font-size: 12px;color:#999999;min-height: 17px;">',
+                    // '   ' + item.SEND_DEPT_NAME + ' ' + item.SEND_NAME + ' ' + ((item.SEND_TIME && item.SEND_TIME.length >= 16) ? item.SEND_TIME.substring(0, 16) : ''),
+                    // '   </div>',
                     '</div>'].join('')
             );
-            if (item.TYPE === '0') {
-                itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
-                    var dataId = $(this).attr('data-id');
-                    var todoId = $(this).attr('id');
-                    doPost("/ts/jsp/qjlb_qj2.jsp", {todoId: todoId, qjid: dataId, hidden: '2'});
-                });
-            } else if (item.TYPE === '1') {
-                itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
-                    var dataId = $(this).attr('data-id');
-                    var todoId = $(this).attr('id');
-                    doPost("/ts/jsp/jklb_jk2.jsp", {todoId: todoId, jkid: dataId, hidden: '2'});
-                });
-            }
+            itemContent.bind('click', function () {//跳转到页面详情（请假/借考/异议）
+                var batchType = $(this).attr('batch-type');
+                var xmId = $(this).attr('id');
+                indexUtils.goTodoList(xmId, batchType);
+            });
 
             todoListEl.append(
                 jQuery([
@@ -332,9 +330,7 @@ function showTodoTip() {
         var tipViewAll = tipListEl.append(
             '<li class="footer" style="padding-top:10px;border-top:1px solid #f4f4f4; "><a href="#">查看所有待办 / 消息</a></li>'
         ).bind('click', function () {//跳转到页面详情（请假/借考/异议）
-            var user_work_num = System.getUser("USER_CODE");
-//        debugger;
-            doPost("/qt/jsp/todo.jsp", {user_work_num: user_work_num});
+            doPost("/qt/jsp/todo.jsp");
         });
     });
 
@@ -357,3 +353,16 @@ function userInfoPage() {
 //    window.location.href = "/qt/jsp/user_info.jsp";
 
 }
+
+
+var indexUtils = {
+
+    /**
+     * 跳转到待办页面
+     * @param xmId
+     * @param batchType 1 请假 2 借考
+     */
+    goTodoList: function (xmId, batchType) {
+        doPost("/qt/jsp/todo.jsp", {batch: batchType, XM_ID: xmId});
+    }
+};
