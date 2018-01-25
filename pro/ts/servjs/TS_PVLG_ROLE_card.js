@@ -5,14 +5,16 @@ var actCode = _viewer.opts.act;
 var userCode = System.getVar("@USER_CODE@");
 var userName = System.getVar("@USER_NAME@");
 
-//角色目录CTLG_PCODE赋值
-//if(_viewer.getItem("CTLG_PCODE").getValue() == "") {
-//	if(_viewer.getParHandler()) {
-//		_viewer.getItem("CTLG_PCODE").setValue(_viewer.getParHandler().getParams().CTLG_PCODE_H);
-//	} else {
-//		_viewer.getItem("CTLG_PCODE").setValue(_viewer.getParams().CTLG_PCODE_H);
-//	}
-//}
+var curWidth = jQuery(window).width()-10;
+if(curWidth <= "900") {
+	$("#TS_PVLG_ROLE-mainTab").css({"overflow-y":"auto"});
+	$(_viewer.formCon).css({"width":"880px"});
+}
+
+//$("#TS_PVLG_ROLE-mainTab").css({"overflow":"hidden"});
+//$(_viewer.formCon).css({"width":"900px"});
+//$("#TS_PVLG_ROLE-winDialog").css({"width":"900px","overflow-x":"hidden"});
+//$("#TS_PVLG_ROLE-winDialog").parent().css({"overflow-x":"scroll","overflow-y":"hidden"});​​
 
 if($("#TS_PVLG_ROLE-ROLE_DCODE__NAME").hasClass("disabled") == false) {
 	

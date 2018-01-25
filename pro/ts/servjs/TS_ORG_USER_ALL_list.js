@@ -14,3 +14,7 @@ rh.vi.listView.prototype.beforeTreeNodeClickLoad = function(item,id,dictId) {
 	_viewer.listClearTipLoad();
 	return flag;
 };
+
+$(".rhSearch-select option[value='ODEPT_NAME_LV1']").remove();
+$(".rhSearch-select option[value='ODEPT_NAME_LV2']").remove();
+$(".rhSearch-select option[value='ODEPT_NAME_LV3']").remove();

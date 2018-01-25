@@ -47,9 +47,13 @@ function bindCard() {
 	//当行编辑事件
 	jQuery("td [id='TS_PVLG_ROLE-upd']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
-		//var height = jQuery(window).height()-50;
-		//var width = jQuery(window).width()-100;
-		rowEdit(pkCode,_viewer,[width,height],[100,50]);
+		if(width <= "900") {
+			var height1 = jQuery(window).height()-10;
+			var width1 = jQuery(window).width()-10;
+			rowEdit(pkCode,_viewer,[width1,height1],[5,10]);
+		} else {
+			rowEdit(pkCode,_viewer,[width,height],[100,50]);
+		}
 	});
 	
 }
@@ -80,13 +84,24 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 		alert("请选择目录 !");
 		return false;
 	}
+	
+	var xyArray = [100,50];
+	var widHeiArray = [width,height];
+	
+	if(width <= "900") {
+		var height1 = jQuery(window).height()-10;
+		var width1 = jQuery(window).width()-10;
+		widHeiArray = [width1,height1];
+		xyArray = [5,10];
+	}
+	
 	var temp = {"act":UIConst.ACT_CARD_ADD,
 			"sId":_viewer.servId,
 			"transferData": _viewer._transferData,
 			"links":_viewer.links,
 			"parHandler":_viewer,
-			"widHeiArray":[width,height],
-			"xyArray":[100,50]
+			"widHeiArray":widHeiArray,
+			"xyArray":xyArray
 	};
 	
 	var cardView = new rh.vi.cardView(temp);
