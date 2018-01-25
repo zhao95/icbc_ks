@@ -11,22 +11,8 @@ $("th[icode='BUTTONS']").css('width','15%');
 var idinfo = "";
 $("#TS_XMGL_BMSH_SHGZK_MX .rhGrid").find("tr").each(function(index, item) {
 	var table = this;
-	if(index != 0) {
-		if(index==1){
-			MXIDS+=$('td[icode="GZK_MX_ID"]',item).text();
-		}else{
-			MXIDS+=","+$('td[icode="GZK_MX_ID"]',item).text();
-		}
 		var value1 = $('td[icode="MX_VALUE1"]',item).text();
 		var val = $('td[icode="MX_VALUE2"]',item).text();
-		if(val.indexOf("rzyear")>-1){
-			
-			idinfo=item.id;
-			$(table).css("display",'none');
-		}
-		if(idinfo!=""){
-			$($(table).find("td").eq(0)).html(index-1);
-		}
 		if(value1 == 1 && val.length >0) {
 				 obj2=eval(val);  
 			var dataId = item.id;
@@ -56,7 +42,6 @@ $("#TS_XMGL_BMSH_SHGZK_MX .rhGrid").find("tr").each(function(index, item) {
 			// 为每个按钮绑定卡片
 			bindCard();
 		}
-	}
 });
 
 //选中的name  code 放入缓存中

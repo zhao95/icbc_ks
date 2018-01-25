@@ -359,7 +359,8 @@ function xminfoshow(){
 				if (ryl_mobile != "" && ryl_mobile != null) {
 				}*/
 				$("#loading").modal("show");//不再进行手机号校验
-				var res = FireFly.doAct("TS_BMLB_BM", "addZgData", param,true,true,function (result){
+				FireFly.doAct("TS_BMLB_BM", "addZgData", param,true,true,function (result){
+					alert(result._MSG_);
 					$("#bmbq").val("1");
 					$("#form1").submit();
 				})
