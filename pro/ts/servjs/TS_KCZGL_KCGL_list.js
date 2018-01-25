@@ -25,40 +25,36 @@ _viewer.getBtn("add").unbind("click").bind("click",function(event){
 	queryView.show(event);
 });
 
-var parparparServId = _viewer.getParHandler().getParHandler().getParHandler().servId;
-if(parparparServId == "TS_XMGL_CCCS_KCZGL"){
-	_viewer.getBtn("addLin").show();
 	
-	_viewer.getBtn("addLin").unbind("click").bind("click",function(event){
-		//1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
-		var param = {};
-		param["SOURCE"] = "KC_ID~KC_CODE~KC_NAME~KC_ODEPTNAME";
-		param["TYPE"] = "multi";
-		param["HIDE"] = "KC_ID";
-		param["EXTWHERE"] = "and KC_STATE = 5 and kc_type = 2 ";
-		var configStr = "TS_KCGL,"+JsonToStr(param);
-		var options = {
-			"config" :configStr,
-			"parHandler":_viewer,
-			"formHandler":_viewer.form,
-		    "replaceCallBack":function(idArray) {//回调，idArray为选中记录的相应字段的数组集合
-		    	var groupId = _viewer.getParHandler().getPKCode();
-		    	var ids = idArray.KC_ID;
-		    	if(ids != "" && groupId != ""){
-		    		FireFly.doAct(_viewer.servId, "kczAddKc", {"ids":ids,"groupId":groupId}, true,false,function(data){
-			    		_viewer.refresh();
-			    	});	
-		    	}
+_viewer.getBtn("addLin").unbind("click").bind("click", function(event) {
+	// 1.构造查询选择参数，其中参数【HTMLITEM】非必填，用以标识返回字段的值为html标签类的
+	var param = {};
+	param["SOURCE"] = "KC_ID~KC_CODE~KC_NAME~KC_ODEPTNAME";
+	param["TYPE"] = "multi";
+	param["HIDE"] = "KC_ID";
+	param["EXTWHERE"] = "and KC_STATE = 5 and kc_type = 2 ";
+	var configStr = "TS_KCGL," + JsonToStr(param);
+	var options = {
+		"config" : configStr,
+		"parHandler" : _viewer,
+		"formHandler" : _viewer.form,
+		"replaceCallBack" : function(idArray) {// 回调，idArray为选中记录的相应字段的数组集合
+			var groupId = _viewer.getParHandler().getPKCode();
+			var ids = idArray.KC_ID;
+			if (ids != "" && groupId != "") {
+				FireFly.doAct(_viewer.servId, "kczAddKc", {
+					"ids" : ids,
+					"groupId" : groupId
+				}, true, false, function(data) {
+					_viewer.refresh();
+				});
 			}
-		};
-		//2.用系统的查询选择组件 rh.vi.rhSelectListView()
-		var queryView = new rh.vi.rhSelectListView(options);
-		queryView.show(event);
-	});
-	
-}else{
-	_viewer.getBtn("addLin").hide();
-}
+		}
+	};
+	// 2.用系统的查询选择组件 rh.vi.rhSelectListView()
+	var queryView = new rh.vi.rhSelectListView(options);
+	queryView.show(event);
+});
 
 $("#TS_KCZGL_KCGL .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
@@ -272,3 +268,8 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 _viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
 	window.open(FireFly.getContextPath() + '/ts/imp_template/考场组管理_考场导入模版.xls');
 });
+
+if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly){
+	_viewer.getBtn("addLin").hide();
+	_viewer.getBtn("updateInfo").hide();
+}
