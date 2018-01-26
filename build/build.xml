@@ -13,7 +13,19 @@
 		<fileset dir="${extLib.dir}">
 			<include name="*.jar" />
 		</fileset>
-	</path>	
+	</path>
+
+	<tstamp>
+		<format property="touchTime" pattern="yyyyMMddHHmmss"/>
+	</tstamp>
+
+	<target name="copy_war_icbc">
+		<echo message="${touchTime}" />
+		<mkdir dir="${dist.dir}/${touchTime}"/>
+		<copy file="${dist.dir}/rh-icbcks.war" todir="${dist.dir}/${touchTime}" />
+		<copy file="${web.dir}/WEB-INF/classes/com/rh/resource/sy_SERV.zip" todir="${dist.dir}/${touchTime}" />
+		<copy file="${web.dir}/WEB-INF/classes/com/rh/resource/sy_SERV_DICT.zip" todir="${dist.dir}/${touchTime}" />
+	</target>
 
 	<target name="compile" depends="clean" description="编译java文件">
 		<echo message="准备编译源文件......" />

@@ -7,3 +7,4 @@ resin.conf
 rh.log*
 pro/WEB-INF/classes/*
 .externalToolBuilders/
+build/dist

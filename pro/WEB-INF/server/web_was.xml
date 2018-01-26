@@ -126,8 +126,9 @@
 	    <param-name>rh.file</param-name>
 	    <param-value></param-value>
 		<!-- 文件实现类：com.rh.core.util.file.CommonFileStorage(缺省，通用文件存储，支持SMB)-->
-  </context-param>	
-  
+  </context-param>
+
+
   <context-param>
 	    <param-name>rh.scheduler.global</param-name>
 	    <param-value></param-value>
@@ -138,17 +139,25 @@
 	    <param-value></param-value>
 		<!-- 任务调度实现类(本地任务)：com.rh.core.util.scheduler.imp.LocalQuartzScheduler(缺省)-->
 	</context-param>
-  	
+
   <context-param>
 	    <param-name>rh.im</param-name>
 	    <param-value></param-value>
 		<!-- im即时沟通实现类：com.rh.opt.plug.im.ImRtxCgi(RTX cgi支持Linux&&Windows)  com.rh.opt.plug.im.ImRtxDll(windows)-->
 	</context-param>
-	
+
 	<listener>
 	    <listener-class>com.rh.core.base.ContextListener</listener-class>
 	</listener>
 
+	<servlet>
+		<servlet-name>TemporaryLoginServlet</servlet-name>
+		<servlet-class>com.rh.core.TemporaryLoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TemporaryLoginServlet</servlet-name>
+		<url-pattern>/t</url-pattern>
+	</servlet-mapping>
 	<servlet>
 		<servlet-name>DoServlet</servlet-name>
 		<servlet-class>com.rh.core.DoServlet</servlet-class>
@@ -185,9 +194,7 @@
 		<url-pattern>/VerifyCodeServlet/*</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>login.jsp</welcome-file>
 	</welcome-file-list>
 
 	<!-- web crawler conf
@@ -202,8 +209,8 @@
 		<url-pattern>/webcrawler</url-pattern>
 	</servlet-mapping>
 	-->
-	
-	<!-- 嵌入XDOC服务 开始 
+
+	<!-- 嵌入XDOC服务 开始
 	<servlet>
 		<servlet-name>XDocServlet</servlet-name>
 		<servlet-class>com.hg.xdoc.XDocServlet</servlet-class>
@@ -218,7 +225,7 @@
 		<url-pattern>*.xdoc</url-pattern>
 	</servlet-mapping>-->
 	<!-- 嵌入XDOC服务 结束 -->
-	
+
 	<filter>
 		<filter-name>GzipFilter</filter-name>
 		<filter-class>com.rh.core.util.http.GZipServletFilter</filter-class>
@@ -238,10 +245,10 @@
 	<filter-mapping>
 		<filter-name>GzipFilter</filter-name>
 		<url-pattern>*.jsp</url-pattern>
-	</filter-mapping>	
+	</filter-mapping>
 
 	<!-- 模版缓存过滤 开始 -->
-	<!-- 
+	<!--
 	<filter>
 		<filter-name>pageCacheFilter</filter-name>
 		<filter-class>com.rh.core.util.http.PageCacheFilter</filter-class>
