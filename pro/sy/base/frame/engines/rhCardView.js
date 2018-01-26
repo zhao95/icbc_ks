@@ -422,7 +422,6 @@ rh.vi.cardView.prototype._tabLayout = function() {
 	   }*/
 	   
 	   this.backA.on("mousedown",function() {
-		   debugger;
 		   if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {
 			   //修改
 			   var changeData = _self.getChangeData();
