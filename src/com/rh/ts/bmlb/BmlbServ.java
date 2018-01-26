@@ -2064,7 +2064,7 @@ public class BmlbServ extends CommonServ {
 		String xm_id = paramBean.getStr("xm_id");
 		String user_code = Context.getUserBean().getCode();
 		List<Bean> finds = ServDao.finds("TS_XMGL_BM_FZGKS", where2);
-		List bmkslist= new ArrayList<Bean>();
+		List<Bean> bmkslist= new ArrayList<Bean>();
 		List<Bean> bmlist = ServDao.finds("TS_BMLB_BM", " AND BM_CODE = '"+user_code+"' and (BM_SH_STATE =1 OR BM_SH_STATE =0) AND BM_STATE=1 AND XM_ID = '"+xm_id+"'");
 		for (Bean fzgbean : finds) {
 			boolean flag = false;
