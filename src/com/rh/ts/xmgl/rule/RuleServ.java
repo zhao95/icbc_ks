@@ -500,12 +500,17 @@ public class RuleServ extends CommonServ {
 		boolean flag = false;
 		List<Bean> listbean = new ArrayList<Bean>();
 		for (Bean bean : post_list) {
+			int post_defined = bean.getInt("POST_DEFINED");//是否指定职务层级
 			String success_info = bean.getStr("SUCCESS_INFO");//成功提示信息
 			String failer_info = bean.getStr("FAIL_INFO");//成功提示信息
 			Bean littelGzBean = new Bean();
 			String dept_codes = bean.getStr("DEPT_CODE");//机构
 			String zspost = bean.getStr("POST_CODE");//职务
 			int gotostay = bean.getInt("GOTO_STAY");//验证失败1去待审核  2.审核不通过
+			String post_type = bean.getStr("POST_TYPE"); //类别
+			String post_xl = bean.getStr("POST_XL");//序列
+			String post_zw = bean.getStr("POST_DUTIES");//没有指定的职务
+			int post_fh = bean.getInt("POST_FUHAO");//符号
 			//判断 此人是否在此机构内
 			String[] codearr = dept_codes.split(",");
 			Boolean codeflag = false;
@@ -538,10 +543,15 @@ public class RuleServ extends CommonServ {
 				}
 				continue;
 			}
+			
+
+			if(post_defined==1){
+			//指定
 				String[] postarr = zspost.split(",");
 				Bean find = ServDao.find("sy_hrm_zdstaffposition", BM_CODE);
 				if(find!=null&&find.size()!=0){
-					String possql = " AND POSTION_NAME_CODE = '"+find.getStr("DUTY_LV_CODE")+"' AND POSTION_SEQUENCE_ID ='"+find.getStr("STATION_NO_CODE")+"' AND POSTION_TYPE='"+find.getStr("STATION_TYPE_CODE")+"'";
+					String possql="";
+					 possql = " AND POSTION_NAME_CODE = '"+find.getStr("DUTY_LV_CODE")+"' AND POSTION_SEQUENCE_ID ='"+find.getStr("STATION_NO_CODE")+"' AND POSTION_TYPE='"+find.getStr("STATION_TYPE_CODE")+"'";
 					List<Bean> finds2 = ServDao.finds("ts_org_postion", possql);
 					Boolean flagpost = false;
 					for (Bean bean2 : finds2) {
@@ -578,8 +588,74 @@ public class RuleServ extends CommonServ {
 					listbean.add(littelGzBean);
 					continue;
 				}
+			}else{
+				Bean find = ServDao.find("sy_hrm_zdstaffposition", BM_CODE);
+				if(find!=null&&find.size()!=0){
+					String possql="";
+					 possql = " AND POSTION_NAME_CODE = '"+find.getStr("DUTY_LV_CODE")+"' AND POSTION_SEQUENCE_ID ='"+find.getStr("STATION_NO_CODE")+"' AND POSTION_TYPE='"+find.getStr("STATION_TYPE_CODE")+"'";
+					List<Bean> finds2 = ServDao.finds("ts_org_postion", possql);
+					Boolean flagpost = false;
+				List<Bean> postlist = ServDao.finds("TS_ORG_POSTION","AND POSTION_NAME = '"+post_zw+"' AND POSTION_TYPE='"+post_type+"'");
+				Bean findbean = null;
+				if(postlist.size()!=0){
+					 findbean = postlist.get(0);
+				}
+				SqlBean sql = new SqlBean();
+				//不指定
+				if(findbean!=null){
+				if(post_fh==1){
+					sql.andGT("POSTION_QUALIFICATION", findbean.getInt("POSTION_QUALIFICATION"));
+				}else if(post_fh==2){
+					sql.andLT("POSTION_QUALIFICATION",  findbean.getInt("POSTION_QUALIFICATION"));
+				}else if(post_fh==3){
+					sql.and("POSTION_QUALIFICATION",  findbean.getInt("POSTION_QUALIFICATION"));
+				}else if(post_fh==4){
+					sql.andGTE("POSTION_QUALIFICATION",  findbean.getInt("POSTION_QUALIFICATION"));
+				}else if(post_fh==5){
+					sql.andLTE("POSTION_QUALIFICATION",  findbean.getInt("POSTION_QUALIFICATION"));
+				}
+				if(!"".equals(post_xl)){
+					sql.and("POSTION_SEQUENCE_ID", post_xl);
+				}
+				sql.and("POSTION_TYPE", post_type);
 				
+				}else{
+					if(gotostay==1){
+						staytogo=true;
+					}
+					littelGzBean.set("validate", false);
+					littelGzBean.set("name",failer_info);
+					listbean.add(littelGzBean);
+					continue;
+				}
+				List<Bean> findlist = ServDao.finds("TS_ORG_POSTION", sql);
+				if(findlist!=null&&findlist.size()!=0){
+					for (Bean bean2 : finds2) {
+						for (Bean posbean : findlist) {
+							if(bean2.getStr("POSTION_ID").equals(posbean.getStr("POSTION_ID"))){
+								flagpost=true;
+							}
+						}
+					}
+					if(flagpost){
+						//在此层级内
+						flag = true;
+						littelGzBean.set("validate", true);
+					littelGzBean.set("name",success_info);
+					listbean.add(littelGzBean);
+					continue;
+					}
 		}
+				}
+				if(gotostay==1){
+					staytogo=true;
+				}
+				littelGzBean.set("validate", false);
+				littelGzBean.set("name",failer_info);
+				listbean.add(littelGzBean);
+				continue;
+			}
+			}
 		for (Bean bean : finds) {
 			Date newdate  = new Date();//当前时间
 			String tishixin = "";

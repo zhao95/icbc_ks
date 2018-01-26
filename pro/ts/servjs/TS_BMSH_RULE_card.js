@@ -52,8 +52,11 @@ $("#TS_BMSH_RULE-R_MK").css("cursor","pointer");
     			xls +=",^"+arr[i]+"^";
     		}
     	}
+    }else{
+    	alert("请先选序列");
+    	return false;
     }
-	var configStr = "TS_XMGL_BM_KSLBK,{'TARGET':'','SOURCE':'KSLBK_MK~KSLBK_XL'," +
+	var configStr = "TS_XMGL_BM_KSLBK,{'TARGET':'','SOURCE':'KSLBK_XL~KSLBK_MK'," +
 	"'HIDE':'','EXTWHERE':'AND KSLBK_XL IN("+xls+") AND KSLBK_MK !=^无模块^ GROUP by KSLBK_MK','TYPE':'multi','HTMLITEM':''}";
 	var options = {
 			"config" :configStr,
