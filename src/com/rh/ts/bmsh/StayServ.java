@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.swing.text.StyledEditorKit.ForegroundAction;
-
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -288,15 +286,11 @@ public class StayServ extends CommonServ {
 						ServDao.delete("TS_BMSH_STAY", id);
 					} else {
 						// 更新    逐级  可以确定  ，越级 当前层级
-						if(flag.equals("1")){  //todo  下级审核人不在时抛异常
 						bean.set("SH_LEVEL", outbean.getStr("SH_LEVEL"));
 						bean.set("SH_USER", allman);
 						bean.set("SH_NODE", node_name);
 						bean.set("SH_OTHER", allman);
 						ServDao.save("TS_BMSH_STAY", bean);
-						}else{
-							ServDao.delete("TS_BMSH_STAY", id);
-						}
 					}
 
 					// 审核通过里面数据进行修改 同步
@@ -315,7 +309,7 @@ public class StayServ extends CommonServ {
 					if (newlist.size() != 0) {
 						Bean newBean = newlist.get(0);
 						newBean.copyFrom(bean);
-						if(flag.equals("1")){
+						/*if(flag.equals("1")){*/
 							if ("1".equals(sh_level)) {
 								//最后一次审核 将数据保存到 审核通过表中
 								newBean.set("SH_USER", shenuser);
@@ -328,7 +322,7 @@ public class StayServ extends CommonServ {
 									ServDao.save("TS_BMLB_BM", bm_bean);
 								}
 							}
-						}else{
+						/*}else{
 							//越级  所有人可见
 							
 							String allman1 = "";
@@ -354,14 +348,14 @@ public class StayServ extends CommonServ {
 							}
 							
 							ServDao.save("TS_BMSH_PASS", newBean);
-						}
+						}*/
 					} else {
 					
 						Bean newBean = new Bean();
 						newBean.copyFrom(bean);
 						newBean.set("SH_USER", shenuser);
 						newBean.set("SH_LEVEL", sh_level);
-						if(flag.equals("1")){
+						/*if(flag.equals("1")){*/
 							//							    逐级  
 							if ("1".equals(sh_level)) {
 								//最后一次审核 将数据保存到 审核通过表中
@@ -375,7 +369,7 @@ public class StayServ extends CommonServ {
 									ServDao.save("TS_BMLB_BM", bm_bean);
 								}
 							}
-						}else{
+						/*}else{
 							//越级  所有人可见
 							String allman1 = "";
 							String blist1 = outbean.getStr("result");
@@ -392,7 +386,7 @@ public class StayServ extends CommonServ {
 								bm_bean.set("BM_SH_STATE", "1");
 								ServDao.save("TS_BMLB_BM", bm_bean);
 							}
-						}
+						}*/
 					}
 					
 				} else {
@@ -404,15 +398,11 @@ public class StayServ extends CommonServ {
 						ServDao.delete("TS_BMSH_STAY", id);
 					} else {
 						// 更新    逐级  可以确定  ，越级 当前层级
-						if(flag.equals("1")){  //todo  下级审核人不在时抛异常
 						bean.set("SH_LEVEL", outbean.getStr("SH_LEVEL"));
 						bean.set("SH_USER", allman);
 						bean.set("SH_OTHER", allman);
 						bean.set("SH_NODE", node_name);
 						ServDao.save("TS_BMSH_STAY", bean);
-						}else{
-							ServDao.delete("TS_BMSH_STAY", id);
-						}
 					}
 
 					// 审核通过里面数据进行修改 同步
@@ -431,7 +421,7 @@ public class StayServ extends CommonServ {
 					if (newlist.size() != 0) {
 						Bean newBean = newlist.get(0);
 						newBean.copyFrom(bean);
-						if(flag.equals("1")){
+						/*if(flag.equals("1")){*/
 							if ("1".equals(sh_level)) {
 								//最后一次审核 将数据保存到 审核通过表中
 								newBean.set("SH_USER", shenuser);
@@ -451,7 +441,7 @@ public class StayServ extends CommonServ {
 									ServDao.save("TS_BMLB_BM", bm_bean);
 								}
 							}
-						}else{
+						/*}else{
 							//越级  所有人可见
 							String allman1 = "";
 							String blist1 = outbean.getStr("result");
@@ -475,7 +465,7 @@ public class StayServ extends CommonServ {
 								}
 								ServDao.save("TS_BMLB_BM", bm_bean);
 							}
-						}
+						}*/
 						
 					} else {
 					
@@ -483,7 +473,7 @@ public class StayServ extends CommonServ {
 						newBean.copyFrom(bean);
 						newBean.set("SH_USER", shenuser);
 						newBean.set("SH_LEVEL", sh_level);
-						if(flag.equals("1")){
+						/*if(flag.equals("1")){*/
 							//							    逐级  
 							if ("1".equals(sh_level)) {
 								//最后一次审核 将数据保存到 审核通过表中
@@ -504,7 +494,7 @@ public class StayServ extends CommonServ {
 									ServDao.save("TS_BMLB_BM", bm_bean);
 								}
 							}
-						}else{
+						/*}else{
 							//越级  所有人可见
 							String allman1 = "";
 							String blist1 = outbean.getStr("result");
@@ -528,7 +518,7 @@ public class StayServ extends CommonServ {
 								}
 								ServDao.save("TS_BMLB_BM", bm_bean);
 							}
-						}
+						}*/
 					}
 					
 					noPassBmIdList.add(bmid);
@@ -868,10 +858,10 @@ public class StayServ extends CommonServ {
 							}
 						}
 						int count2 = Transaction.getExecutor().count(sql3);
-						if (count2 > EXCEL_MAX_NUM) {
+						/*if (count2 > EXCEL_MAX_NUM) {
 							return new OutBean().setError("导出数据总条数大于Excel最大行数："
 									+ EXCEL_MAX_NUM);
-						}
+						}*/
 						
 						dataList = Transaction.getExecutor().query(sql3);
 					}else{
@@ -1205,10 +1195,10 @@ public class StayServ extends CommonServ {
 			// 查询出 要导出的数据
 			count = outBean.getCount();
 			// 总数大于excel可写最大值
-			if (count > EXCEL_MAX_NUM) {
+			/*if (count > EXCEL_MAX_NUM) {
 				errList.add(new OutBean().setError("导出数据总条数大于Excel最大行数："+ EXCEL_MAX_NUM));
 				return errList;
-			}
+			}*/
 			// 导出第一次查询数据
 			paramBean.setQueryPageNowPage(1); // 导出当前第几页
 			afterExp(paramBean, outBean); // 执行导出查询后扩展方法
@@ -1365,10 +1355,10 @@ public class StayServ extends CommonServ {
 						return errList;
 					}
 		}
-		if (dataList.size() > EXCEL_MAX_NUM) {
+	/*	if (dataList.size() > EXCEL_MAX_NUM) {
 			errList.add(new OutBean().setError("导出数据总条数大于Excel最大行数："+ EXCEL_MAX_NUM));
 			return errList;
-		}
+		}*/
 		List<Bean> finalList = new ArrayList<Bean>();
 
 		// 判断user_code 是否为空 若为空则 导出所有
@@ -2070,10 +2060,10 @@ public class StayServ extends CommonServ {
 					String codepath = dept.getCodePath();
 					String sql = "select *from TS_BMSH_STAY a where exists(select dept_code from sy_org_dept b where code_path like concat('"+codepath+"','%') and a.s_dept=b.dept_code and s_flag='1')and xm_id='"+xmid+"'";
 					int count2 = Transaction.getExecutor().count(sql);
-					if (count2 > EXCEL_MAX_NUM) {
+				/*	if (count2 > EXCEL_MAX_NUM) {
 						return new OutBean().setError("导出数据总条数大于Excel最大行数："
 								+ EXCEL_MAX_NUM);
-					}
+					}*/
 					dataList = Transaction.getExecutor().query(sql);
 				}
 				
@@ -2341,7 +2331,7 @@ public class StayServ extends CommonServ {
 	            List<Bean> nopassshlist = ServDao.finds("TS_BMSH_NOPASS", " and BM_ID = '"+colCode+"'");
 	            if (shlist != null&&shlist.size()!=0) {
 	            	Bean bean =shlist.get(0);
-	            	if("1".equals(flag)){
+	            	/*if("1".equals(flag)){*/
 	            		//1.逐级审核 判断是否 能进行流程     数据level=1时 无需导入      level!=1时  判断当前层级和数据审核层级
 	            		if("1".equals(shlist.get(0).getStr("SH_LEVEL"))){
 	            			//最高级审核不能再进行性审核
@@ -2411,11 +2401,11 @@ public class StayServ extends CommonServ {
 	    						ServDao.save("TS_BMSH_STAY", bean);
 	    	            	}
 	            		}
-	            	}else{
+	            	/*}else{
 	            		//2.越级导入 报错
 	            		rowBean.set(ImpUtils.ERROR_NAME, "重复数据，报名数据已存在，不需导入");
             			continue;
-	            	}
+	            	}*/
 	            }else if (passshlist != null&&passshlist.size()!=0) {
 	            	Bean bean = passshlist.get(0);
 	            	//判断审核层级
@@ -2462,6 +2452,13 @@ public class StayServ extends CommonServ {
 						mindbean.set("SH_TYPE", 1);
 						mindbean.set("SH_NODE", nodeid);
 						mindbeans.add(mindbean);
+						bean.remove("SH_ID");
+						bean.remove("S_CMPY");
+						bean.remove("S_ATIME");
+						bean.remove("S_MTIME");
+						bean.remove("S_FLAG");
+						bean.remove("_PK_");
+						bean.remove("ROW_NUM_");
 						ServDao.save("TS_BMSH_STAY", bean);
 						
 						ServDao.save("TS_BMLB_BM", bmbean);
@@ -2511,6 +2508,13 @@ public class StayServ extends CommonServ {
 						mindbean.set("SH_TYPE", 1);
 						mindbean.set("SH_NODE", nodeid);
 						mindbeans.add(mindbean);
+						bean.remove("SH_ID");
+						bean.remove("S_CMPY");
+						bean.remove("S_ATIME");
+						bean.remove("S_MTIME");
+						bean.remove("S_FLAG");
+						bean.remove("_PK_");
+						bean.remove("ROW_NUM_");
 						ServDao.save("TS_BMSH_STAY", bean);
 						
 						ServDao.save("TS_BMLB_BM", bmbean);

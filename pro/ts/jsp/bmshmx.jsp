@@ -75,6 +75,7 @@
 		Bean bean = list.get(i);
 		int j = i+1;
 		String shdate = bean.getStr("S_ATIME");
+		shdate = shdate.substring(0,16);
 		String shr = bean.getStr("SH_UNAME");
 		String shlog = bean.getStr("SH_UCODE");
 		String jibie = bean.getStr("SH_LEVEL");

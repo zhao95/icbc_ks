@@ -660,7 +660,7 @@ public class NoPassServ extends CommonServ {
 			outBean.set("SH_USER", shuser);
 			// 性别
 			int user_sex = userBean.getSex();
-			if (user_sex == 0) {
+			if (user_sex == 1) {
 				outBean.set("USER_SEX", "男");
 			} else {
 				outBean.set("USER_SEX", "女");
@@ -1072,10 +1072,10 @@ public class NoPassServ extends CommonServ {
 			                continue;
 		            }
 	        	 if(level!=1){
-	        	 if("1".equals(flag)){
-	        		   rowBean.set(ImpUtils.ERROR_NAME, "逐级审核下级不能导入最终结果");
+	        	/* if("1".equals(flag)){*/
+	        		   rowBean.set(ImpUtils.ERROR_NAME, "下级不能导入最终结果");
 		                continue;
-	      		 }
+	      		
 	        	 }
 	            String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");
 	            if("".equals(colCode)){
@@ -1204,7 +1204,7 @@ public class NoPassServ extends CommonServ {
 	            }else if (passshlist != null&&passshlist.size()!=0) {
 	            	Bean bean = passshlist.get(0);
 	            	//判断审核层级
-	            	if(level>nopassshlist.get(0).getInt("SH_LEVEL")){
+	            	if(level>passshlist.get(0).getInt("SH_LEVEL")){
 	            		rowBean.set(ImpUtils.ERROR_NAME, "上级已审核 没有权限审核此数据");
 	            		continue;
 	            	}else{
