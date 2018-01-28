@@ -275,4 +275,5 @@ _viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
 if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly){
 	_viewer.getBtn("addLin").hide();
 	_viewer.getBtn("updateInfo").hide();
+	$("#TS_KCZGL_KCGL-tmplBtn").hide();
 }

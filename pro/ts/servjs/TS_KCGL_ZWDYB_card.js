@@ -1,5 +1,4 @@
 var _viewer = this;
-
 if(_viewer.opts.act == "cardAdd"){
 	var handler = _viewer.getParHandler();
 	var extWhere = handler._extWhere;
@@ -25,6 +24,29 @@ _viewer.getBtn("saveAndAdd").click(function(){
 
 _viewer.beforeSave= function() {
 	if(!saveCheck()){
+		return false;
+	}
+	//验证座位号IP在IP段范围内
+	var kcId = _viewer.getItem("KC_ID").getValue();
+	var zwIp = _viewer.getItem("ZW_IP").getValue();
+	var scope = FireFly.doAct("TS_KCGL_IPSCOPE","finds",{"_SELECT_":"IPS_SCOPE","_WHERE_":"and kc_id = '"+kcId+"'"})._DATA_;
+	if(scope.length > 0){
+		var fhFlag = false;
+		for(var i=0;i<scope.length;i++){
+			var tmpScope = scope[i].IPS_SCOPE;
+			if(checkScope(tmpScope,zwIp)){
+				fhFlag = true;
+				break;
+			}
+		}
+		if(!fhFlag){
+			var msg = "座位IP未在考场IP段范围内！";
+			Tip.showError(msg, true);
+			return false;
+		}
+	}else{
+		var msg = "考场IP段未设置！";
+		Tip.showError(msg, true);
 		return false;
 	}
 };
@@ -63,8 +85,8 @@ function saveCheck(){
 			alert("IP地址不允许重复");
 			return false;
 		}
-	}else{
 		
+	}else{
 		if(ZW_ZWH_XT_tmp != ZW_ZWH_XT && num1 > 0 ){
 			alert("系统座位号不允许重复");
 			return false;
@@ -76,4 +98,35 @@ function saveCheck(){
 		}
 	}
 	return true;
+}
+
+/**
+ * 校验ip是不是在scope范围内
+ * @param scope
+ * @param ip
+ * @returns {Boolean}
+ */
+function checkScope(scope,ip){
+	var sz = scope.split("-");
+	var a = sz[0];
+	var b = sz[1];
+	var r1 = a.split(".")[0] != b.split(".")[0];
+	var r2 = a.split(".")[1] != b.split(".")[1];
+	var r3 = a.split(".")[2] != b.split(".")[2];
+	var sa4 = a.split(".")[3];
+	var sb4 = b.split(".")[3];
+	
+	var ip_1 = ip.split(".")[0];
+	var ip_2 = ip.split(".")[1];
+	var ip_3 = ip.split(".")[2];
+	var ip_4 = ip.split(".")[3];
+	
+	if(parseInt(r1) != parseInt(ip_1) || parseInt(r2) != parseInt(ip_2) || parseInt(r3) != parseInt(ip_3)){
+		return false;
+	}
+	
+	if(ip_4 >= sa4 && ip_4 < sb4){
+		return true;
+	}
+	return false;
 }

@@ -3,11 +3,25 @@ var _viewer = this;
 $("#TS_KCGL_ZWDYB .rhGrid").find("tr").unbind("dblclick"); 
 $("#TS_KCGL_ZWDYB .rhGrid").find("th[icode='del']").html("操作");
 
-//删除单行数据
-//_viewer.grid.getBtn("del").unbind("click").bind("click",function() {
-//	var pk = jQuery(this).attr("rowpk");//获取主键信息
-//	rowDelete(pk,_viewer);
-//});
+var height = jQuery(window).height()-200;
+var width = jQuery(window).width()-200;
+
+//添加按钮
+
+_viewer.getBtn("add").unbind("click").bind("click",function() {
+	var kcId = _viewer.getParHandler().getItem("KC_ID").getValue();
+	var kcMax = _viewer.getParHandler().getItem("KC_MAX").getValue();
+	var result = FireFly.doAct("TS_KCGL_ZWDYB","count",{"_WHERE_":"and kc_id = '"+kcId+"'"})._DATA_;
+
+	if(result == kcMax){
+		Tip.showError("录入座位数不能大于考场最大设备数！");
+		return false;
+	}
+	//打开添加页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
+    var temp = {"act":UIConst.ACT_CARD_ADD,"sId":_viewer.servId,"parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,100],"links":{"KC_ID":kcId}};
+    var cardView = new rh.vi.cardView(temp);
+    cardView.show();
+});
 
 /*
 * 删除前方法执行
@@ -60,11 +74,11 @@ function openMyCard(dataId,readOnly,showTab){
 //如果父页面是只读的，则隐藏编辑行按钮
 if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly || _viewer.getParHandler().servId == "TS_KCGL_SH"){
 	$("a#TS_KCGL_ZWDYB_edit").hide();
+	$("#TS_KCGL_ZWDYB-tmplBtn").hide();
 }
 
 _viewer.getBtn("imp").unbind("click").bind("click",function() {
 	var kcId = _viewer.getParHandler().getItem("KC_ID").getValue();
-	
 	var config = {"SERV_ID":_viewer.opts.sId, "FILE_CAT":"EXCEL_UPLOAD", "FILENUMBER":1, 
 		"VALUE":5, "TYPES":"*.xls;*.xlsx", "DESC":"导入Excel文件"};
 	var file = new rh.ui.File({

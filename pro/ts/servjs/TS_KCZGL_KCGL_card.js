@@ -87,6 +87,20 @@ _viewer.beforeSave = function() {
 		$("#TS_KCZGL_KCGL-KC_JKIP_div").find(".ui-dataservice-container,.fl,.wp").addClass("blankError").addClass("errorbox");
 		return false;
 	}
+	
+	//校验最大设备数
+	if(_viewer.opts.act == "cardModify"){
+		var newKcMax = _viewer.getChangeData().KC_MAX;
+		var kcId = _viewer.getItem("KC_ID").getValue();
+		if(newKcMax != undefined){
+			var num = FireFly.doAct("TS_KCGL_ZWDYB","count",{"_WHERE_":"and kc_id = '"+kcId+"'"})._DATA_;
+			if(newKcMax < num){
+				var msg = "考场最大设备数小于现有已录入座位数！";
+				Tip.showError(msg, true);
+				return false;
+			}
+		}
+	}
 };
 
 $("#TS_KCGL_GLY-viListViewBatch input[icode='GLY_NAME']").css("width","80px");

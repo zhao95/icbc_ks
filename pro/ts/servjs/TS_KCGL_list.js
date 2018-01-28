@@ -350,6 +350,6 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 });
 
 _viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
-	window.open(FireFly.getContextPath() + '/ts/imp_template/考场管理倒入模版.xls');
+	window.open(FireFly.getContextPath() + '/ts/imp_template/考场管理导入模版.xls');
 });
 

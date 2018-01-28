@@ -84,6 +84,7 @@ public class KcglShServ extends CommonServ {
 		String mxData2 = list.get(i).getStr("MX_DATA2");
 		String mxData3 = list.get(i).getStr("MX_DATA3");
 		String mxData4 = list.get(i).getStr("MX_DATA4");
+				
 		if (mxCol.equals("KC_ODEPTCODE")) {
 		    dataBean.set("KC_ODEPTCODE", mxData2);
 		    dataBean.set("KC_ODEPTNAME", mxData3);
@@ -93,7 +94,31 @@ public class KcglShServ extends CommonServ {
 		    dataBean.set(mxCol, mxData);
 		}
 	    }
-	    ServDao.save("TS_KCGL", dataBean);
+	    //校验设备数
+	    boolean maxFlag = dataBean.contains("KC_MAX");
+	    boolean goodFlag = dataBean.contains("KC_GOOD");
+	    
+	    if(maxFlag || goodFlag){
+		int kcMax = dataBean.getInt("KC_MAX");
+		int kcGood = dataBean.getInt("KC_GOOD");
+		Bean kcBean = ServDao.find("TS_KCGL", kcId);
+
+		if (!maxFlag) {
+		    kcMax = kcBean.getInt("KC_MAX");
+		}
+		if (!goodFlag) {
+		    kcGood = kcBean.getInt("KC_GOOD");
+		}
+		if (kcMax >= kcGood) {
+		    int zwNum = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"'"));
+		    if(kcMax >= zwNum){
+			ServDao.save("TS_KCGL", dataBean);
+		    }
+		}
+	    }else{
+		ServDao.save("TS_KCGL", dataBean);
+	    }
+	    
 	}
 
 	// 相关子表
@@ -126,41 +151,181 @@ public class KcglShServ extends CommonServ {
 		    actionCode = "ZW_ACTION";
 		    break;
 		}
+				
 		String action = listTmp.get(j).getStr(actionCode);
+		
 		if (action.equals("add")) {
-		    dataBean.remove(actionCode);
-		    dataBean.remove("UPDATE_ID");
-		    dataBean.set("KC_ID", kcId);
-		    dataBean.remove("_PK_");
+		    //座位号校验
+		    boolean sflag = true;
 		    if(tables1[i].equals("TS_KCGL_UPDATE_ZWDYB")){
-			String zwh = dataBean.getStr("ZW_ZWH_XT");
+			List<Bean> ipScopeList = ServDao.finds("TS_KCGL_IPSCOPE", "and kc_id = '" + kcId + "'");
 			String IPStr = dataBean.getStr("ZW_IP");
-			int num_zwh = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_ZWH_XT ='"+zwh+"'"));
-			int num_ip = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_IP ='"+IPStr+"'"));
-			if(num_zwh > 0 || num_ip > 0){
-			    continue;
+			int c0 = Integer.parseInt(IPStr.split(".")[0]);
+			int c1 = Integer.parseInt(IPStr.split(".")[1]);
+			int c2 = Integer.parseInt(IPStr.split(".")[2]);
+			int c3 = Integer.parseInt(IPStr.split(".")[3]);
+			//如果 IPStr 超出IP段范围 则 sflag = false
+			boolean tmpFlag = false;
+			for (Bean bean : ipScopeList) {
+			    String tmpScope = bean.getStr("IPS_SCOPE");
+			    String a1 = tmpScope.split("-")[0];
+			    String a2 = tmpScope.split("-")[1];
+			    int b1_0 = Integer.parseInt(a1.split(".")[0]);
+			    int b1_1 = Integer.parseInt(a1.split(".")[1]);
+			    int b1_2 = Integer.parseInt(a1.split(".")[2]);
+			    int b1_3 = Integer.parseInt(a1.split(".")[3]);
+			    int b2_3 = Integer.parseInt(a2.split(".")[3]);
+			    
+			    if(b1_0 == c0 && b1_1 == c1 && b1_2 == c2){
+				if(c3 >= b1_3 && c3 <= b2_3){
+				    tmpFlag = true;
+				    break;
+				}
+			    }
+			}
+			if(!tmpFlag){
+			    sflag = false;
 			}
 		    }
-		    ServDao.save(tables2[i], dataBean);
+		   
+		    if(sflag){
+			dataBean.remove(actionCode);
+			dataBean.remove("UPDATE_ID");
+			dataBean.set("KC_ID", kcId);
+			dataBean.remove("_PK_");
+			if (tables1[i].equals("TS_KCGL_UPDATE_ZWDYB")) {
+			    String zwh = dataBean.getStr("ZW_ZWH_XT");
+			    String IPStr = dataBean.getStr("ZW_IP");
+			    int num_zwh = ServDao.count("TS_KCGL_ZWDYB", new ParamBean()
+				    .setWhere("and kc_id = '" + kcId + "' and ZW_ZWH_XT ='" + zwh + "'"));
+			    int num_ip = ServDao.count("TS_KCGL_ZWDYB",
+				    new ParamBean().setWhere("and kc_id = '" + kcId + "' and ZW_IP ='" + IPStr + "'"));
+			    if (num_zwh > 0 || num_ip > 0) {
+				continue;
+			    }
+			}
+			ServDao.save(tables2[i], dataBean);
+		    }
 		} else if(action.equals("update")){
-		    String childId = dataBean.getStr("ROOT_ID");
-		    dataBean.remove(actionCode);
-		    dataBean.remove("UPDATE_ID");
-		    dataBean.set("KC_ID", kcId);
-		    dataBean.setId(dataBean.getStr("ROOT_ID"));
-		    dataBean.remove("ROOT_ID");
+		    boolean sflag = true;
+		    //IP段校验
+		    if(tables1[i].equals("TS_KCGL_UPDATE_IPSCOPE")){
+			String childId = dataBean.getStr("ROOT_ID");
+			List<Bean> ipScopeList = ServDao.finds("TS_KCGL_IPSCOPE", "and kc_id = '" + kcId + "' and IPS_ID != '"+childId+"'");
+			ipScopeList.add(dataBean);
+			List<Bean> zwList = ServDao.finds("TS_KCGL_ZWDYB", "and kc_id = '" + kcId + "'");
+			for (Bean bean : zwList) {
+			    String IPStr = bean.getStr("ZW_IP");
+			    int c0 = Integer.parseInt(IPStr.split(".")[0]);
+			    int c1 = Integer.parseInt(IPStr.split(".")[1]);
+			    int c2 = Integer.parseInt(IPStr.split(".")[2]);
+			    int c3 = Integer.parseInt(IPStr.split(".")[3]);
+			    boolean tmpFlag = false;
+			    for (Bean bean2 : ipScopeList) {
+				String tmpScope = bean2.getStr("IPS_SCOPE");
+				String a1 = tmpScope.split("-")[0];
+				String a2 = tmpScope.split("-")[1];
+				int b1_0 = Integer.parseInt(a1.split(".")[0]);
+				int b1_1 = Integer.parseInt(a1.split(".")[1]);
+				int b1_2 = Integer.parseInt(a1.split(".")[2]);
+				int b1_3 = Integer.parseInt(a1.split(".")[3]);
+				int b2_3 = Integer.parseInt(a2.split(".")[3]);
+
+				if (b1_0 == c0 && b1_1 == c1 && b1_2 == c2) {
+				    if (c3 >= b1_3 && c3 <= b2_3) {
+					tmpFlag = true;
+					break;
+				    }
+				}
+			    }
+			    if(!tmpFlag){
+				sflag = false;
+			    }
+			}
+			
+		    }
+		    //座位号校验
 		    if(tables1[i].equals("TS_KCGL_UPDATE_ZWDYB")){
-			String zwh = dataBean.getStr("ZW_ZWH_XT");
+			List<Bean> ipScopeList = ServDao.finds("TS_KCGL_IPSCOPE", "and kc_id = '" + kcId + "'");
 			String IPStr = dataBean.getStr("ZW_IP");
-			int num_zwh = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_ZWH_XT ='"+zwh+"' and ZW_ID !='"+childId+"'"));
-			int num_ip = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_IP ='"+IPStr+"' and ZW_ID !='"+childId+"'"));
-			if(num_zwh > 0 || num_ip > 0){
-			    continue;
+			int c0 = Integer.parseInt(IPStr.split(".")[0]);
+			int c1 = Integer.parseInt(IPStr.split(".")[1]);
+			int c2 = Integer.parseInt(IPStr.split(".")[2]);
+			int c3 = Integer.parseInt(IPStr.split(".")[3]);
+			//如果 IPStr 超出IP段范围 则 sflag = false
+			boolean tmpFlag = false;
+			for (Bean bean : ipScopeList) {
+			    String tmpScope = bean.getStr("IPS_SCOPE");
+			    String a1 = tmpScope.split("-")[0];
+			    String a2 = tmpScope.split("-")[1];
+			    int b1_0 = Integer.parseInt(a1.split(".")[0]);
+			    int b1_1 = Integer.parseInt(a1.split(".")[1]);
+			    int b1_2 = Integer.parseInt(a1.split(".")[2]);
+			    int b1_3 = Integer.parseInt(a1.split(".")[3]);
+			    int b2_3 = Integer.parseInt(a2.split(".")[3]);
+			    
+			    if(b1_0 == c0 && b1_1 == c1 && b1_2 == c2){
+				if(c3 >= b1_3 && c3 <= b2_3){
+				    tmpFlag = true;
+				    break;
+				}
+			    }
+			}
+			if(!tmpFlag){
+			    sflag = false;
+			} 
+		    }
+		    if(sflag){
+			String childId = dataBean.getStr("ROOT_ID");
+			    dataBean.remove(actionCode);
+			    dataBean.remove("UPDATE_ID");
+			    dataBean.set("KC_ID", kcId);
+			    dataBean.setId(dataBean.getStr("ROOT_ID"));
+			    dataBean.remove("ROOT_ID");
+			    if(tables1[i].equals("TS_KCGL_UPDATE_ZWDYB")){
+				String zwh = dataBean.getStr("ZW_ZWH_XT");
+				String IPStr = dataBean.getStr("ZW_IP");
+				int num_zwh = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_ZWH_XT ='"+zwh+"' and ZW_ID !='"+childId+"'"));
+				int num_ip = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"' and ZW_IP ='"+IPStr+"' and ZW_ID !='"+childId+"'"));
+				if(num_zwh > 0 || num_ip > 0){
+				    continue;
+				}
+			    }
+			    ServDao.save(tables2[i], dataBean);
+		    }
+		    
+		}else if (action.equals("delete")) {
+		    boolean runFlag = true;
+		    //IP段校验
+		    if(tables1[i].equals("TS_KCGL_UPDATE_IPSCOPE")){
+			Bean scopeBean = ServDao.find("TS_KCGL_UPDATE_IPSCOPE", dataBean.getStr("ROOT_ID"));
+			String tmpScope = scopeBean.getStr("IPS_SCOPE");
+			String a1 = tmpScope.split("-")[0];
+			String a2 = tmpScope.split("-")[1];
+			List<Bean> zwList = ServDao.finds("TS_KCGL_ZWDYB", "and kc_id = '" + kcId + "'");
+			for (Bean bean : zwList) {
+			    String tmpZwIp = bean.getStr("ZW_IP");
+			    int b1_0 = Integer.parseInt(a1.split(".")[0]);
+			    int b1_1 = Integer.parseInt(a1.split(".")[1]);
+			    int b1_2 = Integer.parseInt(a1.split(".")[2]);
+			    int b1_3 = Integer.parseInt(a1.split(".")[3]);
+			    int b2_3 = Integer.parseInt(a2.split(".")[3]);
+			    
+			    int c0 = Integer.parseInt(tmpZwIp.split(".")[0]);
+			    int c1 = Integer.parseInt(tmpZwIp.split(".")[1]);
+			    int c2 = Integer.parseInt(tmpZwIp.split(".")[2]);
+			    int c3 = Integer.parseInt(tmpZwIp.split(".")[3]);
+			    if(b1_0 == c0 && b1_1 == c1 && b1_2 == c2){
+				if(c3 >= b1_3 && c3 <= b2_3){
+				    runFlag = false;
+				    break;
+				}
+			    }
 			}
 		    }
-		    ServDao.save(tables2[i], dataBean);
-		}else if (action.equals("delete")) {
-		    ServDao.delete(tables2[i], dataBean.getStr("ROOT_ID"));
+		    if(runFlag){
+			ServDao.delete(tables2[i], dataBean.getStr("ROOT_ID"));
+		    }
 		}
 	    }
 	}

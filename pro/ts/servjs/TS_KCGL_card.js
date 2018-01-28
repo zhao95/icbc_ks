@@ -53,6 +53,7 @@ applyBtn.click(function() {
 });
 
 _viewer.beforeSave = function() {
+	var kcCode = _viewer.getItem("KC_CODE").getValue();
 	if (state == 0) {
 		_viewer.getItem("KC_STATE").setValue(1);
 	}
@@ -64,6 +65,37 @@ _viewer.beforeSave = function() {
 	if($("#TS_KCGL-KC_JKIP_div .rhGrid-tbody").find("td").length == 1){
 		$("#TS_KCGL-KC_JKIP_div").find(".ui-dataservice-container,.fl,.wp").addClass("blankError").addClass("errorbox");
 		return false;
+	}
+	
+	//校验最大设备数
+	if(_viewer.opts.act == "cardModify"){
+		var newKcMax = _viewer.getChangeData().KC_MAX;
+		var kcCode_change = _viewer.getChangeData().KC_CODE;
+		if(kcCode_change != undefined){
+			var num = FireFly.doAct(_viewer.servId,"count",{"_WHERE":"and kc_code = '"+kcCode+"'"})._DATA_;
+			if(num > 0){
+				var msg = "考场编号已占用！";
+				Tip.showError(msg, true);
+				return false;
+			}
+		}
+		
+		var kcId = _viewer.getItem("KC_ID").getValue();
+		if(newKcMax != undefined){
+			var num = FireFly.doAct("TS_KCGL_ZWDYB","count",{"_WHERE_":"and kc_id = '"+kcId+"'"})._DATA_;
+			if(newKcMax < num){
+				var msg = "考场最大设备数小于现有已录入座位数！";
+				Tip.showError(msg, true);
+				return false;
+			}
+		}
+	}else{
+		var num = FireFly.doAct(_viewer.servId,"count",{"_WHERE":"and kc_code = '"+kcCode+"'"})._DATA_;
+		if(num > 0){
+			var msg = "考场编号已占用！";
+			Tip.showError(msg, true);
+			return false;
+		}
 	}
 };
 

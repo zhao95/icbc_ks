@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"and serv_id = 'TS_KCGL'",
-"S_MTIME":"2018-01-25 16:35:20:413",
+"S_MTIME":"2018-01-28 13:48:00:632",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "SERV_LINK_FLAG":"1",
@@ -2002,7 +2002,7 @@
 "_ROWNUM_":"0",
 "SERV_DICT_CACHE":"",
 "EN_JSON":"",
-"SERV_PAGE_COUNT":"100",
+"SERV_PAGE_COUNT":"50",
 "SERV_CARD_LOAD":"1",
 "SERV_KEYS":"KC_ID",
 "SERV_CLASS":"com.rh.ts.kcgl.KcglPvlgServ",

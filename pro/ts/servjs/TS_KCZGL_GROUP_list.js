@@ -1,6 +1,10 @@
 var _viewer = this;
 //取消行点击事件
 $(".rhGrid").find("tr").unbind("dblclick");
+//如果父页面是只读的，则隐藏编辑行按钮
+if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly){
+	$("#TS_KCZGL_GROUP-tmplBtn").hide();
+}
 //列表需建一个code为BUTTONS的自定义字段
 //每一行添加编辑和删除
 $("#TS_KCZGL_GROUP .rhGrid").find("tr").each(function(index, item) {

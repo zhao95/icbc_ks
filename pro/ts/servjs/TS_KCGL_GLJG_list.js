@@ -61,6 +61,7 @@ if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly ||
 	$("a#TS_KCGL_GLJG_edit").hide();
 	_viewer.getBtn("far").hide();
 	_viewer.getBtn("near").hide();
+	$("#TS_KCGL_GLJG-tmplBtn").hide();
 }
 
 //1远2近
@@ -142,6 +143,6 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 });
 
 _viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
-	window.open(FireFly.getContextPath() + '/ts/imp_template/考场管理-关联机构倒入模版.xls');
+	window.open(FireFly.getContextPath() + '/ts/imp_template/考场管理-关联机构导入模版.xls');
 });
 

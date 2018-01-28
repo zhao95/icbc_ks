@@ -2,12 +2,45 @@ var _viewer = this;
 
 $("#TS_KCGL_IPSCOPE  .rhGrid").find("th[icode='del']").html("操作");
 $("#TS_KCGL_IPSCOPE  .rhGrid").find("tr").unbind("dblclick");
-//删除单行数据
+
+//如果父页面是只读的，则隐藏编辑行按钮
+if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly || _viewer.getParHandler().servId == "TS_KCGL_SH"){
+	$("a#TS_KCGL_IPSCOPE_edit").hide();
+	$("#TS_KCGL_IPSCOPE-tmplBtn").hide();
+}
 
 /*
 * 删除前方法执行
 */
 rh.vi.listView.prototype.beforeDelete = function(pkArray) {
+	var kcId = _viewer.getParHandler().getPKCode();
+	var pkCodes = _viewer.grid.getSelectPKCodes();//获取主键值
+	var pkCodes_str = pkCodes.join("','");
+	var scope = FireFly.doAct("TS_KCGL_IPSCOPE","finds",{"_SELECT_":"IPS_SCOPE","_WHERE_":"and kc_id = '"+kcId+"' and IPS_ID not in ('"+pkCodes_str+"')"})._DATA_;
+	var zw = FireFly.doAct("TS_KCGL_ZWDYB","finds",{"_SELECT_":"ZW_IP","_WHERE_":"and kc_id = '"+kcId+"'"})._DATA_;
+	var flag = true;
+	for(var j=0;j<zw.length;j++){
+		var tmpIp = zw[j].ZW_IP;
+		var tmpFlag = true;
+		for(var i=0;i<scope.length;i++){
+			var tmpScope = scope[i].IPS_SCOPE;
+			if(checkScope(tmpScope,tmpIp)){
+				tmpFlag = false;
+				break;
+			}
+		}
+		if(flag){
+			flag = false;
+			break;
+		}
+	}
+	
+	if(!flag){
+		var msg = "考场IP段范围删除后存在超出存在IP范围的座位IP！";
+		Tip.showError(msg, true);
+		return false;
+	}
+	
 	showVerify(pkArray,_viewer);
 };
 
@@ -51,11 +84,6 @@ function openMyCard(dataId,readOnly,showTab){
     }
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
-}
-
-//如果父页面是只读的，则隐藏编辑行按钮
-if(_viewer.getParHandler().opts.readOnly || _viewer.getParHandler()._readOnly || _viewer.getParHandler().servId == "TS_KCGL_SH"){
-	$("a#TS_KCGL_IPSCOPE_edit").hide();
 }
 
 /**
@@ -108,6 +136,36 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 });
 
 _viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
-	window.open(FireFly.getContextPath() + '/ts/imp_template/考场管理-考场IP段倒入模版.xls');
+	window.open(FireFly.getContextPath() + '/ts/imp_template/考场管理-考场IP段导入模版.xls');
 });
 
+/**
+ * 校验ip是不是在scope范围内
+ * @param scope
+ * @param ip
+ * @returns {Boolean}
+ */
+function checkScope(scope,ip){
+	var sz = scope.split("-");
+	var a = sz[0];
+	var b = sz[1];
+	var r1 = a.split(".")[0] != b.split(".")[0];
+	var r2 = a.split(".")[1] != b.split(".")[1];
+	var r3 = a.split(".")[2] != b.split(".")[2];
+	var sa4 = a.split(".")[3];
+	var sb4 = b.split(".")[3];
+	
+	var ip_1 = ip.split(".")[0];
+	var ip_2 = ip.split(".")[1];
+	var ip_3 = ip.split(".")[2];
+	var ip_4 = ip.split(".")[3];
+	
+	if(parseInt(r1) != parseInt(ip_1) || parseInt(r2) != parseInt(ip_2) || parseInt(r3) != parseInt(ip_3)){
+		return false;
+	}
+	
+	if(ip_4 >= sa4 && ip_4 < sb4){
+		return true;
+	}
+	return false;
+}
