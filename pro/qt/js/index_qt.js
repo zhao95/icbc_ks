@@ -179,6 +179,13 @@ function showMenu() {
                 }
             }
 
+            if (data.menuList[i].MENU_NAME === "我的借考") {
+                var userCanJkList = FireFly.doAct('TS_JKLB_JK', 'getUserCanLeaveXmList', data);
+                if (userCanJkList._DATA_.length !== 0) {
+                    $menuItem.find('a').append('<i style="margin-left: 5px;" class="fa fa-circle text-yellow"></i>');
+                }
+            }
+
         }
     }
 }

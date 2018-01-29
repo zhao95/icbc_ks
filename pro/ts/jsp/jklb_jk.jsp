@@ -30,7 +30,7 @@
     <link rel="stylesheet"
           href="<%=CONTEXT_PATH%>/qt/ionicons/css/ionicons.min.css">
 
-    <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-1.12.4.min.js"></script>
     <!-- Bootstrap 3.3.6 -->
     <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
     <!--工具方法-->
@@ -208,6 +208,24 @@
                 </label>
                 <div class="col-sm-4">
                     <input type="text" class="form-control" id="jkcity">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="jkerji" class="col-sm-2 control-label">
+                    借考二级分行
+                    <%--<span style="color: red;font-weight: bold">*</span>--%>
+                </label>
+                <div class="col-sm-4">
+                    <select id="jkerji" class="form-control"></select>
+                </div>
+                <label class="col-sm-2 control-label">
+                    <a id="checkHasKc" class="rh-icon rhGrid-btnBar-a" title="">
+                        <span class="rh-icon-inner" style="padding:0 7px 2px;float: right;">是否有考场</span>
+                    </a>
+                </label>
+                <div class="col-sm-4">
+                    <div id="hasKcTip" style="padding: 8px;"></div>
                 </div>
             </div>
 
@@ -509,6 +527,11 @@
             }
         });
 
+        //checkHasKc
+        $('#checkHasKc').unbind('click').bind('click', function () {
+            checkHasKc();
+        });
+
     }
 
     var xmId = '<%=xmId%>';
@@ -575,6 +598,7 @@
 
 
         var $jkyiji = $('#jkyiji');
+        $jkyiji.html('');
         $jkyiji.append('<option value=""></option>');
 
         for (var i = 0; i < arr.length; i++) {
@@ -583,8 +607,21 @@
             $jkyiji.append('<option value="' + itemId + '">' + itemName + '</option>');
         }
         //绑定change事件
-        //var d= document.getElementById("jkyiji");
-        //d.addEventListener("change",citySelect(d),false);
+        $jkyiji.unbind('change').bind('change', function () {
+            var yijiDeptCode = $jkyiji.find("option:selected").val();
+            var dictChildList = FireFly.getDict("TS_ORG_DEPT_ALL", yijiDeptCode);
+            if (dictChildList[0]) {
+                var $jkerji = $('#jkerji');
+                $jkerji.html('');
+                $jkerji.append('<option value=""></option>');
+                for (var i = 0; i < dictChildList[0].CHILD.length; i++) {
+                    var child = dictChildList[0].CHILD[i];
+                    var itemId = child.ID, itemName = child.NAME;
+                    $jkerji.append('<option value="' + itemId + '">' + itemName + '</option>');
+                }
+            }
+        });
+
     });
 
 
@@ -656,6 +693,7 @@
 //        var imgformid = document.getElementById("imgformid");
         var jktitle = document.getElementById("jktitle").value;
         var jkyiji = document.getElementById("jkyiji").value;
+        var jkerji = document.getElementById("jkerji").value;
         var jkcity = document.getElementById("jkcity").value;
         var bumen = document.getElementById("bumen").value;
         var jkreason = document.getElementById("jkreason").value;
@@ -692,6 +730,7 @@
     function saveData(fileId) {
         var jktitle = document.getElementById("jktitle").value;
         var jkyiji = document.getElementById("jkyiji").value;
+        var jkerji = document.getElementById("jkerji").value;
         var jkcity = document.getElementById("jkcity").value;
         var bumen = document.getElementById("bumen").value;
         var jkreason = document.getElementById("jkreason").value;
@@ -708,6 +747,7 @@
         param["jkimg"] = fileId;
         param["jktitle"] = jktitle;
         param["jkyiji"] = jkyiji;
+        param["jkerji"] = jkerji;
         param["jkcity"] = jkcity;
         // param["user_work_num"] = currentUserWorkNum;
         param["user_code"] = System.getUser("USER_CODE");
@@ -736,6 +776,26 @@
             }
 
         });
+    }
+
+    /**
+     * 是否有考场
+     */
+    function checkHasKc() {
+        var jkyiji = document.getElementById("jkyiji").value;
+        var jkerji = document.getElementById("jkerji").value;
+        var param = {};
+        param["jkyiji"] = jkyiji;
+        param["jkerji"] = jkerji;
+        param["XM_ID"] = xmId;
+        var actBean = FireFly.doAct("TS_JKLB_JK", "checkHasKc", param);
+        var $hasKcTip = $('#hasKcTip');
+        if (actBean.flag === "true") {
+            $hasKcTip.html('该机构下有启用的考场');
+        } else {
+            $hasKcTip.html('该机构下目前没有启用的考场');
+        }
+
     }
 </script>
 <script type="text/javascript">

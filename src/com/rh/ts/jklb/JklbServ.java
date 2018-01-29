@@ -157,6 +157,7 @@ public class JklbServ extends CommonServ {
         String userName = paramBean.getStr("user_name");
         String jkTitle = paramBean.getStr("jktitle");
         String jkYiJi = paramBean.getStr("jkyiji");
+        String jkerji = paramBean.getStr("jkerji");
         String jkCity = paramBean.getStr("jkcity");
         String jkUserCode = paramBean.getStr("user_code");
         String jkBumen = paramBean.getStr("bumen");
@@ -173,7 +174,11 @@ public class JklbServ extends CommonServ {
         //借考
         Bean jkbean = new Bean();
         jkbean.set("JK_TITLE", jkTitle);
-        jkbean.set("JK_YJFH", jkYiJi);
+        if (StringUtils.isBlank(jkerji)) {
+            jkbean.set("JK_YJFH", jkYiJi);
+        } else {
+            jkbean.set("JK_YJFH", jkerji);
+        }
         jkbean.set("JK_JKCITY", jkCity);
         jkbean.set("USER_CODE", jkUserCode);
         jkbean.set("JK_REASON", jkReason);
@@ -636,6 +641,39 @@ public class JklbServ extends CommonServ {
         }
         outBean.setData(xmBeanList);
         return outBean;
+    }
+
+    /**
+     * 该机构下是否有启用的考场
+     *
+     * @param paramBean jkyiji jkerji XM_ID
+     * @return outBean flag
+     */
+    public OutBean checkHasKc(ParamBean paramBean) {
+        boolean result = false;
+
+        String jkyiji = paramBean.getStr("jkyiji");
+        String jkerji = paramBean.getStr("jkerji");
+
+        String deptCode = "";
+        if (StringUtils.isBlank(jkerji)) {
+            deptCode = jkyiji;
+        } else {
+            deptCode = jkerji;
+        }
+        String xmId = paramBean.getStr("XM_ID");
+        String sql = "SELECT b.KC_ODEPTCODE FROM `ts_xmgl_kcap_dapcc` a\n" +
+                " left join ts_kcgl b on a.KC_ID =b.KC_ID\n" +
+                " where a.XM_ID =? and b.KC_ODEPTCODE =?";
+        List<Object> values = new ArrayList<Object>();
+        values.add(xmId);
+        values.add(deptCode);
+        List<Bean> list = Transaction.getExecutor().query(sql, values);
+        if (CollectionUtils.isNotEmpty(list)) {
+            result = true;
+        }
+
+        return new OutBean().set("flag", result);
     }
 
     /**

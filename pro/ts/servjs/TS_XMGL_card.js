@@ -276,7 +276,7 @@ if ($impTemplateFile.length <= 0) {
         ['<div id="' + xmglExcelTemplateId + '-impFile" class="inner" style="width:50%;">',
             '   <a class="rh-icon rhGrid-btnBar-a" actcode="impFile" title=""><span class="rh-icon-inner">准考证模板</span><span class="rh-icon-img btn-download"></span></a>',
             '</div>'].join(''));
-    $impTemplateFile.unbind('click').bind('click', function () {
+    $impTemplateFile.find('a').unbind('click').bind('click', function () {
         window.open(FireFly.getContextPath() + '/ts/imp_template/准考证模板.xls');
     });
     $xmglExcelTemplate.after($impTemplateFile);
