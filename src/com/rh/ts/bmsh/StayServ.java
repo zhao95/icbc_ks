@@ -1103,6 +1103,19 @@ public class StayServ extends CommonServ {
 			pxdatalist1 = ServDao.finds("TS_BMSH_PX", where1);
 		}
 		// 查询出所有的 待审核记录
+		for (Bean pxbean : pxdatalist1) {
+			String aa = pxbean.getStr("PX_NAME");
+			String namecol = pxbean.getStr("PX_COLUMN");
+			String pxcol = namecol;
+			Bean colBean = new Bean();
+
+			colBean.set("SAFE_HTML", "");
+			colBean.set("ITEM_LIST_FLAG", "1");
+			colBean.set("ITEM_CODE", namecol);
+			colBean.set("EN_JSON", "");
+			colBean.set("ITEM_NAME", aa);
+			cols.put(pxcol, colBean);
+		}
 		OutBean outBean = query(paramBean);
 		for (Bean bean : dataList) {
 			String work_num = bean.getStr("BM_CODE");
@@ -1113,14 +1126,6 @@ public class StayServ extends CommonServ {
 				String aa = pxbean.getStr("PX_NAME");
 				String namecol = pxbean.getStr("PX_COLUMN");
 				String pxcol = namecol;
-				Bean colBean = new Bean();
-
-				colBean.set("SAFE_HTML", "");
-				colBean.set("ITEM_LIST_FLAG", "1");
-				colBean.set("ITEM_CODE", namecol);
-				colBean.set("EN_JSON", "");
-				colBean.set("ITEM_NAME", aa);
-				cols.put(pxcol, colBean);
 
 				// 字段
 				// 如果 有值 赋值

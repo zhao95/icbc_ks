@@ -61,6 +61,12 @@ if (jQuery('#' + IMPORT_FILE_ID).length === 0) {
     jQuery('<span class="rh-icon-img btn-imp"></span>').appendTo($("#" + file.time + "-upload"));
     file.initUpload();
     file.afterQueueComplete = function (fileData) {// 这个上传队列完成之后
+    	 var filesize = fileData[propertyName].FILE_SIZE;
+   	  if(filesize>1024*1024*20){
+   		  alert("文件超过20M");
+   		  file.clear();
+   		  return false;
+   	  }
         console.log("这个上传队列完成之后" + fileData);
         for (var propertyName in fileData) {
             var fileId = fileData[propertyName].FILE_ID;

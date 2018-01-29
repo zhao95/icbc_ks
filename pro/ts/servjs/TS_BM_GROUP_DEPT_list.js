@@ -145,7 +145,14 @@ if ($importUser.length === 0) {
   file.afterQueueComplete = function (fileData) {// 这个上传队列完成之后
       console.log("这个上传队列完成之后" + fileData);
       for (var propertyName in fileData) {
+    	  var filesize = fileData[propertyName].FILE_SIZE;
+    	  if(filesize>1024*1024*20){
+    		  alert("文件超过20M");
+    		  file.clear();
+    		  return false;
+    	  }
           var fileId = fileData[propertyName].FILE_ID;
+          /*alert(fileData.fileId);*/
           if (fileId) {
               var data = {};
               // data.XM_SZ_ID = xmSzId;

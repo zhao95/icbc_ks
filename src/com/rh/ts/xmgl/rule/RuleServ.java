@@ -302,6 +302,8 @@ public class RuleServ extends CommonServ {
 				}else{
 					passList.add(data);
 				}
+				Bean resBean = validkxl(parambean);
+				
 				} else {
 					Bean data = new Bean();
 					
@@ -939,5 +941,36 @@ public class RuleServ extends CommonServ {
 			outBean.set("GZ_NAME", "证书规则");
 		}
 		return outBean;
+	}
+	
+	public OutBean validkxl (Bean paramBean){
+		String xl = paramBean.getStr("BM_XL");
+		String BM_CODE = paramBean.getStr("BM_CODE");//考生编码
+		//判断报名序列 和本人序列是否相同
+		String str = paramBean.getStr("QZ_ID");//群组id
+		List<Bean> gzlist = ServDao.finds("TS_XMGL_BMSH_SHGZ", " AND KSQZ_ID = '"+str+"' AND GZK_ID='Y09'");
+		List<Bean> finds = new ArrayList<Bean>();//跨序列规则
+		if(gzlist!=null&&gzlist.size()!=0){
+			 finds = ServDao.finds("ts_bmsh_rule_kxlgz", "AND GZ_ID ='"+gzlist.get(0).getId()+"'");
+		}
+		if(finds.size()==0){
+			return new OutBean();
+		}
+		Bean zwbean = ServDao.find("SY_HRM_ZDSTAFFPOSITION", BM_CODE);  //本序列
+		
+		String user_xl = zwbean.getStr("STATION_NO_CODE");
+		if("A000000000000000020".equals(user_xl)){//才会资金序列 报名  考试无  资金  默认 匹配 财会
+			user_xl="A000000000000000019";
+		}
+		if(user_xl.equals(xl)){
+			return new OutBean();//同序列自动验证通过
+		}
+		for (Bean bean : finds) {
+			bean.getStr("POSTION_TYPE");//类别
+			bean.getStr("POSTION_SEQUENCE");//序列
+			bean.getStr("POSTION_NAME");//职务
+			bean.getStr("POSTION_TYPE");
+		}
+		return new OutBean();
 	}
 }

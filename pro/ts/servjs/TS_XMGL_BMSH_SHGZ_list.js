@@ -23,9 +23,13 @@ $("#TS_XMGL_BMSH_SHGZ .rhGrid").find("tr").each(function(index, item) {
 		}else{
 			gzids+=","+$('td[icode="GZK_ID"]',item).text();
 		}
-		debugger;
 		var dataId = item.id;	
-		if($('td[icode="GZK_ID"]',item).text()=='N01'){
+		if($('td[icode="GZK_ID"]',item).text()=='Y09'){
+			$(item).find("td[icode='BUTTONS']").append(
+					'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="SetBtnxl" rowpk="'+dataId+'"><span class="rh-icon-inner">设置</span><span class="rh-icon-img btn-option"></span></a>'+
+					'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optDeleteBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">删除</span><span class="rh-icon-img btn-delete"></span></a>'
+					);
+		}else if($('td[icode="GZK_ID"]',item).text()=='N01'){
 			//准入测试规则  可以指定准入测试成绩
 			$(item).find("td[icode='BUTTONS']").append(
 					'<a class="rhGrid-td-rowBtnObj rh-icon" operCode="optSetBtn" rowpk="'+dataId+'"><span class="rh-icon-inner">设置</span><span class="rh-icon-img btn-option"></span></a>'+
@@ -72,11 +76,18 @@ function bindCard(){
 		cardView.show(true);
 	});
 	
-	//准入成绩设置
 	jQuery("td [operCode='SetBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
 		//打开查看页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
 		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_XMGL_BM_KSQZ_BMOPT","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,0]};
+		temp[UIConst.PK_KEY]=pkCode;//修改时，必填	    
+		 var cardView = new rh.vi.cardView(temp);
+		cardView.show(true);
+	});
+	jQuery("td [operCode='SetBtnxl']").unbind("click").bind("click", function(){
+		var pkCode = jQuery(this).attr("rowpk");
+		//打开查看页面act：方法（必填），sId：服务（必填），parHandler：当前句柄，widHeiArray:小卡片的宽度高度，xyArray：左上角坐标
+		var temp = {"act":UIConst.ACT_CARD_MODIFY,"sId":"TS_BMSH_KSQZ_RULE_KXLGZ","parHandler":_viewer,"widHeiArray":[width,height],"xyArray":[100,0]};
 		temp[UIConst.PK_KEY]=pkCode;//修改时，必填	    
 		 var cardView = new rh.vi.cardView(temp);
 		cardView.show(true);

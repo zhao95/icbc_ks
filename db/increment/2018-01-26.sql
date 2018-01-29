@@ -190,3 +190,32 @@ INSERT INTO `ts_org_postion` (`POSTION_ID`, `POSTION_TYPE`, `POSTION_SEQUENCE`, 
 INSERT INTO `ts_org_postion` (`POSTION_ID`, `POSTION_TYPE`, `POSTION_SEQUENCE`, `POSTION_NAME`, `POSTION_QUALIFICATION`, `S_USER`, `S_TDEPT`, `S_ODEPT`, `S_MTIME`, `S_FLAG`, `S_DEPT`, `S_CMPY`, `S_ATIME`, `POSTION_TYPE_NAME`, `POSTION_SEQUENCE_ID`, `POSTION_NAME_CODE`, `postion_pid`, `code_path`, `postion_level`, `postion_idvalue`) VALUES ('3zEYM2hOd9eWJStiBTKn', '023002', '投行顾问', '投行顾问助理经理', '1', '278p246BZ2jNaftzl7kooot', 'icbc0001', 'icbc0001', '2018-01-21 14:13:41:769', '1', 'icbc0001', 'icbc', '2017-08-14 10:51:45:611', '专业类', 'A000000000000000016', 'A000000000000000053', '3QhzESZJ7t5OHvlrtIiZ', '3OXeDaoHl1nGU9qo24oz^3QhzESZJ7t5OHvlrtIiZ^3zEYM2hOd9eWJStiBTKn^', '3', '投行顾问助理经理');
 INSERT INTO `ts_org_postion` (`POSTION_ID`, `POSTION_TYPE`, `POSTION_SEQUENCE`, `POSTION_NAME`, `POSTION_QUALIFICATION`, `S_USER`, `S_TDEPT`, `S_ODEPT`, `S_MTIME`, `S_FLAG`, `S_DEPT`, `S_CMPY`, `S_ATIME`, `POSTION_TYPE_NAME`, `POSTION_SEQUENCE_ID`, `POSTION_NAME_CODE`, `postion_pid`, `code_path`, `postion_level`, `postion_idvalue`) VALUES ('3ZOcsGOcx5wUSmwB5P7j', '023002', '营销', '营销专家', '4', '278p246BZ2jNaftzl7kooot', 'icbc0001', 'icbc0001', '2018-01-21 14:13:41:203', '1', 'icbc0001', 'icbc', '2017-08-14 10:46:29:642', '专业类', 'A000000000000000006', 'A000000000000000049', '09Snrqollefp7lUB7JVq', '3OXeDaoHl1nGU9qo24oz^09Snrqollefp7lUB7JVq^3ZOcsGOcx5wUSmwB5P7j^', '3', '营销专家');
 INSERT INTO `ts_org_postion` (`POSTION_ID`, `POSTION_TYPE`, `POSTION_SEQUENCE`, `POSTION_NAME`, `POSTION_QUALIFICATION`, `S_USER`, `S_TDEPT`, `S_ODEPT`, `S_MTIME`, `S_FLAG`, `S_DEPT`, `S_CMPY`, `S_ATIME`, `POSTION_TYPE_NAME`, `POSTION_SEQUENCE_ID`, `POSTION_NAME_CODE`, `postion_pid`, `code_path`, `postion_level`, `postion_idvalue`) VALUES ('3ZQ0Z3RwTx32VCiNlA95', '023002', '综合', '高级综合经理', '3', '278p246BZ2jNaftzl7kooot', 'icbc0001', 'icbc0001', '2018-01-21 14:13:42:534', '1', 'icbc0001', 'icbc', '2017-08-14 10:47:14:388', '专业类', 'A000000000000000018', 'A000000000000000046', '36dgaurWhx4T9jCQnRDy', '3OXeDaoHl1nGU9qo24oz^36dgaurWhx4T9jCQnRDy^3ZQ0Z3RwTx32VCiNlA95^', '3', '高级综合经理');
+
+
+
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for ts_org_postion
+-- ----------------------------
+DROP TABLE IF EXISTS `ts_bmsh_rule_kxlgz`;
+CREATE TABLE `ts_bmsh_rule_kxlgz` (
+  `POSTION_ID` varchar(40) NOT NULL COMMENT 'id（UUID）',
+  `POSTION_TYPE` varchar(400) DEFAULT NULL COMMENT '岗位类code',
+  `POSTION_SEQUENCE` varchar(400) DEFAULT NULL COMMENT '岗位序列',
+  `POSTION_NAME` varchar(400) NOT NULL COMMENT '岗位名称',
+  `POSTION_QUALIFICATION` varchar(40) DEFAULT NULL COMMENT '岗位资格',
+	 `GZ_ID` VARCHAR(40) not  NULL COMMENT '规则ID',
+  `S_USER` varchar(40) DEFAULT NULL COMMENT '添加者',
+  `S_TDEPT` varchar(40) DEFAULT NULL COMMENT '当前有效部门编码',
+  `S_ODEPT` varchar(40) DEFAULT NULL COMMENT '当前机构编码',
+  `S_MTIME` varchar(40) DEFAULT NULL COMMENT '更新时间',
+  `S_FLAG` decimal(4,0) DEFAULT NULL COMMENT '启用标志，1：是；2：否',
+  `S_DEPT` varchar(40) DEFAULT NULL COMMENT '当前部门编码',
+  `S_CMPY` varchar(40) DEFAULT NULL COMMENT '当前公司编码',
+  `S_ATIME` varchar(40) DEFAULT NULL COMMENT '添加时间',
+  PRIMARY KEY (`POSTION_ID`),
+  UNIQUE KEY `SYS_C009914` (`POSTION_ID`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='跨序列表';
+UPDATE `icbc_ks`.`ts_xmgl_bmsh_shgzk` SET `GZ_ID`='Y09', `GZ_TYPE`='2', `GZ_NAME`='跨序列报考不要求持证', `GZ_INFO`=NULL, `GZ_SORT`='50', `S_USER`='278p246BZ2jNaftzl7kooot', `S_TDEPT`='icbc0001', `S_ODEPT`='icbc0001', `S_MTIME`='2017-09-19 19:47:47:458', `S_FLAG`='1', `S_DEPT`='icbc0001', `S_CMPY`='icbc', `S_ATIME`='2017-07-28 16:30:40:330' WHERE (`GZ_ID`='Y09');
