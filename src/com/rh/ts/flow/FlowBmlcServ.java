@@ -16,9 +16,11 @@ import com.rh.ts.util.RoleUtil;
 import com.rh.ts.util.TsConstant;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,14 +88,23 @@ public class FlowBmlcServ extends CommonServ {
             
             String code = userBean.getStr("USER_CODE"), name = userBean.getStr("USER_NAME"),
                     userDeptCode = userBean.getStr("DEPT_CODE"),codePath=userBean.getStr("CODE_PATH");
-             for(int k=0;k<len;k++){
-            	 String b=rePvlg[k];
-            	 if(codePath.indexOf(rePvlg[k])>-1) {
-            if (codeList.contains(code)) {
+            String[] codePathArray=codePath.split("\\^");
+            Set<String> sameElementSet = getIds(codePathArray,rePvlg);  
+            
+            //for(String i : sameElementSet) {  
+              
+           // System.out.println(i);  
+              
+            //}   
+             //for(int k=0;k<len;k++){!
+            	// String b=rePvlg[k];
+            if(!sameElementSet.isEmpty()) {
+            	// if(codePath.indexOf(b)>-1) {
+            //if (codeList.contains(code)) {
                 // 已包含 continue ：避免重复添加数据
-                rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
-                continue;
-            }
+                //rowBean.set(ImpUtils.ERROR_NAME, "重复数据：" + code);
+               // continue;
+            //}
 
             Bean bean = new Bean();
             bean.set("NODE_ID", nodeId);
@@ -138,7 +149,7 @@ public class FlowBmlcServ extends CommonServ {
             	 }else {
                      rowBean.set(ImpUtils.ERROR_NAME, "越权限：" + code);
                  }
-             }
+            // }
             	
             
         }
@@ -203,8 +214,9 @@ public class FlowBmlcServ extends CommonServ {
     	//String  userCode=paramBean.getStr("USER_CODE");//登陆人
     	String  userCode=code;//登陆人
     	//Bean bean=RoleMgr.getRoleOptsByUser(userCode,"TS_WFS_NODEAPPLY_ADMINER");"TS_WFS_BMSHLC"
-    	if(!"admin".equals(userCode)){
+    	//if(!"admin".equals(userCode)){
     		Bean bean=RoleUtil.getPvlgRole( userCode,"TS_WFS_BMSHLC");
+    		//if(!"admin".equals(userCode)){	
     		Bean extParams = bean.getBean("TS_WFS_BMSHLC_PVLG");
     		//if (!extParams.isEmpty() && extParams != null) {
     			JSONObject jsonObject = new JSONObject(extParams);
@@ -238,9 +250,31 @@ public class FlowBmlcServ extends CommonServ {
 					beanResult.set("RESULT", result);
 					
 				}
-    	}
+    	//}
     	return beanResult;
     	
     }
+    
+    
+
+    public  Set<String> getIds(String[] a, String[] b){  
+        
+        Set<String> same = new HashSet<String>();  //用来存放两个数组中相同的元素  
+        Set<String> temp = new HashSet<String>();  //用来存放数组a中的元素  
+          
+        for (int i = 0; i < a.length; i++) {  
+            temp.add(a[i]);   //把数组a中的元素放到Set中，可以去除重复的元素  
+        }  
+          
+        for (int j = 0; j < b.length; j++) {  
+          //把数组b中的元素添加到temp中  
+          //如果temp中已存在相同的元素，则temp.add（b[j]）返回false  
+          if(!temp.add(b[j])) {
+        	  same.add(b[j]);
+          }
+                
+      }  
+      return same;   
+    }  
 
 }
