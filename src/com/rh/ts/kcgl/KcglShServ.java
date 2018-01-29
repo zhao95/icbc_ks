@@ -37,20 +37,30 @@ public class KcglShServ extends CommonServ {
 	    
 	    StringBuilder sb1 = new StringBuilder(); 
 	    if(roleDCode != ""){
-		String roleDCodeStr = roleDCode.replace(",", "','");
-		sb1.append("KC_ODEPTCODE in('"+roleDCodeStr+"')");
+//		String roleDCodeStr = roleDCode.replace(",", "','");
+//		sb1.append("KC_ODEPTCODE in('"+roleDCodeStr+"')");
+		//ODEPT_PATH
+		String[] roleArr = roleDCode.split(",");
+		for (int i = 0; i < roleArr.length; i++) {
+		    sb1.append("locate('"+roleArr[i]+"',ODEPT_PATH)");
+		    if(i < roleArr.length-1){
+			 sb1.append(" or ");
+		    }
+		}
 	    }
 	    
 	    StringBuilder sb2 = new StringBuilder();
 	    if(roleOrgLv.indexOf("2") != -1){
-		if(roleOrgLv.length() > 2){
+//		if(roleOrgLv.length() > 2){
 		    sb2.append(" (odept_level in (1," + roleOrgLv + ") or KC_STATE2 = 1)");
-		}else{
-		    sb2.append(" (odept_level < 3 or KC_STATE2 = 1)");
-		}
-	    }else if(!roleOrgLv.isEmpty()){
-		sb2.append("odept_level in (1," + roleOrgLv + ")");
+//		}
+//		else{
+//		    sb2.append(" (odept_level < 3 or KC_STATE2 = 1)");
+//		}
 	    }
+//	    else if(!roleOrgLv.isEmpty()){
+//		sb2.append("odept_level in (1," + roleOrgLv + ")");
+//	    }
 	    
 	    if (sb1.length() > 0 && sb2.length() > 0) {
 		paramBean.setQueryExtWhere(" and ("+sb1.toString()+") or ("+sb2.toString()+")");

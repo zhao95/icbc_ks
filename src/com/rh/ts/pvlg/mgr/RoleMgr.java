@@ -117,15 +117,19 @@ public class RoleMgr {
 
 		if (roleBean == null || roleBean.isEmpty()) {
 
-			roleBean = new RoleBean(ServDao.find(TsConstant.SERV_ROLE, roleId));
+		    	Bean roleTmpBean = ServDao.find(TsConstant.SERV_ROLE, roleId);
+		    	if(roleTmpBean == null){
+		    	    roleTmpBean = new Bean();
+		    	}
+			roleBean = new RoleBean(roleTmpBean);
 
-			if (!roleBean.isEmpty()) {
+			if (roleBean != null && !roleBean.isEmpty()) {
 
 				updateRoleCache(roleId, TsConstant.SERV_ROLE, roleBean);
 			}
 		}
 
-		if (!roleBean.isEmpty()) {
+		if (roleBean != null &&!roleBean.isEmpty()) {
 			// 缓存获取角色功能
 			List<Bean> list = getRoleOpts(roleId);
 
