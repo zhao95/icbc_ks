@@ -87,7 +87,7 @@ public class FlowServ extends CommonServ {
                 bean.remove(primaryCode);
                 bean = delSysCol(bean);
                 Bean newBean = ServDao.save(linkServ, bean);
-                if (newBean.getId() != "") {
+                if (!newBean.getId().isEmpty()) {
                     copyLinkData(linkServ, pkCode, newBean.getId());
                 }
             }

@@ -35,39 +35,39 @@ public class KcglShServ extends CommonServ {
 	    String roleOrgLv = pvlgBean.getBean("upd").getStr("ROLE_ORG_LV");
 	    String roleDCode = pvlgBean.getBean("upd").getStr("ROLE_DCODE");
 	    
+	    String myParh = userBean.getODeptCodePath();
+	    String myOdept = userBean.getODeptCode();
+	    
+	    Bean levelBean = ServDao.find("TS_ODEPT_LEVEL_V", new Bean().set("ODEPT_CODE", myOdept));
+	    int myLevel = levelBean.getInt("DEPT_LEVEL");
+	    
 	    StringBuilder sb1 = new StringBuilder(); 
-	    if(roleDCode != ""){
-//		String roleDCodeStr = roleDCode.replace(",", "','");
-//		sb1.append("KC_ODEPTCODE in('"+roleDCodeStr+"')");
-		//ODEPT_PATH
-		String[] roleArr = roleDCode.split(",");
-		for (int i = 0; i < roleArr.length; i++) {
-		    sb1.append("locate('"+roleArr[i]+"',ODEPT_PATH)");
-		    if(i < roleArr.length-1){
-			 sb1.append(" or ");
-		    }
+	    if(!roleOrgLv.isEmpty()){
+		roleOrgLv = roleOrgLv.substring(0, 1);
+		int lev1 = Integer.parseInt(roleOrgLv);
+		if(lev1 <= myLevel){
+		    String levelOdept = myParh.split("\\^")[lev1];
+		    roleDCode = roleDCode + "," + levelOdept;
 		}
 	    }
 	    
-	    StringBuilder sb2 = new StringBuilder();
-	    if(roleOrgLv.indexOf("2") != -1){
-//		if(roleOrgLv.length() > 2){
-		    sb2.append(" (odept_level in (1," + roleOrgLv + ") or KC_STATE2 = 1)");
-//		}
-//		else{
-//		    sb2.append(" (odept_level < 3 or KC_STATE2 = 1)");
-//		}
+	    String[] roleArr = roleDCode.split(",");
+	    for (int i = 0; i < roleArr.length; i++) {
+		if (roleArr[i].isEmpty()) {
+		    continue;
+		}
+		sb1.append("locate('" + roleArr[i] + "',ODEPT_PATH)");
+		if (i < roleArr.length - 1) {
+		    sb1.append(" or ");
+		}
 	    }
-//	    else if(!roleOrgLv.isEmpty()){
-//		sb2.append("odept_level in (1," + roleOrgLv + ")");
-//	    }
 	    
-	    if (sb1.length() > 0 && sb2.length() > 0) {
-		paramBean.setQueryExtWhere(" and ("+sb1.toString()+") or ("+sb2.toString()+")");
-	    }else if(sb1.length() > 0 && sb2.length() == 0){
-		paramBean.setQueryExtWhere(" and "+sb1.toString());
-	    }else if(sb1.length() == 0 && sb2.length() > 0){
-		paramBean.setQueryExtWhere(" and "+sb2.toString());
+	    if(roleDCode.indexOf("0010100000") > -1 || roleDCode.indexOf("0010100500") > -1){
+		sb1.append(" or KC_STATE2 = 1 ");
+	    }
+	    
+	    if(sb1.length() > 0 ){
+		paramBean.setQueryExtWhere(" and ("+sb1.toString()+")");
 	    }else{
 		paramBean.setQueryExtWhere(" and 1=2");
 	    }
