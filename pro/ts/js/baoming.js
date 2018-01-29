@@ -744,7 +744,6 @@ listPage.prototype.bldTable = function (listData) {
 
             }
         }
-
         if (flagstate == '审核进行中') {
             //为table重新appendtr
             //已提交异议
@@ -816,14 +815,21 @@ listPage.prototype.bldTable = function (listData) {
                 $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME"style="color:red;text-align: center">已撤销</td>');
             }
         } else if (flagstate == "审核结束" || flagstate == "无需审核"|| flagstate == "无手动审核,审核结束") {
-            $operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp;&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
-            if (sh_state == 1) {
-                //审核通过 没有异议  没有撤销
-            	 $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:lightseagreen">' + sh_state_str + '</td>');
+            if(pageEntity[i].BM_STATE == 1){
+            	//没有撤销
+            	$operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>&nbsp;&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
             }else{
+            	$operTd.append('<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>&nbsp&nbsp<a style=" id="chexiao">已撤销</a>&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
 
-            	$tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:red">' + sh_state_str + '</td>');
             }
+            	if (sh_state == 1) {
+            		//审核通过 没有异议  没有撤销
+            		$tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:lightseagreen">' + sh_state_str + '</td>');
+            	}else{
+            		
+            		$tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center;color:red">' + sh_state_str + '</td>');
+            	}
+            	
         } else {
             //审核未开始
             $operTd.append(
