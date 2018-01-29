@@ -98,7 +98,7 @@
             <thead id="tem" class="">
             <tr style="backGround-color:WhiteSmoke; height: 30px;font-weight: bold">
                 <th style="width: 6.6%; text-align: center">序号</th>
-                <th style="width: 20%;">考试名称</th>
+                <th style="width: 20%;">项目名称</th>
                 <th style="width: 20%;">组织单位</th>
                 <th style="width: 10%;">考试时间</th>
                 <th style="width: 10%;">状态</th>

@@ -173,7 +173,7 @@
                 </h5>
             </div>
             <div class="modal-body" style="padding: 24px;">
-                是否撤回该请假？
+                是否撤回该借考？
             </div>
             <div class="modal-footer" style="text-align: center;">
                 <button id="" type="button" class="btn btn-success" onclick=""
@@ -299,7 +299,7 @@
     };
     /*根据条件获取数据*/
     ListPage.prototype.getListData = function (num) {
-        //获取已申请的请假数据
+        //获取已申请的借考数据
         var showNum = parseInt(jQuery('#table2').find('.showNumSelect').find("option:selected").val());
         var data = {_SELECT_: '*'};
         data["_PAGE_"] = {"NOWPAGE": num, "SHOWNUM": showNum};
@@ -701,7 +701,7 @@
         document.body.removeChild(myForm);  // 提交后移除创建的form
     }
 </script>
-<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-1.12.4.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
 <!-- FastClick -->

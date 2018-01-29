@@ -202,7 +202,7 @@
 
             <div class="form-group">
                 <label for="jkyiji" class="col-sm-2 control-label">
-                    借考一级分行
+                    借考分行
                 </label>
                 <div class="col-sm-4">
                     <input type="text" class="form-control" id="jkyiji" disabled>
@@ -542,7 +542,7 @@
 
         //借考一级分行
         var jkYjfh = '<%=jk_yjfh%>';
-        $('#jkyiji').val(FireFly.getDictNames(FireFly.getDict('TS_JKLB_JKCITY'), jkYjfh));
+        $('#jkyiji').val(FireFly.getDictNames(FireFly.getDict('TS_ORG_DEPT_ALL'), jkYjfh));
 
     }
     //考试信息
@@ -643,7 +643,7 @@
 </script>
 <script src="<%=CONTEXT_PATH%>/ts/js/qj_jk_apply.js"></script>
 
-<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-1.12.4.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
 <!-- FastClick -->

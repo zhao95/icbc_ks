@@ -220,8 +220,8 @@
                     <select id="jkerji" class="form-control"></select>
                 </div>
                 <label class="col-sm-2 control-label">
-                    <a id="checkHasKc" class="rh-icon rhGrid-btnBar-a" title="">
-                        <span class="rh-icon-inner" style="padding:0 7px 2px;float: right;">是否有考场</span>
+                    <a id="checkHasKc" class="rh-icon rhGrid-btnBar-a" title="" style="float: right;">
+                        <span class="rh-icon-inner" style="padding:0 7px 2px;">是否有考场</span>
                     </a>
                 </label>
                 <div class="col-sm-4">
