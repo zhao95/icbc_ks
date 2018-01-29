@@ -448,9 +448,61 @@ function xminfoshow(){
 	);
 		}*/
 	}
+
+	function showBxlFzgList(showList){
+		bxlglmk=[];
+		jQuery('#belfzhi').html('');
+		var strchecked = bxlchecked.join(",");
+			//已选中的
+			paramstr={};
+			paramstr["checked"]=strchecked;
+			var data = FireFly.doAct("TS_BMLB_BM","getCheckedData",paramstr,true,false);
+				var alldata = data.list;
+				for(var i=0;i<alldata.length;i++){
+					var kslb_name=alldata[i].KSLBK_NAME;
+				       var kslb_xl=alldata[i].KSLBK_XL;
+				       var kslb_mk=alldata[i].KSLBK_MK;
+				       if(kslb_mk=="无模块"){
+				    	   kslb_mk="";
+				       }
+				       var kslb_type_name=alldata[i].KSLBK_TYPE_NAME;
+					   var kslbk_id = alldata[i].KSLBK_ID;
+					   var kslb_code=alldata[i].KSLBK_CODE;
+				       var kslb_xl_code=alldata[i].KSLBK_XL_CODE;
+				       var kslb_mk_code=alldata[i].KSLBK_MKCODE;
+				       var kslb_type = alldata[i].KSLBK_TYPE;
+				       if("02200401"==kslb_mk_code){
+				    	   //模块code
+				    	   var paramstr = {};
+				    	   paramstr["mk"]=alldata[i].KSLBK_MK;
+				    	   paramstr["type"]=kslb_type_name;
+				    	   bxlglmk.push(paramstr);
+				       }
+				       jQuery('#belfzhi').append([
+				                         		'<tr style="height:30px">',
+				                         		'<td style="text-align: center" width="10%"><image src="/ts/image/u4719.png"></image></td>',
+				                         		'<td width="15%">'+kslb_name+'</td>',
+				                         		'<td width="15%">'+kslb_xl+'</td>',
+				                         		'<td width="45%">'+kslb_mk+'</td>',
+				                         		'<td width="15%">'+kslb_type_name+'</td>',
+				                         		'<td class="rhGrid-td-hide" id="HANGHAO'+i+'">'+i +'</td>',
+				                         		'<td class="rhGrid-td-hide" >'+kslbk_id+'</td>',
+				                         		'<td class="rhGrid-td-hide">'+kslb_code+'</td>',
+				                         		'<td class="rhGrid-td-hide">'+kslb_xl_code+'</td>',
+				                         		'<td class="rhGrid-td-hide">'+kslb_mk_code+'</td>',
+				                         		'<td class="rhGrid-td-hide">'+kslb_type+'</td>',
+				                         	'</tr>'
+				                         	].join('')
+				                         	);  
+				       
+				}
+				       
+	}
 	
 	var rlzyglmk = [];
+	var bxlglmk = [];
 	var checked = [];
+	var bxlchecked = [];
 	var yk={};
 	var xkArg=[];//考试结果
 	var yzgz;//资格验证后端返回到前端的数据
@@ -503,7 +555,14 @@ function xminfoshow(){
 		 paramb["high"]=highnum;
 		 paramb["middle"]=parammiddle;
 		 paramb["STATION_NO_CODE"]=STATION_NO_CODE;
-		 var ressultids = FireFly.doAct("TS_BMLB_BM","getYibmids",paramb)
+		 var ressultids = FireFly.doAct("TS_BMLB_BM","getYibmids",paramb);
+		 var resbxlids = FireFly.doAct("TS_BMLB_BM","getBxlYibmids",paramb);
+		 var bxlids = resbxlids.ids;
+		 if(bxlids!=""){
+			 var bxlextwhere = "AND KSLBK_ID IN ("+bxlids+")";
+		 }else{
+			 
+		 }
 		 var ids = ressultids.ids;
 		 if(resultFlag.flag=="false"){
 		 extWhere="AND KSLBK_ID IN ("+ids+")";
@@ -620,9 +679,90 @@ function xminfoshow(){
 				 }
 			 }
 		 }
-		 setting.data=data1;
+		 
+		 var bxlsetting={data
+	             :FireFly.getDict('TS_XMGL_BM_KSLBK','KSLBK_PID',bxlextwhere),
+	         dictId:"TS_XMGL_BM_KSLBK",expandLevel:1,
+	         oncheckboxclick: function(item, s, id) {
+	        	 //人力资源管理 两个模块 只能选中一个
+	        	 if(bxlglmk!=""){
+	        		 var paramRl = {};
+	        		 paramRl["mk"] = JSON.stringify(bxlglmk);
+	        		 paramRl["type"] = item['NAME'];
+	        		 paramRl["kslbk_id"] = item['ID'];
+	        		 var result = FireFly.doAct("TS_BMLB_BM","rlZyPd",paramRl);
+	        		 if(result.flag=="true"){
+	        			 alert("人力资源管理序列只能选择一个模块,请取消在进行选择");
+	        			 return false;
+	        		 }
+	        	 }
+	        	var itemjson =  item['ID'];
+	        	var valid  = true;
+	        	for(var i=0;i<bxlchecked.length;i++){
+	        		if (bxlchecked[i].indexOf(itemjson) > -1) {
+	        			var index = bxlchecked.indexOf(itemjson);
+	        			bxlchecked.splice(index, 1);
+	        			valid = false;
+	        			showBxlFzgList(obj);
+	        			}
+	        	}
+	        	if(valid){
+	        		if(item.hasOwnProperty("CHILD")){
+	        		}else{
+	        			bxlchecked.push(itemjson);
+	        			showBxlFzgList(obj);
+	        		}
+	        	}
+	         },
+	         rhItemCode:"KSLBK_PID",
+	         rhLeafIcon:"",
+	         rhexpand:false,
+			 showcheck:true,
+			 childOnly:true,
+	         theme: "bbit-tree-no-lines",
+	         url  :"SY_COMM_INFO.dict.do"
+	        };
+		 var data2 = bxlsetting.data;
+		 //如果没有叶子节点则不显示
+		 for(var j=0;j<data2[0].CHILD.length;j++){
+			 if(data2[0].CHILD[j].hasOwnProperty("CHILD")){
+			 for(var m=0;m<data2[0].CHILD[j].CHILD.length;m++){
+				 if(data2[0].CHILD[j].CHILD[m].hasOwnProperty("CHILD")){
+				 for(var n=0;n<data2[0].CHILD[j].CHILD[m].CHILD.length;n++){
+					 if(!data2[0].CHILD[j].CHILD[m].CHILD[n].hasOwnProperty("CHILD")){
+						 var index = data2[0].CHILD[j].CHILD[m].CHILD.indexOf(data2[0].CHILD[j].CHILD[m].CHILD[n]);
+						 data2[0].CHILD[j].CHILD[m].CHILD.splice(index,1);
+					 }
+				 }
+			 }
+			 }
+			 }
+		 }
+		 //将无模块的数据上提
+		 for(var j=0;j<data2[0].CHILD.length;j++){
+			 if(data2[0].CHILD[j].hasOwnProperty("CHILD")){
+			 for(var m=0;m<data2[0].CHILD[j].CHILD.length;m++){
+				 if(data2[0].CHILD[j].CHILD[m].hasOwnProperty("CHILD")){
+				 for(var n=0;n<data2[0].CHILD[j].CHILD[m].CHILD.length;n++){
+					 if(data2[0].CHILD[j].CHILD[m].CHILD[n].NAME=="无模块"){
+						 //将无模块下的 CHILD节点下的  pid改为无模块的  pid 
+					for(var q = 0;q<data2[0].CHILD[j].CHILD[m].CHILD[n].CHILD.length;q++){
+						data2[0].CHILD[j].CHILD[m].CHILD[n].CHILD[q].PID = data2[0].CHILD[j].CHILD[m].CHILD[n].PID;
+					}
+					data2[0].CHILD[j].CHILD[m].CHILD = data2[0].CHILD[j].CHILD[m].CHILD[n].CHILD;
+					 }
+				 }
+				 }
+				 }
+			 }
+		 }
+		 
+		 	 bxlsetting.data = data2;
+		 	 setting.data=data1;
 	         var tree = new rh.ui.Tree(setting);
-	         $('.content-navTree').append(tree.obj);
+	         $('#Kxl.content-navTree').append(tree.obj);
+	         var tree2 = new rh.ui.Tree(bxlsetting);
+	         $('#Bxl.content-navTree').append(tree2.obj);
 	         
 	 });
 	 
@@ -695,19 +835,38 @@ function xminfoshow(){
 	//跨序列复选框变动
 	function change2(obj){
 		if($(obj).prop("checked")){
-			var arrChk=$("input[name='checkboxaa']").each(function(){
+			var arrChk=$("#tablehang input[name='checkboxaa']").each(function(){
 				$(this).prop("checked",true);
 			})
 			}else{
-				var arrChk=$("input[name='checkboxaa']").each(function(){
+				var arrChk=$("#tablehang input[name='checkboxaa']").each(function(){
+					$(this).prop("checked",false);
+				})
+	}
+	}
+	//本序列 全选
+	function change1(obj){
+		if($(obj).prop("checked")){
+			var arrChk=$("#tableid input[name='checkboxaa']").each(function(){
+				$(this).prop("checked",true);
+			})
+			}else{
+				var arrChk=$("#tableid input[name='checkboxaa']").each(function(){
 					$(this).prop("checked",false);
 				})
 	}
 	}
 	//跨序列的考试
-	function fuzhi(){
+	function fuzhi(obj){
 		var divstr="";
-		var strchecked = checked.join(",");
+		var strchecked = "";
+		if(obj==1){
+			$("#goods").html("");
+			strchecked = checked.join(",");
+		}else{
+			$("#BxlksxxId").html("");
+			strchecked =bxlchecked.join(",");
+		}
 		paramstr={};
 		paramstr["checked"]=strchecked;
 		var data = FireFly.doAct("TS_BMLB_BM","getCheckedData",paramstr,true,false);
@@ -743,7 +902,7 @@ function xminfoshow(){
 			       var kslb_type = alldata[i].KSLBK_TYPE;
 			       
 			       if(STATION_NO_CODE==kslb_xl_code){
-			    	   tbody=document.getElementById("tableid");
+			    	   tbody=document.getElementById("BxlksxxId");
 			       }else{
 			    	   tbody=document.getElementById("goods");
 			       }
@@ -1226,48 +1385,6 @@ function xminfoshow(){
 			 $("#zwcj").html(ADMIN_DUTY);
 		}
 		
-		var wherexl = "AND KSLB_CODE="+"'"+STATION_TYPE_CODE+"'"+" AND KSLB_XL_CODE="+"'"+STATION_NO_CODE+"'"+" AND XM_ID="+"'"+xm_id+"'";
-		var param={};
-		param["where"]=wherexl;
-		param["STATION_TYPE_CODE"]=STATION_TYPE_CODE;
-		param["STATION_NO_CODE"]=STATION_NO_CODE;
-		param["xm_id"]=xm_id;
-		 result1 = FireFly.doAct("TS_BMLB_BM","getMatchData",param);
-				if(result1.list==""){
-					return;
-				}
-			var pageEntity = result1.list;
-			
-			 var kslb_id = pageEntity[0].KSLBK_ID;
-			  lbname = pageEntity[0].KSLB_NAME;
-			  xlname= pageEntity[0].KSLB_XL;
-			  var mkmame = pageEntity[0].KSLB_MK;
-			  if(mkmame=="无模块"){
-				  mkmame="";
-			  }
-			  var typemame = pageEntity[0].KSLB_TYPE_NAME;
-			  lbcode= pageEntity[0].KSLB_CODE;
-			  xlcode= pageEntity[0].KSLB_XL_CODE;
-			 //拼接 tr
-			 var tr = document.createElement('tr');
-				 tr.innerHTML='<td style="text-align:center"><input style="margin-right:12px;" type="checkbox" name="checkboxaa"></td>'+
-				 '<td>'+lbname+'</td>'+
-				 '<td>'+xlname+'</td>'+
-				 '<td width="27%">'+mkmame+'</td>'+
-				 '<td width="10%">'+typemame+'</td>'+
-				 '<td class="rhGrid-td-hide"><input type="text" id="zglbid" name="zgksname" value='+kslb_id+'></td>'+
-				 '<td width="20%" id="yz_info"><div id='+kslb_id+'></div></td>'+
-				 '<td width="15%" id="yzjg_info"><div id="'+kslb_id+'yzjg"></div></td>'+
-				 '<td class="rhGrid-td-hide"><div>cannot</div></td>'+
-				 '<td class="rhGrid-td-hide"><div>biaoshi</div></td>'+
-				 '<td class="rhGrid-td-hide"><div>biaoshi</div></td>';
-					yk["BM_LB"]=lbcode;
-					yk["BM_XL"]=xlcode;
-					yk["BM_MK"]=pageEntity[0].KSLB_MK_CODE;
-					yk['BM_KS_TIME']=pageEntity[0].KSLB_TIME;
-					yk["ID"]=pageEntity[0].KSLBK_ID;
-					yk["BM_TYPE"]=pageEntity[0].KSLB_TYPE;
-			 $("#tableid tbody").append(tr);
 	}
 			
 			//模块改变事件

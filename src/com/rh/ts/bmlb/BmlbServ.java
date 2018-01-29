@@ -1351,7 +1351,6 @@ public class BmlbServ extends CommonServ {
 			}
 		}
 		return new OutBean().set("list", list);
-
 	}
 
 	// 获取已报名的此项目的考试
@@ -1921,13 +1920,13 @@ public class BmlbServ extends CommonServ {
 		String xmid = paramBean.getStr("xmid");
 		int middlenum = paramBean.getInt("middle");
 		int high = paramBean.getInt("high");
-		String sql1 = "select * FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'";
-		if(high==0){
+		String sql1 = "select * FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"' AND KSLB_XL_CODE!='"+kslbk_xl_code+"'";
+		/*if(high==0){
 			sql1+=" AND KSLB_TYPE !=3";
 		}
 		if(middlenum ==0){
 			sql1+=" AND KSLB_TYPE !=2";
-		}
+		}*/
 		List<Bean> query = Transaction.getExecutor().query(sql1);
 		/*String sql = "select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"')))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"')union select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'";
 		List<Bean> query = Transaction.getExecutor().query(sql);*/
@@ -1952,7 +1951,7 @@ public class BmlbServ extends CommonServ {
 				}
 			}*/
 			List<Bean> listbea = new ArrayList<Bean>();
-			String sql3 = "select * FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"' AND KSLB_XL_CODE = '"+kslbk_xl_code+"' oRDER BY kslb_type desc";
+			/*String sql3 = "select * FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"' AND KSLB_XL_CODE = '"+kslbk_xl_code+"' oRDER BY kslb_type desc";
 			List<Bean> query2 = Transaction.getExecutor().query(sql3);
 			for(int i = 0;i<query2.size();i++){
 				
@@ -1972,13 +1971,14 @@ public class BmlbServ extends CommonServ {
 						query.remove(i);
 					}
 				}
-			}
+			}*/
 			//考试类别库考试
 			for(int i = 0;i<query.size();i++){
 				String kslbk_code = query.get(i).getStr("KSLB_CODE");
 				String kslb_xl = query.get(i).getStr("KSLB_XL_CODE");
 				String kslb_mk = query.get(i).getStr("KSLB_MK_CODE");
 				String kslb_type = query.get(i).getStr("KSLB_TYPE");
+				Boolean flag = false;
 				for (Bean bean : list) {
 					//已报名的考试类别   
 					/*String KSLB_ID = bean.getStr("KSLBK_ID");//因为有重复的考试  所以  不用考试类别库id
@@ -1987,19 +1987,21 @@ public class BmlbServ extends CommonServ {
 					String KSLB_MK = bean.getStr("BM_MK_CODE");
 					String KSLB_TYPE = bean.getStr("BM_TYPE");
 					if(KSLB_CODE.equals(kslbk_code)&&KSLB_XL.equals(kslb_xl)&&KSLB_MK.equals(kslb_mk)&&KSLB_TYPE.equals(kslb_type)){
-						query.remove(i);
-						i--;
+						flag = true;
 						break;
-					}else{
-						listbea.add(query.get(i));
 					}
 				}
+				if(flag){
+				}else{
+					listbea.add(query.get(i));
+				}
+				
 				}
 			
 			//最后的
 			String ids = "";
-			for(int i = 0;i<query.size();i++){
-				String kslbk_id = query.get(i).getStr("KSLBK_ID");//因为考试类别 不会太多 所以用 逗号分隔
+			for(int i = 0;i<listbea.size();i++){
+				String kslbk_id = listbea.get(i).getStr("KSLBK_ID");//因为考试类别 不会太多 所以用 逗号分隔
 				if("".equals(kslbk_id)){
 					continue;
 				}
@@ -2010,6 +2012,117 @@ public class BmlbServ extends CommonServ {
 				}
 			}
 			
+			String sql = "select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN ("+ids+")))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN ("+ids+"))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN ("+ids+")";
+			List<Bean> query1 = Transaction.getExecutor().query(sql);
+			String newids="";
+			for(int i = 0;i<query1.size();i++){
+				if(i==0){
+					newids="'"+query1.get(i).getId()+"'";
+				}else{
+					newids+=",'"+query1.get(i).getId()+"'";
+				}
+			}
+			newids+=","+ids;
+			return new OutBean().set("ids", newids);
+	}
+	
+	/**
+	 * 本序列已报名的数据
+	 */
+	public OutBean getBxlYibmids(Bean paramBean){
+		UserBean userBean = Context.getUserBean();
+		String code = userBean.getCode();
+		String kslbk_xl_code = paramBean.getStr("STATION_NO_CODE");
+		String xmid = paramBean.getStr("xmid");
+		int middlenum = paramBean.getInt("middle");
+		int high = paramBean.getInt("high");
+		String sql1 = "select * FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"' AND KSLB_XL_CODE='"+kslbk_xl_code+"'";
+	/*	if(high==0){
+			sql1+=" AND KSLB_TYPE !=3";
+		}
+		if(middlenum ==0){
+			sql1+=" AND KSLB_TYPE !=2";
+		}*/
+		List<Bean> query = Transaction.getExecutor().query(sql1);
+		/*String sql = "select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"')))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"')union select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'";
+		List<Bean> query = Transaction.getExecutor().query(sql);*/
+			List<Bean> list = ServDao.finds("TS_BMLB_BM", "AND BM_CODE = '"+code+"' and XM_ID='"+xmid+"' AND BM_STATE = 1");
+			//删除已报名的  kslbk_id
+			/*for (Bean bean : list) {
+				//已报名的考试类别   
+				String KSLB_ID = bean.getStr("KSLBK_ID");//因为有重复的考试  所以  不用考试类别库id
+				String KSLB_CODE = bean.getStr("BM_LB_CODE");
+				String KSLB_XL = bean.getStr("BM_XL_CODE");
+				String KSLB_MK = bean.getStr("BM_MK_CODE");
+				String KSLB_TYPE = bean.getStr("BM_TYPE");
+			for(int i = 0;i<query.size();i++){
+				//考试类别库考试
+				String kslbk_code = query.get(i).getStr("KSLB_CODE");
+				String kslb_xl = query.get(i).getStr("KSLB_XL_CODE");
+				String kslb_mk = query.get(i).getStr("KSLB_MK_CODE");
+				String kslb_type = query.get(i).getStr("KSLB_TYPE");
+				if(KSLB_CODE.equals(kslbk_code)&&KSLB_XL.equals(kslb_xl)&&KSLB_MK.equals(kslb_mk)&&KSLB_TYPE.equals(kslb_type)){
+					query.remove(i);
+				}
+				}
+			}*/
+			List<Bean> listbea = new ArrayList<Bean>();
+			/*for(int i = 0;i<query.size();i++){
+				for (Bean bean : list) {
+					if(query.get(i).getStr("KSLBK_ID").equals(bean.getStr("KSLBK_ID"))){
+						query.remove(i);
+						i--;
+						break;
+					}else{
+						listbea.add(query.get(i));
+					}
+				}
+				}*/
+			
+			//考试类别库考试
+			for(int i = 0;i<query.size();i++){
+				String kslbk_code = query.get(i).getStr("KSLB_CODE");
+				String kslb_xl = query.get(i).getStr("KSLB_XL_CODE");
+				String kslb_mk = query.get(i).getStr("KSLB_MK_CODE");
+				String kslb_type = query.get(i).getStr("KSLB_TYPE");
+				Boolean flag = false;
+				for (Bean bean : list) {
+					//已报名的考试类别   
+					/*String KSLB_ID = bean.getStr("KSLBK_ID");//因为有重复的考试  所以  不用考试类别库id
+	*/				String KSLB_CODE = bean.getStr("BM_LB_CODE");
+					String KSLB_XL = bean.getStr("BM_XL_CODE");
+					String KSLB_MK = bean.getStr("BM_MK_CODE");
+					String KSLB_TYPE = bean.getStr("BM_TYPE");
+					if(KSLB_CODE.equals(kslbk_code)&&KSLB_XL.equals(kslb_xl)&&KSLB_MK.equals(kslb_mk)&&KSLB_TYPE.equals(kslb_type)){
+						flag = false;
+						break;
+					}
+				}
+				if(flag){
+					
+				}else{
+						listbea.add(query.get(i));
+				}
+				}
+			
+			//最后的
+			String ids = "";
+			for(int i = 0;i<listbea.size();i++){
+				String kslbk_id = listbea.get(i).getStr("KSLBK_ID");//因为考试类别 不会太多 所以用 逗号分隔
+				if("".equals(kslbk_id)){
+					continue;
+				}
+				if("".equals(ids)){
+					ids="'"+kslbk_id+"'";
+				}else{
+					ids+=",'"+kslbk_id+"'";
+				}
+			}
+			
+			if("".equals(ids)){
+				//本序列为空
+				return new OutBean().set("ids", "");
+			}
 			String sql = "select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN ("+ids+")))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN ("+ids+"))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN ("+ids+")";
 			List<Bean> query1 = Transaction.getExecutor().query(sql);
 			String newids="";

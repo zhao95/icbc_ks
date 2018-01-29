@@ -206,11 +206,16 @@ position: absolute;
 					<div style="padding-top: 10px; text-align: left; width: 90%;">
 						<span style="color: #ff0000">★ 应报名的本序列考试</span> <!-- <span
 							style="color: #fdb64f;">(提示：如果应考序列包含模块，请在下方选择具体的模块)</span> -->
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<button class="btn btn-success" id='selbxlks' 
+						style="margin-bottom:6px;width: 120px; background-color: #00c2c2;"
+						data-toggle="modal" data-target="#myBxlModal">选择本序列考试</button>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</div>
 					<table border="1" align="center" style="width: 90%;" id="tableid">
 					<thead>
 						<tr style="background-color: #ffbdbd;">
-							<td width="3%"></td>
+							<td width="3%"><input onclick="change1(this)" style="margin-right:12px" type="checkbox"></td>
 							<td width="10%">岗位类别</td>
 							<td width="15%">序列</td>
 							<td width="27%">模块</td>
@@ -219,7 +224,7 @@ position: absolute;
 							<td width="15%">验证结果</td>
 						</tr>
 						</thead>
-						<tbody>
+						<tbody id="BxlksxxId">
 						
        						</tbody>
 					</table>
@@ -229,8 +234,8 @@ position: absolute;
 						style="color: #fdb64f;">(提示：只允许选择两个跨序列的考试)</span> -->
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<button class="btn btn-success" id='selectks' 
-						style="width: 100px; background-color: #00c2c2;"
-						data-toggle="modal" data-target="#myModal">选择考试</button>
+						style="width: 120px; background-color: #00c2c2;"
+						data-toggle="modal" data-target="#myModal">选择跨序列考试</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<!-- 	       					<button class="btn btn-success" style="width:100px;background-color: #00c2c2;" data-toggle="modal" data-target="#deletec">删除</button> -->
 				</div>
@@ -278,7 +283,7 @@ position: absolute;
 					<div class="row" style="height: 450px;">
 						<div class="col-sm-4">
 							<div class="content-navTreeCont">
-								<div class="content-navTree" style="height: 450px;"></div>
+								<div id='Kxl' class="content-navTree" style="height: 450px;"></div>
 							</div>
 
 						</div>
@@ -301,7 +306,52 @@ position: absolute;
 				</div>
 				<div class="modal-footer" style="text-align: center;">
 					<button type="button" class="btn btn-success" data-dismiss="modal"
-						style="width: 100px; background-color: #00c2c2;" onclick="fuzhi()">确定</button>
+						style="width: 100px; background-color: #00c2c2;" onclick="fuzhi(1)">确定</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						style="color:white;width: 100px;margin-left:100px;background-color: #00c2c2;">返回</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+	<div class="modal fade" id="myBxlModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+		<div class="modal-dialog" style="width:700px;">
+			<div class="modal-content">
+				<div class="modal-header"
+					style="background-color: #00c2c2; color: white">
+					
+					<h5 class="modal-title">可选择的考试</h5>
+				</div>
+				<div class="modal-body zgks">
+					<div class="row" style="height: 450px;">
+						<div class="col-sm-4">
+							<div class="content-navTreeCont">
+								<div id="Bxl" class="content-navTree" style="height: 450px;"></div>
+							</div>
+
+						</div>
+						<div class="col-sm-8" style="overflow-y: auto;height: 450px;">
+							<table border="1" style="border-color:lightgray;width: 100%;" id="tabletjId">
+								<thead>
+									<tr style="background-color: #d9eeeb; padding-left: 5px;height:30px;">
+										<th width="10%"></th>
+										<th width="15%">岗位类别</th>
+										<th width="15%">序列</th>
+										<th width="45%">模块</th>
+										<th width="15%">级别</th>
+									</tr>
+								</thead>
+								<tbody id="belfzhi">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="text-align: center;">
+					<button type="button" class="btn btn-success" data-dismiss="modal"
+						style="width: 100px; background-color: #00c2c2;" onclick="fuzhi(2)">确定</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal"
 						style="color:white;width: 100px;margin-left:100px;background-color: #00c2c2;">返回</button>
 				</div>
