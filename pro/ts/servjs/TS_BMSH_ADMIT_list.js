@@ -1,4 +1,29 @@
 var _viewer = this
+
+//重写add方法
+_viewer.getBtn("add").unbind("click").bind("click",function() {
+	var pcodeh = _viewer._transferData["CTLG_PCODE"];
+		if(pcodeh == "" || typeof(pcodeh) == "undefined") {
+		alert("请选择添加目录的层级 !");
+		return false;
+	}
+	var temp = {"act":UIConst.ACT_CARD_ADD,
+			"sId":_viewer.servId,
+			"params":  {
+				//"CTLG_MODULE" : module,
+			},
+			"transferData": _viewer._transferData,
+			"links":_viewer.links,
+			"parHandler":_viewer,
+			"widHeiArray":[width,height],
+			"xyArray":[50,50]
+	};
+	console.log(temp);
+	var cardView = new rh.vi.cardView(temp);
+	
+	cardView.show();
+	
+});
 /*
 * 删除前方法执行
 */

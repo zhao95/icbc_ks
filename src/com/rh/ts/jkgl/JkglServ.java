@@ -33,6 +33,7 @@ import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.ImpUtils;
+import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.TsConstant;
 
 
@@ -213,6 +214,16 @@ public class JkglServ extends CommonServ {
 			}
 		}
     	return out;
+    }
+    
+    
+    
+    protected void beforeQuery(ParamBean paramBean) {
+        ParamBean param = new ParamBean();
+        param.set("paramBean", paramBean);
+        //param.set("fieldName","DEPT_PCODE");
+        param.set("serviceName", paramBean.getServId());
+        PvlgUtils.setOrgPvlgWhere(param);
     }
     
   /** public OutBean imp(ParamBean paramBean) {

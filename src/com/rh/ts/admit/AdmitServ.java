@@ -12,8 +12,17 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.util.ImpUtils;
+import com.rh.ts.pvlg.PvlgUtils;
 
 public class AdmitServ extends CommonServ {
+	
+	   protected void beforeQuery(ParamBean paramBean) {
+	        ParamBean param = new ParamBean();
+	        param.set("paramBean", paramBean);
+	        //param.set("fieldName","DEPT_PCODE");
+	        param.set("serviceName", paramBean.getServId());
+	        PvlgUtils.setOrgPvlgWhere(param);
+	    }
 
 	 /**
      * 导入方法开始的入口

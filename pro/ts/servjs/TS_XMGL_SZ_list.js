@@ -10,8 +10,10 @@ $(".rhGrid-thead-checkbox").hide();
 $(".rhGrid-thead-orderSpan").hide();
 $(".rhGrid-thead-th").unbind("click");
 //列表后增加功能
+
 _viewer.grid.getBtn("set").unbind("click").bind("click",function() {
 	var pk = jQuery(this).attr("rowpk");//获取主键信息
+	//var  xmid = jQuery(this).parent().parent().find("td[icode='XM_ID']").html();
 	var xmglId = jQuery(this).parent().parent().find("td[icode='XM_ID']").html();
 	var name = jQuery(this).parent().parent().find("td[icode='XM_SZ_NAME']").html();
 	
@@ -299,6 +301,15 @@ $(".rh-advSearch-val").on("change", function() {
 	
 });
  
-
+$("#TS_XMGL_SZ-exp").unbind("click").bind("click",function() {
+	var xm_id = $(".rhGrid").find("tr").eq(1).find("td[icode='XM_ID']").html();
+	//var xm_id=$(this).parent().parent().find("td[icode='XM_ID']").html();
+	var whereData={};
+	var data = {};
+	data["xmid"]=xm_id;
+	data = jQuery.extend(data,whereData);
+	window.open(FireFly.getContextPath() + '/' + _viewer.servId + '.exp.do?data=' + 
+	encodeURIComponent(jQuery.toJSON(data)));
+});
 
 
