@@ -34,14 +34,14 @@ _viewer.beforeDelete = function (pkArray) {
  * 系统管理员和项目创建人 显示添加和删除按钮
  */
 var userCode = System.getVar("@USER_CODE@");
-if (userCode != 'admin') {
-    if (_viewer.links.XM_ID != 'undefined') {
+if (userCode !== 'admin') {
+    if (_viewer.links.XM_ID !== 'undefined') {
         var data = {};
         data["_WHERE_"] = " and S_USER ='" + userCode + "'  and XM_ID = '" + _viewer.links.XM_ID + "'";
 
         FireFly.doAct("TS_XMGL", "count", data, false, true, function (result) {
 
-            if (result._MSG_.indexOf("ERROR,") == 0) {
+            if (result._MSG_.indexOf("ERROR,") === 0) {
                 _viewer.getBtn("add").hide();
                 _viewer.getBtn("delete").hide();
             } else {
@@ -55,15 +55,83 @@ if (userCode != 'admin') {
     }
 }
 
-//从excel中导入人员
-const IMPORT_FILE_ID = _viewer.servId + "-impUser";
-var $importUser = $('#' + IMPORT_FILE_ID);
-//避免刷新数据重复添加
+//导入模板下载
 var $impFile = jQuery('#' + _viewer.servId + '-impFile');
-if ($importUser.length === 0) {
+var xmBean = FireFly.doAct("TS_XMGL", "byid", {_PK_: _viewer.links.XM_ID});
+$impFile.unbind('click').bind('click', function () {
+    if (xmBean.XM_ID) {
+        if (xmBean.XM_TYPE === '资格类考试') {
+            window.open(FireFly.getContextPath() + '/ts/imp_template/项目管理_待安排考生_导入模版.xls');
+        } else {
+            window.open(FireFly.getContextPath() + '/ts/imp_template/项目管理_待安排考生_非资格考试_导入模版.xls');
+        }
+    }
+});
+
+
+if (xmBean.XM_ID && xmBean.S_USER === System.getUser("USER_CODE")) {
+    //从excel中导入人员
+    const IMPORT_FILE_ID = _viewer.servId + "-impUser";
+    var $importUser = $('#' + IMPORT_FILE_ID);
+//避免刷新数据重复添加
+    if ($importUser.length === 0) {
+        var config = {
+            "SERV_ID": _viewer.servId,
+            "TEXT": "导入",
+            "FILE_CAT": "",
+            "FILENUMBER": 1,
+            "BTN_IMAGE": "btn-imp",
+            // "VALUE": 15,
+            "TYPES": "*.xls;*.xlsx;",
+            "DESC": ""
+        };
+        var file = new rh.ui.File({
+            "id": IMPORT_FILE_ID,
+            "config": config
+        });
+        file._obj.insertBefore($impFile);
+        $("#" + file.time + "-upload span:first").css('padding', '0 7px 2px 20px');
+        jQuery('<span class="rh-icon-img btn-imp"></span>').appendTo($("#" + file.time + "-upload"));
+        file.initUpload();
+        file.afterQueueComplete = function (fileData) {// 这个上传队列完成之后
+            console.log("这个上传队列完成之后" + fileData);
+            for (var propertyName in fileData) {
+                var filesize = fileData[propertyName].FILE_SIZE;
+                if (filesize > 1024 * 1024 * 20) {
+                    alert("文件超过20M");
+                    file.clear();
+                    return false;
+                }
+                var fileId = fileData[propertyName].FILE_ID;
+                if (fileId) {
+                    var data = {};
+                    // data.XM_SZ_ID = xmSzId;
+                    // data.G_ID = _viewer.getParHandler()._pkCode;
+                    data.FILE_ID = fileId;
+                    data.XM_ID = _viewer.links.XM_ID;
+                    FireFly.doAct(_viewer.servId, "saveFromExcel", data, false, false, function (data) {
+                        rh.ui.File.prototype.downloadFile(data.FILE_ID, "test");
+                        _viewer.refresh();
+                        alert(data._MSG_);
+                    });
+                }
+            }
+            file.clear();
+        };
+    }
+    $importUser.find('object').css('cursor', 'pointer');
+    $importUser.find('object').css('z-index', '999999999');
+    $importUser.find('object').css('width', '100%');
+}
+
+//从excel中导入人员 为借考
+const IMPORT_FILE_TOJK_ID = _viewer.servId + "-impUserToJk";
+var $impUserToJk = $('#' + IMPORT_FILE_TOJK_ID);
+//避免刷新数据重复添加
+if ($impUserToJk.length === 0) {
     var config = {
         "SERV_ID": _viewer.servId,
-        "TEXT": "导入",
+        "TEXT": "导入为借考",
         "FILE_CAT": "",
         "FILENUMBER": 1,
         "BTN_IMAGE": "btn-imp",
@@ -72,7 +140,7 @@ if ($importUser.length === 0) {
         "DESC": ""
     };
     var file = new rh.ui.File({
-        "id": IMPORT_FILE_ID,
+        "id": IMPORT_FILE_TOJK_ID,
         "config": config
     });
     file._obj.insertBefore($impFile);
@@ -82,20 +150,20 @@ if ($importUser.length === 0) {
     file.afterQueueComplete = function (fileData) {// 这个上传队列完成之后
         console.log("这个上传队列完成之后" + fileData);
         for (var propertyName in fileData) {
-        	 var filesize = fileData[propertyName].FILE_SIZE;
-       	  if(filesize>1024*1024*20){
-       		  alert("文件超过20M");
-       		  file.clear();
-       		  return false;
-       	  }
+            var filesize = fileData[propertyName].FILE_SIZE;
+            if (filesize > 1024 * 1024 * 20) {
+                alert("文件超过20M");
+                file.clear();
+                return false;
+            }
             var fileId = fileData[propertyName].FILE_ID;
-            debugger;
             if (fileId) {
                 var data = {};
                 // data.XM_SZ_ID = xmSzId;
                 // data.G_ID = _viewer.getParHandler()._pkCode;
                 data.FILE_ID = fileId;
                 data.XM_ID = _viewer.links.XM_ID;
+                data.OPT_TYPE = 'JK';
                 FireFly.doAct(_viewer.servId, "saveFromExcel", data, false, false, function (data) {
                     rh.ui.File.prototype.downloadFile(data.FILE_ID, "test");
                     _viewer.refresh();
@@ -106,14 +174,9 @@ if ($importUser.length === 0) {
         file.clear();
     };
 }
-$importUser.find('object').css('cursor', 'pointer');
-$importUser.find('object').css('z-index', '999999999');
-$importUser.find('object').css('width', '100%');
-
-//导入模板下载
-$impFile.unbind('click').bind('click', function () {
-    window.open(FireFly.getContextPath() + '/ts/imp_template/项目管理_待安排考生_导入模版.xls');
-});
+$impUserToJk.find('object').css('cursor', 'pointer');
+$impUserToJk.find('object').css('z-index', '999999999');
+$impUserToJk.find('object').css('width', '100%');
 
 //列表条件查询
 var $tsXmglCccsKsgl = $("#" + _viewer.servId);

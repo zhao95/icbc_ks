@@ -1478,7 +1478,7 @@ public class KcapMatch {
 				Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
 					// 升序排序
 					public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
-						return o1.getValue().compareTo(o2.getValue());
+						return o2.getValue().compareTo(o1.getValue());
 					}
 				});
 
