@@ -41,6 +41,21 @@ $($allSelect).unbind('change').bind('change', function () {
 
 //针对项目开始时间的校验与互斥资格类考试其他类考试JH_TYPE
 _viewer.beforeSave = function () {
+    var xmType = _viewer.getItem("XM_TYPE").getValue();//获取项目考试类型
+    var xmAssociateJhId = _viewer.getItem("JH_ID").getValue();//获取项目关联计划ID
+    //选择考试计划，校验类别
+    if(xmAssociateJhId!=""){
+        var jhParam={};
+        jhParam["_extWhere"]="AND JH_ID ='"+xmAssociateJhId+"' AND JH_STATUS='2'";
+        var jhResultObj = FireFly.doAct("TS_JHGL_XX", "query", jhParam);
+        //如果不选择考试计划，不做校验
+        if(_viewer.getItem("XM_TITLE").getValue()=="" || _viewer.getItem("XM_TITLE").getValue()==undefined){
+
+        }else if(jhResultObj._DATA_[0].JH_TYPE_NAME != xmType){
+            $("#TS_XMGL-XM_TYPE").parent().showError("考试类型应与所选考试计划类型一致！");
+            return false;
+        }
+    }
 	var xmType = _viewer.getItem("XM_TYPE").getValue();//
     var xmStart = _viewer.getItem("XM_START").getValue();//项目开始时间
     var xmEnd = _viewer.getItem("XM_END").getValue();//项目截至时间
