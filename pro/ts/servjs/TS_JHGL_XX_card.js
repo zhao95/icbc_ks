@@ -5,6 +5,13 @@ _viewer.beforeSave = function() {
 	var bmEnd=_viewer.getItem("JH_BM_ENDDATE").getValue();//报名结束时间
 	var KsStartData=_viewer.getItem("JH_CREATEDATE").getValue();//考试开始时间
 	var KsEndData=_viewer.getItem("JH_ENDDATE").getValue();//考试截至时间
+	var jhTypeName = _viewer.getItem("JH_TYPE3").getValue();//获取计划的类型
+	//匹配项目，若计划类型为资格考试，则将计划类型名称改为资格类考试，若为非资格考试，则将计划类型名称改为其他类考试
+	if(jhTypeName ==="1"){
+		_viewer.getItem("JH_TYPE_NAME").setValue("资格类考试");
+	}else if(jhTypeName ==="2"){
+        _viewer.getItem("JH_TYPE_NAME").setValue("其他类考试");
+    }
 	var bmStarts = bmStart.split('-');
     var bmEnds = bmEnd.split('-');
     var KsStartDatas = KsStartData.split('-');
