@@ -170,13 +170,13 @@ function xminfoshow(){
        					}
        					
        					if(dataArray[j].VLIDATE=="true"){
-       						if(dataArray[j].NAME=="证书规则"){
+       						if(dataArray[j].GZ_ID=="Y05"||dataArray[j].GZ_ID=="Y09"){
        							$("#"+a).append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'&nbsp;&nbsp<span style="padding:2px 9px" class="btn btn-success" name="'+divid+'" onclick="showinfo(this)">详细</span></div><div style="display:none" id="'+divid+'">'+sss+'</div>');
        						}else{
        						 $("#"+a).append('<div><img src="/ts/image/u4719.png">&nbsp;'+dataArray[j].NAME+'&nbsp;&nbsp</div>');
        						}
 						}else if(dataArray[j].VLIDATE=="false"){
-							if(dataArray[j].NAME=="证书规则"){
+							if(dataArray[j].GZ_ID=="Y05"||dataArray[j].GZ_ID=="Y09"){
 								$("#"+a).append('<div style="color:red;"><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'&nbsp;&nbsp<span style="padding:2px 9px" class="btn btn-success" name="'+divid+'" onclick="showinfo(this)">详细</span></div><div style="display:none" id="'+divid+'">'+sss+'</div>');
 							}else{
 								 $("#"+a).append('<div><img src="/ts/image/u4721.png">&nbsp;'+dataArray[j].NAME+'&nbsp;&nbsp</div>');
@@ -1745,7 +1745,6 @@ $("#slaveselect").change(function(){
 	
 })
 */
-//页面关闭时提示 是否要离开页面
 function showinfo(obj){
 	$("#littlediv").html("");
 	var spanid = $(obj).attr("name");

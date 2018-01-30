@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
-import com.rh.core.base.Context;
 import com.rh.core.base.TipException;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
@@ -21,7 +20,6 @@ import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
-import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.util.Strings;
 import com.rh.ts.util.TsConstant;
@@ -124,7 +122,7 @@ public class RuleServ extends CommonServ {
 					for (Object gzId : gzmxGroup.keySet()) { // 遍历规则组
 						String str = "";
 						Bean shgz = gzBean.getBean(gzId); // 审核规则bean
-						if(shgz.size()==0||"N03".equals(shgz.getStr("GZK_ID"))){
+						if(shgz.size()==0||"Y09".equals(shgz.getStr("GZK_ID"))||"N03".equals(shgz.getStr("GZK_ID"))){
 							continue;
 						}
 						int gzType = shgz.getInt("GZ_TYPE");
@@ -298,12 +296,21 @@ public class RuleServ extends CommonServ {
 				data.set("littlega", resultBean.getList("littlega"));
 				data.set("NAME", resultBean.getStr("GZ_NAME")); // 规则名称
 				data.set("VLIDATE", resultBean.getBoolean("VLIDATE"));
+				data.set("GZ_ID", resultBean.getStr("GZ_ID"));
 				if("".equals(resultBean.getStr("GZ_NAME"))){
 				}else{
 					passList.add(data);
 				}
+				Bean data1 = new Bean();
 				Bean resBean = validkxl(parambean);
-				
+				data1.set("littlega", resBean.getList("littlega"));
+				data1.set("NAME", resBean.getStr("GZ_NAME")); // 规则名称
+				data1.set("VLIDATE", resBean.getBoolean("VLIDATE"));
+				data1.set("GZ_ID", resBean.getStr("GZ_ID"));
+				if("".equals(resBean.getStr("GZ_NAME"))){
+				}else{
+					passList.add(data1);
+				}
 				} else {
 					Bean data = new Bean();
 					
@@ -930,7 +937,7 @@ public class RuleServ extends CommonServ {
 					staytogo=true;
 				}
 				littelGzBean.set("validate", false);
-					littelGzBean.set("name",failer_info);
+				littelGzBean.set("name",failer_info);
 				listbean.add(littelGzBean);
 			}
 		}
@@ -938,19 +945,24 @@ public class RuleServ extends CommonServ {
 			outBean.set("gotostay", staytogo);
 			outBean.set("littlega", listbean); 
 			outBean.set("VLIDATE", flag);
-			outBean.set("GZ_NAME", "证书规则");
+			outBean.set("GZ_NAME", gzlist.get(0).getStr("GZ_NAME"));
+			outBean.set("GZ_ID", "Y05");
 		}
 		return outBean;
 	}
 	
 	public OutBean validkxl (Bean paramBean){
+		OutBean outbean = new OutBean();
+		List<Bean> listbean = new ArrayList<Bean>();
 		String xl = paramBean.getStr("BM_XL");
 		String BM_CODE = paramBean.getStr("BM_CODE");//考生编码
 		//判断报名序列 和本人序列是否相同
 		String str = paramBean.getStr("QZ_ID");//群组id
 		List<Bean> gzlist = ServDao.finds("TS_XMGL_BMSH_SHGZ", " AND KSQZ_ID = '"+str+"' AND GZK_ID='Y09'");
 		List<Bean> finds = new ArrayList<Bean>();//跨序列规则
+		String gz_name = "";
 		if(gzlist!=null&&gzlist.size()!=0){
+			gz_name = gzlist.get(0).getStr("GZ_NAME");
 			 finds = ServDao.finds("ts_bmsh_rule_kxlgz", "AND GZ_ID ='"+gzlist.get(0).getId()+"'");
 		}
 		if(finds.size()==0){
@@ -962,15 +974,110 @@ public class RuleServ extends CommonServ {
 		if("A000000000000000020".equals(user_xl)){//才会资金序列 报名  考试无  资金  默认 匹配 财会
 			user_xl="A000000000000000019";
 		}
-		if(user_xl.equals(xl)){
-			return new OutBean();//同序列自动验证通过
-		}
+		Boolean flag = false;
 		for (Bean bean : finds) {
-			bean.getStr("POSTION_TYPE");//类别
-			bean.getStr("POSTION_SEQUENCE");//序列
-			bean.getStr("POSTION_NAME");//职务
-			bean.getStr("POSTION_TYPE");
+			Bean littelGzBean = new Bean();
+			String POSTION_TYPE = bean.getStr("POSTION_TYPE");//类别
+			String POSTION_SEQUENCE = bean.getStr("POSTION_SEQUENCE");//序列
+			String POSTION_NAME = bean.getStr("POSTION_NAME");//职务
+			String POSTION_SUCCESS = bean.getStr("POSTION_SUCCESS");//成功提示信息
+			String POSTION_FAIL = bean.getStr("POSTION_FAIL");//失败提示信息
+			String POSTION_DESC = bean.getStr("POSTION_DESC");//规则描述
+			int POSTION_QUALIFICATION = bean.getInt("POSTION_QUALIFICATION");//条件
+			SqlBean sqlbean = new SqlBean();
+			if(!"".equals(POSTION_TYPE)){
+				//本人是否在此职务类别中 
+				sqlbean.and("PERSON_ID", BM_CODE);
+				sqlbean.andIn("STATION_TYPE_CODE", POSTION_TYPE.split(","));
+			}
+			if(!"".equals(POSTION_SEQUENCE)){
+				//职务序列
+				if("".equals(POSTION_TYPE)){
+					sqlbean.and("PERSON_ID", BM_CODE);
+				}
+				sqlbean.andIn("STATION_NO_CODE", POSTION_SEQUENCE.split(","));
+			}
+			if(!"".equals(POSTION_NAME)){
+				List<Bean> find = ServDao.finds("TS_ORG_POSTION", " AND POSTION_NAME='"+POSTION_NAME+"'");
+				if(find!=null&&find.size()!=0){
+					SqlBean sql = new SqlBean();
+					sql.and("POSTION_TYPE", find.get(0).getStr("POSTION_TYPE"));
+					sql.and("POSTION_SEQUENCE_ID", find.get(0).getStr("POSTION_SEQUENCE_ID"));
+					int type = find.get(0).getInt("POSTION_QUALIFICATION");
+					if(POSTION_QUALIFICATION==1){
+						sql.andGT("POSTION_QUALIFICATION", type);
+					}else if(POSTION_QUALIFICATION==2){
+						sql.andLT("POSTION_QUALIFICATION", type);
+					}else if(POSTION_QUALIFICATION==3){
+						sql.and("POSTION_QUALIFICATION", type);
+					}else if(POSTION_QUALIFICATION==4){
+						sql.andGTE("POSTION_QUALIFICATION", type);
+					}else if(POSTION_QUALIFICATION==5){
+						sql.andLTE("POSTION_QUALIFICATION", type);
+					}
+					List<Bean> finds2 = ServDao.finds("TS_ORG_POSTION", sql);
+					if(finds2!=null&&finds2.size()!=0){
+						//查找条件数据
+						String ids = "";
+						for (Bean bean2 : finds2) {
+							if("".equals(ids)){
+								ids+=bean2.getStr("POSTION_NAME_CODE");
+							}else{
+								ids+=","+bean2.getStr("POSTION_NAME_CODE");
+							}
+						}
+						if(!"".equals(ids)){
+							sqlbean.andIn("DUTY_LV_CODE",ids.split(","));
+						/*int count = ServDao.count("sy_hrm_zdstaffposition", sqlbean);
+						if(count<=0){
+							//不在职务层级内
+						}else{
+							//在此类职务内
+							flag=true;
+							littelGzBean.set("validate", true);
+							listbean.add(littelGzBean);
+							continue;
+						}*/
+						}
+					}
+				}
+			}
+			int count = ServDao.count("sy_hrm_zdstaffposition", sqlbean);
+			if(count<=0){
+				//不在职务层级内
+				littelGzBean.set("validate", false);
+				littelGzBean.set("name",POSTION_DESC+POSTION_FAIL);
+				listbean.add(littelGzBean);
+			}else{
+				//在此类职务内
+				flag=true;
+				littelGzBean.set("validate", true);
+				littelGzBean.set("name",POSTION_DESC+POSTION_SUCCESS);
+				listbean.add(littelGzBean);
+			}
+			
 		}
-		return new OutBean();
+
+		if(user_xl.equals(xl)){
+			Bean littelGzBean = new Bean();
+			flag=true;
+			littelGzBean.set("validate", true);
+			littelGzBean.set("name","报考本序列考试");
+			listbean.add(littelGzBean);
+		}
+		if(flag){
+			outbean.set("gotostay", false);
+			outbean.set("littlega", listbean); 
+			outbean.set("VLIDATE", flag);
+			outbean.set("GZ_NAME", gz_name);
+			outbean.set("GZ_ID", "Y09");
+		}else{
+			outbean.set("gotostay", false);
+			outbean.set("littlega", listbean); 
+			outbean.set("VLIDATE", flag);
+			outbean.set("GZ_NAME", gz_name);
+			outbean.set("GZ_ID", "Y09");
+		}
+		return outbean;//同序列自动验证通过
 	}
 }
