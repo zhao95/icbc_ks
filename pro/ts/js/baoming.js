@@ -832,10 +832,18 @@ listPage.prototype.bldTable = function (listData) {
             	
         } else {
             //审核未开始
+        	if(pageEntity[i].BM_STATE == 1){
             $operTd.append(
                 '<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>' +
                 '&nbsp&nbsp<a href="#" onclick="chexiao(' + i + ')" style="color:red" id="chexiao' + i + '">撤销</a>' +
                 '&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
+        	}else{
+        		 $operTd.append(
+        	                '<a onclick="chakan(' + i + ')" href="#" style="color:lightseagreen" >查看</a>' +
+        	                '&nbsp&nbsp<a style=" id="chexiao">已撤销</a>'+
+        	                '&nbsp&nbsp<a onclick="formsubmit(' + i + ')" href="#" style="color:lightseagreen" id="shenkeliucheng">审核明细</a>');
+        	}
+            
             $tr.append('<td class="rhGrid-td-left " icode="BM_STATE__NAME" style="text-align: center">' + sh_state_str + '</td>');
         }
         if (pageEntity[i].PUBLICITY === '1') {
