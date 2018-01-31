@@ -49,12 +49,16 @@ public class ImpUtils {
     public final static String ALL_LIST = "alllist";
 
     public final static String SUCCESS_LIST = "successlist";
-    
+
     //服务id标识符
     public final static String SERV_ID = "SERV_ID";
 
     //服务id对应类方法名称
     public final static String SERV_METHOD_NAME = "SERVMETHOD";
+
+    public final static String OK_NUM = "oknum";
+    public final static String FAIL_NUM = "failernum";
+    public final static String FILE_ID = "fileid";
 
     /**
      * 在excel中设置失败信息，返回fileId
@@ -304,6 +308,7 @@ public class ImpUtils {
             FileMgr.deleteFile(fileId);
             tempFile.destroy();
         }
-        return new OutBean().set("oknum", successnum).set("failernum", failernum).set("fileid", newFileBean.getId());
+
+        return new OutBean().set(OK_NUM, successnum).set(FAIL_NUM, failernum).set(FILE_ID, newFileBean.getId());
     }
 }

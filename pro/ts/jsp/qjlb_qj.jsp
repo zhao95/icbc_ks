@@ -16,7 +16,7 @@
             content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
             name="viewport">
 
-    <%@ include file="../../sy/base/view/inHeader.jsp" %>
+    <%@ include file="../../sy/base/view/inHeader-icbc.jsp" %>
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet"
           href="<%=CONTEXT_PATH%>/qt/bootstrap/css/bootstrap.min.css">
@@ -27,7 +27,7 @@
     <link rel="stylesheet"
           href="<%=CONTEXT_PATH%>/qt/ionicons/css/ionicons.min.css">
 
-    <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="<%=CONTEXT_PATH%>/qt/plugins/jQuery/jquery-1.12.4.min.js"></script>
     <!-- Bootstrap 3.3.6 -->
     <script src="<%=CONTEXT_PATH%>/qt/bootstrap/js/bootstrap.min.js"></script>
     <!--工具方法-->
@@ -709,22 +709,20 @@
             alert('请假事由不能为空');
             return false;
         } else {
-//            var paramstr = {};
-//            paramstr["xm_id"] = xmId;
-//            paramstr["cishu"] = cishu;
-//            paramstr["shids"] = shids;
-//            paramstr["zhoushu"] = zhoushu;
-//            var result = FireFly.doAct("TS_BM_QJ_NUM", "getFlag", paramstr);
-//
-//            if (result.yes === "true") {
-//            } else {
-//                alert(result._MSG_);
-//                return false;
-//            }
+            var paramstr = {};
+            paramstr["xm_id"] = xmId;
+            paramstr["cishu"] = cishu;
+            paramstr["shids"] = shids;
+            paramstr["zhoushu"] = zhoushu;
+            var result = FireFly.doAct("TS_BM_QJ_NUM", "getFlag", paramstr);
 
-            //var currentUserWorkNum = System.getUser("USER_WORK_NUM");
-//        var data = {USER_WORK_NUM: currentUserWorkNum};
-            if (/*$('#preview').css('display') === 'none' ||*/ fileData === undefined || fileData.files.length <= 0) {
+            if (result.yes === "true") {
+            } else {
+                alert(result._MSG_);
+                return false;
+            }
+
+            if (fileData === undefined || fileData.files.length <= 0) {/*$('#preview').css('display') === 'none' ||*/
                 //没有证明材料不用上传
                 saveData('');
             } else {

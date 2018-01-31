@@ -112,7 +112,7 @@ public class QjPassServ extends CommonServ {
 //       return new OutBean().set("FILE_ID", finalfileid);
         // String fileId = paramBean.getStr("FILE_ID");
         //方法入口
-        paramBean.set("SERVMETHOD", "savedata");
+        paramBean.set("SERVMETHOD", "saveData");
         OutBean out = ImpUtils.getDataFromXls(fileId, paramBean);
         String failnum = out.getStr("failernum");
         String successnum = out.getStr("oknum");
@@ -125,9 +125,9 @@ public class QjPassServ extends CommonServ {
      * 导入保存方法
      *
      * @param paramBean XM_ID datalist
-     * @return
+     * @return OutBean
      */
-    public OutBean savedata(ParamBean paramBean) {
+    public OutBean saveData(ParamBean paramBean) {
         OutBean outBean = new OutBean();
 
 //        String nowTime = DateUtils.getDatetime();
@@ -252,9 +252,9 @@ public class QjPassServ extends CommonServ {
     /**
      * 根据qjId shStatus shMind 完成审批
      *
-     * @param qjId     qjId
-     * @param shStatus shStatus
-     * @param shMind   shMind
+     * @param qjId     qjId 请假id
+     * @param shStatus shStatus 1 同意 2 不同意
+     * @param shMind   shMind 审批意见
      * @throws Exception Exception
      */
     private void doApplyByQjId(String qjId, String shStatus, String shMind) throws Exception {
@@ -303,29 +303,44 @@ public class QjPassServ extends CommonServ {
                 }
 
                 if ("1".equals(shStatus)) {
-                    if ("2".equals(bean.getStr("BM_STATUS"))) {
+                    //审批同意
+                    if ("2".equals(bean.getStr("BM_STATUS")) || "3".equals(bean.getStr("BM_STATUS"))) {
+                        //2 3
                         bean.set("BM_STATUS", "3");
                     } else {
+                        //0
                         bean.set("BM_STATUS", "1");
+                    }
+                } else if ("2".equals(shStatus)) {
+                    //审批不同意
+                    if ("2".equals(bean.getStr("BM_STATUS")) || "3".equals(bean.getStr("BM_STATUS"))) {
+                        //2 3
+                        bean.set("BM_STATUS", "2");
+                    } else {
+                        //1
+                        bean.set("BM_STATUS", "0");
                     }
                 }
                 ServDao.update(TsConstant.SERV_BMSH_PASS, bean);
             }
 
-            String xmId = qjBean.getStr("XM_ID");
-            Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
-            //如果在提交场次安排前，请假成功删除考位安排
-            String xmKcapPublishTime = xmBean.getStr("XM_KCAP_PUBLISH_TIME");//项目场次发布时间
-            if (StringUtils.isBlank(xmKcapPublishTime)) {
-                //项目场次未发布
-                for (String s : shIds) {
-                    List<Object> values = new ArrayList<Object>();
-                    values.add(s);
-                    Bean whereBean1 = new Bean();
-                    //未提交场次安排
-                    whereBean1.set(Constant.PARAM_WHERE, " and SH_ID =? and (IS_SUBMIT!='1' or IS_SUBMIT is null)");
-                    whereBean1.set(Constant.PARAM_PRE_VALUES, values);
-                    ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean1);
+            //审批通过
+            if ("1".equals(shStatus)) {
+                String xmId = qjBean.getStr("XM_ID");
+                Bean xmBean = ServDao.find(TsConstant.SERV_XMGL, xmId);
+                //如果在提交场次安排前，请假成功删除考位安排
+                String xmKcapPublishTime = xmBean.getStr("XM_KCAP_PUBLISH_TIME");//项目场次发布时间
+                if (StringUtils.isBlank(xmKcapPublishTime)) {
+                    //项目场次未发布
+                    for (String shId : shIds) {
+                        List<Object> values = new ArrayList<Object>();
+                        values.add(shId);
+                        Bean whereBean1 = new Bean();
+                        //未提交场次安排
+                        whereBean1.set(Constant.PARAM_WHERE, " and SH_ID =? and (IS_SUBMIT!='1' or IS_SUBMIT is null)");
+                        whereBean1.set(Constant.PARAM_PRE_VALUES, values);
+                        ServDao.destroy(TsConstant.SERV_KCAP_YAPZW, whereBean1);
+                    }
                 }
             }
 
