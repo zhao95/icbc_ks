@@ -1,0 +1,1 @@
+ALTER TABLE ts_xmgl_kcap_dapcc DROP INDEX IDX_XM_KC_CTLG;
