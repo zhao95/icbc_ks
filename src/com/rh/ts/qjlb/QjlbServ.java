@@ -396,7 +396,6 @@ public class QjlbServ extends CommonServ {
             //请假已通过 修改 TS_BMSH_PASS BM_STATUS字段信息
             String qjKsname = qjbean.getStr("QJ_KSNAME");
             String[] shIds = qjKsname.split(",");
-            StringBuilder shIdStr = new StringBuilder();
             for (String shId : shIds) {
                 ParamBean queryParamBean = new ParamBean();
                 queryParamBean.set("SH_ID", shId);
@@ -405,17 +404,15 @@ public class QjlbServ extends CommonServ {
                     continue;
                 }
 
-                shIdStr.append(",").append(bean.getStr("SH_ID"));
 
-                if ("2".equals(bean.getStr("BM_STATUS"))) {
+                if ("2".equals(bean.getStr("BM_STATUS")) || "3".equals(bean.getStr("BM_STATUS"))) {
+                    //2 3
                     bean.set("BM_STATUS", "3");
                 } else {
+                    //0
                     bean.set("BM_STATUS", "1");
                 }
                 ServDao.update(TsConstant.SERV_BMSH_PASS, bean);
-            }
-            if (shIdStr.length() > 0) {
-                shIdStr = new StringBuilder(shIdStr.substring(1));
             }
 
             String xmId = qjbean.getStr("XM_ID");
@@ -460,12 +457,12 @@ public class QjlbServ extends CommonServ {
             getQxBean.put("zhoushu", ConfMgr.getConf("TS_KSQJ_WEEK_MAXNUM", "0"));
             try {
                 Bean result = ServMgr.act(TS_BM_QJ_NUM_SERVID, "getQx", getQxBean);
-//                if (!"true".equals(result.getStr("yes"))) {
-//                    outBean.setError((String) result.get(Constant.RTN_MSG));
-//                }
+                if (!"true".equals(result.getStr("yes"))) {
+                    outBean.setError((String) result.get(Constant.RTN_MSG));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
-//                outBean.setError("发起人请假次数已超出规定，审批失败");
+                outBean.setError("发起人请假次数已超出规定，审批失败");
             }
         }
     }

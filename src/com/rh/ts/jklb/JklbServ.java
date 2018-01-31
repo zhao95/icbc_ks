@@ -394,9 +394,11 @@ public class JklbServ extends CommonServ {
                         if (bean == null) {
                             continue;
                         }
-                        if ("1".equals(bean.getStr("BM_STATUS"))) {
+                        if ("1".equals(bean.getStr("BM_STATUS")) || "3".equals(bean.getStr("BM_STATUS"))) {
+                            //1 3
                             bean.set("BM_STATUS", "3");
                         } else {
+                            //0
                             bean.set("BM_STATUS", "2");
                         }
                         bean.set("JK_ODEPT", jkbean.getStr("JK_YJFH"));

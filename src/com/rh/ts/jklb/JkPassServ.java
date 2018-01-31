@@ -9,6 +9,7 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
+import com.rh.core.util.Constant;
 import com.rh.core.util.ExpUtils;
 import com.rh.core.util.ImpUtils;
 import com.rh.ts.qjlb.QjUtils;
@@ -134,12 +135,12 @@ public class JkPassServ extends CommonServ {
 //       return new OutBean().set("FILE_ID", finalfileid);
         // String fileId = paramBean.getStr("FILE_ID");
         //方法入口
-        paramBean.set("SERVMETHOD", "savedata");
+        paramBean.set(ImpUtils.SERV_METHOD_NAME, "saveData");
         OutBean out = ImpUtils.getDataFromXls(fileId, paramBean);
-        String failnum = out.getStr("failernum");
-        String successnum = out.getStr("oknum");
+        String failnum = out.getStr(ImpUtils.FAIL_NUM);
+        String successnum = out.getStr(ImpUtils.OK_NUM);
         //返回导入结果
-        return new OutBean().set("FILE_ID", out.getStr("fileid")).set("_MSG_", "导入成功：" + successnum + "条,导入失败：" + failnum + "条");
+        return new OutBean().set("FILE_ID", out.getStr(ImpUtils.FILE_ID)).set(Constant.RTN_MSG, "导入成功：" + successnum + "条,导入失败：" + failnum + "条");
     }
 
 
@@ -149,7 +150,7 @@ public class JkPassServ extends CommonServ {
      * @param paramBean
      * @return
      */
-    public OutBean savedata(ParamBean paramBean) {
+    public OutBean saveData(ParamBean paramBean) {
         Date day = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String nowTime = df.format(day);
@@ -165,8 +166,7 @@ public class JkPassServ extends CommonServ {
         // List<Bean> rowBeanList = paramBean.getList(ImpUtils.DATA_LIST);
         List<String> codeList = new ArrayList<String>();// 避免重复添加数据
         List<Bean> beans = new ArrayList<Bean>();
-        for (int j = 0; j < rowBeanList.size(); j++) {
-            Bean rowBean = rowBeanList.get(j);
+        for (Bean rowBean : rowBeanList) {
             String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");//人力资源编码
             if (colCode != null && colCode.length() != 0) {
                 String jkYifh = rowBean.getStr(ImpUtils.COL_NAME + "3");//借考一级分行
@@ -210,11 +210,10 @@ public class JkPassServ extends CommonServ {
                     String where = "AND XM_ID='" + xmId + "' AND BM_CODE=' " + colCode + "' AND BM_TYPE=" + 2;
                     List<Bean> qjList = ServDao.finds("TS_BMLB_BM", where);
                     if (qjList != null && qjList.size() != 0) {
-                        for (int i = 0; i < qjList.size(); i++) {
-                            Bean qjBean = qjList.get(i);
+                        for (Bean qjBean : qjList) {
                             lbxlmk = qjBean.getStr("BM_LB") + qjBean.getStr("BM_XL") + qjBean.getStr("BM_MK") + qjBean.getStr("BM_TYPE_NAME");
                             //类别+序列+模块+等级
-                            if (jkTsNames.indexOf(lbxlmk) != -1) {
+                            if (jkTsNames.contains(lbxlmk)) {
                                 ksName = qjBean.getStr("BM_ID");
                                 ksName += ",";
                             }
