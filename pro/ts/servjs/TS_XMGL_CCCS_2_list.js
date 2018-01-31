@@ -1,6 +1,10 @@
 var _viewer = this;
 $("#TS_XMGL_CCCS_2 .rhGrid").find("tr").unbind("dblclick");
 var xmId = _viewer.getParHandler().getPKCode();
+
+$("#TS_XMGL_CCCS_2-expNo").hide();
+$("#mytable").remove();
+
 _viewer.getBtn("config").unbind("click").bind("click", function(event) {
 	var temp = {
 		"act" : UIConst.ACT_CARD_ADD,
@@ -18,7 +22,7 @@ var sjVal = Cookie.get("sjVal");
 var cjVal = Cookie.get("cjVal");// 层级
 var runVal = Cookie.get("runVal");
 
-var notInArray = new Array();
+_viewer.notInArray = new Array();
 
 if(runVal == "1"){
 	Cookie.set("runVal", 0, 1);
@@ -45,9 +49,12 @@ function run(){
 	setTimeout(function(){
 		FireFly.doAct("TS_XMGL_CCCS_2","getKsList", {"xmId":xmId,"sjVal":sjVal,"cjVal":cjVal},true,false,function(data){
 			all = data.all;
-			non = data.nonKsList;
+			var nonTmp = data.nonKsList;
+			for(var i=0;i<nonTmp.length;i++){
+				nonTmp[i].CAUSE = "考试时长不符合";
+			}
+			non = nonTmp;
 		});
-		
 		var result_good  = getResult(1,all);
 		var result_max = getResult(2,all);
 		
@@ -111,6 +118,7 @@ function run(){
 		var expData = {};
 		expData["EXP_STR"] = str;
 		expData["XM_ID"] = xmId;
+		expData["TYPE"] = 1;
 		var userCode = System.getVar("@USER_CODE@");
 		//FireFly.doAct("TS_XMGL_CCCS_EXP","delete",{"_WHERE_":"and s_user = '"+userCode+"' and xm_id='"+xmId+"'"},false,true);
 		FireFly.doAct("TS_XMGL_CCCS_EXP","save",expData,false);
@@ -122,9 +130,19 @@ function run(){
 		var fx = "分析:超过10场的考场有"+x1+"个，占比"+percent1+"%。说明：背景色为深色行为场次数大于10场，红色考场名称表示当前考场场次数最大。";
 		$("#TS_XMGL_CCCS_2").find("table[id='JColResizer2']").find(".rhGrid-tbody").append("<tr class='tBody-tr'><td colspan=9 class='rhGrid-td-left'>"+fx+"</td></tr>")
 		
+		for(var i=0;i<result_good.all.length;i++){
+			result_good.all[i].CAUSE = "关联机构不符合";
+		}
 		notInArray = non.concat(result_good.all);
+//		_viewer.notInArray = non.concat(result_good.all);
 		notInTable(notInArray);
-		
+		var str2 = JSON.stringify(notInArray); 
+		var expData2 = {};
+		expData2["EXP_STR"] = str2;
+		expData2["XM_ID"] = xmId;
+		expData2["TYPE"] = 2;
+		//FireFly.doAct("TS_XMGL_CCCS_EXP","delete",{"_WHERE_":"and s_user = '"+userCode+"' and xm_id='"+xmId+"'"},false,true);
+		FireFly.doAct("TS_XMGL_CCCS_EXP","save",expData2,false);
 	},100);
 	myloadbar.hideDelayed();	
 }
@@ -424,35 +442,45 @@ _viewer.getBtn("expExcel").unbind("click").bind("click",function(event) {
 
 function notInTable(array){
 	var main = $("#TS_XMGL_CCCS_2 .content-mainCont");
-	$("#mytable").remove();
-	
+//	$("#mytable").remove();
+	$("#TS_XMGL_CCCS_2-expNo").show();
 	var htmlStr = '<table border="1" class="rhGrid JPadding JColResizer" id="mytable" style="margin:0px 8px 15px 8px;width:98%">';
 	htmlStr += '<caption align="left">不符合条件考生：</caption>';
-	htmlStr += '<thead class="rhGrid-thead"><tr><th class="rhGrid-thead-num" style="width: 3.3%;"></th><th icode="BM_NAME" class="rhGrid-thead-th" style="width: 15.7%;">姓名</th><th icode="BM_CODE" class="rhGrid-thead-th" style="width: 15.7%;">人力资源编码</th><th icode="BM_XL" class="rhGrid-thead-th" style="width: 15.7%;">序列</th><th icode="BM_MK" class="rhGrid-thead-th" style="width: 15.7%;">模块</th><th icode="BM_TYPE_NAME" class="rhGrid-thead-th" style="width: 5.9%;">级别</th><th icode="BM_KS_TIME" class="rhGrid-thead-th" style="width: 10%;">考试时长</th><th icode="ODEPT_CODE_V__NAME" class="rhGrid-thead-th" style="width: 16%;">机构</th></tr></thead>';
+	htmlStr += '<thead class="rhGrid-thead"><tr><th class="rhGrid-thead-num" style="width: 3.3%;"></th><th icode="BM_NAME" class="rhGrid-thead-th" style="width: 15.7%;">姓名</th><th icode="BM_CODE" class="rhGrid-thead-th" style="width: 15.7%;">人力资源编码</th><th icode="BM_LB" class="rhGrid-thead-th" style="width: 15.7%;">类别</th><th icode="BM_XL" class="rhGrid-thead-th" style="width: 15.7%;">序列</th><th icode="BM_MK" class="rhGrid-thead-th" style="width: 15.7%;">模块</th><th icode="BM_TYPE_NAME" class="rhGrid-thead-th" style="width: 5.9%;">级别</th><th icode="BM_KS_TIME" class="rhGrid-thead-th" style="width: 10%;">考试时长</th><th icode="ONE" class="rhGrid-thead-th" style="width: 16%;">一级机构</th><th icode="CAUSE" class="rhGrid-thead-th" style="width: 16%;">原因</th></tr></thead>';
 	htmlStr += '<tbody class="rhGrid-tbody">';
 	for(var i=0;i<array.length;i++){
 		var num = i+1;
 		var BM_NAME = array[i].BM_NAME;
 		var BM_CODE = array[i].BM_CODE;
+		var BM_LB = array[i].BM_LB;
 		var BM_XL = array[i].BM_XL;
 		var BM_MK = array[i].BM_MK;
 		var BM_TYPE_NAME = array[i].BM_TYPE_NAME;
 		var BM_KS_TIME = array[i].BM_KS_TIME;
 		var ODEPT_CODE_V = array[i].ODEPT_CODE_V;
+		var CAUSE = array[i].CAUSE;
+		var ONE = array[i].ONE;
 		var odeptName = FireFly.doAct("TS_XMGL_CCCS_V","getDictItemName", {"dictId":"SY_ORG_ODEPT_ALL","itemCode":ODEPT_CODE_V},true,false).ITEM_NAME;
 		htmlStr += '<tr class="tBody-tr tBody-trOdd>';
 		htmlStr += '<td class="indexTD"></td>';
 		htmlStr += '<td class="indexTD" icode="num">'+num+'</td>';
 		htmlStr += '<td class="rhGrid-td-left " icode="BM_NAME">'+BM_NAME+'</td>';
 		htmlStr += '<td class="rhGrid-td-left " icode="BM_CODE">'+BM_CODE+'</td>';
+		htmlStr += '<td class="rhGrid-td-left " icode="BM_XL">'+BM_LB+'</td>';
 		htmlStr += '<td class="rhGrid-td-left " icode="BM_XL">'+BM_XL+'</td>';
 		htmlStr += '<td class="rhGrid-td-left " icode="BM_MK">'+BM_MK+'</td>';
 		htmlStr += '<td class="rhGrid-td-left " icode="BM_TYPE_NAME">'+BM_TYPE_NAME+'</td>';
 		htmlStr += '<td class="rhGrid-td-left " icode="BM_TYPE_NAME">'+BM_KS_TIME+'</td>';
-		htmlStr += '<td class="rhGrid-td-left " icode="ODEPT_CODE_V__NAME">'+odeptName+'</td>';
+		htmlStr += '<td class="rhGrid-td-left " icode="ODEPT_CODE_V__NAME">'+ONE+'</td>';
+		htmlStr += '<td class="rhGrid-td-left " icode="CAUSE">'+CAUSE+'</td>';
 		htmlStr += '</tr>';
 	}
 
 	htmlStr += '</tbody></table>';
 	main.append(htmlStr);
 }
+
+_viewer.getBtn("expNo").unbind("click").bind("click",function(event){
+	window.open(FireFly.getContextPath() + '/TS_XMGL_CCCS_2.expNoExcel.do?data=' + 
+    		encodeURIComponent(jQuery.toJSON({"xmId":xmId})));
+});

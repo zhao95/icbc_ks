@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"",
-"S_MTIME":"2018-01-23 16:07:17:296",
+"S_MTIME":"2018-01-30 13:52:19:927",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "TABLE_VIEW":"TS_XMGL_CCCS_UTIL_V",
@@ -2100,6 +2100,33 @@
 {
 "ACT_TYPE":"1",
 "ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"exp",
+"ACT_MEMO":"",
+"ACT_CODE":"expNo",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"3ks46PTiB0ybJSQ340bv",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"3ks46PTiB0ybJSQ340bv",
+"SERV_ID":"TS_XMGL_CCCS_2",
+"S_MTIME":"2018-01-30 13:52:19:924",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"100",
+"ACT_GROUP":"2",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"9",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":"导出不符合条件考生"
+},
+{
+"ACT_TYPE":"1",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"imp",
 "ACT_MEMO":"",
 "ACT_CODE":"imp",
@@ -2119,7 +2146,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"9",
+"_ROWNUM_":"10",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 入 "
@@ -2146,7 +2173,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"10",
+"_ROWNUM_":"11",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 出 "
@@ -2173,7 +2200,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"11",
+"_ROWNUM_":"12",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 接 收 "
@@ -2200,7 +2227,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"12",
+"_ROWNUM_":"13",
 "ACT_TIP":"zip文件导入",
 "EN_JSON":"",
 "ACT_NAME":"批量导入"
@@ -2227,7 +2254,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"13",
+"_ROWNUM_":"14",
 "ACT_TIP":"zip文件导出",
 "EN_JSON":"",
 "ACT_NAME":"批量导出"
