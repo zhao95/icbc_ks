@@ -17,3 +17,6 @@ UPDATE ts_jhgl SET jh_type_name ='资格类考试' WHERE JH_FLAG=2 AND JH_TYPE3 
 UPDATE ts_jhgl SET jh_type_name ='资格类考试' WHERE JH_FLAG=1 AND JH_TYPE =1;
 UPDATE ts_jhgl SET jh_type_name ='其他类考试' WHERE JH_FLAG=1 AND JH_TYPE =2;
 
+-- 准入测试、禁考管理添加权限控制
+alter table  TS_BMSH_ADMIT add column CTLG_PCODE varchar(40) not null;
+alter table TS_JKGL add column CTLG_PCODE varchar(40) not null;
