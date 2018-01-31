@@ -425,13 +425,19 @@ rh.vi.cardView.prototype._tabLayout = function() {
 		   if ((_self._actVar == UIConst.ACT_CARD_MODIFY) && (_self.beforeSaveCheck == true)) {
 			   //修改
 			   var changeData = _self.getChangeData();
-			   if(_self.servId == "TS_PVLG_ROLE"){
-				   if(changeData.ROLE_ORG_LV != undefined && changeData.ROLE_ORG_LV == ""){
-					   delete changeData.ROLE_ORG_LV;
+			   
+			   var delFlag= true;
+			   var itemArr = [];
+			   for (var item in changeData){
+			       if(changeData[item].length > 0) delFlag = false;
+			       itemArr.push(item);
+			   }
+			   if(delFlag){
+				   for(var i=0;i<itemArr.length;i++){
+					   delete changeData[itemArr[i]];
 				   }
 			   }
-			   delete changeData.SAFE_FLAG;
-			   delete changeData.SERV_NO_COUNT;
+			   
 			   if (jQuery.isEmptyObject(changeData)) {
 			   } else {
 				   var confirmDel=confirm("数据有修改，是否保存？");
