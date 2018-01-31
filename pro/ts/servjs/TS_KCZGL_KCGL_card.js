@@ -78,6 +78,11 @@ _viewer.getItem("KC_GOOD").change(function(){
 });
 
 _viewer.beforeSave = function() {
+	if(checkJKIP){
+		Tip.showError("监控机IP格式不正确", true);
+		return false;
+	}
+	
 	if($("#TS_KCZGL_KCGL-KC_GLY_div .rhGrid-tbody").find("td").length == 1){
 		$("#TS_KCZGL_KCGL-KC_GLY_div").find(".ui-dataservice-container,.fl,.wp").addClass("blankError").addClass("errorbox");
 		return false;
@@ -137,3 +142,13 @@ $("#TS_KCGL_JKIP-viListViewBatch-addBatch").click(function(){
 });
 $("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").addClass("tooltip");
 $("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").attr("title","格式规范:1-1,表示第一排第一座");
+
+function checkJKIP(){
+	var flag = false;
+	$("input[icode='JKIP_IP']").each(function(){
+	    if($(this).val() == ""){
+	    	flag = true;
+	    }
+	});
+	return flag;
+}

@@ -53,6 +53,11 @@ applyBtn.click(function() {
 });
 
 _viewer.beforeSave = function() {
+	if(checkJKIP){
+		Tip.showError("监控机IP格式不正确", true);
+		return false;
+	}
+	
 	var kcCode = _viewer.getItem("KC_CODE").getValue();
 	if (state == 0) {
 		_viewer.getItem("KC_STATE").setValue(1);
@@ -238,4 +243,12 @@ if(_viewer.getParHandler().getParHandler() != undefined || _viewer.getParHandler
 $("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").addClass("tooltip");
 $("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").attr("title","格式规范:1-1,表示第一排第一座");
 
-
+function checkJKIP(){
+	var flag = false;
+	$("input[icode='JKIP_IP']").each(function(){
+	    if($(this).val() == ""){
+	    	flag = true;
+	    }
+	});
+	return flag;
+}
