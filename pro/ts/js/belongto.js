@@ -1192,7 +1192,7 @@ var listPage = function () {
 	    				fir = pageEntity[i].BM_XL;
 	    			}
 	    			if(column=="TONGYI"){
-	    				fir=pageEntity[i].BM_CODE;
+	    				fir=userEntity[0].TONGYI;
 	    			}
 	    			var BM_TYPE = "";
 	    		}
@@ -1365,7 +1365,7 @@ var listPage = function () {
      return this._page;
  };
  //默认跳转到第一页
- new listPage().gotoPage(1);
+/* new listPage().gotoPage(1);*/
  
 function tongji(){
 	//总数量

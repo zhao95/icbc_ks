@@ -652,11 +652,12 @@ public class StayServ extends CommonServ {
 			outBean.set("SH_USER", shuser);
 			// 性别
 			int user_sex = userBean.getSex();
-			if (user_sex == 0) {
+			if (user_sex == 1) {
 				outBean.set("USER_SEX", "男");
 			} else {
 				outBean.set("USER_SEX", "女");
 			}
+			outBean.set("TONGYI",userBean.getLoginName());
 			// 入行时间
 			String date = userBean.getStr("USER_CMPY_DATE");
 			outBean.set("USER_CMPY_DATE", date);
@@ -871,7 +872,7 @@ public class StayServ extends CommonServ {
 		List<Bean> finalList = new ArrayList<Bean>();
 
 		// 判断user_code 是否为空 若为空则 导出所有
-
+		
 		searchWhere = " AND USER_CODE =" + "'" + user_code1 + "' order by cast(PX_XUHAO as SIGNED)";
 
 		// 排序用的 parr存读取th
@@ -997,6 +998,7 @@ public class StayServ extends CommonServ {
 		}
 		return new OutBean().setOk();
 	}
+	
 	/**
 	 * 导出全部的报名人员  (辖内报名)
 	 * @param paramBean

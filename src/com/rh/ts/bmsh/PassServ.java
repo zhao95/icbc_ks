@@ -859,7 +859,7 @@ public class PassServ extends CommonServ {
 				out.set("LEVEL1", evname);
 			}
 			if(i==codepatharr.length-1){
-				out.set("dept_code",OrgMgr.getDept(codepatharr[i]).getCode());
+				out.set("dept_code",OrgMgr.getDept(codepatharr[i]).getName());
 			}
 		}
 		return out;

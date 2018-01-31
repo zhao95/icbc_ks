@@ -1297,7 +1297,7 @@ var listPage = function () {
 	    				fir = pageEntity[i].BM_XL;
 	    			}
 	    			if(column=="TONGYI"){
-	    				fir=pageEntity[i].BM_CODE;
+	    				fir=userEntity[0].TONGYI;
 	    			}
 	    			var BM_TYPE = "";
 	    		}

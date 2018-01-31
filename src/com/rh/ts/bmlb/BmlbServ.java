@@ -25,8 +25,10 @@ import java.util.List;
 
 
 
+
 import com.rh.core.base.db.Transaction;
 import com.rh.core.serv.bean.PageBean;
+
 
 
 
@@ -155,6 +157,7 @@ public class BmlbServ extends CommonServ {
 			beans.set("BM_ENDDATE", fzgks_date2);
 			beans.set("BM_TITLE", fzgks_name);
 			beans.set("XM_ID", xm_id);
+			beans.set("BM_IDCARD", userBean.getIdcard());
 			Bean bmbean = ServDao.create(servId, beans);
 
 			if (count == 0 || count == 1) {
@@ -245,6 +248,7 @@ public class BmlbServ extends CommonServ {
 
 	
 	public Bean addZgData(Bean paramBean) {
+		UserBean userBean = Context.getUserBean();
 		String servId = paramBean.getStr(Constant.PARAM_SERV_ID);
 		// 获取前台传过来的值
 		String user_code = paramBean.getStr("USER_CODE");
@@ -410,6 +414,7 @@ public class BmlbServ extends CommonServ {
 					beans.set("S_ODEPT", odept_code);
 					beans.set("S_DEPT", dept_code);
 					beans.set("S_TDEPT", t_dept_code);
+					beans.set("BM_IDCARD", userBean.getIdcard());
 					if (count == 0) {
 						beans.set("BM_SH_STATE", 1);
 					}
@@ -2193,4 +2198,5 @@ public class BmlbServ extends CommonServ {
 		}
 		return new OutBean().set("list", bmkslist);
 	}
+
 }
