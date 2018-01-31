@@ -2051,7 +2051,7 @@ public class BmlbServ extends CommonServ {
 		List<Bean> query = Transaction.getExecutor().query(sql1);
 		/*String sql = "select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"')))union select kslbk_pid from ts_xmgl_bm_kslbk where kslbk_id in (SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'))union SELECT KSLBK_PID FROM TS_XMGL_BM_KSLBK WHERE KSLBK_ID IN (select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"')union select KSLBK_ID FROM TS_XMGL_BM_KSLB  WHERE XM_ID='"+xmid+"'";
 		List<Bean> query = Transaction.getExecutor().query(sql);*/
-			List<Bean> list = ServDao.finds("TS_BMLB_BM", "AND BM_CODE = '"+code+"' and XM_ID='"+xmid+"' AND BM_STATE = 1");
+			List<Bean> list = ServDao.finds("TS_BMLB_BM", "AND BM_XL_CODE='"+kslbk_xl_code+"' AND BM_CODE = '"+code+"' and XM_ID='"+xmid+"' AND BM_STATE = 1");
 			//删除已报名的  kslbk_id
 			/*for (Bean bean : list) {
 				//已报名的考试类别   
@@ -2099,7 +2099,7 @@ public class BmlbServ extends CommonServ {
 					String KSLB_MK = bean.getStr("BM_MK_CODE");
 					String KSLB_TYPE = bean.getStr("BM_TYPE");
 					if(KSLB_CODE.equals(kslbk_code)&&KSLB_XL.equals(kslb_xl)&&KSLB_MK.equals(kslb_mk)&&KSLB_TYPE.equals(kslb_type)){
-						flag = false;
+						flag = true;
 						break;
 					}
 				}

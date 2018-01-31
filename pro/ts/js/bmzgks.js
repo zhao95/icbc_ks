@@ -561,7 +561,7 @@ function xminfoshow(){
 		 if(bxlids!=""){
 			 var bxlextwhere = "AND KSLBK_ID IN ("+bxlids+")";
 		 }else{
-			 
+			 var bxlextwhere = "AND KSLBK_ID is null";
 		 }
 		 var ids = ressultids.ids;
 		 if(resultFlag.flag=="false"){
