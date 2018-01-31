@@ -72,7 +72,7 @@ _viewer.beforeSave = function() {
 		var newKcMax = _viewer.getChangeData().KC_MAX;
 		var kcCode_change = _viewer.getChangeData().KC_CODE;
 		if(kcCode_change != undefined){
-			var num = FireFly.doAct(_viewer.servId,"count",{"_WHERE":"and kc_code = '"+kcCode+"'"})._DATA_;
+			var num = FireFly.doAct(_viewer.servId,"count",{"_WHERE_":"and kc_code = '"+kcCode+"'"})._DATA_;
 			if(num > 0){
 				var msg = "考场编号已占用！";
 				Tip.showError(msg, true);
@@ -90,7 +90,7 @@ _viewer.beforeSave = function() {
 			}
 		}
 	}else{
-		var num = FireFly.doAct(_viewer.servId,"count",{"_WHERE":"and kc_code = '"+kcCode+"'"})._DATA_;
+		var num = FireFly.doAct(_viewer.servId,"count",{"_WHERE_":"and kc_code = '"+kcCode+"'"})._DATA_;
 		if(num > 0){
 			var msg = "考场编号已占用！";
 			Tip.showError(msg, true);
