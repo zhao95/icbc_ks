@@ -110,9 +110,9 @@ function checkScope(scope,ip){
 	var sz = scope.split("-");
 	var a = sz[0];
 	var b = sz[1];
-	var r1 = a.split(".")[0] != b.split(".")[0];
-	var r2 = a.split(".")[1] != b.split(".")[1];
-	var r3 = a.split(".")[2] != b.split(".")[2];
+	var r1 = a.split(".")[0];
+	var r2 = a.split(".")[1];
+	var r3 = a.split(".")[2];
 	var sa4 = a.split(".")[3];
 	var sb4 = b.split(".")[3];
 	
@@ -125,7 +125,7 @@ function checkScope(scope,ip){
 		return false;
 	}
 	
-	if(ip_4 >= sa4 && ip_4 < sb4){
+	if(parseInt(ip_4) >= parseInt(sa4) && parseInt(ip_4) < parseInt(sb4)){
 		return true;
 	}
 	return false;

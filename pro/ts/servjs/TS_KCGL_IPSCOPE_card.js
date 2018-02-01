@@ -109,7 +109,7 @@ function checkScope(scope,ip){
 		return false;
 	}
 	
-	if(ip_4 >= sa4 && ip_4 < sb4){
+	if(parseInt(ip_4) >= parseInt(sa4) && parseInt(ip_4) < parseInt(sb4)){
 		return true;
 	}
 	return false;
