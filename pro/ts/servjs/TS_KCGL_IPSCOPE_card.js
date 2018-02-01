@@ -12,7 +12,7 @@ _viewer.readCard();
 }
 
 _viewer.beforeSave= function() {
-	if(checkScope()){
+	if(checkScopeWrite()){
 		var msg = "操作IP区段格式不正确！";
 		Tip.showError(msg, true);
 		return false;
@@ -58,7 +58,7 @@ _viewer.beforeSave= function() {
  * 不符合要求 return true
  * @returns {Boolean}
  */
-function checkScope(){
+function checkScopeWrite(){
 	var scope = $("#TS_KCGL_IPSCOPE-IPS_SCOPE").val();
 	var sz = scope.split("-");
 	if(sz.length != 2){

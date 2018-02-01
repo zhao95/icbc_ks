@@ -78,7 +78,7 @@ _viewer.getItem("KC_GOOD").change(function(){
 });
 
 _viewer.beforeSave = function() {
-	if(checkJKIP){
+	if(checkJKIP()){
 		Tip.showError("监控机IP格式不正确", true);
 		return false;
 	}
@@ -130,7 +130,7 @@ $("#TS_KCGL_JKIP-viListViewBatch-addBatch").click(function(){
 	setTimeout(function () {
 		$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").change(function(){
 			$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").addClass("tooltip");
-			$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").attr("title","格式规范:1-1,表示第一排第一座");
+			$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").attr("title","192.168.1.2");
 			var ipVal = $(this).val();
 			var reg = new RegExp("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$");
 			if(!reg.test(ipVal)){
@@ -141,7 +141,7 @@ $("#TS_KCGL_JKIP-viListViewBatch-addBatch").click(function(){
     }, 100)
 });
 $("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").addClass("tooltip");
-$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").attr("title","格式规范:1-1,表示第一排第一座");
+$("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").attr("title","192.168.1.2");
 
 function checkJKIP(){
 	var flag = false;
