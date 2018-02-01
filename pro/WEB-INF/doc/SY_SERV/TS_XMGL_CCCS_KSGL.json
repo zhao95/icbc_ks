@@ -6,7 +6,7 @@
 [
 ],
 "SERV_SQL_WHERE":"",
-"S_MTIME":"2018-01-19 00:03:03:284",
+"S_MTIME":"2018-02-01 19:33:41:392",
 "SERV_LOCK_FLAG":"2",
 "SERV_CARD_TMPL_CODES":"",
 "TABLE_VIEW":"TS_BMSH_PASS_V",
@@ -2324,6 +2324,60 @@
 {
 "ACT_TYPE":"1",
 "ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"imp",
+"ACT_MEMO":"",
+"ACT_CODE":"impUser",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"1SSbDqAMF8WVXRZD6EW1",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"1SSbDqAMF8WVXRZD6EW1",
+"SERV_ID":"TS_XMGL_CCCS_KSGL",
+"S_MTIME":"2018-02-01 19:33:34:197",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"107",
+"ACT_GROUP":"2",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"9",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":"导入"
+},
+{
+"ACT_TYPE":"1",
+"ACT_EXPRESSION_FLAG":"",
+"ACT_CSS":"imp",
+"ACT_MEMO":"",
+"ACT_CODE":"impUserToJk",
+"S_FLAG":"1",
+"ACT_WS_FLAG":"2",
+"_PK_":"0Py4bvGL58IGe1w6w0sv",
+"ACT_LOG_FLAG":"2",
+"ACT_HOT_KEY":"",
+"ACT_ID":"0Py4bvGL58IGe1w6w0sv",
+"SERV_ID":"TS_XMGL_CCCS_KSGL",
+"S_MTIME":"2018-02-01 19:33:41:389",
+"ACT_EXPRESSION":"",
+"ACT_WS_RESULT":"",
+"ACT_MOBILE_FLAG":"1",
+"ACT_ORDER":"108",
+"ACT_GROUP":"2",
+"SY_SERV_ACT_PARAM":
+[
+],
+"_ROWNUM_":"10",
+"ACT_TIP":"",
+"EN_JSON":"",
+"ACT_NAME":"导入为借考"
+},
+{
+"ACT_TYPE":"1",
+"ACT_EXPRESSION_FLAG":"",
 "ACT_CSS":"download",
 "ACT_MEMO":"",
 "ACT_CODE":"tmplBtn",
@@ -2343,7 +2397,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"9",
+"_ROWNUM_":"11",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":"导入模版"
@@ -2354,14 +2408,14 @@
 "ACT_CSS":"imp",
 "ACT_MEMO":"",
 "ACT_CODE":"imp",
-"S_FLAG":"1",
+"S_FLAG":"2",
 "ACT_WS_FLAG":"2",
 "_PK_":"1MzzsfhGN5xUzXDyHruv",
 "ACT_LOG_FLAG":"2",
 "ACT_HOT_KEY":"",
 "ACT_ID":"1MzzsfhGN5xUzXDyHruv",
 "SERV_ID":"TS_XMGL_CCCS_KSGL",
-"S_MTIME":"2018-01-04 11:12:28:892",
+"S_MTIME":"2018-02-01 19:32:07:831",
 "ACT_EXPRESSION":"",
 "ACT_WS_RESULT":"",
 "ACT_MOBILE_FLAG":"1",
@@ -2370,7 +2424,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"10",
+"_ROWNUM_":"12",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 入 "
@@ -2397,7 +2451,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"11",
+"_ROWNUM_":"13",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 导 出 "
@@ -2424,7 +2478,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"12",
+"_ROWNUM_":"14",
 "ACT_TIP":"",
 "EN_JSON":"",
 "ACT_NAME":" 接 收 "
@@ -2451,7 +2505,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"13",
+"_ROWNUM_":"15",
 "ACT_TIP":"zip文件导入",
 "EN_JSON":"",
 "ACT_NAME":"批量导入"
@@ -2478,7 +2532,7 @@
 "SY_SERV_ACT_PARAM":
 [
 ],
-"_ROWNUM_":"14",
+"_ROWNUM_":"16",
 "ACT_TIP":"zip文件导出",
 "EN_JSON":"",
 "ACT_NAME":"批量导出"

@@ -43,14 +43,15 @@ public class CccsKsServ extends CommonServ {
      * 导入方法开始的入口
      */
     public OutBean saveFromExcel(ParamBean paramBean) {
-        String fileId = paramBean.getStr("FILE_ID");
-        //方法入口
-        paramBean.set("SERVMETHOD", "impDataSave");
-        OutBean out = ImpUtils.getDataFromXls(fileId, paramBean);
-        String failNum = out.getStr("failernum");
-        String successNum = out.getStr("oknum");
-        //返回导入结果
-        return new OutBean().set("FILE_ID", out.getStr("fileid")).setOk("导入成功：" + successNum + "条,导入失败：" + failNum + "条");
+        return ServMgr.act("TS_XMGL_KCAP_DFPKS", "saveFromExcel", paramBean);
+//        String fileId = paramBean.getStr("FILE_ID");
+//        //方法入口
+//        paramBean.set("SERVMETHOD", "impDataSave");
+//        OutBean out = ImpUtils.getDataFromXls(fileId, paramBean);
+//        String failNum = out.getStr("failernum");
+//        String successNum = out.getStr("oknum");
+//        //返回导入结果
+//        return new OutBean().set("FILE_ID", out.getStr("fileid")).setOk("导入成功：" + successNum + "条,导入失败：" + failNum + "条");
     }
 
     /**

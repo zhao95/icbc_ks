@@ -4377,6 +4377,114 @@ function getListPvlg(item,user_pvlg,filed) {
 	}
 	return true;
 };
+
+
+var ImpUtils = {
+
+    /**
+     * 导入方法
+     * @param _viewer
+     * @param methodName
+     * @param extraParamFunction 获取额外参数的方法，运行结果为false，参数获取失败，不继续执行
+     * @returns {Function}
+     */
+    impFileFunction: function (_viewer, methodName, extraParamFunction) {
+        return function () {
+
+            var param = {};
+            if (extraParamFunction) {
+                param = extraParamFunction.call(this);
+            }
+            if (!param) {
+                //paramFunction结果为空，弹出上传文件窗口
+                return;
+            }
+
+            var config = {
+                "SERV_ID": _viewer.opts.sId, "FILE_CAT": "EXCEL_UPLOAD", "FILENUMBER": 1,
+                "VALUE": 5, "TYPES": "*.xls;*.xlsx", "DESC": "导入Excel文件"
+            };
+            var file = new rh.ui.File({
+                "config": config, "width": "99%"
+            });
+
+            var importWin = new rh.ui.popPrompt({
+                title: "请选择文件",
+                tip: "请选择要导入的Excel文件：",
+                okFunc: function () {
+                    var fileData = file.getFileData();
+                    if (jQuery.isEmptyObject(fileData)) {
+                        alert("请选择文件上传");
+                        return;
+                    }
+                    var fileId = null;
+                    for (var key in fileData) {
+                        fileId = key;
+                    }
+                    if (fileId === null) {
+                        alert("请选择文件上传");
+                        return;
+                    }
+                    param = jQuery.extend({"FILE_ID": fileId}, param);
+                    ImpUtils._imp(_viewer, methodName, param);
+                    importWin.closePrompt();
+                    // _viewer.refreshGrid();
+                    file.destroy();
+                },
+                closeFunc: function () {
+                    file.destroy();
+                }
+            });
+
+            var container = _viewer._getImpContainer(event, importWin);
+            container.append(file.obj);
+            file.obj.css({'margin-left': '5px'});
+            file.initUpload();
+        }
+    },
+    _imp: function (_viewer, methodName, param) {
+        //没有文件id
+        if (!param.FILE_ID) {
+            return;
+        }
+        // var data = {"fileId": fileId};
+        // if (param) {
+        //     data = jQuery.extend(data, param);
+        // }
+        var _loadbar = new rh.ui.loadbar();
+        _loadbar.show(true);
+        //form提交，需要服务器再返回Excel
+        FireFly.doAct(_viewer.opts.sId, methodName, param, false, true, function (result) {
+            if (result._MSG_.indexOf("ERROR,") === 0) {
+                console.log(result);
+                if (result.FILE_ID) {
+                    //var msg = "导入文件失败，点击“确定按钮”下载文件。请打开文件查看导入结果。";
+                    var msg = Language.transStatic("rhListView_string16");
+                    SysMsg.alert(msg, function () {
+                        var url = FireFlyContextPath + "/file/" + result.FILE_ID;
+                        window.open(url);
+                    });
+                } else {
+                    SysMsg.alert(result._MSG_);
+                }
+            } else {
+                if (result.FILE_ID) {
+                    var msg = "点击“确定按钮”下载文件。请打开文件查看导入结果。";
+                    SysMsg.alert(msg, function () {
+                        var url = FireFlyContextPath + "/file/" + result.FILE_ID;
+                        window.open(url);
+                    });
+                } else {
+                    SysMsg.alert(result._MSG_);
+                }
+            }
+            _viewer._deletePageAllNum();
+            _viewer.refreshGrid();
+            _loadbar.hideDelayed();
+        });
+    }
+};
+
 //去重
 //function unique(arr){
 //  var res=[];
