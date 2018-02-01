@@ -1,4 +1,8 @@
 var _viewer = this;
+
+//取消行点击事件
+$(".rhGrid").find("tr").unbind("dblclick");
+
 $("#TS_XMGL_JKPASS-expAll").unbind('click').bind('click', function () {
     //获得父级菜单的句柄
     var parent = _viewer.getParHandler();
