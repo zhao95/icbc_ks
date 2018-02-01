@@ -199,10 +199,10 @@ public class QjPassServ extends CommonServ {
                 sqlBean.and("USER_CODE", userCode);
                 sqlBean.and("XM_ID", xmId);
                 sqlBean.andLike("QJ_KSNAME", bmPass.getStr("SH_ID"));
-                sqlBean.and("QJ_STATUS", "2");
+                sqlBean.and("QJ_STATUS", "1");
                 if (ServDao.count(TSQJ_SERVID, sqlBean) > 0) {
-                    //已经存在请假信息
-                    rowBean.set(ImpUtils.ERROR_NAME, "该考生该考试已经请假");
+                    //在审核中
+                    rowBean.set(ImpUtils.ERROR_NAME, "该考生该考试的请假在审核中");
                     continue;
                 } else {
                     //请假bean
