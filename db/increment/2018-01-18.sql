@@ -1,9 +1,5 @@
 -- 修改视图ts_wfs_bmshlc_v
-ALTER 
-ALGORITHM=UNDEFINED 
-DEFINER=`root`@`%` 
-SQL SECURITY DEFINER 
-VIEW `ts_wfs_bmshlc_v` AS 
+create or replace view ts_wfs_bmshlc_v as
 SELECT
 	`t`.`BMSHLC_ID` AS `BMSHLC_ID`,
 	`t`.`NODE_ID` AS `NODE_ID`,

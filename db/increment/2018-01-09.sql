@@ -2,8 +2,7 @@
 -- sy_serv_log_item_v 视图添加sy_org_user的user_name    作为视图的USER_NAME
 DROP VIEW IF EXISTS `sy_serv_log_item_v`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `sy_serv_log_item_v` AS 
-SELECT
+CREATE VIEW sy_serv_log_item_v AS SELECT
   `a`.`ILOG_ID`         AS `ILOG_ID`,
   `a`.`ITEM_ID`         AS `ITEM_ID`,
   `a`.`ITEM_CODE`       AS `ITEM_CODE`,
