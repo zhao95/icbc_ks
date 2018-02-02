@@ -220,7 +220,7 @@ position: absolute;
 							<td width="15%">序列</td>
 							<td width="27%">模块</td>
 							<td width="10%">级别</td>
-							<td width="20%">验证</td>
+							<td width="23%">验证</td>
 							<td width="15%">验证结果</td>
 						</tr>
 						</thead>
@@ -247,7 +247,7 @@ position: absolute;
 							<td width="15%">序列</td>
 							<td width="27%">模块</td>
 							<td width="10%">级别</td>
-							<td width="20%">验证</td>
+							<td width="23%">验证</td>
 							<td width="15%">验证结果</td>
 						</tr>
 						<tbody id="goods">

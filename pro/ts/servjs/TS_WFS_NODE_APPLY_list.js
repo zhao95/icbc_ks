@@ -1,4 +1,5 @@
 var _viewer = this;
+$(".rhGrid").find("tr").unbind("dblclick");
 var height = jQuery(window).height() - 400;
 var width = jQuery(window).width() - 200;
 var userCode = System.getVar("@USER_CODE@");//当前登录用户code
