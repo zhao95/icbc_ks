@@ -25,7 +25,7 @@ _viewer.getBtn("save").unbind("click").bind("click", function(event) {
 	var sjVal = _viewer.getItem("KS_SJ").getValue();
 	var cjVal = _viewer.getItem("KC_CJ").getValue();
 	if (scVal == "" || sjVal == "" || cjVal == "") {
-		alert("测算条件不完整");
+		Tip.showError("测算条件不完整", true);
 	} else {
 		Cookie.set("scVal", scVal, 1);
 		Cookie.set("sjVal", sjVal, 1);

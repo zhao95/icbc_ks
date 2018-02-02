@@ -31,7 +31,7 @@ if(runVal == "1"){
 
 _viewer.getBtn("run").unbind("click").bind("click", function(event) {
 	if(scVal == "" || sjVal == "" || cjVal == "" || scVal == null || sjVal == null || cjVal == null){
-		alert("请设置测算条件");
+		Tip.showError("请设置测算条件 !", true);
 		return false;
 	}
 	run();

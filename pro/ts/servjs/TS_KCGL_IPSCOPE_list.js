@@ -104,7 +104,7 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 		okFunc:function() {
 			var fileData = file.getFileData();
 			if (jQuery.isEmptyObject(fileData)) {
-				alert("请选择文件上传");
+				Tip.showError("请选择文件上传", true);
 				return;
 			}
 			var fileId = null;
@@ -112,7 +112,7 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 				fileId = key;
 			}
 			if (fileId == null){
-				alert("请选择文件上传");
+				Tip.showError("请选择文件上传", true);
 				return;
 			}
 			

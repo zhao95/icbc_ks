@@ -21,7 +21,7 @@ if (_viewer._actVar == "cardAdd") {
 //_viewer.getBtn("save").css("right", "500px");
 _viewer.getBtn("commit").unbind("click").bind("click", function(event) {
 	if (_viewer.getItem("KC_COMMIT").getValue() == 1) {
-		alert("申请单已提交过，无需重复提交");
+		Tip.showError("申请单已提交过，无需重复提交", true);
 		return false;
 	}
 	_viewer.getItem("KC_COMMIT").setValue(1);
@@ -59,7 +59,7 @@ _viewer.getBtn("shTgBtn").unbind("click").bind("click", function(event) {
 			jQuery("#TS_KCGL_UPDATE-winDialog").dialog("close");
 		}, 200);
 	} else {
-		alert("已审核过");
+		Tip.showError("已审核过", true);
 	}
 });
 _viewer.getBtn("shBtgBtn").unbind("click").bind("click", function(event) {
@@ -73,7 +73,7 @@ _viewer.getBtn("shBtgBtn").unbind("click").bind("click", function(event) {
 			jQuery("#TS_KCGL_UPDATE-winDialog").dialog("close");
 		}, 200);
 	} else {
-		alert("已审核过");
+		Tip.showError("已审核过", true);
 	}
 });
 

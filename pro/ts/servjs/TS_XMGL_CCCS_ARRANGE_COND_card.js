@@ -27,7 +27,7 @@ _viewer.getBtn("ok").click(function(){
 	var nm_info = _viewer.getItem("CONF_NM_INFO").getValue();
 	
 	if(date == ""){
-		alert("日期未填写");
+		Tip.showError("日期未填写", true);
 		return false;
 	}
 	
@@ -46,7 +46,7 @@ _viewer.getBtn("ok").click(function(){
 	if(am_time != "" &&  am_num !="" && am_info!=""){
 		var amTimesNum = am_info.split(",").length;
 		if(amTimes !=amTimesNum){
-			alert("请正确匹配场次数和时长段");
+			Tip.showError("请正确匹配场次数和时长段", true);
 			return false;
 		}
 	}
@@ -54,7 +54,7 @@ _viewer.getBtn("ok").click(function(){
 	if(pm_time != "" &&  pm_num !="" && pm_info!=""){
 		var pmTimesNum = pm_info.split(",").length;
 		if(pmTimes !=pmTimesNum){
-			alert("请正确匹配场次数和时长段");
+			Tip.showError("请正确匹配场次数和时长段", true);
 			return false;
 		}
 	}
@@ -62,7 +62,7 @@ _viewer.getBtn("ok").click(function(){
 	if(nm_time != "" &&  nm_num !="" && nm_info!=""){
 		var nmTimesNum = nm_info.split(",").length;
 		if(nmTimes !=nmTimesNum){
-			alert("请正确匹配场次数和时长段");
+			Tip.showError("请正确匹配场次数和时长段", true);
 			return false;
 		}
 	}
@@ -102,7 +102,7 @@ function js(date,time,inter,num,info){
 			start = addMin(end,inter);
 		}
 	}else{
-		alert("条件输入不正确");
+		Tip.showError("条件输入不正确", true);
 	}
 }
 //function js(date,time,inter,num,info){debugger;

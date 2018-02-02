@@ -86,6 +86,7 @@ public class UtilServ extends CommonServ {
 		bean = delSysCol(bean);
 		if(servId.equals("TS_KCGL")){
 		    bean.set("KC_CODE", bean.getStr("KC_CODE")+"_2");
+		    bean.set("KC_STATE", 1);
 		}
 		Bean newBean = ServDao.create(servId, bean);
 		if (!newBean.getId().equals("")) {

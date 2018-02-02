@@ -15,7 +15,7 @@ _viewer.getBtn("new").unbind("click").bind("click", function(event) {
 _viewer.getBtn("publish").unbind("click").bind("click", function(event) {
 	var pkArray = _viewer.grid.getSelectPKCodes();
 	if (pkArray.length == 0) {
-		alert("请选择记录");
+		Tip.showError("请选择记录", true);
 		return;
 	}
 	for (var i = 0; i < pkArray.length; i++) {

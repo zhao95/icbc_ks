@@ -66,11 +66,13 @@ function saveCheck(){
 	var reg1 = new RegExp("^([0-9]{1,3})\-([0-9]{1,3})$");
 	var reg2 = new RegExp("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$");
 	if(!reg1.test(ZW_ZWH_XT)){
-		alert("系统座位号格式不正确");
+		var msg = "系统座位号格式不正确！";
+		Tip.showError(msg, true);
 		return false;
     }
 	if(!reg2.test(ZW_IP)){
-		alert("IP地址格式不正确");
+		var msg = "IP地址格式不正确！";
+		Tip.showError(msg, true);
 		return false;
     }
 	var kcId = _viewer.getItem("KC_ID").getValue();
@@ -78,22 +80,26 @@ function saveCheck(){
 	var num2 = FireFly.doAct("TS_KCGL_ZWDYB","count",{"_WHERE_":"and kc_id = '"+kcId+"' and ZW_IP = '"+ZW_IP+"'"},true,false)._DATA_;
 	if(_viewer.opts.act == "cardAdd"){
 		if(num1 > 0){
-			alert("系统座位号不允许重复");
+			var msg = "系统座位号不允许重复！";
+			Tip.showError(msg, true);
 			return false;
 		}
 		if(num2 > 0){
-			alert("IP地址不允许重复");
+			var msg = "IP地址不允许重复！";
+			Tip.showError(msg, true);
 			return false;
 		}
 		
 	}else{
 		if(ZW_ZWH_XT_tmp != ZW_ZWH_XT && num1 > 0 ){
-			alert("系统座位号不允许重复");
+			var msg = "系统座位号不允许重复！";
+			Tip.showError(msg, true);
 			return false;
 		}
 		
 		if(ZW_IP_tmp != ZW_IP && num2 > 0){
-			alert("IP地址不允许重复");
+			var msg = "IP地址不允许重复！";
+			Tip.showError(msg, true);
 			return false;
 		}
 	}

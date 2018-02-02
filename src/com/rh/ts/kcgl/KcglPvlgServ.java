@@ -160,6 +160,7 @@ public class KcglPvlgServ  extends CommonServ{
                     /****************/
                     data.set("CTLG_PCODE", CTLG_PCODE);
                     data.set("SERV_ID", servId);
+                    data.set("KC_STATE", 1);
                     /******************/
                     for(int j = 0; j < cell.length && j < cols; j++) {
                         if (itemMaps[j] != null) {

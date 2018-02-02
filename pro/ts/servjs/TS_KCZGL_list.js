@@ -116,7 +116,7 @@ function bindCard(){
 _viewer.getBtn("trash").unbind("click").bind("click", function(event) {
 	var pkArray = _viewer.grid.getSelectPKCodes();
 	if (pkArray.length == 0) {
-		alert("请选择记录");
+		Tip.showError("请选择记录", true);
 		return;
 	}
 
@@ -211,7 +211,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 _viewer.getBtn("imp").unbind("click").bind("click",function() {
 	var pcodeh = _viewer._transferData["CTLG_PCODE"];
 	if(pcodeh == "" || typeof(pcodeh) == "undefined") {
-		alert("请选择添加目录的层级 !");
+		Tip.showError("请选择添加目录的层级 !", true);
 		return false;
 	}
 	
@@ -227,7 +227,7 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 		okFunc:function() {
 			var fileData = file.getFileData();
 			if (jQuery.isEmptyObject(fileData)) {
-				alert("请选择文件上传");
+				Tip.showError("请选择文件上传 !", true);
 				return;
 			}
 			var fileId = null;
@@ -235,7 +235,7 @@ _viewer.getBtn("imp").unbind("click").bind("click",function() {
 				fileId = key;
 			}
 			if (fileId == null){
-				alert("请选择文件上传");
+				Tip.showError("请选择文件上传 !", true);
 				return;
 			}
 			

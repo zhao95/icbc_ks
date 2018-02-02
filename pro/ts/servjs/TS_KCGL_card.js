@@ -159,7 +159,7 @@ function check(colName){
 				}else{
 					_viewer.getItem("KC_LEVEL").clear();
 				}
-				_viewer.cardBarTipError("一级考场所属机构为一级机构");
+				Tip.showError("一级考场所属机构为一级机构", true);
 			}
 		}else if(kcLevel == "二级"){
 			if(level != 3){
@@ -168,7 +168,7 @@ function check(colName){
 				}else{
 					_viewer.getItem("KC_LEVEL").clear();
 				}
-				_viewer.cardBarTipError("二级考场所属机构为二级机构");
+				Tip.showError("二级考场所属机构为二级机构", true);
 			}
 		}
 	});
@@ -182,7 +182,7 @@ _viewer.getItem("KC_MAX").change(function(){
 		maxValue = parseInt(maxValue);
 		goodValue = parseInt(goodValue);
 		if(maxValue < goodValue){
-			alert("最大设备数不能小于最优设备数！");
+			Tip.showError("最大设备数不能小于最优设备数！", true);
 			_viewer.getItem("KC_MAX").clear();
 		}
 	}
@@ -194,7 +194,7 @@ _viewer.getItem("KC_GOOD").change(function(){
 		maxValue = parseInt(maxValue);
 		goodValue = parseInt(goodValue);
 		if(maxValue < goodValue){
-			alert("最大设备数不能小于最优设备数！");
+			Tip.showError("最大设备数不能小于最优设备数！", true);
 			_viewer.getItem("KC_GOOD").clear();
 		}
 	}
@@ -214,7 +214,7 @@ $("#TS_KCGL_JKIP-viListViewBatch").find("input[icode='JKIP_IP']").change(functio
 	var ipVal = $(this).val();
 	var reg = new RegExp("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$");
 	if(!reg.test(ipVal)){
-		alert("IP地址格式不正确");
+		Tip.showError("IP地址格式不正确！", true);
 		$(this).val(""); 
     }
 });
@@ -226,7 +226,7 @@ $("#TS_KCGL_JKIP-viListViewBatch-addBatch").click(function(){
 			var ipVal = $(this).val();
 			var reg = new RegExp("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$");
 			if(!reg.test(ipVal)){
-				alert("IP地址格式不正确");
+				Tip.showError("IP地址格式不正确！", true);
 				$(this).val(""); 
 		    }
 		});
