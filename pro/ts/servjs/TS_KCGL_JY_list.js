@@ -91,3 +91,18 @@ function openMyCard(dataId,readOnly,showTab){
     var cardView = new rh.vi.cardView(temp);
     cardView.show();
 }
+
+/*******/
+var mySearch = $(".content-navTreeCont").find("input[id='myTreeSearch']");
+if(mySearch.length == 0){
+	var serachDiv = "<input type='text' id='myTreeSearch' class='rhSearch-input' style='width:65%;'><input id='myTreeSearchBtn' type='button' value='查询'>";
+	$(".bbit-tree").prepend(serachDiv);
+}
+
+$("#myTreeSearchBtn").unbind("click").bind("click",function(){
+	var searchTree = _viewer.navTree;
+	var searchVal = $("#myTreeSearch").val();
+	var selectDiv = $(".bbit-tree-body").find("div[title*='"+searchVal+"']").eq(0);
+	if($(".bbit-tree-body").find("div[title*='"+searchVal+"']").length == 0){_viewer.refreshTreeAndGrid(_viewer.opts);}
+	selectDiv.expandParentForTpath(searchTree);
+});

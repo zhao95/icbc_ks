@@ -977,6 +977,37 @@ author:xuanye.wan@gmail.com
     		this[0].t.expandParent();
     	}
     };
+    
+    $.fn.expandParentForTpath = function(searchTree) {
+    	var selectDiv = this;
+    	if(selectDiv.length == 0){
+    		searchTree.find(".bbit-tree-selected").removeClass("bbit-tree-selected");
+    		return;
+    	}
+    	var selectId = selectDiv[0].id;
+    	var tpath = selectDiv.attr("tpath");
+    	searchTree.find(".bbit-tree-selected").removeClass("bbit-tree-selected");
+    	var arr = tpath.split(".");
+    	while(arr.length > 1){
+    		var newArr = [];
+    		var tmpTpath = "";
+    		for(var i=0;i<arr.length-1;i++){
+    			newArr.push(arr[i]);
+    			if(i == arr.length-2){
+    				tmpTpath += arr[i].toString();
+    			}else{
+    				tmpTpath += arr[i].toString() + ".";
+    			}
+    		}
+    		arr = newArr;
+    		var node = $(".bbit-tree-body").find("div[tpath='"+tmpTpath+"']");
+    		var img = node.find("img.bbit-tree-ec-icon");
+    		if(img.length > 0 && !img.parent().hasClass("bbit-tree-node-expanded")){
+    			img.click();
+    		}
+    	}
+    	$("#"+selectId).click();
+    };
 	
     //rh-add-ljk 供外部调用设置动态展开的回调
     $.fn.setAfterExpandFunc = function(afterExpand,handler) {//rh add by ljk

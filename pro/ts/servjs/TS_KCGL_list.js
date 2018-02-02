@@ -353,3 +353,16 @@ _viewer.getBtn("tmplBtn").unbind("click").bind("click",function(){
 	window.open(FireFly.getContextPath() + '/ts/imp_template/考场管理导入模版.xls');
 });
 
+var mySearch = $(".content-navTreeCont").find("input[id='myTreeSearch']");
+if(mySearch.length == 0){
+	var serachDiv = "<input type='text' id='myTreeSearch' class='rhSearch-input' style='width:65%;'><input id='myTreeSearchBtn' type='button' value='查询'>";
+	$(".bbit-tree").prepend(serachDiv);
+}
+
+$("#myTreeSearchBtn").unbind("click").bind("click",function(){
+	var searchTree = _viewer.navTree;
+	var searchVal = $("#myTreeSearch").val();
+	var selectDiv = $(".bbit-tree-body").find("div[title*='"+searchVal+"']").eq(0);
+	if($(".bbit-tree-body").find("div[title*='"+searchVal+"']").length == 0){_viewer.refreshTreeAndGrid(_viewer.opts);}
+	selectDiv.expandParentForTpath(searchTree);
+});
