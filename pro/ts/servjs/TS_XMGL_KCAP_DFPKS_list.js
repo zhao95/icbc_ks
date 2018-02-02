@@ -21,7 +21,7 @@ _viewer.beforeTreeNodeClickLoad = function (item, id, dictId) {
 _viewer.afterTreeNodeClick = function (item, id, dictId) {
     _viewer._transferData["S_ODEPT"] = item.ODEPT_CODE;
     _viewer._transferData["S_ODEPT__NAME"] = item.ODEPT_CODE;
-}
+};
 
 /*
  * 删除前方法执行
@@ -55,7 +55,7 @@ if (userCode !== 'admin') {
     }
 }
 
-//导入模板下载
+/*********导入模板下载************/
 var $impFile = jQuery('#' + _viewer.servId + '-impFile');
 var xmBean = FireFly.doAct("TS_XMGL", "byid", {_PK_: _viewer.links.XM_ID});
 $impFile.unbind('click').bind('click', function () {
@@ -68,115 +68,22 @@ $impFile.unbind('click').bind('click', function () {
     }
 });
 
-
 if (xmBean.XM_ID && xmBean.S_USER === System.getUser("USER_CODE")) {
-    //从excel中导入人员
-    const IMPORT_FILE_ID = _viewer.servId + "-impUser";
-    var $importUser = $('#' + IMPORT_FILE_ID);
-//避免刷新数据重复添加
-    if ($importUser.length === 0) {
-        var config = {
-            "SERV_ID": _viewer.servId,
-            "TEXT": "导入",
-            "FILE_CAT": "",
-            "FILENUMBER": 1,
-            "BTN_IMAGE": "btn-imp",
-            // "VALUE": 15,
-            "TYPES": "*.xls;*.xlsx;",
-            "DESC": ""
-        };
-        var file = new rh.ui.File({
-            "id": IMPORT_FILE_ID,
-            "config": config
-        });
-        file._obj.insertBefore($impFile);
-        $("#" + file.time + "-upload span:first").css('padding', '0 7px 2px 20px');
-        jQuery('<span class="rh-icon-img btn-imp"></span>').appendTo($("#" + file.time + "-upload"));
-        file.initUpload();
-        file.afterQueueComplete = function (fileData) {// 这个上传队列完成之后
-            console.log("这个上传队列完成之后" + fileData);
-            for (var propertyName in fileData) {
-                var filesize = fileData[propertyName].FILE_SIZE;
-                if (filesize > 1024 * 1024 * 20) {
-                    alert("文件超过20M");
-                    file.clear();
-                    return false;
-                }
-                var fileId = fileData[propertyName].FILE_ID;
-                if (fileId) {
-                    var data = {};
-                    // data.XM_SZ_ID = xmSzId;
-                    // data.G_ID = _viewer.getParHandler()._pkCode;
-                    data.FILE_ID = fileId;
-                    data.XM_ID = _viewer.links.XM_ID;
-                    FireFly.doAct(_viewer.servId, "saveFromExcel", data, false, false, function (data) {
-                        rh.ui.File.prototype.downloadFile(data.FILE_ID, "test");
-                        _viewer.refresh();
-                        alert(data._MSG_);
-                    });
-                }
-            }
-            file.clear();
-        };
-    }
-    $importUser.find('object').css('cursor', 'pointer');
-    $importUser.find('object').css('z-index', '999999999');
-    $importUser.find('object').css('width', '100%');
+    var i = 0;
+    _viewer.getBtn("impUser").unbind('click').bind('click',
+        ImpUtils.impFileFunction(_viewer, "saveFromExcel", function () {
+            return {XM_ID: _viewer.links.XM_ID};
+        })
+    );
+} else {
+    _viewer.getBtn("impUser").remove();
 }
 
-//从excel中导入人员 为借考
-const IMPORT_FILE_TOJK_ID = _viewer.servId + "-impUserToJk";
-var $impUserToJk = $('#' + IMPORT_FILE_TOJK_ID);
-//避免刷新数据重复添加
-if ($impUserToJk.length === 0) {
-    var config = {
-        "SERV_ID": _viewer.servId,
-        "TEXT": "导入为借考",
-        "FILE_CAT": "",
-        "FILENUMBER": 1,
-        "BTN_IMAGE": "btn-imp",
-        // "VALUE": 15,
-        "TYPES": "*.xls;*.xlsx;",
-        "DESC": ""
-    };
-    var file = new rh.ui.File({
-        "id": IMPORT_FILE_TOJK_ID,
-        "config": config
-    });
-    file._obj.insertBefore($impFile);
-    $("#" + file.time + "-upload span:first").css('padding', '0 7px 2px 20px');
-    jQuery('<span class="rh-icon-img btn-imp"></span>').appendTo($("#" + file.time + "-upload"));
-    file.initUpload();
-    file.afterQueueComplete = function (fileData) {// 这个上传队列完成之后
-        console.log("这个上传队列完成之后" + fileData);
-        for (var propertyName in fileData) {
-            var filesize = fileData[propertyName].FILE_SIZE;
-            if (filesize > 1024 * 1024 * 20) {
-                alert("文件超过20M");
-                file.clear();
-                return false;
-            }
-            var fileId = fileData[propertyName].FILE_ID;
-            if (fileId) {
-                var data = {};
-                // data.XM_SZ_ID = xmSzId;
-                // data.G_ID = _viewer.getParHandler()._pkCode;
-                data.FILE_ID = fileId;
-                data.XM_ID = _viewer.links.XM_ID;
-                data.OPT_TYPE = 'JK';
-                FireFly.doAct(_viewer.servId, "saveFromExcel", data, false, false, function (data) {
-                    rh.ui.File.prototype.downloadFile(data.FILE_ID, "test");
-                    _viewer.refresh();
-                    alert(data._MSG_);
-                });
-            }
-        }
-        file.clear();
-    };
-}
-$impUserToJk.find('object').css('cursor', 'pointer');
-$impUserToJk.find('object').css('z-index', '999999999');
-$impUserToJk.find('object').css('width', '100%');
+_viewer.getBtn("impUserToJk").unbind('click').bind('click',
+    ImpUtils.impFileFunction(_viewer, "saveFromExcel", function () {
+        return {XM_ID: _viewer.links.XM_ID, OPT_TYPE: 'JK'};
+    })
+);
 
 //列表条件查询
 var $tsXmglCccsKsgl = $("#" + _viewer.servId);
