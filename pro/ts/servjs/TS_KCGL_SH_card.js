@@ -23,8 +23,9 @@ var kcState2 = _viewer.getItem("KC_STATE2").getValue();
 //console.log("KC_STATE2",_viewer.getItem("KC_STATE2").getValue());
 //状态 0:新增未保存1:无效(待审核) 2:无效(审核未通过) 3:无效(审核中) 4:无效(扣分超过上限)5:有效
 _viewer.getBtn("yesBtn").unbind("click").bind("click", function(event) {
+	var userCode = System.getVar("@USER_CODE@");//当前登录用户code
 	var param = {"_PK_":pkCode};
-	if(roleOrgPvlg != undefined && (roleOrgPvlg.indexOf('0010100000') > -1 || roleOrgPvlg.indexOf('0010100500') > -1)){
+	if(userCode == "admin" || roleOrgPvlg != undefined && (roleOrgPvlg.indexOf('0010100000') > -1 || roleOrgPvlg.indexOf('0010100500') > -1)){
 		param["KC_STATE"] = 5;
 	}else{
 		param["KC_STATE2"] = 1;
