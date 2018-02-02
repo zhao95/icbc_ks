@@ -1,5 +1,6 @@
 var _viewer = this
-
+var height = jQuery(window).height()-50;
+var width = jQuery(window).width()-100;
 //重写add方法
 _viewer.getBtn("add").unbind("click").bind("click",function() {
 	var pcodeh = _viewer._transferData["CTLG_PCODE"];
