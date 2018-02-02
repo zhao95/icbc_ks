@@ -6,10 +6,9 @@ var user_pvlg=_viewer._userPvlg["TS_KCGL_SH_PVLG"];
 //var roleOrgPvlg = user_pvlg.upd.ROLE_ORG_LV;
 var roleOrgPvlg = user_pvlg.upd.ROLE_DCODE;
 
-//var odeptLevel = System.getVar("@ODEPT_LEVEL@");
-//if(odeptLevel != 1){
+if(_viewer.getItem("KC_STATE").getValue() < 4 || _viewer.getItem("KC_STATE").getValue() > 5){
 	_viewer.tabHide("TS_KCGL_UPDATE");
-//}
+}
 
 var kcState = _viewer.getItem("KC_STATE").getValue();
 
