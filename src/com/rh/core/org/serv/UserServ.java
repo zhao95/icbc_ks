@@ -66,7 +66,7 @@ public class UserServ extends CommonServ {
                 ImMgr.getIm().saveUser(outBean);
             }
         }
-        
+
         /** 处理兼岗用户 */
         if (!paramBean.containsKey("_JIANGANG_FLAG_")) {
             treatJiangangUser(paramBean, outBean);
@@ -412,6 +412,7 @@ public class UserServ extends CommonServ {
 //  			param.set("ctlgModuleName", ctlgModuleName);
   			param.set("fieldName","DEPT_CODE");
   			param.set("serviceName", paramBean.getServId());
-  			PvlgUtils.setOrgPvlgWhereNoSearch(param);	
+            PvlgUtils.setCtlgPvlgWhere(param);
+  			//PvlgUtils.setOrgPvlgWhereNoSearch(param);
   		}
 }
