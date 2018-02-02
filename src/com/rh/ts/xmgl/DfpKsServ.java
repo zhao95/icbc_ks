@@ -3,14 +3,16 @@ package com.rh.ts.xmgl;
 import com.rh.core.base.Bean;
 import com.rh.core.base.Context;
 import com.rh.core.org.UserBean;
-import com.rh.core.serv.*;
+import com.rh.core.org.mgr.UserMgr;
+import com.rh.core.serv.CommonServ;
+import com.rh.core.serv.OutBean;
+import com.rh.core.serv.ParamBean;
+import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
-import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.DateUtils;
 import com.rh.core.util.ImpUtils;
 import com.rh.ts.pvlg.PvlgUtils;
 import com.rh.ts.util.KcUtils;
-import com.rh.ts.util.RoleUtil;
 import com.rh.ts.util.TsConstant;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DfpKsServ extends CommonServ {
+
+    @Override
+    protected void beforeSave(ParamBean paramBean) {
+        String userCode = paramBean.getStr("BM_CODE");
+        UserBean userBean = UserMgr.getUser(userCode);
+        paramBean.set("S_DEPT", userBean.getDeptCode());
+        paramBean.set("S_TDEPT", userBean.getTDeptCode());
+        paramBean.set("S_ODEPT", userBean.getODeptCode());//机构编码 导入后所属机构
+        paramBean.set("ODEPT_CODE", userBean.getODeptCode());
+        super.beforeSave(paramBean);
+    }
+
     // 查询前添加查询条件
     protected void beforeQuery(ParamBean paramBean) {
         ParamBean param = new ParamBean();
@@ -85,7 +99,7 @@ public class DfpKsServ extends CommonServ {
                 UserBean userBean = ImpUtils.getUserBeanByString(col1String);
                 if (userBean == null) {
                     rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
-                   continue;
+                    continue;
                 }
 
                 String kslbkId = "";

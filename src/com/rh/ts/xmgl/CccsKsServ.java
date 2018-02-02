@@ -5,13 +5,14 @@ import com.rh.core.base.BeanUtils;
 import com.rh.core.comm.FileMgr;
 import com.rh.core.comm.file.TempFile;
 import com.rh.core.comm.file.TempFile.Storage;
+import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
+import com.rh.core.org.mgr.UserMgr;
 import com.rh.core.serv.*;
 import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.ExpUtils;
-import com.rh.core.util.ImpUtils;
 import com.rh.ts.pvlg.PvlgUtils;
 import jxl.Cell;
 import jxl.Sheet;
@@ -28,6 +29,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class CccsKsServ extends CommonServ {
+
+    @Override
+    protected void beforeSave(ParamBean paramBean) {
+        String userCode = paramBean.getStr("BM_CODE");
+        UserBean userBean = UserMgr.getUser(userCode);
+        paramBean.set("S_DEPT", userBean.getDeptCode());
+        paramBean.set("S_TDEPT", userBean.getTDeptCode());
+        paramBean.set("S_ODEPT", userBean.getODeptCode());//机构编码 导入后所属机构
+        paramBean.set("ODEPT_CODE", userBean.getODeptCode());
+        super.beforeSave(paramBean);
+    }
+
     // 查询前添加查询条件
     protected void beforeQuery(ParamBean paramBean) {
         ParamBean param = new ParamBean();

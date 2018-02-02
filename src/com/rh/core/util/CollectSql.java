@@ -11,7 +11,7 @@ import java.util.Date;
  * 整合增量sql
  * Created by shenh on 2018/2/2.
  */
-public class CollectionSql {
+public class CollectSql {
 
     private static String startDateString = "2017-12-26";
 
@@ -24,11 +24,11 @@ public class CollectionSql {
     public static void main(String[] args) throws IOException, ParseException {
         startDate = DateUtils.parseDate(startDateString);
         endDate = DateUtils.parseDate(endDateString);
-        CollectionSql.collectionSql();
+        CollectSql.collectionSql();
     }
 
     public static void collectionSql() throws IOException {
-        String path = CollectionSql.class.getResource("").getPath();
+        String path = CollectSql.class.getResource("").getPath();
         String folder = path.substring(0, path.indexOf("pro")) + "db/increment/";
         String allFileContent = getAllFileContent(new File(folder));
 
@@ -45,6 +45,7 @@ public class CollectionSql {
         File[] files = folder.listFiles();
         for (File file : files != null ? files : new File[0]) {
             if (!ignoreFile(file)) {
+                result.append("/***").append(file.getName()).append("***/\n");
                 String fileToString = FileUtils.readFileToString(file);
                 result.append(fileToString).append("\n");
             }
