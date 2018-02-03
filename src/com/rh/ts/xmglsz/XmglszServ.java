@@ -349,6 +349,317 @@ public OutBean exp(ParamBean paramBean) {
 		
 		String where1 = "AND USER_CODE is null ";
 		List<Bean> 	pxdatalist1 = ServDao.finds("TS_BMSH_PX", where1);
+		
+//	    String pxcol = namecol;
+//	    Bean colBean = new Bean();
+//		colBean.set("SAFE_HTML", "");
+//		colBean.set("ITEM_LIST_FLAG", "1");
+//		colBean.set("ITEM_CODE", namecol);
+//		colBean.set("EN_JSON", "");
+//		colBean.set("ITEM_NAME", aa);
+//		cols.put(pxcol, colBean);
+		for(int  k=0;k<pxdatalist1.size();k++){
+			
+			if(k==0){
+				//String aa = pxbean.getStr("PX_NAME");
+				//String namecol = pxbean.getStr("PX_COLUMN");
+				if("人力资源编码".equals("人力资源编码")){
+				//String pxcol = namecol;
+				Bean colBean = new Bean();
+				colBean.set("SAFE_HTML", "");
+				colBean.set("ITEM_LIST_FLAG", "1");
+				colBean.set("ITEM_CODE", "BM_CODE");
+				colBean.set("EN_JSON", "");
+				colBean.set("ITEM_NAME", "人力资源编码");
+				cols.put("BM_CODE", colBean);
+				}
+			}
+			if(k==1){
+				if("统一认证号".equals("统一认证号")){
+					//String pxcol = namecol;
+					Bean colBean = new Bean();
+					colBean.set("SAFE_HTML", "");
+					colBean.set("ITEM_LIST_FLAG", "1");
+					colBean.set("ITEM_CODE", "TONGYI");
+					colBean.set("EN_JSON", "");
+					colBean.set("ITEM_NAME", "统一认证号");
+					cols.put("TONGYI", colBean);
+					}
+			}
+			if(k==2){
+				if("姓名".equals("姓名")){
+					//String pxcol = namecol;
+					Bean colBean = new Bean();
+					colBean.set("SAFE_HTML", "");
+					colBean.set("ITEM_LIST_FLAG", "1");
+					colBean.set("ITEM_CODE", "BM_NAME");
+					colBean.set("EN_JSON", "");
+					colBean.set("ITEM_NAME", "姓名");
+					cols.put("BM_NAME", colBean);
+					}
+				
+			}
+			if(k==3){
+				 if("性别".equals("性别")){
+						//String pxcol = namecol;
+						Bean colBean = new Bean();
+						colBean.set("SAFE_HTML", "");
+						colBean.set("ITEM_LIST_FLAG", "1");
+						colBean.set("ITEM_CODE", "USER_SEX");
+						colBean.set("EN_JSON", "");
+						colBean.set("ITEM_NAME", "性别");
+						cols.put("USER_SEX", colBean);
+					}
+			}
+			if(k==4){
+				if("一级机构".equals("一级机构")){
+				    //String pxcol = namecol;
+				    Bean colBean = new Bean();
+					colBean.set("SAFE_HTML", "");
+					colBean.set("ITEM_LIST_FLAG", "1");
+					colBean.set("ITEM_CODE", "LEVEL1");
+					colBean.set("EN_JSON", "");
+					colBean.set("ITEM_NAME", "一级机构");
+					cols.put("LEVEL1", colBean);
+				}
+			}
+			if(k==5){
+				if("二级机构".equals("二级机构")){
+				    //String pxcol = namecol;
+				    Bean colBean = new Bean();
+					colBean.set("SAFE_HTML", "");
+					colBean.set("ITEM_LIST_FLAG", "1");
+					colBean.set("ITEM_CODE", "LEVEL2");
+					colBean.set("EN_JSON", "");
+					colBean.set("ITEM_NAME", "二级机构");
+					cols.put("LEVEL2", colBean);
+				}
+			}
+			if(k==6){
+				if("三级机构".equals("三级机构")){
+				    //String pxcol = namecol;
+				    Bean colBean = new Bean();
+					colBean.set("SAFE_HTML", "");
+					colBean.set("ITEM_LIST_FLAG", "1");
+					colBean.set("ITEM_CODE", "LEVEL3");
+					colBean.set("EN_JSON", "");
+					colBean.set("ITEM_NAME", "三级机构");
+					cols.put("LEVEL3", colBean);
+				}
+			}
+			if(k==7){
+				if("四级机构".equals("四级机构")){
+				    //String pxcol = namecol;
+				    Bean colBean = new Bean();
+					colBean.set("SAFE_HTML", "");
+					colBean.set("ITEM_LIST_FLAG", "1");
+					colBean.set("ITEM_CODE", "LEVEL4");
+					colBean.set("EN_JSON", "");
+					colBean.set("ITEM_NAME", "四级机构");
+					cols.put("LEVEL4", colBean);
+				}
+			}
+			if(k==8){
+				if("五级机构".equals("五级机构")){
+				    //String pxcol = namecol;
+				    Bean colBean = new Bean();
+					colBean.set("SAFE_HTML", "");
+					colBean.set("ITEM_LIST_FLAG", "1");
+					colBean.set("ITEM_CODE", "LEVEL5");
+					colBean.set("EN_JSON", "");
+					colBean.set("ITEM_NAME", "五级机构");
+					cols.put("LEVEL5", colBean);
+				}
+			}
+			if(k==9){
+				if("考试类别".equals("考试类别")){
+				    //String pxcol = namecol;
+				    Bean colBean = new Bean();
+					colBean.set("SAFE_HTML", "");
+					colBean.set("ITEM_LIST_FLAG", "1");
+					colBean.set("ITEM_CODE", "BM_LB");
+					colBean.set("EN_JSON", "");
+					colBean.set("ITEM_NAME", "考试类别");
+					cols.put("BM_LB", colBean);
+				}
+			}
+			if(k==10){
+				if("考试序列".equals("考试序列")){
+				    //String pxcol = namecol;
+				    Bean colBean = new Bean();
+					colBean.set("SAFE_HTML", "");
+					colBean.set("ITEM_LIST_FLAG", "1");
+					colBean.set("ITEM_CODE", "BM_XL");
+					colBean.set("EN_JSON", "");
+					colBean.set("ITEM_NAME", "考试序列");
+					cols.put("BM_XL", colBean);
+				}
+			}
+			if(k==11){
+				if("考试模块".equals("考试模块")){
+				    //String pxcol = namecol;
+				    Bean colBean = new Bean();
+					colBean.set("SAFE_HTML", "");
+					colBean.set("ITEM_LIST_FLAG", "1");
+					colBean.set("ITEM_CODE", "BM_MK");
+					colBean.set("EN_JSON", "");
+					colBean.set("ITEM_NAME", "考试模块");
+					cols.put("BM_MK", colBean);
+				}
+			}
+			if(k==12){
+				if("考试层级".equals("考试层级")){
+				    //String pxcol = namecol;
+				    Bean colBean = new Bean();
+					colBean.set("SAFE_HTML", "");
+					colBean.set("ITEM_LIST_FLAG", "1");
+					colBean.set("ITEM_CODE", "BM_TYPE");
+					colBean.set("EN_JSON", "");
+					colBean.set("ITEM_NAME", "考试层级");
+					cols.put("BM_TYPE", colBean);
+				}
+			}
+			
+		}
+		
+//		for (Bean pxbean : pxdatalist1) {//表头
+//			String aa = pxbean.getStr("PX_NAME");
+//			String namecol = pxbean.getStr("PX_COLUMN");
+//			if("人力资源编码".equals("人力资源编码")){
+//			String pxcol = namecol;
+//			Bean colBean = new Bean();
+//			colBean.set("SAFE_HTML", "");
+//			colBean.set("ITEM_LIST_FLAG", "1");
+//			colBean.set("ITEM_CODE", "BM_CODE");
+//			colBean.set("EN_JSON", "");
+//			colBean.set("ITEM_NAME", "人力资源编码");
+//			cols.put("BM_CODE", colBean);
+//			}
+//             if("统一认证号".equals("统一认证号")){
+//				String pxcol = namecol;
+//				Bean colBean = new Bean();
+//				colBean.set("SAFE_HTML", "");
+//				colBean.set("ITEM_LIST_FLAG", "1");
+//				colBean.set("ITEM_CODE", "TONGYI");
+//				colBean.set("EN_JSON", "");
+//				colBean.set("ITEM_NAME", "统一认证号");
+//				cols.put("TONGYI", colBean);
+//				}
+//                if("姓名".equals("姓名")){
+//						String pxcol = namecol;
+//						Bean colBean = new Bean();
+//						colBean.set("SAFE_HTML", "");
+//						colBean.set("ITEM_LIST_FLAG", "1");
+//						colBean.set("ITEM_CODE", "BM_NAME");
+//						colBean.set("EN_JSON", "");
+//						colBean.set("ITEM_NAME", "姓名");
+//						cols.put("BM_NAME", colBean);
+//						}
+//                if("性别".equals("性别")){
+//							String pxcol = namecol;
+//							Bean colBean = new Bean();
+//							colBean.set("SAFE_HTML", "");
+//							colBean.set("ITEM_LIST_FLAG", "1");
+//							colBean.set("ITEM_CODE", "USER_SEX");
+//							colBean.set("EN_JSON", "");
+//							colBean.set("ITEM_NAME", aa);
+//							cols.put("USER_SEX", colBean);
+//						}
+//                if("一级机构".equals(aa)){
+//						    String pxcol = namecol;
+//						    Bean colBean = new Bean();
+//							colBean.set("SAFE_HTML", "");
+//							colBean.set("ITEM_LIST_FLAG", "1");
+//							colBean.set("ITEM_CODE", namecol);
+//							colBean.set("EN_JSON", "");
+//							colBean.set("ITEM_NAME", aa);
+//							cols.put(pxcol, colBean);
+//						}
+//                if("二级机构".equals(aa)){
+//						    String pxcol = namecol;
+//						    Bean colBean = new Bean();
+//							colBean.set("SAFE_HTML", "");
+//							colBean.set("ITEM_LIST_FLAG", "1");
+//							colBean.set("ITEM_CODE", namecol);
+//							colBean.set("EN_JSON", "");
+//							colBean.set("ITEM_NAME", aa);
+//							cols.put(pxcol, colBean);
+//						}
+//                if("三级机构".equals(aa)){
+//						    String pxcol = namecol;
+//						    Bean colBean = new Bean();
+//							colBean.set("SAFE_HTML", "");
+//							colBean.set("ITEM_LIST_FLAG", "1");
+//							colBean.set("ITEM_CODE", namecol);
+//							colBean.set("EN_JSON", "");
+//							colBean.set("ITEM_NAME", aa);
+//							cols.put(pxcol, colBean);
+//						}
+//                if("四级机构".equals(aa)){
+//						    String pxcol = namecol;
+//						    Bean colBean = new Bean();
+//							colBean.set("SAFE_HTML", "");
+//							colBean.set("ITEM_LIST_FLAG", "1");
+//							colBean.set("ITEM_CODE", namecol);
+//							colBean.set("EN_JSON", "");
+//							colBean.set("ITEM_NAME", aa);
+//							cols.put(pxcol, colBean);
+//						}
+//                if("五级机构".equals(aa)){
+//						    String pxcol = namecol;
+//						    Bean colBean = new Bean();
+//							colBean.set("SAFE_HTML", "");
+//							colBean.set("ITEM_LIST_FLAG", "1");
+//							colBean.set("ITEM_CODE", namecol);
+//							colBean.set("EN_JSON", "");
+//							colBean.set("ITEM_NAME", aa);
+//							cols.put(pxcol, colBean);
+//						}
+//                if("考试类别".equals(aa)){
+//						    String pxcol = namecol;
+//						    Bean colBean = new Bean();
+//							colBean.set("SAFE_HTML", "");
+//							colBean.set("ITEM_LIST_FLAG", "1");
+//							colBean.set("ITEM_CODE", namecol);
+//							colBean.set("EN_JSON", "");
+//							colBean.set("ITEM_NAME", aa);
+//							cols.put(pxcol, colBean);
+//						}
+//                if("考试序列".equals(aa)){
+//						    String pxcol = namecol;
+//						    Bean colBean = new Bean();
+//							colBean.set("SAFE_HTML", "");
+//							colBean.set("ITEM_LIST_FLAG", "1");
+//							colBean.set("ITEM_CODE", namecol);
+//							colBean.set("EN_JSON", "");
+//							colBean.set("ITEM_NAME", aa);
+//							cols.put(pxcol, colBean);
+//						}
+//                if("考试模块".equals(aa)){
+//						    String pxcol = namecol;
+//						    Bean colBean = new Bean();
+//							colBean.set("SAFE_HTML", "");
+//							colBean.set("ITEM_LIST_FLAG", "1");
+//							colBean.set("ITEM_CODE", namecol);
+//							colBean.set("EN_JSON", "");
+//							colBean.set("ITEM_NAME", aa);
+//							cols.put(pxcol, colBean);
+//						}
+//                if("考试层级".equals(aa)){
+//						    String pxcol = namecol;
+//						    Bean colBean = new Bean();
+//							colBean.set("SAFE_HTML", "");
+//							colBean.set("ITEM_LIST_FLAG", "1");
+//							colBean.set("ITEM_CODE", namecol);
+//							colBean.set("EN_JSON", "");
+//							colBean.set("ITEM_NAME", aa);
+//							cols.put(pxcol, colBean);
+//						}
+//			
+//			
+//		}
+		
+	
 		//if(!dataList.isEmpty()){
 	    Bean StartTimeBean = new Bean();
 	    StartTimeBean.set("SAFE_HTML", "");
@@ -434,19 +745,90 @@ public OutBean exp(ParamBean paramBean) {
 		jkCityBean.set("EN_JSON", "");
 		jkCityBean.set("ITEM_NAME", "借考城市");
 		cols.put("jkCity", jkCityBean);
+		Bean shStyleBean = new Bean();
+		shStyleBean.set("SAFE_HTML", "");
+		shStyleBean.set("ITEM_LIST_FLAG", "1");
+		shStyleBean.set("ITEM_CODE", "shStyle");
+		shStyleBean.set("EN_JSON", "");
+		shStyleBean.set("ITEM_NAME", "审核方式");
+		cols.put("shStyle", shStyleBean);
+		Bean node1Bean = new Bean();
+		node1Bean.set("SAFE_HTML", "");
+		node1Bean.set("ITEM_LIST_FLAG", "1");
+		node1Bean.set("ITEM_CODE", "node1");
+		node1Bean.set("EN_JSON", "");
+		node1Bean.set("ITEM_NAME", "终级审核");
+		cols.put("node1", node1Bean);
+		Bean mide1Bean = new Bean();
+		mide1Bean.set("SAFE_HTML", "");
+		mide1Bean.set("ITEM_LIST_FLAG", "1");
+		mide1Bean.set("ITEM_CODE", "mide1");
+		mide1Bean.set("EN_JSON", "");
+		mide1Bean.set("ITEM_NAME", "终级审核意见");
+		cols.put("mide1", mide1Bean);
+		
+		Bean node2Bean = new Bean();
+		node2Bean.set("SAFE_HTML", "");
+		node2Bean.set("ITEM_LIST_FLAG", "1");
+		node2Bean.set("ITEM_CODE", "node2");
+		node2Bean.set("EN_JSON", "");
+		node2Bean.set("ITEM_NAME", "一级审核");
+		cols.put("node2", node2Bean);
+		Bean mide2Bean = new Bean();
+		mide2Bean.set("SAFE_HTML", "");
+		mide2Bean.set("ITEM_LIST_FLAG", "1");
+		mide2Bean.set("ITEM_CODE", "mide2");
+		mide2Bean.set("EN_JSON", "");
+		mide2Bean.set("ITEM_NAME", "一级审核意见");
+		cols.put("mide2", mide2Bean);
+		
+		Bean node3Bean = new Bean();
+		node3Bean.set("SAFE_HTML", "");
+		node3Bean.set("ITEM_LIST_FLAG", "1");
+		node3Bean.set("ITEM_CODE", "node3");
+		node3Bean.set("EN_JSON", "");
+		node3Bean.set("ITEM_NAME", "二级审核");
+		cols.put("node3", node3Bean);
+		Bean mide3Bean = new Bean();
+		mide3Bean.set("SAFE_HTML", "");
+		mide3Bean.set("ITEM_LIST_FLAG", "1");
+		mide3Bean.set("ITEM_CODE", "mide3");
+		mide3Bean.set("EN_JSON", "");
+		mide3Bean.set("ITEM_NAME", "二级审核意见");
+		cols.put("mide3", mide3Bean);
+		
+		Bean node4Bean = new Bean();
+		node4Bean.set("SAFE_HTML", "");
+		node4Bean.set("ITEM_LIST_FLAG", "1");
+		node4Bean.set("ITEM_CODE", "node4");
+		node4Bean.set("EN_JSON", "");
+		node4Bean.set("ITEM_NAME", "三级审核");
+		cols.put("node4", node4Bean);
+		Bean mide4Bean = new Bean();
+		mide4Bean.set("SAFE_HTML", "");
+		mide4Bean.set("ITEM_LIST_FLAG", "1");
+		mide4Bean.set("ITEM_CODE", "mide4");
+		mide4Bean.set("EN_JSON", "");
+		mide4Bean.set("ITEM_NAME", "三级审核意见");
+		cols.put("mide4", mide4Bean);
+		
+		Bean node5Bean = new Bean();
+		node5Bean.set("SAFE_HTML", "");
+		node5Bean.set("ITEM_LIST_FLAG", "1");
+		node5Bean.set("ITEM_CODE", "node5");
+		node5Bean.set("EN_JSON", "");
+		node5Bean.set("ITEM_NAME", "最低审核");
+		cols.put("node5", node5Bean);
+		Bean mide5Bean = new Bean();
+		mide5Bean.set("SAFE_HTML", "");
+		mide5Bean.set("ITEM_LIST_FLAG", "1");
+		mide5Bean.set("ITEM_CODE", "mide5");
+		mide5Bean.set("EN_JSON", "");
+		mide5Bean.set("ITEM_NAME", "最低审核意见");
+		cols.put("mide5", mide5Bean);
+	
 		//}
-		for (Bean pxbean : pxdatalist1) {//表头
-			String aa = pxbean.getStr("PX_NAME");
-			String namecol = pxbean.getStr("PX_COLUMN");
-			String pxcol = namecol;
-			Bean colBean = new Bean();
-			colBean.set("SAFE_HTML", "");
-			colBean.set("ITEM_LIST_FLAG", "1");
-			colBean.set("ITEM_CODE", namecol);
-			colBean.set("EN_JSON", "");
-			colBean.set("ITEM_NAME", aa);
-			cols.put(pxcol, colBean);
-		}
+	
 		String  table ="";
 		List<Bean> finalList = new ArrayList<Bean>();
 		for(int i=0;i<3;i++){
@@ -477,10 +859,12 @@ public OutBean exp(ParamBean paramBean) {
 				String sjid=bean.getStr("SJ_ID");
 				String kcid=bean.getStr("KC_ID");
 				String zwid=bean.getStr("ZW_ID");
-				String shid=bean.getStr("SH_ID");
+				String  shid =bean.getStr("SH_ID");
+				
+				String bmid=bean.getStr("BM_ID");
 				//Bean kcInfoBean=getKcMessages( work_num,xmid,lbCode,xlCode,mkCode,djCode);
 				
-				Bean kcInfoBean=getKcMessages(sjid,kcid ,zwid,work_num,xmid,shid);
+				Bean kcInfoBean=getKcMessages(sjid,kcid ,zwid,work_num,xmid,shid,bmid);
 				String 	StartTime=kcInfoBean.getStr("STARTTIME");
 				String 	EndTime=kcInfoBean.getStr("ENDTIME");
 				String 	kcName=kcInfoBean.getStr("kcName");
@@ -493,6 +877,18 @@ public OutBean exp(ParamBean paramBean) {
 				String jkYesNo=kcInfoBean.getStr("jkYesNo");
 				String 	jkResult=kcInfoBean.getStr("jkResult");
 				String 	jkcity=kcInfoBean.getStr("jkcity");
+				String 	shStyle=kcInfoBean.getStr("shStyle");
+				String 	node1=kcInfoBean.getStr("node1");
+				String 	mide1=kcInfoBean.getStr("mide1");
+				String 	node2=kcInfoBean.getStr("node2");
+				String 	mide2=kcInfoBean.getStr("mide2");
+				String 	node3=kcInfoBean.getStr("node3");
+				String 	mide3=kcInfoBean.getStr("mide3");
+				String 	node4=kcInfoBean.getStr("node4");
+				String 	mide4=kcInfoBean.getStr("mide4");
+				String 	node5=kcInfoBean.getStr("node5");
+				String 	mide5=kcInfoBean.getStr("mide5");
+				
 				Bean userBean = getUserInfo1(work_num);
 				Bean newBean = new Bean();
 				newBean.set("StartTime", StartTime);
@@ -507,6 +903,17 @@ public OutBean exp(ParamBean paramBean) {
 				newBean.set("jkYesNo", jkYesNo);
 				newBean.set("jkResult", jkResult);
 				newBean.set("jkCity", jkcity);
+				newBean.set("shStyle", shStyle);
+				newBean.set("node1", node1);
+				newBean.set("mide1", mide1);
+				newBean.set("node2", node2);
+				newBean.set("mide2", mide2);
+				newBean.set("node3", node3);
+				newBean.set("mide3", mide3);
+				newBean.set("node4", node4);
+				newBean.set("mide4", mide4);
+				newBean.set("node5", node5);
+				newBean.set("mide5", mide5);
 				// for循环排序bean
 				for (Bean pxbean : pxdatalist1) {
 					String namecol = pxbean.getStr("PX_COLUMN");
@@ -658,7 +1065,7 @@ public Bean getUserInfo1(String s) {
 
 
 //考场相关信息( work_num,xmid,lbCode,xlCode,mkCode,djCode);
-public Bean getKcMessages(String sjid,String kcid ,String zwid,String  user_code,String xm_id,String sh_id) {
+public Bean getKcMessages(String sjid,String kcid ,String zwid,String  user_code,String xm_id,String sh_id,String bm_id) {
 	Bean  KcInfoBean=new Bean();
 	//String yapWhere="AND SH_ID='"+shid+"'";
 	//String yapWhere="AND XM_ID='"+xmid+"' AND U_CODE='"+work_num+"' AND BM_LB='"+lbCode+"' AND BM_XL='"+xlCode+"' AND BM_MK ='"+mkCode+"' AND BM_LV='"+djCode+"'";
@@ -675,6 +1082,19 @@ public Bean getKcMessages(String sjid,String kcid ,String zwid,String  user_code
 	String  jkYesNo=null;
 	String  jkResult=null;
 	String jkcity=null;
+	String  shStyle=null; 
+	String  node1=null;
+	String  mide1=null;
+	String  node2=null;
+	String  mide2=null;
+	String  node3=null;
+	String  mide3=null;
+	String  node4=null;
+	String  mide4=null;
+	String  node5=null;
+	String  mide5=null;
+	
+	
 	//if(Beanlist !=null  && !Beanlist.isEmpty()){
 			//String shId=Beanlist.get(0).getStr("SJ_ID");
 			//String ccId=Beanlist.get(0).getStr("KC_ID");
@@ -763,7 +1183,63 @@ public Bean getKcMessages(String sjid,String kcid ,String zwid,String  user_code
 	        	}
          }else{
        	     qjYesNo="否";
-         }      
+         }  
+	        
+	     String mindDataSql="SELECT  *   FROM  ts_comm_mind    WHERE  data_ID  ='"+bm_id+"'";    
+	     List<Bean> mindData= Transaction.getExecutor().query(mindDataSql);
+	     if(mindData !=null    && !mindData.isEmpty()){
+	    	 String shfs=mindData.get(0).getStr("SH_UCODE");
+	    	 if(!shfs.isEmpty() && !"".equals(shfs)){
+	    		 shStyle="手动审核";
+	    	 }else{
+	    		 shStyle="自动审核"; 
+	    	 }
+	    	 for(int k=0;k<jkbean.size();k++){
+	    		String nodeName= mindData.get(k).getStr("SH_NODE");
+	    	   int  shMide= mindData.get(k).getInt("SH_STATUS");
+	    		if("最终审核级别".equals(nodeName)){
+	    			node1=nodeName;
+	    			if(shMide==1){
+	    				mide1="同意";
+	    			}else if(shMide==2){
+	    				mide1="不同意";
+	    			}
+	    			
+	    		}else if("一级审核级别".equals(nodeName)){
+	    			node2=nodeName;
+	    			if(shMide==1){
+	    				mide2="同意";
+	    			}else if(shMide==2){
+	    				mide2="不同意";
+	    			}
+	    			
+	    		}else if("二级审核级别".equals(nodeName)){
+	    			node3=nodeName;
+	    			if(shMide==1){
+	    				mide3="同意";
+	    			}else if(shMide==2){
+	    				mide3="不同意";
+	    			}
+	    			
+	    	 }else  if("三级审核级别".equals(nodeName)){
+	    		    node4=nodeName;
+	    			if(shMide==1){
+	    				mide4="同意";
+	    			}else if(shMide==2){
+	    				mide4="不同意";
+	    			}
+	    			
+	    	 }else if ("最低审核级别".equals(nodeName)){
+	    		    node5=nodeName;
+	    			if(shMide==1){
+	    				mide5="同意";
+	    			}else if(shMide==2){
+	    				mide5="不同意";
+	    			}
+	    			
+	    	 }
+	     }
+	     }    
 	KcInfoBean.set("STARTTIME", startTime);
 	KcInfoBean.set("ENDTIME", endTime);
 	KcInfoBean.set("kcName", kcName);
@@ -776,6 +1252,18 @@ public Bean getKcMessages(String sjid,String kcid ,String zwid,String  user_code
 	KcInfoBean.set("jkYesNo", jkYesNo);
 	KcInfoBean.set("jkResult", jkResult);
 	KcInfoBean.set("jkcity", jkcity);
+	KcInfoBean.set("shStyle", shStyle);//审核方式
+	KcInfoBean.set("node1", node1);//1节点名称
+	KcInfoBean.set("mide1", mide1);//1节点名称
+	KcInfoBean.set("node2", node2);//2节点名称
+	KcInfoBean.set("mide2", mide2);//2节点名称
+	KcInfoBean.set("node3", node3);//3节点名称
+	KcInfoBean.set("mide3", mide3);//4节点名称
+	KcInfoBean.set("node4", node4);//1节点名称
+	KcInfoBean.set("mide4", mide4);//1节点名称
+	KcInfoBean.set("node5", node5);//1节点名称
+	KcInfoBean.set("mide5", mide5);//1节点名称
+	
 	return KcInfoBean;
 	
 }
