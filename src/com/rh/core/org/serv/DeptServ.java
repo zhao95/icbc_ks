@@ -20,6 +20,7 @@ import com.rh.core.serv.bean.SqlBean;
 import com.rh.core.serv.util.ServUtils;
 import com.rh.core.util.Constant;
 import com.rh.core.util.UserName2PinyinUtils;
+import com.rh.ts.pvlg.PvlgUtils;
 
 /**
  * 部门服务类
@@ -265,5 +266,22 @@ public class DeptServ extends CommonServ {
         String sql = "update SY_ORG_DEPT set DEPT_SHORT_NAME=#DEPT_SHORT_NAME# where DEPT_CODE=#DEPT_CODE#";
         int count = Transaction.getExecutor().executeBatchBean(sql, dataList);
         return new OutBean().setOk(Context.getSyMsg("SY_BATCHSAVE_OK", count));
+    }
+
+    /**
+     * 查询之前的拦截方法，由子类重载
+     *
+     * @param paramBean
+     *            参数信息
+     */
+    protected void beforeQuery(ParamBean paramBean) {
+        ParamBean param = new ParamBean();
+        param.set("paramBean", paramBean);
+        param.set("_searhFirstType", false);
+//  			param.set("ctlgModuleName", ctlgModuleName);
+        param.set("fieldName","DEPT_CODE");
+        param.set("serviceName", paramBean.getServId());
+        PvlgUtils.setCtlgPvlgWhere(param);
+        //PvlgUtils.setOrgPvlgWhereNoSearch(param);
     }
 }

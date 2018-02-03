@@ -33,3 +33,7 @@ function callBack(idArray) {
 	//工作交接服务
 	FireFly.doAct("SY_ORG_WORK_HANDOVER", "save", param, true);
 };
+
+_viewer.beforeSave =function () {
+    this.byIdData[this.servKeys]=this.getItem(this.servKeys).getValue();
+};
