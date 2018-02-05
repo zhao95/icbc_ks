@@ -16,7 +16,7 @@
 	</path>
 
 	<tstamp>
-		<format property="touchTime" pattern="yyyyMMddHHmmss"/>
+		<format property="touchTime" pattern="yyyyMMdd_HHmmss"/>
 	</tstamp>
 
 	<target name="copy_war_icbc">
@@ -125,7 +125,8 @@
 		<delete file="${lib.dir}/${jar.name}" />
 		<delete dir="${web-info-doc.dir}/UPGRADE_TODO" />
 	</target>
-	
+
+	<!--工行测试环境打包-->
 	<target name="war4Was" depends="create-Manifest,compile" description="创建部署文件">
 		<echo message="准备创建War....."></echo>
 		<war 
@@ -136,6 +137,7 @@
 			>
 			<exclude name="**/WEB-INF/work/" />
 			<exclude name="**/WEB-INF/server/" />
+			<exclude name="**/WEB-INF/server-pro/" />
 			<exclude name="**/WEB-INF/server-test/" />
 			<exclude name="**/WEB-INF/doc/SY_COMM_MENU/" />
 			<exclude name="**/WEB-INF/log4j.properties" />
@@ -146,6 +148,33 @@
 			<exclude name="**/WEB-INF/lib/ruahocrawler.jar" />
 			<exclude name="**/WEB-INF/lib/ojdbc14.jar" />
 			<webinf dir="${web-info.dir}/server" includes="log4j.properties" />
+		</war>
+		<echo message="War创建成功！......"></echo>
+	</target>
+
+
+	<!--工行生成环境打包-->
+	<target name="war4WasPro" depends="create-Manifest,compile" description="创建部署文件">
+		<echo message="准备创建War....."></echo>
+		<war
+				destfile="${dist.dir}/${war.name}"
+				webxml="${web-info.dir}/server/web_was.xml"
+				whenempty="skip"
+				basedir="${web.dir}"
+		>
+			<exclude name="**/WEB-INF/work/" />
+			<exclude name="**/WEB-INF/server/" />
+			<exclude name="**/WEB-INF/server-pro/" />
+			<exclude name="**/WEB-INF/server-test/" />
+			<exclude name="**/WEB-INF/doc/SY_COMM_MENU/" />
+			<exclude name="**/WEB-INF/log4j.properties" />
+			<exclude name="**/WEB-INF/lib/c3p0-0.9.1.2.jar" />
+			<exclude name="**/WEB-INF/lib/junit-4.10.jar" />
+			<exclude name="**/WEB-INF/lib/rh-km.jar" />
+			<exclude name="**/WEB-INF/lib/jsdk-15.jar" />
+			<exclude name="**/WEB-INF/lib/ruahocrawler.jar" />
+			<exclude name="**/WEB-INF/lib/ojdbc14.jar" />
+			<webinf dir="${web-info.dir}/server-pro" includes="log4j.properties" />
 		</war>
 		<echo message="War创建成功！......"></echo>
 	</target>
