@@ -25,7 +25,7 @@ public class AdmitTest implements IRule {
 		String kslbk_id = param.getStr("ID");
 		String ksqz_id = param.getStr("KSQZ_ID");
 		//找到匹配的准入测试类别 进行匹配
-		List<Bean> finds = ServDao.finds("ts_bmgz_admit_grade", " AND KSLBK_ID='"+kslbk_id+"' AND KSQZ_ID='"+ksqz_id+"'");
+		List<Bean> finds = ServDao.finds("TS_XMGL_BM_KSLB_ADMIT_GRADE", " AND KSLBK_ID='"+kslbk_id+"' AND KSQZ_ID='"+ksqz_id+"'");
 		if(finds!=null&&finds.size()!=0){
 			//设置了准入测试成绩
 			String xl = "";
