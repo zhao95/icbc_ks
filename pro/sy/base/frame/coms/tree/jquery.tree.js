@@ -1006,7 +1006,23 @@ author:xuanye.wan@gmail.com
     			img.click();
     		}
     	}
-    	$("#"+selectId).click();
+    	$("#"+selectId).click(); 
+    	var container = $('.content-navTree');
+    	var uidialog = $(".ui-dialog");
+    	var scrollTo = $("#"+selectId);
+    	var a = scrollTo.offset().top;
+    	var b = container.offset().top;
+    	if(b == 0){
+    		b= 170;
+    	}
+    	var c = container.scrollTop();
+    	var d = 0;
+    	if(uidialog.length > 0){
+    		d = uidialog.offset().top;
+    	}
+    	container.scrollTop( 
+    			a - b + c - d 
+    	); 
     };
 	
     //rh-add-ljk 供外部调用设置动态展开的回调

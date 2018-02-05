@@ -124,13 +124,31 @@ if(mySearch.length == 0){
 }
 
 $("#myTreeSearchBtn").unbind("click").bind("click",function(){
-	var searchTree = _viewer.navTree;
 	var searchVal = $("#myTreeSearch").val();
-	var selectDiv = $(".bbit-tree-body").find("div[title*='"+searchVal+"']").eq(0);
-	if($(".bbit-tree-body").find("div[title*='"+searchVal+"']").length == 0){_viewer.refreshTreeAndGrid(_viewer.opts);}
-	selectDiv.expandParentForTpath(searchTree);
+	treeFind(searchVal);
 });
 
+function treeFind(searchVal){
+	var searchTree = _viewer.navTree;
+	var selectDiv = $(".bbit-tree-body").find("div[title*='"+searchVal+"']").eq(0);
+	if($(".bbit-tree-body").find("div[title*='"+searchVal+"']").length == 0){
+		//_viewer.refreshTreeAndGrid(_viewer.opts);
+		var collapsed = $(".bbit-tree-body").find("div.bbit-tree-node-collapsed");
+		if(collapsed.length > 0){
+			collapsed.each(function(){
+				var img = $(this).find("img.bbit-tree-ec-icon");
+	    		if(img.length > 0 && !img.parent().hasClass("bbit-tree-node-expanded")){
+	    			img.click();
+	    		}
+			});
+			setTimeout(function(){
+				treeFind(searchVal);
+			}, 300);
+		}
+	}else{
+		selectDiv.expandParentForTpath(searchTree);
+	}
+}
 
 
 
