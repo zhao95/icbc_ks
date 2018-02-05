@@ -10,7 +10,7 @@ if (_viewer._actVar == "cardAdd") {
 	if(_viewer.getItem("KC_ID").getValue() == ""){
 		_viewer.getItem("KC_ID").setValue(kcId);
 	}
-	var msg = "新建一条申请";
+	var msg = "申请变更";
 	if (confirm(msg) == true) {
 		_viewer.btns[UIConst.ACT_SAVE].click();
 	} else {
