@@ -982,7 +982,6 @@ author:xuanye.wan@gmail.com
     	var selectDiv = this;
     	if(selectDiv.length == 0){
     		searchTree.find(".bbit-tree-selected").removeClass("bbit-tree-selected");
-    		return;
     	}
     	var selectId = selectDiv[0].id;
     	var tpath = selectDiv.attr("tpath");
