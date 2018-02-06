@@ -18,9 +18,16 @@ $(".rhGrid").find("tr").each(function(index, item) {
 		var divHeight = $(item).get(0).offsetHeight;
 		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+XM_ID+"' style=' height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display:none;color:#666666'>"+btns+"</div>";
 		$(".content-main").find("table").before(hoverDiv);//="color:#F00">
-		bindCard();
+		//bindCard();
 	}
 });
+
+
+//setTimeout(function (){id='hoverDiv_"+XM_ID+"'
+//	bindCard();
+//},100);
+	
+
 
 //隐藏列表行按钮条
 $(".hoverDiv").bind("mouseleave", function(e){
@@ -56,23 +63,39 @@ rh.vi.listView.prototype.beforeDelete = function() {
 }
 
 
+jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter",function() {
+	var pkCode = jQuery(this).parent().attr("id");
+	var trWidth = $(this).parent().get(0).offsetWidth;
+	var divWidth = $("#hoverDiv_" + pkCode).get(0).innerText.length * 8.7;
+	var marginLeft = trWidth - divWidth;
+	var marginTop = $(this).get(0).offsetTop;
+	setTimeout(function() {
+		$(".hoverDiv").css('display', 'none');
+		$("#hoverDiv_" + pkCode).css('display', 'block');
+		$("#hoverDiv_" + pkCode).css('margin-left',marginLeft + 'px');
+		$("#hoverDiv_" + pkCode).css('margin-top',marginTop + 'px');
+		$("#hoverDiv_" + pkCode).focus();
+	}, 10);
+	
+	bindCard();
+});	
 
 
 function bindCard() {
-	jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter",function() {
-		var pkCode = jQuery(this).parent().attr("id");
-		var trWidth = $(this).parent().get(0).offsetWidth;
-		var divWidth = $("#hoverDiv_" + pkCode).get(0).innerText.length * 8.7;
-		var marginLeft = trWidth - divWidth;
-		var marginTop = $(this).get(0).offsetTop;
-		setTimeout(function() {
-			$(".hoverDiv").css('display', 'none');
-			$("#hoverDiv_" + pkCode).css('display', 'block');
-			$("#hoverDiv_" + pkCode).css('margin-left',marginLeft + 'px');
-			$("#hoverDiv_" + pkCode).css('margin-top',marginTop + 'px');
-			$("#hoverDiv_" + pkCode).focus();
-		}, 10);
-	});		
+//	jQuery("td[icode='buttons']").unbind("mouseenter").bind("mouseenter",function() {
+//		var pkCode = jQuery(this).parent().attr("id");
+//		var trWidth = $(this).parent().get(0).offsetWidth;
+//		var divWidth = $("#hoverDiv_" + pkCode).get(0).innerText.length * 8.7;
+//		var marginLeft = trWidth - divWidth;
+//		var marginTop = $(this).get(0).offsetTop;
+//		setTimeout(function() {
+//			$(".hoverDiv").css('display', 'none');
+//			$("#hoverDiv_" + pkCode).css('display', 'block');
+//			$("#hoverDiv_" + pkCode).css('margin-left',marginLeft + 'px');
+//			$("#hoverDiv_" + pkCode).css('margin-top',marginTop + 'px');
+//			$("#hoverDiv_" + pkCode).focus();
+//		}, 10);
+//	});		
 	
  	 //查看
  	 $(".hoverDiv [actcode='look']").unbind("click").bind("click", function(){
@@ -223,7 +246,7 @@ _viewer.getBtn("fabu").unbind("click").bind("click",function(){debugger;
 	
 });
 //初次发布
-function  firRelea(pkAarry,_viewer){debugger;
+function  firRelea(pkAarry,_viewer){
 	//if(pkAarry.length==0){
 		//_viewer.listBarTipError("请选择要发布的项目！");
 	//}else{

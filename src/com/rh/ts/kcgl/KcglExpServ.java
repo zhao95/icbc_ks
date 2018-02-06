@@ -195,7 +195,7 @@ public class KcglExpServ extends CommonServ{
                     	
                     	//验证座位号IP和系统座位号
                     	
-			if (servId.equals("TS_KCGL_ZWDYB") && error.isEmpty()) {
+			if (servId.equals("TS_KCGL_ZWDYB") && (error == null || error.isEmpty())) {
 			    String zwh = data.getStr("ZW_ZWH_XT");
 			    String IPStr = data.getStr("ZW_IP");
 
@@ -218,12 +218,12 @@ public class KcglExpServ extends CommonServ{
 			    if(num_ip > 0){
 				error = "IP地址已存在";
 			    }
-			}else if(servId.equals("TS_KCGL_IPSCOPE") && error.isEmpty()){
+			} else if (servId.equals("TS_KCGL_IPSCOPE") && (error == null || error.isEmpty())) {
 			    String scope = data.getStr("IPS_SCOPE");
 			    String[] sz = scope.split("-");
 			    if (sz.length != 2) {
 				error = "操作IP区段格式不正确";
-			    }else{
+			    } else {
 				String a = sz[0];
 				String b = sz[1];
 				if (a.split(".").length != 4 || b.split(".").length != 4) {
@@ -232,11 +232,14 @@ public class KcglExpServ extends CommonServ{
 				    String pattern_ip = "^([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3})$";
 				    boolean IPMatch_a = Pattern.matches(pattern_ip, a);
 				    boolean IPMatch_b = Pattern.matches(pattern_ip, b);
-				    
-				    if(IPMatch_a && IPMatch_b){
-					boolean r1 = Integer.parseInt(a.split(".")[0]) != Integer.parseInt(b.split(".")[0]);
-					boolean r2 = Integer.parseInt(a.split(".")[1]) != Integer.parseInt(b.split(".")[1]);
-					boolean r3 = Integer.parseInt(a.split(".")[2]) != Integer.parseInt(b.split(".")[2]);
+
+				    if (IPMatch_a && IPMatch_b) {
+					boolean r1 = Integer.parseInt(a.split(".")[0]) != Integer
+						.parseInt(b.split(".")[0]);
+					boolean r2 = Integer.parseInt(a.split(".")[1]) != Integer
+						.parseInt(b.split(".")[1]);
+					boolean r3 = Integer.parseInt(a.split(".")[2]) != Integer
+						.parseInt(b.split(".")[2]);
 					if (r1 || r2 || r3) {
 					    error = "操作IP区段格式不正确";
 					} else {
@@ -247,7 +250,7 @@ public class KcglExpServ extends CommonServ{
 						error = "操作IP区段格式不正确";
 					    }
 					}
-				    }else{
+				    } else {
 					error = "操作IP区段格式不正确";
 				    }
 				}

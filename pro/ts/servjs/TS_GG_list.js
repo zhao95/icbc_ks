@@ -14,7 +14,7 @@ $("#TS_GG .rhGrid").find("tr").each(function (index, item) {
         	 $(item).find("td[icode='BUTTONS']").append(
         	            '<a class="rhGrid-td-rowBtnObj rh-icon"  id="TS_GG_look" operCode="optLookBtn" rowpk="' + dataId + '"><span class="rh-icon-inner">查看</span><span class="rh-icon-img btn-edit"></span></a>' +
         	            '<a class="rh-icon rhGrid-btnBar-a" id="TS_GG_edit" operCode="optEditBtn"   rowpk="' + dataId + '"><span class="rh-icon-inner">编辑</span><span class="rh-icon-img btn-edit"></span></a>'+
-        	            '<a class="rh-icon rhGrid-btnBar-a" id="TS_GG_first" operCode="optFirstBtn"   rowpk="' + dataId + '"><span class="rh-icon-inner">置顶</span><span class="rh-icon-img btn-edit"></span></a>'+
+        	            //'<a class="rh-icon rhGrid-btnBar-a" id="TS_GG_first" operCode="optFirstBtn"   rowpk="' + dataId + '"><span class="rh-icon-inner">置顶</span><span class="rh-icon-img btn-edit"></span></a>'+
         	            '<a class="rh-icon rhGrid-btnBar-a" id="TS_GG_delete" operCode="optFirstBtn"   rowpk="' + dataId + '"><span class="rh-icon-inner">置后</span><span class="rh-icon-img btn-edit"></span></a>'
         	           
         	        );
