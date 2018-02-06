@@ -1,0 +1,1 @@
+UPDATE `ts_xmgl_bmsh_shgzk` SET `GZ_ID`='Y09', `GZ_TYPE`='2', `GZ_NAME`='本岗位持证', `GZ_INFO`=NULL, `GZ_SORT`='50', `S_USER`='278p246BZ2jNaftzl7kooot', `S_TDEPT`='icbc0001', `S_ODEPT`='icbc0001', `S_MTIME`='2017-09-19 19:47:47:458', `S_FLAG`='1', `S_DEPT`='icbc0001', `S_CMPY`='icbc', `S_ATIME`='2017-07-28 16:30:40:330' WHERE (`GZ_ID`='Y09');
