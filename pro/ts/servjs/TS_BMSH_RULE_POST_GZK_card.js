@@ -1,5 +1,7 @@
 _viewer=this;
 $("#TS_BMSH_RULE_POST_GZK-POST_FUHAO_div").find("span:last").find("div").css("width","50px");
+$("#TS_BMSH_RULE_POST_GZK-POST_YEAR_FUHAO_div").find("span:last").find("div").css("width","50px");
+$("#TS_BMSH_RULE_POST_GZK-POST_YEAR_div").css("margin-left","-35%");
 $("#TS_BMSH_RULE_POST_GZK-POST_DUTIES_div").css("margin-left","-35%");
 
 $("#TS_BMSH_RULE_POST_GZK-POST_DUTIES").css("cursor","pointer");
