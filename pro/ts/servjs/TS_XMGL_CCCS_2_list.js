@@ -173,7 +173,8 @@ function getResult(num,all){
 						kcZwNum = kcMax;
 					}
 					var kcJgArr = new Array();
-					if(stopKcArr.includes(kcId)){
+//					if(stopKcArr.includes(kcId)){
+					if(myIncludes(stopKcArr,kcId)){	
 						continue;
 					}
 					//得到考场的关联机构
@@ -193,7 +194,8 @@ function getResult(num,all){
 						var ks_path = all[j].CODE_PATH;
 						var ks_odept = all[j].ODEPT_CODE_V;
 						//判断考生是否在关联机构范围内
-						if(tmp1.includes(bmCode)){
+//						if(tmp1.includes(bmCode)){
+						if(myIncludes(tmp1,bmCode)){	
 							continue;
 						}
 						var fh = isfh(ks_odept,ks_path,kcJgArr);
@@ -266,7 +268,8 @@ function getResult(num,all){
 						var ks_path = all[j].CODE_PATH;
 						var ks_odept = all[j].ODEPT_CODE_V;
 						//判断考生是否在关联机构范围内
-						if(tmp1.includes(bmCode)){
+//						if(tmp1.includes(bmCode)){
+						if(myIncludes(tmp1,bmCode)){	
 							continue;
 						}
 						var fh = isfh(ks_odept,ks_path,kcJgArr);
@@ -318,7 +321,8 @@ function getResult(num,all){
 					}
 					var kcJgArr = new Array();
 					
-					if(stopKcArr.includes(kcId)){
+//					if(stopKcArr.includes(kcId)){
+					if(myIncludes(stopKcArr,kcId)){	
 						continue;
 					}
 					//得到考场的关联机构
@@ -338,7 +342,8 @@ function getResult(num,all){
 						var ks_path = all[j].CODE_PATH;
 						var ks_odept = all[j].ODEPT_CODE_V;
 						//判断考生是否在关联机构范围内
-						if(tmp1.includes(bmCode)){
+//						if(tmp1.includes(bmCode)){
+						if(myIncludes(tmp1,bmCode)){	
 							continue;
 						}
 						var fh = isfh(ks_odept,ks_path,kcJgArr);
@@ -484,3 +489,13 @@ _viewer.getBtn("expNo").unbind("click").bind("click",function(event){
 	window.open(FireFly.getContextPath() + '/TS_XMGL_CCCS_2.expNoExcel.do?data=' + 
     		encodeURIComponent(jQuery.toJSON({"xmId":xmId})));
 });
+
+//数组 是否包含元素
+function myIncludes(arr,elem){
+	for(var i=0;i<arr.length;i++){
+		if(arr[i] == elem){
+			return true;
+		}
+	}
+	return false;
+}
