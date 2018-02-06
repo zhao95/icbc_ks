@@ -311,7 +311,7 @@ public class KcglServ extends CommonServ{
                     	if (StringUtils.isEmpty(error)) { //数据校验通过
                     		//ServMgr.act(servId, ServMgr.ACT_SAVE, new ParamBean(data));
                     	    if(StringUtils.isEmpty(data.getStr("KC_ID"))){
-                    		error = "失败";
+                    		error = "根据考场编号未找到有效对应考场信息";
                     	    }else{
                     		ParamBean myParamBean = new ParamBean();
                     		myParamBean.set("ids", data.getStr("KC_ID"));
