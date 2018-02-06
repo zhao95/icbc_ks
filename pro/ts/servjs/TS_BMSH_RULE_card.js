@@ -1,12 +1,52 @@
 _viewer = this;
+$("#TS_BMSH_RULE-RULE_END_SCOPE_label").find("span:first").css("width","1000px");
+$("#TS_BMSH_RULE-START_TIME_END_label").find("span:first").css("width","1000px");
 $("#TS_BMSH_RULE-R_ZD_label").find("span:first").css("width","1000px");
-$("#TS_BMSH_RULE-R_ZD_div").css("margin-left","2%");
+$("#TS_BMSH_RULE-R_ZD_div").css("margin-left","6%");
+$("#TS_BMSH_RULE-R_ZD_MK_div").css("margin-left","6%");
+$("#TS_BMSH_RULE-R_ZD_MK_label").find("span:first").css("width","1000px");
 $("#TS_BMSH_RULE-R_TYPE_label").find("span:first").css("width","1000px");
 $("#TS_BMSH_RULE-R_TYPE_div").css("margin-left","2%");
 $("#TS_BMSH_RULE-CONDITION_TWO_div").find("span:last").find("div").css("width","50px");
 $("#TS_BMSH_RULE-CONDITION_ONE_div").find("span:last").find("div").css("width","50px");
-$("#TS_BMSH_RULE-VALID_START_div").css("margin-left","-30%");
-$("#TS_BMSH_RULE-VALID_END_div").css("margin-left","-30%");
+$("#TS_BMSH_RULE-VALID_START_div").css("width","20%");
+$("#TS_BMSH_RULE-VALID_START_div").css("margin-left","-28%");
+$("#TS_BMSH_RULE-VALID_END_div").css("width","30%");
+$("#TS_BMSH_RULE-RULE_CENGJI_div").css("width","30%");
+$("#TS_BMSH_RULE-RULE_LASTYEAR_div").css("width","50%");
+$("#TS_BMSH_RULE-RULE_LASTYEAR_div").css("margin-left","-32%");
+$("#TS_BMSH_RULE-RULE_LASTYEAR").parent().css("width","20%");
+$("#TS_BMSH_RULE-RULE_NOWTIME_div").css("width","50%");
+$("#TS_BMSH_RULE-RULE_NOWTIME_div").css("margin-left","-32%");
+$("#TS_BMSH_RULE-CONDITION_ONE_END_div").find("span:last").find("div").css("width","50px");
+$("#TS_BMSH_RULE-CONDITION_ONE_TIME_div").css("width","50%");
+$("#TS_BMSH_RULE-CONDITION_ONE_TIME_div").css("margin-left","-32%");
+$("#TS_BMSH_RULE-CONDITION_YEAR_div").css("width","50%");
+$("#TS_BMSH_RULE-CONDITION_YEAR_div").css("margin-left","-32%");
+$("#TS_BMSH_RULE-CONDITION_YEAR").parent().css("width","20%");
+$("#TS_BMSH_RULE-CONDITION_TIME_div").css("width","20%");
+$("#TS_BMSH_RULE-CONDITION_TIME_div").css("margin-left","-28%");
+$("#TS_BMSH_RULE-CONDITION_ONE_TYPE_div").css("width","30%");
+
+$("#TS_BMSH_RULE-CONDITION_TWO_div").find("span:last").find("div").css("width","50px");
+$("#TS_BMSH_RULE-VALID_END_div").css("width","50%");
+$("#TS_BMSH_RULE-VALID_END_div").css("margin-left","-32%");
+$("#TS_BMSH_RULE-CONDITION_TWO_YEAR_div").css("width","50%");
+$("#TS_BMSH_RULE-CONDITION_TWO_YEAR_div").css("margin-left","-32%");
+$("#TS_BMSH_RULE-CONDITION_TWO_YEAR").parent().css("width","20%");
+$("#TS_BMSH_RULE-CONDITION_TWO_TIME_div").css("width","20%");
+$("#TS_BMSH_RULE-CONDITION_TWO_TIME_div").css("margin-left","-28%");
+$("#TS_BMSH_RULE-CONDITION_TWO_TYPE_div").css("width","30%");
+
+$("#TS_BMSH_RULE-CONDITION_TWO_END_div").find("span:last").find("div").css("width","50px");
+$("#TS_BMSH_RULE-CONDITION_TWO_TIMETW_div").css("width","50%");
+$("#TS_BMSH_RULE-CONDITION_TWO_TIMETW_div").css("margin-left","-32%");
+$("#TS_BMSH_RULE-CONDITION_TWO_END_YEAR_div").css("width","50%");
+$("#TS_BMSH_RULE-CONDITION_TWO_END_YEAR_div").css("margin-left","-32%");
+$("#TS_BMSH_RULE-CONDITION_TWO_END_YEAR").parent().css("width","20%");
+$("#TS_BMSH_RULE-CONDITION_TWO_END_TIME_div").css("width","20%");
+$("#TS_BMSH_RULE-CONDITION_TWO_END_TIME_div").css("margin-left","-28%");
+$("#TS_BMSH_RULE-CONDITION_TWO_END_TYPE_div").css("width","30%");
 _viewer.beforeSave = function() {
 	var con_one = _viewer.getItem("CONDITION_ONE").getValue("");//条件一
 	var con_two = _viewer.getItem("CONDITION_TWO").getValue("");//条件二

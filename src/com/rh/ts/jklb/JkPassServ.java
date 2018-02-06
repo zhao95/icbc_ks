@@ -45,7 +45,7 @@ public class JkPassServ extends CommonServ {
         colMap.put("USER_CODE", "人力资源编码");
         colMap.put("JK_NAME", "姓名");
         colMap.put("KS_NAME", "考试名称");
-        colMap.put("JK_YJFH_NAME", "借考一级分行");
+        colMap.put("JK_YJFH_NAME", "借考分行");
         colMap.put("JK_JKCITY", "借考的城市");
         colMap.put("JK_REASON", "借考事由");
         colMap.put("JK_STATUS_NAME", "借考状态");

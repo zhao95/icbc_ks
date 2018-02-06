@@ -5108,6 +5108,9 @@ rh.ui.Date.prototype.setDatePicker = function(config) {
 		case "TIME" :
 			onClickStr = "WdatePicker({lang:'"+langtype+"',startDate:'',dateFmt:'H:mm',alwaysUseStartDate:true,onpicked:function(){_self.onchange();}";
 			break;
+		case "DATE_MONTH" :
+			onClickStr = "WdatePicker({lang:'"+langtype+"',startDate:'%MM-%dd',dateFmt:'MM-dd',alwaysUseStartDate:true,onpicked:function(){_self.onchange();}";
+			break;
 		default :
 			onClickStr = "WdatePicker({lang:'"+langtype+"',onpicked:function(){_self.onchange();}";
 	}

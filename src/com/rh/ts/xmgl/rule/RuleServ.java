@@ -1,5 +1,6 @@
 package com.rh.ts.xmgl.rule;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 
 import com.rh.core.base.Bean;
 import com.rh.core.base.TipException;
+import com.rh.core.comm.ConfMgr;
 import com.rh.core.org.DeptBean;
 import com.rh.core.org.UserBean;
 import com.rh.core.org.mgr.OrgMgr;
@@ -21,7 +23,9 @@ import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
 import com.rh.core.serv.ServDao;
 import com.rh.core.serv.bean.SqlBean;
+import com.rh.core.util.ImpUtils;
 import com.rh.core.util.Strings;
+import com.rh.core.util.var.OrgVar;
 import com.rh.ts.util.TsConstant;
 
 public class RuleServ extends CommonServ {
@@ -316,7 +320,7 @@ public class RuleServ extends CommonServ {
 					
 					data.set("NAME", "无审核规则"); // 规则名称
 
-					data.set("VLIDATE", false);
+					data.set("VLIDATE", true);
 
 					data.set("MSG", "未找到该考试类别,审核不通过");
 
@@ -492,6 +496,7 @@ public class RuleServ extends CommonServ {
 	public OutBean validbmopt (Bean paramBean){
 		OutBean outBean = new OutBean();
 		Boolean staytogo = false;
+		String BM_MK = paramBean.getStr("BM_MK");
 		String BM_CODE = paramBean.getStr("BM_CODE");//考生编码
 		String BM_XL = paramBean.getStr("BM_XL");//报考序列
 		String BM_TYPE = paramBean.getStr("BM_TYPE");//报考类别
@@ -520,6 +525,8 @@ public class RuleServ extends CommonServ {
 			String post_xl = bean.getStr("POST_XL");//序列
 			String post_zw = bean.getStr("POST_DUTIES");//没有指定的职务
 			int post_fh = bean.getInt("POST_FUHAO");//符号
+			int POST_ZD = bean.getInt("POST_ZD");//是否自动验证报考序列
+			String post_desc = bean.getStr("POST_DESC");
 			//判断 此人是否在此机构内
 			String[] codearr = dept_codes.split(",");
 			Boolean codeflag = false;
@@ -545,7 +552,7 @@ public class RuleServ extends CommonServ {
 			}else{
 				//不包含在此部门
 				littelGzBean.set("validate", false);
-				littelGzBean.set("name",failer_info);
+				littelGzBean.set("name",post_desc+failer_info);
 				listbean.add(littelGzBean);
 				if(gotostay==1){
 					staytogo=true;
@@ -555,7 +562,7 @@ public class RuleServ extends CommonServ {
 			
 
 			if(post_defined==1){
-			//指定
+			//指定职务层级
 				String[] postarr = zspost.split(",");
 				Bean find = ServDao.find("sy_hrm_zdstaffposition", BM_CODE);
 				if(find!=null&&find.size()!=0){
@@ -574,7 +581,7 @@ public class RuleServ extends CommonServ {
 						//在此层级内
 						flag = true;
 						littelGzBean.set("validate", true);
-					littelGzBean.set("name",success_info);
+					littelGzBean.set("name",post_desc+success_info);
 					listbean.add(littelGzBean);
 					continue;
 					}else{
@@ -582,22 +589,21 @@ public class RuleServ extends CommonServ {
 							staytogo=true;
 						}
 						littelGzBean.set("validate", false);
-						littelGzBean.set("name",failer_info);
+						littelGzBean.set("name",post_desc+failer_info);
 						listbean.add(littelGzBean);
 						continue;
 					}
-						
-						
 				}else{
 					if(gotostay==1){
 						staytogo=true;
 					}
 					littelGzBean.set("validate", false);
-					littelGzBean.set("name",failer_info);
+					littelGzBean.set("name",post_desc+failer_info);
 					listbean.add(littelGzBean);
 					continue;
 				}
 			}else{
+				
 				Bean find = ServDao.find("sy_hrm_zdstaffposition", BM_CODE);
 				if(find!=null&&find.size()!=0){
 					String possql="";
@@ -623,17 +629,23 @@ public class RuleServ extends CommonServ {
 				}else if(post_fh==5){
 					sql.andLTE("POSTION_QUALIFICATION",  findbean.getInt("POSTION_QUALIFICATION"));
 				}
-				if(!"".equals(post_xl)){
-					sql.and("POSTION_SEQUENCE_ID", post_xl);
-				}
-				sql.and("POSTION_TYPE", post_type);
-				
+			/*	if(POST_ZD==1){
+					//自动验证报考序列
+					sql.and("POSTION_SEQUENCE_ID", find.getStr("STATION_NO_CODE"));
+					sql.and("POSTION_TYPE", find.getStr("STATION_TYPE_CODE"));
+				}else{*/
+					//指定序列验证
+					if(!"".equals(post_xl)){
+						sql.and("POSTION_SEQUENCE_ID", post_xl);
+					}
+					sql.and("POSTION_TYPE", post_type);
+					
 				}else{
 					if(gotostay==1){
 						staytogo=true;
 					}
 					littelGzBean.set("validate", false);
-					littelGzBean.set("name",failer_info);
+					littelGzBean.set("name",post_desc+failer_info);
 					listbean.add(littelGzBean);
 					continue;
 				}
@@ -650,7 +662,7 @@ public class RuleServ extends CommonServ {
 						//在此层级内
 						flag = true;
 						littelGzBean.set("validate", true);
-					littelGzBean.set("name",success_info);
+					littelGzBean.set("name",post_desc+success_info);
 					listbean.add(littelGzBean);
 					continue;
 					}
@@ -660,7 +672,7 @@ public class RuleServ extends CommonServ {
 					staytogo=true;
 				}
 				littelGzBean.set("validate", false);
-				littelGzBean.set("name",failer_info);
+				littelGzBean.set("name",post_desc+failer_info);
 				listbean.add(littelGzBean);
 				continue;
 			}
@@ -682,13 +694,33 @@ public class RuleServ extends CommonServ {
 			int ruzhi = bean.getInt("R_POST_CODE");//入职年限
 			String success_info = bean.getStr("SUCCESS_INFO");//成功提示信息
 			String failer_info = bean.getStr("FAIL_INFO");//成功提示信息
-			String start_date = bean.getStr("VALID_START");//获证日期
-			String end_date = bean.getStr("VALID_END");//失效日期
-			int gotostay = bean.getInt("GOTO_STAY");//获证日期
+			int R_ZD_MK = bean.getInt("R_ZD_MK");//是否自动验证模块
+			int R_ZD_TYPE = bean.getInt("R_ZD_TYPE");//自动验证报考等级
+			String rule_nowtime = bean.getStr("RULE_NOWTIME");//精准获证时间1
+			int rule_lastyear = bean.getInt("RULE_LASTYEAR");//获证年前1
+			String start_date = bean.getStr("VALID_START");//时间1
+			int rule_cengji	= bean.getInt("RULE_CENGJI");//时间类型1
+			
+			String condition_one_time = bean.getStr("CONDITION_ONE_TIME");//精准时间2
+			String condition_time = bean.getStr("CONDITION_TIME");//时间2
+			int condition_year = bean.getInt("CONDITION_YEAR");//获证年前2
+			int condition_one_type	= bean.getInt("CONDITION_ONE_TYPE");//时间类型2
+			
+			String end_date = bean.getStr("VALID_END");//精准时间3
+			String condition_two_time = bean.getStr("CONDITION_TWO_TIME");//时间3
+			int condition_two_type	= bean.getInt("CONDITION_TWO_TYPE");//时间类型3
+			int condition_two_year = bean.getInt("CONDITION_TWO_YEAR");//获证年前3
+			
+			int condition_two_end_type	= bean.getInt("CONDITION_TWO_END_TYPE");//时间类型4
+			String condition_two_timetw = bean.getStr("CONDITION_TWO_TIMETW");//精准时间4
+			int  condition_two_end_year = bean.getInt("CONDITION_TWO_END_YEAR");//获证年前4
+			String CONDITION_TWO_END_TIME = bean.getStr("CONDITION_TWO_END_TIME");//获证时间4
+			
+			int gotostay = bean.getInt("GOTO_STAY");//是否去待审核
 			int cy = bean.getInt("R_RZYEAR");//从业年限
 			String RULE_CY = bean.getStr("RULE_CY");//验证从业序列
 			int RULE_MAST = bean.getInt("RULE_MAST");//是否担任管理类职务
-			
+			String RULE_DESC = bean.getStr("RULE_DESC");
 			if(RULE_MAST==1){//担任管理类职务
 				SqlBean adminbean = new SqlBean();
 				adminbean.set("STATION_TYPE_CODE", "023001");
@@ -700,7 +732,7 @@ public class RuleServ extends CommonServ {
 						staytogo=true;
 					}
 					littelGzBean.set("validate", false);
-					littelGzBean.set("name",failer_info);
+					littelGzBean.set("name",RULE_DESC+failer_info);
 					listbean.add(littelGzBean);
 					continue;
 				}
@@ -728,18 +760,20 @@ public class RuleServ extends CommonServ {
 						staytogo=true;
 					}
 					littelGzBean.set("validate", false);
-					littelGzBean.set("name",failer_info);
+					littelGzBean.set("name",RULE_DESC+failer_info);
 					listbean.add(littelGzBean);
 					continue;
 				}
 			}
+			SqlBean sqlbean = new SqlBean();
 			/*ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, new ParamBean().setWhere(""));*/
 			SqlBean cybean = new SqlBean();
-			if("1".equals(zd)){
+			if(1==zd){ //自动验证报考考试
 				zsxl=BM_XL;
 				zsdj=BM_TYPE;
-				zslv="0";
-				
+				if(R_ZD_MK==1){
+					zsmk = BM_MK;
+				}
 			}else{
 				if(!"".equals(zsxl)){
 					SqlBean xlsql = new SqlBean();
@@ -757,7 +791,7 @@ public class RuleServ extends CommonServ {
 			}
 			/*String zspost = bean.getStr("R_POST_NAME");//职务层级
 */			//先判断从业年限
-			SqlBean sqlbean = new SqlBean();
+		
 			if(cy==0){
 				
 			}else{
@@ -811,7 +845,7 @@ public class RuleServ extends CommonServ {
 							staytogo=true;
 						}
 						littelGzBean.set("validate", false);
-						littelGzBean.set("name",failer_info);
+						littelGzBean.set("name",RULE_DESC+failer_info);
 						listbean.add(littelGzBean);
 					}
 					
@@ -823,7 +857,17 @@ public class RuleServ extends CommonServ {
 					sqlbean.andIn("QUALFY_STAT", lxtype.split(","));
 				}
 				if(!"".equals(zsdj)){
-					sqlbean.andIn("CERT_GRADE_CODE", zsdj.split(","));
+					if(R_ZD_TYPE==1){
+						sqlbean.and("CERT_GRADE_CODE", zsdj);
+					}else if(R_ZD_TYPE==2){
+						sqlbean.andLT("CERT_GRADE_CODE", zsdj);
+					}else if(R_ZD_TYPE==3){
+						sqlbean.andLTE("CERT_GRADE_CODE", zsdj);
+					}else if(R_ZD_TYPE==4){
+						sqlbean.andGT("CERT_GRADE_CODE", zsdj);
+					}else if(R_ZD_TYPE==5){
+						sqlbean.andGTE("CERT_GRADE_CODE", zsdj);
+					}
 				}
 				//判断证书有效期
 				if(0==zsvalid){
@@ -831,6 +875,7 @@ public class RuleServ extends CommonServ {
 					sqlbean.andGTE("YEAR(END_DATE)-YEAR(BGN_DATE)", zsvalid);
 				}
 				sqlbean.andIn("CERT_MODULE", zsmk.split(","));
+				
 			}else{
 			if(!"".equals(zsxl)){
 				sqlbean.and("STU_PERSON_ID", BM_CODE);
@@ -866,40 +911,133 @@ public class RuleServ extends CommonServ {
 				}
 			}
 			}
-			if(!"".equals(start_date)){//证书时间判断
+			SimpleDateFormat simp = new SimpleDateFormat("yyyy");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = new Date();
+			int year = Integer.parseInt(simp.format(date));//当前年限 yyyy
+			String datestr = sdf.format(date);//当前时间yyyy-mm-dd
+			
+			if(rule_cengji==1){//获证时间类型
+				if(!"".equals(rule_nowtime)){//证书时间判断  
+					int CON_ONE = bean.getInt("CONDITION_ONE");
+					if(CON_ONE==1){
+						sqlbean.andGT("BGN_DATE", rule_nowtime);
+					}else if(CON_ONE==2){
+						sqlbean.andGTE("BGN_DATE", rule_nowtime);
+					}
+				}
+			}else if(rule_cengji==2){
+				if(!"".equals(start_date)){//证书时间判断  
+					int year1 = year-rule_lastyear;
+					int CON_ONE = bean.getInt("CONDITION_ONE");
+					if(CON_ONE==1){
+						sqlbean.andGT("BGN_DATE", year1+"-"+start_date);
+					}else if(CON_ONE==2){
+						sqlbean.andGTE("BGN_DATE", year1+"-"+start_date);
+					}
+				}
+				
+			}else if(rule_cengji==3){
 				int CON_ONE = bean.getInt("CONDITION_ONE");
 				if(CON_ONE==1){
-					sqlbean.andGT("BGN_DATE", zsvalid);
+					sqlbean.andGT("BGN_DATE", datestr);
 				}else if(CON_ONE==2){
-					sqlbean.andLT("BGN_DATE", zsvalid);
-				}else if(CON_ONE==3){
-					sqlbean.and("BGN_DATE", zsvalid);
-				}else if(CON_ONE==4){
-					sqlbean.andGTE("BGN_DATE", zsvalid);
-				}else if(CON_ONE==5){
-					sqlbean.andLTE("BGN_DATE", zsvalid);
+					sqlbean.andGTE("BGN_DATE", datestr);
 				}
 			}
 			
-			if(!"".equals(end_date)){
-				int CON_TWO = bean.getInt("CONDITION_TWO");
-				if(CON_TWO==1){
-					sqlbean.andGT("END_DATE", zsvalid);
-				}else if(CON_TWO==2){
-					sqlbean.andLT("END_DATE", zsvalid);
-				}else if(CON_TWO==3){
-					sqlbean.and("END_DATE", zsvalid);
-				}else if(CON_TWO==4){
-					sqlbean.andGTE("END_DATE", zsvalid);
-				}else if(CON_TWO==5){
-					sqlbean.andLTE("END_DATE", zsvalid);
+
+			if(condition_one_type==1){//获证时间类型
+				if(!"".equals(condition_one_time)){//证书时间判断  
+					int CON_ONE = bean.getInt("CONDITION_ONE_END");
+					if(CON_ONE==1){
+						sqlbean.andLT("BGN_DATE", condition_one_time);
+					}else if(CON_ONE==2){
+						sqlbean.andLTE("BGN_DATE", condition_one_time);
+					}
+				}
+			}else if(condition_one_type==2){
+				if(!"".equals(condition_time)){//证书时间判断  
+					int year2 = year-condition_year;
+					int CON_ONE = bean.getInt("CONDITION_ONE_END");
+					if(CON_ONE==1){
+						sqlbean.andLT("BGN_DATE", year2+"-"+condition_time);
+					}else if(CON_ONE==2){
+						sqlbean.andLTE("BGN_DATE", year2+"-"+condition_time);
+					}
+				}
+				
+			}else if(condition_one_type==3){
+				int CON_ONE = bean.getInt("CONDITION_ONE_END");
+				if(CON_ONE==1){
+					sqlbean.andLT("BGN_DATE", datestr);
+				}else if(CON_ONE==2){
+					sqlbean.andLTE("BGN_DATE", datestr);
 				}
 			}
+			
+			
+			if(condition_two_type==1){//获证时间类型
+				if(!"".equals(end_date)){//证书时间判断  
+					int CON_ONE = bean.getInt("CONDITION_TWO");
+					if(CON_ONE==1){
+						sqlbean.andGT("END_DATE", end_date);
+					}else if(CON_ONE==2){
+						sqlbean.andGTE("END_DATE", end_date);
+					}
+				}
+			}else if(condition_two_type==2){
+				if(!"".equals(condition_two_time)){//证书时间判断  
+					int year2 = year-condition_two_year;
+					int CON_ONE = bean.getInt("CONDITION_TWO");
+					if(CON_ONE==1){
+						sqlbean.andGT("END_DATE", year2+"-"+condition_two_time);
+					}else if(CON_ONE==2){
+						sqlbean.andGTE("END_DATE", year2+"-"+condition_two_time);
+					}
+				}
+				
+			}else if(condition_two_type==3){
+				int CON_ONE = bean.getInt("CONDITION_TWO");
+				if(CON_ONE==1){
+					sqlbean.andGT("END_DATE", datestr);
+				}else if(CON_ONE==2){
+					sqlbean.andGTE("END_DATE", datestr);
+				}
+			}
+			
+			if(condition_two_end_type==1){//获证时间类型
+				if(!"".equals(condition_two_timetw)){//证书时间判断  
+					int CON_ONE = bean.getInt("CONDITION_TWO_END");
+					if(CON_ONE==1){
+						sqlbean.andLT("END_DATE", condition_two_timetw);
+					}else if(CON_ONE==2){
+						sqlbean.andLTE("END_DATE", condition_two_timetw);
+					}
+				}
+			}else if(condition_two_end_type==2){
+				if(!"".equals(CONDITION_TWO_END_TIME)){//证书时间判断  
+					int year2 = year-condition_two_end_year;
+					int CON_ONE = bean.getInt("CONDITION_TWO_END");
+					if(CON_ONE==1){
+						sqlbean.andLT("END_DATE", year2+"-"+CONDITION_TWO_END_TIME);
+					}else if(CON_ONE==2){
+						sqlbean.andLTE("END_DATE", year2+"-"+CONDITION_TWO_END_TIME);
+					}
+				}
+				
+			}else if(condition_two_end_type==3){
+				int CON_ONE = bean.getInt("CONDITION_TWO_END");
+				if(CON_ONE==1){
+					sqlbean.andLT("END_DATE", datestr);
+				}else if(CON_ONE==2){
+					sqlbean.andLTE("END_DATE", datestr);
+				}
+			}
+			
 			int count = 0;
 			if(!"".equals(zsmk)){
-				if(!"".equals(zsdj)){//是否验证证书
 					count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
-				}
 			}else{
 				if(!"".equals(zsxl)){
 					//是否是 自动获取 报名的考试
@@ -919,25 +1057,25 @@ public class RuleServ extends CommonServ {
 						}
 					}
 				}else{
-					if(!"".equals(zsdj)){//是否验证证书
+					if(!"".equals(zslb)){//是否验证证书
 						count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, sqlbean);
+					}else{
+						//不用验证证书
+						count=0;
 					}
 				}
-			}
-			if("".equals(zsdj)){//证书为空时 不验证证书
-				count=1;
 			}
 			if(count>0){
 				flag = true;
 				littelGzBean.set("validate", true);
-				littelGzBean.set("name",success_info);
+				littelGzBean.set("name",RULE_DESC+success_info);
 				listbean.add(littelGzBean);
 			}else{
 				if(gotostay==1){
 					staytogo=true;
 				}
 				littelGzBean.set("validate", false);
-				littelGzBean.set("name",failer_info);
+				littelGzBean.set("name",RULE_DESC+failer_info);
 				listbean.add(littelGzBean);
 			}
 		}
@@ -984,6 +1122,8 @@ public class RuleServ extends CommonServ {
 			String POSTION_FAIL = bean.getStr("POSTION_FAIL");//失败提示信息
 			String POSTION_DESC = bean.getStr("POSTION_DESC");//规则描述
 			int POSTION_QUALIFICATION = bean.getInt("POSTION_QUALIFICATION");//条件
+			int gz_tx_year = bean.getInt("GZ_TX_YEAR");//离退休不满多少年
+			
 			SqlBean sqlbean = new SqlBean();
 			if(!"".equals(POSTION_TYPE)){
 				//本人是否在此职务类别中 
@@ -992,9 +1132,6 @@ public class RuleServ extends CommonServ {
 			}
 			if(!"".equals(POSTION_SEQUENCE)){
 				//职务序列
-				if("".equals(POSTION_TYPE)){
-					sqlbean.and("PERSON_ID", BM_CODE);
-				}
 				sqlbean.andIn("STATION_NO_CODE", POSTION_SEQUENCE.split(","));
 			}
 			if(!"".equals(POSTION_NAME)){
@@ -1049,11 +1186,46 @@ public class RuleServ extends CommonServ {
 				littelGzBean.set("name",POSTION_DESC+POSTION_FAIL);
 				listbean.add(littelGzBean);
 			}else{
-				//在此类职务内
-				flag=true;
-				littelGzBean.set("validate", true);
-				littelGzBean.set("name",POSTION_DESC+POSTION_SUCCESS);
-				listbean.add(littelGzBean);
+				if(gz_tx_year==0){
+					//在此类职务内
+					flag=true;
+					littelGzBean.set("validate", true);
+					littelGzBean.set("name",POSTION_DESC+POSTION_SUCCESS);
+					listbean.add(littelGzBean);
+				}else{
+					UserBean user = UserMgr.getUser(BM_CODE);
+					int sex = user.getSex();
+					String age = "";
+					if(sex==1){
+						age = ConfMgr.getConf("TS_MAN_TUIXIU_AGE", "0");
+					}else{
+						age = ConfMgr.getConf("TS_WOMAN_TUIXIU_AGE", "0");
+					}
+						//退休几年进行验证
+						int txage = Integer.parseInt(age);
+						String birthday = user.getBirthday();
+							Calendar calendar=Calendar.getInstance();
+							int year=calendar.get(Calendar.YEAR);//当前年份
+							if(!"".equals(birthday)){//出生日期为空
+								birthday = birthday.substring(0,4);
+								int nowage = Integer.parseInt(birthday);
+								if(txage-(year-nowage)<gz_tx_year){
+									flag=true;//离退休时间小于配置年限
+									littelGzBean.set("validate", true);
+									littelGzBean.set("name",POSTION_DESC+POSTION_SUCCESS);
+									listbean.add(littelGzBean);
+								}else{
+									littelGzBean.set("validate", false);//离退休时间大于配置年限
+									littelGzBean.set("name",POSTION_DESC+POSTION_FAIL);
+									listbean.add(littelGzBean);
+								}
+							}else{
+								littelGzBean.set("validate", false);
+								littelGzBean.set("name",POSTION_DESC+POSTION_FAIL);
+								listbean.add(littelGzBean);
+							}
+				}
+			
 			}
 			
 		}
@@ -1078,6 +1250,7 @@ public class RuleServ extends CommonServ {
 			outbean.set("GZ_NAME", gz_name);
 			outbean.set("GZ_ID", "Y09");
 		}
+		
 		return outbean;//同序列自动验证通过
 	}
 }
