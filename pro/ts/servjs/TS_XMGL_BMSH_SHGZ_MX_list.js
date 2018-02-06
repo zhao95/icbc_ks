@@ -958,14 +958,6 @@ function bindCard() {
 			var span1 = document.createElement("span");
 			span1.innerHTML=nameArg[1];
 			formConDiv7.append(span1);
-			formConDiv7.append("&nbsp;&nbsp;精确到模块：");
-			var RadioInput=""
-			if(obj2[0].code=='1'){
-				 RadioInput = "<input id='radio1' style='vertical-align:text-bottom; margin-bottom:-3px;' name='state' type='radio' value='1' checked>是&nbsp;<input id='radio2' style='vertical-align:text-bottom; margin-bottom:-3px;' name='state' type='radio' value='0'>否";
-			}else{
-				 RadioInput = "<input id='radio1' style='vertical-align:text-bottom; margin-bottom:-3px;' name='state' type='radio' value='1'>是&nbsp;<input id='radio2' style='vertical-align:text-bottom; margin-bottom:-3px;' name='state' type='radio' value='0' checked>否";
-			}
-			formConDiv7.append(RadioInput);
 		}else{
 			for(var i=0;i<nameArg.length;i++) {
 				if(obj2[0].type == 'dateyear') {
