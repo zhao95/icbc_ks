@@ -2,9 +2,9 @@ var _viewer = this;
 $("#TS_XMGL_CCCS_ARRANGE_COND-save").css("right",300);
 //取消行点击事件
 
-$(_viewer.formCon).css({"width":"1000px"});
+$(_viewer.formCon).css({"width":"950px"});
 $("#TS_XMGL_CCCS_ARRANGE_COND-winDialog").css({"height":"300px"});
-$("#TS_XMGL_CCCS_ARRANGE_COND-winDialog").parent().css({"width":"1100px"});
+$("#TS_XMGL_CCCS_ARRANGE_COND-winDialog").parent().css({"width":"950px"});
 
 var xmId = _viewer.getParHandler().getParHandler().getPKCode();
 

@@ -5,8 +5,8 @@ _viewer.getBtn("new").unbind("click").bind("click", function(event) {
 		"act" : UIConst.ACT_CARD_ADD,
 		"sId" : "TS_XMGL_CCCS_ARRANGE_COND",
 		"parHandler" : _viewer,
-		"widHeiArray" : [ 1200, 380 ],
-		"xyArray" : [ 100, 100 ]
+		"widHeiArray" : [ 950, 380 ],
+		"xyArray" : [ 50, 100 ]
 	};
 	var cardView = new rh.vi.cardView(temp);
 	cardView.show();
