@@ -174,7 +174,8 @@ public class JkPassServ extends CommonServ {
                 String jkReason = rowBean.getStr(ImpUtils.COL_NAME + "5");//借考事由
                 //String jkTime = rowBean.getStr(ImpUtils.COL_NAME + "6");//借考时间
                 String jkTsNames = rowBean.getStr(ImpUtils.COL_NAME + "6");//考试借考
-                Bean userBean = UserMgr.getUser(colCode);//获取人员信息
+                //Bean userBean = UserMgr.getUser(colCode);//获取人员信息
+                Bean userBean = ImpUtils.getUserBeanByString(colCode);
                 if (userBean == null) {
                     rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
                     continue;
