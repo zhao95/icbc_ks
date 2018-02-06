@@ -1,12 +1,12 @@
 package com.rh.ts.admit;
 
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 
 import com.rh.core.base.Bean;
-import com.rh.core.org.mgr.UserMgr;
+
 import com.rh.core.serv.CommonServ;
 import com.rh.core.serv.OutBean;
 import com.rh.core.serv.ParamBean;
@@ -60,8 +60,8 @@ public class AdmitServ extends CommonServ {
         List<Bean> beans = new ArrayList<Bean>();
         for (Bean rowBean : rowBeanList) {
             String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");
-           // Bean userBean = ImpUtils.getUserBeanByString(colCode);
-            Bean  userBean=UserMgr.getUser(colCode);//获取人员信息
+            Bean userBean = ImpUtils.getUserBeanByString(colCode);
+            //Bean  userBean=UserMgr.getUser(colCode);//获取人员信息
             if (userBean == null) {
                 rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
                 continue;
@@ -114,7 +114,15 @@ public class AdmitServ extends CommonServ {
 //            	continue;
 //            }
             String AD_GRADE = rowBean.getStr(ImpUtils.COL_NAME + "6");
-            bean.set("AD_GRADE", AD_GRADE);
+           
+            boolean result=AD_GRADE.matches("[0-9]+");
+            if (result == true) {
+            	bean.set("AD_GRADE", AD_GRADE);
+           }else{
+        	   rowBean.set(ImpUtils.ERROR_NAME, "成绩格式不正确");
+           	continue;
+           }
+            
             if("".equals(AD_GRADE)){
             	rowBean.set(ImpUtils.ERROR_NAME, "分数为空");
             	continue;
