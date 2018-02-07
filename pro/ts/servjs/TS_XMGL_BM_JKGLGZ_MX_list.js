@@ -93,19 +93,15 @@ function bindCard() {
 					span.innerHTML=nameArg[i];
 					formConDiv7.append(span);
 					//禁考类型
+					var result = FireFly.doAct("TS_BMLB_BM","getJKdict","");
+					var pageEntity = result.list;
 					var jktype =[];
-					var jktp = {};
-					jktp["qk"]="2";
-					jktp["qkname"]="无故弃考";
-					jktype.push(jktp);
-					var jktp1 = {};
-					jktp1["qk"]="1";
-					jktp1["qkname"]="违纪";
-					var jktp2 = {};
-					jktp2["qk"]="3";
-					jktp2["qkname"]="其它";
-					jktype.push(jktp1);
-					jktype.push(jktp2);
+					for(var i=0;i<pageEntity.length;i++){
+						var jktp = {};
+						jktp["qk"]=pageEntity[i].ITEM_CODE;
+						jktp["qkname"]=pageEntity[i].ITEM_NAME;
+						jktype.push(jktp);
+					}
 					var codestr="";
 					for(var j=0;j<(obj2.length);j++){
 						if(j==(obj2.length-1)){
