@@ -29,7 +29,7 @@ rh.vi.listView.prototype.beforeDelete = function(pkArray) {
 				break;
 			}
 		}
-		if(flag){
+		if(tmpFlag){
 			flag = false;
 			break;
 		}

@@ -170,21 +170,21 @@ public class KcglShServ extends CommonServ {
 		    if(tables1[i].equals("TS_KCGL_UPDATE_ZWDYB")){
 			List<Bean> ipScopeList = ServDao.finds("TS_KCGL_IPSCOPE", "and kc_id = '" + kcId + "'");
 			String IPStr = dataBean.getStr("ZW_IP");
-			int c0 = Integer.parseInt(IPStr.split(".")[0]);
-			int c1 = Integer.parseInt(IPStr.split(".")[1]);
-			int c2 = Integer.parseInt(IPStr.split(".")[2]);
-			int c3 = Integer.parseInt(IPStr.split(".")[3]);
+			int c0 = Integer.parseInt(IPStr.split("\\.")[0]);
+			int c1 = Integer.parseInt(IPStr.split("\\.")[1]);
+			int c2 = Integer.parseInt(IPStr.split("\\.")[2]);
+			int c3 = Integer.parseInt(IPStr.split("\\.")[3]);
 			//如果 IPStr 超出IP段范围 则 sflag = false
 			boolean tmpFlag = false;
 			for (Bean bean : ipScopeList) {
 			    String tmpScope = bean.getStr("IPS_SCOPE");
 			    String a1 = tmpScope.split("-")[0];
 			    String a2 = tmpScope.split("-")[1];
-			    int b1_0 = Integer.parseInt(a1.split(".")[0]);
-			    int b1_1 = Integer.parseInt(a1.split(".")[1]);
-			    int b1_2 = Integer.parseInt(a1.split(".")[2]);
-			    int b1_3 = Integer.parseInt(a1.split(".")[3]);
-			    int b2_3 = Integer.parseInt(a2.split(".")[3]);
+			    int b1_0 = Integer.parseInt(a1.split("\\.")[0]);
+			    int b1_1 = Integer.parseInt(a1.split("\\.")[1]);
+			    int b1_2 = Integer.parseInt(a1.split("\\.")[2]);
+			    int b1_3 = Integer.parseInt(a1.split("\\.")[3]);
+			    int b2_3 = Integer.parseInt(a2.split("\\.")[3]);
 			    
 			    if(b1_0 == c0 && b1_1 == c1 && b1_2 == c2){
 				if(c3 >= b1_3 && c3 <= b2_3){
@@ -226,20 +226,20 @@ public class KcglShServ extends CommonServ {
 			List<Bean> zwList = ServDao.finds("TS_KCGL_ZWDYB", "and kc_id = '" + kcId + "'");
 			for (Bean bean : zwList) {
 			    String IPStr = bean.getStr("ZW_IP");
-			    int c0 = Integer.parseInt(IPStr.split(".")[0]);
-			    int c1 = Integer.parseInt(IPStr.split(".")[1]);
-			    int c2 = Integer.parseInt(IPStr.split(".")[2]);
-			    int c3 = Integer.parseInt(IPStr.split(".")[3]);
+			    int c0 = Integer.parseInt(IPStr.split("\\.")[0]);
+			    int c1 = Integer.parseInt(IPStr.split("\\.")[1]);
+			    int c2 = Integer.parseInt(IPStr.split("\\.")[2]);
+			    int c3 = Integer.parseInt(IPStr.split("\\.")[3]);
 			    boolean tmpFlag = false;
 			    for (Bean bean2 : ipScopeList) {
 				String tmpScope = bean2.getStr("IPS_SCOPE");
 				String a1 = tmpScope.split("-")[0];
 				String a2 = tmpScope.split("-")[1];
-				int b1_0 = Integer.parseInt(a1.split(".")[0]);
-				int b1_1 = Integer.parseInt(a1.split(".")[1]);
-				int b1_2 = Integer.parseInt(a1.split(".")[2]);
-				int b1_3 = Integer.parseInt(a1.split(".")[3]);
-				int b2_3 = Integer.parseInt(a2.split(".")[3]);
+				int b1_0 = Integer.parseInt(a1.split("\\.")[0]);
+				int b1_1 = Integer.parseInt(a1.split("\\.")[1]);
+				int b1_2 = Integer.parseInt(a1.split("\\.")[2]);
+				int b1_3 = Integer.parseInt(a1.split("\\.")[3]);
+				int b2_3 = Integer.parseInt(a2.split("\\.")[3]);
 
 				if (b1_0 == c0 && b1_1 == c1 && b1_2 == c2) {
 				    if (c3 >= b1_3 && c3 <= b2_3) {
@@ -258,21 +258,21 @@ public class KcglShServ extends CommonServ {
 		    if(tables1[i].equals("TS_KCGL_UPDATE_ZWDYB")){
 			List<Bean> ipScopeList = ServDao.finds("TS_KCGL_IPSCOPE", "and kc_id = '" + kcId + "'");
 			String IPStr = dataBean.getStr("ZW_IP");
-			int c0 = Integer.parseInt(IPStr.split(".")[0]);
-			int c1 = Integer.parseInt(IPStr.split(".")[1]);
-			int c2 = Integer.parseInt(IPStr.split(".")[2]);
-			int c3 = Integer.parseInt(IPStr.split(".")[3]);
+			int c0 = Integer.parseInt(IPStr.split("\\.")[0]);
+			int c1 = Integer.parseInt(IPStr.split("\\.")[1]);
+			int c2 = Integer.parseInt(IPStr.split("\\.")[2]);
+			int c3 = Integer.parseInt(IPStr.split("\\.")[3]);
 			//如果 IPStr 超出IP段范围 则 sflag = false
 			boolean tmpFlag = false;
 			for (Bean bean : ipScopeList) {
 			    String tmpScope = bean.getStr("IPS_SCOPE");
 			    String a1 = tmpScope.split("-")[0];
 			    String a2 = tmpScope.split("-")[1];
-			    int b1_0 = Integer.parseInt(a1.split(".")[0]);
-			    int b1_1 = Integer.parseInt(a1.split(".")[1]);
-			    int b1_2 = Integer.parseInt(a1.split(".")[2]);
-			    int b1_3 = Integer.parseInt(a1.split(".")[3]);
-			    int b2_3 = Integer.parseInt(a2.split(".")[3]);
+			    int b1_0 = Integer.parseInt(a1.split("\\.")[0]);
+			    int b1_1 = Integer.parseInt(a1.split("\\.")[1]);
+			    int b1_2 = Integer.parseInt(a1.split("\\.")[2]);
+			    int b1_3 = Integer.parseInt(a1.split("\\.")[3]);
+			    int b2_3 = Integer.parseInt(a2.split("\\.")[3]);
 			    
 			    if(b1_0 == c0 && b1_1 == c1 && b1_2 == c2){
 				if(c3 >= b1_3 && c3 <= b2_3){
@@ -315,16 +315,16 @@ public class KcglShServ extends CommonServ {
 			List<Bean> zwList = ServDao.finds("TS_KCGL_ZWDYB", "and kc_id = '" + kcId + "'");
 			for (Bean bean : zwList) {
 			    String tmpZwIp = bean.getStr("ZW_IP");
-			    int b1_0 = Integer.parseInt(a1.split(".")[0]);
-			    int b1_1 = Integer.parseInt(a1.split(".")[1]);
-			    int b1_2 = Integer.parseInt(a1.split(".")[2]);
-			    int b1_3 = Integer.parseInt(a1.split(".")[3]);
-			    int b2_3 = Integer.parseInt(a2.split(".")[3]);
+			    int b1_0 = Integer.parseInt(a1.split("\\.")[0]);
+			    int b1_1 = Integer.parseInt(a1.split("\\.")[1]);
+			    int b1_2 = Integer.parseInt(a1.split("\\.")[2]);
+			    int b1_3 = Integer.parseInt(a1.split("\\.")[3]);
+			    int b2_3 = Integer.parseInt(a2.split("\\.")[3]);
 			    
-			    int c0 = Integer.parseInt(tmpZwIp.split(".")[0]);
-			    int c1 = Integer.parseInt(tmpZwIp.split(".")[1]);
-			    int c2 = Integer.parseInt(tmpZwIp.split(".")[2]);
-			    int c3 = Integer.parseInt(tmpZwIp.split(".")[3]);
+			    int c0 = Integer.parseInt(tmpZwIp.split("\\.")[0]);
+			    int c1 = Integer.parseInt(tmpZwIp.split("\\.")[1]);
+			    int c2 = Integer.parseInt(tmpZwIp.split("\\.")[2]);
+			    int c3 = Integer.parseInt(tmpZwIp.split("\\.")[3]);
 			    if(b1_0 == c0 && b1_1 == c1 && b1_2 == c2){
 				if(c3 >= b1_3 && c3 <= b2_3){
 				    runFlag = false;

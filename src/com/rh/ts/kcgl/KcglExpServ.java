@@ -226,7 +226,7 @@ public class KcglExpServ extends CommonServ{
 			    } else {
 				String a = sz[0];
 				String b = sz[1];
-				if (a.split(".").length != 4 || b.split(".").length != 4) {
+				if (a.split("\\.").length != 4 || b.split("\\.").length != 4) {
 				    error = "操作IP区段格式不正确";
 				} else {
 				    String pattern_ip = "^([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3})$";
@@ -234,17 +234,17 @@ public class KcglExpServ extends CommonServ{
 				    boolean IPMatch_b = Pattern.matches(pattern_ip, b);
 
 				    if (IPMatch_a && IPMatch_b) {
-					boolean r1 = Integer.parseInt(a.split(".")[0]) != Integer
-						.parseInt(b.split(".")[0]);
-					boolean r2 = Integer.parseInt(a.split(".")[1]) != Integer
-						.parseInt(b.split(".")[1]);
-					boolean r3 = Integer.parseInt(a.split(".")[2]) != Integer
-						.parseInt(b.split(".")[2]);
+					boolean r1 = Integer.parseInt(a.split("\\.")[0]) != Integer
+						.parseInt(b.split("\\.")[0]);
+					boolean r2 = Integer.parseInt(a.split("\\.")[1]) != Integer
+						.parseInt(b.split("\\.")[1]);
+					boolean r3 = Integer.parseInt(a.split("\\.")[2]) != Integer
+						.parseInt(b.split("\\.")[2]);
 					if (r1 || r2 || r3) {
 					    error = "操作IP区段格式不正确";
 					} else {
-					    int sa4 = Integer.parseInt(a.split(".")[3]);
-					    int sb4 = Integer.parseInt(b.split(".")[3]);
+					    int sa4 = Integer.parseInt(a.split("\\.")[3]);
+					    int sb4 = Integer.parseInt(b.split("\\.")[3]);
 
 					    if (sa4 > sb4) {
 						error = "操作IP区段格式不正确";
