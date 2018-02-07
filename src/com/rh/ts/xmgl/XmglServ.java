@@ -117,41 +117,46 @@ public  void   copyBmgl(String dataId,Bean beanA){
 			 beanBmgl=ServDao.save(bmglservId, nbean);
 	}
 
-   //考试类别组复制	 根据xmid找到老数据
-	String   oKsqzServId="TS_XMGL_BM_KSQZ";
-	Bean  kaqzBean=new  Bean();
-	List<Bean>  ksqzBean= ServDao.finds(oKsqzServId, oldXmidWhere);//多条
-	Bean   ksqzIdBean   =new   Bean();
-	if(ksqzBean !=null && !ksqzBean.isEmpty()){
-		for(int i=0;i<ksqzBean.size();i++){
-		Bean  nksqzbean  =new   Bean();
-		nksqzbean.copyFrom(ksqzBean.get(i));
-		nksqzbean.set("XM_ID", nXmid);
-		nksqzbean.set("XM_SZ_ID", nXmszid);
-		nksqzbean.set("BM_ID", beanBmgl.getId());
-		nksqzbean.remove("KSQZ_ID");
-		nksqzbean.remove("_PK_");
-		ksqzIdBean =ServDao.save(oKsqzServId, nksqzbean);
-		//copyGZ ( oldXmidWhere,nXmid,ksqzIdBean.getId());2018-1-18
+
+	   //考试类别组复制	 根据xmid找到老数据
+		String   oKsqzServId="TS_XMGL_BM_KSQZ";
+		// 考试类别复制
+		String  OkslbServId="TS_XMGL_BM_KSLB";
+		//Bean  kaqzBean=new  Bean();
+		List<Bean>  ksqzBean= ServDao.finds(oKsqzServId, oldXmidWhere);//多条
+		Bean   ksqzIdBean   =new   Bean();
+		if(ksqzBean !=null && !ksqzBean.isEmpty()){
+			for(int i=0;i<ksqzBean.size();i++){
+			Bean  nksqzbean  =new   Bean();
+			nksqzbean.copyFrom(ksqzBean.get(i));
+			nksqzbean.set("XM_ID", nXmid);
+			nksqzbean.set("XM_SZ_ID", nXmszid);
+			nksqzbean.set("BM_ID", beanBmgl.getId());
+			nksqzbean.remove("KSQZ_ID");
+			
+			nksqzbean.remove("_PK_");
+			ksqzIdBean =ServDao.save(oKsqzServId, nksqzbean);
+			
+			List<Bean>  OkslbBeanList= ServDao.finds(OkslbServId, oldXmidWhere);//1条
+			if(OkslbBeanList !=null && !OkslbBeanList.isEmpty()){
+				for(int j=0;j<OkslbBeanList.size();j++){
+					Bean  kslbbean  =new   Bean();
+					kslbbean.copyFrom(OkslbBeanList.get(j));
+					kslbbean.set("XM_ID", nXmid);
+					kslbbean.set("XM_SZ_ID", nXmszid);
+					kslbbean.set("BM_ID", beanBmgl.getId());
+					kslbbean.set("KSQZ_ID", ksqzIdBean.getId());
+					kslbbean.remove("KSLB_ID");
+					kslbbean.remove("_PK_");
+					ServDao.save(OkslbServId, kslbbean);
+				}
+			}
+			//copyGZ ( oldXmidWhere,nXmid,ksqzIdBean.getId());2018-1-18
+			}
 		}
-	}
-	// 考试类别复制
-	String  OkslbServId="TS_XMGL_BM_KSLB";
-	List<Bean>  OkslbBeanList= ServDao.finds(OkslbServId, oldXmidWhere);//1条
-	if(OkslbBeanList !=null && !OkslbBeanList.isEmpty()){
-		for(int i=0;i<OkslbBeanList.size();i++){
-			Bean  kslbbean  =new   Bean();
-			kslbbean.copyFrom(OkslbBeanList.get(i));
-			kslbbean.set("XM_ID", nXmid);
-			kslbbean.set("XM_SZ_ID", nXmszid);
-			kslbbean.set("BM_ID", beanBmgl.getId());
-			kslbbean.set("KSQZ_ID", kaqzBean.getId());
-			kslbbean.remove("KSLB_ID");
-			kslbbean.remove("_PK_");
-			ServDao.save(OkslbServId, kslbbean);
-		}
-	}
-	
+		
+		
+		
 //禁考管理复制，需要oldxmid
 	String jkglgzServId="TS_XMGL_BM_JKGZ";
 	//List<Bean>  OjkglgzBean= ServDao.finds(jkglgzServId, oldXmidWhere);//1条ts_xmgl_bm_jkglgz

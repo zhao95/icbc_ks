@@ -27,7 +27,7 @@ $("#TS_KCZGL .rhGrid").find("tr").each(function(index, item) {
 		var hoverDiv = "<div class='hoverDiv' id='hoverDiv_"+dataId+"' style='height: "+divHeight+"px; line-height: "+(divHeight-4)+"px; display: none;color:#666666;'>"+abtns+"</div>";
 		$(".content-main").find("table").before(hoverDiv);	
 		// 为每个按钮绑定卡片
-		bindCard();
+		//bindCard();
 	}
 });
 
@@ -38,21 +38,38 @@ $(".hoverDiv").bind("mouseleave", function(e){
 	},1);	
 });
 
+jQuery("td[icode='BUTTONS']").unbind("mouseenter").bind("mouseenter", function(){
+	var pkCode = jQuery(this).parent().attr("id");
+	var trWidth = $(this).parent().get(0).offsetWidth;
+	var divWidth = $("#hoverDiv_"+pkCode).get(0).innerText.length*9.78;
+	var marginLeft = trWidth - divWidth;
+	var marginTop =$(this).get(0).offsetTop;
+	setTimeout(function(){
+		$(".hoverDiv").css('display','none');
+		$("#hoverDiv_"+pkCode).css('display','block'); 
+		$("#hoverDiv_"+pkCode).css('margin-left',marginLeft+'px'); 
+		$("#hoverDiv_"+pkCode).css('margin-top',marginTop+'px'); 
+		$("#hoverDiv_"+pkCode).focus();
+	},10);
+	bindCard();
+});	
+
+
 function bindCard(){
-	jQuery("td[icode='BUTTONS']").unbind("mouseenter").bind("mouseenter", function(){
-		var pkCode = jQuery(this).parent().attr("id");
-		var trWidth = $(this).parent().get(0).offsetWidth;
-		var divWidth = $("#hoverDiv_"+pkCode).get(0).innerText.length*9.78;
-		var marginLeft = trWidth - divWidth;
-		var marginTop =$(this).get(0).offsetTop;
-		setTimeout(function(){
-			$(".hoverDiv").css('display','none');
-			$("#hoverDiv_"+pkCode).css('display','block'); 
-			$("#hoverDiv_"+pkCode).css('margin-left',marginLeft+'px'); 
-			$("#hoverDiv_"+pkCode).css('margin-top',marginTop+'px'); 
-			$("#hoverDiv_"+pkCode).focus();
-		},10);
-	});	
+//	jQuery("td[icode='BUTTONS']").unbind("mouseenter").bind("mouseenter", function(){
+//		var pkCode = jQuery(this).parent().attr("id");
+//		var trWidth = $(this).parent().get(0).offsetWidth;
+//		var divWidth = $("#hoverDiv_"+pkCode).get(0).innerText.length*9.78;
+//		var marginLeft = trWidth - divWidth;
+//		var marginTop =$(this).get(0).offsetTop;
+//		setTimeout(function(){
+//			$(".hoverDiv").css('display','none');
+//			$("#hoverDiv_"+pkCode).css('display','block'); 
+//			$("#hoverDiv_"+pkCode).css('margin-left',marginLeft+'px'); 
+//			$("#hoverDiv_"+pkCode).css('margin-top',marginTop+'px'); 
+//			$("#hoverDiv_"+pkCode).focus();
+//		},10);
+//	});	
 	// 当行查看事件
 	jQuery(".hoverDiv [operCode='optLookBtn']").unbind("click").bind("click", function(){
 		var pkCode = jQuery(this).attr("rowpk");
