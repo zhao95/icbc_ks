@@ -84,7 +84,8 @@ if (jQuery('#' + IMPORT_FILE_ID).length === 0) {
                 FireFly.doAct(_viewer.servId, "saveFromExcel", data, false, false, function (data) {
                     rh.ui.File.prototype.downloadFile(data.FILE_ID, "test");
                     alert(data.mess);
-                    _viewer.refreshGrid();
+                    //_viewer.refreshGrid();
+                    _viewer.refresh();
                 });
             }
         }

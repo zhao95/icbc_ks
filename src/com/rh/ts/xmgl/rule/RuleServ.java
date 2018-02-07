@@ -527,7 +527,10 @@ public class RuleServ extends CommonServ {
 			int post_fh = bean.getInt("POST_FUHAO");//符号
 			int POST_ZD = bean.getInt("POST_ZD");//是否自动验证报考序列
 			String post_desc = bean.getStr("POST_DESC");
+			int POST_YEAR = bean.getInt("POST_YEAR");//任职时间
+			int fuhao = bean.getInt("POST_YEAR_FUHAO");
 			//判断 此人是否在此机构内
+			if(!"".equals(dept_codes)){
 			String[] codearr = dept_codes.split(",");
 			Boolean codeflag = false;
 			for (String string : codearr) {
@@ -560,15 +563,29 @@ public class RuleServ extends CommonServ {
 				continue;
 			}
 			
-
+			}
 			if(post_defined==1){
 			//指定职务层级
 				String[] postarr = zspost.split(",");
 				Bean find = ServDao.find("sy_hrm_zdstaffposition", BM_CODE);
 				if(find!=null&&find.size()!=0){
-					String possql="";
-					 possql = " AND POSTION_NAME_CODE = '"+find.getStr("DUTY_LV_CODE")+"' AND POSTION_SEQUENCE_ID ='"+find.getStr("STATION_NO_CODE")+"' AND POSTION_TYPE='"+find.getStr("STATION_TYPE_CODE")+"'";
-					List<Bean> finds2 = ServDao.finds("ts_org_postion", possql);
+					SqlBean postbean = new SqlBean();	
+					Date date = new Date();
+					if(fuhao==1){
+						postbean.andGT("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+					}else if(fuhao==2){
+						postbean.andLT("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+					}else if(fuhao==3){
+						postbean.and("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+					}else if(fuhao==4){
+						postbean.andGTE("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+					}else if(fuhao==5){
+						postbean.andLTE("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+					}
+					postbean.and("POSTION_NAME_CODE", find.getStr("DUTY_LV_CODE"));
+					postbean.and("POSTION_SEQUENCE_ID", find.getStr("STATION_NO_CODE"));
+					postbean.and("POSTION_TYPE", find.getStr("STATION_TYPE_CODE"));
+					List<Bean> finds2 = ServDao.finds("ts_org_postion", postbean);
 					Boolean flagpost = false;
 					for (Bean bean2 : finds2) {
 						for (String string : postarr) {
@@ -603,14 +620,35 @@ public class RuleServ extends CommonServ {
 					continue;
 				}
 			}else{
-				
+				String table= "TS_ORG_POSTION";
+				if(POST_ZD==2){
+					if("全部".equals(post_xl)&&"专业类".equals(post_type)){
+						table= "TS_ORG_POSTION_K";
+					}
+				}else{
+					table= "TS_ORG_POSTION_K";
+				}
 				Bean find = ServDao.find("sy_hrm_zdstaffposition", BM_CODE);
 				if(find!=null&&find.size()!=0){
-					String possql="";
-					 possql = " AND POSTION_NAME_CODE = '"+find.getStr("DUTY_LV_CODE")+"' AND POSTION_SEQUENCE_ID ='"+find.getStr("STATION_NO_CODE")+"' AND POSTION_TYPE='"+find.getStr("STATION_TYPE_CODE")+"'";
-					List<Bean> finds2 = ServDao.finds("ts_org_postion", possql);
+					SqlBean postbean = new SqlBean();	
+					Date date = new Date();
+					if(fuhao==1){
+						postbean.andGT("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+					}else if(fuhao==2){
+						postbean.andLT("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+					}else if(fuhao==3){
+						postbean.and("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+					}else if(fuhao==4){
+						postbean.andGTE("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+					}else if(fuhao==5){
+						postbean.andLTE("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+					}
+					postbean.and("POSTION_NAME_CODE", find.getStr("DUTY_LV_CODE"));
+					postbean.and("POSTION_SEQUENCE_ID", find.getStr("STATION_NO_CODE"));
+					postbean.and("POSTION_TYPE", find.getStr("STATION_TYPE_CODE"));
+					List<Bean> finds2 = ServDao.finds("ts_org_postion", postbean);
 					Boolean flagpost = false;
-				List<Bean> postlist = ServDao.finds("TS_ORG_POSTION","AND POSTION_NAME = '"+post_zw+"' AND POSTION_TYPE='"+post_type+"'");
+				List<Bean> postlist = ServDao.finds(table,"AND POSTION_NAME = '"+post_zw+"'");
 				Bean findbean = null;
 				if(postlist.size()!=0){
 					 findbean = postlist.get(0);
@@ -721,6 +759,9 @@ public class RuleServ extends CommonServ {
 			String RULE_CY = bean.getStr("RULE_CY");//验证从业序列
 			int RULE_MAST = bean.getInt("RULE_MAST");//是否担任管理类职务
 			String RULE_DESC = bean.getStr("RULE_DESC");
+			
+			int RULE_YEAR_FUHAO = bean.getInt("RULE_YEAR_FUHAO");//持证符号
+			int cy_fuhao = bean.getInt("RULE_CYYEAR_FUHAO");
 			if(RULE_MAST==1){//担任管理类职务
 				SqlBean adminbean = new SqlBean();
 				adminbean.set("STATION_TYPE_CODE", "023001");
@@ -822,6 +863,7 @@ public class RuleServ extends CommonServ {
 					if(!"".equals(cyxl)){
 						cybean.andIn("STATION_NO_CODE", cyxl.split(","));
 					}
+					
 					cybean.and("PERSON_ID", BM_CODE);
 					//从业当前职位满多少年
 					//当前时间减去年数
@@ -838,7 +880,19 @@ public class RuleServ extends CommonServ {
 					
 					String yearago = format.format(y);
 					
-					cybean.andLTE("HOLD_TIME", yearago);// 开始日期小于等于
+					Date date = new Date();
+					if(cy_fuhao==1){
+						cybean.andGT("YEAR("+date+")-YEAR(HOLD_TIME)",yearago);
+					}else if(cy_fuhao==2){
+						cybean.andLT("YEAR("+date+")-YEAR(HOLD_TIME)",yearago);
+					}else if(cy_fuhao==3){
+						cybean.and("YEAR("+date+")-YEAR(HOLD_TIME)",yearago);
+					}else if(cy_fuhao==4){
+						cybean.andGTE("YEAR("+date+")-YEAR(HOLD_TIME)",yearago);
+					}else if(cy_fuhao==5){
+						cybean.andLTE("YEAR("+date+")-YEAR(HOLD_TIME)",yearago);
+					}
+					
 					int cycount = ServDao.count("sy_hrm_zdstaffposition", cybean);
 					if(cycount<=0){//从业年限不符合条件
 						if(gotostay==1){
@@ -860,9 +914,10 @@ public class RuleServ extends CommonServ {
 					if(R_ZD_TYPE==1){
 						sqlbean.and("CERT_GRADE_CODE", zsdj);
 					}else if(R_ZD_TYPE==2){
-						sqlbean.andLT("CERT_GRADE_CODE", zsdj);
+						sqlbean.and("CERT_GRADE_CODE", Integer.parseInt(zsdj)-1);
 					}else if(R_ZD_TYPE==3){
-						sqlbean.andLTE("CERT_GRADE_CODE", zsdj);
+						zsdj+=","+String.valueOf(Integer.parseInt(zsdj)-1);
+						sqlbean.andIn("CERT_GRADE_CODE", zsdj.split(","));
 					}else if(R_ZD_TYPE==4){
 						sqlbean.andGT("CERT_GRADE_CODE", zsdj);
 					}else if(R_ZD_TYPE==5){
@@ -872,9 +927,19 @@ public class RuleServ extends CommonServ {
 				//判断证书有效期
 				if(0==zsvalid){
 				}else{
-					sqlbean.andGTE("YEAR(END_DATE)-YEAR(BGN_DATE)", zsvalid);
+					if(RULE_YEAR_FUHAO==1){
+						sqlbean.andGT("YEAR(END_DATE)-YEAR(BGN_DATE)", zsvalid);
+					}else if(RULE_YEAR_FUHAO==2){
+						sqlbean.andLT("YEAR(END_DATE)-YEAR(BGN_DATE)", zsvalid);
+					}else if(RULE_YEAR_FUHAO==3){
+						sqlbean.and("YEAR(END_DATE)-YEAR(BGN_DATE)", zsvalid);
+					}else if(RULE_YEAR_FUHAO==4){
+						sqlbean.andGTE("YEAR(END_DATE)-YEAR(BGN_DATE)", zsvalid);
+					}else if(RULE_YEAR_FUHAO==5){
+						sqlbean.andLTE("YEAR(END_DATE)-YEAR(BGN_DATE)", zsvalid);
+					}
+						sqlbean.andGTE("YEAR(END_DATE)-YEAR(BGN_DATE)", zsvalid);
 				}
-				sqlbean.andIn("CERT_MODULE", zsmk.split(","));
 				
 			}else{
 			if(!"".equals(zsxl)){
@@ -1237,6 +1302,7 @@ public class RuleServ extends CommonServ {
 			littelGzBean.set("name","报考本序列考试");
 			listbean.add(littelGzBean);
 		}
+		
 		if(flag){
 			outbean.set("gotostay", false);
 			outbean.set("littlega", listbean); 
@@ -1244,11 +1310,29 @@ public class RuleServ extends CommonServ {
 			outbean.set("GZ_NAME", gz_name);
 			outbean.set("GZ_ID", "Y09");
 		}else{
-			outbean.set("gotostay", false);
-			outbean.set("littlega", listbean); 
-			outbean.set("VLIDATE", flag);
-			outbean.set("GZ_NAME", gz_name);
-			outbean.set("GZ_ID", "Y09");
+			//验证本岗位是否持证
+			SqlBean selfsql = new SqlBean();
+			selfsql.andIn("STATION_NO", user_xl);
+			selfsql.and("STU_PERSON_ID", BM_CODE);
+			int count = ServDao.count(TsConstant.SERV_ETI_CERT_QUAL_V, selfsql);
+			if(count>0){
+				outbean.set("gotostay", false);
+				outbean.set("GZ_NAME", gz_name);
+				outbean.set("VLIDATE", true);
+				outbean.set("GZ_ID", "Y09");
+				listbean.clear();
+				Bean bean = new Bean();
+				bean.set("validate", true);
+				bean.set("name","本岗位已持证");
+				listbean.add(bean);
+			}else{
+				outbean.set("gotostay", false);
+				outbean.set("VLIDATE", false);
+				outbean.set("littlega", listbean); 
+				outbean.set("VLIDATE", flag);
+				outbean.set("GZ_ID", "Y09");
+			}
+		
 		}
 		
 		return outbean;//同序列自动验证通过

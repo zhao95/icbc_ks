@@ -126,7 +126,7 @@ var $impFile = jQuery('#' + _viewer.servId + '-impFile');
 if ($importUser.length === 0) {
   var config = {
       "SERV_ID": _viewer.servId,
-      "TEXT": "导入部门",
+      "TEXT": "导入机构",
       "FILE_CAT": "",
       "FILENUMBER": 1,
       "BTN_IMAGE": "btn-imp",
@@ -175,5 +175,5 @@ $importUser.attr('title', '导入文件为excel格式文件，内容为无标题
 
 //导入模板下载
 $impFile.unbind('click').bind('click', function () {
-  window.open(FireFly.getContextPath() + '/ts/imp_template/可见部门导入模板.xls');
+  window.open(FireFly.getContextPath() + '/ts/imp_template/可见机构导入模板.xls');
 });

@@ -450,8 +450,8 @@ public class JkglServ extends CommonServ {
 			String jkType = rowBean.getStr(ImpUtils.COL_NAME + "3");//获取禁考类型
 			String jkStartTime = rowBean.getStr(ImpUtils.COL_NAME + "4");//获取禁考开始时间
 			String jkEndTime = rowBean.getStr(ImpUtils.COL_NAME + "5");//获取禁考开始时间
-			Bean  userBean=UserMgr.getUser(colCode);//获取人员信息
-           // Bean userBean = ImpUtils.getUserBeanByString(colCode);
+			//Bean  userBean=UserMgr.getUser(colCode);//获取人员信息
+            Bean userBean = ImpUtils.getUserBeanByString(colCode);
             if (userBean == null) {
                 rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
                 continue;

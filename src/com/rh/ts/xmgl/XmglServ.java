@@ -110,12 +110,13 @@ public  void   copyBmgl(String dataId,Bean beanA){
 			nbean.copyFrom(bmglBean.get(0));
 			nbean.set("XM_ID", nXmid);
 			nbean.set("XM_SZ_ID", nXmszid);
+			
+			nbean.set("BM_NAME", bmglBean.get(0).getStr("BM_NAME")+"_复制");
 			nbean.remove("BM_ID");
 			nbean.remove("_PK_");
 			 beanBmgl=ServDao.save(bmglservId, nbean);
 	}
 
-	
    //考试类别组复制	 根据xmid找到老数据
 	String   oKsqzServId="TS_XMGL_BM_KSQZ";
 	Bean  kaqzBean=new  Bean();

@@ -412,7 +412,8 @@ public class UserServ extends CommonServ {
 //  			param.set("ctlgModuleName", ctlgModuleName);
   			param.set("fieldName","DEPT_CODE");
   			param.set("serviceName", paramBean.getServId());
-            PvlgUtils.setCtlgPvlgWhere(param);
-  			//PvlgUtils.setOrgPvlgWhereNoSearch(param);
+//            PvlgUtils.setCtlgPvlgWhere(param);
+        //懒加载模式查询
+  			PvlgUtils.setOrgPvlgWhereNoSearch(param);
   		}
 }

@@ -3,10 +3,11 @@
 	<%
 	boolean debugMode = Context.getSyConf("PE_LOGIN_DEBUG_MODE", false);
 	%>
-	var debugMode ="<%=debugMode%>";
-	if(!debugMode){
-		window.close();
-	}else{
-		window.location.href = FireFly.getContextPath() + "/t";
-	}
+	var debugMode =<%=debugMode%>;
+    debugger;
+    if(debugMode){
+        window.location.href = FireFly.getContextPath() + "/t";
+    }else{
+        window.close();
+    }
 </script>
