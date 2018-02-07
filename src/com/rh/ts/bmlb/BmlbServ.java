@@ -2198,5 +2198,11 @@ public class BmlbServ extends CommonServ {
 		}
 		return new OutBean().set("list", bmkslist);
 	}
+	
+	public OutBean getJKdict(ParamBean paramBean){
+		String sql = "SELECT * FROM SY_SERV_DICT_ITEM where dict_id = 'TS_JKGL_JK_TYPE'";
+		List<Bean> query = Transaction.getExecutor().query(sql);
+		return new OutBean().set("list", query);
+	}
 
 }

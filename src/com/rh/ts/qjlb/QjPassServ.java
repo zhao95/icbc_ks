@@ -233,6 +233,12 @@ public class QjPassServ extends CommonServ {
                         qjId = qjbd.getId();
                     }
                 }
+            }else{
+                Bean qjBean = ServDao.find(TSQJ_SERVID, qjId);
+                if(qjBean==null){
+                    rowBean.set(ImpUtils.ERROR_NAME, "没有找到对应的请假申请，如果不是通过请假申请编码进行审批，请清空请假申请编码");
+                    continue;
+                }
             }
 
             //处理审批
