@@ -3,6 +3,7 @@ package com.rh.ts.kcgl;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
@@ -22,6 +23,7 @@ import com.rh.core.serv.ServMgr;
 import com.rh.core.serv.dict.DictMgr;
 import com.rh.core.serv.util.ExportExcel;
 import com.rh.core.serv.util.ServUtils;
+import com.rh.core.util.var.Var;
 
 import jxl.Cell;
 import jxl.Sheet;
@@ -217,6 +219,33 @@ public class KcglExpServ extends CommonServ{
 			    }
 			    if(num_ip > 0){
 				error = "IP地址已存在";
+			    }
+			    List<Bean> scopeList = ServDao.finds("TS_KCGL_IPSCOPE", "and KC_ID = '"+kcId+"'");
+			    //是否在考场IP段范围内
+			    boolean inFlag = false;
+			    int c0 = Integer.parseInt(IPStr.split("\\.")[0]);
+			    int c1 = Integer.parseInt(IPStr.split("\\.")[1]);
+			    int c2 = Integer.parseInt(IPStr.split("\\.")[2]);
+			    int c3 = Integer.parseInt(IPStr.split("\\.")[3]);
+			    for (int j = 0; j < scopeList.size(); j++) {
+				String tmpScope = scopeList.get(j).getStr("IPS_SCOPE");
+				String a1 = tmpScope.split("-")[0];
+				String a2 = tmpScope.split("-")[1];
+				int b1_0 = Integer.parseInt(a1.split("\\.")[0]);
+				int b1_1 = Integer.parseInt(a1.split("\\.")[1]);
+				int b1_2 = Integer.parseInt(a1.split("\\.")[2]);
+				int b1_3 = Integer.parseInt(a1.split("\\.")[3]);
+				int b2_3 = Integer.parseInt(a2.split("\\.")[3]);
+				if (b1_0 == c0 && b1_1 == c1 && b1_2 == c2) {
+				    if (c3 >= b1_3 && c3 <= b2_3) {
+					inFlag = true;
+					break;
+				    }
+				}
+			    }
+			    
+			    if(!inFlag){
+				error = "IP地址不在IP段范围内";
 			    }
 			} else if (servId.equals("TS_KCGL_IPSCOPE") && (error == null || error.isEmpty())) {
 			    String scope = data.getStr("IPS_SCOPE");
