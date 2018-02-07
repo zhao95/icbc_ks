@@ -22,6 +22,7 @@ import com.rh.core.util.DateUtils;
 import com.rh.ts.util.BMUtil;
 import com.rh.ts.util.POIExcelUtil;
 import com.rh.ts.util.TsConstant;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -78,7 +79,7 @@ public class XmglAdmissionServ extends CommonServ {
                 " where exists (" +
                 "select 'X' from ts_bmsh_pass b where a.XM_ID =b.XM_ID and b.BM_CODE=? and b.BM_STATUS not in( '1','3')" +
                 ")" +
-                "order by a.XM_START";
+                "order by a.XM_KSSTARTDATA desc,a.XM_START desc";
 
         List<Bean> dataList = Transaction.getExecutor().queryPage(
                 sql, page.getNowPage(), page.getShowNum(), new ArrayList<Object>(values), null);
@@ -258,9 +259,20 @@ public class XmglAdmissionServ extends CommonServ {
                 in = FileMgr.download(excelTemplateFileBean);
                 //根据模板生成excel文件
                 List<File> sourceFiles = generateAdmissionExcelFileList(xmId, userCode, in);
+                if (CollectionUtils.isEmpty(sourceFiles)) {
+                    throw new TipException("项目场次安排已发布，但没有您的座位安排");
+                }
+
                 for (File sourceFile : sourceFiles) {
                     //office to pdf
-                    pdfFiles.add(this.office2PDF(sourceFile, pdfFileTempName));
+                    File pdfFile = this.office2PDF(sourceFile, pdfFileTempName);
+                    File dest = new File(
+                            pdfFile.getParent() + File.separator +
+                                    pdfFileTempName + "-" +
+                                    sourceFile.getName().substring(0, sourceFile.getName().indexOf(".")) +
+                                    ".pdf");
+                    pdfFile.renameTo(dest);
+                    pdfFiles.add(dest);
                 }
                 //zip打包
                 pdfZipfile = zipFiles(pdfFiles);
@@ -416,12 +428,18 @@ public class XmglAdmissionServ extends CommonServ {
         List<File> sourceFiles = new ArrayList<File>();
         try {
             List<Bean> ksList = dataBean.getList("ksList");
-            for (Bean ks : ksList) {
+            for (int i = 0; i < ksList.size(); i++) {
+                Bean ks = ksList.get(0);
+                String ksName = ks.getStr("ksName");
+
                 List<Bean> ksTempList = new ArrayList<Bean>();
                 ksTempList.add(ks);
                 dataBean.set("ksList", ksTempList);
                 FileInputStream fileInputStream = new FileInputStream(tempFile);
-                sourceFiles.add(this.generateAdmissionExcelFile(dataBean, ksIndexMap, ksInfoFieldNameList, fileInputStream));
+                File ksExcelFile = this.generateAdmissionExcelFile(dataBean, ksIndexMap, ksInfoFieldNameList, fileInputStream);
+                File dest = new File(ksExcelFile.getParent() + File.separator + ksName + (i + 1) + ".xls");
+                ksExcelFile.renameTo(dest);
+                sourceFiles.add(dest);
             }
         } finally {
             tempFile.delete();
