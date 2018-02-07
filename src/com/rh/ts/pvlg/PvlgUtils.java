@@ -20,7 +20,7 @@ public class PvlgUtils {
 	 * 
 	 * 登陆人对应列表数据的权限
 	 * 
-	 * @param servId
+	 * @param param
 	 */
 	@SuppressWarnings("rawtypes")
 	public static void setCtlgPvlgWhere(ParamBean param) {
@@ -184,7 +184,7 @@ public class PvlgUtils {
 	}
 	
     /**
-     *	默认进入列表页面后不自动查询的方法，需要在paramBean中传递一个参数_searhFirstType为false
+     *	默认进入列表页面后不自动查询的方法，查询懒加载
      * @param param
      */
 	@SuppressWarnings("rawtypes")
@@ -216,7 +216,7 @@ public class PvlgUtils {
 			int treeWhereSize = paramBean.getList("_treeWhere").size();
 			//是否查询的标志位
 			boolean searchFirstType = paramBean.getBoolean("_searhFirstType");
-			if (searchFirstType == true && treeWhereSize == 0) {
+			if (treeWhereSize > 0) {
 
 				JSONObject jsonObject = new JSONObject(userPvlg);
 				String result = null;
@@ -259,6 +259,9 @@ public class PvlgUtils {
 					// 无权限
 					paramBean.set(Constant.PARAM_WHERE, " and 1=2 ");
 				}
+			}else{
+				// 无权限
+				paramBean.set(Constant.PARAM_WHERE, " and 1=2 ");
 			}
 		} catch (Exception e) {
 			// 无权限
