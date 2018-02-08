@@ -79,7 +79,14 @@ public class FlowBmlcServ extends CommonServ {
             String colCode = rowBean.getStr(ImpUtils.COL_NAME + "1");
             String colDeptCodes = rowBean.getStr(ImpUtils.COL_NAME + "3");
             String yesNo = rowBean.getStr(ImpUtils.COL_NAME + "4");
-            Bean userBean = ImpUtils.getUserBeanByString(colCode);
+           // Bean userBean = ImpUtils.getUserBeanByString(colCode);
+            Bean userBean=new Bean();
+			if(colCode.length()==10){
+			 userBean = ImpUtils.getUserBeanByString(colCode);
+			}else{
+				rowBean.set(ImpUtils.ERROR_NAME, "请正确填写人力资源编码");
+                continue;
+			}
             // Bean  userBean=UserMgr.getUser(colCode);//获取人员信息
             if (userBean == null) {
                 rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
