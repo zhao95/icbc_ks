@@ -451,7 +451,14 @@ public class JkglServ extends CommonServ {
 			String jkStartTime = rowBean.getStr(ImpUtils.COL_NAME + "4");//获取禁考开始时间
 			String jkEndTime = rowBean.getStr(ImpUtils.COL_NAME + "5");//获取禁考开始时间
 			//Bean  userBean=UserMgr.getUser(colCode);//获取人员信息
-            Bean userBean = ImpUtils.getUserBeanByString(colCode);
+			Bean userBean=new Bean();
+			if(colCode.length()==10){
+			 userBean = ImpUtils.getUserBeanByString(colCode);
+			}else{
+				rowBean.set(ImpUtils.ERROR_NAME, "请正确填写人力资源编码");
+                continue;
+			}
+            
             if (userBean == null) {
                 rowBean.set(ImpUtils.ERROR_NAME, "找不到用户");
                 continue;
