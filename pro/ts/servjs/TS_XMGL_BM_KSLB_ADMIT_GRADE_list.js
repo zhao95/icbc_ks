@@ -9,6 +9,7 @@ var kslbk_id = "";
 	qz_id = $("#TS_XMGL_BM_KSLB_ADMIT-KSQZ_ID").val();
 	
 	kslbk_id =$("#TS_XMGL_BM_KSLB_ADMIT-KSLBK_ID").val();
+	var kslb_id =$("#TS_XMGL_BM_KSLB_ADMIT-KSLB_ID").val();
 $("#TS_XMGL_BM_KSLB_ADMIT_GRADE .rhGrid").find("tr").each(function(index, item) {
 	if(index != 0){
 		var dataId = item.id;
@@ -56,7 +57,7 @@ _viewer.getBtn("add").unbind("click").bind("click",function() {
 	    	var paramlist = [];
 	    	 for(var i=0;i<ids.length;i++){
 	    		 var param = {};
-	    		 param["KSLBK_ADMIT_ID"] = ids[i];
+	    		 param["KSLBK_ADMIT_ID"] = kslb_id;
 	    		 param["KSQZ_ID"] = qz_id;
 	    		 param["KSLBK_ID"]=kslbk_id;
 	    		 param["KSLB_XL"]=xlcodes[i];
