@@ -38,7 +38,7 @@ _viewer.beforeSave= function() {
 						break;
 					}
 				}
-				if(flag){
+				if(tmpFlag){
 					flag = false;
 					break;
 				}
@@ -94,9 +94,9 @@ function checkScope(scope,ip){
 	var sz = scope.split("-");
 	var a = sz[0];
 	var b = sz[1];
-	var r1 = a.split(".")[0] != b.split(".")[0];
-	var r2 = a.split(".")[1] != b.split(".")[1];
-	var r3 = a.split(".")[2] != b.split(".")[2];
+	var r1 = a.split(".")[0];
+	var r2 = a.split(".")[1];
+	var r3 = a.split(".")[2];
 	var sa4 = a.split(".")[3];
 	var sb4 = b.split(".")[3];
 	
