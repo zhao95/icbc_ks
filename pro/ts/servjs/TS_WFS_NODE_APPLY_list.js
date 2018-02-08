@@ -6,6 +6,9 @@ var userCode = System.getVar("@USER_CODE@");//当前登录用户code
 var wfsId = _viewer.getParHandler()._pkCode;//WFS_ID
 var wfsBean = FireFly.doAct("ts_wfs_apply", 'byid', {_PK_: wfsId});
 
+
+
+
 var paramS = {};
 paramS["USER_CODE"] = userCode;
 paramS["WFS_ID"] = wfsId;
@@ -89,7 +92,15 @@ function openMyCard(dataId, readOnly, showTab) {
     cardView.show();
 
 }
-
+//查看审核人
+$("#TS_WFS_NODE_APPLY-serchers").unbind("click").bind("click",function(){
+	  var extWhere = "and WFS_ID = '" + wfsId + "'";
+	  var params = {"WFS_ID": wfsId, "_extWhere": extWhere};
+      var url = "TS_WFS_BMSHLC_ALLNAME.list.do?&_extWhere=" + extWhere;
+      var options = {"url": url, "params": params, "menuFlag": 3, "top": true};
+      //$( ".ui-dialog-titlebar-close").click();
+      Tab.open(options);
+});
 
 //		var dataId = "";
 //		FireFly.doAct("TS_WFS_NODEAPPLY_ADMINER","finds",{"_WHERE_":" and NODE_ID='"+pkCode+"'"},true,false,function(data){
