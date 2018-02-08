@@ -791,7 +791,9 @@ public  void  copyJkip(String kcId ,String  oldkcid){
 			// 去掉重复群组
 			qz = Strings.removeSame(qz);
 		}
-		
+		if("".equals(qz)){
+			qz="''";
+		}
 		String[] qzArray1 = qz.split(",");
 		String servId = "TS_BMSH_STAY";
 		String where1 = paramBean.getStr("where");
