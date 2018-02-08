@@ -55,7 +55,7 @@ public class QjNumServ extends CommonServ {
         Date date = new Date();
         String format = simps.format(date);
         
-        List<Bean> finds = ServDao.finds("TS_BM_QJ_NUM", "AND QJ_CODE='" + code + "' AND (YEAR)XM_END_TIME = '"+format+"'");
+        List<Bean> finds = ServDao.finds("TS_BM_QJ_NUM", "AND QJ_CODE='" + code + "' AND YEAR(XM_END_TIME) = '"+format+"'");
 
         if (finds != null && finds.size() != 0) {
             int weeknum = finds.get(0).getInt("WEEK_NUM");
