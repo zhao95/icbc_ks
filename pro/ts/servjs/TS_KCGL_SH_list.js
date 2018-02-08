@@ -13,8 +13,12 @@ $("#TS_KCGL_SH .rhGrid").find("tr").each(function(index, item) {
 		var state2 = $(item).find("td[icode='KC_STATE2']")[0].innerText;
 		var c1 = userCode == "admin";
 		var c2 = roleOrgPvlg != undefined;
-		var c3 = roleOrgPvlg.indexOf('0010100000') > -1;
-		var c4 = roleOrgPvlg.indexOf('0010100500') > -1;
+		var c3 = false;
+		var c4 = false;
+		if(c2){
+			c3 = roleOrgPvlg.indexOf('0010100000') > -1;
+			c4 = roleOrgPvlg.indexOf('0010100500') > -1;
+		}
 		//总行审核
 		if(c1 || (c2 && (c3 || c4))){
 			if(state == 3){

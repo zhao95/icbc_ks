@@ -10,8 +10,12 @@ var kcState2 = _viewer.getItem("KC_STATE2").getValue();
 var userCode = System.getVar("@USER_CODE@");
 var c1 = userCode == "admin";
 var c2 = roleOrgPvlg != undefined;
-var c3 = roleOrgPvlg.indexOf('0010100000') > -1;
-var c4 = roleOrgPvlg.indexOf('0010100500') > -1;
+var c3 = false;
+var c4 = false;
+if(c2){
+	c3 = roleOrgPvlg.indexOf('0010100000') > -1;
+	c4 = roleOrgPvlg.indexOf('0010100500') > -1;
+}
 
 //有效考场显示变更列表  
 if(kcState < 4 || kcState > 5){
