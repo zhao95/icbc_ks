@@ -46,7 +46,7 @@ public class KcglShServ extends CommonServ {
 		roleOrgLv = roleOrgLv.substring(0, 1);
 		int lev1 = Integer.parseInt(roleOrgLv);
 		if(lev1 <= myLevel){
-		    String levelOdept = myParh.split("\\^")[lev1];
+		    String levelOdept = myParh.split("\\^")[lev1-1];
 		    roleDCode = roleDCode + "," + levelOdept;
 		}
 	    }
