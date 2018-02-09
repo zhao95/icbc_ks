@@ -567,21 +567,24 @@ public class RuleServ extends CommonServ {
 			if(post_defined==1){
 			//指定职务层级
 				String[] postarr = zspost.split(",");
-				Bean find = ServDao.find("sy_hrm_zdstaffposition", BM_CODE);
+				SqlBean sql = new SqlBean();
+				sql.and("PERSON_ID", BM_CODE);
+				Date date = new Date();
+				if(fuhao==1){
+					sql.andGT("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+				}else if(fuhao==2){
+					sql.andLT("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+				}else if(fuhao==3){
+					sql.and("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+				}else if(fuhao==4){
+					sql.andGTE("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+				}else if(fuhao==5){
+					sql.andLTE("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+				}
+				List<Bean> list = ServDao.finds("sy_hrm_zdstaffposition", sql);
+				Bean find = list.get(0);
 				if(find!=null&&find.size()!=0){
 					SqlBean postbean = new SqlBean();	
-					Date date = new Date();
-					if(fuhao==1){
-						postbean.andGT("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
-					}else if(fuhao==2){
-						postbean.andLT("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
-					}else if(fuhao==3){
-						postbean.and("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
-					}else if(fuhao==4){
-						postbean.andGTE("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
-					}else if(fuhao==5){
-						postbean.andLTE("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
-					}
 					postbean.and("POSTION_NAME_CODE", find.getStr("DUTY_LV_CODE"));
 					postbean.and("POSTION_SEQUENCE_ID", find.getStr("STATION_NO_CODE"));
 					postbean.and("POSTION_TYPE", find.getStr("STATION_TYPE_CODE"));
@@ -628,20 +631,36 @@ public class RuleServ extends CommonServ {
 				}else{
 					table= "TS_ORG_POSTION_K";
 				}
-				Bean find = ServDao.find("sy_hrm_zdstaffposition", BM_CODE);
-				if(find!=null&&find.size()!=0){
+				SqlBean sqlpost = new SqlBean();
+				sqlpost.and("PERSON_ID", BM_CODE);
+				SimpleDateFormat simpd = new SimpleDateFormat("yyyy");
+				Date date = new Date();
+				String datestr = simpd.format(date);
+				if(fuhao==1){
+					sqlpost.andGT("YEAR("+datestr+")-YEAR(HOLD_TIME)",POST_YEAR);
+				}else if(fuhao==2){
+					sqlpost.andLT("YEAR("+datestr+")-YEAR(HOLD_TIME)",POST_YEAR);
+				}else if(fuhao==3){
+					sqlpost.and("YEAR("+datestr+")-YEAR(HOLD_TIME)",POST_YEAR);
+				}else if(fuhao==4){
+					sqlpost.andGTE("YEAR("+datestr+")-YEAR(HOLD_TIME)",POST_YEAR);
+				}else if(fuhao==5){
+					sqlpost.andLTE("YEAR("+datestr+")-YEAR(HOLD_TIME)",POST_YEAR);
+				}
+				List<Bean> list = ServDao.finds("sy_hrm_zdstaffposition", sqlpost);
+				if(list!=null&&list.size()!=0){
+					Bean find = list.get(0);
 					SqlBean postbean = new SqlBean();	
-					Date date = new Date();
 					if(fuhao==1){
-						postbean.andGT("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+						postbean.andGT("YEAR("+datestr+")-YEAR(HOLD_TIME)",POST_YEAR);
 					}else if(fuhao==2){
-						postbean.andLT("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+						postbean.andLT("YEAR("+datestr+")-YEAR(HOLD_TIME)",POST_YEAR);
 					}else if(fuhao==3){
-						postbean.and("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+						postbean.and("YEAR("+datestr+")-YEAR(HOLD_TIME)",POST_YEAR);
 					}else if(fuhao==4){
-						postbean.andGTE("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+						postbean.andGTE("YEAR("+datestr+")-YEAR(HOLD_TIME)",POST_YEAR);
 					}else if(fuhao==5){
-						postbean.andLTE("YEAR("+date+")-YEAR(HOLD_TIME)",POST_YEAR);
+						postbean.andLTE("YEAR("+datestr+")-YEAR(HOLD_TIME)",POST_YEAR);
 					}
 					postbean.and("POSTION_NAME_CODE", find.getStr("DUTY_LV_CODE"));
 					postbean.and("POSTION_SEQUENCE_ID", find.getStr("STATION_NO_CODE"));
