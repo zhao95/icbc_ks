@@ -181,13 +181,10 @@ public class KcglExpServ extends CommonServ{
                     	error = getExcelRowDataError(data);
                     	
                     	if(servId.equals("TS_KCGL_ZWDYB")){
-                    	    Bean kc1 = ServDao.find("TS_KCGL", kcId);
-                    	    Bean kc2 = ServDao.find("TS_KCZGL_KCGL", kcId);
+                    	    Bean kc1 = ServDao.find("TS_KCGL_UTIL", kcId);
                     	    int maxNum = 0;
                     	    if(!kc1.isEmpty()){
                     		maxNum = kc1.getInt("KC_MAX");
-                    	    }else{
-                    		maxNum = kc2.getInt("KC_MAX");
                     	    }
                     	    int zwNum = ServDao.count("TS_KCGL_ZWDYB", new ParamBean().setWhere("and kc_id = '"+kcId+"'"));
                     	    if(zwNum >= maxNum){
