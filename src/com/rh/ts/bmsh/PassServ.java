@@ -100,7 +100,7 @@ public class PassServ extends CommonServ {
 			 if(jieshu>ALLNUM){
 				 showpage=ALLNUM-chushi;
 			 }
-			sql3+=" limit "+chushi+","+showpage;
+			sql3+="order by c.BM_CODE limit "+chushi+","+showpage;
 			 list = Transaction.getExecutor().query(sql3);
 		}else{
 	return new OutBean().setError("空");
