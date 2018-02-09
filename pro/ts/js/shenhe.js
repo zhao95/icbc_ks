@@ -818,7 +818,6 @@ var eles=[
 	}
 	if(impexter==4){
 		//修改导入数据模板
-		alert(xm_type);
 		if(xm_type=="其他类考试"){
 			$("#impmodeal").attr("href","/ts/imp_template/非资格额外报名数据导入模板.xls");
 
