@@ -1191,11 +1191,11 @@ public class KcapMatch {
 			Bean timeBean = (Bean) filtBean.getBean(time).clone();
 
 			Bean uTemp = new Bean();
-
+			//timeBean所有考生：{key:userCode，val:考生考试}  过滤出不应该安排的考生，过滤结果为uTemp
 			for (Object user : timeBean.keySet()) { // 遍历考生
 
 				if (spOrgKsBean.containsKey(user)) {
-
+					//特定机构考生
 					String date = freeZw.getStr("SJ_DATE"); // 考试日期
 
 					if ("forward".equals(type)) { // forward靠前
@@ -1268,7 +1268,7 @@ public class KcapMatch {
 		String kcLv = freeZw.getStr("KC_LV"); // 考场层级 一级考场 二级考场
 
 		String jsonStr = rule.getStr("GZ_VALUE2");
-
+		Bean temp = new Bean();
 		try {
 
 			if (kcLv.equals("一级") && !Strings.isBlank(jsonStr)) { // 一级考场
@@ -1277,7 +1277,7 @@ public class KcapMatch {
 
 				String xlCode = obj.getString("values");
 
-				Bean temp = new Bean();
+
 
 				for (Object time : filtBean.keySet()) { // 遍历考试时长
 
@@ -1295,7 +1295,7 @@ public class KcapMatch {
 
 							String bmxl = ks.getStr("BM_XL_CODE");
 
-							if (bmxl.equals(xlCode)) {
+							if (xlCode.contains(bmxl)) {
 
 								uTemp.put(user, ks);
 							}
@@ -1308,7 +1308,7 @@ public class KcapMatch {
 
 								String bmxl = ks.getStr("BM_XL_CODE");
 
-								if (bmxl.equals(xlCode)) {
+								if (xlCode.contains(bmxl)) {
 
 									if (uTemp.containsKey(user)) {
 
@@ -1343,16 +1343,17 @@ public class KcapMatch {
 					}
 				}
 
-				if (!temp.isEmpty()) {
 
-					filtBean = new Bean(temp);
-				}
 			}
 
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
+		//				if (!temp.isEmpty()) {
+
+		filtBean = new Bean(temp);
+//				}
 		KcapUtils.showInfo(filtBean, "++++++++++++++++++++++++R009-end:", KcapMatch.class);
 
 		return filtBean;
