@@ -482,7 +482,7 @@ public class PassServ extends CommonServ {
 								sql3+=" or c.code_path like concat('"+query1.get(i).getId()+"','%')";
 							}
 						}
-						sql3+=" and SH_LEVEL !=0 ";
+						/*sql3+=" and SH_LEVEL !=0 ";*/
 						int count2 = Transaction.getExecutor().count(sql3);
 						if (count2 > EXCEL_MAX_NUM) {
 							return new OutBean().setError("导出数据总条数大于Excel最大行数："
